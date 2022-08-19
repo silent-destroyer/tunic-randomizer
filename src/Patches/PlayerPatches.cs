@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using UnityEngine;
 using TinyJson;
@@ -16,7 +15,6 @@ namespace TunicRandomizer {
         public static List<ItemData> AllItemData = new List<ItemData>();
 
         public static string SaveName = null;
-
         public static void Text_LanguagePatch(LanguageLine script, bool pauseTime) {
 
         }
@@ -63,8 +61,6 @@ namespace TunicRandomizer {
                     TunicRandomizer.Logger.LogInfo("Granted Hyperdash and Grapple via failsafe option!");
                 }
             }
-
-
         }
 
         public static void Start_PlayerPatches(PlayerCharacter __instance) {

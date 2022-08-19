@@ -52,14 +52,19 @@ namespace TunicRandomizer{
 
             Reward Reward = ItemList[RewardId].Reward;
             if (Reward.Type == "MONEY") {
+                SaveFile.SetInt("randomizer picked up " + RewardId, 1);
+                ItemsPickedUp[RewardId] = true;
+                TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
                 __result = Reward.Amount;
             } else {
                 if (!ItemsPickedUp[RewardId]) {
-                    GiveReward(Reward, RewardId);
-
                     SaveFile.SetInt("randomizer picked up " + RewardId, 1);
                     ItemsPickedUp[RewardId] = true;
+                    TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
+                    GiveReward(Reward, RewardId);
+
                 }
+
             }
             
             return false;
@@ -69,6 +74,9 @@ namespace TunicRandomizer{
             string RewardId = __instance.chestID == 0 ? ScenePatches.SceneName + "-" + __instance.transform.position.ToString() + " [" + ScenePatches.SceneName + "]" : __instance.chestID + " [" + ScenePatches.SceneName + "]";
             Reward Reward = ItemList[RewardId].Reward;
             if (Reward.Type == "INVENTORY") {
+                SaveFile.SetInt("randomizer picked up " + RewardId, 1);
+                ItemsPickedUp[RewardId] = true;
+                TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
                 __result = Inventory.GetItemByName(Reward.Name);
             }
             return false;
@@ -95,9 +103,11 @@ namespace TunicRandomizer{
                 GiveReward(Reward, RewardId);
                 SaveFile.SetInt("randomizer picked up " + RewardId, 1);
                 ItemsPickedUp[RewardId] = true;
-                
+                TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
+
             }
 
+            __instance.pickupStateVar.BoolValue = true;
             return false;
         }
 
@@ -110,6 +120,7 @@ namespace TunicRandomizer{
 
             SaveFile.SetInt("randomizer picked up " + RewardId, 1);
             ItemsPickedUp[RewardId] = true;
+            TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
 
             return false;
         }
@@ -126,21 +137,25 @@ namespace TunicRandomizer{
                 GiveReward(Reward, "Well Reward (3 Coins) []");
                 SaveFile.SetInt("randomizer picked up Well Reward (3 Coins) []", 1);
                 ItemsPickedUp["Well Reward (3 Coins) []"] = true;
+                TunicRandomizer.Logger.LogInfo("Picked up item Well Reward (3 Coins) []");
             } else if (CoinsTossed == 6) {
                 Reward Reward = ItemList["Well Reward (6 Coins) []"].Reward;
                 GiveReward(Reward, "Well Reward (6 Coins) []");
                 SaveFile.SetInt("randomizer picked up Well Reward (6 Coins) []", 1);
                 ItemsPickedUp["Well Reward (3 Coins) []"] = true;
+                TunicRandomizer.Logger.LogInfo("Picked up item Well Reward (6 Coins) []");
             } else if (CoinsTossed == 10) {
                 Reward Reward = ItemList["Well Reward (10 Coins) []"].Reward;
                 GiveReward(Reward, "Well Reward (10 Coins) []");
                 SaveFile.SetInt("randomizer picked up Well Reward (10 Coins) []", 1);
                 ItemsPickedUp["Well Reward (3 Coins) []"] = true;
+                TunicRandomizer.Logger.LogInfo("Picked up item Well Reward (10 Coins) []");
             } else if (CoinsTossed == 15) {
                 Reward Reward = ItemList["Well Reward (15 Coins) []"].Reward;
                 GiveReward(Reward, "Well Reward (15 Coins) []");
                 SaveFile.SetInt("randomizer picked up Well Reward (15 Coins) []", 1);
                 ItemsPickedUp["Well Reward (3 Coins) []"] = true;
+                TunicRandomizer.Logger.LogInfo("Picked up item Well Reward (15 Coins) []");
             }
         }
 
