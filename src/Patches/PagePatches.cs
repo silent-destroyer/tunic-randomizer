@@ -33,7 +33,6 @@ namespace TunicRandomizer {
                 }
             }
             
-            SaveFile.SetInt("unlocked page 24", 1);
             SaveFile.SaveToDisk();
         }
 
@@ -52,7 +51,6 @@ namespace TunicRandomizer {
                 SaveFile.SetInt(Fairy.Flag, 1);
             }
 
-            SaveFile.SetInt("unlocked page 24", 0);
             SaveFile.SaveToDisk();
             PagesToShow.Clear();
             PagesToRevert.Clear();

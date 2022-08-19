@@ -165,9 +165,9 @@ namespace TunicRandomizer{
             } else if (Reward.Type == "FOOL") {
                 PlayerCharacter.ApplyRadiationAsDamageInHP(20f);
                 SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
-                PlayerCharacter.instance.AddFreezeTime(5f);
+                PlayerCharacter.instance.AddFreezeTime(3f);
                 LanguageLine Fool = ScriptableObject.CreateInstance<LanguageLine>();
-                Fool.text = $"yoo R A \"FOOL\"";
+                Fool.text = $"yoo R A \"FOOL!!\"";
                 GenericMessage.ShowMessage(Fool);
             }
         }
