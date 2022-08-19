@@ -56,9 +56,17 @@ namespace TunicRandomizer {
                     }
                 }
                 if (ItemCount >= 150) {
-                    Inventory.GetItemByName("Hyperdash").Quantity = 1;
-                    Inventory.GetItemByName("Wand").Quantity = 1;
-                    TunicRandomizer.Logger.LogInfo("Granted Hyperdash and Grapple via failsafe option!");
+                    if (Inventory.GetItemByName("Hyperdash").Quantity == 0 || Inventory.GetItemByName("Wand").Quantity == 0) {
+                        Inventory.GetItemByName("Hyperdash").Quantity = 1;
+                        Inventory.GetItemByName("Wand").Quantity = 1;
+                        TunicRandomizer.Logger.LogInfo("Granted Hyperdash and Grapple via failsafe option!");
+                        LanguageLine FailsafeText = ScriptableObject.CreateInstance<LanguageLine>();
+                        FailsafeText.text = "\"The Heir is giving you a \"\n\"second chance...\"";
+                        NPCDialogue.DisplayDialogue(FailsafeText, true);
+                        ItemPresentation.PresentItem(Inventory.GetItemByName("Hyperdash"));
+                    }
+                } else {
+                    GenericMessage.ShowMessage("\"Not enough items...\"");
                 }
             }
         }

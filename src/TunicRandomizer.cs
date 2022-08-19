@@ -1,16 +1,8 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
-using System.Reflection;
+﻿using System.Reflection;
 using BepInEx;
 using BepInEx.IL2CPP;
 using BepInEx.Logging;
-using UnityEngine.UI;
-using UnhollowerRuntimeLib;
 using HarmonyLib;
-using FMODUnity;
-using UnhollowerBaseLib;
-using Mono;
 
 namespace TunicRandomizer {
     [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.0.1")]

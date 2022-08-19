@@ -7,10 +7,7 @@ namespace TunicRandomizer {
         public static List<string> FairiesToShow = new List<string>();
         public static List<Fairy> FairiesToRevert = new List<Fairy>();
         public static void Show_PagePatches(PageDisplay __instance) {
-            PagesToShow.Clear();
-            PagesToRevert.Clear();
-            FairiesToShow.Clear();
-            FairiesToRevert.Clear();
+            ClearLists();
             TunicRandomizer.Logger.LogInfo("Showed the manual");
             for (int i = 0; i < 28; i++) {
                 if (SaveFile.GetInt("randomizer obtained page " + i) == 1) {
@@ -52,6 +49,10 @@ namespace TunicRandomizer {
             }
 
             SaveFile.SaveToDisk();
+            ClearLists();
+        }
+
+        private static void ClearLists() {
             PagesToShow.Clear();
             PagesToRevert.Clear();
             FairiesToShow.Clear();
