@@ -74,9 +74,11 @@ namespace TunicRandomizer{
             string RewardId = __instance.chestID == 0 ? ScenePatches.SceneName + "-" + __instance.transform.position.ToString() + " [" + ScenePatches.SceneName + "]" : __instance.chestID + " [" + ScenePatches.SceneName + "]";
             Reward Reward = ItemList[RewardId].Reward;
             if (Reward.Type == "INVENTORY") {
-                SaveFile.SetInt("randomizer picked up " + RewardId, 1);
-                ItemsPickedUp[RewardId] = true;
-                TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
+                if (!ItemsPickedUp[RewardId]) {
+                    SaveFile.SetInt("randomizer picked up " + RewardId, 1);
+                    ItemsPickedUp[RewardId] = true;
+                    TunicRandomizer.Logger.LogInfo("Picked up item " + RewardId);
+                }
                 __result = Inventory.GetItemByName(Reward.Name);
             }
             return false;
