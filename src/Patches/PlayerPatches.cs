@@ -72,7 +72,7 @@ namespace TunicRandomizer {
         }
 
         public static void Start_PlayerPatches(PlayerCharacter __instance) {
-            
+
             int seed = SaveFile.GetInt("seed");
 
             if (seed == 0) {

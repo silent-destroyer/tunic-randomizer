@@ -25,6 +25,7 @@ namespace TunicRandomizer {
                     if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
                         RandomFairiesFound.Add(Key);
                     }
+                    SaveFile.SetInt(ItemPatches.FairyLookup[Key].Flag, 0);
                 }
                 List<string> FairyNames = new List<string>(ItemPatches.FairyLookup.Keys);
                 for (int i = 0; i < Math.Min(19, RandomFairiesFound.Count); i++) {
@@ -34,22 +35,6 @@ namespace TunicRandomizer {
                     }
                     StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[FairyNames[i]].Flag).BoolValue = true;
                 }
-                /*                List<string> RandomFairiesFound = new List<string>();
-                                List<string> RealFairyChestsOpened = new List<string>();
-                                foreach (string Key in ItemPatches.FairyLookup.Keys) {
-                                    if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
-                                        RandomFairiesFound.Add(Key);
-                                    }
-                                    if (SaveFile.GetInt(ItemPatches.FairyLookup[Key].Flag) == 1) {
-                                        RealFairyChestsOpened.Add(ItemPatches.FairyLookup[Key].Flag);
-                                    }
-                                }
-                                if (RandomFairiesFound.Count >= 10) {
-                                    StateVariable.GetStateVariableByName("SV_Fairy_00_Enough Fairies Found").BoolValue = true;
-                                }
-                                if (RandomFairiesFound.Count == 20) {
-                                    StateVariable.GetStateVariableByName("SV_Fairy_00_All Fairies Found").BoolValue = true;
-                                }*/
             } else {
                 List<string> VanillaFairyChestsOpened = new List<string>();
                 List<string> FairyNames = new List<string>(ItemPatches.FairyLookup.Keys);

@@ -56,13 +56,16 @@ namespace TunicRandomizer {
             MethodInfo playerStartPatch = AccessTools.Method(typeof(PlayerPatches), "Start_PlayerPatches");
             harmony.Patch(playerStartOriginal, null, new HarmonyMethod(playerStartPatch));
 
+            MethodInfo showPageOriginal = AccessTools.Method(typeof(PageDisplay), "ShowPage");
+            MethodInfo showPagePatched = AccessTools.Method(typeof(PagePatches), "Show_PagePatches");
+            harmony.Patch(showPageOriginal, new HarmonyMethod(showPagePatched));
+
             MethodInfo showManualOriginal = AccessTools.Method(typeof(PageDisplay), "Show");
-            MethodInfo showManualPatched = AccessTools.Method(typeof(PagePatches), "Show_PagePatches");
-            harmony.Patch(showManualOriginal, null, new HarmonyMethod(showManualPatched));
+            harmony.Patch(showManualOriginal, new HarmonyMethod(showPagePatched));
 
             MethodInfo closeManualOriginal = AccessTools.Method(typeof(PageDisplay), "close");
             MethodInfo closeManualPatched = AccessTools.Method(typeof(PagePatches), "Close_PagePatches");
-            harmony.Patch(closeManualOriginal, null, new HarmonyMethod(closeManualPatched));
+            harmony.Patch(closeManualOriginal, new HarmonyMethod(closeManualPatched));
 
             MethodInfo originalPickupItem = AccessTools.Method(typeof(ItemPickup), "onGetIt");
             MethodInfo patchedPickupItem = AccessTools.Method(typeof(ItemPatches), "onGetIt_ItemPickupPatch");
