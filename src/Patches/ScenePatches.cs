@@ -20,26 +20,30 @@ namespace TunicRandomizer {
             Scarf = PlayerPalette.ChangeColourByDelta(4, rnd.Next(1, 11));
 
             if (SceneName == "Waterfall") {
-                List<string> RandomFairiesFound = new List<string>();
+                List<string> RandomObtainedFairies = new List<string>();
                 foreach (string Key in ItemPatches.FairyLookup.Keys) {
+                    StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer obtained fairy " + Key) == 1 ? true : false;
                     if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
-                        RandomFairiesFound.Add(Key);
+                        RandomObtainedFairies.Add(Key);
                     }
-                    SaveFile.SetInt(ItemPatches.FairyLookup[Key].Flag, 0);
                 }
-                List<string> FairyNames = new List<string>(ItemPatches.FairyLookup.Keys);
-                for (int i = 0; i < Math.Min(19, RandomFairiesFound.Count); i++) {
+                
+                StateVariable.GetStateVariableByName("SV_Fairy_5_Waterfall_Opened").BoolValue = SaveFile.GetInt("randomizer opened fairy chest Waterfall-(-47.0, 45.0, 10.0)") == 1 ? true : false;
+                
+                StateVariable.GetStateVariableByName("SV_Fairy_00_Enough Fairies Found").BoolValue = RandomObtainedFairies.Count >= 10 ? true : false;
+               
+                StateVariable.GetStateVariableByName("SV_Fairy_00_All Fairies Found").BoolValue = RandomObtainedFairies.Count == 20 ? true : false;
 
-                    if (i == 4) {
-                        continue;
-                    }
-                    StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[FairyNames[i]].Flag).BoolValue = true;
+            } else if (SceneName == "Spirit Arena") {
+                for (int i = 0; i < 28; i++) {
+                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
             } else {
-                List<string> VanillaFairyChestsOpened = new List<string>();
-                List<string> FairyNames = new List<string>(ItemPatches.FairyLookup.Keys);
                 foreach (string Key in ItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1 ? true : false;
+                }
+                for (int i = 0; i < 28; i++) {
+                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
                 }
             }
         }

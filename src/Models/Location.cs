@@ -19,29 +19,26 @@ namespace TunicRandomizer {
             get;
             set;
         }
-        public List<Restrictions> LocationRestrictions {
+        public List<string> RequiredItems {
             get;
             set;
-        }
-
-        // CHEST 1006 requires ice dagger and fire rod
-        public enum Restrictions {
-            GRAPPLE,
-            HYPERDASH,
-            LANTERN
         }
 
         public Location() { }
 
         public Location(string locationId) {
             LocationId = locationId;
-            LocationRestrictions = new List<Restrictions>();
         }
 
-        public Location(string locationId, Restrictions locationRestrictions) {
+        public Location(string locationId, string sceneName) { 
             LocationId = locationId;
-            LocationRestrictions = new List<Restrictions>();
-            LocationRestrictions.AddItem(locationRestrictions);
+            SceneName = sceneName;
+        }
+
+        public Location(string locationId, string sceneName, int sceneId) {
+            LocationId = locationId;
+            SceneName = sceneName;
+            SceneId = sceneId;
         }
 
         public Location(string locationId, string sceneName, int sceneId, string position) {
@@ -49,15 +46,14 @@ namespace TunicRandomizer {
             SceneName = sceneName;
             SceneId = sceneId;
             Position = position;
-            LocationRestrictions = new List<Restrictions>();
         }
-
-        public Location(string locationId, string sceneName, int sceneId, string position, Restrictions locationRestrictions) : this(locationId) {
+        
+        public Location(string locationId, string sceneName, int sceneId, string position, List<string> requiredItems) {
+            LocationId = locationId;
             SceneName = sceneName;
             SceneId = sceneId;
             Position = position;
-            LocationRestrictions = new List<Restrictions>();
-            LocationRestrictions.AddItem(locationRestrictions);
+            RequiredItems = requiredItems;
         }
     }
 }

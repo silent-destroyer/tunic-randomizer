@@ -15,9 +15,6 @@ namespace TunicRandomizer {
         public static List<ItemData> AllItemData = new List<ItemData>();
 
         public static string SaveName = null;
-        public static void Text_LanguagePatch(LanguageLine script, bool pauseTime) {
-
-        }
 
         public static void Update_PlayerPatches(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Semicolon);
@@ -36,18 +33,27 @@ namespace TunicRandomizer {
                 GenericMessage.ShowMessage("\"Seed: " + SaveFile.GetInt("seed") + "\"");
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)) { 
-                string Palette = "\"Color Palette \"\n\"Fur Color: " + ScenePatches.Fur + "\"\n\"Tunic Color: " + ScenePatches.Tunic + "\"\n\"Scarf Color: " + ScenePatches.Scarf + "\"\n\"Paws/Nose Color: " + ScenePatches.Details + "\"\n\"Hair Color: " + ScenePatches.Puff + "\"";
+                string Palette = "\"Color Palette\"\n\"-----------------\"\n\"" + "(0) Fur:".PadRight(17) + SaveFile.GetInt("customFoxPalette 0").ToString().PadLeft(2) + "\"\n\"" + "(1) Hair:".PadRight(17) + SaveFile.GetInt("customFoxPalette 1").ToString().PadLeft(2) + "\"\n\"" + "(2) Paws/Nose:".PadRight(17) + SaveFile.GetInt("customFoxPalette 2").ToString().PadLeft(2) + "\"\n\"" + "(3) Tunic:".PadRight(17) + SaveFile.GetInt("customFoxPalette 3").ToString().PadLeft(2) + "\"\n\"" + "(4) Scarf:".PadRight(17) + SaveFile.GetInt("customFoxPalette 4").ToString().PadLeft(2) + "\"";
                 GenericMessage.ShowMessage(Palette);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4)) {
-                int ItemCount = 0;
+                int ObtainedItemCount = 0;
+                int ObtainedItemCountInCurrentScene = 0;
+                int TotalItemCountInCurrentScene = 0;
                 foreach (string Key in ItemPatches.ItemsPickedUp.Keys) {
                     if (ItemPatches.ItemsPickedUp[Key]) {
-                        ItemCount++;
+                        ObtainedItemCount++;
+                    }
+                    if (ItemPatches.ItemList[Key].Location.SceneName == ScenePatches.SceneName) {
+                        TotalItemCountInCurrentScene++;
+                        if (ItemPatches.ItemsPickedUp[Key]) {
+                            ObtainedItemCountInCurrentScene++;
+                        }
                     }
                 }
-                GenericMessage.ShowMessage("\"Items Checked: " + ItemCount + "/" + (ItemPatches.ItemList.Count-1) + "\"");
+                GenericMessage.ShowMessage("\"Items Found\"\n\"-----------------\"\n\"In This Area: " + string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(7) + "\"\n\"In All Areas: " + string.Format("{0}/{1}", ObtainedItemCount, (ItemPatches.ItemList.Count - 1)).PadLeft(7) + "\"");
             }
+
             if (Input.GetKeyDown(KeyCode.Alpha9)) {
                 int ItemCount = 0;
                 foreach (string Key in ItemPatches.ItemsPickedUp.Keys) {
@@ -72,7 +78,7 @@ namespace TunicRandomizer {
         }
 
         public static void Start_PlayerPatches(PlayerCharacter __instance) {
-
+            
             int seed = SaveFile.GetInt("seed");
 
             if (seed == 0) {
@@ -96,28 +102,9 @@ namespace TunicRandomizer {
                     InitialRewards.Add(item.Reward);
                     InitialLocations.Add(item.Location);
                 }
-                Shuffle(InitialLocations);
-                Shuffle(InitialRewards);
 
-                // Basic logic for now, tries to prevent certain items from being randomized to places they shouldn't be
-                Location Hyperdash = InitialLocations[FindIndexByName(InitialRewards, "Hyperdash")];
-                Location Grapple = InitialLocations[FindIndexByName(InitialRewards, "Wand")];
-                Location Lantern = InitialLocations[FindIndexByName(InitialRewards, "Lantern")];
-                Location Techbow = InitialLocations[FindIndexByName(InitialRewards, "Techbow")];
-                Location Stundagger = InitialLocations[FindIndexByName(InitialRewards, "Stundagger")];
-                while (Hyperdash.LocationRestrictions.Contains(Location.Restrictions.HYPERDASH) || Hyperdash.LocationRestrictions.Contains(Location.Restrictions.GRAPPLE)
-                    || Grapple.LocationRestrictions.Contains(Location.Restrictions.HYPERDASH) || Grapple.LocationRestrictions.Contains(Location.Restrictions.GRAPPLE)
-                    || Lantern.LocationRestrictions.Count != 0 || Techbow.LocationId == "1006" || Stundagger.LocationId == "1006") {
-                    Shuffle(InitialLocations);
-                    Shuffle(InitialRewards);
-
-                    Hyperdash = InitialLocations[FindIndexByName(InitialRewards, "Hyperdash")];
-                    Grapple = InitialLocations[FindIndexByName(InitialRewards, "Wand")];
-                    Lantern = InitialLocations[FindIndexByName(InitialRewards, "Lantern")];
-                    Techbow = InitialLocations[FindIndexByName(InitialRewards, "Techbow")];
-                    Stundagger = InitialLocations[FindIndexByName(InitialRewards, "Stundagger")];
-                }
-
+                // Randomize the rewards and locations
+                Shuffle(InitialRewards, InitialLocations);
 
                 for (int i = 0; i < InitialRewards.Count; i++) {
                     string DictionaryId = InitialLocations[i].LocationId + " [" + InitialLocations[i].SceneName + "]";
@@ -141,11 +128,12 @@ namespace TunicRandomizer {
 
                 String SpoilerLogPath = Application.dataPath + "/SpoilerLog.json"; 
                 if (!File.Exists(SpoilerLogPath)) {
-                    File.WriteAllText(SpoilerLogPath, "[Seed: " + seed + "]\n" + JSONWriter.ToJson(ItemPatches.ItemList));
+                    File.WriteAllText(SpoilerLogPath, "[{\"Seed\": " + seed + "},\n" + JSONWriter.ToJson(ItemPatches.ItemList) + "]");
                 } else {
                     File.Delete(SpoilerLogPath);
-                    File.WriteAllText(SpoilerLogPath, "[Seed: " + seed + "]\n" + JSONWriter.ToJson(ItemPatches.ItemList));
+                    File.WriteAllText(SpoilerLogPath, "[{\"Seed\": " + seed + "},\n" + JSONWriter.ToJson(ItemPatches.ItemList) + "]");
                 }
+                TunicRandomizer.Logger.LogInfo("Wrote Spoiler Log to " + SpoilerLogPath);
             }
         }
 
@@ -156,6 +144,26 @@ namespace TunicRandomizer {
                 }
             }
             return -1;
+        }
+
+        private static void Shuffle(List<Reward> Rewards, List<Location> Locations) {
+            int n = Rewards.Count;
+            int r;
+            int l;
+            while (n > 1) {
+                n--;
+                do {
+                    r = TunicRandomizer.Randomizer.Next(n + 1);
+                    l = TunicRandomizer.Randomizer.Next(n + 1);
+                } while (Locations[l].RequiredItems.Contains(Rewards[r].Name));
+                Reward Reward = Rewards[r];
+                Rewards[r] = Rewards[n];
+                Rewards[n] = Reward;
+
+                Location Location = Locations[l];
+                Locations[l] = Locations[n];
+                Locations[n] = Location;
+            }
         }
 
         private static void Shuffle<T>(List<T> list) {

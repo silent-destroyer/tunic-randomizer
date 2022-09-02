@@ -5,14 +5,8 @@ namespace TunicRandomizer {
         public static void Show_PagePatches(PageDisplay __instance) {
 
             TunicRandomizer.Logger.LogInfo("Showed the manual");
-            bool[] RandomPagesObtained = new bool[28];
             for (int i = 0; i < 28; i++) {
-                if (SaveFile.GetInt("randomizer obtained page " + i) == 1) {
-                    RandomPagesObtained[i] = true;
-                }
-            }
-            for (int i = 0; i < RandomPagesObtained.Length; i++) {
-                SaveFile.SetInt("unlocked page " + i, RandomPagesObtained[i] ? 1 : 0);
+                SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
             }
 
             bool[] RandomFairiesObtained = new bool[20];
@@ -33,15 +27,15 @@ namespace TunicRandomizer {
 
         public static void Close_PagePatches(PageDisplay __instance) {
             TunicRandomizer.Logger.LogInfo("Closed the manual");
-            bool[] PickedUpPages = new bool[28];
-            for (int i = 0; i < PickedUpPages.Length; i++) {
-                if (SaveFile.GetInt("randomizer picked up page " + i) == 1) { 
-                    PickedUpPages[i] = true;
+            for (int i = 0; i < 28; i++) {
+                // If manual is opened in the heir arena, set pages accordingly so true ending still works based on randomized pages
+                if (ScenePatches.SceneName == "Spirit Arena") {
+                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
+                } else {
+                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
                 }
             }
-            for (int i = 0; i < PickedUpPages.Length; i++) {
-                SaveFile.SetInt("unlocked page " + i, PickedUpPages[i] ? 1 : 0);
-            }
+
 
             bool[] OpenedFairyChests = new bool[28];
             List<string> Fairies = new List<string>(ItemPatches.FairyLookup.Keys);
@@ -55,8 +49,9 @@ namespace TunicRandomizer {
             for (int i = 0; i < 20; i++) {
                 SaveFile.SetInt(ItemPatches.FairyLookup[Fairies[i]].Flag, OpenedFairyChests[i] ? 1 : 0);
             }
-
+            
             SaveFile.SaveToDisk();
         }
+
     }
 }
