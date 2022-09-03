@@ -49,9 +49,6 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "close"), new HarmonyMethod(AccessTools.Method(typeof(PagePatches), "Close_PagePatches")));
 
-
-
-
         }
     }
 }

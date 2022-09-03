@@ -53,7 +53,6 @@ namespace TunicRandomizer {
                 }
                 GenericMessage.ShowMessage("\"Items Found\"\n\"-----------------\"\n\"In This Area: " + string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(7) + "\"\n\"In All Areas: " + string.Format("{0}/{1}", ObtainedItemCount, (ItemPatches.ItemList.Count - 1)).PadLeft(7) + "\"");
             }
-
             if (Input.GetKeyDown(KeyCode.Alpha9)) {
                 int ItemCount = 0;
                 foreach (string Key in ItemPatches.ItemsPickedUp.Keys) {
@@ -126,7 +125,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                String SpoilerLogPath = Application.dataPath + "/SpoilerLog.json"; 
+                string SpoilerLogPath = Application.dataPath + "/SpoilerLog.json"; 
                 if (!File.Exists(SpoilerLogPath)) {
                     File.WriteAllText(SpoilerLogPath, "[{\"Seed\": " + seed + "},\n" + JSONWriter.ToJson(ItemPatches.ItemList) + "]");
                 } else {
@@ -135,15 +134,6 @@ namespace TunicRandomizer {
                 }
                 TunicRandomizer.Logger.LogInfo("Wrote Spoiler Log to " + SpoilerLogPath);
             }
-        }
-
-        private static int FindIndexByName(List<Reward> Items, string Name) {
-            for (int i = 0; i < Items.Count; i++) {
-                if (Items[i].Name == Name) {
-                    return i;
-                }
-            }
-            return -1;
         }
 
         private static void Shuffle(List<Reward> Rewards, List<Location> Locations) {
@@ -163,17 +153,6 @@ namespace TunicRandomizer {
                 Location Location = Locations[l];
                 Locations[l] = Locations[n];
                 Locations[n] = Location;
-            }
-        }
-
-        private static void Shuffle<T>(List<T> list) {
-            int n = list.Count;
-            while (n > 1) {
-                n--;
-                int k = TunicRandomizer.Randomizer.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
             }
         }
     }
