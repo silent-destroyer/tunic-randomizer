@@ -41,6 +41,7 @@ Created by SilentDestroyer and Glacia (Spaceglace)
     - Save files can typically be found at C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend\SAVES
   - Change the seed value on the line that looks like "seed|seed value" to your custom seed, then save the file.
   - Close and relaunch the game, then load the edited save file by pressing Continue or from the Load Game menu.
+- The randomizer is not intended to be played with pre-existing save files from the vanilla version of the game, and files made with the randomizer are not intended to be played in the vanilla version of the game (i.e. with the randomizer disabled), as it may prevent progress from being made in the game in either case.
   
 ## Credits
 - Tiny Json - zanders3 (https://github.com/zanders3/json)
