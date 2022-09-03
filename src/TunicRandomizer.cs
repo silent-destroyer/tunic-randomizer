@@ -5,7 +5,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 
 namespace TunicRandomizer {
-    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.1")]
+    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.2")]
     public class TunicRandomizer : BasePlugin {
         public static ManualLogSource Logger;
         public static System.Random Randomizer = null;
@@ -29,12 +29,13 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(ItemPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "onGetIt_ItemPickupPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_Patch")));
+            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_Patch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_PatchPostfix")));
 
-            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), null, new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_PatchPostfix")));
-
+            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_TrinketWellPatch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_TrinketWellPatchPostfix")));
+            
             // Scene Load Patch
             harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(ScenePatches), "OnSceneLoaded_SceneLoader_ScenePatches")));
+
             harmony.Patch(AccessTools.Method(typeof(FairyCollection), "getFairyCount"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "getFairyCount_Patch")));
 
             // Player Character Patches

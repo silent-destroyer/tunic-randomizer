@@ -153,6 +153,17 @@ namespace TunicRandomizer{
             }
         }
 
+        public static bool IInteractionReceiver_Interact_TrinketWellPatch(Item item, TrinketWell __instance) {
+            // Set the number of coins tossed for the well interact message
+            __instance.coinsTossedStateVar.IntValue = CoinsTossed;
+            return true;
+        }
+
+        public static void IInteractionReceiver_Interact_TrinketWellPatchPostfix(Item item, TrinketWell __instance) {
+
+            __instance.coinsTossedStateVar.IntValue = 0;
+        }
+
         public static bool getFairyCount_Patch(FairyCollection __instance, ref int __result) {
             int FairyCount = 0;
             foreach (string Key in FairyLookup.Keys) {
