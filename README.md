@@ -18,9 +18,10 @@ Created by SilentDestroyer and Glacia (Spaceglace)
 
 ## Installation
 - Must use the Windows Steam version of TUNIC
-- Go to https://builds.bepinex.dev/projects/bepinex_be and download the "BepInEx Unity (IL2CPP) for Windows (x64) games" build listed under the latest artifact
-  
-  ![image](https://user-images.githubusercontent.com/110704408/185545726-bd97af1b-65af-45c7-ac90-d97397e98c5e.png)
+- Go to https://builds.bepinex.dev/projects/bepinex_be and find Artifact #572 and download the "BepInEx Unity (IL2CPP) for Windows (x64) games" build. (The mod is currently NOT compatible with newer BepInEx builds so #572 is recommended. Here is a direct link for the correct download: https://builds.bepinex.dev/projects/bepinex_be/572/BepInEx_UnityIL2CPP_x64_9c2b17f_6.0.0-be.572.zip)
+
+  ![image](https://user-images.githubusercontent.com/110704408/188519149-d9476aa9-55f6-4f38-9ce9-93d137fa71af.png)
+
 - Extract the zip folder into your game's install directory (For example: C:\Program Files (x86)\Steam\steamapps\common\TUNIC)
 - Launch the game and close it. This will finalize the BepInEx installation.
 - Download the TunicRandomizer dll file and copy it into BepInEx/plugins under your game's install directory
