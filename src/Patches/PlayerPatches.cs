@@ -260,22 +260,22 @@ namespace TunicRandomizer {
             
             // Golden Path hints
             HintItem = FindRandomizedItemByName("Sword");
-            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>the Golden Path<#ffffff>...\"";
+            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>Path of the Hero<#ffffff>...\"";
             Hints.HintMessages.Add("East Forest Relic", HintMessage);
 
             List<string> HintItems = new List<string>() { "Techbow", "Stundagger" };
             string FirstItem = HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)];
             HintItem = FindRandomizedItemByName(FirstItem);
-            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>the Golden Path<#ffffff>...\""; ;
+            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>Path of the Hero<#ffffff>...\""; ;
             Hints.HintMessages.Add("Fortress Relic", HintMessage);
             HintItems.Remove(FirstItem);
             string SecondItem = HintItems[0];
             HintItem = FindRandomizedItemByName(SecondItem);
-            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>the Golden Path<#ffffff>...\""; ;
+            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn #E \"<#ffd700>Path of the Hero<#ffffff>...\""; ;
             Hints.HintMessages.Add("West Garden Relic", HintMessage);
 
             HintItem = FindRandomizedItemByName("Hyperdash");
-            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>the Golden Path<#ffffff>...\""; ;
+            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>Path of the Hero<#ffffff>...\""; ;
             Hints.HintMessages.Add("Temple Statue", HintMessage);
 
             // Questagon Hints
