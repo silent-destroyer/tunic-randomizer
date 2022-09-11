@@ -9,11 +9,13 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - Manual Pages
   - Fairies
   - Overworld items (Sword, Keys, etc.)
+  - Hero Relics
   - Rewards from tossing coins into wells
   - Ice traps (yoo R A FOOL!!)
-- Note: Hero Relics and Shop Items are currently not randomized.
+- Note: Shop Items are currently not randomized.
 - Randomized Fox colors upon every scene transition (!!).
 - Custom seed support
+- Hint System
 - Spoiler log
 
 ## Installation

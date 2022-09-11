@@ -5,7 +5,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 
 namespace TunicRandomizer {
-    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.2")]
+    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.3")]
     public class TunicRandomizer : BasePlugin {
         public static ManualLogSource Logger;
         public static System.Random Randomizer = null;
@@ -18,6 +18,8 @@ namespace TunicRandomizer {
 
             // Item Patches
             harmony.Patch(AccessTools.Method(typeof(Chest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_ChestPatch")));
+            
+            harmony.Patch(AccessTools.Method(typeof(Chest), "InterruptOpening"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "InterruptOpening_ChestPatch")));
 
             harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "moneySprayQuantityFromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "moneySprayQuantityFromDatabase_ChestPatch")));
 
@@ -29,10 +31,12 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(ItemPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "onGetIt_ItemPickupPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(HeroRelicPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "onGetIt_HeroRelicPickupPatch")));
+
             harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_Patch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_PatchPostfix")));
 
             harmony.Patch(AccessTools.Method(typeof(TrinketWell), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_TrinketWellPatch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_TrinketWellPatchPostfix")));
-            
+
             // Scene Load Patch
             harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(ScenePatches), "OnSceneLoaded_SceneLoader_ScenePatches")));
 
@@ -42,6 +46,10 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "Update_PlayerPatches")));
 
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "Start_PlayerPatches")));
+
+            harmony.Patch(AccessTools.Method(typeof(Foxgod), "OnFlinchlessHit"), new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "OnFlinchlessHit_Patches")));
+
+            harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "Interact_Patches")));
 
             // Page Patches
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "ShowPage"), new HarmonyMethod(AccessTools.Method(typeof(PagePatches), "Show_PagePatches")));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace TunicRandomizer {
     public class ScenePatches {
@@ -11,7 +12,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
-            Random rnd = new Random();
+            System.Random rnd = new System.Random();
             // Fur, Puff, Details, Tunic, Scarf
             Fur = PlayerPalette.ChangeColourByDelta(0, rnd.Next(1, 16));
             Puff = PlayerPalette.ChangeColourByDelta(1, rnd.Next(1, 12));
@@ -30,15 +31,18 @@ namespace TunicRandomizer {
                 
                 StateVariable.GetStateVariableByName("SV_Fairy_5_Waterfall_Opened").BoolValue = SaveFile.GetInt("randomizer opened fairy chest Waterfall-(-47.0, 45.0, 10.0)") == 1 ? true : false;
                 
-                StateVariable.GetStateVariableByName("SV_Fairy_00_Enough Fairies Found").BoolValue = RandomObtainedFairies.Count >= 10 ? true : false;
+                StateVariable.GetStateVariableByName("SV_Fairy_00_Enough Fairies Found").BoolValue = true;
                
-                StateVariable.GetStateVariableByName("SV_Fairy_00_All Fairies Found").BoolValue = RandomObtainedFairies.Count == 20 ? true : false;
+                StateVariable.GetStateVariableByName("SV_Fairy_00_All Fairies Found").BoolValue = true;
 
             } else if (SceneName == "Spirit Arena") {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-            } else {
+                PlayerPatches.ShownHeirAssistModePrompt = false;        
+                PlayerPatches.HeirAssistMode = false;
+                PlayerPatches.HeirAssistModeDamageValue = 0;
+    } else {
                 foreach (string Key in ItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1 ? true : false;
                 }
@@ -47,6 +51,5 @@ namespace TunicRandomizer {
                 }
             }
         }
-
     }
 }

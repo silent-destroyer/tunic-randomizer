@@ -141,6 +141,8 @@
     <Compile Include="src\Json\JSONParser.cs" />
     <Compile Include="src\Json\JSONWriter.cs" />
     <Compile Include="src\Models\Fairy.cs" />
+    <Compile Include="src\Models\HeroRelic.cs" />
+    <Compile Include="src\Models\Hints.cs" />
     <Compile Include="src\Models\ItemData.cs" />
     <Compile Include="src\Models\Location.cs" />
     <Compile Include="src\Models\Reward.cs" />
