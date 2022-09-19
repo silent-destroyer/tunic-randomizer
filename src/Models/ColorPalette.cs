@@ -6,37 +6,6 @@ using System.Threading.Tasks;
 
 namespace TunicRandomizer {
     public class ColorPalette {
-        /*
-        {0, ""},
-        {1, ""},
-        { 2, ""},
-        { 3, ""},
-        { 4, ""},
-        { 5, ""},
-        { 6, ""},
-        { 7, ""},
-        { 8, ""},
-        { 9, ""},
-        { 10, ""},
-        { 11, ""},
-        { 12, ""},
-        { 13, ""},
-        { 14, ""},
-        { 15, ""},
-        { 16, ""},
-
-        [Info   :Tunic Randomizer] width: 16 Fur
-        [Info   :Tunic Randomizer] width: 12 Puff
-        [Info   :Tunic Randomizer] width: 12 Details
-        [Info   :Tunic Randomizer] width: 16
-        [Info   :Tunic Randomizer] width: 11
-
-            Fur = PlayerPalette.ChangeColourByDelta(0, rnd.Next(1, 16));
-            Puff = PlayerPalette.ChangeColourByDelta(1, rnd.Next(1, 12));
-            Details = PlayerPalette.ChangeColourByDelta(2, rnd.Next(1, 12));
-            Tunic = PlayerPalette.ChangeColourByDelta(3, rnd.Next(1, 16));
-            Scarf = PlayerPalette.ChangeColourByDelta(4, rnd.Next(1, 11));
-        */
 
         public static Dictionary<int, ColorPalette> Fur = new Dictionary<int, ColorPalette>() {
             {0, new ColorPalette("<#EE9464>", "Orange")},

@@ -107,15 +107,15 @@ namespace TunicRandomizer{
         public static bool Chest_shouldShowAsOpen_GetterPatch(Chest __instance, ref bool __result) {
             if (__instance.chestID == 19) {
                 if (__instance.transform.position.ToString() == "(8.8, 0.0, 9.9)") {
-                    __result = SaveFile.GetInt("randomizer picked up 19 [Sword Cave]") == 1 ? true : false;
+                    __result = SaveFile.GetInt("randomizer picked up 19 [Sword Cave]") == 1;
                 } else {
 
-                    __result = SaveFile.GetInt("randomizer picked up 19 [Forest Belltower]") == 1 ? true : false;
+                    __result = SaveFile.GetInt("randomizer picked up 19 [Forest Belltower]") == 1;
                 }
                 return false;
             }
             if (FairyLookup.ContainsKey(__instance.gameObject.scene.name + "-" + __instance.transform.position.ToString())) {
-                __result = SaveFile.GetInt(FairyLookup[__instance.gameObject.scene.name + "-" + __instance.transform.position.ToString()].Flag) == 1 ? true : false;
+                __result = SaveFile.GetInt(FairyLookup[__instance.gameObject.scene.name + "-" + __instance.transform.position.ToString()].Flag) == 1;
                 return false;
             }
 
