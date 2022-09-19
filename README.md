@@ -4,19 +4,20 @@ An extensive randomizer mod for the tiny fox game TUNIC.
 Created by SilentDestroyer and Glacia (Spaceglace)
 
 ## Features
-- Randomized items, including:
+- Randomizes every item in the game, including:
   - All Chests
-  - Manual Pages
+  - Instruction Manual Pages
   - Fairies
-  - Overworld items (Sword, Keys, etc.)
+  - Item Pickups (Sword, Keys, etc.)
   - Hero Relics
-  - Rewards from tossing coins into wells
-  - Ice traps (yoo R A FOOL!!)
-- Note: Shop Items are currently not randomized.
-- Randomized Fox colors upon every scene transition (!!).
+  - Unique items in the shop (Flasks and Coins)
+  - Trinket card slots from tossing coins into wells
+  - A number of ice traps replacing less valuable rewards
 - Custom seed support
+- Randomized Fox colors upon every scene transition (!!)
 - Hint System
 - Spoiler log
+- Randomizer Settings Menu
 
 ## Installation
 - Must use the Windows Steam version of TUNIC
@@ -26,17 +27,16 @@ Created by SilentDestroyer and Glacia (Spaceglace)
 
 - Extract the zip folder into your game's install directory (For example: C:\Program Files (x86)\Steam\steamapps\common\TUNIC)
 - Launch the game and close it. This will finalize the BepInEx installation.
-- Download the TunicRandomizer dll file and copy it into BepInEx/plugins under your game's install directory
+- Download the TunicRandomizer.dll file and copy it into BepInEx/plugins under your game's install directory
 - Launch the game again and start a new game!
 
 ## Tips
 - The following keyboard shortcuts are built-in to the mod:
-  - Press '1' to switch between day/night time.
+  - Press '1' to switch between day/night time. (Note: This is locked until after the first time you fight The Heir)
   - Press '2' to display the current seed.
   - Press '3' to display the fox's color palette (important).
   - Press '4' to view how many items have been checked overall and in the current area.
-- The randomizer has logic to prevent most softlocks, but is not guaranteed to be perfect. If you have checked over 150 of the randomized items, you can press '9' to activate a failsafe which will give you Hyperdash and Grapple, allowing you to access most remaining checks in the game.
-- Upon selecting New Game or Continue, a SpoilerLog.json file will be created in the Tunic_Data folder where your game is installed.
+- Upon selecting New Game or Continue, a spoiler log file named "RandomizerSpoiler.log" will be created in the AppData folder for the game (same folder that the save file folder is located, typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend)
 - To use a custom seed:
   - Start a New Game from the main menu.
   - Save and quit after the intro cutscene plays.

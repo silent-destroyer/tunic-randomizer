@@ -104,6 +104,10 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -140,16 +144,20 @@
   <ItemGroup>
     <Compile Include="src\Json\JSONParser.cs" />
     <Compile Include="src\Json\JSONWriter.cs" />
+    <Compile Include="src\Models\ColorPalette.cs" />
     <Compile Include="src\Models\Fairy.cs" />
     <Compile Include="src\Models\HeroRelic.cs" />
     <Compile Include="src\Models\Hints.cs" />
     <Compile Include="src\Models\ItemData.cs" />
     <Compile Include="src\Models\Location.cs" />
+    <Compile Include="src\Models\RandomizerSettings.cs" />
     <Compile Include="src\Models\Reward.cs" />
-    <Compile Include="src\Patches\ItemPatches.cs" />
-    <Compile Include="src\Patches\PagePatches.cs" />
-    <Compile Include="src\Patches\PlayerPatches.cs" />
-    <Compile Include="src\Patches\ScenePatches.cs" />
+    <Compile Include="src\Patches\RandomItemPatches.cs" />
+    <Compile Include="src\Patches\PageDisplayPatches.cs" />
+    <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
+    <Compile Include="src\Patches\OptionsGUIPatches.cs" />
+    <Compile Include="src\Patches\SceneLoaderPatches.cs" />
+    <Compile Include="src\Patches\TitleVersion.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
   </ItemGroup>
   <ItemGroup>

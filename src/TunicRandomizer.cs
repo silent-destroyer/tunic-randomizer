@@ -1,62 +1,95 @@
 ﻿using System.Reflection;
+using System.IO;
 using BepInEx;
 using BepInEx.IL2CPP;
 using BepInEx.Logging;
+using Il2CppSystem;
 using HarmonyLib;
+using UnhollowerRuntimeLib;
+using UnityEngine;
+using TinyJson;
 
 namespace TunicRandomizer {
-    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.3")]
+    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.4")]
     public class TunicRandomizer : BasePlugin {
+        
         public static ManualLogSource Logger;
         public static System.Random Randomizer = null;
+        public static RandomizerSettings Settings;
+        public static string SettingsPath = Application.persistentDataPath + "/RandomizerSettings.json";
 
         public override void Load() {
             Log.LogInfo("Tunic Randomizer is loaded!");
             Logger = Log;
-
             Harmony harmony = new Harmony("glacia-silent.tunicrandomizer");
 
-            // Item Patches
-            harmony.Patch(AccessTools.Method(typeof(Chest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_ChestPatch")));
-            
-            harmony.Patch(AccessTools.Method(typeof(Chest), "InterruptOpening"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "InterruptOpening_ChestPatch")));
+            ClassInjector.RegisterTypeInIl2Cpp<TitleVersion>();
+            GameObject TitleVersion = new GameObject("TitleVersion", new Type[] { Il2CppType.Of<TitleVersion>() });
+            TitleVersion.hideFlags = HideFlags.HideAndDontSave;
+            UnityEngine.Object.DontDestroyOnLoad(TitleVersion);
 
-            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "moneySprayQuantityFromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "moneySprayQuantityFromDatabase_ChestPatch")));
+            if (!File.Exists(SettingsPath)) {
+                Settings = new RandomizerSettings();
+                File.WriteAllText(SettingsPath, JSONWriter.ToJson(Settings));
+            } else {
+                Settings = JSONParser.FromJson<RandomizerSettings>(File.ReadAllText(SettingsPath));
+                Log.LogInfo("Loaded settings from file: " + JSONWriter.ToJson(Settings));
+            }
 
-            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "itemContentsfromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "itemContentsfromDatabase_ChestPatch")));
+            // Random Item Patches
+            harmony.Patch(AccessTools.Method(typeof(Chest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "Chest_IInteractionReceiver_Interact_PrefixPatch")));
 
-            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "itemQuantityFromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "itemQuantityFromDatabase_ChestPatch")));
+            harmony.Patch(AccessTools.Method(typeof(Chest), "InterruptOpening"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "Chest_InterruptOpening_PrefixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(PagePickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "onGetIt_PagePickupPatch")));
+            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "moneySprayQuantityFromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "Chest_moneySprayQuantityFromDatabase_GetterPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(ItemPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "onGetIt_ItemPickupPatch")));
+            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "itemContentsfromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "Chest_itemContentsfromDatabase_GetterPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(HeroRelicPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "onGetIt_HeroRelicPickupPatch")));
+            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "itemQuantityFromDatabase"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "Chest_itemQuantityFromDatabase_GetterPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_Patch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "TossedInCoin_PatchPostfix")));
+            harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "shouldShowAsOpen"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "Chest_shouldShowAsOpen_GetterPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_TrinketWellPatch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "IInteractionReceiver_Interact_TrinketWellPatchPostfix")));
+            harmony.Patch(AccessTools.Method(typeof(PagePickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "PagePickup_onGetIt_PrefixPatch")));
 
-            // Scene Load Patch
-            harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(ScenePatches), "OnSceneLoaded_SceneLoader_ScenePatches")));
+            harmony.Patch(AccessTools.Method(typeof(ItemPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "ItemPickup_onGetIt_PrefixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(FairyCollection), "getFairyCount"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "getFairyCount_Patch")));
+            harmony.Patch(AccessTools.Method(typeof(HeroRelicPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "HeroRelicPickup_onGetIt_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_TossedInCoin_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_TossedInCoin_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_IInteractionReceiver_Interact_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_IInteractionReceiver_Interact_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(ShopItem), "buy"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "ShopItem_buy_PrefixPatch")));
+
+            // Scene Loader Patches
+            harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PostfixPatch")));
 
             // Player Character Patches
-            harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "Update_PlayerPatches")));
+            harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Update_PostfixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "Start_PlayerPatches")));
+            harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Start_PostfixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(Foxgod), "OnFlinchlessHit"), new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "OnFlinchlessHit_Patches")));
+            harmony.Patch(AccessTools.Method(typeof(Foxgod), "OnFlinchlessHit"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Foxgod_OnFlinchlessHit_PrefixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerPatches), "Interact_Patches")));
+            // Page Display Patches
+            harmony.Patch(AccessTools.Method(typeof(PageDisplay), "ShowPage"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Show_PostfixPatch")));
 
-            // Page Patches
-            harmony.Patch(AccessTools.Method(typeof(PageDisplay), "ShowPage"), new HarmonyMethod(AccessTools.Method(typeof(PagePatches), "Show_PagePatches")));
+            harmony.Patch(AccessTools.Method(typeof(PageDisplay), "Show"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Show_PostfixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(PageDisplay), "Show"), new HarmonyMethod(AccessTools.Method(typeof(PagePatches), "Show_PagePatches")));
+            harmony.Patch(AccessTools.Method(typeof(PageDisplay), "close"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Close_PostfixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(PageDisplay), "close"), new HarmonyMethod(AccessTools.Method(typeof(PagePatches), "Close_PagePatches")));
+            // Miscellaneous Patches            
+            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "popPage"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_popPage_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_root"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_root_PostfixPatch")));
+            
+            harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "InteractionTrigger_Interact_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(FairyCollection), "getFairyCount"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "FairyCollection_getFairyCount_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(InventoryDisplay), "Update"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "InventoryDisplay_Update_PrefixPatch")));
+            
+            harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), null, new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
 
         }
     }
