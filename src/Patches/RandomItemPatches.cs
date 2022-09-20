@@ -188,25 +188,8 @@ namespace TunicRandomizer{
         }
 
         public static void TrinketWell_TossedInCoin_PostfixPatch(TrinketWell __instance) {
-            string RewardId;
-
-            if (CoinsTossed == 3) {
-                RewardId = "Well Reward (3 Coins) []";
-                Reward Reward = ItemList[RewardId].Reward;
-                GiveReward(Reward);
-                SetCollectedReward(RewardId);
-            } else if (CoinsTossed == 6) {
-                RewardId = "Well Reward (6 Coins) []";
-                Reward Reward = ItemList[RewardId].Reward;
-                GiveReward(Reward);
-                SetCollectedReward(RewardId);
-            } else if (CoinsTossed == 10) {
-                RewardId = "Well Reward (10 Coins) []";
-                Reward Reward = ItemList[RewardId].Reward;
-                GiveReward(Reward);
-                SetCollectedReward(RewardId);
-            } else if (CoinsTossed == 15) {
-                RewardId = "Well Reward (15 Coins) []";
+            string RewardId = "Well Reward (" + CoinsTossed + " Coins) [Trinket Well]";
+            if (ItemList.ContainsKey(RewardId)) {
                 Reward Reward = ItemList[RewardId].Reward;
                 GiveReward(Reward);
                 SetCollectedReward(RewardId);
