@@ -115,7 +115,7 @@ namespace TunicRandomizer{
                 return false;
             }
             if (FairyLookup.ContainsKey(__instance.gameObject.scene.name + "-" + __instance.transform.position.ToString())) {
-                __result = SaveFile.GetInt(FairyLookup[__instance.gameObject.scene.name + "-" + __instance.transform.position.ToString()].Flag) == 1;
+                __result = SaveFile.GetInt("randomizer opened fairy chest " +__instance.gameObject.scene.name + "-" + __instance.transform.position.ToString()) == 1;
                 return false;
             }
 
@@ -233,6 +233,7 @@ namespace TunicRandomizer{
                 LanguageLine FairyMessage = ScriptableObject.CreateInstance<LanguageLine>();
                 FairyMessage.text = $"yoo fownd #uh fawlOi^ \"FAIRY: \"\n" + FairyLookup[Reward.Name].Translation;
                 NPCDialogue.DisplayDialogue(FairyMessage, true);
+                FairiesCollected++;
             } else if (Reward.Type == "PAGE") {
                 SaveFile.SetInt("randomizer obtained page " + Reward.Name, 1);
                 PageDisplay.ShowPage(int.Parse(Reward.Name));
