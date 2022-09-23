@@ -21,7 +21,7 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "TitleScreen") {
                 GUI.color = new Color(1f, 147f / 255f, 0f, 1f);
                 GUI.skin.label.fontSize = 40;
-                GUI.Label(new Rect(10f, 10f, 700f, 100f), "Randomizer Mod Ver. 0.0.4");
+                GUI.Label(new Rect(10f, 10f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
             } 
         }
     }

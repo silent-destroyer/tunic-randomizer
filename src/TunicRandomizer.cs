@@ -10,7 +10,8 @@ using UnityEngine;
 using TinyJson;
 
 namespace TunicRandomizer {
-    [BepInPlugin("glacia-silent.tunicrandomizer", "Tunic Randomizer", "0.0.4")]
+
+    [BepInPlugin(PluginInfo.GUID, PluginInfo.NAME, PluginInfo.VERSION)]
     public class TunicRandomizer : BasePlugin {
         
         public static ManualLogSource Logger;
@@ -19,9 +20,9 @@ namespace TunicRandomizer {
         public static string SettingsPath = Application.persistentDataPath + "/RandomizerSettings.json";
 
         public override void Load() {
-            Log.LogInfo("Tunic Randomizer is loaded!");
+            Log.LogInfo("Tunic Randomizer v" + PluginInfo.VERSION + " is loaded!");
             Logger = Log;
-            Harmony harmony = new Harmony("glacia-silent.tunicrandomizer");
+            Harmony harmony = new Harmony(PluginInfo.GUID);
 
             ClassInjector.RegisterTypeInIl2Cpp<TitleVersion>();
             GameObject TitleVersion = new GameObject("TitleVersion", new Type[] { Il2CppType.Of<TitleVersion>() });

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -24,6 +26,7 @@ namespace TunicRandomizer {
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
             System.Random rnd = new System.Random();
+            PlayerCharacterPatches.StungByBee = false;
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
                 Fur = PlayerPalette.ChangeColourByDelta(0, rnd.Next(1, 16));
@@ -52,9 +55,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-                PlayerCharacterPatches.ShownHeirAssistModePrompt = false;
-                PlayerCharacterPatches.HeirAssistMode = false;
-                PlayerCharacterPatches.HeirAssistModeDamageValue = 0;
+                PlayerCharacterPatches.HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
             } else if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", 0);
             } else if (SceneName == "Overworld Interiors") {

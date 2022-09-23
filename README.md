@@ -12,12 +12,17 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - Hero Relics
   - Unique items in the shop (Flasks and Coins)
   - Trinket card slots from tossing coins into wells
-  - A number of ice traps replacing less valuable rewards
+  - A (customizable) number of fool traps replacing less valuable rewards
 - Custom seed support
 - Randomized Fox colors upon every scene transition (!!)
 - Hint System
-- Spoiler log
-- Randomizer Settings Menu
+- Spoiler Log
+- Randomizer Settings Menu to Enable/Disable the Following:
+    - Hints
+    - Random Fox Colors
+    - In-Game Timer Overlay
+    - Easier Heir Fight
+    - Frequency of Fool Traps
 
 ## Installation
 - Must use the Windows Steam version of TUNIC
@@ -36,6 +41,7 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - Press '2' to display the current seed.
   - Press '3' to display the fox's color palette (important).
   - Press '4' to view how many items have been checked overall and in the current area.
+  - Press '5' to randomize the fox's color palette on demand (bonus feature).
 - Upon selecting New Game or Continue, a spoiler log file named "RandomizerSpoiler.log" will be created in the AppData folder for the game (same folder that the save file folder is located, typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend)
 - To use a custom seed:
   - Start a New Game from the main menu.

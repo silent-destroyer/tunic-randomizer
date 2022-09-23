@@ -158,6 +158,7 @@
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
     <Compile Include="src\Patches\TitleVersion.cs" />
+    <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,12 +10,11 @@ namespace TunicRandomizer {
     public class PlayerCharacterPatches {
         
         public static string SaveName = null;
-        public static bool ShownHeirAssistModePrompt = false;
-        public static bool HeirAssistMode = false;
         public static int HeirAssistModeDamageValue = 0;
+        public static bool StungByBee = false;
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Semicolon);
-            
+
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
                 if (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) {
                     bool isNight = !CycleController.IsNight;
@@ -79,15 +78,33 @@ namespace TunicRandomizer {
                         }
                     }
                 }
-                    GenericMessage.ShowMessage($"\"Collected Items\"\n\"-----------------\"\n\"Pages......" + string.Format("{0}/{1}", ObtainedPagesCount, 28).PadLeft(9, '.')
-                    + "\"\n\"Fairies...." + string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')
-                    + "\"\n\"Treasures.." + string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')
-                    + "\"\n\"This Area.." + string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')
-                    + "\"\n\"Overall...." + string.Format("{0}/{1}", ObtainedItemCount, (RandomItemPatches.ItemList.Count - 1)).PadLeft(9, '.') + "\"");
+                string BossesAndKeys = (StateVariable.GetStateVariableByName("SV_Fortress Arena_Spidertank Is Dead").BoolValue ? "<#FF3333>" : "<#FFFFFF>") + "[death]  "
+                    + (StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue || Inventory.GetItemByName("Hexagon Red").Quantity == 1 ? "<#FF3333>" : "<#FFFFFF>") + "[hexagram]  "
+                    + (StateVariable.GetStateVariableByName("Librarian Dead Forever").BoolValue ? "<#33FF33>" : "<#FFFFFF>") + "[death]  "
+                    + (StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue || Inventory.GetItemByName("Hexagon Green").Quantity == 1 ? "<#33FF33>" : "<#FFFFFF>") + "[hexagram]  "
+                    + (StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue ? "<#3333FF>" : "<#FFFFFF>") + "[death]  "
+                    + (StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue || Inventory.GetItemByName("Hexagon Blue").Quantity == 1 ? "<#3333FF>" : "<#FFFFFF>") + "[hexagram]";
+                GenericMessage.ShowMessage($"\"Collected Items\"\n\"-----------------\"\n\"Pages......" + string.Format("{0}/{1}", ObtainedPagesCount, 28).PadLeft(9, '.')
+                + "\"\n\"Fairies...." + string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')
+                + "\"\n\"Treasures.." + string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')
+                + "\"\n\"This Area.." + string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')
+                + "\"\n\"Overall...." + string.Format("{0}/{1}", ObtainedItemCount, (RandomItemPatches.ItemList.Count - 1)).PadLeft(9, '.')
+                + "\"\n" + BossesAndKeys);
             }
-
+            System.Random rnd = new System.Random();
+            if (Input.GetKeyDown(KeyCode.Alpha5)) {
+                PlayerPalette.ChangeColourByDelta(0, rnd.Next(1, 16));
+                PlayerPalette.ChangeColourByDelta(1, rnd.Next(1, 12));
+                PlayerPalette.ChangeColourByDelta(2, rnd.Next(1, 12));
+                PlayerPalette.ChangeColourByDelta(3, rnd.Next(1, 16));
+                PlayerPalette.ChangeColourByDelta(4, rnd.Next(1, 11));
+            }
+            if (StungByBee) {
+                __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
+            }
             TimeSpan timespan = TimeSpan.FromSeconds(SpeedrunData.inGameTime);
             SpeedrunTimerDisplay.instance.timerText.text = timespan.ToString("hh':'mm':'ss'.'ff");
+
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
@@ -96,7 +113,6 @@ namespace TunicRandomizer {
             SpeedrunTimerDisplay.instance.sceneText.text = "";
             SpeedrunTimerDisplay.instance.timerText.transform.position = new Vector3(-454.1f, 245.4f, -197.0f);
             SpeedrunTimerDisplay.instance.timerText.fontSize = 64;
-
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Fortress").BoolValue = true;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Sewer").BoolValue = true;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Swamp(Night)").BoolValue = true;
@@ -111,78 +127,59 @@ namespace TunicRandomizer {
                 SaveFile.SaveToDisk();
             }
 
-            if (SaveName != SaveFile.saveDestinationName || TunicRandomizer.Randomizer == null) {
-                TunicRandomizer.Logger.LogInfo("Loading seed: " + seed);
-                TunicRandomizer.Randomizer = new System.Random(seed);
-                SaveName = SaveFile.saveDestinationName;
+            TunicRandomizer.Logger.LogInfo("Loading seed: " + seed);
+            TunicRandomizer.Randomizer = new System.Random(seed);
+            SaveName = SaveFile.saveDestinationName;
 
-                RandomItemPatches.ItemList.Clear();
-                RandomItemPatches.ItemsPickedUp.Clear();
-                Hints.HintMessages.Clear();
-                RandomItemPatches.CoinsTossed = SaveFile.GetInt("randomizer coins tossed");
-                RandomItemPatches.FairiesCollected = 0;
+            RandomItemPatches.ItemList.Clear();
+            RandomItemPatches.ItemsPickedUp.Clear();
+            Hints.HintMessages.Clear();
+            RandomItemPatches.CoinsTossed = SaveFile.GetInt("randomizer coins tossed");
+            RandomItemPatches.FairiesCollected = 0;
 
-                List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(RandomItemPatches.ItemListJson);
-                List<Reward> InitialRewards = new List<Reward>();
-                List<Location> InitialLocations = new List<Location>();
-                foreach (ItemData item in InitialItems) {
-                    InitialRewards.Add(item.Reward);
-                    InitialLocations.Add(item.Location);
-                }
-
-                // Randomize the rewards and locations
-                Shuffle(InitialRewards, InitialLocations);
-
-                for (int i = 0; i < InitialRewards.Count; i++) {
-                    string DictionaryId = InitialLocations[i].LocationId + " [" + InitialLocations[i].SceneName + "]";
-                    ItemData ItemData = new ItemData(InitialRewards[i], InitialLocations[i]);
-                    RandomItemPatches.ItemList.Add(DictionaryId, ItemData);
-                }
-
-                foreach (string Key in RandomItemPatches.ItemList.Keys) {
-                    int ItemPickedUp = SaveFile.GetInt("randomizer picked up " + Key);
-                    if (ItemPickedUp == 1) {
-                        RandomItemPatches.ItemsPickedUp.Add(Key, true);
-                    } else {
-                        RandomItemPatches.ItemsPickedUp.Add(Key, false);
-                    }
-                }
-
-                foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
-                    if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
-                        RandomItemPatches.FairiesCollected++;
-                    }
-                }
-
-                PopulateSpoilerLog();
-                PopulateHints();
+            List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(RandomItemPatches.ItemListJson);
+            List<Reward> InitialRewards = new List<Reward>();
+            List<Location> InitialLocations = new List<Location>();
+            foreach (ItemData item in InitialItems) {
+                InitialRewards.Add(item.Reward);
+                InitialLocations.Add(item.Location);
             }
+
+            // Randomize the rewards and locations
+            Shuffle(InitialRewards, InitialLocations);
+
+            for (int i = 0; i < InitialRewards.Count; i++) {
+                string DictionaryId = InitialLocations[i].LocationId + " [" + InitialLocations[i].SceneName + "]";
+                ItemData ItemData = new ItemData(InitialRewards[i], InitialLocations[i]);
+                RandomItemPatches.ItemList.Add(DictionaryId, ItemData);
+            }
+
+            foreach (string Key in RandomItemPatches.ItemList.Keys) {
+                int ItemPickedUp = SaveFile.GetInt("randomizer picked up " + Key);
+                if (ItemPickedUp == 1) {
+                    RandomItemPatches.ItemsPickedUp.Add(Key, true);
+                } else {
+                    RandomItemPatches.ItemsPickedUp.Add(Key, false);
+                }
+            }
+            HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
+            
+            foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
+                if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
+                    RandomItemPatches.FairiesCollected++;
+                }
+            }
+
+            PopulateSpoilerLog();
+            PopulateHints();
         }
 
         public static bool Foxgod_OnFlinchlessHit_PrefixPatch(Foxgod __instance) {
-            if (!ShownHeirAssistModePrompt) {
-                GenericPrompt.ShowPrompt($"yoo fEl A \"<#ffd700>strange power\" rehzuhnAti^\nwi%in yoo\"...\" wil yoo \"<#ffd700>accept it\"?", (Il2CppSystem.Action)ActivateHeirAssist, null);
-                ShownHeirAssistModePrompt = true;
-                __instance.Flinch(true);
-            }
-            if (HeirAssistMode) {
+            if (TunicRandomizer.Settings.HeirAssistModeEnabled) {
                 __instance.hp -= HeirAssistModeDamageValue;
             }
             return true;
         }
-
-        public static void ActivateHeirAssist() {
-            HeirAssistMode = true;
-            int damageMultiplier = 0;
-            foreach (string Key in RandomItemPatches.ItemsPickedUp.Keys) {
-                if (RandomItemPatches.ItemsPickedUp[Key]) {
-                    damageMultiplier++;
-                }
-            }
-            HeirAssistModeDamageValue = damageMultiplier / 15;
-            SFX.PlayAudioClipAtFox(GameObject.FindObjectOfType<Foxgod>().finalDeathSFX);
-        }
-
 
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
@@ -239,6 +236,15 @@ namespace TunicRandomizer {
                     Spoiler += " (20 Fairy Reward)";
                 } else if (ItemData.Location.SceneName == "Trinket Well") {
                     Spoiler += " (" + ItemData.Location.LocationId + ")";
+                }
+                if (ItemData.Reward.Type == "MONEY") {
+                    if (ItemData.Reward.Amount < 20) {
+                        Spoiler += " OR Fool Trap (if set to Normal/Double/Onslaught)";
+                    } else if (ItemData.Reward.Amount <= 20) {
+                        Spoiler += " OR Fool Trap (if set to Double/Onslaught)";
+                    } else if (ItemData.Reward.Amount <= 30) {
+                        Spoiler += " OR Fool Trap (if set to Onslaught)";
+                    }
                 }
                 SpoilerLog[ItemData.Location.SceneName].Add(Spoiler);
             }

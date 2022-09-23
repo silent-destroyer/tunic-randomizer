@@ -22,16 +22,43 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool HeirAssistModeEnabled {
+            get;
+            set;
+        }
+
+        public enum FoolTrapOption { 
+            NONE,
+            NORMAL,
+            DOUBLE,
+            ONSLAUGHT,
+        }
+
+        public FoolTrapOption FoolTrapIntensity {
+            get;
+            set;
+        }
+
         public RandomizerSettings() {
             HintsEnabled = true;
             RandomFoxColorsEnabled = true;
             TimerOverlayEnabled = false;
+            HeirAssistModeEnabled = true;
+            FoolTrapIntensity = FoolTrapOption.NORMAL;
         }
 
         public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool timerOverlayEnabled) { 
             HintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
             TimerOverlayEnabled = timerOverlayEnabled;
+        }
+
+        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool timerOverlayEnabled, bool heirAssistEnaled, FoolTrapOption foolTrapIntensity) {
+            HintsEnabled = hintsEnabled;
+            RandomFoxColorsEnabled = randomFoxColorsEnabled;
+            TimerOverlayEnabled = timerOverlayEnabled;
+            HeirAssistModeEnabled = heirAssistEnaled;
+            FoolTrapIntensity = foolTrapIntensity;
         }
     }
 }

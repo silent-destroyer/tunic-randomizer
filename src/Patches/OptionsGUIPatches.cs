@@ -13,6 +13,8 @@ namespace TunicRandomizer {
         public static OptionsGUIButton HintsButton;
         public static OptionsGUIButton FoxColorOptionButton;
         public static OptionsGUIButton TimerOverlayButton;
+        public static OptionsGUIButton HeirAssistModeButton;
+        public static OptionsGUIButton FoolTrapSettingButton;
         public static OptionsGUIButton FurButton;
         public static OptionsGUIButton PuffButton;
         public static OptionsGUIButton DetailsButton;
@@ -32,14 +34,57 @@ namespace TunicRandomizer {
         public static void LoadRandomizerSettings() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.clearPage();
+            if (SceneLoaderPatches.SceneName != "TitleScreen") {
+                OptionsGUIButton TopButton = OptionsGUI.addButton("", null);
+                TopButton.button.enabled = false;
+            }
             HintsButton = OptionsGUI.addButton("Hints", TunicRandomizer.Settings.HintsEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleHints);
             TimerOverlayButton = OptionsGUI.addButton("Timer Overlay", TunicRandomizer.Settings.TimerOverlayEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleTimerOverlay);
+            HeirAssistModeButton = OptionsGUI.addButton("Easier Heir Fight", TunicRandomizer.Settings.HeirAssistModeEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleHeirAssistMode);
+            FoolTrapSettingButton = OptionsGUI.addButton("Fool Trap Frequency", GetFoolTrapString(), (Il2CppSystem.Action)ChangeFoolTrapFrequency);
             FoxColorOptionButton = OptionsGUI.addButton("Random Fox Colors", TunicRandomizer.Settings.RandomFoxColorsEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleRandomFoxPalette);
             if (SceneLoaderPatches.SceneName != "TitleScreen") {
                 OptionsGUI.addButton("Change Fox Colors", (Il2CppSystem.Action)LoadColorPaletteSettings);
             }
             OptionsGUI.addButton_CancelSFX("Return", true, (Il2CppSystem.Action)GameObject.FindObjectOfType<OptionsGUI>().pushDefault);
-            OptionsGUI.setHeading("Randomizer v0.0.4");
+            OptionsGUI.setHeading("Randomizer");
+        }
+
+        public static string GetFoolTrapString() {
+            if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NONE) {
+                return "<#FFFFFF>None";
+            } else if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NORMAL) {
+                return "<#4FF5D4>Normal";
+            } else if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.DOUBLE) {
+                return "<#E3D457>Double";
+            } else if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT) {
+                return "<#FF3333>Onslaught";
+            }
+            return "";
+        }
+
+        public static void ChangeFoolTrapFrequency() {
+
+            if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NONE) {
+                TunicRandomizer.Settings.FoolTrapIntensity = RandomizerSettings.FoolTrapOption.NORMAL;
+                FoolTrapSettingButton.secondaryText.text = "<#4FF5D4>Normal";
+            } else if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NORMAL) {
+                TunicRandomizer.Settings.FoolTrapIntensity = RandomizerSettings.FoolTrapOption.DOUBLE;
+                FoolTrapSettingButton.secondaryText.text = "<#E3D457>Double";
+            } else if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.DOUBLE) {
+                TunicRandomizer.Settings.FoolTrapIntensity = RandomizerSettings.FoolTrapOption.ONSLAUGHT;
+                FoolTrapSettingButton.secondaryText.text = "<#FF3333>Onslaught";
+            } else if (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT) {
+                TunicRandomizer.Settings.FoolTrapIntensity = RandomizerSettings.FoolTrapOption.NONE;
+                FoolTrapSettingButton.secondaryText.text = "<#FFFFFF>None";
+            }
+            SaveSettings();
+        }
+
+        public static void ToggleHeirAssistMode() {
+            TunicRandomizer.Settings.HeirAssistModeEnabled = !TunicRandomizer.Settings.HeirAssistModeEnabled;
+            HeirAssistModeButton.secondaryText.text = TunicRandomizer.Settings.HeirAssistModeEnabled ? "<#33FF33>On" : "<#FF3333>Off";
+            SaveSettings();
         }
 
         public static void ToggleTimerOverlay() {
