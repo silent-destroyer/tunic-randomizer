@@ -14,7 +14,7 @@ namespace TunicRandomizer {
         public static bool StungByBee = false;
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Semicolon);
-
+            
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
                 if (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) {
                     bool isNight = !CycleController.IsNight;
@@ -91,8 +91,8 @@ namespace TunicRandomizer {
                 + "\"\n\"Overall...." + string.Format("{0}/{1}", ObtainedItemCount, (RandomItemPatches.ItemList.Count - 1)).PadLeft(9, '.')
                 + "\"\n" + BossesAndKeys);
             }
-            System.Random rnd = new System.Random();
             if (Input.GetKeyDown(KeyCode.Alpha5)) {
+                System.Random rnd = new System.Random();
                 PlayerPalette.ChangeColourByDelta(0, rnd.Next(1, 16));
                 PlayerPalette.ChangeColourByDelta(1, rnd.Next(1, 12));
                 PlayerPalette.ChangeColourByDelta(2, rnd.Next(1, 12));
@@ -102,17 +102,11 @@ namespace TunicRandomizer {
             if (StungByBee) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
             }
-            TimeSpan timespan = TimeSpan.FromSeconds(SpeedrunData.inGameTime);
-            SpeedrunTimerDisplay.instance.timerText.text = timespan.ToString("hh':'mm':'ss'.'ff");
 
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
 
-            SpeedrunTimerDisplay.Visible = TunicRandomizer.Settings.TimerOverlayEnabled;
-            SpeedrunTimerDisplay.instance.sceneText.text = "";
-            SpeedrunTimerDisplay.instance.timerText.transform.position = new Vector3(-454.1f, 245.4f, -197.0f);
-            SpeedrunTimerDisplay.instance.timerText.fontSize = 64;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Fortress").BoolValue = true;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Sewer").BoolValue = true;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Swamp(Night)").BoolValue = true;
@@ -207,10 +201,13 @@ namespace TunicRandomizer {
             int l;
             while (n > 1) {
                 n--;
-                do {
-                    r = TunicRandomizer.Randomizer.Next(n + 1);
+                r = TunicRandomizer.Randomizer.Next(n + 1);
+                l = TunicRandomizer.Randomizer.Next(n + 1);
+
+                while (Locations[l].RequiredItems.Contains(Rewards[r].Name)) {
                     l = TunicRandomizer.Randomizer.Next(n + 1);
-                } while (Locations[l].RequiredItems.Contains(Rewards[r].Name));
+                }
+
                 Reward Reward = Rewards[r];
                 Rewards[r] = Rewards[n];
                 Rewards[n] = Reward;
@@ -269,10 +266,12 @@ namespace TunicRandomizer {
         private static void PopulateHints() {
             ItemData HintItem;
             string HintMessage;
-
+            List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
             // Mailbox Hint
             HintItem = FindRandomizedItemByName("Lantern");
-            HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\nwil hlp yoo \"light the way...\"";
+            string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
+            string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+            HintMessage = $"lehjehnd sehz " + ScenePrefix +  " \"" + Scene + "\"\nwil hlp yoo \"light the way...\"";
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
             // Golden Path hints
@@ -282,7 +281,9 @@ namespace TunicRandomizer {
                 HintItem = FindRandomizedItemByName(HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)]);
                 string HintScene = HintScenes[TunicRandomizer.Randomizer.Next(HintScenes.Count)];
 
-                HintMessage = $"lehjehnd sehs #E \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\"\niz lOkAtid awn \"<#ffd700>Path of the Hero<#ffffff>...\"";
+                Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
+                ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+                HintMessage = $"lehjehnd sehz " + ScenePrefix +  " \"" + Scene + "\"\niz lOkAtid awn #uh \"<#ffd700>Path of the Hero<#ffffff>...\"";
                 Hints.HintMessages.Add(HintScene, HintMessage);
 
                 HintItems.Remove(HintItem.Reward.Name);
@@ -297,8 +298,9 @@ namespace TunicRandomizer {
                 string Hexagon = Hexagons[TunicRandomizer.Randomizer.Next(Hexagons.Count)];
                 HintItem = FindRandomizedItemByName(Hexagon);
                 string HexagonHintArea = HexagonHintAreas[TunicRandomizer.Randomizer.Next(HexagonHintAreas.Count)];
-
-                HintMessage = $"#A sA \"" + Hints.SimplifiedSceneNames[HintItem.Location.SceneName] + "\" iz \nwAr #E " + HexagonColors[Hexagon] + "kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
+                Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
+                ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+                HintMessage = $"#A sA " + ScenePrefix + " \"" + Scene + "\" iz \nwAr #uh " + HexagonColors[Hexagon] + "kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                 Hints.HintMessages.Add(HexagonHintArea, HintMessage);
 
                 Hexagons.Remove(Hexagon);
@@ -362,18 +364,19 @@ namespace TunicRandomizer {
                 chosenHint = maxWeightedItems[TunicRandomizer.Randomizer.Next(maxWeightedItems.Count)];
             }
             string HintMessage = "";
+            string ScenePrefix = new List<char>() { 'A', 'E', 'I', 'O', 'U' }.Contains(Scene[0]) ? "#E" : "#uh";
             switch (chosenHint) {
                 case "Fools":
-                    HintMessage = $"lehjehnd sehs #E \"" + Scene + "\" iz \nawn #E \"path of the fool...";
+                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of the fool...";
                     break;
                 case "Pages":
-                    HintMessage = $"lehjehnd sehs #E \"" + Scene + "\" iz \nawn #E \"path of knowledge...";
+                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of knowledge...";
                     break;
                 case "Treasures":
-                    HintMessage = $"lehjehnd sehs #E \"" + Scene + "\" iz \nawn #E \"path of treasure...";
+                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of treasure...";
                     break;
                 case "Upgrades":
-                    HintMessage = $"lehjehnd sehs #E \"" + Scene + "\" iz \nawn #E \"path of strength...";
+                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of strength...";
                     break;
                 default:
                     break;

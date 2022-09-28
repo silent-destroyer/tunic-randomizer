@@ -34,12 +34,7 @@ namespace TunicRandomizer {
         public static void LoadRandomizerSettings() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.clearPage();
-            if (SceneLoaderPatches.SceneName != "TitleScreen") {
-                OptionsGUIButton TopButton = OptionsGUI.addButton("", null);
-                TopButton.button.enabled = false;
-            }
             HintsButton = OptionsGUI.addButton("Hints", TunicRandomizer.Settings.HintsEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleHints);
-            TimerOverlayButton = OptionsGUI.addButton("Timer Overlay", TunicRandomizer.Settings.TimerOverlayEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleTimerOverlay);
             HeirAssistModeButton = OptionsGUI.addButton("Easier Heir Fight", TunicRandomizer.Settings.HeirAssistModeEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleHeirAssistMode);
             FoolTrapSettingButton = OptionsGUI.addButton("Fool Trap Frequency", GetFoolTrapString(), (Il2CppSystem.Action)ChangeFoolTrapFrequency);
             FoxColorOptionButton = OptionsGUI.addButton("Random Fox Colors", TunicRandomizer.Settings.RandomFoxColorsEnabled ? "<#33FF33>On" : "<#FF3333>Off", (Il2CppSystem.Action)ToggleRandomFoxPalette);
@@ -87,18 +82,6 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        public static void ToggleTimerOverlay() {
-            TunicRandomizer.Settings.TimerOverlayEnabled = !TunicRandomizer.Settings.TimerOverlayEnabled;
-            SpeedrunTimerDisplay.Visible = TunicRandomizer.Settings.TimerOverlayEnabled;
-            SpeedrunTimerDisplay.instance.sceneText.text = "";
-            SpeedrunTimerDisplay.instance.timerText.transform.position = new Vector3(-454.1f, 245.4f, -197.0f);
-            SpeedrunTimerDisplay.instance.timerText.fontSize = 64;
-            TimeSpan timespan = TimeSpan.FromSeconds(SpeedrunData.inGameTime);
-            SpeedrunTimerDisplay.instance.timerText.text = timespan.ToString("hh':'mm':'ss'.'ff");
-            TimerOverlayButton.secondaryText.text = TunicRandomizer.Settings.TimerOverlayEnabled ? "<#33FF33>On" : "<#FF3333>Off";
-            SaveSettings();
-        }
-
         public static void ToggleRandomFoxPalette() {
             TunicRandomizer.Settings.RandomFoxColorsEnabled = !TunicRandomizer.Settings.RandomFoxColorsEnabled;
             FoxColorOptionButton.secondaryText.text = TunicRandomizer.Settings.RandomFoxColorsEnabled ? "<#33FF33>On" : "<#FF3333>Off";
@@ -123,7 +106,7 @@ namespace TunicRandomizer {
         public static void LoadColorPaletteSettings() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.clearPage();
-            OptionsGUIButton TopButton = OptionsGUI.addButton("", null);
+            OptionsGUIButton TopButton = OptionsGUI.addButton("  ", null);
             TopButton.button.enabled = false;
             FurButton = OptionsGUI.addButton("Fur", ColorPalette.Fur[PlayerPalette.selectionIndices[0]].ToString(), (Il2CppSystem.Action)IncrementFurColor);
             PuffButton = OptionsGUI.addButton("Puff", PlayerPalette.selectionIndices[1] == 0 ? ColorPalette.getDefaultPuffColor() : ColorPalette.Puff[PlayerPalette.selectionIndices[1]].ToString(), (Il2CppSystem.Action)IncrementPuffColor);
@@ -138,7 +121,6 @@ namespace TunicRandomizer {
         public static void IncrementFurColor() {
             int FurIndex = PlayerPalette.ChangeColourByDelta(0, 1);
             string FurColor = ColorPalette.Fur[FurIndex].ToString();
-            //GameObject.FindObjectsOfType<OptionsGUIButton>().Where(obj => obj.leftAlignedText.text == "Fur").ToList()[0].secondaryText.text = FurColor;
             FurButton.secondaryText.text = FurColor;
             if (PlayerPalette.selectionIndices[1] == 0) {
                 PuffButton.secondaryText.text = ColorPalette.getDefaultPuffColor();

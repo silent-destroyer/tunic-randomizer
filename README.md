@@ -25,7 +25,7 @@ Created by SilentDestroyer and Glacia (Spaceglace)
     - Frequency of Fool Traps
 
 ## Installation
-- Must use the Windows Steam version of TUNIC
+- Must use the latest Windows Steam version of TUNIC
 - Go to https://builds.bepinex.dev/projects/bepinex_be and find Artifact #572 and download the "BepInEx Unity (IL2CPP) for Windows (x64) games" build. (The mod is currently NOT compatible with newer BepInEx builds so #572 is recommended. Here is a direct link for the correct download: https://builds.bepinex.dev/projects/bepinex_be/572/BepInEx_UnityIL2CPP_x64_9c2b17f_6.0.0-be.572.zip)
 
   ![image](https://user-images.githubusercontent.com/110704408/188519149-d9476aa9-55f6-4f38-9ce9-93d137fa71af.png)

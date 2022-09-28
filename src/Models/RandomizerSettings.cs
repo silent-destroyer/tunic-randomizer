@@ -17,11 +17,6 @@ namespace TunicRandomizer {
             set;
         }
 
-        public bool TimerOverlayEnabled {
-            get;
-            set;
-        }
-
         public bool HeirAssistModeEnabled {
             get;
             set;
@@ -42,21 +37,18 @@ namespace TunicRandomizer {
         public RandomizerSettings() {
             HintsEnabled = true;
             RandomFoxColorsEnabled = true;
-            TimerOverlayEnabled = false;
             HeirAssistModeEnabled = true;
             FoolTrapIntensity = FoolTrapOption.NORMAL;
         }
 
-        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool timerOverlayEnabled) { 
+        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled) { 
             HintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
-            TimerOverlayEnabled = timerOverlayEnabled;
         }
 
-        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool timerOverlayEnabled, bool heirAssistEnaled, FoolTrapOption foolTrapIntensity) {
+        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool heirAssistEnaled, FoolTrapOption foolTrapIntensity) {
             HintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
-            TimerOverlayEnabled = timerOverlayEnabled;
             HeirAssistModeEnabled = heirAssistEnaled;
             FoolTrapIntensity = foolTrapIntensity;
         }

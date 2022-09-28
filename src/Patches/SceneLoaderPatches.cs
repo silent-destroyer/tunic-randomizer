@@ -62,12 +62,6 @@ namespace TunicRandomizer {
                 foreach (string Key in RandomItemPatches.HeroRelicLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
                 }
-            } else if (SceneName == "TitleScreen") {
-                SpeedrunTimerDisplay.Visible = TunicRandomizer.Settings.TimerOverlayEnabled;
-                SpeedrunTimerDisplay.instance.timerText.text = "00:00:00.00";
-                SpeedrunTimerDisplay.instance.sceneText.text = "";
-                SpeedrunTimerDisplay.instance.timerText.transform.position = new Vector3(-454.1f, 245.4f, -197.0f);
-                SpeedrunTimerDisplay.instance.timerText.fontSize = 64;
             } else {
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
