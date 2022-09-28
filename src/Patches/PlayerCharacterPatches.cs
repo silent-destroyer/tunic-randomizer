@@ -13,7 +13,7 @@ namespace TunicRandomizer {
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
-            Cheats.FastForward = Input.GetKey(KeyCode.Semicolon);
+            Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
             
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
                 if (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) {

@@ -20,7 +20,6 @@ Created by SilentDestroyer and Glacia (Spaceglace)
 - Randomizer Settings Menu to Enable/Disable the Following:
     - Hints
     - Random Fox Colors
-    - In-Game Timer Overlay
     - Easier Heir Fight
     - Frequency of Fool Traps
 
