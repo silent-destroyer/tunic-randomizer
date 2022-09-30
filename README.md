@@ -15,8 +15,13 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - A (customizable) number of fool traps replacing less valuable rewards
 - Custom seed support
 - Randomized Fox colors upon every scene transition (!!)
-- Hint System
 - Spoiler Log
+- Fool Traps, with difficulty options (None, Normal, Double, Onslaught)
+- Hint Messages displayed at certain interactable locations when enabled, including:
+  - The Mailbox
+  - Hero's Graves
+  - Sealed Temple statue
+  - Orange signposts
 - Randomizer Settings Menu to Enable/Disable the Following:
     - Hints
     - Random Fox Colors
@@ -48,12 +53,15 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - Open the new save file in a text editor 
     - Save files can typically be found at C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend\SAVES
   - Change the seed value on the line that looks like "seed|seed value" to your custom seed, then save the file.
-  - Close and relaunch the game, then load the edited save file by pressing Continue or from the Load Game menu.
+  - Load the edited save file by pressing Continue or from the Load Game menu.
 - The randomizer is not intended to be played with pre-existing save files from the vanilla version of the game, and files made with the randomizer are not intended to be played in the vanilla version of the game (i.e. with the randomizer disabled), as it may prevent progress from being made in the game in either case.
-  
+- To uninstall the mod, either remove/delete the TunicRandomizer.dll file from the plugins folder or rename the winhttp.dll file located in the game's root directory (this will disable all installed mods from running).
+
 ## Credits
 - Tiny Json - zanders3 (https://github.com/zanders3/json)
 
 ## Screenshots
-<img src="https://user-images.githubusercontent.com/110704408/185547173-e9328f5f-431c-4611-8cbf-9fba98eb0a1e.png" height="40%" width="40%"/> <img src="https://user-images.githubusercontent.com/110704408/185546864-9546ec58-c9a9-4e5d-8a74-bce0a697a6eb.png" height="40%" width="40%"/>
-<img src="https://user-images.githubusercontent.com/110704408/185547851-676b91e8-15d5-403b-b6b4-1b0b8ddb445e.png" height="40%" width="40%"/> <img src="https://user-images.githubusercontent.com/110704408/185547944-b4317305-2e95-4d92-b8ae-35850bb21731.png" height="40%" width="40%"/>
+![image](https://user-images.githubusercontent.com/110704408/193220644-e62bc84b-ccaa-4245-b080-797e17b5d640.png)
+![image](https://user-images.githubusercontent.com/110704408/193220673-15a35c0d-fd42-43b0-a946-a007dc671cdd.png)
+![image](https://user-images.githubusercontent.com/110704408/193220692-01f3d497-db4c-4200-a2b4-28abba4fdd96.png)
+![image](https://user-images.githubusercontent.com/110704408/193220725-e61f149f-14be-4a95-9088-7081926cd3ec.png)
