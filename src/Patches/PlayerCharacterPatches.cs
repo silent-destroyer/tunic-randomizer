@@ -88,7 +88,7 @@ namespace TunicRandomizer {
                 + "\"\n\"Fairies...." + string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')
                 + "\"\n\"Treasures.." + string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')
                 + "\"\n\"This Area.." + string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')
-                + "\"\n\"Overall...." + string.Format("{0}/{1}", ObtainedItemCount, (RandomItemPatches.ItemList.Count - 1)).PadLeft(9, '.')
+                + "\"\n\"Overall...." + string.Format("{0}/{1}", ObtainedItemCount, RandomItemPatches.ItemList.Count).PadLeft(9, '.')
                 + "\"\n" + BossesAndKeys);
             }
             if (Input.GetKeyDown(KeyCode.Alpha5)) {
@@ -391,6 +391,31 @@ namespace TunicRandomizer {
                 }
             }
             return null;
+        }
+
+        public static void SaveFile_GetNewSaveFileName_PostfixPatch(SaveFile __instance, ref string __result) {
+
+            __result = $"{__result.Split('.')[0]}-randomizer.tunic";
+        }
+
+        public static void FileManagementGUI_rePopulateList_PostfixPatch(FileManagementGUI __instance) {
+            foreach (FileManagementGUIButton button in GameObject.FindObjectsOfType<FileManagementGUIButton>()) {
+                SaveFile.LoadFromPath(SaveFile.GetRootSaveFileNameList()[button.index]);
+                if (SaveFile.GetInt("seed") != 0 && !button.isSpecial) {
+                    // Display special icon and "randomized" text next to file name
+                    button.specialBadge.gameObject.active = true;
+                    button.filenameTMP.enableAutoSizing = false;
+                    button.filenameTMP.text += $" <size=60%>(randomized)";
+                    // Display randomized page count instead of "vanilla" pages picked up
+                    int Pages = 0;
+                    for (int i = 0; i < 28; i++) {
+                        if (SaveFile.GetInt("randomizer obtained page " + i) == 1) {
+                            Pages++;
+                        }
+                    }
+                    button.manpageTMP.text = Pages.ToString();
+                }
+            }
         }
     }
 }

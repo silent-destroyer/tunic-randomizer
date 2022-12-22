@@ -92,6 +92,10 @@ namespace TunicRandomizer {
             
             harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), null, new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(SaveFile), "GetNewSaveFileName"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "SaveFile_GetNewSaveFileName_PostfixPatch")));
+
         }
     }
 }

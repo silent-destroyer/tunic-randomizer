@@ -230,7 +230,7 @@ namespace TunicRandomizer{
                 ItemPresentation.PresentItem(Item, Reward.Amount);
             } else if (Reward.Type == "MONEY") {
                 LanguageLine Money = ScriptableObject.CreateInstance<LanguageLine>();
-                Money.text = $"yoo gawt \"$\"" + Reward.Amount + "!!";
+                Money.text = $"yoo gawt [money]" + Reward.Amount + "!!";
                 SmallMoneyItem.PlayerQuantity += Reward.Amount;
                 NPCDialogue.DisplayDialogue(Money, true);
             } else if (Reward.Type == "FAIRY") {
