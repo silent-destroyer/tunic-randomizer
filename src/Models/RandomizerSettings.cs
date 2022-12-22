@@ -22,6 +22,21 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ShowShopItemsEnabled {
+            get;
+            set;
+        }
+
+        public bool CheaperShopItemsEnabled {
+            get;
+            set;
+        }
+
+        public bool StartWithSwordEnabled {
+            get;
+            set;
+        }
+
         public enum FoolTrapOption { 
             NONE,
             NORMAL,
@@ -38,6 +53,9 @@ namespace TunicRandomizer {
             HintsEnabled = true;
             RandomFoxColorsEnabled = true;
             HeirAssistModeEnabled = true;
+            ShowShopItemsEnabled = true;
+            CheaperShopItemsEnabled = false;
+            StartWithSwordEnabled = false;
             FoolTrapIntensity = FoolTrapOption.NORMAL;
         }
 

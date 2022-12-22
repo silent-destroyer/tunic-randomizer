@@ -62,6 +62,9 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(ShopItem), "buy"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "ShopItem_buy_PrefixPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(ShopItem), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "ShopItem_IInteractionReceiver_Interact_PrefixPatch")));
+            
+
             // Scene Loader Patches
             harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PostfixPatch")));
 
@@ -83,7 +86,11 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "popPage"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_popPage_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_root"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_root_PostfixPatch")));
-            
+
+            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_extras"), new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_extras_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_extras"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_extras_PostfixPatch")));
+
             harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "InteractionTrigger_Interact_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(FairyCollection), "getFairyCount"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "FairyCollection_getFairyCount_PrefixPatch")));

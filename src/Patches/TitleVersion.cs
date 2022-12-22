@@ -12,7 +12,7 @@ namespace TunicRandomizer {
         public Vector2 position = new Vector2(10, 10);
         private void Awake() {
 
-            this.GuiMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(Screen.width / 1920f, Screen.height / 1080f, 1f));
+            this.GuiMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1f, 1f, 1f));
         }
 
         private void OnGUI() {
@@ -22,11 +22,23 @@ namespace TunicRandomizer {
                 GUI.color = new Color(1f, 147f / 255f, 0f, 1f);
                 GUI.skin.label.fontSize = 38;
                 if (Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode)) {
-                    GUI.Label(new Rect(17f, 55f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
+                    GUI.Label(new Rect(20f, 75f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
                 } else {
-                    GUI.Label(new Rect(17f, 10f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
+                    GUI.Label(new Rect(20f, 30f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
                 }
-            } 
+            }
+            
+            if(SceneLoaderPatches.SceneName == "Shop" && TunicRandomizer.Settings.ShowShopItemsEnabled) {
+                GUI.skin.label.fontSize = 19;
+                foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
+                    if (ItemData.Location.SceneName == "Shop" && !RandomItemPatches.ItemsPickedUp[$"{ItemData.Location.LocationId} [Shop]"]) {
+                        var position = Camera.main.WorldToScreenPoint(GameObject.Find(ItemData.Location.LocationId).gameObject.transform.position);
+                        if (GameObject.Find(ItemData.Location.LocationId).transform.localScale.x >= 1) {
+                            GUI.Label(new Rect(position.x - 100, Screen.currentResolution.height - position.y - 100, 500, 50), $"{Hints.SimplifiedItemNames[ItemData.Reward.Name]} {(ItemData.Reward.Amount > 1 ? $"x{ItemData.Reward.Amount}" : "")}");
+                        }
+                    }
+                }
+            }
         }
     }
 }

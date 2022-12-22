@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 namespace TunicRandomizer{
@@ -165,15 +166,24 @@ namespace TunicRandomizer{
             return false;
         }
 
+        public static bool ShopItem_IInteractionReceiver_Interact_PrefixPatch(Item i, ShopItem __instance) {
+            if (ItemList.ContainsKey(__instance.name + " [Shop]") && TunicRandomizer.Settings.CheaperShopItemsEnabled) {
+                __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for 300 [money]?";
+            } else {
+                __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {__instance.price} [money]?";
+            }
+            return true;
+        }
         public static bool ShopItem_buy_PrefixPatch(ShopItem __instance) {
             string RewardId = __instance.name + " [Shop]";
             if (!ItemList.ContainsKey(RewardId)) {
                 return true;
             }
-            if (Inventory.GetItemByName("MoneySmall").Quantity < __instance.price) {
+            int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
+            if (Inventory.GetItemByName("MoneySmall").Quantity < Price) {
                 GenericMessage.ShowMessage($"nawt Enuhf [money]...");
             } else {
-                Inventory.GetItemByName("MoneySmall").Quantity -= __instance.price;
+                Inventory.GetItemByName("MoneySmall").Quantity -= Price;
                 CheckFoolTrapSetting(RewardId);
                 Reward Reward = ItemList[RewardId].Reward;
                 GiveReward(Reward);
