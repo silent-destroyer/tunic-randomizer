@@ -1,7 +1,7 @@
 # Tunic Randomizer
-An extensive randomizer mod for the tiny fox game TUNIC.
-<br>
-Created by SilentDestroyer and Glacia (Spaceglace)
+An extensive randomizer mod for TUNIC, the action adventure game about a tiny fox in a big world.
+
+For questions, feedback, or discussion related to the randomizer, please visit the dedicated randomizer channel in the [Tunic Speedrunning Discord](https://discord.gg/HXkztJgQWj)! 
 
 ## Features
 - Randomizes every item in the game, including:
@@ -12,7 +12,7 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - Hero Relics
   - Unique items in the shop (Flasks and Coins)
   - Trinket card slots from tossing coins into wells
-  - A (customizable) number of fool traps replacing less valuable rewards
+  - A (customizable) number of fool traps replacing less valuable money rewards
 - Custom seed support
 - Randomized Fox colors upon every scene transition (!!)
 - Spoiler Log
@@ -22,11 +22,15 @@ Created by SilentDestroyer and Glacia (Spaceglace)
   - Hero's Graves
   - Sealed Temple statue
   - Orange signposts
-- Randomizer Settings Menu to Enable/Disable the Following:
+- Randomizer Settings Menu with the following options:
     - Hints
     - Random Fox Colors
+    - Change Fox Colors on the fly
     - Easier Heir Fight
     - Frequency of Fool Traps
+    - Reveal randomized shop item contents
+    - Make randomized shop items cheaper
+    - Start with a sword
 
 ## Installation
 - Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version.
@@ -59,7 +63,9 @@ Created by SilentDestroyer and Glacia (Spaceglace)
 - To uninstall the mod, either remove/delete the TunicRandomizer.dll file from the plugins folder or rename the winhttp.dll file located in the game's root directory (this will disable all installed mods from running).
 
 ## Credits
-- Tiny Json - zanders3 (https://github.com/zanders3/json)
+- zanders3 for TinyJson (https://github.com/zanders3/json)
+- Glacia and RisingStar111 for helping research how to mod this game
+- Radicoon, kingsamps0n, Landie, and JimTheEternal for playtesting
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/110704408/193220644-e62bc84b-ccaa-4245-b080-797e17b5d640.png)

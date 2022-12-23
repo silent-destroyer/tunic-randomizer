@@ -115,5 +115,10 @@ namespace TunicRandomizer {
         public override string ToString() {
             return HexValue + ColorName;
         }
+
+        public static string GetColorStringForPopup(Dictionary<int, ColorPalette> Palette, int index) {
+            int CurrentColor = PlayerPalette.selectionIndices[index];
+            return $"{Palette[CurrentColor].HexValue}({Palette[CurrentColor].ColorName}) {CurrentColor.ToString().PadLeft(2)}";
+        }
     }
 }

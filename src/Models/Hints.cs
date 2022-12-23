@@ -140,7 +140,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, string> SimplifiedItemNames = new Dictionary<string, string>() {
             {"Hyperdash", "Hyperdash (Hero Laurels)"},
             {"Lantern", "Lantern"},
-            {"Wand", "Magic Orb (Grapple/Wand)"},
+            {"Wand", "Magic Orb (Grapple Wand)"},
             {"GoldenTrophy_9", "Golden Trophy 9"},
             {"CubeRoom-(321.1, 3.0, 217.0)", "Fairy (Cube)"},
             {"Stick", "Stick"},
@@ -219,8 +219,8 @@ namespace TunicRandomizer {
             {"Trinket - Bloodstain Plus", "Trinket Card (Louder Echo)"},
             {"15", "Page 15"},
             {"Trinket - MP Flasks", "Trinket Card (Inverted Ash)"},
-            {"Trinket - RTSR", "Trinket Card (RTSR Orange Peril Ring)"},
-            {"Trinket - BTSR", "Trinket Card (BTSR Cyan Peril Ring)"},
+            {"Trinket - RTSR", "Trinket Card (Orange Peril Ring)"},
+            {"Trinket - BTSR", "Trinket Card (Cyan Peril Ring)"},
             {"13", "Page 13"},
             {"Archipelagos Redux-(-396.3, 1.4, 42.3)", "Fairy (West Garden Tree)"},
             {"Stundagger", "Stundagger (Ice Dagger)"},
@@ -258,6 +258,5 @@ namespace TunicRandomizer {
             {"Relic - Hero Crown", "Hero Relic (DEF)"},
             {"Relic - Hero Pendant SP", "Hero Relic (SP)"}
         };
-
     }
 }

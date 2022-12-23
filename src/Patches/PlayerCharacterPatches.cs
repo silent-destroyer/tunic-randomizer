@@ -30,25 +30,20 @@ namespace TunicRandomizer {
                 }
             }
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                GenericMessage.ShowMessage("\"Seed: " + SaveFile.GetInt("seed") + "\"");
+                GenericMessage.ShowMessage($"\"Seed: {SaveFile.GetInt("seed")}\"");
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                string FurColor = ColorPalette.Fur[PlayerPalette.selectionIndices[0]].HexValue + "(" + ColorPalette.Fur[PlayerPalette.selectionIndices[0]].ColorName + ") " + PlayerPalette.selectionIndices[0].ToString().PadLeft(2);
-                string PuffColor;
-                if (PlayerPalette.selectionIndices[1] == 0) {
-                    PuffColor = ColorPalette.Fur[PlayerPalette.selectionIndices[0]].HexValue + "(Match Fur)  0";
-                } else {
-                    PuffColor = ColorPalette.Puff[PlayerPalette.selectionIndices[1]].HexValue + "(" + ColorPalette.Puff[PlayerPalette.selectionIndices[1]].ColorName + ") " + PlayerPalette.selectionIndices[1].ToString().PadLeft(2);
-                }
-                string DetailsColor = ColorPalette.Details[PlayerPalette.selectionIndices[2]].HexValue + "(" + ColorPalette.Details[PlayerPalette.selectionIndices[2]].ColorName + ") " + PlayerPalette.selectionIndices[2].ToString().PadLeft(2);
-                string TunicColor = ColorPalette.Tunic[PlayerPalette.selectionIndices[3]].HexValue + "(" + ColorPalette.Tunic[PlayerPalette.selectionIndices[3]].ColorName + ") " + PlayerPalette.selectionIndices[3].ToString().PadLeft(2);
-                string ScarfColor = ColorPalette.Scarf[PlayerPalette.selectionIndices[4]].HexValue + "(" + ColorPalette.Scarf[PlayerPalette.selectionIndices[4]].ColorName + ") " + PlayerPalette.selectionIndices[4].ToString().PadLeft(2);
-                string Palette = "\"Color Palette\"\n\"-----------------\"\n\"" + 
-                    "(0) Fur:     " + FurColor.PadLeft(25) + "\"\n\"" +
-                    "(1) Puff:    " + PuffColor.PadLeft(25) + "\"\n\"" +
-                    "(2) Details: " + DetailsColor.PadLeft(25) + "\"\n\"" +
-                    "(3) Tunic:   " + TunicColor.PadLeft(25) + "\"\n\"" +
-                    "(4) Scarf:   " + ScarfColor.PadLeft(25) + "\"";
+                string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
+                string PuffColor = ColorPalette.GetColorStringForPopup(ColorPalette.Puff, 1);
+                string DetailsColor = ColorPalette.GetColorStringForPopup(ColorPalette.Details, 2);
+                string TunicColor = ColorPalette.GetColorStringForPopup(ColorPalette.Tunic, 3);
+                string ScarfColor = ColorPalette.GetColorStringForPopup(ColorPalette.Scarf, 4);
+                string Palette = $"\"Color Palette\"\n\"-----------------\"\n" +
+                    $"\"(0) Fur:     {FurColor.PadLeft(25)}\"\n" +
+                    $"\"(1) Puff:    {PuffColor.PadLeft(25)}\"\n" +
+                    $"\"(2) Details: {DetailsColor.PadLeft(25)}\"\n" +
+                    $"\"(3) Tunic:   {TunicColor.PadLeft(25)}\"\n" +
+                    $"\"(4) Scarf:   {ScarfColor.PadLeft(25)}\"";
                 GenericMessage.ShowMessage(Palette);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4)) {
@@ -78,18 +73,18 @@ namespace TunicRandomizer {
                         }
                     }
                 }
-                string BossesAndKeys = (StateVariable.GetStateVariableByName("SV_Fortress Arena_Spidertank Is Dead").BoolValue ? "<#FF3333>" : "<#FFFFFF>") + "[death]  "
-                    + (StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue || Inventory.GetItemByName("Hexagon Red").Quantity == 1 ? "<#FF3333>" : "<#FFFFFF>") + "[hexagram]  "
-                    + (StateVariable.GetStateVariableByName("Librarian Dead Forever").BoolValue ? "<#33FF33>" : "<#FFFFFF>") + "[death]  "
-                    + (StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue || Inventory.GetItemByName("Hexagon Green").Quantity == 1 ? "<#33FF33>" : "<#FFFFFF>") + "[hexagram]  "
-                    + (StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue ? "<#3333FF>" : "<#FFFFFF>") + "[death]  "
-                    + (StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue || Inventory.GetItemByName("Hexagon Blue").Quantity == 1 ? "<#3333FF>" : "<#FFFFFF>") + "[hexagram]";
-                GenericMessage.ShowMessage($"\"Collected Items\"\n\"-----------------\"\n\"Pages......" + string.Format("{0}/{1}", ObtainedPagesCount, 28).PadLeft(9, '.')
-                + "\"\n\"Fairies...." + string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')
-                + "\"\n\"Treasures.." + string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')
-                + "\"\n\"This Area.." + string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')
-                + "\"\n\"Overall...." + string.Format("{0}/{1}", ObtainedItemCount, RandomItemPatches.ItemList.Count).PadLeft(9, '.')
-                + "\"\n" + BossesAndKeys);
+                string BossesAndKeys = $"{(StateVariable.GetStateVariableByName("SV_Fortress Arena_Spidertank Is Dead").BoolValue ? "<#FF3333>" : "<#FFFFFF>")}[death]  " +
+                    $"{(StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue || Inventory.GetItemByName("Hexagon Red").Quantity == 1 ? "<#FF3333>" : "<#FFFFFF>")}[hexagram]  " +
+                    $"{(StateVariable.GetStateVariableByName("Librarian Dead Forever").BoolValue ? "<#33FF33>" : "<#FFFFFF>")}[death]  " +
+                    $"{(StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue || Inventory.GetItemByName("Hexagon Green").Quantity == 1 ? "<#33FF33>" : "<#FFFFFF>")}[hexagram]  " +
+                    $"{(StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue ? "<#3333FF>" : "<#FFFFFF>")}[death]  " +
+                    $"{(StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue || Inventory.GetItemByName("Hexagon Blue").Quantity == 1 ? "<#3333FF>" : "<#FFFFFF>")}[hexagram]";
+                GenericMessage.ShowMessage($"\"Collected Items\"\n\"-----------------\"\n\"Pages......{string.Format("{0}/{1}", ObtainedPagesCount, 28).PadLeft(9, '.')}\"\n" +
+                    $"\"Fairies....{string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')}\"\n" +
+                    $"\"Treasures..{string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')}\"\n" +
+                    $"\"This Area..{string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')}\"\n" +
+                    $"\"Overall....{string.Format("{0}/{1}", ObtainedItemCount, RandomItemPatches.ItemList.Count).PadLeft(9, '.')}\"\n" +
+                    $"{BossesAndKeys}");
             }
             if (Input.GetKeyDown(KeyCode.Alpha5)) {
                 System.Random rnd = new System.Random();
@@ -116,7 +111,7 @@ namespace TunicRandomizer {
 
             if (seed == 0) {
                 seed = new System.Random().Next();
-                TunicRandomizer.Logger.LogInfo("Generated new seed: " + seed);
+                TunicRandomizer.Logger.LogInfo($"Generated new seed: " + seed);
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
@@ -143,13 +138,13 @@ namespace TunicRandomizer {
             Shuffle(InitialRewards, InitialLocations);
 
             for (int i = 0; i < InitialRewards.Count; i++) {
-                string DictionaryId = InitialLocations[i].LocationId + " [" + InitialLocations[i].SceneName + "]";
+                string DictionaryId = $"{InitialLocations[i].LocationId} [{InitialLocations[i].SceneName}]";
                 ItemData ItemData = new ItemData(InitialRewards[i], InitialLocations[i]);
                 RandomItemPatches.ItemList.Add(DictionaryId, ItemData);
             }
 
             foreach (string Key in RandomItemPatches.ItemList.Keys) {
-                int ItemPickedUp = SaveFile.GetInt("randomizer picked up " + Key);
+                int ItemPickedUp = SaveFile.GetInt($"randomizer picked up {Key}");
                 if (ItemPickedUp == 1) {
                     RandomItemPatches.ItemsPickedUp.Add(Key, true);
                 } else {
@@ -159,7 +154,7 @@ namespace TunicRandomizer {
             HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
             
             foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
-                if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
+                if (SaveFile.GetInt($"randomizer obtained fairy {Key}") == 1) {
                     RandomItemPatches.FairiesCollected++;
                 }
             }
@@ -174,7 +169,6 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("randomizer free sword given", 0);
                 Sword.Quantity--;
             }
-
             PopulateSpoilerLog();
             PopulateHints();
         }
@@ -230,20 +224,20 @@ namespace TunicRandomizer {
         }
 
         public static void PopulateSpoilerLog() {
-            string SpoilerLogPath = Application.persistentDataPath + "/RandomizerSpoiler.log";
+            string SpoilerLogPath = $"{Application.persistentDataPath}/RandomizerSpoiler.log";
             int seed = SaveFile.GetInt("seed");
             Dictionary<string, List<string>> SpoilerLog = new Dictionary<string, List<string>>();
             foreach (string Key in Hints.SceneNamesForSpoilerLog.Keys) {
                 SpoilerLog[Key] = new List<string>();
             }
             foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
-                string Spoiler = "\t- " + Hints.SimplifiedItemNames[ItemData.Reward.Name] + " x" + ItemData.Reward.Amount;
+                string Spoiler = $"\t- {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
                 if (ItemData.Location.LocationId == "1007") {
                     Spoiler += " (10 Fairy Reward)";
                 } else if (ItemData.Location.LocationId == "waterfall") {
                     Spoiler += " (20 Fairy Reward)";
                 } else if (ItemData.Location.SceneName == "Trinket Well") {
-                    Spoiler += " (" + ItemData.Location.LocationId + ")";
+                    Spoiler += $" ({ItemData.Location.LocationId})";
                 }
                 if (ItemData.Reward.Type == "MONEY") {
                     if (ItemData.Reward.Amount < 20) {
@@ -282,7 +276,7 @@ namespace TunicRandomizer {
             HintItem = FindRandomizedItemByName("Lantern");
             string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz " + ScenePrefix +  " \"" + Scene + "\"\nwil hlp yoo \"light the way...\"";
+            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene}\"\nwil hlp yoo \"light the way...\"";
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
             // Golden Path hints
@@ -294,7 +288,7 @@ namespace TunicRandomizer {
 
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-                HintMessage = $"lehjehnd sehz " + ScenePrefix +  " \"" + Scene + "\"\niz lOkAtid awn #uh \"<#ffd700>Path of the Hero<#ffffff>...\"";
+                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene}\"\niz lOkAtid awn #uh \"<#ffd700>Path of the Hero<#ffffff>...\"";
                 Hints.HintMessages.Add(HintScene, HintMessage);
 
                 HintItems.Remove(HintItem.Reward.Name);
@@ -311,7 +305,7 @@ namespace TunicRandomizer {
                 string HexagonHintArea = HexagonHintAreas[TunicRandomizer.Randomizer.Next(HexagonHintAreas.Count)];
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-                HintMessage = $"#A sA " + ScenePrefix + " \"" + Scene + "\" iz \nwAr #uh " + HexagonColors[Hexagon] + "kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
+                HintMessage = $"#A sA {ScenePrefix} \"{Scene}\" iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                 Hints.HintMessages.Add(HexagonHintArea, HintMessage);
 
                 Hexagons.Remove(Hexagon);
@@ -376,18 +370,19 @@ namespace TunicRandomizer {
             }
             string HintMessage = "";
             string ScenePrefix = new List<char>() { 'A', 'E', 'I', 'O', 'U' }.Contains(Scene[0]) ? "#E" : "#uh";
+            string HintPrefix = $"lehjehnd sehs {ScenePrefix} \"{Scene}\" iz \nawn #uh"; 
             switch (chosenHint) {
                 case "Fools":
-                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of the fool...";
+                    HintMessage = $"{HintPrefix} \"path of the fool...\"";
                     break;
                 case "Pages":
-                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of knowledge...";
+                    HintMessage = $"{HintPrefix} \"path of knowledge...\"";
                     break;
                 case "Treasures":
-                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of treasure...";
+                    HintMessage = $"{HintPrefix} \"path of treasure...\"";
                     break;
                 case "Upgrades":
-                    HintMessage = $"lehjehnd sehs " + ScenePrefix + " \"" + Scene + "\" iz \nawn #uh \"path of strength...";
+                    HintMessage = $"{HintPrefix} \"path of strength...\"";
                     break;
                 default:
                     break;
@@ -413,14 +408,16 @@ namespace TunicRandomizer {
             foreach (FileManagementGUIButton button in GameObject.FindObjectsOfType<FileManagementGUIButton>()) {
                 SaveFile.LoadFromPath(SaveFile.GetRootSaveFileNameList()[button.index]);
                 if (SaveFile.GetInt("seed") != 0 && !button.isSpecial) {
-                    // Display special icon and "randomized" text next to file name
+                    // Display special icon and "randomized" text to indicate randomizer file
                     button.specialBadge.gameObject.active = true;
-                    button.filenameTMP.enableAutoSizing = false;
-                    button.filenameTMP.text += $" <size=60%>(randomized)";
+                    button.specialBadge.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+                    button.specialBadge.transform.localPosition = new Vector3(-75f, -27f, 0f);
+                    button.playtimeString.enableAutoSizing = false;
+                    button.playtimeString.text += $" <size=70%>randomized";
                     // Display randomized page count instead of "vanilla" pages picked up
                     int Pages = 0;
                     for (int i = 0; i < 28; i++) {
-                        if (SaveFile.GetInt("randomizer obtained page " + i) == 1) {
+                        if (SaveFile.GetInt($"randomizer obtained page {i}") == 1) {
                             Pages++;
                         }
                     }

@@ -27,18 +27,6 @@ namespace TunicRandomizer {
                     GUI.Label(new Rect(20f, 30f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
                 }
             }
-            
-            if(SceneLoaderPatches.SceneName == "Shop" && TunicRandomizer.Settings.ShowShopItemsEnabled) {
-                GUI.skin.label.fontSize = 19;
-                foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
-                    if (ItemData.Location.SceneName == "Shop" && !RandomItemPatches.ItemsPickedUp[$"{ItemData.Location.LocationId} [Shop]"]) {
-                        var position = Camera.main.WorldToScreenPoint(GameObject.Find(ItemData.Location.LocationId).gameObject.transform.position);
-                        if (GameObject.Find(ItemData.Location.LocationId).transform.localScale.x >= 1) {
-                            GUI.Label(new Rect(position.x - 100, Screen.currentResolution.height - position.y - 100, 500, 50), $"{Hints.SimplifiedItemNames[ItemData.Reward.Name]} {(ItemData.Reward.Amount > 1 ? $"x{ItemData.Reward.Amount}" : "")}");
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -12,14 +12,12 @@ using UnhollowerRuntimeLib;
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
 
-
-
-public static OptionsGUIMultiSelect FurButton;
-        public static OptionsGUIMultiSelect PuffButton;
-        public static OptionsGUIMultiSelect DetailsButton;
-        public static OptionsGUIMultiSelect TunicButton;
-        public static OptionsGUIMultiSelect ScarfButton;
-        public static OptionsGUIButton ResetColorButton;
+        private static OptionsGUIMultiSelect FurButton;
+        private static OptionsGUIMultiSelect PuffButton;
+        private static OptionsGUIMultiSelect DetailsButton;
+        private static OptionsGUIMultiSelect TunicButton;
+        private static OptionsGUIMultiSelect ScarfButton;
+        private static OptionsGUIButton ResetColorButton;
         private static OptionsGUIMultiSelect.MultiSelectAction ToggleHintsAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleHints;
         private static OptionsGUIMultiSelect.MultiSelectAction ToggleHeirAssistAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleHeirAssistMode;
         private static OptionsGUIMultiSelect.MultiSelectAction ToggleFoolTrapAction = (OptionsGUIMultiSelect.MultiSelectAction) ChangeFoolTrapFrequency;
@@ -27,9 +25,6 @@ public static OptionsGUIMultiSelect FurButton;
         private static OptionsGUIMultiSelect.MultiSelectAction ToggleDisplayShopAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleShopItemDisplay;
         private static OptionsGUIMultiSelect.MultiSelectAction ToggleFreeSwordAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleFreeSword;
         private static OptionsGUIMultiSelect.MultiSelectAction ToggleFoxColorsAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleRandomFoxPalette;
-
-        //private static OptionsGUIMultiSelect.MultiSelectAction ToggleHintsAction = (OptionsGUIMultiSelect.MultiSelectAction)(toggleHints);
-
 
         public static void OptionsGUI_page_root_PostfixPatch(OptionsGUI __instance) {
             foreach (OptionsGUIButton Button in GameObject.FindObjectsOfType<OptionsGUIButton>()) {
@@ -96,8 +91,6 @@ public static OptionsGUIMultiSelect FurButton;
                 ScarfButton.gameObject.active = false;
                 ResetColorButton.gameObject.active = false;
             }
-            __instance.setHeading("Randomizer + Extra");
-            
 
             return true;
         }
