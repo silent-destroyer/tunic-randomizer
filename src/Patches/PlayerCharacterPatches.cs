@@ -112,6 +112,9 @@ namespace TunicRandomizer {
             if (seed == 0) {
                 seed = new System.Random().Next();
                 TunicRandomizer.Logger.LogInfo($"Generated new seed: " + seed);
+                if (TunicRandomizer.Settings.StartWithSwordEnabled) {
+                    Inventory.GetItemByName("Sword").Quantity = 1;
+                }
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
@@ -159,16 +162,6 @@ namespace TunicRandomizer {
                 }
             }
 
-            Item Sword = Inventory.GetItemByName("Sword");
-            if (TunicRandomizer.Settings.StartWithSwordEnabled) {
-                if (Sword.Quantity == 0) { 
-                    Sword.Quantity = 1;
-                    SaveFile.SetInt("randomizer free sword given", 1);
-                }
-            } else if (!TunicRandomizer.Settings.StartWithSwordEnabled && SaveFile.GetInt("randomizer free sword given") == 1) {
-                SaveFile.SetInt("randomizer free sword given", 0);
-                Sword.Quantity--;
-            }
             PopulateSpoilerLog();
             PopulateHints();
         }

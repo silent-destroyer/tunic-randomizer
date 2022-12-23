@@ -17,26 +17,14 @@ namespace TunicRandomizer {
         private static OptionsGUIMultiSelect DetailsButton;
         private static OptionsGUIMultiSelect TunicButton;
         private static OptionsGUIMultiSelect ScarfButton;
+        private static OptionsGUIMultiSelect FoolTrapButton;
         private static OptionsGUIButton ResetColorButton;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleHintsAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleHints;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleHeirAssistAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleHeirAssistMode;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleFoolTrapAction = (OptionsGUIMultiSelect.MultiSelectAction) ChangeFoolTrapFrequency;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleCheaperShopAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleCheaperShopItems;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleDisplayShopAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleShopItemDisplay;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleFreeSwordAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleFreeSword;
-        private static OptionsGUIMultiSelect.MultiSelectAction ToggleFoxColorsAction = (OptionsGUIMultiSelect.MultiSelectAction) ToggleRandomFoxPalette;
 
         public static void OptionsGUI_page_root_PostfixPatch(OptionsGUI __instance) {
             foreach (OptionsGUIButton Button in GameObject.FindObjectsOfType<OptionsGUIButton>()) {
                 if (Button.centerAlignedText.text == "Extra Options") {
                     Button.centerAlignedText.text = "Extra Options & Randomizer Settings";
                 }
-            }
-        }
-
-        public static void OptionsGUI_popPage_PostfixPatch(OptionsGUI __instance) {
-            if (__instance.pageStack.Count == 0) {
-                __instance.pushDefault();
             }
         }
 
@@ -61,15 +49,16 @@ namespace TunicRandomizer {
             foreach (ColorPalette Color in ColorPalette.Scarf.Values) {
                 ScarfOptions.Add(Color.ToString());
             }
-            __instance.addToggle("Hints", "Off", "On", TunicRandomizer.Settings.HintsEnabled ? 1 : 0, ToggleHintsAction);
-            __instance.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, ToggleHeirAssistAction);
             UnhollowerBaseLib.Il2CppStringArray FoolTrapOptions = (UnhollowerBaseLib.Il2CppStringArray)new string[] { "<#FFFFFF>None", "<#4FF5D4>Normal", "<#E3D457>Double", "<#FF3333>Onslaught" };
-            OptionsGUIMultiSelect ms = __instance.addMultiSelect("Fool Trap Frequency", FoolTrapOptions, GetFoolTrapIndex(), ToggleFoolTrapAction);
-            ms.wrap = true;
-            __instance.addToggle("Show Shop Items", "Off", "On", TunicRandomizer.Settings.ShowShopItemsEnabled ? 1: 0, ToggleDisplayShopAction);
-            __instance.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, ToggleCheaperShopAction);
-            __instance.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, ToggleFreeSwordAction);
-            __instance.addToggle("Random Fox Colors", "Off", "On", TunicRandomizer.Settings.RandomFoxColorsEnabled ? 1 : 0, ToggleFoxColorsAction);
+
+            __instance.addToggle("Hints", "Off", "On", TunicRandomizer.Settings.HintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHints);
+            __instance.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
+            FoolTrapButton = __instance.addMultiSelect("Fool Trap Frequency", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency);
+            FoolTrapButton.wrap = true;
+            __instance.addToggle("Show Shop Items", "Off", "On", TunicRandomizer.Settings.ShowShopItemsEnabled ? 1: 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShopItemDisplay);
+            __instance.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
+            __instance.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFreeSword);
+            __instance.addToggle("Random Fox Colors", "Off", "On", TunicRandomizer.Settings.RandomFoxColorsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleRandomFoxPalette);
 
             if (SceneLoaderPatches.SceneName != "TitleScreen") {
                 __instance.addButton("Change Fox Colors", (Il2CppSystem.Action)LoadColorPaletteSettings);
@@ -121,14 +110,6 @@ namespace TunicRandomizer {
 
         public static void ToggleFreeSword(int index) {
             TunicRandomizer.Settings.StartWithSwordEnabled = !TunicRandomizer.Settings.StartWithSwordEnabled;
-            Item Sword = Inventory.GetItemByName("Sword");
-            if (TunicRandomizer.Settings.StartWithSwordEnabled && Sword.Quantity == 0) {
-                SaveFile.SetInt("randomizer free sword given", 1);
-                Sword.Quantity = 1;
-            } else if (!TunicRandomizer.Settings.StartWithSwordEnabled && SaveFile.GetInt("randomizer free sword given") == 1) {
-                SaveFile.SetInt("randomizer free sword given", 0);
-                Sword.Quantity--;
-            }
             SaveSettings();
         }
 
@@ -165,7 +146,6 @@ namespace TunicRandomizer {
             TunicButton.gameObject.active = !TunicButton.gameObject.active;
             ScarfButton.gameObject.active = !ScarfButton.gameObject.active;
             ResetColorButton.gameObject.active = !ResetColorButton.gameObject.active;
-
         }
 
         public static void IncrementFur(int index) {

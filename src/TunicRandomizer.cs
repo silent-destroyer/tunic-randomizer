@@ -82,8 +82,6 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "close"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Close_PostfixPatch")));
 
             // Miscellaneous Patches            
-            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "popPage"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_popPage_PostfixPatch")));
-
             harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_root"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_root_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_extras"), new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_extras_PrefixPatch")));
