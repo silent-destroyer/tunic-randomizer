@@ -276,7 +276,7 @@ namespace TunicRandomizer {
             HintItem = FindRandomizedItemByName("Lantern");
             string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene}\"\nwil hlp yoo \"light the way...\"";
+            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene}\"\nwil hehlp yoo \"light the way...\"";
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
             // Golden Path hints
