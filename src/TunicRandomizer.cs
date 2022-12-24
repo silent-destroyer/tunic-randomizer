@@ -34,6 +34,9 @@ namespace TunicRandomizer {
                 File.WriteAllText(SettingsPath, JSONWriter.ToJson(Settings));
             } else {
                 Settings = JSONParser.FromJson<RandomizerSettings>(File.ReadAllText(SettingsPath));
+                if (Settings.SavedColorPalette == null) {
+                    Settings.SavedColorPalette = new int[] { 0, 0, 0, 0, 0 };
+                }
                 Log.LogInfo("Loaded settings from file: " + JSONWriter.ToJson(Settings));
             }
 

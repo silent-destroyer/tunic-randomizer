@@ -37,6 +37,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public int[] SavedColorPalette {
+            get;
+            set;
+        }
+
         public enum FoolTrapOption { 
             NONE,
             NORMAL,
@@ -56,6 +61,7 @@ namespace TunicRandomizer {
             ShowShopItemsEnabled = true;
             CheaperShopItemsEnabled = false;
             StartWithSwordEnabled = false;
+            SavedColorPalette = new int[5] {0, 0, 0, 0, 0};
             FoolTrapIntensity = FoolTrapOption.NORMAL;
         }
 

@@ -18,6 +18,8 @@ namespace TunicRandomizer {
         private static OptionsGUIMultiSelect TunicButton;
         private static OptionsGUIMultiSelect ScarfButton;
         private static OptionsGUIMultiSelect FoolTrapButton;
+        private static OptionsGUIButton SaveColorPaletteButton;
+        private static OptionsGUIButton LoadColorPaletteButton;
         private static OptionsGUIButton ResetColorButton;
 
         public static void OptionsGUI_page_root_PostfixPatch(OptionsGUI __instance) {
@@ -60,26 +62,29 @@ namespace TunicRandomizer {
             __instance.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFreeSword);
             __instance.addToggle("Random Fox Colors", "Off", "On", TunicRandomizer.Settings.RandomFoxColorsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleRandomFoxPalette);
 
-            if (SceneLoaderPatches.SceneName != "TitleScreen") {
-                __instance.addButton("Change Fox Colors", (Il2CppSystem.Action)LoadColorPaletteSettings);
-                FurButton = __instance.addMultiSelect("Fur", (UnhollowerBaseLib.Il2CppStringArray)FurOptions.ToArray(), PlayerPalette.selectionIndices[0], (OptionsGUIMultiSelect.MultiSelectAction)IncrementFur);
-                PuffButton = __instance.addMultiSelect("Fur", (UnhollowerBaseLib.Il2CppStringArray)PuffOptions.ToArray(), PlayerPalette.selectionIndices[1], (OptionsGUIMultiSelect.MultiSelectAction)IncrementPuff);
-                DetailsButton = __instance.addMultiSelect("Fur", (UnhollowerBaseLib.Il2CppStringArray)DetailsOptions.ToArray(), PlayerPalette.selectionIndices[2], (OptionsGUIMultiSelect.MultiSelectAction)IncrementDetails);
-                TunicButton = __instance.addMultiSelect("Fur", (UnhollowerBaseLib.Il2CppStringArray)TunicOptions.ToArray(), PlayerPalette.selectionIndices[3], (OptionsGUIMultiSelect.MultiSelectAction)IncrementTunic);
-                ScarfButton = __instance.addMultiSelect("Fur", (UnhollowerBaseLib.Il2CppStringArray)ScarfOptions.ToArray(), PlayerPalette.selectionIndices[4], (OptionsGUIMultiSelect.MultiSelectAction)IncrementScarf);
-                ResetColorButton = __instance.addButton("Reset Fox Colors", (Il2CppSystem.Action) ResetToDefaults);
-                FurButton.wrap = true;
-                PuffButton.wrap = true;
-                DetailsButton.wrap = true;
-                TunicButton.wrap = true;
-                ScarfButton.wrap = true;
-                FurButton.gameObject.active = false;
-                PuffButton.gameObject.active = false;
-                DetailsButton.gameObject.active = false;
-                TunicButton.gameObject.active = false;
-                ScarfButton.gameObject.active = false;
-                ResetColorButton.gameObject.active = false;
-            }
+            __instance.addButton("Customize Fox Colors", (Il2CppSystem.Action)LoadColorPaletteSettings);
+            FurButton = __instance.addMultiSelect("Fur", (UnhollowerBaseLib.Il2CppStringArray)FurOptions.ToArray(), PlayerPalette.selectionIndices[0], (OptionsGUIMultiSelect.MultiSelectAction)IncrementFur);
+            PuffButton = __instance.addMultiSelect("Puff", (UnhollowerBaseLib.Il2CppStringArray)PuffOptions.ToArray(), PlayerPalette.selectionIndices[1], (OptionsGUIMultiSelect.MultiSelectAction)IncrementPuff);
+            DetailsButton = __instance.addMultiSelect("Details", (UnhollowerBaseLib.Il2CppStringArray)DetailsOptions.ToArray(), PlayerPalette.selectionIndices[2], (OptionsGUIMultiSelect.MultiSelectAction)IncrementDetails);
+            TunicButton = __instance.addMultiSelect("Tunic", (UnhollowerBaseLib.Il2CppStringArray)TunicOptions.ToArray(), PlayerPalette.selectionIndices[3], (OptionsGUIMultiSelect.MultiSelectAction)IncrementTunic);
+            ScarfButton = __instance.addMultiSelect("Scarf", (UnhollowerBaseLib.Il2CppStringArray)ScarfOptions.ToArray(), PlayerPalette.selectionIndices[4], (OptionsGUIMultiSelect.MultiSelectAction)IncrementScarf);
+            SaveColorPaletteButton = __instance.addButton("Save Color Palette", (Il2CppSystem.Action)SaveColorPalette);
+            LoadColorPaletteButton = __instance.addButton("Load Saved Palette", (Il2CppSystem.Action)LoadColorPalette);
+            ResetColorButton = __instance.addButton("Reset Fox Colors", (Il2CppSystem.Action)ResetToDefaults);
+            FurButton.wrap = true;
+            PuffButton.wrap = true;
+            DetailsButton.wrap = true;
+            TunicButton.wrap = true;
+            ScarfButton.wrap = true;
+            FurButton.gameObject.active = false;
+            PuffButton.gameObject.active = false;
+            DetailsButton.gameObject.active = false;
+            TunicButton.gameObject.active = false;
+            ScarfButton.gameObject.active = false;
+            ResetColorButton.gameObject.active = false;
+            SaveColorPaletteButton.gameObject.active = false;
+            LoadColorPaletteButton.gameObject.active = false;
+            
 
             return true;
         }
@@ -118,6 +123,28 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void SaveColorPalette() {
+            TunicRandomizer.Settings.SavedColorPalette = PlayerPalette.selectionIndices;
+            SaveSettings();
+        }
+
+        public static void LoadColorPalette() {
+            PlayerPalette.selectionIndices = TunicRandomizer.Settings.SavedColorPalette;
+            for (int i = 0; i < PlayerPalette.selectionIndices.Count; i++) {
+                PlayerPalette.ChangeColourByDelta(i, 0);
+            }
+            FurButton.selectedIndex = PlayerPalette.selectionIndices[0];
+            FurButton.secondaryText.text = ColorPalette.Fur[PlayerPalette.selectionIndices[0]].ToString();
+            PuffButton.selectedIndex = PlayerPalette.selectionIndices[1];
+            PuffButton.secondaryText.text = ColorPalette.Puff[PlayerPalette.selectionIndices[1]].ToString();
+            DetailsButton.selectedIndex = PlayerPalette.selectionIndices[2];
+            DetailsButton.secondaryText.text = ColorPalette.Details[PlayerPalette.selectionIndices[2]].ToString();
+            TunicButton.selectedIndex = PlayerPalette.selectionIndices[3];
+            TunicButton.secondaryText.text = ColorPalette.Tunic[PlayerPalette.selectionIndices[3]].ToString();
+            ScarfButton.selectedIndex = PlayerPalette.selectionIndices[4];
+            ScarfButton.secondaryText.text = ColorPalette.Scarf[PlayerPalette.selectionIndices[4]].ToString();
+        }
+
         public static int GetFoolTrapIndex() {
    
             return (int)TunicRandomizer.Settings.FoolTrapIntensity;
@@ -146,6 +173,9 @@ namespace TunicRandomizer {
             TunicButton.gameObject.active = !TunicButton.gameObject.active;
             ScarfButton.gameObject.active = !ScarfButton.gameObject.active;
             ResetColorButton.gameObject.active = !ResetColorButton.gameObject.active;
+
+            SaveColorPaletteButton.gameObject.active = !SaveColorPaletteButton.gameObject.active;
+            LoadColorPaletteButton.gameObject.active = !LoadColorPaletteButton.gameObject.active;
         }
 
         public static void IncrementFur(int index) {

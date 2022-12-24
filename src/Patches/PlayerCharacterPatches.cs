@@ -115,6 +115,13 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.StartWithSwordEnabled) {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                 }
+                if (!TunicRandomizer.Settings.RandomFoxColorsEnabled) {
+                    TunicRandomizer.Logger.LogInfo("here");
+                    PlayerPalette.selectionIndices = TunicRandomizer.Settings.SavedColorPalette;
+                    for (int i = 0; i < PlayerPalette.selectionIndices.Count; i++) {
+                        PlayerPalette.ChangeColourByDelta(i, 0);
+                    }
+                }
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
