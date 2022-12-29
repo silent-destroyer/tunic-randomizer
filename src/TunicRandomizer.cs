@@ -114,6 +114,10 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(GameOverDecision), "__retry"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "GameOverDecision___retry_PrefixPatch")));
             
+            harmony.Patch(AccessTools.Method(typeof(BoneItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BoneItemBehavior_onActionButtonDown_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(BoneItemBehaviour), "confirmBoneUseCallback"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BoneItemBehavior_confirmBoneUseCallback_PrefixPatch")));
+            
         }
     }
 }

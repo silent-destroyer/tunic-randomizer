@@ -12,6 +12,7 @@ namespace TunicRandomizer {
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
+        public static bool IsTeleporting = false;
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
 
@@ -78,7 +79,15 @@ namespace TunicRandomizer {
             if (StungByBee) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
             }
-            
+            if (IsTeleporting) {
+                PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = true;
+                PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = true;
+                PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
+                PlayerCharacter.instance.AddPoison(1f);
+                var x = GameObject.Find("__Fox(Clone)").transform.rotation;
+                x.y += 0.01f;
+                GameObject.Find("__Fox(Clone)").transform.rotation = x;
+            }
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
@@ -149,7 +158,8 @@ namespace TunicRandomizer {
             }
             
             HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
-
+            Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
+            Inventory.GetItemByName("Homeward Bone Statue").icon = Inventory.GetItemByName("Dash Stone").icon;
             PopulateSpoilerLog();
             PopulateHints();
         }
@@ -162,6 +172,19 @@ namespace TunicRandomizer {
             return true;
         }
 
+        public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
+            if (GameObject.FindObjectsOfType<Monster>().Where(Monster => Monster.IsAggroed).Count() > 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool BoneItemBehavior_confirmBoneUseCallback_PrefixPatch(BoneItemBehaviour __instance) {
+            IsTeleporting = true;
+            return true;
+        }
+        
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
 
@@ -212,8 +235,10 @@ namespace TunicRandomizer {
             foreach (string Key in Hints.SceneNamesForSpoilerLog.Keys) {
                 SpoilerLog[Key] = new List<string>();
             }
-            foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
-                string Spoiler = $"\t- {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
+            Dictionary<string, string> Descriptions = JSONParser.FromJson<Dictionary<string, string>>(Hints.LocationDescriptionsJson);
+            foreach (string Key in RandomItemPatches.ItemList.Keys) {
+                ItemData ItemData = RandomItemPatches.ItemList[Key];
+                string Spoiler = $"\t- {Descriptions[Key]}: {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
                 if (ItemData.Location.LocationId == "1007") {
                     Spoiler += " (10 Fairy Reward)";
                 } else if (ItemData.Location.LocationId == "waterfall") {
@@ -236,6 +261,7 @@ namespace TunicRandomizer {
             SpoilerLogLines.Add("Seed: " + seed);
             foreach (string Key in SpoilerLog.Keys) {
                 SpoilerLogLines.Add(Hints.SceneNamesForSpoilerLog[Key]);
+                SpoilerLog[Key].Sort();
                 foreach (string line in SpoilerLog[Key]) {
                     SpoilerLogLines.Add(line);
                 }

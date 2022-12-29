@@ -78,7 +78,14 @@ namespace TunicRandomizer {
                 foreach (string Key in RandomItemPatches.HeroRelicLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer picked up " + RandomItemPatches.HeroRelicLookup[Key].OriginalPickupLocation) == 1;
                 }
-            } 
+            }
+            if (PlayerCharacterPatches.IsTeleporting) {
+                PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = false;
+                PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = false;
+                PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = false;
+                PlayerCharacter.instance.ClearPoison();
+                PlayerCharacterPatches.IsTeleporting = false;
+            }
         }
 
         public static void PauseMenu___button_ReturnToTitle_PostfixPatch(PauseMenu __instance) {
