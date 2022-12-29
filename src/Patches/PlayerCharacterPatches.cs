@@ -84,9 +84,6 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.AddPoison(1f);
-                var x = GameObject.Find("__Fox(Clone)").transform.rotation;
-                x.y += 0.01f;
-                GameObject.Find("__Fox(Clone)").transform.rotation = x;
             }
         }
 
