@@ -37,6 +37,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ItemTrackerFileEnabled {
+            get;
+            set;
+        }
+
         public int[] SavedColorPalette {
             get;
             set;
@@ -61,6 +66,7 @@ namespace TunicRandomizer {
             ShowShopItemsEnabled = true;
             CheaperShopItemsEnabled = false;
             StartWithSwordEnabled = false;
+            ItemTrackerFileEnabled = false;
             SavedColorPalette = new int[5] {0, 0, 0, 0, 0};
             FoolTrapIntensity = FoolTrapOption.NORMAL;
         }

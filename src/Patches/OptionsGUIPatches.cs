@@ -84,7 +84,8 @@ namespace TunicRandomizer {
             ResetColorButton.gameObject.active = false;
             SaveColorPaletteButton.gameObject.active = false;
             LoadColorPaletteButton.gameObject.active = false;
-            
+
+            __instance.addToggle("Item Tracker File", "Off", "On", TunicRandomizer.Settings.ItemTrackerFileEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrackerFile);
 
             return true;
         }
@@ -118,6 +119,17 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void ToggleTrackerFile(int index) {
+            TunicRandomizer.Settings.ItemTrackerFileEnabled = !TunicRandomizer.Settings.ItemTrackerFileEnabled;
+            if (TunicRandomizer.Settings.ItemTrackerFileEnabled) {
+                ItemTracker.SaveTrackerFile();
+            } else {
+                File.Delete(TunicRandomizer.ItemTrackerPath);
+            }
+
+            SaveSettings();
+        }
+
         public static void ToggleRandomFoxPalette(int index) {
             TunicRandomizer.Settings.RandomFoxColorsEnabled = !TunicRandomizer.Settings.RandomFoxColorsEnabled;
             SaveSettings();
@@ -143,6 +155,7 @@ namespace TunicRandomizer {
             TunicButton.secondaryText.text = ColorPalette.Tunic[PlayerPalette.selectionIndices[3]].ToString();
             ScarfButton.selectedIndex = PlayerPalette.selectionIndices[4];
             ScarfButton.secondaryText.text = ColorPalette.Scarf[PlayerPalette.selectionIndices[4]].ToString();
+            SceneLoaderPatches.UpdateTrackerSceneInfo();
         }
 
         public static int GetFoolTrapIndex() {
@@ -181,26 +194,31 @@ namespace TunicRandomizer {
         public static void IncrementFur(int index) {
             PlayerPalette.selectionIndices[0] = index;
             PlayerPalette.ChangeColourByDelta(0, 0);
+            SceneLoaderPatches.UpdateTrackerSceneInfo();
         }
 
         public static void IncrementPuff(int index) {
             PlayerPalette.selectionIndices[1] = index;
             PlayerPalette.ChangeColourByDelta(0, 0);
+            SceneLoaderPatches.UpdateTrackerSceneInfo();
         }
 
         public static void IncrementDetails(int index) {
             PlayerPalette.selectionIndices[2] = index;
             PlayerPalette.ChangeColourByDelta(0, 0);
+            SceneLoaderPatches.UpdateTrackerSceneInfo();
         }
 
         public static void IncrementTunic(int index) {
             PlayerPalette.selectionIndices[3] = index;
             PlayerPalette.ChangeColourByDelta(0, 0);
+            SceneLoaderPatches.UpdateTrackerSceneInfo();
         }
 
         public static void IncrementScarf(int index) {
             PlayerPalette.selectionIndices[4] = index;
             PlayerPalette.ChangeColourByDelta(0, 0);
+            SceneLoaderPatches.UpdateTrackerSceneInfo();
         }
 
 

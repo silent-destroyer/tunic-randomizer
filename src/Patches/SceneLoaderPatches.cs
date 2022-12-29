@@ -36,6 +36,8 @@ namespace TunicRandomizer {
                 Scarf = PlayerPalette.ChangeColourByDelta(4, rnd.Next(1, 11));
             }
 
+            UpdateTrackerSceneInfo();
+
             if (SceneName == "Waterfall") {
                 List<string> RandomObtainedFairies = new List<string>();
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
@@ -62,6 +64,10 @@ namespace TunicRandomizer {
                 foreach (string Key in RandomItemPatches.HeroRelicLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
                 }
+            } else if (SceneName == "Credits First") {
+                for (int i = 0; i < 28; i++) {
+                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
+                }
             } else {
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
@@ -77,6 +83,18 @@ namespace TunicRandomizer {
 
         public static void PauseMenu___button_ReturnToTitle_PostfixPatch(PauseMenu __instance) {
             SceneName = "TitleScreen";
+        }
+
+        public static void UpdateTrackerSceneInfo() {
+            TunicRandomizer.Tracker.CurrentScene.SceneId = SceneId;
+            TunicRandomizer.Tracker.CurrentScene.SceneName = SceneName;
+            TunicRandomizer.Tracker.CurrentScene.Fur = ColorPalette.Fur[PlayerPalette.selectionIndices[0]];
+            TunicRandomizer.Tracker.CurrentScene.Puff = PlayerPalette.selectionIndices[1] == 0 ? ColorPalette.Fur[PlayerPalette.selectionIndices[0]] : ColorPalette.Puff[PlayerPalette.selectionIndices[1]];
+            TunicRandomizer.Tracker.CurrentScene.Details = ColorPalette.Details[PlayerPalette.selectionIndices[2]];
+            TunicRandomizer.Tracker.CurrentScene.Tunic = ColorPalette.Tunic[PlayerPalette.selectionIndices[3]];
+            TunicRandomizer.Tracker.CurrentScene.Scarf = ColorPalette.Scarf[PlayerPalette.selectionIndices[4]];
+
+            ItemTracker.SaveTrackerFile();
         }
     }
 }

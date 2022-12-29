@@ -16,7 +16,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 - Custom seed support
 - Randomized Fox colors upon every scene transition (!!)
 - Spoiler Log
-- Fool Traps, with difficulty options (None, Normal, Double, Onslaught)
+- Fool Traps, with different intensity options (None, Normal, Double, Onslaught)
 - Hint Messages displayed at certain interactable locations when enabled, including:
   - The Mailbox
   - Hero's Graves
@@ -25,13 +25,15 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 - Randomizer Settings Menu with the following options:
     - Hints
     - Random Fox Colors
-    - Change Fox Colors on the fly
+    - Customize Fox Colors on the fly and Save/Load a custom color scheme
+      - Saved color scheme will be applied on New Game if "Random Fox Colors" is disabled
     - Easier Heir Fight
     - Frequency of Fool Traps
     - Reveal randomized shop item contents
     - Make randomized shop items cheaper
     - Start with a sword
-
+    - Enable Item Tracker File
+  
 ## Installation
 - Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version.
 - Go to https://builds.bepinex.dev/projects/bepinex_be and find Artifact #572 and download the "BepInEx Unity (IL2CPP) for Windows (x64) games" build. (The mod is currently NOT compatible with newer BepInEx builds so #572 is recommended. Here is a direct link for the correct download: https://builds.bepinex.dev/projects/bepinex_be/572/BepInEx_UnityIL2CPP_x64_9c2b17f_6.0.0-be.572.zip)

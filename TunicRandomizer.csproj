@@ -151,12 +151,14 @@
     <Compile Include="src\Models\ItemData.cs" />
     <Compile Include="src\Models\Location.cs" />
     <Compile Include="src\Models\RandomizerSettings.cs" />
+    <Compile Include="src\Models\ItemTracker.cs" />
     <Compile Include="src\Models\Reward.cs" />
     <Compile Include="src\Patches\RandomItemPatches.cs" />
     <Compile Include="src\Patches\PageDisplayPatches.cs" />
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
+    <Compile Include="src\Patches\SpeedrunFinishlineDisplayPatches.cs" />
     <Compile Include="src\Patches\TitleVersion.cs" />
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
