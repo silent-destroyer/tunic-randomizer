@@ -182,6 +182,8 @@ namespace TunicRandomizer{
                 int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
                 string ItemString = TunicRandomizer.Settings.ShowShopItemsEnabled ? $"\"{Hints.SimplifiedItemNames[Item.Reward.Name] + (Item.Reward.Amount > 1 ? " x" + Item.Reward.Amount : "")}\"{(Hints.SimplifiedItemNames[Item.Reward.Name].Length >= 20 ? "\n" : "")}" : "";
                 __instance.confirmPurchaseFormattedLanguageLine.text = $"bI {ItemString} for {Price} [money]?";
+            } else {
+                __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {__instance.price} [money]?";
             }
             return true;
         }
