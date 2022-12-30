@@ -130,6 +130,7 @@
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>

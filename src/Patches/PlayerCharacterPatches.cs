@@ -155,7 +155,6 @@ namespace TunicRandomizer {
             }
             
             HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
-            Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
             Inventory.GetItemByName("Homeward Bone Statue").icon = Inventory.GetItemByName("Dash Stone").icon;
             PopulateSpoilerLog();
             PopulateHints();
