@@ -4,9 +4,12 @@ using System.Collections;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using BepInEx.Logging;
 
 namespace TunicRandomizer {
     public class SceneLoaderPatches {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
+
         public static int Fur, Puff, Details, Tunic, Scarf;
         public static int SceneId;
         public static string SceneName;
@@ -22,7 +25,7 @@ namespace TunicRandomizer {
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-            TunicRandomizer.Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
+            Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
             System.Random rnd = new System.Random();

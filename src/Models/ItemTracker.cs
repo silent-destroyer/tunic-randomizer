@@ -39,6 +39,7 @@ namespace TunicRandomizer {
             {"Pages", 0},
             {"Fairies", 0},
             {"Golden Trophies", 0},
+            {"Strange Stone", 0},
             {"Upgrade Offering - Attack - Tooth", 0},
             {"Upgrade Offering - DamageResist - Effigy", 0},
             {"Upgrade Offering - PotionEfficiency Swig - Ash", 0},

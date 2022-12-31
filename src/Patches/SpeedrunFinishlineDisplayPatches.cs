@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 namespace TunicRandomizer {
     public class SpeedrunFinishlineDisplayPatches {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static Dictionary<string, string> ReportGroupItems = new Dictionary<string, string>(){
             {"Inventory items_stick", "Stick"},
@@ -33,6 +35,8 @@ namespace TunicRandomizer {
         };
 
         public static bool SpeedrunFinishlineDisplay_showFinishline_PrefixPatch(SpeedrunFinishlineDisplay __instance) {
+            Inventory.GetItemByName("Firecracker").Quantity += 1;
+
             foreach (SpeedrunReportItem item in __instance.reportGroup_items) {
                 item.itemsForQuantity = new Item[] { Inventory.GetItemByName("Firecracker") };
                 item.chestIDs = new int[] { };
@@ -50,13 +54,15 @@ namespace TunicRandomizer {
             }
             return true;
         }
+        public static void SpeedrunFinishlineDisplay_showFinishline_PostfixPatch(SpeedrunFinishlineDisplay __instance) {
+            Inventory.GetItemByName("Firecracker").Quantity -= 1;
+        }
 
         public static bool SpeedrunFinishlineDisplay_addParadeIcon_PrefixPatch(SpeedrunFinishlineDisplay __instance, ref Sprite icon, ref int quantity, ref RectTransform rt) {
-            TunicRandomizer.Logger.LogInfo(icon.name + " " + TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]]);
             if (TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]] == 0) {
                 return false;
             }
-  
+
             quantity = TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]];
             return true;
         }

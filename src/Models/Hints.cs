@@ -260,7 +260,7 @@ namespace TunicRandomizer {
             {"Relic - Hero Pendant HP", "Hero Relic (HP)"},
             {"Relic - Hero Crown", "Hero Relic (DEF)"},
             {"Relic - Hero Pendant SP", "Hero Relic (SP)"},
-            {"???", "???"}
+            {"Strange Stone", "Strange Stone"}
         };
     }
 }

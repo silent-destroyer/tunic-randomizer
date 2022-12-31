@@ -5,10 +5,12 @@ using System.IO;
 using UnityEngine;
 using TinyJson;
 using System.Linq;
+using BepInEx.Logging;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
-        
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
+
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
@@ -98,7 +100,7 @@ namespace TunicRandomizer {
 
             if (seed == 0) {
                 seed = new System.Random().Next();
-                TunicRandomizer.Logger.LogInfo($"Generated new seed: " + seed);
+                Logger.LogInfo($"Generated new seed: " + seed);
                 if (TunicRandomizer.Settings.StartWithSwordEnabled) {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                 }
@@ -115,7 +117,7 @@ namespace TunicRandomizer {
                 TunicRandomizer.Tracker = new ItemTracker(seed);
                 SceneLoaderPatches.UpdateTrackerSceneInfo();
             }
-            TunicRandomizer.Logger.LogInfo("Loading seed: " + seed);
+            Logger.LogInfo("Loading seed: " + seed);
             TunicRandomizer.Randomizer = new System.Random(seed);
             SaveName = SaveFile.saveDestinationName;
 
@@ -269,7 +271,7 @@ namespace TunicRandomizer {
                 File.Delete(SpoilerLogPath);
                 File.WriteAllLines(SpoilerLogPath, SpoilerLogLines);
             }
-            TunicRandomizer.Logger.LogInfo("Wrote Spoiler Log to " + SpoilerLogPath);
+            Logger.LogInfo("Wrote Spoiler Log to " + SpoilerLogPath);
         }
 
         private static void PopulateHints() {
