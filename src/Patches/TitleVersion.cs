@@ -4,29 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
 namespace TunicRandomizer {
-    public class TitleVersion : MonoBehaviour {
+    
+    public class TitleVersion {
 
-        private Matrix4x4 GuiMatrix;
-        public Rect textureCrop = new Rect(0.1f, 0.1f, 0.5f, 0.25f);
-        public Vector2 position = new Vector2(10, 10);
-        private void Awake() {
+        public static bool Loaded = false;
+        public static GameObject TitleLogo;
+        public static void Initialize() {
+            if (!Loaded) {
+                TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
+                Material FontMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(Material => Material.name == "Latin Rounded - Quantity Outline").ToList()[0];
+                GameObject TitleVersion = new GameObject("randomizer version");
+                TitleVersion.AddComponent<TextMeshProUGUI>().text = $"Randomizer Mod Ver. {PluginInfo.VERSION}";
+                TitleVersion.GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 0.64f, 0.0f);
+                TitleVersion.GetComponent<TextMeshProUGUI>().fontMaterial = FontMaterial;
+                TitleVersion.GetComponent<TextMeshProUGUI>().font = FontAsset;
+                TitleVersion.GetComponent<TextMeshProUGUI>().fontSize = 24;
+                TitleVersion.layer = 5;
+                TitleVersion.transform.parent = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/").transform;
+                TitleVersion.GetComponent<RectTransform>().sizeDelta = new Vector2(300f, 50f);
+                TitleVersion.transform.localPosition = new Vector3(-376f, 240f, 0);
+                TitleVersion.transform.localScale = Vector3.one;
+                GameObject.DontDestroyOnLoad(TitleVersion);
+                System.Random Random = new System.Random();
 
-            this.GuiMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1f, 1f, 1f));
-        }
-
-        private void OnGUI() {
-            Matrix4x4 matrixx = GUI.matrix;
-            GUI.matrix = this.GuiMatrix;
-            if (SceneLoaderPatches.SceneName == "TitleScreen") {
-                GUI.color = new Color(1f, 147f / 255f, 0f, 1f);
-                GUI.skin.label.fontSize = 38;
-                if (Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode)) {
-                    GUI.Label(new Rect(20f, 75f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
-                } else {
-                    GUI.Label(new Rect(20f, 30f, 700f, 100f), "Randomizer Mod Ver. " + PluginInfo.VERSION);
+                if (Random.Next(100) < 20) {
+                    GameObject Title = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Image");
+                    GameObject.Destroy(Title.GetComponent<Image>());
+                    ModelSwaps.TuncTitleImage.transform.parent = Title.transform;
+                    ModelSwaps.TuncTitleImage.transform.localScale = new Vector3(3.5f, 2f, 1f);
+                    ModelSwaps.TuncTitleImage.transform.localPosition = Vector3.zero;
+                    ModelSwaps.TuncTitleImage.SetActive(true);
                 }
             }
+            Loaded = true;
+
         }
+
     }
+
 }

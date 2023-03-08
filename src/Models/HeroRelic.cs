@@ -11,15 +11,23 @@ namespace TunicRandomizer {
             get;
             set;
         }
+
         public string ItemPresentedOnCollection {
             get;
             set;
         }
+
         public string CollectionMessage {
             get;
             set;
         }
+
         public string OriginalPickupLocation {
+            get;
+            set;
+        }
+
+        public string CorrespondingStat {
             get;
             set;
         }
@@ -32,11 +40,12 @@ namespace TunicRandomizer {
             CollectionMessage = collectionMessage;
         }
 
-        public HeroRelic(string flag, string itemPresentedOnCollection, string collectionMessage, string originalPickupLocation) {
+        public HeroRelic(string flag, string itemPresentedOnCollection, string collectionMessage, string originalPickupLocation, string correspondingStat) {
             Flag = flag;
             ItemPresentedOnCollection = itemPresentedOnCollection;
             CollectionMessage = collectionMessage;
             OriginalPickupLocation = originalPickupLocation;
+            CorrespondingStat = correspondingStat;
         }
     }
 }

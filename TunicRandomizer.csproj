@@ -120,6 +120,10 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
@@ -130,6 +134,10 @@
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
@@ -152,18 +160,25 @@
     <Compile Include="src\Models\Fairy.cs" />
     <Compile Include="src\Models\HeroRelic.cs" />
     <Compile Include="src\Models\Hints.cs" />
+    <Compile Include="src\Models\ImageData.cs" />
     <Compile Include="src\Models\ItemData.cs" />
+    <Compile Include="src\Models\ItemPositions.cs" />
     <Compile Include="src\Models\Location.cs" />
+    <Compile Include="src\Patches\ModelSwaps.cs" />
     <Compile Include="src\Models\RandomizerSettings.cs" />
     <Compile Include="src\Models\ItemTracker.cs" />
     <Compile Include="src\Models\Reward.cs" />
+    <Compile Include="src\Patches\GoldenItemBehavior.cs" />
+    <Compile Include="src\Patches\ItemStatsHUD.cs" />
     <Compile Include="src\Patches\RandomItemPatches.cs" />
     <Compile Include="src\Patches\PageDisplayPatches.cs" />
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
     <Compile Include="src\Patches\SpeedrunFinishlineDisplayPatches.cs" />
+    <Compile Include="src\Patches\SwordProgression.cs" />
     <Compile Include="src\Patches\TitleVersion.cs" />
+    <Compile Include="src\Patches\TrackerOverlay.cs" />
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
   </ItemGroup>

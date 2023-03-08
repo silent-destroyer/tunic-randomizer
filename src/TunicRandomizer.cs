@@ -17,8 +17,9 @@ namespace TunicRandomizer {
         public static ManualLogSource Logger;
         public static System.Random Randomizer = null;
         public static RandomizerSettings Settings;
-        public static string SettingsPath = Application.persistentDataPath + "/RandomizerSettings.json";
-        public static string ItemTrackerPath = Application.persistentDataPath + "/RandomizerTracker.json";
+        public static string SpoilerLogPath = Application.persistentDataPath + "/Randomizer/Spoiler.log";
+        public static string SettingsPath = Application.persistentDataPath + "/Randomizer/Settings.json";
+        public static string ItemTrackerPath = Application.persistentDataPath + "/Randomizer/ItemTracker.json";
         public static ItemTracker Tracker = new ItemTracker();
 
         public override void Load() {
@@ -26,12 +27,20 @@ namespace TunicRandomizer {
             Logger = Log;
             Harmony harmony = new Harmony(PluginInfo.GUID);
 
-            ClassInjector.RegisterTypeInIl2Cpp<TitleVersion>();
-            GameObject TitleVersion = new GameObject("TitleVersion", new Type[] { Il2CppType.Of<TitleVersion>() });
-            TitleVersion.hideFlags = HideFlags.HideAndDontSave;
-            UnityEngine.Object.DontDestroyOnLoad(TitleVersion);
+            if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
+                Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");
+            }
+            if (File.Exists(Application.persistentDataPath + "/RandomizerTracker.json")) { 
+                File.Delete(Application.persistentDataPath + "/RandomizerTracker.json");
+            }
+            if (File.Exists(Application.persistentDataPath + "/RandomizerSpoiler.log")) {
+                File.Delete(Application.persistentDataPath + "/RandomizerSpoiler.log");
+            }
+            if (File.Exists(Application.persistentDataPath + "/RandomizerSettings.json")) {
+                File.Delete(Application.persistentDataPath + "/RandomizerSettings.json");
+            }
 
-
+            Application.runInBackground = true;
             if (!File.Exists(SettingsPath)) {
                 Settings = new RandomizerSettings();
                 File.WriteAllText(SettingsPath, JSONWriter.ToJson(Settings));
@@ -62,9 +71,9 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(HeroRelicPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "HeroRelicPickup_onGetIt_PrefixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_TossedInCoin_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_TossedInCoin_PostfixPatch")));
-
-            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_IInteractionReceiver_Interact_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_IInteractionReceiver_Interact_PostfixPatch")));
+            harmony.Patch(AccessTools.Method(typeof(TrinketWell), "TossedInCoin"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_TossedInCoin_PostfixPatch")));
+            
+            harmony.Patch(AccessTools.Method(typeof(TrinketWell._giveTrinketUpgrade_d__14), "MoveNext"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "TrinketWell_giveTrinketUpgrade_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(ShopItem), "buy"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "ShopItem_buy_PrefixPatch")));
 
@@ -79,8 +88,6 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Update_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Start_PostfixPatch")));
-
-            harmony.Patch(AccessTools.Method(typeof(Foxgod), "OnFlinchlessHit"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Foxgod_OnFlinchlessHit_PrefixPatch")));
 
             // Page Display Patches
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "ShowPage"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Show_PostfixPatch")));
@@ -100,7 +107,7 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(FairyCollection), "getFairyCount"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "FairyCollection_getFairyCount_PrefixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(InventoryDisplay), "Update"), new HarmonyMethod(AccessTools.Method(typeof(RandomItemPatches), "InventoryDisplay_Update_PrefixPatch")));
+            harmony.Patch(AccessTools.Method(typeof(InventoryDisplay), "Update"), new HarmonyMethod(AccessTools.Method(typeof(ItemStatsHUD), "InventoryDisplay_Update_PrefixPatch")));
             
             harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), null, new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
 
@@ -117,7 +124,11 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(BoneItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BoneItemBehavior_onActionButtonDown_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(BoneItemBehaviour), "confirmBoneUseCallback"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BoneItemBehavior_confirmBoneUseCallback_PrefixPatch")));
-            
+
+            harmony.Patch(AccessTools.Method(typeof(SpearItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(GoldenItemBehavior), "SpearItemBehaviour_onActionButtonDown_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
+
         }
     }
 }

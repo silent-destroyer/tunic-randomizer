@@ -14,7 +14,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
   - Trinket card slots from tossing coins into wells
   - A (customizable) number of fool traps replacing less valuable money rewards
 - Custom seed support
-- Randomized Fox colors upon every scene transition (!!)
+- Randomized Fox colors upon every scene transition
 - Spoiler Log
 - Fool Traps, with different intensity options (None, Normal, Double, Onslaught)
 - Hint Messages displayed at certain interactable locations when enabled, including:
@@ -35,7 +35,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
     - Enable Item Tracker File
   
 ## Installation
-- Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version.
+- Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version. The mod can also be installed on the Steam Deck via Proton.
 - Go to https://builds.bepinex.dev/projects/bepinex_be and find Artifact #572 and download the "BepInEx Unity (IL2CPP) for Windows (x64) games" build. (The mod is currently NOT compatible with newer BepInEx builds so #572 is recommended. Here is a direct link for the correct download: https://builds.bepinex.dev/projects/bepinex_be/572/BepInEx_UnityIL2CPP_x64_9c2b17f_6.0.0-be.572.zip)
 
   ![image](https://user-images.githubusercontent.com/110704408/188519149-d9476aa9-55f6-4f38-9ce9-93d137fa71af.png)
@@ -53,7 +53,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
   - Press '3' to display the fox's color palette (important).
   - Press '4' to view how many items have been checked overall and in the current area.
   - Press '5' to randomize the fox's color palette on demand (bonus feature).
-- Upon selecting New Game or Continue, a spoiler log file named "RandomizerSpoiler.log" will be created in the AppData folder for the game (same folder that the save file folder is located, typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend)
+- Upon selecting New Game or Continue, a spoiler log file named "Spoiler.log" will be created in the Randomizer folder in the AppData folder for the game (same folder that the save file folder is located, typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend)
 - To use a custom seed:
   - Start a New Game from the main menu.
   - Save and quit after the intro cutscene plays.
@@ -68,6 +68,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 - zanders3 for TinyJson (https://github.com/zanders3/json)
 - Glacia and RisingStar111 for helping research how to mod this game
 - Radicoon, kingsamps0n, Landie, and JimTheEternal for playtesting
+- Andrew Shouldice, Kevin Regamey, Finji, and everyone else who made this wonderful game.
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/110704408/193220644-e62bc84b-ccaa-4245-b080-797e17b5d640.png)

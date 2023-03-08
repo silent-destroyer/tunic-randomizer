@@ -33,13 +33,14 @@ namespace TunicRandomizer {
             {"Key (House)", 0},
             {"Vault Key (Red)", 0},
             {"Trinket Coin", 0},
+            {"Coins Tossed", 0},
             {"Trinket Slot", 1},
             {"Trinket Cards", 0},
             {"Flask Container", 0},
             {"Pages", 0},
             {"Fairies", 0},
             {"Golden Trophies", 0},
-            {"Strange Stone", 0},
+            {"Dath Stone", 0},
             {"Upgrade Offering - Attack - Tooth", 0},
             {"Upgrade Offering - DamageResist - Effigy", 0},
             {"Upgrade Offering - PotionEfficiency Swig - Ash", 0},
@@ -54,7 +55,9 @@ namespace TunicRandomizer {
             {"Relic - Hero Pendant SP", 0},
             {"Hexagon Red", 0},
             {"Hexagon Green", 0},
-            {"Hexagon Blue", 0}
+            {"Hexagon Blue", 0},
+            {"Hexagon Gold", 0},
+            {"Sword Progression", 0},
         };
 
         public List<ItemData> ItemsCollected = new List<ItemData>();

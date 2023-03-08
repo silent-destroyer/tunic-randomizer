@@ -13,7 +13,7 @@ namespace TunicRandomizer {
         public static int Fur, Puff, Details, Tunic, Scarf;
         public static int SceneId;
         public static string SceneName;
-        
+
         public static bool SceneLoader_OnSceneLoaded_PrefixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", RandomItemPatches.ItemsPickedUp["19 [Forest Belltower]"] ? 1 : 0);
@@ -25,6 +25,39 @@ namespace TunicRandomizer {
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
+            ModelSwaps.SwappedThisSceneAlready = false;
+/*            if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GardenKnightVoid == null) {
+                ModelSwaps.SetupGardenKnightVoid();
+                SceneLoader.LoadScene("TitleScreen");
+            }*/
+            if (loadingScene.name == "Spirit Arena" && ModelSwaps.ThirdSword == null) {
+                ModelSwaps.InitializeThirdSword();
+                SceneLoader.LoadScene("TitleScreen");
+                return;
+            }
+            if(loadingScene.name == "Library Arena" && ModelSwaps.SecondSword == null) {
+                ModelSwaps.InitializeSecondSword();
+                SceneLoader.LoadScene("Spirit Arena");
+                return;
+            }
+            if (loadingScene.name == "Cathedral Arena" && !ModelSwaps.Chests.ContainsKey("Hyperdash")) {
+                ModelSwaps.InitializeChestType("Hyperdash");
+                SceneLoader.LoadScene("Library Arena");
+                return;
+            }
+            if (loadingScene.name == "Overworld Redux" && ModelSwaps.Chests.Count == 0) {
+                ModelSwaps.InitializeItems();
+                SceneLoader.LoadScene("Cathedral Arena");
+                return;
+            }
+
+            if (ModelSwaps.Chests.Count == 0 && loadingScene.name == "TitleScreen") {
+                SceneLoader.LoadScene("Overworld Redux");
+                return;
+            }
+            if (Camera.main != null && Camera.main.gameObject.GetComponentInParent<CycleController>() == null) {
+                Camera.main.transform.parent.gameObject.AddComponent<CycleController>();
+            }
             Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
@@ -40,8 +73,9 @@ namespace TunicRandomizer {
             }
 
             UpdateTrackerSceneInfo();
-
-            if (SceneName == "Waterfall") {
+            if (SceneName == "Overworld Redux") {
+                //ModelSwaps.InitializeItems();
+            } else if (SceneName == "Waterfall") {
                 List<string> RandomObtainedFairies = new List<string>();
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer obtained fairy " + Key) == 1;
@@ -61,6 +95,10 @@ namespace TunicRandomizer {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
                 PlayerCharacterPatches.HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
+                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
+                    Resources.FindObjectsOfTypeAll<Foxgod>().ToList()[0].gameObject.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                    Resources.FindObjectsOfTypeAll<Foxgod>().ToList()[0].gameObject.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                }
             } else if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", 0);
             } else if (SceneName == "Overworld Interiors") {
@@ -70,6 +108,15 @@ namespace TunicRandomizer {
             } else if (SceneName == "Credits First") {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
+                }
+            } else if (SceneName == "TitleScreen") {
+                TitleVersion.Initialize();
+            } else if (SceneName == "Temple") {
+                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
+                    foreach (GameObject Questagon in Resources.FindObjectsOfTypeAll<GameObject>().Where(Obj => Obj.name == "questagon")) {
+                        Questagon.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                        Questagon.GetComponent<MeshRenderer>().receiveShadows = false;
+                    }
                 }
             } else {
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
@@ -89,9 +136,15 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.ClearPoison();
                 PlayerCharacterPatches.IsTeleporting = false;
             }
+            if (!ModelSwaps.SwappedThisSceneAlready && (RandomItemPatches.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
+                ModelSwaps.SwapItemsInScene();
+            }
         }
 
         public static void PauseMenu___button_ReturnToTitle_PostfixPatch(PauseMenu __instance) {
+            if (ItemStatsHUD.HexagonQuest != null) {
+                ItemStatsHUD.HexagonQuest.SetActive(false);
+            }
             SceneName = "TitleScreen";
         }
 
