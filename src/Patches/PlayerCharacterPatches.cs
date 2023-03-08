@@ -179,7 +179,7 @@ namespace TunicRandomizer {
             List<ItemData> Hexagons = new List<ItemData>();
 
             foreach (ItemData Item in InitialItems) {
-                if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)") {
+                if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
                     if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
                         Hexagons.Add(Item);
                     } else if (Item.Reward.Name == "Vault Key (Red)") {
