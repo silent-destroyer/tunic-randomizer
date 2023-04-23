@@ -9,6 +9,7 @@ using BepInEx.Logging;
 using UnityEngine.SceneManagement;
 using UnhollowerBaseLib;
 using TMPro;
+using static TunicRandomizer.GhostHints;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
@@ -84,14 +85,11 @@ namespace TunicRandomizer {
                     $"{BossesAndKeys}");
             }
             if (Input.GetKeyDown(KeyCode.Alpha5)) {
-                System.Random rnd = new System.Random();
-                PlayerPalette.ChangeColourByDelta(0, rnd.Next(1, 16));
-                PlayerPalette.ChangeColourByDelta(1, rnd.Next(1, 12));
-                PlayerPalette.ChangeColourByDelta(2, rnd.Next(1, 12));
-                PlayerPalette.ChangeColourByDelta(3, rnd.Next(1, 16));
-                PlayerPalette.ChangeColourByDelta(4, rnd.Next(1, 11));
+                PaletteEditor.RandomizeFoxColors();
             }
-
+            if (Input.GetKeyDown(KeyCode.Alpha6)) {
+                PaletteEditor.LoadCustomTexture();
+            }
             if (StungByBee) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
             }
@@ -115,7 +113,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.AddPoison(1f);
             }
         }
-
+        
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
 
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Fortress").BoolValue = true;
@@ -126,7 +124,7 @@ namespace TunicRandomizer {
             int seed = SaveFile.GetInt("seed");
 
             if (seed == 0) {
-                seed = new System.Random().Next();
+                seed = QuickSettings.CustomSeed == 0 ? new System.Random().Next() : QuickSettings.CustomSeed;
                 Logger.LogInfo($"Generated new seed: " + seed);
                 SaveFile.SetString("randomizer game mode", Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode));
                 if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
@@ -152,10 +150,7 @@ namespace TunicRandomizer {
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
                 if (!TunicRandomizer.Settings.RandomFoxColorsEnabled) {
-                    PlayerPalette.selectionIndices = TunicRandomizer.Settings.SavedColorPalette;
-                    for (int i = 0; i < PlayerPalette.selectionIndices.Count; i++) {
-                        PlayerPalette.ChangeColourByDelta(i, 0);
-                    }
+
                 }
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
@@ -256,6 +251,12 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
                 int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
                 TunicRandomizer.Tracker.ImportantItems["Sword Progression"] = SwordLevel;
+                if (SwordLevel >= 1) {
+                    TunicRandomizer.Tracker.ImportantItems["Stick"] = 1;
+                }
+                if (SwordLevel >= 2) {
+                    TunicRandomizer.Tracker.ImportantItems["Sword"] = 1;
+                }
                 if (SwordLevel == 3) {
                     LoadSecondSword = true;
                 }
@@ -274,14 +275,32 @@ namespace TunicRandomizer {
             ModelSwaps.SetupDathStoneItemPresentation();
             SetupGoldenTrophyCollectionLines();
             PopulateSpoilerLog();
+            Logger.LogInfo("Wrote Spoiler Log to " + TunicRandomizer.SpoilerLogPath);
             PopulateHints();
 
             if (!ModelSwaps.SwappedThisSceneAlready) {
                 ModelSwaps.SwapItemsInScene();
             }
-        }
 
+            if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
+                PaletteEditor.RandomizeFoxColors();
+            }
+            if (TunicRandomizer.Settings.UseCustomTexture) {
+                PaletteEditor.LoadCustomTexture();
+            }
+            if (TunicRandomizer.Settings.RealestAlwaysOn) {
+                GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
+            }
+            FairyTargets.CreateFairyTargets();
+            GhostHints.GenerateHints();
+            OptionsGUIPatches.SaveSettings();
+            if (!SceneLoaderPatches.SpawnedGhosts) {
+                GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
+            }
+        }
+        
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance) {
+
             if (__instance.name == "Foxgod" && SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                 return false;
             }
@@ -294,7 +313,7 @@ namespace TunicRandomizer {
                     return false;
                 }
             } else {
-                if (__instance.name == "Foxgod") {
+                if (__instance.name == "Foxgod" && TunicRandomizer.Settings.HeirAssistModeEnabled) {
                     __instance.hp -= HeirAssistModeDamageValue;
                 }
                 if (GoldenItemBehavior.CanSwingGoldenSword) {
@@ -314,10 +333,11 @@ namespace TunicRandomizer {
         }
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
+            __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"{Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}\"?";
             if (GameObject.FindObjectsOfType<Monster>().Where(Monster => Monster.IsAggroed).Count() > 0) {
                 return false;
             }
-
+            
             return true;
         }
 
@@ -407,7 +427,7 @@ namespace TunicRandomizer {
             Dictionary<string, string> Descriptions = JSONParser.FromJson<Dictionary<string, string>>(Hints.LocationDescriptionsJson);
             foreach (string Key in RandomItemPatches.ItemList.Keys) {
                 ItemData ItemData = RandomItemPatches.ItemList[Key];
-                string Spoiler = $"\t- {Descriptions[Key]}: {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
+                string Spoiler = $"\t{(RandomItemPatches.ItemsPickedUp[Key] ? "x" : "-")} {Descriptions[Key]}: {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
 
                 if (ItemData.Reward.Type == "MONEY") {
                     if (ItemData.Reward.Amount < 20) {
@@ -422,6 +442,7 @@ namespace TunicRandomizer {
             }
             List<string> SpoilerLogLines = new List<string>();
             SpoilerLogLines.Add("Seed: " + seed);
+            SpoilerLogLines.Add("Lines that start with 'x' instead of '-' represent items that have been collected");
             foreach (string Key in SpoilerLog.Keys) {
                 SpoilerLogLines.Add(Hints.SceneNamesForSpoilerLog[Key]);
                 SpoilerLog[Key].Sort();
@@ -436,7 +457,6 @@ namespace TunicRandomizer {
                 File.Delete(TunicRandomizer.SpoilerLogPath);
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             }
-            Logger.LogInfo("Wrote Spoiler Log to " + TunicRandomizer.SpoilerLogPath);
         }
 
         private static void PopulateHints() {
@@ -447,19 +467,25 @@ namespace TunicRandomizer {
             HintItem = FindRandomizedItemByName("Lantern");
             string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene}\"\nwil hehlp yoo \"light the way...\"";
+            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nwil hehlp yoo \"<#00FFFF>LIGHT THE WAY<#ffffff>...\"";
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
             // Golden Path hints
-            List<string> HintItems = new List<string>() { SaveFile.GetInt("randomizer sword progression enabled") == 1 ? "Sword Progression" : "Sword", "Techbow", "Stundagger", "Wand", "Hyperdash" };
-            List<string> HintScenes = new List<string>() { "East Forest Relic", "Fortress Relic", "West Garden Relic", "Temple Statue" };
-            for (int i = 0; i < 4; i++) {
+            HintItem = FindRandomizedItemByName("Hyperdash");
+            Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
+            ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+            HintMessage = $"lehjehnd sehz \"<#FF00FF>SOMETHING EXTRAORDINARY\"\nuhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
+            Hints.HintMessages.Add("Temple Statue", HintMessage);
+            
+            List<string> HintItems = new List<string>() { "Techbow", "Stundagger", "Wand" };
+            List<string> HintScenes = new List<string>() { "East Forest Relic", "Fortress Relic", "West Garden Relic" };
+            for (int i = 0; i < 3; i++) {
                 HintItem = FindRandomizedItemByName(HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)]);
                 string HintScene = HintScenes[TunicRandomizer.Randomizer.Next(HintScenes.Count)];
 
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene}\"\niz lOkAtid awn #uh \"<#ffd700>Path of the Hero<#ffffff>...\"";
+                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\niz lOkAtid awn #uh \"<#ffd700>PATH OF THE HERO<#ffffff>...\"";
                 Hints.HintMessages.Add(HintScene, HintMessage);
 
                 HintItems.Remove(HintItem.Reward.Name);
@@ -491,83 +517,8 @@ namespace TunicRandomizer {
                 HexagonHintAreas.Remove(HexagonHintArea);
             }
 
-            // Generic Hints
-            List<string> EastForestHintAreas = new List<string>() {"Forest Belltower", "East Forest Redux Interior", "East Forest Redux Laddercave", "Sword Access", "East Forest Redux" };
-            Hints.HintMessages.Add("East Forest Sign", CreateGenericHint(EastForestHintAreas, "East Forest"));
-
-            List<string> OverworldHintAreas = new List<string>() { "Overworld Redux", "CubeRoom", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Ruins Passage", "Ruined Shop", "Town_FiligreeRoom", "Changing Room", "Town Basement", "Maze Room", "Overworld Interiors", "ShopSpecial" };
-            Hints.HintMessages.Add("Overworld Sign", CreateGenericHint(OverworldHintAreas, "Overworld"));
-
-            List<string> SwampHintAreas = new List<string>() { "Cathedral Arena", "Swamp Redux 2", "Cathedral Redux" };
-            Hints.HintMessages.Add("Swamp Sign", CreateGenericHint(SwampHintAreas, "Swamp"));
-
-            List<string> WestGardenHintAreas = new List<string>() { "Archipelagos Redux", "archipelagos_house" };
-            Hints.HintMessages.Add("West Garden Sign", CreateGenericHint(WestGardenHintAreas, "West Garden"));
-
-            List<string> FortressHintAreas = new List<string>() { "Fortress Courtyard", "Fortress Basement", "Fortress Main", "Fortress Reliquary", "Dusty", "Fortress East", "Fortress Arena" };
-            Hints.HintMessages.Add("Fortress Sign", CreateGenericHint(WestGardenHintAreas, "Eastern Vault"));
-
-            List<string> QuarryHintAreas = new List<string>() { "Quarry Redux", "Monastery", "ziggurat2020_1", "ziggurat2020_2", "ziggurat2020_3" };
-            Hints.HintMessages.Add("Quarry Sign", CreateGenericHint(QuarryHintAreas, "Quarry"));
         }
 
-        private static string CreateGenericHint(List<string> SceneNames, string Scene) {
-            Dictionary<string, int> HintWeights = new Dictionary<string, int>(){
-                {"Fools", 0},
-                {"Pages", 0},
-                {"Treasures", 0},
-                {"Upgrades", 0}
-            };
-            foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
-                if (SceneNames.Contains(ItemData.Location.SceneName)) {
-                    if (ItemData.Reward.Type == "PAGE") {
-                        HintWeights["Pages"] += 1;
-                    }
-                    if (ItemData.Reward.Name.Contains("GoldenTrophy")) {
-                        HintWeights["Treasures"] += 1;
-                    }
-                    if (ItemData.Reward.Name.Contains("Upgrade Offering")) {
-                        HintWeights["Upgrades"] += 1;
-                    }
-                    if (ItemData.Reward.Type == "FOOL") {
-                        HintWeights["Fools"] += 1;
-                    }
-                }
-            }
-            List<string> maxWeightedItems = new List<string>();
-            int maxWeight = new List<int>(HintWeights.Values).Max();
-            foreach (string Key in HintWeights.Keys) {
-                if (HintWeights[Key] == maxWeight) {
-                    maxWeightedItems.Add(Key);
-                }
-            }
-            string chosenHint;
-            if (maxWeightedItems.Count == 1) {
-                chosenHint = maxWeightedItems[0];
-            } else { 
-                chosenHint = maxWeightedItems[TunicRandomizer.Randomizer.Next(maxWeightedItems.Count)];
-            }
-            string HintMessage = "";
-            string ScenePrefix = new List<char>() { 'A', 'E', 'I', 'O', 'U' }.Contains(Scene[0]) ? "#E" : "#uh";
-            string HintPrefix = $"lehjehnd sehs {ScenePrefix} \"{Scene}\" iz \nawn #uh"; 
-            switch (chosenHint) {
-                case "Fools":
-                    HintMessage = $"{HintPrefix} \"path of the fool...\"";
-                    break;
-                case "Pages":
-                    HintMessage = $"{HintPrefix} \"path of knowledge...\"";
-                    break;
-                case "Treasures":
-                    HintMessage = $"{HintPrefix} \"path of treasure...\"";
-                    break;
-                case "Upgrades":
-                    HintMessage = $"{HintPrefix} \"path of strength...\"";
-                    break;
-                default:
-                    break;
-            }
-            return HintMessage;
-        }
 
         public static void SetupGoldenTrophyCollectionLines() {
             //kawngrahJoulA$uhnz!
@@ -597,7 +548,7 @@ namespace TunicRandomizer {
             }
         }
 
-        private static ItemData FindRandomizedItemByName(string Name) {
+        public static ItemData FindRandomizedItemByName(string Name) {
             foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
                 if (ItemData.Reward.Name == Name) {
                     return ItemData;
@@ -631,6 +582,15 @@ namespace TunicRandomizer {
                     button.manpageTMP.text = Pages.ToString();
                 }
             }
+        }
+
+        public static bool BloodstainChest_IInteractionReceiver_Interact_PrefixPatch(Item i, BloodstainChest __instance) {
+            if (SceneLoaderPatches.SceneName == "Changing Room") {
+                CoinSpawner.SpawnCoins(20, __instance.transform.position);
+                __instance.doPushbackBlast();
+                return false;
+            }
+            return true;
         }
     }
 }

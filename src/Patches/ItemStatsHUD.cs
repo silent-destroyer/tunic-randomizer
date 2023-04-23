@@ -96,6 +96,9 @@ namespace TunicRandomizer {
                 GoldHexagons = SetupText("gold hexagons", new Vector3(-237f, 200f, 0f), HexagonQuest.transform, 24f, FontAsset, FontMaterial);
                 GoldHexagons.GetComponent<RectTransform>().sizeDelta = new Vector2(350f, 50f);
                 GoldHexagons.transform.parent = HexagonQuest.transform;
+                if (Screen.width <= 1280 && Screen.height <= 800) {
+                    HexagonQuest.transform.position = new Vector3(50f, 0f, 100f);
+                }
                 GameObject.DontDestroyOnLoad(HexagonQuest);
  
 
@@ -154,7 +157,9 @@ namespace TunicRandomizer {
                         EquipButtons.Add(EquipButton);
                     }
                 }
-
+                if (Screen.width <= 1280 && Screen.height <= 800) {
+                    Stats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
+                }
             }
             Loaded = true;
         }

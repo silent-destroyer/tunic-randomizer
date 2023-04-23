@@ -112,6 +112,10 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.AIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.AnimationModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
@@ -164,12 +168,16 @@
     <Compile Include="src\Models\ItemData.cs" />
     <Compile Include="src\Models\ItemPositions.cs" />
     <Compile Include="src\Models\Location.cs" />
+    <Compile Include="src\Patches\GhostHints.cs" />
+    <Compile Include="src\Patches\QuickSettings.cs" />
+    <Compile Include="src\Patches\FairyTargets.cs" />
     <Compile Include="src\Patches\ModelSwaps.cs" />
     <Compile Include="src\Models\RandomizerSettings.cs" />
     <Compile Include="src\Models\ItemTracker.cs" />
     <Compile Include="src\Models\Reward.cs" />
     <Compile Include="src\Patches\GoldenItemBehavior.cs" />
     <Compile Include="src\Patches\ItemStatsHUD.cs" />
+    <Compile Include="src\Patches\PaletteEditor.cs" />
     <Compile Include="src\Patches\RandomItemPatches.cs" />
     <Compile Include="src\Patches\PageDisplayPatches.cs" />
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />

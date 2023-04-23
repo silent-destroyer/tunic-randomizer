@@ -71,7 +71,12 @@ namespace TunicRandomizer {
             set;
         }
 
-        public int[] SavedColorPalette {
+        public bool RealestAlwaysOn {
+            get;
+            set;
+        }
+
+        public bool UseCustomTexture {
             get;
             set;
         }
@@ -118,7 +123,8 @@ namespace TunicRandomizer {
             ItemTrackerOverlayEnabled = false;
 
             RandomFoxColorsEnabled = true;
-            SavedColorPalette = new int[5] {0, 0, 0, 0, 0};
+            RealestAlwaysOn = false;
+            UseCustomTexture = false;
         }
 
         public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled) { 

@@ -26,7 +26,20 @@ namespace TunicRandomizer {
             Log.LogInfo("Tunic Randomizer v" + PluginInfo.VERSION + " is loaded!");
             Logger = Log;
             Harmony harmony = new Harmony(PluginInfo.GUID);
-
+            ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Type[]
+            {
+                Il2CppType.Of<PaletteEditor>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            }); 
+            ClassInjector.RegisterTypeInIl2Cpp<QuickSettings>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("quick settings gui", new Type[]
+            {
+                Il2CppType.Of<QuickSettings>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");
             }
@@ -46,9 +59,7 @@ namespace TunicRandomizer {
                 File.WriteAllText(SettingsPath, JSONWriter.ToJson(Settings));
             } else {
                 Settings = JSONParser.FromJson<RandomizerSettings>(File.ReadAllText(SettingsPath));
-                if (Settings.SavedColorPalette == null) {
-                    Settings.SavedColorPalette = new int[] { 0, 0, 0, 0, 0 };
-                }
+
                 Log.LogInfo("Loaded settings from file: " + JSONWriter.ToJson(Settings));
             }
 
@@ -97,11 +108,7 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "close"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Close_PostfixPatch")));
 
             // Miscellaneous Patches            
-            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_root"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_root_PostfixPatch")));
-
-            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_extras"), new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_extras_PrefixPatch")));
-
-            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_extras"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_extras_PostfixPatch")));
+            harmony.Patch(AccessTools.Method(typeof(OptionsGUI), "page_root"), new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "OptionsGUI_page_root_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "InteractionTrigger_Interact_PrefixPatch")));
 
@@ -128,6 +135,8 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(SpearItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(GoldenItemBehavior), "SpearItemBehaviour_onActionButtonDown_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(BloodstainChest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BloodstainChest_IInteractionReceiver_Interact_PrefixPatch")));
 
         }
     }

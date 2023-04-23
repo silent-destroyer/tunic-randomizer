@@ -18,6 +18,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Stick").collectionMessage.text = $"fownd ahn Itehm! \"(<#8ddc6e>Lv. 1<#FFFFFF>)\"";
 
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Stick"));
+                TunicRandomizer.Tracker.ImportantItems["Stick"] = 1;
             } else if (SwordLevel == 2) {
                 Inventory.GetItemByName("Sword").Quantity = 1;
                 SwordPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.Items["Sword"].GetComponent<MeshFilter>().mesh;
@@ -30,6 +31,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                 Inventory.GetItemByName("Sword").collectionMessage.text = $"fownd ahn Itehm! \"(<#e99d4c>Lv. 2<#FFFFFF>)\"";
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
+                TunicRandomizer.Tracker.ImportantItems["Sword"] = 1;
             } else if (SwordLevel == 3) {
                 SwordPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.SecondSword.GetComponent<MeshFilter>().mesh;
                 SwordPresentation.GetComponent<MeshRenderer>().materials = ModelSwaps.SecondSword.GetComponent<MeshRenderer>().materials;
@@ -41,6 +43,7 @@ namespace TunicRandomizer {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
                 EnableSecondSword();
+                TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
             } else if (SwordLevel == 4) {
                 SwordPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.ThirdSword.GetComponent<MeshFilter>().mesh;
                 SwordPresentation.GetComponent<MeshRenderer>().materials = ModelSwaps.ThirdSword.GetComponent<MeshRenderer>().materials;
@@ -52,6 +55,7 @@ namespace TunicRandomizer {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
                 EnableThirdSword();
+                TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
             }
         }
 
@@ -83,6 +87,8 @@ namespace TunicRandomizer {
             SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 1.85f, 0f);
             SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.66f, 4.36f, 2f);
             SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.4f, 4.6f, 0.4f);
+            SwordProxy.transform.GetChild(1).GetComponent<HitTrigger>().unblockable = true;
+            SwordProxy.transform.GetChild(2).GetComponent<HitTrigger>().unblockable = true;
             if (SwordProxy.transform.childCount == 5) {
                 GameObject.Destroy(SwordProxy.transform.GetChild(4).gameObject);
             }

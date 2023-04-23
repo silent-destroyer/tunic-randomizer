@@ -31,10 +31,12 @@ namespace TunicRandomizer {
         public static GameObject TuncImage;
         public static GameObject GardenKnightVoid;
         public static GameObject MoneySfx;
+        public static GameObject FairyAnimation;
 
         public static GameObject RedKeyMaterial;
         public static GameObject GreenKeyMaterial;
         public static GameObject BlueKeyMaterial;
+        public static GameObject HeroRelicMaterial;
         public static bool SetupDathStonePresentation = false;
 
         public static void InitializeItems() {
@@ -80,13 +82,6 @@ namespace TunicRandomizer {
             Items["Upgrade Offering - Magic MP - Mushroom"] = ItemRoot.transform.GetChild(19).gameObject;
             Items["Upgrade Offering - PotionEfficiency Swig - Ash"] = ItemRoot.transform.GetChild(12).gameObject;
             Items["Upgrade Offering - Stamina SP - Feather"] = ItemRoot.transform.GetChild(14).gameObject;
-
-            Items["Relic - Hero Sword"] = ItemRoot.transform.GetChild(15).gameObject;
-            Items["Relic - Hero Crown"] = ItemRoot.transform.GetChild(13).gameObject;
-            Items["Relic - Hero Pendant HP"] = ItemRoot.transform.GetChild(18).gameObject;
-            Items["Relic - Hero Pendant MP"] = ItemRoot.transform.GetChild(19).gameObject;
-            Items["Relic - Hero Water"] = ItemRoot.transform.GetChild(12).gameObject;
-            Items["Relic - Hero Pendant SP"] = ItemRoot.transform.GetChild(14).gameObject;
 
             Items["GoldenTrophy_1"] = ItemRoot.transform.GetChild(31).gameObject;
             Items["GoldenTrophy_2"] = ItemRoot.transform.GetChild(32).gameObject;
@@ -175,6 +170,25 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void InitializeHeroRelics() {
+            GameObject ItemRoot = Resources.FindObjectsOfTypeAll<GameObject>().Where(Item => Item.name == "User Rotation Root").ToList()[0];
+
+            Material RelicMaterial = FindMaterial("ghost material_offerings");
+            List<string> RelicItems = new List<string>() { "Relic - Hero Sword", "Relic - Hero Crown", "Relic - Hero Pendant HP", "Relic - Hero Pendant MP", "Relic - Hero Water", "Relic - Hero Pendant SP" };
+            List<int> ItemPositions = new List<int>() { 15, 13, 18, 19, 12, 14 };
+            for (int i = 0; i < RelicItems.Count; i++) {
+                Items[RelicItems[i]] = GameObject.Instantiate(ItemRoot.transform.GetChild(ItemPositions[i]).gameObject);
+                if (Items[RelicItems[i]].GetComponent<MeshRenderer>() != null) {
+                    Items[RelicItems[i]].GetComponent<MeshRenderer>().material = RelicMaterial;
+                }
+                for (int j = 0; j < Items[RelicItems[i]].transform.childCount; j++) {
+                    Items[RelicItems[i]].transform.GetChild(j).GetComponent<MeshRenderer>().material = RelicMaterial;
+                }
+                Items[RelicItems[i]].SetActive(false);
+                GameObject.DontDestroyOnLoad(Items[RelicItems[i]]);
+            }
+        }
+
         public static void InitializeChestType(string ChestType) {
             if (!Chests.ContainsKey(ChestType)) {
                 List<Chest> SceneChests = new List<Chest>();
@@ -192,6 +206,11 @@ namespace TunicRandomizer {
                     Chests[ChestType].AddComponent<FMODUnity.StudioEventEmitter>().EventReference = SceneChests[0].gameObject.GetComponent<FMODUnity.StudioEventEmitter>().EventReference;
                     Chests[ChestType].SetActive(false);
                     GameObject.DontDestroyOnLoad(Chests[ChestType]);
+                    if (ChestType == "Fairy") {
+                        FairyAnimation = GameObject.Instantiate(SceneChests[0].transform.parent.GetChild(1).gameObject);
+                        FairyAnimation.SetActive(false);
+                        GameObject.DontDestroyOnLoad(FairyAnimation);
+                    }
                 }
             }
         }
@@ -274,9 +293,9 @@ namespace TunicRandomizer {
             string ItemId = $"{HeroRelicPickup.name} [{SceneLoaderPatches.SceneName}]";
             if (RandomItemPatches.ItemList.ContainsKey(ItemId)) {
                 ItemData Item = RandomItemPatches.ItemList[ItemId];
-                if (Item.Reward.Name == HeroRelicPickup.relicItem.name) {
+/*                if (Item.Reward.Name == HeroRelicPickup.relicItem.name) {
                     return;
-                }
+                }*/
                 for (int i = 0; i < HeroRelicPickup.transform.childCount; i++) {
                     HeroRelicPickup.transform.GetChild(i).gameObject.SetActive(false);
                 }
@@ -400,6 +419,7 @@ namespace TunicRandomizer {
                     NewItem.transform.localScale = TransformData.scale;
                     NewItem.SetActive(true);
                     Page.transform.GetChild(1).gameObject.SetActive(false);
+                    Page.transform.GetChild(0).gameObject.GetComponent<ParticleSystemRenderer>().material.color = Color.cyan;
                 }
             }
         }
@@ -714,7 +734,7 @@ namespace TunicRandomizer {
             Texture2D TuncTexture = new Texture2D(148, 148, TextureFormat.DXT1, false);
             ImageConversion.LoadImage(TuncTexture, Convert.FromBase64String(ImageData.Tunc));
 
-            Material ImageMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
+            Material ImageMaterial = FindMaterial("UI Add");
             HexagonGoldImage = new GameObject("hexagon gold");
             HexagonGoldImage.AddComponent<RawImage>().texture = GoldHexTexture;
             HexagonGoldImage.GetComponent<RawImage>().material = ImageMaterial;
@@ -742,5 +762,13 @@ namespace TunicRandomizer {
 
         }
 
+        public static Material FindMaterial(string MaterialName) {
+            List<Material> Material = Resources.FindObjectsOfTypeAll<Material>().Where(Mat => Mat.name == MaterialName).ToList();
+            if (Material != null && Material.Count > 0) {
+                return Material[0];
+            } else {
+                return null;
+            }
+        }
     }
 }

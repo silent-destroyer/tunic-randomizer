@@ -15,27 +15,13 @@ For questions, feedback, or discussion related to the randomizer, please visit t
   - A (customizable) number of fool traps replacing less valuable money rewards
 - Custom seed support
 - Randomized Fox colors upon every scene transition
+- Custom Fox Color texture support
 - Spoiler Log
 - Fool Traps, with different intensity options (None, Normal, Double, Onslaught)
-- Hint Messages displayed at certain interactable locations when enabled, including:
-  - The Mailbox
-  - Hero's Graves
-  - Sealed Temple statue
-  - Orange signposts
-- Randomizer Settings Menu with the following options:
-    - Hints
-    - Random Fox Colors
-    - Customize Fox Colors on the fly and Save/Load a custom color scheme
-      - Saved color scheme will be applied on New Game if "Random Fox Colors" is disabled
-    - Easier Heir Fight
-    - Frequency of Fool Traps
-    - Reveal randomized shop item contents
-    - Make randomized shop items cheaper
-    - Start with a sword
-    - Enable Item Tracker File
+- An in-depth hint system with several different hint types.
   
 ## Installation
-- Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version. The mod can also be installed on the Steam Deck via Proton.
+- Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version. The mod can also be installed on the Steam Deck via Proton using this guide: https://docs.bepinex.dev/articles/advanced/proton_wine.html.
 - Go to https://builds.bepinex.dev/projects/bepinex_be and find Artifact #572 and download the "BepInEx Unity (IL2CPP) for Windows (x64) games" build. (The mod is currently NOT compatible with newer BepInEx builds so #572 is recommended. Here is a direct link for the correct download: https://builds.bepinex.dev/projects/bepinex_be/572/BepInEx_UnityIL2CPP_x64_9c2b17f_6.0.0-be.572.zip)
 
   ![image](https://user-images.githubusercontent.com/110704408/188519149-d9476aa9-55f6-4f38-9ce9-93d137fa71af.png)

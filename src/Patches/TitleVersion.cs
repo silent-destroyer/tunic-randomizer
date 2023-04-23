@@ -26,12 +26,16 @@ namespace TunicRandomizer {
                 TitleVersion.layer = 5;
                 TitleVersion.transform.parent = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/").transform;
                 TitleVersion.GetComponent<RectTransform>().sizeDelta = new Vector2(300f, 50f);
-                TitleVersion.transform.localPosition = new Vector3(-376f, 240f, 0);
+                if (Screen.width <= 1280 && Screen.height <= 800) {
+                    TitleVersion.transform.localPosition = new Vector3(-321f, 240f, 0f);
+                } else {
+                    TitleVersion.transform.localPosition = new Vector3(-376f, 240f, 0);
+                }
                 TitleVersion.transform.localScale = Vector3.one;
                 GameObject.DontDestroyOnLoad(TitleVersion);
                 System.Random Random = new System.Random();
 
-                if (Random.Next(100) < 20) {
+                if (Random.Next(100) < 10) {
                     GameObject Title = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Image");
                     GameObject.Destroy(Title.GetComponent<Image>());
                     ModelSwaps.TuncTitleImage.transform.parent = Title.transform;
