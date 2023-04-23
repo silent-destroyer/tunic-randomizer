@@ -26,7 +26,7 @@ namespace TunicRandomizer {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Randomizer");
             addPageButton("Logic Settings", LogicSettingsPage);
-            addPageButton("Dialogue Settings", HintsSettingsPage);
+            addPageButton("Hint Settings", HintsSettingsPage);
             addPageButton("General Settings", GeneralSettingsPage);
             addPageButton("Fox Customization", CustomFoxSettingsPage);
 
