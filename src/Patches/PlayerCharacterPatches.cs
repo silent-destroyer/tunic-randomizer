@@ -294,7 +294,7 @@ namespace TunicRandomizer {
             FairyTargets.CreateFairyTargets();
             GhostHints.GenerateHints();
             OptionsGUIPatches.SaveSettings();
-            if (!SceneLoaderPatches.SpawnedGhosts) {
+            if (TunicRandomizer.Settings.HintsEnabled && !SceneLoaderPatches.SpawnedGhosts) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
         }
