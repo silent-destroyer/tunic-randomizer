@@ -36,6 +36,7 @@ namespace TunicRandomizer {
                 ModelSwaps.GlowEffect.SetActive(false);
                 GameObject.DontDestroyOnLoad(ModelSwaps.GlowEffect);
                 SceneLoader.LoadScene("TitleScreen");
+                return;
             }
 
             if (loadingScene.name == "Transit" && !ModelSwaps.Items.ContainsKey("Relic - Hero Sword")) {
