@@ -20,7 +20,7 @@ namespace TunicRandomizer {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Stick"));
                 TunicRandomizer.Tracker.ImportantItems["Stick"] = 1;
             } else if (SwordLevel == 2) {
-                Inventory.GetItemByName("Sword").Quantity = 1;
+                Inventory.GetItemByName("Sword").Quantity = 2;
                 SwordPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.Items["Sword"].GetComponent<MeshFilter>().mesh;
                 SwordPresentation.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Sword"].GetComponent<MeshRenderer>().materials;
                 SwordPresentation.transform.localScale = new Vector3(1.447f, 1.447f, 1.447f);
@@ -33,6 +33,7 @@ namespace TunicRandomizer {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 TunicRandomizer.Tracker.ImportantItems["Sword"] = 1;
             } else if (SwordLevel == 3) {
+                Inventory.GetItemByName("Sword").Quantity = 3;
                 SwordPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.SecondSword.GetComponent<MeshFilter>().mesh;
                 SwordPresentation.GetComponent<MeshRenderer>().materials = ModelSwaps.SecondSword.GetComponent<MeshRenderer>().materials;
                 SwordPresentation.transform.localScale = new Vector3(0.25f, 0.2f, 0.25f);
@@ -45,6 +46,7 @@ namespace TunicRandomizer {
                 EnableSecondSword();
                 TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
             } else if (SwordLevel == 4) {
+                Inventory.GetItemByName("Sword").Quantity = 4;
                 SwordPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.ThirdSword.GetComponent<MeshFilter>().mesh;
                 SwordPresentation.GetComponent<MeshRenderer>().materials = ModelSwaps.ThirdSword.GetComponent<MeshRenderer>().materials;
                 SwordPresentation.transform.localScale = new Vector3(0.175f, 0.175f, 0.175f);

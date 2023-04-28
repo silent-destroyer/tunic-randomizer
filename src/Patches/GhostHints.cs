@@ -57,7 +57,6 @@ public class GhostHints {
             { "1011 [Dusty]", "PILES OF LEAVES" },
             { "Archipelagos Redux-(-396.3, 1.4, 42.3) [Archipelagos Redux]", "GARDEN TREE" },
             { "final [Mountaintop]", "TOP OF THE MOUNTAIN" }
-
         };
         
         public static List<string> HintableItemNames = new List<string>() {
@@ -96,7 +95,7 @@ public class GhostHints {
             },
             { "Far Shore", new List<HintGhost>() {
                 new HintGhost("Overworld Redux", new Vector3(8.45f, 12.0833f, -204.9243f), new Quaternion(0f, 0.4226183f, 0f, -0.9063078f), NPC.NPCAnimState.IDLE, $"wAr did yoo kuhm fruhm, tInE fawks?"),
-                new HintGhost("Transit", new Vector3(-18.6177f, 8.0314f, -81.6153f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, "I stoud awn #aht skwAr ahnd ehndid uhp hEr suhmhow. did yoo\nkuhm hEr #uh sAm wA? wAr igzahktlE R wE?" ) }
+                new HintGhost("Transit", new Vector3(-18.6177f, 8.0314f, -81.6153f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, "I stoud awn #aht skwAr ahnd ehndid uhp hEr suhmhow.\nwAr igzahktlE R wE?" ) }
             },
             { "Ruined Passage", new List<HintGhost>() {
                 new HintGhost("Ruins Passage", new Vector3(184.1698f, 17.3268f, 40.54981f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.TIRED, $"nahp tIm! haw haw haw... geht it?") }
@@ -112,7 +111,7 @@ public class GhostHints {
                 new HintGhost("Overworld Interiors", new Vector3(12.0368f, 21.1446f, -72.81052f), new Quaternion(0f, 0.8660254f, 0f, -0.5000001f), NPC.NPCAnimState.SIT, $"wuht R #Ez pehduhstuhlz for? doo yoo nO?") }
             },
             { "Overworld Above Ruins", new List<HintGhost>() {
-               new HintGhost("Overworld Redux", new Vector3(28.53184f, 36.0833f, -108.3734f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.IDLE, $"I wuhz hIdi^ fruhm #uh \"SLIMES\", buht yoo dOnt louk\nlIk wuhn uhv #ehm."),
+               new HintGhost("Overworld Redux", new Vector3(28.53184f, 36.0833f, -108.3734f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.IDLE, $"I wuhz hIdi^ fruhm #uh \"SLIMES,\" buht yoo dOnt louk\nlIk wuhn uhv #ehm."),
                new HintGhost("Overworld Redux", new Vector3(22.3667f, 27.9833f, -126.3728f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"wAr did I lEv %aht kE..."),
                new HintGhost("Overworld Redux", new Vector3(51.20462f, 28.00694f, -129.722f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.SIT, $"I %awt #aht Jehst wuhz ehmptE. how suhspi$is.") }
             },
@@ -121,7 +120,7 @@ public class GhostHints {
                new HintGhost("Overworld Redux", new Vector3(-34.0649f, 37.9833f, -59.2506f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.GAZE, $"sO mehnE roodli^z. Im stAi^ uhp hEr.") }
             },
             { "Inside Temple", new List<HintGhost>() {
-                new HintGhost("Temple", new Vector3(7.067f, -0.224f, 59.9285f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.IDLE, $"yur naht uh \"RUIN SEEKER\", R yoo? mAbE yoo $oud gO\nsuhmwAr ehls."),
+                new HintGhost("Temple", new Vector3(7.067f, -0.224f, 59.9285f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.IDLE, $"yur naht uh \"RUIN SEEKER,\" R yoo? mAbE yoo $oud gO\nsuhmwAr ehls."),
                 new HintGhost("Temple", new Vector3(0.9350182f, 4.076f, 133.7965f), new Quaternion(0f, 0.8660254f, 0f, 0.5f), NPC.NPCAnimState.GAZE_UP, $"yur guhnuh frE \"THE HEIR\"? iznt #aht... bahd?") }
             },
             { "Ruined Shop", new List<HintGhost>() {
@@ -225,7 +224,7 @@ public class GhostHints {
                 Logger.LogInfo("Error initalizing ghost foxes for hints!");
             }
         }
-
+         
         public static void SpawnHintGhosts(string SceneName) {
             foreach (HintGhost HintGhost in HintGhosts) {
                 if (HintGhost.SceneName == SceneName) {

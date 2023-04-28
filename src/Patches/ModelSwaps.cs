@@ -39,6 +39,8 @@ namespace TunicRandomizer {
         public static GameObject HeroRelicMaterial;
         public static bool SetupDathStonePresentation = false;
 
+        public static GameObject GlowEffect;
+
         public static void InitializeItems() {
             GameObject ItemRoot = Resources.FindObjectsOfTypeAll<GameObject>().Where(Item => Item.name == "User Rotation Root").ToList()[0];
             Items["Firecracker"] = ItemRoot.transform.GetChild(3).GetChild(0).gameObject;

@@ -11,8 +11,7 @@ using BepInEx.Logging;
 namespace TunicRandomizer {
     public class PaletteEditor : MonoBehaviour {
 
-		public static int SelectedIndex = -1;
-		public static int LastIndex = -1;
+		public static int SelectedIndex = 0;
 		public static Color SelectedColor;
 		public static bool ApplyColor = true;
 		public static bool EditorOpen = false;
@@ -23,7 +22,7 @@ namespace TunicRandomizer {
 			{2, "Hero's\nLaurels"},
 			{3, "Tunic"},
 			{4, "Fur\n(Secondary)"},
-			{5, "Paws\nNose"},
+			{5, "Paws,\nNose"},
 			{6, "Unused"},
 			{7, "Tunic\nUnderside"},
 			{8, "Ear\n(Inner)"},
@@ -33,7 +32,7 @@ namespace TunicRandomizer {
 			{12, "Eye"},
 			{13, "Eye\n(Pupil)"},
 			{14, "Glasses\n(Custom)"},
-			{15, "Scarf\nMouth\nGlasses"},
+			{15, "Scarf,\nMouth"},
 		};
 		public static Dictionary<int, int[]> ColorIndices = new Dictionary<int, int[]>() {
 			{0, new int[]{ 0, 3 } },
@@ -78,6 +77,8 @@ namespace TunicRandomizer {
 				Cursor.visible = true;
 				GUI.Window(102, new Rect(10f, 230f, 800f, 400f), new Action<int>(PaletteEditorWindow), "Palette Editor");
 				GUI.backgroundColor = Color.white;
+			} else if (SceneLoaderPatches.SceneName != "TitleScreen") {
+				Cursor.visible = false;
 			}
 
 		}
@@ -101,10 +102,9 @@ namespace TunicRandomizer {
 			GUI.skin.button.fontSize = 20;
 			bool PaletteSelected = SelectedIndex >= 0 && SelectedIndex < 16;
 			if (PaletteSelected) {
-				bool SwitchedPalettes = LastIndex != SelectedIndex && LastIndex >= 0 && LastIndex < 16;
-				if (SwitchedPalettes) {
-					SelectedColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
-				}
+
+				SelectedColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
+				
 		
 				GUI.skin.label.fontSize = 25;
 				GUI.Label(new Rect(350f, 35, 400f, 30f), "Selected: " + ColorNames[SelectedIndex].Replace("\n", " "));
@@ -116,19 +116,19 @@ namespace TunicRandomizer {
 
 				PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], SelectedColor);
 				PlayerPalette.runtimePalette.Apply();
-				if (SelectedIndex == 2) {
+				Color SetColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
+				if (SelectedIndex == 2 && (SelectedColor.r != SetColor.r || SelectedColor.g != SetColor.g || SelectedColor.b != SetColor.b)) {
+					Logger.LogInfo("SELECTED " + SelectedColor.ToString() + " SET " + SetColor.ToString());
 					ChangeHyperdashColors(SelectedColor);
 				}
 				if (SelectedIndex == 14) {
 					ChangeSunglassesColor(SelectedColor);
 				}
-				LastIndex = SelectedIndex;
 			}
 			bool RandomizeAll = GUI.Button(new Rect(555f, 235f, 200f, 30f), "Randomize all");
 			if (RandomizeAll) {
 				for (int j = 0; j < 16; j++) {
 					Color RandomColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
-                    PlayerPalette.runtimePalette.SetPixel(ColorIndices[j][0], ColorIndices[j][1], RandomColor);
 					if (SelectedIndex == 2) {
 						ChangeHyperdashColors(RandomColor);
 					}
@@ -153,12 +153,15 @@ namespace TunicRandomizer {
 			bool Load = GUI.Button(new Rect(555f, 335f, 200f, 30f), "Load Texture");
 			if (Load) {
 				LoadCustomTexture();
-				SelectedIndex = -1;
 			}
 			bool Close = GUI.Button(new Rect(60f, 350f, 200f, 30f), "Close Editor");
 			if (Close) {
 				EditorOpen = false;
+				CameraController.DerekZoom = 1f;
 			}
+			bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, 370f, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Always Apply Saved Texture");
+			TunicRandomizer.Settings.UseCustomTexture = ToggleCustomTextureUse;
+
 		}
 
 		private static Color RGBSlider(Rect screenRect, Color rgb) {
@@ -291,7 +294,6 @@ namespace TunicRandomizer {
 
 			}
 		}
-
 
 	}
 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using BepInEx.Logging;
 using UnityEngine.UI;
+using System.Linq;
 
-namespace TunicRandomizer{
+namespace TunicRandomizer {
     public class RandomItemPatches {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
         
@@ -271,13 +272,16 @@ namespace TunicRandomizer{
                 ItemPresentation.PresentItem(Item, Reward.Amount);
 
             } else if (Reward.Type == "MONEY") {
-                CoinSpawner.SpawnCoins(Reward.Amount, StringToVector3(ItemData.Location.Position));
-                //SmallMoneyItem.PlayerQuantity += Reward.Amount;
-                //MoneyGoUp.IncrementMoneyGoUp(Reward.Amount);
-     /*           for (int i = 0; i < Reward.Amount; i++) {
-                    SFX.PlayAudioClipAtFox(ModelSwaps.MoneySfx.GetComponent<FMODUnity.StudioEventEmitter>().EventReference);
-                }*/
+                Vector3 SpawnPosition;
+                
+                if (ItemData.Location.SceneName == "Trinket Well") {
+                    SpawnPosition = GameObject.FindObjectOfType<TrinketWell>().transform.position;
+                    SpawnPosition.Set(SpawnPosition.x, SpawnPosition.y + 3.25f, SpawnPosition.z);
+                } else {
+                    SpawnPosition = StringToVector3(ItemData.Location.Position);
+                }
 
+                CoinSpawner.SpawnCoins(Reward.Amount, SpawnPosition);
             } else if (Reward.Type == "FAIRY") {
                 SaveFile.SetInt($"randomizer obtained fairy {Reward.Name}", 1);
                 /*                LanguageLine FairyMessage = ScriptableObject.CreateInstance<LanguageLine>();
@@ -351,14 +355,27 @@ namespace TunicRandomizer{
         private static void SetCollectedReward(string RewardId) {
             SaveFile.SetInt("randomizer picked up " + RewardId, 1);
             ItemsPickedUp[RewardId] = true;
-            Logger.LogInfo("Picked up item " + RewardId + " (" + ItemList[RewardId].Reward.Name + " - " + ItemList[RewardId].Reward.Amount + ")");
+            ItemData ItemData = ItemList[RewardId];
+            Logger.LogInfo("Picked up item " + RewardId + " (" + ItemData.Reward.Name + " - " + ItemData.Reward.Amount + ")");
 
             UpdateItemTracker(RewardId);
             ItemTracker.SaveTrackerFile();
             PlayerCharacterPatches.PopulateSpoilerLog();
-            GameObject FairyTarget = GameObject.Find($"fairy target {ItemList[RewardId].Location.Position}");
+
+            if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
+                foreach (string Key in GoldenTrophyStatUpgrades.Keys) {
+                    if (GoldenTrophyStatUpgrades[Key].Contains(ItemList[RewardId].Reward.Name)) {
+                        Inventory.GetItemByName(Key).Quantity += 1;
+                    }
+                }
+            }
+
+            GameObject FairyTarget = ItemData.Location.SceneName == "Trinket Well" ? GameObject.Find($"fairy target trinket well"): GameObject.Find($"fairy target {ItemData.Location.Position}");
             if (FairyTarget != null) {
                 GameObject.Destroy(FairyTarget);
+            }
+            if (ItemList.Keys.Where(ItemId => ItemList[ItemId].Location.SceneName == SceneLoaderPatches.SceneName && !ItemsPickedUp[ItemId]).ToList().Count == 0) {
+                FairyTargets.CreateLoadZoneTargets();
             }
         }
 
@@ -383,13 +400,6 @@ namespace TunicRandomizer{
             }
             if (Reward.Name.Contains("GoldenTrophy")) {
                 TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]++;
-                if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                    foreach (string Key in GoldenTrophyStatUpgrades.Keys) {
-                        if (GoldenTrophyStatUpgrades[Key].Contains(Reward.Name)) {
-                            Inventory.GetItemByName(Key).Quantity += 1;
-                        }
-                    }
-                }
 
                 if (TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12) {
                     Inventory.GetItemByName("Spear").Quantity = 1;

@@ -29,7 +29,12 @@ namespace TunicRandomizer {
         }
 
         // Hint Settings
-        public bool HintsEnabled {
+        public bool HeroPathHintsEnabled {
+            get;
+            set;
+        }
+
+        public bool GhostFoxHintsEnabled {
             get;
             set;
         }
@@ -110,7 +115,8 @@ namespace TunicRandomizer {
             SwordProgressionEnabled = true;
             StartWithSwordEnabled = false;
 
-            HintsEnabled = true;
+            HeroPathHintsEnabled = true;
+            GhostFoxHintsEnabled = true;
             ShowItemsEnabled = true;
             ChestsMatchContentsEnabled = true;
 
@@ -128,12 +134,12 @@ namespace TunicRandomizer {
         }
 
         public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled) { 
-            HintsEnabled = hintsEnabled;
+            HeroPathHintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
         }
 
         public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool heirAssistEnaled, FoolTrapOption foolTrapIntensity) {
-            HintsEnabled = hintsEnabled;
+            HeroPathHintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
             HeirAssistModeEnabled = heirAssistEnaled;
             FoolTrapIntensity = foolTrapIntensity;

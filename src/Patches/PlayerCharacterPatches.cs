@@ -90,6 +90,7 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
+
             if (StungByBee) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
             }
@@ -149,9 +150,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-                if (!TunicRandomizer.Settings.RandomFoxColorsEnabled) {
 
-                }
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
@@ -294,7 +293,7 @@ namespace TunicRandomizer {
             FairyTargets.CreateFairyTargets();
             GhostHints.GenerateHints();
             OptionsGUIPatches.SaveSettings();
-            if (TunicRandomizer.Settings.HintsEnabled && !SceneLoaderPatches.SpawnedGhosts) {
+            if (TunicRandomizer.Settings.GhostFoxHintsEnabled && !SceneLoaderPatches.SpawnedGhosts) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
         }
@@ -367,7 +366,7 @@ namespace TunicRandomizer {
 
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
-            if (Hints.HintLocations.ContainsKey(InteractionLocation) && TunicRandomizer.Settings.HintsEnabled) {
+            if (Hints.HintLocations.ContainsKey(InteractionLocation) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 LanguageLine Hint = ScriptableObject.CreateInstance<LanguageLine>();
                 Hint.text = Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
                 GenericMessage.ShowMessage(Hint);
@@ -474,7 +473,7 @@ namespace TunicRandomizer {
             HintItem = FindRandomizedItemByName("Hyperdash");
             Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz \"<#FF00FF>SOMETHING EXTRAORDINARY\"\nuhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
+            HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
             Hints.HintMessages.Add("Temple Statue", HintMessage);
             
             List<string> HintItems = new List<string>() { "Techbow", "Stundagger", "Wand" };

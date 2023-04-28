@@ -50,8 +50,9 @@ namespace TunicRandomizer {
 
         public static void HintsSettingsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.addToggle("Hints", "Off", "On", TunicRandomizer.Settings.HintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHints);
-            OptionsGUI.addToggle("Show Item Pickups", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
+            OptionsGUI.addToggle("Path of the Hero Hints", "Off", "On", TunicRandomizer.Settings.HeroPathHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePathOfHeroHints);
+            OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
+            OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
             OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
             OptionsGUI.setHeading("Hints");
         }
@@ -65,7 +66,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
             OptionsGUI.addToggle("Bonus Upgrades", "Off", "On", TunicRandomizer.Settings.BonusStatUpgradesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBonusStatUpgrades);
             //ItemTrackerOverlayButton = __instance.addToggle("Item Tracker Overlay", "Off", "On", TunicRandomizer.Settings.ItemTrackerOverlayEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrackerOverlay);
-            OptionsGUI.addMultiSelect("Fool Trap Frequency", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
+            OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
             OptionsGUI.addToggle("???", "Off", "On", CameraController.Flip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
         }
 
@@ -96,11 +97,21 @@ namespace TunicRandomizer {
 
         public static void TogglePaletteEditor(int index) { 
             PaletteEditor.EditorOpen = !PaletteEditor.EditorOpen;
+            CameraController.DerekZoom = PaletteEditor.EditorOpen ? 0.35f : 1f;
         }
+
         public static void ToggleSunglasses(int index) {
             TunicRandomizer.Settings.RealestAlwaysOn = !TunicRandomizer.Settings.RealestAlwaysOn;
             if (TunicRandomizer.Settings.RealestAlwaysOn) {
-                GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
+                if (GameObject.FindObjectOfType<RealestSpell>() != null) {
+                    GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
+                }
+            }
+            if (!TunicRandomizer.Settings.RealestAlwaysOn) {
+                GameObject Realest = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/therealest");
+                if (Realest != null) { 
+                    Realest.SetActive(false);
+                }
             }
             SaveSettings();
         }
@@ -139,10 +150,16 @@ namespace TunicRandomizer {
         }
 
         // Hints
-        public static void ToggleHints(int index) {
-            TunicRandomizer.Settings.HintsEnabled = !TunicRandomizer.Settings.HintsEnabled;
+        public static void TogglePathOfHeroHints(int index) {
+            TunicRandomizer.Settings.HeroPathHintsEnabled = !TunicRandomizer.Settings.HeroPathHintsEnabled;
             SaveSettings();
         }
+
+        public static void ToggleGhostFoxHints(int index) {
+            TunicRandomizer.Settings.GhostFoxHintsEnabled = !TunicRandomizer.Settings.GhostFoxHintsEnabled;
+            SaveSettings();
+        }
+
 
         public static void ToggleShowItems(int index) {
             TunicRandomizer.Settings.ShowItemsEnabled = !TunicRandomizer.Settings.ShowItemsEnabled;

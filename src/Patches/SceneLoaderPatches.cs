@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using BepInEx.Logging;
+using UnhollowerBaseLib;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class SceneLoaderPatches {
@@ -28,13 +30,17 @@ namespace TunicRandomizer {
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
-            /*            if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GardenKnightVoid == null) {
-                            ModelSwaps.SetupGardenKnightVoid();
-                            SceneLoader.LoadScene("TitleScreen");
-                        }*/
+            if (loadingScene.name == "Archipelagos Redux") {
+                ModelSwaps.GlowEffect = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Night Glow").ToList()[0]);
+                GameObject.Destroy(ModelSwaps.GlowEffect.GetComponent<StatefulActive>());
+                ModelSwaps.GlowEffect.SetActive(false);
+                GameObject.DontDestroyOnLoad(ModelSwaps.GlowEffect);
+                SceneLoader.LoadScene("TitleScreen");
+            }
+
             if (loadingScene.name == "Transit" && !ModelSwaps.Items.ContainsKey("Relic - Hero Sword")) {
                 ModelSwaps.InitializeHeroRelics();
-                SceneLoader.LoadScene("TitleScreen");
+                SceneLoader.LoadScene("Archipelagos Redux");
                 return;
             }
             if (loadingScene.name == "Spirit Arena" && ModelSwaps.ThirdSword == null) {
@@ -126,8 +132,17 @@ namespace TunicRandomizer {
                         Questagon.GetComponent<MeshRenderer>().receiveShadows = false;
                     }
                 }
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && Inventory.GetItemByName("Hyperdash").Quantity == 0) {
+
+                    GameObject HintStatueGlow = GameObject.Instantiate(ModelSwaps.GlowEffect);
+                    HintStatueGlow.SetActive(true);
+                    HintStatueGlow.transform.position = new Vector3(13f, 0f, 49f);
+                }
             } else if (SceneName == "Overworld Redux") {
                 GameObject.Find("_Signposts/Signpost (3)/").GetComponent<Signpost>().message.text = $"#is wA too \"West Garden\"\n<#33FF33>[death] bEwAr uhv tArE [death]";
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && Inventory.GetItemByName("Lantern").Quantity == 0) {
+                    GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f,-0.5f, 0.5f, 0.5f);
+                }
             } else{
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
@@ -146,12 +161,12 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.ClearPoison();
                 PlayerCharacterPatches.IsTeleporting = false;
             }
-            if (!ModelSwaps.SwappedThisSceneAlready && (RandomItemPatches.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
-                ModelSwaps.SwapItemsInScene();
-            }
             foreach (ItemData Fool in RandomItemPatches.ItemList.Values.ToList().Where(Item => Item.Reward.Type == "FOOL")) {
                 Fool.Reward.Type = "MONEY";
                 Fool.Reward.Name = "money";
+            }
+            if (!ModelSwaps.SwappedThisSceneAlready && (RandomItemPatches.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
+                ModelSwaps.SwapItemsInScene();
             }
             FairyTargets.CreateFairyTargets();
             if (TunicRandomizer.Settings.UseCustomTexture) {
@@ -162,7 +177,7 @@ namespace TunicRandomizer {
                     GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
                 } catch (Exception e) { }
             }
-            if (TunicRandomizer.Settings.HintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
+            if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
                 GhostHints.SpawnHintGhosts(SceneName);
                 SpawnedGhosts = true;
             }
