@@ -30,7 +30,7 @@ namespace TunicRandomizer {
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
-            if (loadingScene.name == "Archipelagos Redux") {
+            if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
                 ModelSwaps.GlowEffect = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Night Glow").ToList()[0]);
                 GameObject.Destroy(ModelSwaps.GlowEffect.GetComponent<StatefulActive>());
                 ModelSwaps.GlowEffect.SetActive(false);
