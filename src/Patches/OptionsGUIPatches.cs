@@ -28,6 +28,7 @@ namespace TunicRandomizer {
             addPageButton("Logic Settings", LogicSettingsPage);
             addPageButton("Hint Settings", HintsSettingsPage);
             addPageButton("General Settings", GeneralSettingsPage);
+            addPageButton("Enemy Randomizer Settings", EnemyRandomizerSettings);
             addPageButton("Fox Customization", CustomFoxSettingsPage);
 
         }
@@ -68,6 +69,15 @@ namespace TunicRandomizer {
             //ItemTrackerOverlayButton = __instance.addToggle("Item Tracker Overlay", "Off", "On", TunicRandomizer.Settings.ItemTrackerOverlayEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrackerOverlay);
             OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
             OptionsGUI.addToggle("???", "Off", "On", CameraController.Flip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
+        }
+
+        public static void EnemyRandomizerSettings() {
+            Il2CppStringArray EnemyGenerationTypes = (Il2CppStringArray)new string[] { "Random", "Balanced" };
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Enemy Randomization");
+            OptionsGUI.addToggle("Enemy Randomizer", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
+            OptionsGUI.addMultiSelect("Enemy Types", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
+
         }
 
         public static void CustomFoxSettingsPage() {
@@ -115,8 +125,6 @@ namespace TunicRandomizer {
             }
             SaveSettings();
         }
-
-    
 
         public static void SaveSettings() {
             if (!File.Exists(TunicRandomizer.SettingsPath)) {
@@ -197,6 +205,21 @@ namespace TunicRandomizer {
         public static void ChangeFoolTrapFrequency(int index) {
 
             TunicRandomizer.Settings.FoolTrapIntensity = (RandomizerSettings.FoolTrapOption)index;
+            SaveSettings();
+        }
+
+        // Enemy Randomizer
+        public static void ToggleEnemyRandomizer(int index) { 
+            TunicRandomizer.Settings.EnemyRandomizerEnabled = !TunicRandomizer.Settings.EnemyRandomizerEnabled;
+            SaveSettings();
+        }
+
+        public static int GetEnemyGenerationType() {
+            return (int)TunicRandomizer.Settings.EnemyGeneration;
+        }
+
+        public static void ChangeEnemyRandomizerGenerationType(int index) {
+            TunicRandomizer.Settings.EnemyGeneration = (RandomizerSettings.EnemyRandomizationType)index;
             SaveSettings();
         }
 

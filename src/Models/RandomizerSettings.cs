@@ -70,6 +70,18 @@ namespace TunicRandomizer {
             set;
         }
 
+        // Enemy Randomization Settings
+        public bool EnemyRandomizerEnabled {
+            get;
+            set;
+        }
+
+        public EnemyRandomizationType EnemyGeneration {
+            get;
+            set;
+        }
+
+
         // Fox Settings
         public bool RandomFoxColorsEnabled {
             get;
@@ -109,6 +121,10 @@ namespace TunicRandomizer {
             ONSLAUGHT,
         }
 
+        public enum EnemyRandomizationType { 
+            RANDOM,
+            BALANCED
+        }
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
             KeysBehindBosses = false;
@@ -124,6 +140,9 @@ namespace TunicRandomizer {
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
             FoolTrapIntensity = FoolTrapOption.NORMAL;
+            
+            EnemyRandomizerEnabled = false;
+            EnemyGeneration = EnemyRandomizationType.RANDOM;
 
             ItemTrackerFileEnabled = false;
             ItemTrackerOverlayEnabled = false;

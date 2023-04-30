@@ -168,6 +168,7 @@
     <Compile Include="src\Models\ItemData.cs" />
     <Compile Include="src\Models\ItemPositions.cs" />
     <Compile Include="src\Models\Location.cs" />
+    <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
     <Compile Include="src\Patches\QuickSettings.cs" />
     <Compile Include="src\Patches\FairyTargets.cs" />
