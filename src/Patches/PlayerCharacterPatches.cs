@@ -507,7 +507,6 @@ namespace TunicRandomizer {
             string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
             HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nwil hehlp yoo \"<#00FFFF>LIGHT THE WAY<#ffffff>...\"";
             Hints.HintMessages.Add("Mailbox", HintMessage);
-            Logger.LogInfo("Added hint message: " + HintMessage);
 
             // Golden Path hints
             HintItem = FindRandomizedItemByName("Hyperdash");
