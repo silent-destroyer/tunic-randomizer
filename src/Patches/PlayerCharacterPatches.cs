@@ -24,7 +24,7 @@ namespace TunicRandomizer {
         public static bool LoadSecondSword = false;
         public static bool LoadThirdSword = false;
         public static readonly string[] ProgressionNames = {
-             "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask" };
+             "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
@@ -230,10 +230,11 @@ namespace TunicRandomizer {
                 }
 
                 // add item to placed inv for future reachability checks
-                if (PlacedInventory.Keys.Contains(item.Name)) {
-                    PlacedInventory[item.Name] += 1;
+                string itemName = RandomItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                if (PlacedInventory.Keys.Contains(itemName)) {
+                    PlacedInventory[itemName] += 1;
                 } else {
-                    PlacedInventory.Add(item.Name, 1);
+                    PlacedInventory.Add(itemName, 1);
                 }
 
                 // prepare matched list of progression items and locations
