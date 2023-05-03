@@ -45,7 +45,8 @@ namespace TunicRandomizer {
                     "Fox enemy zombie",
                     "_Turret",
                 }
-            },{
+            },
+            {
                 "Archipelagos Redux",
                 new List<string>() {
                     "crocodoo Voidtouched",
@@ -121,13 +122,6 @@ namespace TunicRandomizer {
                     "voidling redux"
                 }
             }
-/*            
-
-
-
-
-
-*/
         };
 
         public static Dictionary<string, List<string>> EnemyRankings = new Dictionary<string, List<string>>() {

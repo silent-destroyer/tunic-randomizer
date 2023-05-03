@@ -218,7 +218,6 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer keys behind bosses") != 0) {
                 foreach (ItemData Hexagon in Hexagons) {
-                    // second quest?
                     if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                         Hexagon.Reward.Name = "Hexagon Gold";
                         Hexagon.Reward.Type = "SPECIAL";
