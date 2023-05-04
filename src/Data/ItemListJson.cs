@@ -2925,8 +2925,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(7.8, 0.0, -6.9)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
                     ""SceneName"": ""Fortress Basement""
@@ -2943,8 +2942,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(26.3, 0.0, 5.1)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
                     ""SceneName"": ""Fortress Basement""
@@ -2961,8 +2959,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(17.2, 0.0, 72.5)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
                     ""SceneName"": ""Fortress Basement""
@@ -2979,8 +2976,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(-88.7, 7.6, 25.8)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Fortress Main""
@@ -2997,8 +2993,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(-89.0, 7.0, 56.3)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Fortress Main""
@@ -3015,8 +3010,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(-82.6, 7.0, 48.6)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Fortress Main""
@@ -3033,8 +3027,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(-75.0, -1.0, 17.0)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Fortress Main""
@@ -3051,8 +3044,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(31.0, 11.0, 50.7)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Fortress Main""
@@ -3069,8 +3061,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(127.2, 8.0, -27.0)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 47,
                     ""SceneName"": ""Fortress Reliquary""
@@ -3087,8 +3078,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(199.5, 0.0, -45.0)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 47,
                     ""SceneName"": ""Fortress Reliquary""
@@ -3105,8 +3095,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(199.5, 0.0, -35.0)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 47,
                     ""SceneName"": ""Fortress Reliquary""
