@@ -519,6 +519,9 @@ namespace TunicRandomizer {
             ItemData HintItem = null;
             string HintMessage;
             List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
+            bool techbowHinted = false;
+            bool wandHinted = false;
+
             // Mailbox Hint
             List<string> mailboxNames = new List<string>() {"Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword"}; 
             List<ItemData> mailboxHintables = new List<ItemData>();
@@ -572,6 +575,8 @@ namespace TunicRandomizer {
             string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
             HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE";
             Hints.HintMessages.Add("Mailbox", HintMessage);
+            if (HintItem.Reward.Name == "Techbow") {techbowHinted = true;}
+            if (HintItem.Reward.Name == "Wand") {wandHinted = true;}
 
             // Golden Path hints
             HintItem = FindRandomizedItemByName("Hyperdash");
@@ -580,7 +585,7 @@ namespace TunicRandomizer {
             HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
             Hints.HintMessages.Add("Temple Statue", HintMessage);
             
-            List<string> HintItems = new List<string>() { "Techbow", "Stundagger", "Wand" };
+            List<string> HintItems = new List<string>() { techbowHinted ? "Lantern" : "Techbow", wandHinted ? "Lantern" : "Wand", "Stundagger" };
             List<string> HintScenes = new List<string>() { "East Forest Relic", "Fortress Relic", "West Garden Relic" };
             for (int i = 0; i < 3; i++) {
                 HintItem = FindRandomizedItemByName(HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)]);
