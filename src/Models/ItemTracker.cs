@@ -53,13 +53,19 @@ namespace TunicRandomizer {
             {"Relic - Hero Pendant HP", 0},
             {"Relic - Hero Pendant MP", 0},
             {"Relic - Hero Pendant SP", 0},
+            {"Level Up - Attack", 0},
+            {"Level Up - DamageResist", 0},
+            {"Level Up - PotionEfficiency", 0},
+            {"Level Up - Health", 0},
+            {"Level Up - Stamina", 0},
+            {"Level Up - Magic", 0},
             {"Hexagon Red", 0},
             {"Hexagon Green", 0},
             {"Hexagon Blue", 0},
             {"Hexagon Gold", 0},
             {"Sword Progression", 0},
         };
-
+        
         public List<ItemData> ItemsCollected = new List<ItemData>();
 
         public ItemTracker() {
@@ -73,12 +79,10 @@ namespace TunicRandomizer {
         }
 
         public static void SaveTrackerFile() {
-            if (TunicRandomizer.Settings.ItemTrackerFileEnabled) {
-                if (File.Exists(TunicRandomizer.ItemTrackerPath)) {
-                    File.Delete(TunicRandomizer.ItemTrackerPath);
-                }
-                File.WriteAllText(TunicRandomizer.ItemTrackerPath, JSONWriter.ToJson(TunicRandomizer.Tracker));
+            if (File.Exists(TunicRandomizer.ItemTrackerPath)) {
+                File.Delete(TunicRandomizer.ItemTrackerPath);
             }
+            File.WriteAllText(TunicRandomizer.ItemTrackerPath, JSONWriter.ToJson(TunicRandomizer.Tracker));
         }
     }
 }

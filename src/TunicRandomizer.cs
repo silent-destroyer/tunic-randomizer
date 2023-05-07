@@ -138,6 +138,8 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(BloodstainChest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BloodstainChest_IInteractionReceiver_Interact_PrefixPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(UpgradeAltar), "DoOfferingSequence"), null ,new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "UpgradeAltar_DoOfferingSequence_PostfixPatch")));
+
         }
     }
 }

@@ -223,24 +223,6 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        // Item Tracker Settings
-
-        public static void ToggleTrackerOverlay(int index) { 
-            TunicRandomizer.Settings.ItemTrackerOverlayEnabled = !TunicRandomizer.Settings.ItemTrackerOverlayEnabled;
-            SaveSettings();
-        }
-
-        public static void ToggleTrackerFile(int index) {
-            TunicRandomizer.Settings.ItemTrackerFileEnabled = !TunicRandomizer.Settings.ItemTrackerFileEnabled;
-            if (TunicRandomizer.Settings.ItemTrackerFileEnabled) {
-                ItemTracker.SaveTrackerFile();
-            } else {
-                File.Delete(TunicRandomizer.ItemTrackerPath);
-            }
-
-            SaveSettings();
-        }
-
         public static void ToggleWeirdMode(int index) {
             CameraController.Flip = !CameraController.Flip;
         }

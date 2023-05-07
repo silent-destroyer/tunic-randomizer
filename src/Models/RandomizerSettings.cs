@@ -98,17 +98,6 @@ namespace TunicRandomizer {
             set;
         }
 
-        // Item Tracker Settings
-        public bool ItemTrackerFileEnabled {
-            get;
-            set;
-        }
-
-        public bool ItemTrackerOverlayEnabled {
-            get;
-            set;
-        }
-
         public enum GameModes { 
             RANDOMIZER,
             HEXAGONQUEST
@@ -143,9 +132,6 @@ namespace TunicRandomizer {
             
             EnemyRandomizerEnabled = false;
             EnemyGeneration = EnemyRandomizationType.RANDOM;
-
-            ItemTrackerFileEnabled = false;
-            ItemTrackerOverlayEnabled = false;
 
             RandomFoxColorsEnabled = true;
             RealestAlwaysOn = false;
