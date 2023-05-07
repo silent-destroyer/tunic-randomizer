@@ -461,6 +461,19 @@ namespace TunicRandomizer {
             }
         }
 
+        private static void Shuffle(List<ItemData> list) {
+            int n = list.Count;
+            int r;
+            while (n > 1) {
+                n--;
+                r = TunicRandomizer.Randomizer.Next(n + 1);
+
+                ItemData holder = list[r];
+                list[r] = list[n];
+                list[n] = holder;
+            }
+        }
+
         public static void PopulateSpoilerLog() {
             int seed = SaveFile.GetInt("seed");
             Dictionary<string, List<string>> SpoilerLog = new Dictionary<string, List<string>>();
@@ -503,14 +516,61 @@ namespace TunicRandomizer {
         }
 
         private static void PopulateHints() {
-            ItemData HintItem;
+            ItemData HintItem = null;
             string HintMessage;
             List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
             // Mailbox Hint
-            HintItem = FindRandomizedItemByName("Lantern");
+            List<string> mailboxNames = new List<string>() {"Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword"}; 
+            List<ItemData> mailboxHintables = new List<ItemData>();
+            foreach (string Item in mailboxNames) {
+                mailboxHintables.AddRange(FindAllRandomizedItemsByName(Item));
+            }
+            Shuffle(mailboxHintables);
+            int n = 0;
+            while (HintItem == null && n < mailboxHintables.Count) {
+                if (mailboxHintables[n].Location.RequiredItems.Count == 0) {
+                    HintItem = mailboxHintables[n];
+                }
+                n++;
+            }
+            if (HintItem == null) {
+                n = 0;
+                while (HintItem == null && n < mailboxHintables.Count) {
+                    if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
+                        foreach(ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin")) {
+                            if(itemData.Location.RequiredItems.Count == 0) {
+                                HintItem = itemData;
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
+                        foreach(ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
+                            if(itemData.Location.RequiredItems.Count == 0) {
+                                HintItem = itemData;
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors") {
+                        ItemData itemData = FindRandomizedItemByName("Key (House)");
+                        if (itemData.Location.RequiredItems.Count == 0) {
+                            HintItem = itemData;
+                        }
+                    } else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
+                        foreach(ItemData itemData in FindAllRandomizedItemsByName("Key")) {
+                            if(itemData.Location.RequiredItems.Count == 0) {
+                                HintItem = itemData;
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
+                        ItemData itemData = FindRandomizedItemByName("Mask");
+                        if (itemData.Location.RequiredItems.Count == 0) {
+                            HintItem = itemData;
+                        }
+                    }
+                    n++;
+                }
+            }
             string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nwil hehlp yoo \"<#00FFFF>LIGHT THE WAY<#ffffff>...\"";
+            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE";
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
             // Golden Path hints
@@ -598,6 +658,30 @@ namespace TunicRandomizer {
                 }
             }
             return null;
+        }
+
+        public static List<ItemData> FindAllRandomizedItemsByName(string Name) {
+            List<ItemData> results = new List<ItemData>();
+
+            foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
+                if (ItemData.Reward.Name == Name) {
+                    results.Add(ItemData);
+                }
+            }
+
+            return results;
+        }
+
+        public static List<ItemData> FindAllRandomizedItemsByType(string type) {
+            List<ItemData> results = new List<ItemData>();
+
+            foreach (ItemData itemData in RandomItemPatches.ItemList.Values) {
+                if (itemData.Reward.Type == type) {
+                    results.Add(itemData);
+                }
+            }
+
+            return results;
         }
 
         public static void SaveFile_GetNewSaveFileName_PostfixPatch(SaveFile __instance, ref string __result) {
