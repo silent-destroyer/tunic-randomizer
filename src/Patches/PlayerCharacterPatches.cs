@@ -521,6 +521,8 @@ namespace TunicRandomizer {
             List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
             bool techbowHinted = false;
             bool wandHinted = false;
+            string Scene;
+            string ScenePrefix;
 
             // Mailbox Hint
             List<string> mailboxNames = new List<string>() {"Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword"}; 
@@ -571,12 +573,16 @@ namespace TunicRandomizer {
                     n++;
                 }
             }
-            string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
-            string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE";
+            if (HintItem == null) {
+                HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEker.\nyoo hahv uh difikuhlt rOd uhhehd.";
+            } else {
+                Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
+                ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE.";
+                if (HintItem.Reward.Name == "Techbow") {techbowHinted = true;}
+                if (HintItem.Reward.Name == "Wand") {wandHinted = true;}
+            }
             Hints.HintMessages.Add("Mailbox", HintMessage);
-            if (HintItem.Reward.Name == "Techbow") {techbowHinted = true;}
-            if (HintItem.Reward.Name == "Wand") {wandHinted = true;}
 
             // Golden Path hints
             HintItem = FindRandomizedItemByName("Hyperdash");
