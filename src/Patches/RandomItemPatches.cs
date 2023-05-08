@@ -265,7 +265,7 @@ namespace TunicRandomizer {
             return false;
         }
 
-        private static void GiveReward(ItemData ItemData) {
+        public static void GiveReward(ItemData ItemData) {
             Reward Reward = ItemData.Reward;
             if (Reward.Type == "INVENTORY") {
                 Item Item = Inventory.GetItemByName(Reward.Name);
@@ -292,7 +292,35 @@ namespace TunicRandomizer {
             } else if (Reward.Type == "PAGE") {
                 SaveFile.SetInt($"randomizer obtained page {Reward.Name}", 1);
                 PageDisplay.ShowPage(int.Parse(Reward.Name));
-
+                if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                    if (Reward.Name == "12") { 
+                        AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
+                        AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
+                        AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
+                        AreaData.topLine.text = $"\"PRAYER Unlocked\"";
+                        AreaData.bottomLine.text = $"Jahnuhl yor wizduhm, rooin sEkur";
+                        AreaLabel.ShowLabel(AreaData);
+                    }
+                    if (Reward.Name == "21") {
+                        AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
+                        AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
+                        AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
+                        AreaData.topLine.text = $"\"HOLY CROSS Unlocked\"";
+                        AreaData.bottomLine.text = $"sEk wuht iz rItfuhlE yorz";
+                        AreaLabel.ShowLabel(AreaData);
+                        foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                            SpellToggle.gameObject.SetActive(true);
+                        }
+                    }
+                    if (Reward.Name == "26") {
+                        AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
+                        AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
+                        AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
+                        AreaData.topLine.text = $"\"ICE ROD Unlocked\"";
+                        AreaData.bottomLine.text = $"#A wOnt nO wuht hit #ehm";
+                        AreaLabel.ShowLabel(AreaData);
+                    }
+                }
             } else if (Reward.Type == "RELIC") {
                 Item Relic = Inventory.GetItemByName(Reward.Name);
                 Relic.Quantity = 1;

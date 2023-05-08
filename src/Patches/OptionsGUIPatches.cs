@@ -40,11 +40,13 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Keys Behind Bosses", "Off", "On", TunicRandomizer.Settings.KeysBehindBosses ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleKeysBehindBosses);
                 OptionsGUI.addToggle("Sword Progression", "Off", "On", TunicRandomizer.Settings.SwordProgressionEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSwordProgression);
                 OptionsGUI.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleStartWithSword);
+                OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
             } else {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
                 OptionsGUI.addButton("Keys Behind Bosses", SaveFile.GetInt("randomizer keys behind bosses") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Sword Progression", SaveFile.GetInt("randomizer sword progression enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Start With Sword", SaveFile.GetInt("randomizer sword progression enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                OptionsGUI.addButton("Shuffled Abilities", SaveFile.GetInt("randomizer shuffled abilities") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
             }
             OptionsGUI.setHeading("Logic");
         }
@@ -153,6 +155,11 @@ namespace TunicRandomizer {
 
         public static void ToggleSwordProgression(int index) { 
             TunicRandomizer.Settings.SwordProgressionEnabled = !TunicRandomizer.Settings.SwordProgressionEnabled;
+            SaveSettings();
+        }
+
+        public static void ToggleAbilityShuffling(int index) {
+            TunicRandomizer.Settings.ShuffleAbilities = !TunicRandomizer.Settings.ShuffleAbilities;
             SaveSettings();
         }
 

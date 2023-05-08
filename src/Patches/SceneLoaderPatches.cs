@@ -7,6 +7,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using UnhollowerBaseLib;
 using UnityEngine.UI;
+using UnityEngine.Animations;
 
 namespace TunicRandomizer {
     public class SceneLoaderPatches {
@@ -233,6 +234,11 @@ namespace TunicRandomizer {
             }
             if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && Resources.FindObjectsOfTypeAll<Monster>().Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();
+            }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
+                foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                    SpellToggle.gameObject.SetActive(false);
+                }
             }
         }
 

@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnhollowerBaseLib;
 using TMPro;
 using static TunicRandomizer.GhostHints;
+using HarmonyLib;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
@@ -47,7 +48,8 @@ namespace TunicRandomizer {
                     $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
-                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
+                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"\n"+
+                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
@@ -113,6 +115,12 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.AddPoison(1f);
             }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt($"randomizer obtained page 12") == 0) {
+                __instance.prayerBeginTimer = 0;
+            }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt($"randomizer obtained page 26") == 0) {
+                TechbowItemBehaviour.kIceShotWindow = 0;
+            }
         }
         
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
@@ -150,7 +158,9 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-
+                if (TunicRandomizer.Settings.ShuffleAbilities) {
+                    SaveFile.SetInt("randomizer shuffled abilities", 1);
+                }
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
@@ -222,6 +232,11 @@ namespace TunicRandomizer {
             OptionsGUIPatches.SaveSettings();
             if (TunicRandomizer.Settings.GhostFoxHintsEnabled && !SceneLoaderPatches.SpawnedGhosts) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
+            }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
+                foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                    SpellToggle.gameObject.SetActive(false);
+                }
             }
         }
         
@@ -324,7 +339,11 @@ namespace TunicRandomizer {
         private static void RandomizeAndPlaceItems() {
             string[] ProgressionNames = {
                 "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
-
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                ProgressionNames.AddItem("12"); // Prayer
+                ProgressionNames.AddItem("21"); // Holy Cross
+                ProgressionNames.AddItem("26"); // Ice Rod
+            }
             List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList);
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
@@ -732,10 +751,12 @@ namespace TunicRandomizer {
             return true;
         }
 
+
         public static void UpgradeAltar_DoOfferingSequence_PostfixPatch(UpgradeAltar __instance) {
             foreach (string LevelUp in RandomItemPatches.LevelUpItemNames) {
                 TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
             }
         }
+
     }
 }

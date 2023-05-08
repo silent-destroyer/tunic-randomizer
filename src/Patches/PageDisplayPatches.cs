@@ -25,7 +25,7 @@ namespace TunicRandomizer {
         }
 
         public static void PageDisplay_Close_PostfixPatch(PageDisplay __instance) {
-
+            
             for (int i = 0; i < 28; i++) {
                 // If manual is opened in the heir arena, set pages accordingly so true ending still works based on randomized pages
                 if (SceneLoaderPatches.SceneName == "Spirit Arena") {
