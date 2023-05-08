@@ -218,7 +218,6 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer keys behind bosses") != 0) {
                 foreach (ItemData Hexagon in Hexagons) {
-                    // second quest?
                     if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                         Hexagon.Reward.Name = "Hexagon Gold";
                         Hexagon.Reward.Type = "SPECIAL";
@@ -254,7 +253,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Stick"] = 1;
                 }
                 if (SwordLevel >= 2) {
-                    TunicRandomizer.Tracker.ImportantItems["Sword"] = 1;
+                    TunicRandomizer.Tracker.ImportantItems["Sword"] = SwordLevel;
                 }
                 if (SwordLevel == 3) {
                     LoadSecondSword = true;
@@ -589,7 +588,14 @@ namespace TunicRandomizer {
                 __instance.doPushbackBlast();
                 return false;
             }
+            
             return true;
+        }
+
+        public static void UpgradeAltar_DoOfferingSequence_PostfixPatch(UpgradeAltar __instance) {
+            foreach (string LevelUp in RandomItemPatches.LevelUpItemNames) {
+                TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
+            }
         }
     }
 }

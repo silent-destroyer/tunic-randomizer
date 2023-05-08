@@ -70,6 +70,23 @@ namespace TunicRandomizer {
             set;
         }
 
+        // Enemy Randomization Settings
+        public bool EnemyRandomizerEnabled {
+            get;
+            set;
+        }
+
+        public EnemyRandomizationType EnemyGeneration {
+            get;
+            set;
+        }
+
+        public bool ExtraEnemiesEnabled {
+            get;
+            set;
+        }
+
+
         // Fox Settings
         public bool RandomFoxColorsEnabled {
             get;
@@ -86,17 +103,6 @@ namespace TunicRandomizer {
             set;
         }
 
-        // Item Tracker Settings
-        public bool ItemTrackerFileEnabled {
-            get;
-            set;
-        }
-
-        public bool ItemTrackerOverlayEnabled {
-            get;
-            set;
-        }
-
         public enum GameModes { 
             RANDOMIZER,
             HEXAGONQUEST
@@ -109,6 +115,10 @@ namespace TunicRandomizer {
             ONSLAUGHT,
         }
 
+        public enum EnemyRandomizationType { 
+            RANDOM,
+            BALANCED
+        }
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
             KeysBehindBosses = false;
@@ -124,9 +134,10 @@ namespace TunicRandomizer {
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
             FoolTrapIntensity = FoolTrapOption.NORMAL;
-
-            ItemTrackerFileEnabled = false;
-            ItemTrackerOverlayEnabled = false;
+            
+            EnemyRandomizerEnabled = false;
+            EnemyGeneration = EnemyRandomizationType.RANDOM;
+            ExtraEnemiesEnabled = false;
 
             RandomFoxColorsEnabled = true;
             RealestAlwaysOn = false;

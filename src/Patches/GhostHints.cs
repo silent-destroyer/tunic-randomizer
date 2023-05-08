@@ -296,7 +296,7 @@ public class GhostHints {
                 string ItemName = Hints.SimplifiedItemNames[RandomItemPatches.ItemList[Key].Reward.Name];
                 string LocationSuffix = HintableLocationIds[Key][HintableLocationIds[Key].Length-1] == 'S' ? "R" : "iz";
                 string ItemPrefix = ItemName == "Money" ? "suhm" : Vowels.Contains(ItemName.ToUpper()[0]) ? "ahn" : "uh";
-                string Hint = $"bI #uh wA, I hird #aht \"{HintableLocationIds[Key]}\"\n{LocationSuffix} gRdi^ {ItemPrefix} \"{ItemName.ToUpper()}.\"";
+                string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key]}\"\n{LocationSuffix} gRdi^ {ItemPrefix} \"{ItemName.ToUpper()}.\"";
 
                 LocationHints.Add(Hint);
             }
@@ -354,9 +354,9 @@ public class GhostHints {
                         string Hint = "";
                         if (Scene.Length > 15) {
                             string[] SceneSplit = Scene.Split(' ');
-                            Hint = $"if I wur yoo, I wood uhvoid \"{String.Join(" ", SceneSplit.Take(SceneSplit.Length - 1))}\"\n\"{SceneSplit[SceneSplit.Length-1]}.\" #aht plAs iz \"NOT IMPORTANT.\"";
+                            Hint = $"if I wur yoo, I woud uhvoid \"{String.Join(" ", SceneSplit.Take(SceneSplit.Length - 1))}\"\n\"{SceneSplit[SceneSplit.Length-1]}.\" #aht plAs iz \"NOT IMPORTANT.\"";
                         } else {
-                            Hint = $"if I wur yoo, I wood uhvoid \"{Scene}.\"\n#aht plAs iz \"NOT IMPORTANT.\"";
+                            Hint = $"if I wur yoo, I woud uhvoid \"{Scene}.\"\n#aht plAs iz \"NOT IMPORTANT.\"";
                         }
                         BarrenAndTreasureHints.Add(Hint);
                     }

@@ -24,21 +24,68 @@ namespace TunicRandomizer {
             if (SceneName == "Sword Cave") {
                 SaveFile.SetInt("chest open 19", RandomItemPatches.ItemsPickedUp["19 [Sword Cave]"] ? 1 : 0);
             }
+
             return true;
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
+
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
+            if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
+                EnemyRandomizer.InitializeEnemies("Cathedral Redux");
+                SceneLoader.LoadScene("TitleScreen");
+                return;
+            }
+            if (loadingScene.name == "Fortress Main" && !EnemyRandomizer.Enemies.ContainsKey("woodcutter")) {
+                EnemyRandomizer.InitializeEnemies("Fortress Main");
+                SceneLoader.LoadScene("Cathedral Redux");
+                return;
+            }
+            if (loadingScene.name == "Fortress Reliquary" && !EnemyRandomizer.Enemies.ContainsKey("voidling redux")) {
+                EnemyRandomizer.InitializeEnemies("Fortress Reliquary");
+                SceneLoader.LoadScene("Fortress Main");
+                return;
+            }
+            if (loadingScene.name == "ziggurat2020_1" && !EnemyRandomizer.Enemies.ContainsKey("administrator")) {
+                EnemyRandomizer.InitializeEnemies("ziggurat2020_1");
+                SceneLoader.LoadScene("Fortress Reliquary");
+                return;
+            }
+            if (loadingScene.name == "Swamp Redux 2" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_easy")) {
+                EnemyRandomizer.InitializeEnemies("Swamp Redux 2");
+                SceneLoader.LoadScene("ziggurat2020_1");
+                return;
+            }
+            if (loadingScene.name == "Quarry Redux" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger")) {
+                EnemyRandomizer.InitializeEnemies("Quarry Redux");
+                SceneLoader.LoadScene("Swamp Redux 2");
+                return;
+            }
+            if (loadingScene.name == "Fortress Basement" && !EnemyRandomizer.Enemies.ContainsKey("Spider Small")) {
+                EnemyRandomizer.InitializeEnemies("Fortress Basement");
+                SceneLoader.LoadScene("Quarry Redux");
+                return;
+            }
+            if (loadingScene.name == "frog cave main" && !EnemyRandomizer.Enemies.ContainsKey("Frog Small")) {
+                EnemyRandomizer.InitializeEnemies("frog cave main");
+                SceneLoader.LoadScene("Fortress Basement");
+                return;
+            }
+            if (loadingScene.name == "Atoll Redux" && !EnemyRandomizer.Enemies.ContainsKey("plover")) {
+                EnemyRandomizer.InitializeEnemies("Atoll Redux");
+                SceneLoader.LoadScene("frog cave main");
+                return;
+            }
             if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
                 ModelSwaps.GlowEffect = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Night Glow").ToList()[0]);
                 GameObject.Destroy(ModelSwaps.GlowEffect.GetComponent<StatefulActive>());
                 ModelSwaps.GlowEffect.SetActive(false);
                 GameObject.DontDestroyOnLoad(ModelSwaps.GlowEffect);
-                SceneLoader.LoadScene("TitleScreen");
+                EnemyRandomizer.InitializeEnemies("Archipelagos Redux");
+                SceneLoader.LoadScene("Atoll Redux");
                 return;
             }
-
             if (loadingScene.name == "Transit" && !ModelSwaps.Items.ContainsKey("Relic - Hero Sword")) {
                 ModelSwaps.InitializeHeroRelics();
                 SceneLoader.LoadScene("Archipelagos Redux");
@@ -57,6 +104,7 @@ namespace TunicRandomizer {
             if (loadingScene.name == "Cathedral Arena" && !ModelSwaps.Chests.ContainsKey("Hyperdash")) {
                 ModelSwaps.InitializeChestType("Hyperdash");
                 SceneLoader.LoadScene("Library Arena");
+                EnemyRandomizer.InitializeEnemies("Cathedral Arena");
                 return;
             }
             if (loadingScene.name == "Overworld Redux" && ModelSwaps.Chests.Count == 0) {
@@ -64,6 +112,7 @@ namespace TunicRandomizer {
                     GhostHints.InitializeGhostFox();
                 }
                 ModelSwaps.InitializeItems();
+                EnemyRandomizer.InitializeEnemies("Overworld Redux");
                 SceneLoader.LoadScene("Cathedral Arena");
                 return;
             }
@@ -144,7 +193,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.HeroPathHintsEnabled && Inventory.GetItemByName("Lantern").Quantity == 0) {
                     GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f,-0.5f, 0.5f, 0.5f);
                 }
-            } else{
+            } else {
                 foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
                 }
@@ -182,9 +231,13 @@ namespace TunicRandomizer {
                 GhostHints.SpawnHintGhosts(SceneName);
                 SpawnedGhosts = true;
             }
+            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && Resources.FindObjectsOfTypeAll<Monster>().Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
+                EnemyRandomizer.SpawnNewEnemies();
+            }
         }
 
         public static void PauseMenu___button_ReturnToTitle_PostfixPatch(PauseMenu __instance) {
+
             if (ItemStatsHUD.HexagonQuest != null) {
                 ItemStatsHUD.HexagonQuest.SetActive(false);
             }

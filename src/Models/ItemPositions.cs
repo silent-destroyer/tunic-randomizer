@@ -19,8 +19,6 @@ namespace TunicRandomizer {
     }
     public class ItemPositions {
 
-
-
         public static Dictionary<string, Quaternion> ShopItemRotations = new Dictionary<string, Quaternion>() {
             {"Stick", new Quaternion(0.7071f, 0, 0, -0.7071f)},
             {"Techbow", new Quaternion(0.7071f, 0, 0, -0.7071f)},

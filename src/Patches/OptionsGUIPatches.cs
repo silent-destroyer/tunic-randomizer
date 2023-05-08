@@ -28,6 +28,7 @@ namespace TunicRandomizer {
             addPageButton("Logic Settings", LogicSettingsPage);
             addPageButton("Hint Settings", HintsSettingsPage);
             addPageButton("General Settings", GeneralSettingsPage);
+            addPageButton("Enemy Randomizer Settings", EnemyRandomizerSettings);
             addPageButton("Fox Customization", CustomFoxSettingsPage);
 
         }
@@ -65,9 +66,17 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
             OptionsGUI.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
             OptionsGUI.addToggle("Bonus Upgrades", "Off", "On", TunicRandomizer.Settings.BonusStatUpgradesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBonusStatUpgrades);
-            //ItemTrackerOverlayButton = __instance.addToggle("Item Tracker Overlay", "Off", "On", TunicRandomizer.Settings.ItemTrackerOverlayEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrackerOverlay);
             OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
             OptionsGUI.addToggle("???", "Off", "On", CameraController.Flip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
+        }
+
+        public static void EnemyRandomizerSettings() {
+            Il2CppStringArray EnemyGenerationTypes = (Il2CppStringArray)new string[] { "Random", "Balanced" };
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Enemy Randomization");
+            OptionsGUI.addToggle("Enemy Randomizer", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
+            OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
+            OptionsGUI.addMultiSelect("Enemy Difficulty", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
         }
 
         public static void CustomFoxSettingsPage() {
@@ -115,8 +124,6 @@ namespace TunicRandomizer {
             }
             SaveSettings();
         }
-
-    
 
         public static void SaveSettings() {
             if (!File.Exists(TunicRandomizer.SettingsPath)) {
@@ -200,21 +207,23 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        // Item Tracker Settings
-
-        public static void ToggleTrackerOverlay(int index) { 
-            TunicRandomizer.Settings.ItemTrackerOverlayEnabled = !TunicRandomizer.Settings.ItemTrackerOverlayEnabled;
+        // Enemy Randomizer
+        public static void ToggleEnemyRandomizer(int index) { 
+            TunicRandomizer.Settings.EnemyRandomizerEnabled = !TunicRandomizer.Settings.EnemyRandomizerEnabled;
             SaveSettings();
         }
 
-        public static void ToggleTrackerFile(int index) {
-            TunicRandomizer.Settings.ItemTrackerFileEnabled = !TunicRandomizer.Settings.ItemTrackerFileEnabled;
-            if (TunicRandomizer.Settings.ItemTrackerFileEnabled) {
-                ItemTracker.SaveTrackerFile();
-            } else {
-                File.Delete(TunicRandomizer.ItemTrackerPath);
-            }
+        public static void ToggleExtraEnemies(int index) {
+            TunicRandomizer.Settings.ExtraEnemiesEnabled = !TunicRandomizer.Settings.ExtraEnemiesEnabled;
+            SaveSettings();
+        }
+        
+        public static int GetEnemyGenerationType() {
+            return (int)TunicRandomizer.Settings.EnemyGeneration;
+        }
 
+        public static void ChangeEnemyRandomizerGenerationType(int index) {
+            TunicRandomizer.Settings.EnemyGeneration = (RandomizerSettings.EnemyRandomizationType)index;
             SaveSettings();
         }
 
