@@ -81,6 +81,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ExtraEnemiesEnabled {
+            get;
+            set;
+        }
+
 
         // Fox Settings
         public bool RandomFoxColorsEnabled {
@@ -132,6 +137,7 @@ namespace TunicRandomizer {
             
             EnemyRandomizerEnabled = false;
             EnemyGeneration = EnemyRandomizationType.RANDOM;
+            ExtraEnemiesEnabled = false;
 
             RandomFoxColorsEnabled = true;
             RealestAlwaysOn = false;

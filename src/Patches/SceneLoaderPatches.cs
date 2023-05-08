@@ -32,9 +32,19 @@ namespace TunicRandomizer {
 
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
+            if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
+                EnemyRandomizer.InitializeEnemies("Cathedral Redux");
+                SceneLoader.LoadScene("TitleScreen");
+                return;
+            }
+            if (loadingScene.name == "Fortress Main" && !EnemyRandomizer.Enemies.ContainsKey("woodcutter")) {
+                EnemyRandomizer.InitializeEnemies("Fortress Main");
+                SceneLoader.LoadScene("Cathedral Redux");
+                return;
+            }
             if (loadingScene.name == "Fortress Reliquary" && !EnemyRandomizer.Enemies.ContainsKey("voidling redux")) {
                 EnemyRandomizer.InitializeEnemies("Fortress Reliquary");
-                SceneLoader.LoadScene("TitleScreen");
+                SceneLoader.LoadScene("Fortress Main");
                 return;
             }
             if (loadingScene.name == "ziggurat2020_1" && !EnemyRandomizer.Enemies.ContainsKey("administrator")) {

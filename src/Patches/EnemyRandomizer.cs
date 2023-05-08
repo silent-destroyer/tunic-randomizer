@@ -25,7 +25,7 @@ namespace TunicRandomizer {
             "Fortress Arena",
             "Spirit Arena"
         };
-
+        
 
         public static Dictionary<string, List<string>> LocationEnemies = new Dictionary<string, List<string>>() {
             {
@@ -74,6 +74,7 @@ namespace TunicRandomizer {
                     "Frog Small",
                     "Frog Spear",
                     "Frog (7)",
+                    "Wizard_Support"
                 }
             },
             {
@@ -83,7 +84,6 @@ namespace TunicRandomizer {
                     "Spider Big",
                     "Wizard_Sword",
                     "Wizard_Candleabra",
-                    //"Hedgehog Trap",*//*
                 }
             },
             {
@@ -102,6 +102,7 @@ namespace TunicRandomizer {
                     "Ghostfox_monster",
                     "Gunslinger",
                     "sewertentacle",
+                    "Crow Voidtouched"
                 }
             },
             {
@@ -121,12 +122,24 @@ namespace TunicRandomizer {
                 new List<string> () {
                     "voidling redux"
                 }
+            },
+            {
+                "Fortress Main",
+                new List<string> () { 
+                    "woodcutter"
+                }
+            },
+            {
+                "Cathedral Redux",
+                new List<string> () {
+                    "Voidtouched"
+                }
             }
         };
 
         public static Dictionary<string, List<string>> EnemyRankings = new Dictionary<string, List<string>>() {
             {
-                "Weak",
+                "Average",
                 new List<string>() {
                     "Blob",
                     "Hedgehog",
@@ -138,24 +151,16 @@ namespace TunicRandomizer {
                     "Fox enemy zombie",
                     "BlobBig",
                     "HedgehogBig",
-                }
-            },
-            {
-                "Average",
-                new List<string>() {
                     "Bat",
-                    "crocodoo",                 
-                    "crocodoo Voidtouched",
                     "Spider Small",
                     "bomezome_easy",
-                    "Fairyprobe Archipelagos (2)",
+                    "Fairyprobe Archipelagos",
                     "Fairyprobe Archipelagos (Dmg)",
                     "Skuladot redux_shield",
-                    "Crabbo (1)",
-                    "Spinnerbot Corrupted",
-                    "Frog Small",                                        
-                    "_Turret",
-
+                    "Crabbo",
+                    "Spinnerbot Corrupted",                          
+                    "Turret",
+                    "Hedgehog Trap"
                 }
             },
             {
@@ -166,6 +171,8 @@ namespace TunicRandomizer {
                     "Honourguard",
                     "Skuladot redux Big",
                     "Crow",
+                    "crocodoo",
+                    "crocodoo Voidtouched",
                     "Scavenger",
                     "Scavenger_miner",
                     "Scavenger_support",
@@ -173,9 +180,13 @@ namespace TunicRandomizer {
                     "Ghostfox_monster",
                     "voidling redux",
                     "Frog Spear",
-                    "Frog (7)",
+                    "Frog",
+                    "Frog Small",
                     "Spider Big",
                     "Wizard_Sword",
+                    "Wizard_Support",
+                    "Crow Voidtouched",
+                    "woodcutter"
                 }
             },
             {
@@ -185,31 +196,35 @@ namespace TunicRandomizer {
                     "Gunslinger",
                     "beefboy",
                     "bomezome big",
+                    "tech knight ghost",
+                    "tunic knight void",
+                    "Voidtouched"
                 }
             },
-            {
-                "Special",
-                new List<string>() {
-                     "tech knight ghost",
-                     "tunic knight void"
-                }
-            }
         };
 
         public static void InitializeEnemies(string SceneName) {
             List<Monster> Monsters = Resources.FindObjectsOfTypeAll<Monster>().ToList();
-            foreach (string EnemyName in LocationEnemies[SceneName]) {
+            foreach (string LocationEnemy in LocationEnemies[SceneName]) {
+                string EnemyName = LocationEnemy;
+                if (EnemyName.Contains("(") && !EnemyName.Contains("(Dmg)")) { 
+                    EnemyName = LocationEnemy.Split('(')[0].Trim();
+                }
+                if (EnemyName == "_Turret") {
+                    EnemyName = "Turret";
+                }
                 if (EnemyName == "voidling redux") {
-                    Enemies[EnemyName] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == EnemyName && Monster.transform.parent.name == "_Night Encounters").ToList()[0].gameObject);
+                    Enemies[EnemyName] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == LocationEnemy && Monster.transform.parent.name == "_Night Encounters").ToList()[0].gameObject);
                     Enemies[EnemyName].GetComponent<Voidling>().replacementMonster = null;
 
                 } else { 
-                    Enemies[EnemyName] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == EnemyName).ToList()[0].gameObject);
+                    Enemies[EnemyName] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == LocationEnemy).ToList()[0].gameObject);
                 }
                 GameObject.DontDestroyOnLoad(Enemies[EnemyName]);
                 Enemies[EnemyName].SetActive(false);
 
                 Enemies[EnemyName].transform.position = new Vector3(-30000f, -30000f, -30000f);
+
             }
             if (SceneName == "Archipelagos Redux") {
                 Enemies["tunic knight void"].GetComponent<ZTarget>().isActive = true;
@@ -218,34 +233,70 @@ namespace TunicRandomizer {
                     Enemies["tunic knight void"].transform.GetChild(i).gameObject.SetActive(true);
                 }
             }
+            if (SceneName == "Fortress Basement") {
+                Enemies["Hedgehog Trap"] = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<TurretTrap>().ToList()[0].gameObject);
+                GameObject.DontDestroyOnLoad(Enemies["Hedgehog Trap"]);
+                Enemies["Hedgehog Trap"].SetActive(false);
+
+                Enemies["Hedgehog Trap"].transform.position = new Vector3(-30000f, -30000f, -30000f);
+
+            }
 
         }
 
         public static void SpawnNewEnemies() {
-            foreach (NavigatingMonster Enemy in Resources.FindObjectsOfTypeAll<NavigatingMonster>().Where(Monster => Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name))) {
+            System.Random Random = new System.Random();
+            List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name)).ToList();
+            if (SceneLoaderPatches.SceneName == "Archipelagos Redux") {
+                Monsters = Monsters.Where(Monster => Monster.transform.parent.parent == null || Monster.transform.parent.parent.name != "_Environment Prefabs").ToList();
+            }
+            if (SceneLoaderPatches.SceneName == "Forest Belltower") {
+                Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Clone")).ToList();
+            }
+            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && SceneLoaderPatches.SceneName == "Library Hall" && !CycleController.IsNight) { 
+                GameObject.Find("beefboy statues").SetActive(false);
+                GameObject.Find("beefboy statues (2)").SetActive(false);
+                foreach (GameObject Monster in Monsters) {
+                    Monster.transform.parent = null;
+                }
+            }
+            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && SceneLoaderPatches.SceneName == "Monastery") {
+                Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
+            }
+
+            foreach (GameObject Enemy in Monsters) {
+                if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                    if (Enemy.transform.parent != null && Enemy.transform.parent.name.Contains("NG+")) {
+                        Enemy.transform.parent.gameObject.SetActive(true);
+                    }
+                }
                 GameObject NewEnemy;
 
-                if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM) {
-                    NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[TunicRandomizer.Randomizer.Next(Enemies.Count)]]);
+                if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || SceneLoaderPatches.SceneName == "Cathedral Arena") {
+                    NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[Random.Next(Enemies.Count)]]);
                 } else if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.BALANCED) {
-                    int EnemyType = TunicRandomizer.Randomizer.Next(101);
-                    List<string> EnemyTypes = new List<string>();
-                    if (EnemyType < 30) {
-                        EnemyTypes = EnemyRankings["Weak"];
-                    } else if (EnemyType >= 30 && EnemyType < 75) {
-                        EnemyTypes = EnemyRankings["Average"];
-                    } else if (EnemyType >= 75 && EnemyType < 92) {
-                        EnemyTypes = EnemyRankings["Strong"];
-                    } else if (EnemyType >= 92 && EnemyType < 98) {
-                        EnemyTypes = EnemyRankings["Intense"];
-                    } else {
-                        EnemyTypes = EnemyRankings["Special"];
+                    List<string> EnemyTypes = null;
+                    foreach (string Key in EnemyRankings.Keys.Reverse()) {
+                        List<string> Rank = EnemyRankings[Key];
+                        Rank.Sort();
+                        Rank.Reverse();
+                        foreach (string EnemyName in Rank) {
+                            if (Enemy.name.Contains(EnemyName)) {
+                                EnemyTypes = Rank;
+                            }
+                        }
+                        if (EnemyTypes != null) {
+                            break;
+                        }
                     }
-                    NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[TunicRandomizer.Randomizer.Next(EnemyTypes.Count)]]);
+                    if (EnemyTypes == null) {
+                        NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[Random.Next(Enemies.Count)]]);
+                    } else {
+                        NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
+                    }
                 } else {
-                    NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[TunicRandomizer.Randomizer.Next(Enemies.Count)]]);
+                    NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[Random.Next(Enemies.Count)]]);
                 }
-                //GameObject NewEnemy = GameObject.Instantiate(Enemies["voidling redux"]);
 
                 NewEnemy.transform.position = Enemy.transform.position;
                 NewEnemy.transform.rotation = Enemy.transform.rotation;
@@ -257,6 +308,7 @@ namespace TunicRandomizer {
             foreach (string Key in Enemies.Keys) {
                 Enemies[Key].SetActive(false);
             }
+
         }
 
     }

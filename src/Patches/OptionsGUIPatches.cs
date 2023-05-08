@@ -66,7 +66,6 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
             OptionsGUI.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
             OptionsGUI.addToggle("Bonus Upgrades", "Off", "On", TunicRandomizer.Settings.BonusStatUpgradesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBonusStatUpgrades);
-            //ItemTrackerOverlayButton = __instance.addToggle("Item Tracker Overlay", "Off", "On", TunicRandomizer.Settings.ItemTrackerOverlayEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrackerOverlay);
             OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
             OptionsGUI.addToggle("???", "Off", "On", CameraController.Flip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
         }
@@ -76,8 +75,8 @@ namespace TunicRandomizer {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Enemy Randomization");
             OptionsGUI.addToggle("Enemy Randomizer", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
-            OptionsGUI.addMultiSelect("Enemy Types", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
-
+            OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
+            OptionsGUI.addMultiSelect("Enemy Difficulty", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
         }
 
         public static void CustomFoxSettingsPage() {
@@ -214,6 +213,11 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void ToggleExtraEnemies(int index) {
+            TunicRandomizer.Settings.ExtraEnemiesEnabled = !TunicRandomizer.Settings.ExtraEnemiesEnabled;
+            SaveSettings();
+        }
+        
         public static int GetEnemyGenerationType() {
             return (int)TunicRandomizer.Settings.EnemyGeneration;
         }
