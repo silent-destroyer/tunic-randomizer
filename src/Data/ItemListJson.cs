@@ -3128,8 +3128,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(77.0, -1.0, 36.0)"",
                     ""RequiredItems"": [
                         {""Lantern"": 1},
-                        {""Hyperdash"": 1},
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 46,
                     ""SceneName"": ""Fortress East""
@@ -3146,8 +3145,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(-1.0, 8.4, 181.5)"",
                     ""RequiredItems"": [
                         {""Sword"": 1, ""Lantern"": 1},
-                        {""Sword"": 1, ""Hyperdash"": 1},
-                        {""Sword"": 1, ""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Sword"": 1, ""Hyperdash"": 1}
                     ],
                     ""SceneId"": 15,
                     ""SceneName"": ""Fortress Arena""
@@ -3164,8 +3162,7 @@ namespace TunicRandomizer {
                     ""Position"": ""(0.0, 1.0, 117.0)"",
                     ""RequiredItems"": [
                         {""Vault Key (Red)"": 1, ""Lantern"": 1},
-                        {""Vault Key (Red)"": 1, ""Hyperdash"": 1},
-                        {""Vault Key (Red)"": 1, ""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Vault Key (Red)"": 1, ""Hyperdash"": 1}
                     ],
                     ""SceneId"": 15,
                     ""SceneName"": ""Fortress Arena""

@@ -309,7 +309,7 @@ namespace TunicRandomizer {
                         AreaData.bottomLine.text = $"sEk wuht iz rItfuhlE yorz";
                         AreaLabel.ShowLabel(AreaData);
                         foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                            SpellToggle.gameObject.SetActive(true);
+                            SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
                         }
                     }
                     if (Reward.Name == "26") {

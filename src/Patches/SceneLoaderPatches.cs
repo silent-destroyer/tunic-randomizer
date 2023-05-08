@@ -237,7 +237,7 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
                 foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                    SpellToggle.gameObject.SetActive(false);
+                    SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
                 }
             }
         }
