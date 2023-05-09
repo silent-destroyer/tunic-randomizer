@@ -24,6 +24,7 @@ namespace TunicRandomizer {
 
         public static bool LoadSecondSword = false;
         public static bool LoadThirdSword = false;
+        public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
@@ -177,6 +178,9 @@ namespace TunicRandomizer {
             RandomItemPatches.ItemsPickedUp.Clear();
             Hints.HintMessages.Clear();
 
+            if (SphereZero.Count == 0) {
+                PopulateSphereZero();
+            }
             RandomizeAndPlaceItems();
 
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
@@ -336,13 +340,24 @@ namespace TunicRandomizer {
             return true;
         }
 
+        private static void PopulateSphereZero() {
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
+                SphereZero.Add("12", 1);
+                SphereZero.Add("21", 1);
+                SphereZero.Add("26", 1);
+            }
+            if (SaveFile.GetInt("randomizer started with sword") == 1) {
+                SphereZero.Add("Sword", 1);
+            }
+        }
+
         private static void RandomizeAndPlaceItems() {
-            string[] ProgressionNames = {
+            List<string> ProgressionNames = new List<string>{
                 "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                ProgressionNames.AddItem("12"); // Prayer
-                ProgressionNames.AddItem("21"); // Holy Cross
-                ProgressionNames.AddItem("26"); // Ice Rod
+                ProgressionNames.Add("12"); // Prayer
+                ProgressionNames.Add("21"); // Holy Cross
+                ProgressionNames.Add("26"); // Ice Rod
             }
             
             List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList);
@@ -350,7 +365,7 @@ namespace TunicRandomizer {
             List<Location> InitialLocations = new List<Location>();
             List<ItemData> Hexagons = new List<ItemData>();
             List<Reward> ProgressionRewards = new List<Reward>();
-            Dictionary<string, int> PlacedInventory = new Dictionary<string, int>{};
+            Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData>{};
 
             foreach (ItemData Item in InitialItems) {
@@ -387,13 +402,12 @@ namespace TunicRandomizer {
                     if (ProgressionNames.Contains(Item.Reward.Name) || RandomItemPatches.FairyLookup.Keys.Contains(Item.Reward.Name)) {
                         ProgressionRewards.Add(Item.Reward);
                     } else {
-                       InitialRewards.Add(Item.Reward);
+                        InitialRewards.Add(Item.Reward);
                     }
                     InitialLocations.Add(Item.Location);
                 }
             }
 
-            // Randomize the rewards and locations
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
                 // pick a location 
@@ -541,11 +555,17 @@ namespace TunicRandomizer {
             List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
             bool techbowHinted = false;
             bool wandHinted = false;
+            bool prayerHinted = false;
+            bool hcHinted = false;
             string Scene;
             string ScenePrefix;
 
             // Mailbox Hint
             List<string> mailboxNames = new List<string>() {"Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword"}; 
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                mailboxNames.Add("12");
+                mailboxNames.Add("21");
+            }
             List<ItemData> mailboxHintables = new List<ItemData>();
             foreach (string Item in mailboxNames) {
                 mailboxHintables.AddRange(FindAllRandomizedItemsByName(Item));
@@ -553,7 +573,7 @@ namespace TunicRandomizer {
             Shuffle(mailboxHintables);
             int n = 0;
             while (HintItem == null && n < mailboxHintables.Count) {
-                if (mailboxHintables[n].Location.RequiredItems.Count == 0) {
+                if (mailboxHintables[n].Location.reachable(SphereZero)) {
                     HintItem = mailboxHintables[n];
                 }
                 n++;
@@ -563,30 +583,30 @@ namespace TunicRandomizer {
                 while (HintItem == null && n < mailboxHintables.Count) {
                     if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
                         foreach(ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin")) {
-                            if(itemData.Location.RequiredItems.Count == 0) {
+                            if(itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     } else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
                         foreach(ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
-                            if(itemData.Location.RequiredItems.Count == 0) {
+                            if(itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     } else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors") {
                         ItemData itemData = FindRandomizedItemByName("Key (House)");
-                        if (itemData.Location.RequiredItems.Count == 0) {
+                        if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;
                         }
                     } else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
                         foreach(ItemData itemData in FindAllRandomizedItemsByName("Key")) {
-                            if(itemData.Location.RequiredItems.Count == 0) {
+                            if(itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     } else if (mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
                         ItemData itemData = FindRandomizedItemByName("Mask");
-                        if (itemData.Location.RequiredItems.Count == 0) {
+                        if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;
                         }
                     }
@@ -601,6 +621,8 @@ namespace TunicRandomizer {
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE.";
                 if (HintItem.Reward.Name == "Techbow") {techbowHinted = true;}
                 if (HintItem.Reward.Name == "Wand") {wandHinted = true;}
+                if (HintItem.Reward.Name == "12") {prayerHinted = true;}
+                if (HintItem.Reward.Name == "21") {hcHinted = true;}
             }
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
@@ -612,11 +634,18 @@ namespace TunicRandomizer {
             Hints.HintMessages.Add("Temple Statue", HintMessage);
             
             List<string> HintItems = new List<string>() { techbowHinted ? "Lantern" : "Techbow", wandHinted ? "Lantern" : "Wand", "Stundagger" };
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                HintItems.Add(prayerHinted ? "Lantern" : "12");
+                HintItems.Add(hcHinted ? "Lantern" : "21");
+                HintItems.Remove("Stundagger");
+            }
             List<string> HintScenes = new List<string>() { "East Forest Relic", "Fortress Relic", "West Garden Relic" };
-            for (int i = 0; i < 3; i++) {
+            while (HintScenes.Count > 0) {
                 HintItem = FindRandomizedItemByName(HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)]);
                 string HintScene = HintScenes[TunicRandomizer.Randomizer.Next(HintScenes.Count)];
-
+                if (HintItem.Reward.Name == "12" && HintScene == "Fortress Relic") {
+                    continue;
+                }
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\niz lOkAtid awn #uh \"<#ffd700>PATH OF THE HERO<#ffffff>...\"";

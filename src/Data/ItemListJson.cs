@@ -49,7 +49,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1013"",
                     ""Position"": ""(-4.3, 11.9, -206.4)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -63,7 +65,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""CubeRoom-(321.1, 3.0, 217.0)"",
                     ""Position"": ""(321.1, 3.0, 217.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 65,
                     ""SceneName"": ""CubeRoom""
                 },
@@ -133,7 +137,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1003"",
                     ""Position"": ""(-62.0, 40.0, -40.5)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -189,7 +195,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""270"",
                     ""Position"": ""(12.0, 0.0, -4.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 81,
                     ""SceneName"": ""EastFiligreeCache""
                 },
@@ -203,7 +211,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""271"",
                     ""Position"": ""(7.0, 0.0, -5.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 81,
                     ""SceneName"": ""EastFiligreeCache""
                 },
@@ -217,7 +227,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""272"",
                     ""Position"": ""(2.0, 0.0, -5.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 81,
                     ""SceneName"": ""EastFiligreeCache""
                 },
@@ -245,7 +257,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Overworld Cave-(-90.4, 515.0, -738.9)"",
                     ""Position"": ""(-90.4, 515.0, -738.9)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 49,
                     ""SceneName"": ""Overworld Cave""
                 },
@@ -301,7 +315,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Overworld Redux-(90.4, 36.0, -122.1)"",
                     ""Position"": ""(90.4, 36.0, -122.1)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -427,7 +443,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""East Forest Redux-(104.0, 16.0, 61.0)"",
                     ""Position"": ""(104.0, 16.0, 61.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 52,
                     ""SceneName"": ""East Forest Redux""
                 },
@@ -483,7 +501,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1009"",
                     ""Position"": ""(19.0, 4.0, -186.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 11,
                     ""SceneName"": ""Sword Access""
                 },
@@ -553,7 +573,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""East Forest Redux-(164.0, -25.0, -56.0)"",
                     ""Position"": ""(164.0, -25.0, -56.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 52,
                     ""SceneName"": ""East Forest Redux""
                 },
@@ -600,7 +622,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""1006"",
                     ""Position"": ""(104.0, -16.0, -23.8)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1}
+                        {""Wand"": 1, ""Stundagger"": 1, ""Techbow"": 1, ""26"": 1}
                     ],
                     ""SceneId"": 52,
                     ""SceneName"": ""East Forest Redux""
@@ -727,7 +749,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Overworld Redux-(64.5, 44.0, -40.0)"",
                     ""Position"": ""(64.5, 44.0, -40.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -755,7 +779,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""PatrolCave-(74.0, 46.0, 24.0)"",
                     ""Position"": ""(74.0, 46.0, 24.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 66,
                     ""SceneName"": ""PatrolCave""
                 },
@@ -797,7 +823,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""stonehenge_reward"",
                     ""Position"": ""(-95.0, 72.0, 47.2)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -853,7 +881,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Waterfall-(-47.0, 45.0, 10.0)"",
                     ""Position"": ""(-47.0, 45.0, 10.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 48,
                     ""SceneName"": ""Waterfall""
                 },
@@ -881,7 +911,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1008"",
                     ""Position"": ""(-37.2, 28.0, -63.6)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -951,7 +983,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Overworld Redux-(-132.0, 28.0, -55.5)"",
                     ""Position"": ""(-132.0, 28.0, -55.5)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -979,7 +1013,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""town_filigree"",
                     ""Position"": ""(-80.0, 23.0, -64.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 29,
                     ""SceneName"": ""Town_FiligreeRoom""
                 },
@@ -1009,7 +1045,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Overworld Redux-(-83.0, 20.0, -117.5)"",
                     ""Position"": ""(-83.0, 20.0, -117.5)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -1124,7 +1162,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Overworld Redux-(-52.0, 2.0, -174.8)"",
                     ""Position"": ""(-52.0, 2.0, -174.8)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -1138,7 +1178,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1004"",
                     ""Position"": ""(-34.0, -0.5, -178.5)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""
                 },
@@ -1180,7 +1222,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Town Basement-(-202.0, 28.0, 150.0)"",
                     ""Position"": ""(-202.0, 28.0, 150.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 6,
                     ""SceneName"": ""Town Basement""
                 },
@@ -1267,7 +1311,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""FT_Island"",
                     ""Position"": ""(-11.0, 8.0, -68.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""12"": 1}
+                    ],
                     ""SceneId"": 38,
                     ""SceneName"": ""Transit""
                 },
@@ -1282,7 +1328,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""1012"",
                     ""Position"": ""(-68.0, 8.0, -40.0)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 38,
                     ""SceneName"": ""Transit""
@@ -1325,7 +1371,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Maze Room-(1.0, 0.0, -1.0)"",
                     ""Position"": ""(1.0, 0.0, -1.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 67,
                     ""SceneName"": ""Maze Room""
                 },
@@ -1765,8 +1813,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Library Hall-(133.3, 10.0, -43.2)"",
                     ""Position"": ""(133.3, 10.0, -43.2)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1, ""21"": 1},
+                        {""Hyperdash"": 1, ""12"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Hall""
@@ -1782,8 +1830,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""library_2"",
                     ""Position"": ""(119.7, 92.8, -84.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1799,8 +1847,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""library_3"",
                     ""Position"": ""(129.1, 92.8, -68.7)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1816,8 +1864,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""library_1"",
                     ""Position"": ""(160.1, 92.8, -74.9)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1833,8 +1881,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""226"",
                     ""Position"": ""(163.9, 95.0, -41.8)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1850,8 +1898,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""225"",
                     ""Position"": ""(155.3, 95.0, -31.3)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1867,8 +1915,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""227"",
                     ""Position"": ""(153.8, 95.0, -29.3)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1884,8 +1932,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""228"",
                     ""Position"": ""(114.5, 95.0, -36.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 17,
                     ""SceneName"": ""Library Lab""
@@ -1901,8 +1949,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Hexagon Green"",
                     ""Position"": ""(0.2, 1.3, 0.4)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1},
-                        {""Hyperdash"": 1}
+                        {""Wand"": 1, ""12"": 1},
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 27,
                     ""SceneName"": ""Library Arena""
@@ -1934,7 +1982,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Overworld Interiors-(-28.0, 27.0, -50.5)"",
                     ""Position"": ""(-28.0, 27.0, -50.5)"",
                     ""RequiredItems"": [
-                        {""Key (House)"": 1}
+                        {""Key (House)"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Interiors""
@@ -1965,7 +2013,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""under_overworld"",
                     ""Position"": ""(7.0, 30.0, 37.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Interiors""
                 },
@@ -2221,7 +2271,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""264"",
                     ""Position"": ""(294.5, 11.0, 109.5)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""12"": 1}
+                    ],
                     ""SceneId"": 26,
                     ""SceneName"": ""Sewer""
                 },
@@ -2413,8 +2465,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""217"",
                     ""Position"": ""(-235.7, 5.0, 152.5)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
-                        {""Hyperdash"": 1}
+                        {""Lantern"": 1, ""21"": 1},
+                        {""Hyperdash"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 30,
                     ""SceneName"": ""Archipelagos Redux""
@@ -2547,7 +2599,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Archipelagos Redux-(-396.3, 1.4, 42.3)"",
                     ""Position"": ""(-396.3, 1.4, 42.3)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 30,
                     ""SceneName"": ""Archipelagos Redux""
@@ -2648,7 +2700,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""archipelagos_night"",
                     ""Position"": ""(-182.3, 1.0, 26.9)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 30,
                     ""SceneName"": ""Archipelagos Redux""
@@ -2697,8 +2749,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Archipelagos Redux-(-236.0, 8.0, 86.3)"",
                     ""Position"": ""(-236.0, 8.0, 86.3)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
-                        {""Hyperdash"": 1}
+                        {""Lantern"": 1, ""21"": 1},
+                        {""Hyperdash"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 30,
                     ""SceneName"": ""Archipelagos Redux""
@@ -2781,9 +2833,9 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Temple-(14.0, 0.1, 42.4)"",
                     ""Position"": ""(14.0, 0.1, 42.4)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1, ""Stick"": 1},
-                        {""Hyperdash"": 1, ""Techbow"": 1},
-                        {""Lantern"": 1, ""Sword"": 1}
+                        {""Hyperdash"": 1, ""Stick"": 1, ""21"": 1},
+                        {""Hyperdash"": 1, ""Techbow"": 1, ""21"": 1},
+                        {""Lantern"": 1, ""Sword"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 23,
                     ""SceneName"": ""Temple""
@@ -2860,7 +2912,10 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""87"",
                     ""Position"": ""(-53.7, 0.0, -49.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""12"": 1},
+                        {""Hyperdash"": 1}
+                    ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Courtyard""
                 },
@@ -2874,7 +2929,10 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""spidercave"",
                     ""Position"": ""(-43.1, 0.0, -44.6)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""12"": 1},
+                        {""Hyperdash"": 1}
+                    ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Courtyard""
                 },
@@ -2889,7 +2947,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""63"",
                     ""Position"": ""(-91.3, -4.0, 16.2)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1}
+                        {""Lantern"": 1, ""12"": 1},
+                        {""Lantern"": 1, ""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
                     ""SceneName"": ""Fortress Basement""
@@ -2905,9 +2964,9 @@ namespace TunicRandomizer {
                     ""LocationId"": ""61"",
                     ""Position"": ""(-101.0, 5.0, 27.0)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1, ""Stick"": 1},
-                        {""Lantern"": 1, ""Sword"": 1},
-                        {""Lantern"": 1, ""Techbow"": 1},
+                        {""Lantern"": 1, ""Stick"": 1, ""12"": 1},
+                        {""Lantern"": 1, ""Sword"": 1, ""12"": 1},
+                        {""Lantern"": 1, ""Techbow"": 1, ""12"": 1},
                         {""Lantern"": 1, ""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
@@ -2924,7 +2983,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""62"",
                     ""Position"": ""(7.8, 0.0, -6.9)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
@@ -2941,7 +3000,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""65"",
                     ""Position"": ""(26.3, 0.0, 5.1)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
@@ -2958,7 +3017,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""64"",
                     ""Position"": ""(17.2, 0.0, 72.5)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 13,
@@ -2992,7 +3051,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""83"",
                     ""Position"": ""(-89.0, 7.0, 56.3)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
@@ -3009,7 +3068,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""84"",
                     ""Position"": ""(-82.6, 7.0, 48.6)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
@@ -3026,8 +3085,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Fortress Main-(-75.0, -1.0, 17.0)"",
                     ""Position"": ""(-75.0, -1.0, 17.0)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
-                        {""Hyperdash"": 1}
+                        {""Lantern"": 1, ""12"": 1, ""21"": 1},
+                        {""Hyperdash"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Fortress Main""
@@ -3043,7 +3102,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""85"",
                     ""Position"": ""(31.0, 11.0, 50.7)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,
@@ -3060,7 +3119,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""113"",
                     ""Position"": ""(127.2, 8.0, -27.0)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 47,
@@ -3077,7 +3136,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""114"",
                     ""Position"": ""(199.5, 0.0, -45.0)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 47,
@@ -3094,7 +3153,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""115"",
                     ""Position"": ""(199.5, 0.0, -35.0)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 47,
@@ -3127,7 +3186,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""112"",
                     ""Position"": ""(77.0, -1.0, 36.0)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 46,
@@ -3144,8 +3203,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Vault Key (Red)"",
                     ""Position"": ""(-1.0, 8.4, 181.5)"",
                     ""RequiredItems"": [
-                        {""Sword"": 1, ""Lantern"": 1},
-                        {""Sword"": 1, ""Hyperdash"": 1}
+                        {""Sword"": 1, ""Lantern"": 1, ""12"": 1},
+                        {""Sword"": 1, ""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 15,
                     ""SceneName"": ""Fortress Arena""
@@ -3161,8 +3220,8 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Hexagon Red"",
                     ""Position"": ""(0.0, 1.0, 117.0)"",
                     ""RequiredItems"": [
-                        {""Vault Key (Red)"": 1, ""Lantern"": 1},
-                        {""Vault Key (Red)"": 1, ""Hyperdash"": 1}
+                        {""Vault Key (Red)"": 1, ""Lantern"": 1, ""12"": 1},
+                        {""Vault Key (Red)"": 1, ""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 15,
                     ""SceneName"": ""Fortress Arena""
@@ -3207,7 +3266,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""final"",
                     ""Position"": ""(-11.0, 42.0, 15.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 9,
                     ""SceneName"": ""Mountaintop""
                 },
@@ -3221,7 +3282,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""Quarry Redux-(0.7, 68.0, 84.7)"",
                     ""Position"": ""(0.7, 68.0, 84.7)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Quarry Redux""
                 },
@@ -3650,7 +3713,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""274"",
                     ""Position"": ""(135.0, 138.0, -58.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 42,
                     ""SceneName"": ""ziggurat2020_1""
@@ -3666,7 +3729,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""275"",
                     ""Position"": ""(130.0, 106.0, -129.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 42,
                     ""SceneName"": ""ziggurat2020_1""
@@ -3682,7 +3745,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""229"",
                     ""Position"": ""(149.9, 424.3, -42.6)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 41,
                     ""SceneName"": ""ziggurat2020_2""
@@ -3698,7 +3761,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""230"",
                     ""Position"": ""(74.0, 4.0, 5.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3714,7 +3777,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""231"",
                     ""Position"": ""(-7.0, 4.0, -24.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3730,7 +3793,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""234"",
                     ""Position"": ""(67.6, 4.0, -38.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3746,7 +3809,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""261"",
                     ""Position"": ""(129.1, 4.1, -27.3)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3762,7 +3825,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""260"",
                     ""Position"": ""(149.2, 4.0, -53.5)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3778,7 +3841,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""232"",
                     ""Position"": ""(85.6, 4.0, -51.8)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3794,7 +3857,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""233"",
                     ""Position"": ""(153.0, 0.0, -61.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -3810,7 +3873,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Hexagon Blue"",
                     ""Position"": ""(521.0, -32.9, -146.0)"",
                     ""RequiredItems"": [
-                        {""Wand"": 1, ""Mask"": 1}
+                        {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 43,
                     ""SceneName"": ""ziggurat2020_3""
@@ -4155,7 +4218,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1002"",
                     ""Position"": ""(-53.5, -20.0, 30.0)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
                 },
@@ -4170,7 +4235,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""240"",
                     ""Position"": ""(-21.6, 0.0, -71.4)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4186,7 +4251,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""244"",
                     ""Position"": ""(-17.5, 0.0, -47.5)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4202,7 +4267,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""236"",
                     ""Position"": ""(89.1, 0.0, -71.7)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4218,7 +4283,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""237"",
                     ""Position"": ""(44.5, -0.1, -27.5)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4234,7 +4299,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""243"",
                     ""Position"": ""(63.8, 20.0, -71.9)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4250,7 +4315,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""238"",
                     ""Position"": ""(55.8, 20.0, -63.3)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4266,7 +4331,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""239"",
                     ""Position"": ""(31.5, 20.5, -49.8)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4282,7 +4347,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""241"",
                     ""Position"": ""(-26.3, 20.0, -63.6)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4298,7 +4363,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""242"",
                     ""Position"": ""(-20.5, 20.0, 30.9)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 68,
                     ""SceneName"": ""Cathedral Redux""
@@ -4378,7 +4443,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Relic PIckup (6) Sword)"",
                     ""Position"": ""(-18.5, 2.0, -11.0)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""RelicVoid""
@@ -4394,7 +4459,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Relic PIckup (5) (MP)"",
                     ""Position"": ""(-18.7, 2.0, 10.8)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""RelicVoid""
@@ -4410,7 +4475,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Relic PIckup (4) (water)"",
                     ""Position"": ""(0.0, 2.0, 21.5)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""RelicVoid""
@@ -4426,7 +4491,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Relic PIckup (3) (HP)"",
                     ""Position"": ""(18.5, 2.0, 10.5)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""RelicVoid""
@@ -4442,7 +4507,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Relic PIckup (2) (Crown)"",
                     ""Position"": ""(18.5, 2.0, -11.0)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""RelicVoid""
@@ -4458,7 +4523,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Relic PIckup (1) (SP)"",
                     ""Position"": ""(0.0, 2.0, -21.5)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1}
+                        {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""RelicVoid""
