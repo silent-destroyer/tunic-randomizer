@@ -73,7 +73,8 @@ public class GhostHints {
             "Relic - Hero Pendant HP",
             "Relic - Hero Crown",
             "Relic - Hero Pendant SP",
-            "Dath Stone"
+            "Dath Stone",
+            "26"
         };
 
         public static List<string> BarrenItemNames = new List<string>() {
