@@ -6,7 +6,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""999"",
                     ""Position"": ""(0.0, 0.0, 0.0)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1 }
+                        {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 60,
                     ""SceneName"": ""Cathedral Arena""
@@ -287,7 +287,9 @@ namespace TunicRandomizer {
                 ""Location"": {
                     ""LocationId"": ""1001"",
                     ""Position"": ""(176.0, 16.0, 113.5)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""21"": 1}
+                    ],
                     ""SceneId"": 7,
                     ""SceneName"": ""Ruins Passage""
                 },
@@ -3034,7 +3036,7 @@ namespace TunicRandomizer {
                     ""LocationId"": ""fortress"",
                     ""Position"": ""(-88.7, 7.6, 25.8)"",
                     ""RequiredItems"": [
-                        {""Lantern"": 1},
+                        {""Lantern"": 1, ""12"": 1},
                         {""Hyperdash"": 1}
                     ],
                     ""SceneId"": 12,

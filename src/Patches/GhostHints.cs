@@ -74,7 +74,6 @@ public class GhostHints {
             "Relic - Hero Crown",
             "Relic - Hero Pendant SP",
             "Dath Stone",
-            "26"
         };
 
         public static List<string> BarrenItemNames = new List<string>() {
@@ -305,7 +304,11 @@ public class GhostHints {
 
         public static void GenerateItemHints() {
             ItemHints.Clear();
-            foreach (string Key in HintableItemNames) {
+            List<string> HintableItems = new List<string>(HintableItemNames);
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                HintableItems.Add("26");
+            }
+            foreach (string Key in HintableItems) {
                 List<ItemData> Items = FindAllRandomizedItemsByName(Key);
                 foreach (ItemData Item in Items) {
                     string ScenePrefix = Item.Location.SceneName == "Trinket Well" ? "%rOi^" : "aht #uh";
