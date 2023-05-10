@@ -63,7 +63,7 @@ namespace TunicRandomizer {
                 SaveFile.SetInt(FairyLookup[FairyId].Flag, 1);
                 SaveFile.SetInt($"randomizer opened fairy chest {FairyId}", 1);
             }
-
+            
             __instance.isFairy = false;
             return true;
         }
@@ -285,10 +285,15 @@ namespace TunicRandomizer {
                 CoinSpawner.SpawnCoins(Reward.Amount, SpawnPosition);
             } else if (Reward.Type == "FAIRY") {
                 SaveFile.SetInt($"randomizer obtained fairy {Reward.Name}", 1);
-                /*                LanguageLine FairyMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                                FairyMessage.text = $"yoo fownd #uh fawlOi^ \"FAIRY:\t  ({TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1}/20)\"\n{FairyLookup[Reward.Name].Translation}\n";
-                                NPCDialogue.DisplayDialogue(FairyMessage, true);*/
-                GameObject.Instantiate(ModelSwaps.FairyAnimation, StringToVector3(ItemData.Location.Position), Quaternion.identity).SetActive(true);
+                Vector3 SpawnPosition;
+
+                if (ItemData.Location.SceneName == "Trinket Well") {
+                    SpawnPosition = GameObject.FindObjectOfType<TrinketWell>().transform.position;
+                    SpawnPosition.Set(SpawnPosition.x, SpawnPosition.y + 3.25f, SpawnPosition.z);
+                } else {
+                    SpawnPosition = StringToVector3(ItemData.Location.Position);
+                }
+                GameObject.Instantiate(ModelSwaps.FairyAnimation, SpawnPosition, Quaternion.identity).SetActive(true);
             } else if (Reward.Type == "PAGE") {
                 SaveFile.SetInt($"randomizer obtained page {Reward.Name}", 1);
                 PageDisplay.ShowPage(int.Parse(Reward.Name));
@@ -456,11 +461,14 @@ namespace TunicRandomizer {
         }
 
         private static Vector3 StringToVector3(string Position) {
-            Position = Position.Replace("(", "").Replace(")", "");
-            string[] coords = Position.Split(',');
-            Vector3 vector = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
-            return vector;
+            try {
+                Position = Position.Replace("(", "").Replace(")", "");
+                string[] coords = Position.Split(',');
+                Vector3 vector = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
+                return vector;
+            } catch (Exception e) {
+                return PlayerCharacter.instance.transform.position;
+            }
         }
-
     }
 }
