@@ -298,32 +298,9 @@ namespace TunicRandomizer {
                 SaveFile.SetInt($"randomizer obtained page {Reward.Name}", 1);
                 PageDisplay.ShowPage(int.Parse(Reward.Name));
                 if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                    if (Reward.Name == "12") { 
-                        AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
-                        AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
-                        AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
-                        AreaData.topLine.text = $"\"PRAYER Unlocked\"";
-                        AreaData.bottomLine.text = $"Jahnuhl yor wizduhm, rooin sEkur";
-                        AreaLabel.ShowLabel(AreaData);
-                    }
-                    if (Reward.Name == "21") {
-                        AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
-                        AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
-                        AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
-                        AreaData.topLine.text = $"\"HOLY CROSS Unlocked\"";
-                        AreaData.bottomLine.text = $"sEk wuht iz rItfuhlE yorz";
-                        AreaLabel.ShowLabel(AreaData);
-                        foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                            SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
-                        }
-                    }
-                    if (Reward.Name == "26") {
-                        AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
-                        AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
-                        AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
-                        AreaData.topLine.text = $"\"ICE ROD Unlocked\"";
-                        AreaData.bottomLine.text = $"#A wOnt nO wuht hit #ehm";
-                        AreaLabel.ShowLabel(AreaData);
+                    if (Reward.Name == "12" || Reward.Name == "21" || Reward.Name == "26") {
+                        PageDisplayPatches.ShowAbilityUnlock = true;
+                        PageDisplayPatches.AbilityUnlockPage = Reward.Name;
                     }
                 }
             } else if (Reward.Type == "RELIC") {

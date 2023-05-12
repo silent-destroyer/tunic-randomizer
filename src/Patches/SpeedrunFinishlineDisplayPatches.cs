@@ -31,10 +31,26 @@ namespace TunicRandomizer {
             {"Inventory items_offering_ash", "Upgrade Offering - PotionEfficiency Swig - Ash"},
             {"Inventory items_offering_flower", "Upgrade Offering - Health HP - Flower"},
             {"Inventory items_offering_feather", "Upgrade Offering - Stamina SP - Feather"},
-            {"Inventory items_offering_orb", "Upgrade Offering - Magic MP - Mushroom"}
+            {"Inventory items_offering_orb", "Upgrade Offering - Magic MP - Mushroom"},
+            {"Inventory items_dash stone", "Dath Stone"}
         };
-
+        
         public static bool SpeedrunFinishlineDisplay_showFinishline_PrefixPatch(SpeedrunFinishlineDisplay __instance) {
+
+            SpeedrunReportItem DathStone = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            DathStone.chestIDs = new int[] { };
+            DathStone.tallyStateVars = new StateVariable[] { };
+            DathStone.itemsForQuantity = new Item[] { Inventory.GetItemByName("Homeward Bone Statue") };
+            DathStone.icon = Inventory.GetItemByName("Homeward Bone Statue").icon;
+
+            SpeedrunFinishlineDisplay.instance.reportGroup_secrets = new SpeedrunReportItem[] {
+                SpeedrunFinishlineDisplay.instance.reportGroup_secrets[0],
+                SpeedrunFinishlineDisplay.instance.reportGroup_secrets[1],
+                SpeedrunFinishlineDisplay.instance.reportGroup_secrets[2],
+                SpeedrunFinishlineDisplay.instance.reportGroup_secrets[3],
+                DathStone
+            };
+
             Inventory.GetItemByName("Firecracker").Quantity += 1;
 
             foreach (SpeedrunReportItem item in __instance.reportGroup_items) {
