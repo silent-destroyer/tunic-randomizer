@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class SpeedrunFinishlineDisplayPatches {
@@ -32,7 +33,8 @@ namespace TunicRandomizer {
             {"Inventory items_offering_flower", "Upgrade Offering - Health HP - Flower"},
             {"Inventory items_offering_feather", "Upgrade Offering - Stamina SP - Feather"},
             {"Inventory items_offering_orb", "Upgrade Offering - Magic MP - Mushroom"},
-            {"Inventory items_dash stone", "Dath Stone"}
+            {"Inventory items_dash stone", "Dath Stone"},
+            {"Inventory items_money triangle", "Golden Item"}
         };
         
         public static bool SpeedrunFinishlineDisplay_showFinishline_PrefixPatch(SpeedrunFinishlineDisplay __instance) {
@@ -42,13 +44,19 @@ namespace TunicRandomizer {
             DathStone.tallyStateVars = new StateVariable[] { };
             DathStone.itemsForQuantity = new Item[] { Inventory.GetItemByName("Homeward Bone Statue") };
             DathStone.icon = Inventory.GetItemByName("Homeward Bone Statue").icon;
+            SpeedrunReportItem GoldenItem = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            GoldenItem.chestIDs = new int[] { };
+            GoldenItem.tallyStateVars = new StateVariable[] { };
+            GoldenItem.itemsForQuantity = new Item[] { Inventory.GetItemByName("Spear") };
+            GoldenItem.icon = Inventory.GetItemByName("Spear").icon;
 
             SpeedrunFinishlineDisplay.instance.reportGroup_secrets = new SpeedrunReportItem[] {
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[0],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[1],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[2],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[3],
-                DathStone
+                DathStone,
+                GoldenItem
             };
 
             Inventory.GetItemByName("Firecracker").Quantity += 1;
@@ -75,6 +83,14 @@ namespace TunicRandomizer {
         }
 
         public static bool SpeedrunFinishlineDisplay_addParadeIcon_PrefixPatch(SpeedrunFinishlineDisplay __instance, ref Sprite icon, ref int quantity, ref RectTransform rt) {
+            if (icon.name == "Inventory items_money triangle") {
+                if (TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12) {
+                    quantity = 1;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
             if (TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]] == 0) {
                 return false;
             }
