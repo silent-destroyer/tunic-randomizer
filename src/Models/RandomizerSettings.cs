@@ -28,6 +28,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ShuffleAbilities {
+            get;
+            set;
+        }
+
         // Hint Settings
         public bool HeroPathHintsEnabled {
             get;
@@ -124,6 +129,7 @@ namespace TunicRandomizer {
             KeysBehindBosses = false;
             SwordProgressionEnabled = true;
             StartWithSwordEnabled = false;
+            ShuffleAbilities = false;
 
             HeroPathHintsEnabled = true;
             GhostFoxHintsEnabled = true;

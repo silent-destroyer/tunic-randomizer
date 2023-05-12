@@ -260,11 +260,18 @@ namespace TunicRandomizer {
                     Monster.transform.parent = null;
                 }
             }
+            if (SceneLoaderPatches.SceneName == "Fortress East" || SceneLoaderPatches.SceneName == "Frog Stairs") {
+                Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null ) && !Monster.name.Contains("Clone")).ToList();
+            }
             if (TunicRandomizer.Settings.ExtraEnemiesEnabled && SceneLoaderPatches.SceneName == "Monastery") {
                 Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
             }
 
             foreach (GameObject Enemy in Monsters) {
+                List<string> EnemyKeys = Enemies.Keys.ToList();
+                if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
+                    EnemyKeys.Remove("Hedgehog Trap");
+                }
                 if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                     if (Enemy.transform.parent != null && Enemy.transform.parent.name.Contains("NG+")) {
                         Enemy.transform.parent.gameObject.SetActive(true);
@@ -273,7 +280,7 @@ namespace TunicRandomizer {
                 GameObject NewEnemy;
 
                 if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || SceneLoaderPatches.SceneName == "Cathedral Arena") {
-                    NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[Random.Next(Enemies.Count)]]);
+                    NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                 } else if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.BALANCED) {
                     List<string> EnemyTypes = null;
                     foreach (string Key in EnemyRankings.Keys.Reverse()) {
@@ -290,18 +297,21 @@ namespace TunicRandomizer {
                         }
                     }
                     if (EnemyTypes == null) {
-                        NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[Random.Next(Enemies.Count)]]);
+                        NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                     }
                 } else {
-                    NewEnemy = GameObject.Instantiate(Enemies[Enemies.Keys.ToList()[Random.Next(Enemies.Count)]]);
+                    NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                 }
 
                 NewEnemy.transform.position = Enemy.transform.position;
                 NewEnemy.transform.rotation = Enemy.transform.rotation;
                 NewEnemy.transform.parent = Enemy.transform.parent;
                 NewEnemy.SetActive(true);
+                if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
+                    GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
+                }
                 GameObject.Destroy(Enemy.gameObject);
             }
 

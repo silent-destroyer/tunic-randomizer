@@ -49,7 +49,8 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.SwordProgressionEnabled = ToggleSwordProgression;
             bool ToggleSwordStart = GUI.Toggle(new Rect(10f, 180f, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
             TunicRandomizer.Settings.StartWithSwordEnabled = ToggleSwordStart;
-
+            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(210f, 180f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
+            TunicRandomizer.Settings.ShuffleAbilities = ToggleAbilityShuffle;
             GUI.skin.button.fontSize = 20;
             GUI.Label(new Rect(10f, 220f, 300f, 30f), $"Custom Seed: {(CustomSeed == 0 ? "Not Set" : CustomSeed.ToString())}");
             bool PasteSeed = GUI.Button(new Rect(10f, 260f, 250f, 30f), "Paste Custom Seed");

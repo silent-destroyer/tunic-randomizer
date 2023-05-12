@@ -99,7 +99,7 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Update_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Start_PostfixPatch")));
-
+            
             // Page Display Patches
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "ShowPage"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Show_PostfixPatch")));
 
@@ -139,7 +139,8 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(BloodstainChest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BloodstainChest_IInteractionReceiver_Interact_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(UpgradeAltar), "DoOfferingSequence"), null ,new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "UpgradeAltar_DoOfferingSequence_PostfixPatch")));
-
+            
         }
+        
     }
 }

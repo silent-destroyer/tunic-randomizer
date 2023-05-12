@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.IO;
@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnhollowerBaseLib;
 using TMPro;
 using static TunicRandomizer.GhostHints;
+using HarmonyLib;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
@@ -23,6 +24,7 @@ namespace TunicRandomizer {
 
         public static bool LoadSecondSword = false;
         public static bool LoadThirdSword = false;
+        public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
@@ -47,7 +49,8 @@ namespace TunicRandomizer {
                     $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
-                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
+                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"\n"+
+                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
@@ -113,6 +116,12 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.AddPoison(1f);
             }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt($"randomizer obtained page 12") == 0) {
+                __instance.prayerBeginTimer = 0;
+            }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt($"randomizer obtained page 26") == 0) {
+                TechbowItemBehaviour.kIceShotWindow = 0;
+            }
         }
         
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
@@ -150,7 +159,9 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-
+                if (TunicRandomizer.Settings.ShuffleAbilities) {
+                    SaveFile.SetInt("randomizer shuffled abilities", 1);
+                }
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
@@ -167,79 +178,10 @@ namespace TunicRandomizer {
             RandomItemPatches.ItemsPickedUp.Clear();
             Hints.HintMessages.Clear();
 
-            List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(RandomItemPatches.ItemListJson);
-            List<Reward> InitialRewards = new List<Reward>();
-            List<Location> InitialLocations = new List<Location>();
-            List<ItemData> Hexagons = new List<ItemData>();
-
-            foreach (ItemData Item in InitialItems) {
-                if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
-                    if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
-                        Hexagons.Add(Item);
-                    } else if (Item.Reward.Name == "Vault Key (Red)") {
-                        Item.Reward.Name = "Hexagon Red";
-                        Hexagons.Add(Item);
-                    } else if (Item.Reward.Name == "Hexagon Red") {
-                        Item.Reward.Name = "Vault Key (Red)";
-                        InitialRewards.Add(Item.Reward);
-                        InitialLocations.Add(Item.Location);
-                    }
-                } else {
-                    if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
-                        if (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5") {
-                            Item.Reward.Name = "Sword Progression";
-                            Item.Reward.Type = "SPECIAL";
-                        }
-                    }
-                    if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
-                        if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
-                            if (Item.Reward.Name == "0") {
-                                Item.Reward.Name = "money";
-                                Item.Reward.Type = "MONEY";
-                                Item.Reward.Amount = 1;
-                            } else {
-                                Item.Reward.Name = "Hexagon Gold";
-                                Item.Reward.Type = "SPECIAL";
-                            }
-                        }
-                    }
-                    InitialRewards.Add(Item.Reward);
-                    InitialLocations.Add(Item.Location);
-                }
+            if (SphereZero.Count == 0) {
+                PopulateSphereZero();
             }
-
-            // Randomize the rewards and locations
-            Shuffle(InitialRewards, InitialLocations);
-
-            for (int i = 0; i < InitialRewards.Count; i++) {
-                string DictionaryId = $"{InitialLocations[i].LocationId} [{InitialLocations[i].SceneName}]";
-                ItemData ItemData = new ItemData(InitialRewards[i], InitialLocations[i]);
-                RandomItemPatches.ItemList.Add(DictionaryId, ItemData);
-            }
-            if (SaveFile.GetInt("randomizer keys behind bosses") != 0) {
-                foreach (ItemData Hexagon in Hexagons) {
-                    if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
-                        Hexagon.Reward.Name = "Hexagon Gold";
-                        Hexagon.Reward.Type = "SPECIAL";
-                    }
-                    string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
-                    RandomItemPatches.ItemList.Add(DictionaryId, Hexagon);
-                }
-            }
-            foreach (string Key in RandomItemPatches.ItemList.Keys) {
-                int ItemPickedUp = SaveFile.GetInt($"randomizer picked up {Key}");
-                RandomItemPatches.ItemsPickedUp.Add(Key, ItemPickedUp == 1 ? true : false);
-            }
-            if (TunicRandomizer.Tracker.ItemsCollected.Count == 0) {
-                foreach (KeyValuePair<string, bool> PickedUpItem in RandomItemPatches.ItemsPickedUp.Where(item => item.Value)) {
-                    RandomItemPatches.UpdateItemTracker(PickedUpItem.Key);
-                }
-                ItemTracker.SaveTrackerFile();
-                TunicRandomizer.Tracker.ImportantItems["Flask Container"] += TunicRandomizer.Tracker.ItemsCollected.Where(Item => Item.Reward.Name == "Flask Shard").Count() / 3;
-                if (SaveFile.GetInt("randomizer started with sword") == 1) {
-                    TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
-                }
-            }
+            RandomizeAndPlaceItems();
 
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
             HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
@@ -294,6 +236,11 @@ namespace TunicRandomizer {
             OptionsGUIPatches.SaveSettings();
             if (TunicRandomizer.Settings.GhostFoxHintsEnabled && !SceneLoaderPatches.SpawnedGhosts) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
+            }
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
+                foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                    SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
+                }
             }
         }
         
@@ -393,6 +340,142 @@ namespace TunicRandomizer {
             return true;
         }
 
+        private static void PopulateSphereZero() {
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
+                SphereZero.Add("12", 1);
+                SphereZero.Add("21", 1);
+                SphereZero.Add("26", 1);
+            }
+            if (SaveFile.GetInt("randomizer started with sword") == 1) {
+                SphereZero.Add("Sword", 1);
+            }
+        }
+
+        private static void RandomizeAndPlaceItems() {
+            List<string> ProgressionNames = new List<string>{
+                "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                ProgressionNames.Add("12"); // Prayer
+                ProgressionNames.Add("21"); // Holy Cross
+                ProgressionNames.Add("26"); // Ice Rod
+            }
+            
+            List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList);
+            List<Reward> InitialRewards = new List<Reward>();
+            List<Location> InitialLocations = new List<Location>();
+            List<ItemData> Hexagons = new List<ItemData>();
+            List<Reward> ProgressionRewards = new List<Reward>();
+            Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
+            Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData>{};
+
+            foreach (ItemData Item in InitialItems) {
+                if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
+                    if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
+                        Hexagons.Add(Item);
+                    } else if (Item.Reward.Name == "Vault Key (Red)") {
+                        Item.Reward.Name = "Hexagon Red";
+                        Hexagons.Add(Item);
+                    } else if (Item.Reward.Name == "Hexagon Red") {
+                        Item.Reward.Name = "Vault Key (Red)";
+                        InitialRewards.Add(Item.Reward);
+                        InitialLocations.Add(Item.Location);
+                    }
+                } else {
+                    if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
+                        if (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5") {
+                            Item.Reward.Name = "Sword Progression";
+                            Item.Reward.Type = "SPECIAL";
+                        }
+                    }
+                    if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
+                        if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
+                            if (Item.Reward.Name == "0") {
+                                Item.Reward.Name = "money";
+                                Item.Reward.Type = "MONEY";
+                                Item.Reward.Amount = 1;
+                            } else {
+                                Item.Reward.Name = "Hexagon Gold";
+                                Item.Reward.Type = "SPECIAL";
+                            }
+                        }
+                    }
+                    if (ProgressionNames.Contains(Item.Reward.Name) || RandomItemPatches.FairyLookup.Keys.Contains(Item.Reward.Name)) {
+                        ProgressionRewards.Add(Item.Reward);
+                    } else {
+                        InitialRewards.Add(Item.Reward);
+                    }
+                    InitialLocations.Add(Item.Location);
+                }
+            }
+
+            // put progression items in locations
+            foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
+                // pick a location 
+                int l;
+                l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
+            
+                // if location isn't reachable with placed inv, pick a new location
+                while(!InitialLocations[l].reachable(PlacedInventory)) {
+                    l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
+                }
+
+                // add item to placed inv for future reachability checks
+                string itemName = RandomItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                if (PlacedInventory.Keys.Contains(itemName)) {
+                    PlacedInventory[itemName] += 1;
+                } else {
+                    PlacedInventory.Add(itemName, 1);
+                }
+
+                // prepare matched list of progression items and locations
+                string DictionaryId = $"{InitialLocations[l].LocationId} [{InitialLocations[l].SceneName}]";
+                ItemData ItemData = new ItemData(item, InitialLocations[l]);
+                ProgressionLocations.Add(DictionaryId, ItemData);
+
+                InitialLocations.Remove(InitialLocations[l]);
+            }
+
+            // shuffle remaining rewards and locations
+            Shuffle(InitialRewards, InitialLocations);
+
+            for (int i = 0; i < InitialRewards.Count; i++) {
+                string DictionaryId = $"{InitialLocations[i].LocationId} [{InitialLocations[i].SceneName}]";
+                ItemData ItemData = new ItemData(InitialRewards[i], InitialLocations[i]);
+                RandomItemPatches.ItemList.Add(DictionaryId, ItemData);
+            }
+
+            // add progression items and locations back
+            foreach (string key in ProgressionLocations.Keys) {
+                RandomItemPatches.ItemList.Add(key, ProgressionLocations[key]);
+            }
+
+            if (SaveFile.GetInt("randomizer keys behind bosses") != 0) {
+                foreach (ItemData Hexagon in Hexagons) {
+                    // second quest?
+                    if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
+                        Hexagon.Reward.Name = "Hexagon Gold";
+                        Hexagon.Reward.Type = "SPECIAL";
+                    }
+                    string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
+                    RandomItemPatches.ItemList.Add(DictionaryId, Hexagon);
+                }
+            }
+            foreach (string Key in RandomItemPatches.ItemList.Keys) {
+                int ItemPickedUp = SaveFile.GetInt($"randomizer picked up {Key}");
+                RandomItemPatches.ItemsPickedUp.Add(Key, ItemPickedUp == 1 ? true : false);
+            }
+            if (TunicRandomizer.Tracker.ItemsCollected.Count == 0) {
+                foreach (KeyValuePair<string, bool> PickedUpItem in RandomItemPatches.ItemsPickedUp.Where(item => item.Value)) {
+                    RandomItemPatches.UpdateItemTracker(PickedUpItem.Key);
+                }
+                ItemTracker.SaveTrackerFile();
+                TunicRandomizer.Tracker.ImportantItems["Flask Container"] += TunicRandomizer.Tracker.ItemsCollected.Where(Item => Item.Reward.Name == "Flask Shard").Count() / 3;
+                if (SaveFile.GetInt("randomizer started with sword") == 1) {
+                    TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
+                }
+            }
+        }
+
         private static void Shuffle(List<Reward> Rewards, List<Location> Locations) {
             int n = Rewards.Count;
             int r;
@@ -402,10 +485,6 @@ namespace TunicRandomizer {
                 r = TunicRandomizer.Randomizer.Next(n + 1);
                 l = TunicRandomizer.Randomizer.Next(n + 1);
 
-                while (Locations[l].RequiredItems.Contains(Rewards[r].Name)) {
-                    l = TunicRandomizer.Randomizer.Next(n + 1);
-                }
-
                 Reward Reward = Rewards[r];
                 Rewards[r] = Rewards[n];
                 Rewards[n] = Reward;
@@ -413,6 +492,19 @@ namespace TunicRandomizer {
                 Location Location = Locations[l];
                 Locations[l] = Locations[n];
                 Locations[n] = Location;
+            }
+        }
+
+        private static void Shuffle(List<ItemData> list) {
+            int n = list.Count;
+            int r;
+            while (n > 1) {
+                n--;
+                r = TunicRandomizer.Randomizer.Next(n + 1);
+
+                ItemData holder = list[r];
+                list[r] = list[n];
+                list[n] = holder;
             }
         }
 
@@ -458,14 +550,80 @@ namespace TunicRandomizer {
         }
 
         private static void PopulateHints() {
-            ItemData HintItem;
+            ItemData HintItem = null;
             string HintMessage;
             List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
+            bool techbowHinted = false;
+            bool wandHinted = false;
+            bool prayerHinted = false;
+            bool hcHinted = false;
+            string Scene;
+            string ScenePrefix;
+
             // Mailbox Hint
-            HintItem = FindRandomizedItemByName("Lantern");
-            string Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
-            string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nwil hehlp yoo \"<#00FFFF>LIGHT THE WAY<#ffffff>...\"";
+            List<string> mailboxNames = new List<string>() {"Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword"}; 
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                mailboxNames.Add("12");
+                mailboxNames.Add("21");
+            }
+            List<ItemData> mailboxHintables = new List<ItemData>();
+            foreach (string Item in mailboxNames) {
+                mailboxHintables.AddRange(FindAllRandomizedItemsByName(Item));
+            }
+            Shuffle(mailboxHintables);
+            int n = 0;
+            while (HintItem == null && n < mailboxHintables.Count) {
+                if (mailboxHintables[n].Location.reachable(SphereZero)) {
+                    HintItem = mailboxHintables[n];
+                }
+                n++;
+            }
+            if (HintItem == null) {
+                n = 0;
+                while (HintItem == null && n < mailboxHintables.Count) {
+                    if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
+                        foreach(ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin")) {
+                            if(itemData.Location.reachable(SphereZero)) {
+                                HintItem = itemData;
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
+                        foreach(ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
+                            if(itemData.Location.reachable(SphereZero)) {
+                                HintItem = itemData;
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors") {
+                        ItemData itemData = FindRandomizedItemByName("Key (House)");
+                        if (itemData.Location.reachable(SphereZero)) {
+                            HintItem = itemData;
+                        }
+                    } else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
+                        foreach(ItemData itemData in FindAllRandomizedItemsByName("Key")) {
+                            if(itemData.Location.reachable(SphereZero)) {
+                                HintItem = itemData;
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
+                        ItemData itemData = FindRandomizedItemByName("Mask");
+                        if (itemData.Location.reachable(SphereZero)) {
+                            HintItem = itemData;
+                        }
+                    }
+                    n++;
+                }
+            }
+            if (HintItem == null) {
+                HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEker.\nyoo hahv uh difikuhlt rOd uhhehd.";
+            } else {
+                Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
+                ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE.";
+                if (HintItem.Reward.Name == "Techbow") {techbowHinted = true;}
+                if (HintItem.Reward.Name == "Wand") {wandHinted = true;}
+                if (HintItem.Reward.Name == "12") {prayerHinted = true;}
+                if (HintItem.Reward.Name == "21") {hcHinted = true;}
+            }
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
             // Golden Path hints
@@ -475,12 +633,19 @@ namespace TunicRandomizer {
             HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
             Hints.HintMessages.Add("Temple Statue", HintMessage);
             
-            List<string> HintItems = new List<string>() { "Techbow", "Stundagger", "Wand" };
+            List<string> HintItems = new List<string>() { techbowHinted ? "Lantern" : "Techbow", wandHinted ? "Lantern" : "Wand", "Stundagger" };
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                HintItems.Add(prayerHinted ? "Lantern" : "12");
+                HintItems.Add(hcHinted ? "Lantern" : "21");
+                HintItems.Remove("Stundagger");
+            }
             List<string> HintScenes = new List<string>() { "East Forest Relic", "Fortress Relic", "West Garden Relic" };
-            for (int i = 0; i < 3; i++) {
+            while (HintScenes.Count > 0) {
                 HintItem = FindRandomizedItemByName(HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)]);
                 string HintScene = HintScenes[TunicRandomizer.Randomizer.Next(HintScenes.Count)];
-
+                if (HintItem.Reward.Name == "12" && HintScene == "Fortress Relic") {
+                    continue;
+                }
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\niz lOkAtid awn #uh \"<#ffd700>PATH OF THE HERO<#ffffff>...\"";
@@ -555,6 +720,30 @@ namespace TunicRandomizer {
             return null;
         }
 
+        public static List<ItemData> FindAllRandomizedItemsByName(string Name) {
+            List<ItemData> results = new List<ItemData>();
+
+            foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
+                if (ItemData.Reward.Name == Name) {
+                    results.Add(ItemData);
+                }
+            }
+
+            return results;
+        }
+
+        public static List<ItemData> FindAllRandomizedItemsByType(string type) {
+            List<ItemData> results = new List<ItemData>();
+
+            foreach (ItemData itemData in RandomItemPatches.ItemList.Values) {
+                if (itemData.Reward.Type == type) {
+                    results.Add(itemData);
+                }
+            }
+
+            return results;
+        }
+
         public static void SaveFile_GetNewSaveFileName_PostfixPatch(SaveFile __instance, ref string __result) {
 
             __result = $"{__result.Split('.')[0]}-randomizer.tunic";
@@ -592,10 +781,12 @@ namespace TunicRandomizer {
             return true;
         }
 
+
         public static void UpgradeAltar_DoOfferingSequence_PostfixPatch(UpgradeAltar __instance) {
             foreach (string LevelUp in RandomItemPatches.LevelUpItemNames) {
                 TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
             }
         }
+
     }
 }
