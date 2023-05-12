@@ -236,6 +236,9 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("MoneySmall").Quantity -= Price;
                 CheckFoolTrapSetting(RewardId);
                 ItemData Reward = ItemList[RewardId];
+                if (Reward.Reward.Type == "MONEY") {
+                    Reward.Reward.Amount += Price;
+                }
                 GiveReward(Reward);
                 SetCollectedReward(RewardId);
                 __instance.boughtStatevar.BoolValue = true;
@@ -274,10 +277,12 @@ namespace TunicRandomizer {
 
             } else if (Reward.Type == "MONEY") {
                 Vector3 SpawnPosition;
-                
+
                 if (ItemData.Location.SceneName == "Trinket Well") {
                     SpawnPosition = GameObject.FindObjectOfType<TrinketWell>().transform.position;
                     SpawnPosition.Set(SpawnPosition.x, SpawnPosition.y + 3.25f, SpawnPosition.z);
+                } else if (ItemData.Location.SceneName == "Shop") {
+                    SpawnPosition = PlayerCharacter.instance.transform.position;
                 } else {
                     SpawnPosition = StringToVector3(ItemData.Location.Position);
                 }
@@ -290,6 +295,8 @@ namespace TunicRandomizer {
                 if (ItemData.Location.SceneName == "Trinket Well") {
                     SpawnPosition = GameObject.FindObjectOfType<TrinketWell>().transform.position;
                     SpawnPosition.Set(SpawnPosition.x, SpawnPosition.y + 3.25f, SpawnPosition.z);
+                } else if (ItemData.Location.SceneName == "Shop") {
+                    SpawnPosition = PlayerCharacter.instance.transform.position;
                 } else {
                     SpawnPosition = StringToVector3(ItemData.Location.Position);
                 }
