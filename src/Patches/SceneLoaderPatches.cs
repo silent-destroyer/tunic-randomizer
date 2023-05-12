@@ -205,6 +205,7 @@ namespace TunicRandomizer {
                     StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer picked up " + RandomItemPatches.HeroRelicLookup[Key].OriginalPickupLocation) == 1;
                 }
             }
+
             if (PlayerCharacterPatches.IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = false;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = false;
@@ -212,33 +213,40 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.ClearPoison();
                 PlayerCharacterPatches.IsTeleporting = false;
             }
+
             foreach (ItemData Fool in RandomItemPatches.ItemList.Values.ToList().Where(Item => Item.Reward.Type == "FOOL")) {
                 Fool.Reward.Type = "MONEY";
                 Fool.Reward.Name = "money";
             }
+
             if (!ModelSwaps.SwappedThisSceneAlready && (RandomItemPatches.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
                 ModelSwaps.SwapItemsInScene();
             }
-            FairyTargets.CreateFairyTargets();
-            if (TunicRandomizer.Settings.UseCustomTexture) {
-                PaletteEditor.LoadCustomTexture();
-            }
-            if (TunicRandomizer.Settings.RealestAlwaysOn) {
-                try {
-                    GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
-                } catch (Exception e) { }
-            }
-            if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
-                GhostHints.SpawnHintGhosts(SceneName);
-                SpawnedGhosts = true;
-            }
-            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && Resources.FindObjectsOfTypeAll<Monster>().Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
-                EnemyRandomizer.SpawnNewEnemies();
-            }
+
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
                 foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
                     SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
                 }
+            }
+
+            if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
+                GhostHints.SpawnHintGhosts(SceneName);
+                SpawnedGhosts = true;
+            }
+
+            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
+                EnemyRandomizer.SpawnNewEnemies();
+            }
+
+            FairyTargets.CreateFairyTargets();
+            if (TunicRandomizer.Settings.UseCustomTexture) {
+                PaletteEditor.LoadCustomTexture();
+            }
+
+            if (TunicRandomizer.Settings.RealestAlwaysOn) {
+                try {
+                    GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
+                } catch (Exception e) { }
             }
         }
 

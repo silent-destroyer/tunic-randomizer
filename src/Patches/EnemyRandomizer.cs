@@ -260,7 +260,7 @@ namespace TunicRandomizer {
                     Monster.transform.parent = null;
                 }
             }
-            if (SceneLoaderPatches.SceneName == "Fortress East") {
+            if (SceneLoaderPatches.SceneName == "Fortress East" || SceneLoaderPatches.SceneName == "Frog Stairs") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null ) && !Monster.name.Contains("Clone")).ToList();
             }
             if (TunicRandomizer.Settings.ExtraEnemiesEnabled && SceneLoaderPatches.SceneName == "Monastery") {
