@@ -253,7 +253,7 @@ namespace TunicRandomizer {
                     GameObject.DontDestroyOnLoad(Enemies["BlobBigger"]);
                     Enemies["BlobBigger"].SetActive(false);
                     Enemies["BlobBigger"].transform.position = new Vector3(-30000f, -30000f, -30000f);
-                    Enemies["BlobBigger"].name = "BlobBigger";
+                    Enemies["BlobBigger"].name = "BlobBigger(Clone)";
                 }
             }
             if (SceneName == "Archipelagos Redux") {
