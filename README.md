@@ -26,7 +26,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
   - The Scavenger's Mask is in logic to not be shuffled into the lower areas of Quarry or within the Ziggurat.
   - The Holy Cross chest from the dancing fox ghost in East Forest can be spawned in during the daytime. 
   - The Secret Legend chest in the Cathedral can similarly be obtained during the day by opening the Holy Cross door from the outside.
-  - Nighttime is not considered in logic. Every check in the game is logically obtainable before the first visit to The Heir, and since nighttime restricts access to several locations it would limit the amount of options overall if certain items were required to always be obtainable at night. The game will automatically switch back to daytime if you die to The Heir on the first visit, but you can optionally switch to nighttime at any point after that by interacting with the Bed in the Old House.
+  - Nighttime is not considered in logic. Every check in the game is logically obtainable before the first visit to The Heir, and since nighttime restricts access to several locations it would limit the amount of options overall if certain items were required to always be obtainable at night. The game will automatically switch back to daytime if you die to The Heir on the first visit, but you can optionally switch to nighttime at any point after that by interacting with a special object in the Old House.
 - Regarding Hints:
   - The Mailbox will always give you a "First Step" hint, which will generally try to lead you to a useful item that is not blocked by progression. In the rare event that all of the Mailbox hint items are locked by something else, it will lead you to one of the things needed to unlock a more useful items.
   - The Hero's Grave in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
@@ -46,8 +46,8 @@ With the exception of the Logic settings, all options can be freely toggled or c
 ### Logic
 - Game Mode
   - Choose between a classic randomizer experience or Hexagon Quest, a separate game mode inspired by Triforce Hunt in Zelda randomizers.
-  - Classic Randomizer: Find the three Hexagon Keys and defeat The Heir or Share Your Wisdom to win.
-  - Hexagon Quest: 30 Gold Hexagons are shuffled into the item pool. Find 20 of them and visit The Heir to win.
+    - Classic Randomizer: Find the three Hexagon Keys and defeat The Heir or Share Your Wisdom to win.
+    - Hexagon Quest: 30 Gold Hexagons are shuffled into the item pool. Find 20 of them and visit The Heir to win.
 - Keys Behind Bosses 
   - Choose if the three Hexagon Keys are randomly shuffled or placed behind their respective bossfight.
   - In Hexagon Quest, this option guarantees a Gold Hexagon is placed behind each of the three major bosses.
@@ -105,7 +105,7 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - The custom texture can be found under AppData in the same folder as the Spoiler log and Item Tracker file.
 
 ## Credits
-- Glacia and RisingStar111 for helping research how to mod this game.
+- Glace and RisingStar111 for helping research how to mod this game.
 - Radicoon, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, and many others for playtesting and helping to improve the mod.
 - Andrew Shouldice, Kevin Regamey, Finji, and everyone else involved in making this wonderful game.
 - zanders3 for [TinyJson](https://github.com/zanders3/json).
