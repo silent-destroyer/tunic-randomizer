@@ -184,7 +184,7 @@ namespace TunicRandomizer {
                     StateVariable.GetStateVariableByName(ItemRandomizer.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
                 }
                 GameObject.Destroy(GameObject.Find("_Special/Bed Toggle Trigger/"));
-                if (GameObject.Find("_Special/Bed Toggle Trigger/") != null && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
+                if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
                     SetupDayNightHourglass();
                 }
             } else if (SceneName == "TitleScreen") {
