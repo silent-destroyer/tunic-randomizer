@@ -118,7 +118,6 @@ namespace TunicRandomizer {
 				PlayerPalette.runtimePalette.Apply();
 				Color SetColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
 				if (SelectedIndex == 2 && (SelectedColor.r != SetColor.r || SelectedColor.g != SetColor.g || SelectedColor.b != SetColor.b)) {
-					Logger.LogInfo("SELECTED " + SelectedColor.ToString() + " SET " + SetColor.ToString());
 					ChangeHyperdashColors(SelectedColor);
 				}
 				if (SelectedIndex == 14) {

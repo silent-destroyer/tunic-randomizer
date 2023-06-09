@@ -147,9 +147,7 @@ namespace TunicRandomizer {
             Items["money medium"].SetActive(false);
             Items["money large"].SetActive(false);
             MoneySfx.SetActive(false);
-            //sol coin - purple
-            //sol coin - gold
-            //sol coin - blue
+
             foreach (TrinketItem TrinketItem in Resources.FindObjectsOfTypeAll<TrinketItem>()) {
                 Cards[TrinketItem.name] = TrinketItem.CardGraphic;
             }
@@ -260,8 +258,8 @@ namespace TunicRandomizer {
             //hyperdash chest Spirit Realm Doorway Glow (Instance)
             if (Chest != null) {
                 string ItemId = Chest.chestID == 0 ? $"{SceneLoaderPatches.SceneName}-{Chest.transform.position.ToString()} [{SceneLoaderPatches.SceneName}]" : $"{Chest.chestID} [{SceneLoaderPatches.SceneName}]";
-                if (RandomItemPatches.ItemList.ContainsKey(ItemId)) {
-                    ItemData Item = RandomItemPatches.ItemList[ItemId];
+                if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
+                    ItemData Item = ItemRandomizer.ItemList[ItemId];
                     //TODO: questagon chest textures
                     if (Item.Reward.Type == "FAIRY") {
                         Chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = Chests["Fairy"].GetComponent<MeshRenderer>().materials;
@@ -285,19 +283,11 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void SetupGardenKnightVoid() {
-            GardenKnightVoid = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<TunicKnightVoid>().ToList()[0].gameObject);
-            GardenKnightVoid.SetActive(false);
-            GameObject.DontDestroyOnLoad(GardenKnightVoid);
-        }
-
         public static void SetupHeroRelicPickup(HeroRelicPickup HeroRelicPickup) {
             string ItemId = $"{HeroRelicPickup.name} [{SceneLoaderPatches.SceneName}]";
-            if (RandomItemPatches.ItemList.ContainsKey(ItemId)) {
-                ItemData Item = RandomItemPatches.ItemList[ItemId];
-/*                if (Item.Reward.Name == HeroRelicPickup.relicItem.name) {
-                    return;
-                }*/
+            if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
+                ItemData Item = ItemRandomizer.ItemList[ItemId];
+
                 for (int i = 0; i < HeroRelicPickup.transform.childCount; i++) {
                     HeroRelicPickup.transform.GetChild(i).gameObject.SetActive(false);
                 }
@@ -324,11 +314,11 @@ namespace TunicRandomizer {
             if (ItemPickup != null && ItemPickup.itemToGive != null) {
                 string ItemId = $"{ItemPickup.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
 
-                if (RandomItemPatches.ItemsPickedUp.ContainsKey(ItemId) && RandomItemPatches.ItemsPickedUp[ItemId]) {
+                if (ItemRandomizer.ItemsPickedUp.ContainsKey(ItemId) && ItemRandomizer.ItemsPickedUp[ItemId]) {
                     return;
                 }
-                if (RandomItemPatches.ItemList.ContainsKey(ItemId)) {
-                    ItemData Item = RandomItemPatches.ItemList[ItemId];
+                if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
+                    ItemData Item = ItemRandomizer.ItemList[ItemId];
                     if (Item.Reward.Name == ItemPickup.itemToGive.name) {
                         //return;
                     }
@@ -385,8 +375,12 @@ namespace TunicRandomizer {
             if (PagePickup != null) {
                 GameObject Page = PagePickup.gameObject.transform.GetChild(2).GetChild(0).gameObject;
                 string ItemId = $"{PagePickup.pageName} [{SceneLoaderPatches.SceneName}]";
-                if (RandomItemPatches.ItemList.ContainsKey(ItemId)) {
-                    ItemData Item = RandomItemPatches.ItemList[ItemId];
+                if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
+                    if(ItemRandomizer.ItemsPickedUp.ContainsKey(ItemId) && ItemRandomizer.ItemsPickedUp[ItemId]) {
+                        GameObject.Destroy(PagePickup.gameObject);
+                        return;
+                    }
+                    ItemData Item = ItemRandomizer.ItemList[ItemId];
                     if (Item.Reward.Type == "PAGE") {
                         return;
                     }
@@ -440,9 +434,9 @@ namespace TunicRandomizer {
                 "Shop/Item Holder/Trinket Coin 2 (night)/rotation/Trinket Coin" 
             };
             for (int i = 0; i < ShopItemIDs.Count; i++) {
-                if (!RandomItemPatches.ItemsPickedUp[ShopItemIDs[i]]) {
+                if (!ItemRandomizer.ItemsPickedUp[ShopItemIDs[i]]) {
                     GameObject ItemHolder = GameObject.Find(ShopGameObjectIDs[i]);
-                    ItemData ShopItem = RandomItemPatches.ItemList[ShopItemIDs[i]];
+                    ItemData ShopItem = ItemRandomizer.ItemList[ShopItemIDs[i]];
                     GameObject NewItem;
 
                     if (ItemHolder.name.Contains("Trinket Coin")) {
@@ -578,7 +572,7 @@ namespace TunicRandomizer {
 
         public static void SwapSiegeEngineCrown() {
             GameObject VaultKey = GameObject.Find("Spidertank/Spidertank_skeleton/root/thorax/vault key graphic");
-            ItemData VaultKeyItem = RandomItemPatches.ItemList["Vault Key (Red) [Fortress Arena]"];
+            ItemData VaultKeyItem = ItemRandomizer.ItemList["Vault Key (Red) [Fortress Arena]"];
             if (VaultKey != null) {
                 if (VaultKeyItem.Reward.Name == "Vault Key (Red)") {
                     return;
@@ -647,7 +641,7 @@ namespace TunicRandomizer {
 
         public static void SetupRedHexagonPlinth() {
             GameObject Plinth = GameObject.Find("_Hexagon Plinth Assembly/hexagon plinth/PRISM/questagon");
-            ItemData Item = RandomItemPatches.ItemList["Hexagon Red [Fortress Arena]"];
+            ItemData Item = ItemRandomizer.ItemList["Hexagon Red [Fortress Arena]"];
             if (Plinth != null && Item != null) {
                 if (Item.Reward.Name == "Hexagon Red") {
                     return;
@@ -683,7 +677,7 @@ namespace TunicRandomizer {
 
         public static void SetupBlueHexagonPlinth() {
             GameObject Plinth = GameObject.Find("_Plinth/turn off when taken/questagon");
-            ItemData Item = RandomItemPatches.ItemList["Hexagon Blue [ziggurat2020_3]"];
+            ItemData Item = ItemRandomizer.ItemList["Hexagon Blue [ziggurat2020_3]"];
             if (Plinth != null && Item != null) {
                 if (Item.Reward.Name == "Hexagon Blue") {
                     return;
@@ -768,6 +762,15 @@ namespace TunicRandomizer {
             List<Material> Material = Resources.FindObjectsOfTypeAll<Material>().Where(Mat => Mat.name == MaterialName).ToList();
             if (Material != null && Material.Count > 0) {
                 return Material[0];
+            } else {
+                return null;
+            }
+        }
+
+        public static Sprite FindSprite(string SpriteName) {
+            List<Sprite> Sprites = Resources.FindObjectsOfTypeAll<Sprite>().Where(Sprite => Sprite.name == SpriteName).ToList();
+            if (Sprites != null && Sprites.Count > 0) {
+                return Sprites[0];
             } else {
                 return null;
             }

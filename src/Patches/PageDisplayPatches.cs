@@ -14,7 +14,7 @@ namespace TunicRandomizer {
             }
 
             bool[] RandomFairiesObtained = new bool[20];
-            List<string> Fairies = new List<string>(RandomItemPatches.FairyLookup.Keys);
+            List<string> Fairies = new List<string>(ItemRandomizer.FairyLookup.Keys);
             int Counter = 0;
             foreach (string Key in Fairies) {
                 if (SaveFile.GetInt($"randomizer obtained fairy {Key}") == 1) {
@@ -23,7 +23,7 @@ namespace TunicRandomizer {
                 Counter++;
             }
             for (int i = 0; i < 20; i++) {
-                SaveFile.SetInt(RandomItemPatches.FairyLookup[Fairies[i]].Flag, RandomFairiesObtained[i] ? 1 : 0);
+                SaveFile.SetInt(ItemRandomizer.FairyLookup[Fairies[i]].Flag, RandomFairiesObtained[i] ? 1 : 0);
             }
 
             SaveFile.SaveToDisk();
@@ -42,7 +42,7 @@ namespace TunicRandomizer {
 
 
             bool[] OpenedFairyChests = new bool[28];
-            List<string> Fairies = new List<string>(RandomItemPatches.FairyLookup.Keys);
+            List<string> Fairies = new List<string>(ItemRandomizer.FairyLookup.Keys);
             int Counter = 0;
             foreach (string Key in Fairies) {
                 if (SaveFile.GetInt($"randomizer opened fairy chest {Key}") == 1) {
@@ -51,7 +51,7 @@ namespace TunicRandomizer {
                 Counter++;
             }
             for (int i = 0; i < 20; i++) {
-                SaveFile.SetInt(RandomItemPatches.FairyLookup[Fairies[i]].Flag, OpenedFairyChests[i] ? 1 : 0);
+                SaveFile.SetInt(ItemRandomizer.FairyLookup[Fairies[i]].Flag, OpenedFairyChests[i] ? 1 : 0);
             }
 
             if (ShowAbilityUnlock) {

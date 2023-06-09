@@ -213,7 +213,7 @@ namespace TunicRandomizer {
             try {
                 int ObtainedItemCount = TunicRandomizer.Tracker.ItemsCollected.Count;
                 int ObtainedItemCountInCurrentScene = TunicRandomizer.Tracker.ItemsCollected.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
-                int TotalItemCountInCurrentScene = RandomItemPatches.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
+                int TotalItemCountInCurrentScene = ItemRandomizer.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
                 Title.GetComponent<TextMeshProUGUI>().text = $"Randomizer Stats";
                 Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
                 Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? new Color(0.917f, 0.65f, .08f) : Color.white;

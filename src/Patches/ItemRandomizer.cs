@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using System.Linq;
 
 namespace TunicRandomizer {
-    public class RandomItemPatches {
+    public class ItemRandomizer {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
         
         public static Dictionary<string, ItemData> ItemList = new Dictionary<string, ItemData>();
@@ -194,7 +194,7 @@ namespace TunicRandomizer {
 
             GiveReward(Reward);
             SetCollectedReward(RewardId);
- 
+
             __instance.pickupStateVar.BoolValue = true;
             __instance.destroyOrDisable();
             return false;
@@ -321,37 +321,15 @@ namespace TunicRandomizer {
                 ItemToPresent.collectionMessage = OldLine;
 
                 if (SceneLoaderPatches.SceneName == "Overworld Interiors") {
-                    foreach (string Key in RandomItemPatches.HeroRelicLookup.Keys) {
-                        StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
+                    foreach (string Key in ItemRandomizer.HeroRelicLookup.Keys) {
+                        StateVariable.GetStateVariableByName(ItemRandomizer.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
                     }
                 }
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     Inventory.GetItemByName(HeroRelicLookup[Reward.Name].CorrespondingStat).Quantity += 1;
                 }
             } else if (Reward.Type == "FOOL") {
-                System.Random Random = new System.Random();
-                int FoolType = PlayerCharacterPatches.StungByBee ? Random.Next(21, 100) : Random.Next(100);
-                if (FoolType < 20) {
-                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                    PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                    GenericMessage.ShowMessage($"yoo R A \"<#ffd700>FOOL<#ffffff>!!\"\n\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"");
-                    PlayerCharacterPatches.StungByBee = true;
-                    PlayerCharacter.instance.Flinch(true);
-                } else if (FoolType >= 20 && FoolType < 50) {
-                    PlayerCharacter.ApplyRadiationAsDamageInHP(0f);
-                    PlayerCharacter.instance.stamina = 0;
-                    PlayerCharacter.instance.cachedFireController.FireAmount = 3f;
-                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                    GenericMessage.ShowMessage($"yoo R A \"<#FF3333>FOOL<#ffffff>!!\"");
-                    PlayerCharacter.instance.Flinch(true);
-                } else if (FoolType >= 50) {
-                    PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
-                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                    SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
-                    PlayerCharacter.instance.AddFreezeTime(3f);
-                    GenericMessage.ShowMessage($"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\"");
-                }
-             
+                ApplyFoolEffect();
             } else if (Reward.Type == "SPECIAL") {
                 if (Reward.Name == "Dath Stone") {
                     ItemPresentation.PresentItem(Inventory.GetItemByName("Key Special"));
@@ -366,8 +344,31 @@ namespace TunicRandomizer {
                     ItemPresentation.PresentItem(Inventory.GetItemByName("Hexagon Blue"));
                 }
             }
+        }
 
-
+        private static void ApplyFoolEffect() {
+            System.Random Random = new System.Random();
+            int FoolType = PlayerCharacterPatches.StungByBee ? Random.Next(21, 100) : Random.Next(100);
+            if (FoolType < 20) {
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+                GenericMessage.ShowMessage($"yoo R A \"<#ffd700>FOOL<#ffffff>!!\"\n\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"");
+                PlayerCharacterPatches.StungByBee = true;
+                PlayerCharacter.instance.Flinch(true);
+            } else if (FoolType >= 20 && FoolType < 50) {
+                PlayerCharacter.ApplyRadiationAsDamageInHP(0f);
+                PlayerCharacter.instance.stamina = 0;
+                PlayerCharacter.instance.cachedFireController.FireAmount = 3f;
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                GenericMessage.ShowMessage($"yoo R A \"<#FF3333>FOOL<#ffffff>!!\"");
+                PlayerCharacter.instance.Flinch(true);
+            } else if (FoolType >= 50) {
+                PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
+                PlayerCharacter.instance.AddFreezeTime(3f);
+                GenericMessage.ShowMessage($"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\"");
+            }
         }
 
         private static void SetCollectedReward(string RewardId) {

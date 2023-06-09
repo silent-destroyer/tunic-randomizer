@@ -11,6 +11,7 @@ using UnhollowerBaseLib;
 using TMPro;
 using static TunicRandomizer.GhostHints;
 using HarmonyLib;
+using Il2CppSystem.Runtime.InteropServices;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
@@ -25,11 +26,13 @@ namespace TunicRandomizer {
         public static bool LoadSecondSword = false;
         public static bool LoadThirdSword = false;
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
+        public static float TimeWhenLastChangedDayNight = 0.0f;
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
             Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
-
-            if (Input.GetKeyDown(KeyCode.Alpha1) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
+/*
+            if (Input.GetKeyDown(KeyCode.Alpha1) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST" && (TimeWhenLastChangedDayNight + 3.0f < Time.fixedTime)) {
+                TimeWhenLastChangedDayNight = Time.fixedTime;
                 if (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) {
                     bool isNight = !CycleController.IsNight;
                     if (isNight) {
@@ -42,17 +45,17 @@ namespace TunicRandomizer {
                 } else {
                     GenericMessage.ShowMessage($"OnlE #Oz hoo \"face The Heir\" R Abl\ntoo\"receive the power of time.\"");
                 }
-            }
+            }*/
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
                 GenericMessage.ShowMessage($"\"Game Settings\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
-                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"\n"+
+                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"\n" +
                     $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
             }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) {
+/*            if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
                 string PuffColor = ColorPalette.GetColorStringForPopup(ColorPalette.Puff, 1);
                 string DetailsColor = ColorPalette.GetColorStringForPopup(ColorPalette.Details, 2);
@@ -69,7 +72,7 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha4)) {
                 int ObtainedItemCount = TunicRandomizer.Tracker.ItemsCollected.Count;
                 int ObtainedItemCountInCurrentScene = TunicRandomizer.Tracker.ItemsCollected.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
-                int TotalItemCountInCurrentScene = RandomItemPatches.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
+                int TotalItemCountInCurrentScene = ItemRandomizer.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
                 int ObtainedPagesCount = TunicRandomizer.Tracker.ImportantItems["Pages"];
                 int ObtainedFairiesCount = TunicRandomizer.Tracker.ImportantItems["Fairies"];
                 int ObtainedGoldenTrophiesCount = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"];
@@ -84,9 +87,9 @@ namespace TunicRandomizer {
                     $"\"Fairies....{string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')}\"\n" +
                     $"\"Treasures..{string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')}\"\n" +
                     $"\"This Area..{string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')}\"\n" +
-                    $"\"Overall....{string.Format("{0}/{1}", ObtainedItemCount, RandomItemPatches.ItemList.Count).PadLeft(9, '.')}\"\n" +
+                    $"\"Overall....{string.Format("{0}/{1}", ObtainedItemCount, ItemRandomizer.ItemList.Count).PadLeft(9, '.')}\"\n" +
                     $"{BossesAndKeys}");
-            }
+            }*/
             if (Input.GetKeyDown(KeyCode.Alpha5)) {
                 PaletteEditor.RandomizeFoxColors();
             }
@@ -110,6 +113,7 @@ namespace TunicRandomizer {
                 } catch (Exception e) { }
             }
 
+
             if (IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = true;
@@ -123,7 +127,7 @@ namespace TunicRandomizer {
                 TechbowItemBehaviour.kIceShotWindow = 0;
             }
         }
-        
+
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
 
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Fortress").BoolValue = true;
@@ -159,9 +163,10 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-                if (TunicRandomizer.Settings.ShuffleAbilities) {
+                if (TunicRandomizer.Settings.ShuffleAbilities && TunicRandomizer.Settings.GameMode != RandomizerSettings.GameModes.HEXAGONQUEST) {
                     SaveFile.SetInt("randomizer shuffled abilities", 1);
                 }
+
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SaveToDisk();
             }
@@ -174,8 +179,8 @@ namespace TunicRandomizer {
             TunicRandomizer.Randomizer = new System.Random(seed);
             SaveName = SaveFile.saveDestinationName;
 
-            RandomItemPatches.ItemList.Clear();
-            RandomItemPatches.ItemsPickedUp.Clear();
+            ItemRandomizer.ItemList.Clear();
+            ItemRandomizer.ItemsPickedUp.Clear();
             Hints.HintMessages.Clear();
 
             if (SphereZero.Count == 0) {
@@ -184,7 +189,7 @@ namespace TunicRandomizer {
             RandomizeAndPlaceItems();
 
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
-            HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
+            HeirAssistModeDamageValue = ItemRandomizer.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
             Inventory.GetItemByName("Homeward Bone Statue").icon = Inventory.GetItemByName("Dash Stone").icon;
             Inventory.GetItemByName("Spear").icon = Inventory.GetItemByName("MoneyBig").icon;
             Inventory.GetItemByName("MoneyLevelItem").Quantity = 1;
@@ -243,7 +248,7 @@ namespace TunicRandomizer {
                 }
             }
         }
-        
+
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance) {
 
             if (__instance.name == "Foxgod" && SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
@@ -253,6 +258,8 @@ namespace TunicRandomizer {
                 if (GoldenItemBehavior.CanTakeGoldenHit) {
                     GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = GoldenItemBehavior.FoxBody.GetComponent<MeshRenderer>().materials;
                     GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = GoldenItemBehavior.FoxHair.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = GoldenItemBehavior.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = GoldenItemBehavior.GhostFoxHair.GetComponent<MeshRenderer>().materials;
                     SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                     GoldenItemBehavior.CanTakeGoldenHit = false;
                     return false;
@@ -282,7 +289,7 @@ namespace TunicRandomizer {
             if (GameObject.FindObjectsOfType<Monster>().Where(Monster => Monster.IsAggroed).Count() > 0) {
                 return false;
             }
-            
+
             return true;
         }
 
@@ -326,8 +333,14 @@ namespace TunicRandomizer {
                 GenericMessage.ShowMessage($"\"Locked. (20\" fArEz \"required)\"");
                 return false;
             }
+            if (SceneLoaderPatches.SceneName == "Overworld Interiors" && __instance.transform.position.ToString() == "(-25.7, 28.4, -54.4)") { 
+                if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && (TimeWhenLastChangedDayNight + 3.0f < Time.fixedTime)) {
+                    GenericPrompt.ShowPrompt(CycleController.IsNight ? $"wAk fruhm #is drEm?" : $"rEtirn too yor drEm?", (Il2CppSystem.Action)ChangeDayNightHourglass, null);
+                }
+                return false;
+            }
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
-                if(__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
+                if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
                     GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
                     return false;
                 }
@@ -338,6 +351,19 @@ namespace TunicRandomizer {
             }
 
             return true;
+        }
+
+        private static void ChangeDayNightHourglass() {
+            TimeWhenLastChangedDayNight = Time.fixedTime;
+            bool isNight = CycleController.IsNight;
+            if (isNight) {
+                CycleController.AnimateSunrise();
+            } else {
+                CycleController.AnimateSunset();
+            }
+            CycleController.IsNight = !isNight;
+            CycleController.nightStateVar.BoolValue = !isNight;
+            GameObject.Find("day night hourglass/rotation/hourglass").GetComponent<MeshRenderer>().materials[0].color = CycleController.IsNight ? new Color(1f, 0f, 1f, 1f) : new Color(1f, 1f, 0f, 1f);
         }
 
         private static void PopulateSphereZero() {
@@ -359,14 +385,14 @@ namespace TunicRandomizer {
                 ProgressionNames.Add("21"); // Holy Cross
                 ProgressionNames.Add("26"); // Ice Rod
             }
-            
+
             List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList);
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
             List<ItemData> Hexagons = new List<ItemData>();
             List<Reward> ProgressionRewards = new List<Reward>();
             Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
-            Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData>{};
+            Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
 
             foreach (ItemData Item in InitialItems) {
                 if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
@@ -399,7 +425,7 @@ namespace TunicRandomizer {
                             }
                         }
                     }
-                    if (ProgressionNames.Contains(Item.Reward.Name) || RandomItemPatches.FairyLookup.Keys.Contains(Item.Reward.Name)) {
+                    if (ProgressionNames.Contains(Item.Reward.Name) || ItemRandomizer.FairyLookup.Keys.Contains(Item.Reward.Name)) {
                         ProgressionRewards.Add(Item.Reward);
                     } else {
                         InitialRewards.Add(Item.Reward);
@@ -413,14 +439,14 @@ namespace TunicRandomizer {
                 // pick a location 
                 int l;
                 l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
-            
+
                 // if location isn't reachable with placed inv, pick a new location
-                while(!InitialLocations[l].reachable(PlacedInventory)) {
+                while (!InitialLocations[l].reachable(PlacedInventory)) {
                     l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
                 }
 
                 // add item to placed inv for future reachability checks
-                string itemName = RandomItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                string itemName = ItemRandomizer.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 if (PlacedInventory.Keys.Contains(itemName)) {
                     PlacedInventory[itemName] += 1;
                 } else {
@@ -441,32 +467,31 @@ namespace TunicRandomizer {
             for (int i = 0; i < InitialRewards.Count; i++) {
                 string DictionaryId = $"{InitialLocations[i].LocationId} [{InitialLocations[i].SceneName}]";
                 ItemData ItemData = new ItemData(InitialRewards[i], InitialLocations[i]);
-                RandomItemPatches.ItemList.Add(DictionaryId, ItemData);
+                ItemRandomizer.ItemList.Add(DictionaryId, ItemData);
             }
 
             // add progression items and locations back
             foreach (string key in ProgressionLocations.Keys) {
-                RandomItemPatches.ItemList.Add(key, ProgressionLocations[key]);
+                ItemRandomizer.ItemList.Add(key, ProgressionLocations[key]);
             }
 
             if (SaveFile.GetInt("randomizer keys behind bosses") != 0) {
                 foreach (ItemData Hexagon in Hexagons) {
-                    // second quest?
                     if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                         Hexagon.Reward.Name = "Hexagon Gold";
                         Hexagon.Reward.Type = "SPECIAL";
                     }
                     string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
-                    RandomItemPatches.ItemList.Add(DictionaryId, Hexagon);
+                    ItemRandomizer.ItemList.Add(DictionaryId, Hexagon);
                 }
             }
-            foreach (string Key in RandomItemPatches.ItemList.Keys) {
+            foreach (string Key in ItemRandomizer.ItemList.Keys) {
                 int ItemPickedUp = SaveFile.GetInt($"randomizer picked up {Key}");
-                RandomItemPatches.ItemsPickedUp.Add(Key, ItemPickedUp == 1 ? true : false);
+                ItemRandomizer.ItemsPickedUp.Add(Key, ItemPickedUp == 1 ? true : false);
             }
             if (TunicRandomizer.Tracker.ItemsCollected.Count == 0) {
-                foreach (KeyValuePair<string, bool> PickedUpItem in RandomItemPatches.ItemsPickedUp.Where(item => item.Value)) {
-                    RandomItemPatches.UpdateItemTracker(PickedUpItem.Key);
+                foreach (KeyValuePair<string, bool> PickedUpItem in ItemRandomizer.ItemsPickedUp.Where(item => item.Value)) {
+                    ItemRandomizer.UpdateItemTracker(PickedUpItem.Key);
                 }
                 ItemTracker.SaveTrackerFile();
                 TunicRandomizer.Tracker.ImportantItems["Flask Container"] += TunicRandomizer.Tracker.ItemsCollected.Where(Item => Item.Reward.Name == "Flask Shard").Count() / 3;
@@ -515,9 +540,9 @@ namespace TunicRandomizer {
                 SpoilerLog[Key] = new List<string>();
             }
             Dictionary<string, string> Descriptions = JSONParser.FromJson<Dictionary<string, string>>(Hints.LocationDescriptionsJson);
-            foreach (string Key in RandomItemPatches.ItemList.Keys) {
-                ItemData ItemData = RandomItemPatches.ItemList[Key];
-                string Spoiler = $"\t{(RandomItemPatches.ItemsPickedUp[Key] ? "x" : "-")} {Descriptions[Key]}: {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
+            foreach (string Key in ItemRandomizer.ItemList.Keys) {
+                ItemData ItemData = ItemRandomizer.ItemList[Key];
+                string Spoiler = $"\t{(ItemRandomizer.ItemsPickedUp[Key] ? "x" : "-")} {Descriptions[Key]}: {Hints.SimplifiedItemNames[ItemData.Reward.Name]} x{ItemData.Reward.Amount}";
 
                 if (ItemData.Reward.Type == "MONEY") {
                     if (ItemData.Reward.Amount < 20) {
@@ -540,7 +565,7 @@ namespace TunicRandomizer {
                     SpoilerLogLines.Add(line);
                 }
             }
-            
+
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             } else {
@@ -561,7 +586,7 @@ namespace TunicRandomizer {
             string ScenePrefix;
 
             // Mailbox Hint
-            List<string> mailboxNames = new List<string>() {"Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword"}; 
+            List<string> mailboxNames = new List<string>() { "Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 mailboxNames.Add("12");
                 mailboxNames.Add("21");
@@ -582,14 +607,14 @@ namespace TunicRandomizer {
                 n = 0;
                 while (HintItem == null && n < mailboxHintables.Count) {
                     if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
-                        foreach(ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin")) {
-                            if(itemData.Location.reachable(SphereZero)) {
+                        foreach (ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin")) {
+                            if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     } else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
-                        foreach(ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
-                            if(itemData.Location.reachable(SphereZero)) {
+                        foreach (ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
+                            if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
@@ -599,8 +624,8 @@ namespace TunicRandomizer {
                             HintItem = itemData;
                         }
                     } else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
-                        foreach(ItemData itemData in FindAllRandomizedItemsByName("Key")) {
-                            if(itemData.Location.reachable(SphereZero)) {
+                        foreach (ItemData itemData in FindAllRandomizedItemsByName("Key")) {
+                            if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
@@ -619,10 +644,10 @@ namespace TunicRandomizer {
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE.";
-                if (HintItem.Reward.Name == "Techbow") {techbowHinted = true;}
-                if (HintItem.Reward.Name == "Wand") {wandHinted = true;}
-                if (HintItem.Reward.Name == "12") {prayerHinted = true;}
-                if (HintItem.Reward.Name == "21") {hcHinted = true;}
+                if (HintItem.Reward.Name == "Techbow") { techbowHinted = true; }
+                if (HintItem.Reward.Name == "Wand") { wandHinted = true; }
+                if (HintItem.Reward.Name == "12") { prayerHinted = true; }
+                if (HintItem.Reward.Name == "21") { hcHinted = true; }
             }
             Hints.HintMessages.Add("Mailbox", HintMessage);
 
@@ -632,7 +657,7 @@ namespace TunicRandomizer {
             ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
             HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
             Hints.HintMessages.Add("Temple Statue", HintMessage);
-            
+
             List<string> HintItems = new List<string>() { techbowHinted ? "Lantern" : "Techbow", wandHinted ? "Lantern" : "Wand", "Stundagger" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 HintItems.Add(prayerHinted ? "Lantern" : "12");
@@ -686,20 +711,20 @@ namespace TunicRandomizer {
         public static void SetupGoldenTrophyCollectionLines() {
             //kawngrahJoulA$uhnz!
             if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                foreach (string StaminaTrophy in RandomItemPatches.GoldenTrophyStatUpgrades["Level Up - Stamina"]) {
+                foreach (string StaminaTrophy in ItemRandomizer.GoldenTrophyStatUpgrades["Level Up - Stamina"]) {
                     Inventory.GetItemByName(StaminaTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     Inventory.GetItemByName(StaminaTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#8ddc6e>+1 SP<#FFFFFF>)\"";
 
                 }
-                foreach (string MagicTrophy in RandomItemPatches.GoldenTrophyStatUpgrades["Level Up - Magic"]) {
+                foreach (string MagicTrophy in ItemRandomizer.GoldenTrophyStatUpgrades["Level Up - Magic"]) {
                     Inventory.GetItemByName(MagicTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     Inventory.GetItemByName(MagicTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#2a8fed>+1 MP<#FFFFFF>)\"";
                 }
-                foreach (string DefenseTrophy in RandomItemPatches.GoldenTrophyStatUpgrades["Level Up - DamageResist"]) {
+                foreach (string DefenseTrophy in ItemRandomizer.GoldenTrophyStatUpgrades["Level Up - DamageResist"]) {
                     Inventory.GetItemByName(DefenseTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     Inventory.GetItemByName(DefenseTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#5de7cf>+1 DEF<#FFFFFF>)\"";
                 }
-                foreach (string PotionTrophy in RandomItemPatches.GoldenTrophyStatUpgrades["Level Up - PotionEfficiency"]) {
+                foreach (string PotionTrophy in ItemRandomizer.GoldenTrophyStatUpgrades["Level Up - PotionEfficiency"]) {
                     Inventory.GetItemByName(PotionTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     Inventory.GetItemByName(PotionTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#ca7be4>+1 POTION<#FFFFFF>)\"";
                 }
@@ -712,7 +737,7 @@ namespace TunicRandomizer {
         }
 
         public static ItemData FindRandomizedItemByName(string Name) {
-            foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
+            foreach (ItemData ItemData in ItemRandomizer.ItemList.Values) {
                 if (ItemData.Reward.Name == Name) {
                     return ItemData;
                 }
@@ -723,7 +748,7 @@ namespace TunicRandomizer {
         public static List<ItemData> FindAllRandomizedItemsByName(string Name) {
             List<ItemData> results = new List<ItemData>();
 
-            foreach (ItemData ItemData in RandomItemPatches.ItemList.Values) {
+            foreach (ItemData ItemData in ItemRandomizer.ItemList.Values) {
                 if (ItemData.Reward.Name == Name) {
                     results.Add(ItemData);
                 }
@@ -735,7 +760,7 @@ namespace TunicRandomizer {
         public static List<ItemData> FindAllRandomizedItemsByType(string type) {
             List<ItemData> results = new List<ItemData>();
 
-            foreach (ItemData itemData in RandomItemPatches.ItemList.Values) {
+            foreach (ItemData itemData in ItemRandomizer.ItemList.Values) {
                 if (itemData.Reward.Type == type) {
                     results.Add(itemData);
                 }
@@ -777,16 +802,24 @@ namespace TunicRandomizer {
                 __instance.doPushbackBlast();
                 return false;
             }
-            
+
             return true;
         }
 
-
         public static void UpgradeAltar_DoOfferingSequence_PostfixPatch(UpgradeAltar __instance) {
-            foreach (string LevelUp in RandomItemPatches.LevelUpItemNames) {
+            foreach (string LevelUp in ItemRandomizer.LevelUpItemNames) {
                 TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
             }
         }
+
+/*        public static void CrossbowItemBehavior___fireBow_PostfixPatch(CrossbowItemBehaviour __instance) {
+
+        }
+
+        public static bool CrossbowItemBehavior_onActionButtonDown_PrefixPatch(CrossbowItemBehaviour __instance) {
+            
+            return true;
+        }*/
 
     }
 }

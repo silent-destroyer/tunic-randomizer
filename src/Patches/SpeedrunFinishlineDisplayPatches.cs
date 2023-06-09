@@ -105,5 +105,12 @@ namespace TunicRandomizer {
             }
             return true;
         }
+
+        public static void GameOverDecision_Start_PostfixPatch(GameOverDecision __instance) {
+            int MissingPageCount = (28 - TunicRandomizer.Tracker.ImportantItems["Pages"]);
+            __instance.retryKey_plural = $"Missing {MissingPageCount} pages. Return to seek another path.";
+            __instance.retryKey_single = $"Missing {MissingPageCount} page. Return to seek another path.";
+        }
+
     }
 }

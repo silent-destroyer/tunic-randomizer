@@ -8,11 +8,16 @@ using BepInEx.Logging;
 using UnhollowerBaseLib;
 
 namespace TunicRandomizer {
+
     public class EnemyRandomizer {
 
         private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
+
+        public static Dictionary<string, List<string>> DefeatedEnemyTracker = new Dictionary<string, List<string>>();
+
+        public static Dictionary<string, string> EnemiesInCurrentScene = new Dictionary<string, string>() { };
 
         public static List<string> ExcludedEnemies = new List<string>() {
             "tech knight boss",
@@ -25,7 +30,6 @@ namespace TunicRandomizer {
             "Fortress Arena",
             "Spirit Arena"
         };
-        
 
         public static Dictionary<string, List<string>> LocationEnemies = new Dictionary<string, List<string>>() {
             {
@@ -132,7 +136,21 @@ namespace TunicRandomizer {
             {
                 "Cathedral Redux",
                 new List<string> () {
-                    "Voidtouched"
+                    "Voidtouched",
+                    "Fox enemy"
+                }
+            },
+            {
+                "Library Hall",
+                new List<string> () {
+                    "administrator_servant"
+                }
+            },
+            { 
+                "Posterity",
+                new List<string> () {
+                    "Phage",
+                    "Ghost Knight"
                 }
             }
         };
@@ -150,6 +168,7 @@ namespace TunicRandomizer {
                     "Crabbit with Shell",
                     "Fox enemy zombie",
                     "BlobBig",
+                    "BlobBigger",
                     "HedgehogBig",
                     "Bat",
                     "Spider Small",
@@ -160,7 +179,10 @@ namespace TunicRandomizer {
                     "Crabbo",
                     "Spinnerbot Corrupted",                          
                     "Turret",
-                    "Hedgehog Trap"
+                    "Hedgehog Trap",
+                    "administrator_servant",
+                    "Phage",
+                    "Ghost Knight"
                 }
             },
             {
@@ -186,7 +208,8 @@ namespace TunicRandomizer {
                     "Wizard_Sword",
                     "Wizard_Support",
                     "Crow Voidtouched",
-                    "woodcutter"
+                    "woodcutter",
+                    "Fox enemy"
                 }
             },
             {
@@ -200,7 +223,7 @@ namespace TunicRandomizer {
                     "tunic knight void",
                     "Voidtouched"
                 }
-            },
+            }
         };
 
         public static void InitializeEnemies(string SceneName) {
@@ -224,7 +247,14 @@ namespace TunicRandomizer {
                 Enemies[EnemyName].SetActive(false);
 
                 Enemies[EnemyName].transform.position = new Vector3(-30000f, -30000f, -30000f);
-
+                if (EnemyName == "Blob") {
+                    Enemies["BlobBigger"] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == LocationEnemy).ToList()[0].gameObject);
+                    Enemies["BlobBigger"].transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                    GameObject.DontDestroyOnLoad(Enemies["BlobBigger"]);
+                    Enemies["BlobBigger"].SetActive(false);
+                    Enemies["BlobBigger"].transform.position = new Vector3(-30000f, -30000f, -30000f);
+                    Enemies["BlobBigger"].name = "BlobBigger";
+                }
             }
             if (SceneName == "Archipelagos Redux") {
                 Enemies["tunic knight void"].GetComponent<ZTarget>().isActive = true;
@@ -239,37 +269,52 @@ namespace TunicRandomizer {
                 Enemies["Hedgehog Trap"].SetActive(false);
 
                 Enemies["Hedgehog Trap"].transform.position = new Vector3(-30000f, -30000f, -30000f);
-
             }
 
         }
 
         public static void SpawnNewEnemies() {
+            EnemiesInCurrentScene.Clear();
+
+            string CurrentScene = SceneLoaderPatches.SceneName;
+
             System.Random Random = new System.Random();
             List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name)).ToList();
-            if (SceneLoaderPatches.SceneName == "Archipelagos Redux") {
+            if (CurrentScene == "Archipelagos Redux") {
                 Monsters = Monsters.Where(Monster => Monster.transform.parent.parent == null || Monster.transform.parent.parent.name != "_Environment Prefabs").ToList();
             }
-            if (SceneLoaderPatches.SceneName == "Forest Belltower") {
+            if (CurrentScene == "Forest Belltower") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Clone")).ToList();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && SceneLoaderPatches.SceneName == "Library Hall" && !CycleController.IsNight) { 
+            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Library Hall" && !CycleController.IsNight) { 
                 GameObject.Find("beefboy statues").SetActive(false);
                 GameObject.Find("beefboy statues (2)").SetActive(false);
                 foreach (GameObject Monster in Monsters) {
                     Monster.transform.parent = null;
                 }
             }
-            if (SceneLoaderPatches.SceneName == "Fortress East" || SceneLoaderPatches.SceneName == "Frog Stairs") {
+            if (CurrentScene == "Fortress East" || CurrentScene == "Frog Stairs") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null ) && !Monster.name.Contains("Clone")).ToList();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && SceneLoaderPatches.SceneName == "Monastery") {
+            if (CurrentScene == "Cathedral Redux") {
+                Monsters.AddRange(Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => Monster.GetComponent<Crow>() != null && !Monster.name.Contains("Clone")).ToList());
+            }
+            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Monastery") {
                 Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
             }
-
+            int i = 0;
             foreach (GameObject Enemy in Monsters) {
+                if (DefeatedEnemyTracker.ContainsKey(CurrentScene) && DefeatedEnemyTracker[CurrentScene].Contains(Enemy.transform.position.ToString())) {
+                    GameObject.Destroy(Enemy);
+                    continue;
+                }
                 List<string> EnemyKeys = Enemies.Keys.ToList();
-                if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
+                if (CurrentScene == "Cathedral Arena") {
+                    EnemyKeys.Remove("administrator_servant");
+                    EnemyKeys.Remove("administrator");
+                    EnemyKeys.Remove("Hedgehog Trap");
+                }
+                if (CurrentScene == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                     EnemyKeys.Remove("Hedgehog Trap");
                 }
                 if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
@@ -279,7 +324,7 @@ namespace TunicRandomizer {
                 }
                 GameObject NewEnemy;
 
-                if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || SceneLoaderPatches.SceneName == "Cathedral Arena") {
+                if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || CurrentScene == "Cathedral Arena") {
                     NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                 } else if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.BALANCED) {
                     List<string> EnemyTypes = null;
@@ -308,17 +353,52 @@ namespace TunicRandomizer {
                 NewEnemy.transform.position = Enemy.transform.position;
                 NewEnemy.transform.rotation = Enemy.transform.rotation;
                 NewEnemy.transform.parent = Enemy.transform.parent;
+                NewEnemy.name += $" {i}";
+                EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
                 NewEnemy.SetActive(true);
+                if(NewEnemy.GetComponent<DefenseTurret>() != null) { 
+                    NewEnemy.GetComponent<Monster>().onlyAggroViaTrigger = false;
+                }
+                if(NewEnemy.GetComponent<TunicKnightVoid>() != null) {
+                    NewEnemy.GetComponent<Creature>().defaultStartingMaxHP._value = 200;
+                }
+                if (NewEnemy.name.Contains("BlobBigger")) {
+                    NewEnemy.GetComponent<Creature>().defaultStartingMaxHP._value = 25;
+                }
                 if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                     GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
                 }
                 GameObject.Destroy(Enemy.gameObject);
+                i++;
             }
 
             foreach (string Key in Enemies.Keys) {
                 Enemies[Key].SetActive(false);
             }
 
+        }
+
+        public static void Monster_IDamageable_ReceiveDamage_PostfixPatch(Monster __instance) {
+            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && __instance.hp <= 0 && __instance.name != "_Fox(Clone)") {
+                string SceneName = SceneLoaderPatches.SceneName;
+                if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
+                    DefeatedEnemyTracker.Add(SceneName, new List<string>());
+                }
+                DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[__instance.name]);
+                if (__instance.GetComponent<TunicKnightVoid>() != null) {
+
+                    CoinSpawner.SpawnCoins(50, __instance.transform.position);
+                    MPPickup.Drop(100f, __instance.transform.position);
+                    GameObject.Destroy(__instance.gameObject);
+                }
+            }
+
+
+        }
+        
+        public static bool Campfire_Interact_PrefixPatch(Campfire __instance) {
+            DefeatedEnemyTracker.Clear();
+            return true;
         }
 
     }

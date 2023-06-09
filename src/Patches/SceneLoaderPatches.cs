@@ -19,11 +19,12 @@ namespace TunicRandomizer {
         public static bool SpawnedGhosts = false;
 
         public static bool SceneLoader_OnSceneLoaded_PrefixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
+            
             if (SceneName == "Forest Belltower") {
-                SaveFile.SetInt("chest open 19", RandomItemPatches.ItemsPickedUp["19 [Forest Belltower]"] ? 1 : 0);
+                SaveFile.SetInt("chest open 19", ItemRandomizer.ItemsPickedUp["19 [Forest Belltower]"] ? 1 : 0);
             }
             if (SceneName == "Sword Cave") {
-                SaveFile.SetInt("chest open 19", RandomItemPatches.ItemsPickedUp["19 [Sword Cave]"] ? 1 : 0);
+                SaveFile.SetInt("chest open 19", ItemRandomizer.ItemsPickedUp["19 [Sword Cave]"] ? 1 : 0);
             }
 
             return true;
@@ -33,9 +34,19 @@ namespace TunicRandomizer {
 
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
+            if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
+                EnemyRandomizer.InitializeEnemies("Posterity");
+                SceneLoader.LoadScene("TitleScreen");
+                return;
+            }
+            if (loadingScene.name == "Library Hall" && !EnemyRandomizer.Enemies.ContainsKey("administrator_servant")) {
+                EnemyRandomizer.InitializeEnemies("Library Hall");
+                SceneLoader.LoadScene("Posterity");
+                return;
+            }
             if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
                 EnemyRandomizer.InitializeEnemies("Cathedral Redux");
-                SceneLoader.LoadScene("TitleScreen");
+                SceneLoader.LoadScene("Library Hall");
                 return;
             }
             if (loadingScene.name == "Fortress Main" && !EnemyRandomizer.Enemies.ContainsKey("woodcutter")) {
@@ -126,10 +137,15 @@ namespace TunicRandomizer {
             if (Camera.main != null && Camera.main.gameObject.GetComponentInParent<CycleController>() == null) {
                 Camera.main.transform.parent.gameObject.AddComponent<CycleController>();
             }
+            if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1) {
+                CycleController.IsNight = false;
+                CycleController.AnimateSunrise();
+                SaveFile.SetInt("randomizer died to heir", 1);
+            }
             Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
-            System.Random rnd = new System.Random();
+
             PlayerCharacterPatches.StungByBee = false;
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
@@ -139,8 +155,8 @@ namespace TunicRandomizer {
             UpdateTrackerSceneInfo();
             if (SceneName == "Waterfall") {
                 List<string> RandomObtainedFairies = new List<string>();
-                foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
-                    StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer obtained fairy " + Key) == 1;
+                foreach (string Key in ItemRandomizer.FairyLookup.Keys) {
+                    StateVariable.GetStateVariableByName(ItemRandomizer.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer obtained fairy " + Key) == 1;
                     if (SaveFile.GetInt("randomizer obtained fairy " + Key) == 1) {
                         RandomObtainedFairies.Add(Key);
                     }
@@ -156,7 +172,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-                PlayerCharacterPatches.HeirAssistModeDamageValue = RandomItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
+                PlayerCharacterPatches.HeirAssistModeDamageValue = ItemRandomizer.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
                 if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
                     Resources.FindObjectsOfTypeAll<Foxgod>().ToList()[0].gameObject.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
                     Resources.FindObjectsOfTypeAll<Foxgod>().ToList()[0].gameObject.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
@@ -164,15 +180,12 @@ namespace TunicRandomizer {
             } else if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", 0);
             } else if (SceneName == "Overworld Interiors") {
-                foreach (string Key in RandomItemPatches.HeroRelicLookup.Keys) {
-                    StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
+                foreach (string Key in ItemRandomizer.HeroRelicLookup.Keys) {
+                    StateVariable.GetStateVariableByName(ItemRandomizer.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
                 }
-                if (GameObject.Find("_Special/Bed Toggle Trigger/") != null) {
-                    GameObject.Find("_Special/Bed Toggle Trigger/").SetActive(false);
-                }
-            } else if (SceneName == "Credits First") {
-                for (int i = 0; i < 28; i++) {
-                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
+                GameObject.Destroy(GameObject.Find("_Special/Bed Toggle Trigger/"));
+                if (GameObject.Find("_Special/Bed Toggle Trigger/") != null && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
+                    SetupDayNightHourglass();
                 }
             } else if (SceneName == "TitleScreen") {
                 TitleVersion.Initialize();
@@ -195,14 +208,14 @@ namespace TunicRandomizer {
                     GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f,-0.5f, 0.5f, 0.5f);
                 }
             } else {
-                foreach (string Key in RandomItemPatches.FairyLookup.Keys) {
-                    StateVariable.GetStateVariableByName(RandomItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
+                foreach (string Key in ItemRandomizer.FairyLookup.Keys) {
+                    StateVariable.GetStateVariableByName(ItemRandomizer.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
                 }
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
                 }
-                foreach (string Key in RandomItemPatches.HeroRelicLookup.Keys) {
-                    StateVariable.GetStateVariableByName(RandomItemPatches.HeroRelicLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer picked up " + RandomItemPatches.HeroRelicLookup[Key].OriginalPickupLocation) == 1;
+                foreach (string Key in ItemRandomizer.HeroRelicLookup.Keys) {
+                    StateVariable.GetStateVariableByName(ItemRandomizer.HeroRelicLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer picked up " + ItemRandomizer.HeroRelicLookup[Key].OriginalPickupLocation) == 1;
                 }
             }
 
@@ -214,12 +227,12 @@ namespace TunicRandomizer {
                 PlayerCharacterPatches.IsTeleporting = false;
             }
 
-            foreach (ItemData Fool in RandomItemPatches.ItemList.Values.ToList().Where(Item => Item.Reward.Type == "FOOL")) {
+            foreach (ItemData Fool in ItemRandomizer.ItemList.Values.ToList().Where(Item => Item.Reward.Type == "FOOL")) {
                 Fool.Reward.Type = "MONEY";
                 Fool.Reward.Name = "money";
             }
 
-            if (!ModelSwaps.SwappedThisSceneAlready && (RandomItemPatches.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
+            if (!ModelSwaps.SwappedThisSceneAlready && (ItemRandomizer.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
                 ModelSwaps.SwapItemsInScene();
             }
 
@@ -268,6 +281,30 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker.CurrentScene.Scarf = ColorPalette.Scarf[PlayerPalette.selectionIndices[4]];
             
             ItemTracker.SaveTrackerFile();
+        }
+
+        public static void SetupDayNightHourglass() {
+            GameObject DayNightSwitch = GameObject.Instantiate(GameObject.Find("Trophy Stuff/TROPHY POINT (1)/"));
+            DayNightSwitch.name = "day night hourglass";
+            DayNightSwitch.GetComponent<GoldenTrophyRoom>().item = null;
+            DayNightSwitch.transform.GetChild(0).gameObject.SetActive(true);
+            GameObject Hourglass = DayNightSwitch.transform.GetChild(0).GetChild(0).gameObject;
+            Hourglass.GetComponent<MeshFilter>().mesh = ModelSwaps.Items["SlowmoItem"].GetComponent<MeshFilter>().mesh;
+            Hourglass.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["SlowmoItem"].GetComponent<MeshRenderer>().materials;
+            Hourglass.GetComponent<MeshRenderer>().materials[0].color = CycleController.IsNight ? new Color(1f, 0f, 1f, 1f) : new Color(1f, 1f, 0f, 1f);
+            Hourglass.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            Hourglass.transform.localPosition = Vector3.zero;
+            Hourglass.name = "hourglass";
+            Hourglass.SetActive(true);
+            GameObject GlowEffect = GameObject.Instantiate(ModelSwaps.GlowEffect);
+            GlowEffect.transform.parent = DayNightSwitch.transform;
+            GlowEffect.transform.GetChild(0).gameObject.SetActive(false);
+            GlowEffect.transform.GetChild(1).gameObject.SetActive(false);
+            GlowEffect.transform.GetChild(2).gameObject.SetActive(false);
+            GlowEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            GlowEffect.transform.localPosition = new Vector3(-0.4f, -1.4f, 0f);
+            GlowEffect.SetActive(true);
+            DayNightSwitch.transform.position = new Vector3(-25.6759f, 28.447f, -54.4082f);
         }
     }
 }
