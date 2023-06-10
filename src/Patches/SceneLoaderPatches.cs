@@ -220,6 +220,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = false;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = false;
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = false;
+                PlayerCharacter.instance._CompletelyInvulnerableEvenToIFrameIgnoringAttacks_k__BackingField = false;
                 PlayerCharacter.instance.ClearPoison();
                 PlayerCharacterPatches.IsTeleporting = false;
             }

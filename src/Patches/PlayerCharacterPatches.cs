@@ -112,6 +112,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
+                PlayerCharacter.instance._CompletelyInvulnerableEvenToIFrameIgnoringAttacks_k__BackingField = true;
                 PlayerCharacter.instance.AddPoison(1f);
             }
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt($"randomizer obtained page 12") == 0) {
@@ -280,9 +281,6 @@ namespace TunicRandomizer {
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
             __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"{Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}\"?";
-            if (GameObject.FindObjectsOfType<Monster>().Where(Monster => Monster.IsAggroed).Count() > 0) {
-                return false;
-            }
 
             return true;
         }

@@ -365,7 +365,7 @@ namespace TunicRandomizer {
                     NewItem.transform.localRotation = TransformData.rot;
                     NewItem.transform.localScale = TransformData.scale;
                     NewItem.transform.parent.gameObject.SetActive(true);
-
+                    
                     NewItem.SetActive(true);
                 }
             }
@@ -416,6 +416,8 @@ namespace TunicRandomizer {
                     NewItem.SetActive(true);
                     Page.transform.GetChild(1).gameObject.SetActive(false);
                     Page.transform.GetChild(0).gameObject.GetComponent<ParticleSystemRenderer>().material.color = Color.cyan;
+                    PagePickup.optionalPickupPrompt = ScriptableObject.CreateInstance<LanguageLine>();
+                    PagePickup.optionalPickupPrompt.text = Item.Reward.Type == "PAGE" ? $"tAk pAj?" : $"tAk Ituhm?";
                 }
             }
         }
