@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.IO;
 using UnityEngine;
 using TinyJson;
 using System.Linq;
 using BepInEx.Logging;
-using UnityEngine.SceneManagement;
-using UnhollowerBaseLib;
-using TMPro;
 using static TunicRandomizer.GhostHints;
-using HarmonyLib;
-using Il2CppSystem.Runtime.InteropServices;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
@@ -555,9 +549,21 @@ namespace TunicRandomizer {
                 }
                 SpoilerLog[ItemData.Location.SceneName].Add(Spoiler);
             }
-            List<string> SpoilerLogLines = new List<string>();
-            SpoilerLogLines.Add("Seed: " + seed);
-            SpoilerLogLines.Add("Lines that start with 'x' instead of '-' represent items that have been collected");
+            List<string> SpoilerLogLines = new List<string> {
+                "Seed: " + seed,
+                "Lines that start with 'x' instead of '-' represent items that have been collected",
+                "Major Items",
+            };
+            List<string> MajorItems = new List<string>() { "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shield", "Shotgun",
+                "Key (House)", "Dath Stone", "Relic - Hero Sword", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "12", "21", "26"
+            };
+            foreach (string MajorItem in MajorItems) { 
+                foreach(ItemData Item in FindAllRandomizedItemsByName(MajorItem)) {
+                    string Key = $"{Item.Location.LocationId} [{Item.Location.SceneName}]";
+                    string Spoiler = $"\t{(ItemRandomizer.ItemsPickedUp[Key] ? "x" : "-")} {Hints.SimplifiedItemNames[Item.Reward.Name]}: {Hints.SceneNamesForSpoilerLog[Item.Location.SceneName]} - {Descriptions[Key]}";
+                    SpoilerLogLines.Add(Spoiler);
+                }
+            }
             foreach (string Key in SpoilerLog.Keys) {
                 SpoilerLogLines.Add(Hints.SceneNamesForSpoilerLog[Key]);
                 SpoilerLog[Key].Sort();

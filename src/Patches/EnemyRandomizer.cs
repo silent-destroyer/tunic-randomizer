@@ -304,72 +304,80 @@ namespace TunicRandomizer {
             }
             int i = 0;
             foreach (GameObject Enemy in Monsters) {
-                if (DefeatedEnemyTracker.ContainsKey(CurrentScene) && DefeatedEnemyTracker[CurrentScene].Contains(Enemy.transform.position.ToString())) {
-                    GameObject.Destroy(Enemy);
-                    continue;
-                }
-                List<string> EnemyKeys = Enemies.Keys.ToList();
-                if (CurrentScene == "Cathedral Arena") {
-                    EnemyKeys.Remove("administrator_servant");
-                    EnemyKeys.Remove("administrator");
-                    EnemyKeys.Remove("Hedgehog Trap");
-                }
-                if (CurrentScene == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
-                    EnemyKeys.Remove("Hedgehog Trap");
-                }
-                if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                    if (Enemy.transform.parent != null && Enemy.transform.parent.name.Contains("NG+")) {
-                        Enemy.transform.parent.gameObject.SetActive(true);
+                GameObject NewEnemy = null;
+                try {
+                    if (DefeatedEnemyTracker.ContainsKey(CurrentScene) && DefeatedEnemyTracker[CurrentScene].Contains(Enemy.transform.position.ToString())) {
+                        GameObject.Destroy(Enemy);
+                        continue;
                     }
-                }
-                GameObject NewEnemy;
+                    List<string> EnemyKeys = Enemies.Keys.ToList();
+                    if (CurrentScene == "Cathedral Arena") {
+                        EnemyKeys.Remove("administrator_servant");
+                        EnemyKeys.Remove("administrator");
+                        EnemyKeys.Remove("Hedgehog Trap");
+                    }
+                    if (CurrentScene == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
+                        EnemyKeys.Remove("Hedgehog Trap");
+                    }
+                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                        if (Enemy.transform.parent != null && Enemy.transform.parent.name.Contains("NG+")) {
+                            Enemy.transform.parent.gameObject.SetActive(true);
+                        }
+                    }
 
-                if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || CurrentScene == "Cathedral Arena") {
-                    NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
-                } else if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.BALANCED) {
-                    List<string> EnemyTypes = null;
-                    foreach (string Key in EnemyRankings.Keys.Reverse()) {
-                        List<string> Rank = EnemyRankings[Key];
-                        Rank.Sort();
-                        Rank.Reverse();
-                        foreach (string EnemyName in Rank) {
-                            if (Enemy.name.Contains(EnemyName)) {
-                                EnemyTypes = Rank;
+                    if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || CurrentScene == "Cathedral Arena") {
+                        NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
+                    } else if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.BALANCED) {
+                        List<string> EnemyTypes = null;
+                        foreach (string Key in EnemyRankings.Keys.Reverse()) {
+                            List<string> Rank = EnemyRankings[Key];
+                            Rank.Sort();
+                            Rank.Reverse();
+                            foreach (string EnemyName in Rank) {
+                                if (Enemy.name.Contains(EnemyName)) {
+                                    EnemyTypes = Rank;
+                                }
+                            }
+                            if (EnemyTypes != null) {
+                                break;
                             }
                         }
-                        if (EnemyTypes != null) {
-                            break;
+                        if (EnemyTypes == null) {
+                            NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
+                        } else {
+                            NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                         }
-                    }
-                    if (EnemyTypes == null) {
-                        NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else {
-                        NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
+                        NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     }
-                } else {
-                    NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
-                }
 
-                NewEnemy.transform.position = Enemy.transform.position;
-                NewEnemy.transform.rotation = Enemy.transform.rotation;
-                NewEnemy.transform.parent = Enemy.transform.parent;
-                NewEnemy.name += $" {i}";
-                EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
-                NewEnemy.SetActive(true);
-                if(NewEnemy.GetComponent<DefenseTurret>() != null) { 
-                    NewEnemy.GetComponent<Monster>().onlyAggroViaTrigger = false;
+                    NewEnemy.transform.position = Enemy.transform.position;
+                    NewEnemy.transform.rotation = Enemy.transform.rotation;
+                    NewEnemy.transform.parent = Enemy.transform.parent;
+                    NewEnemy.name += $" {i}";
+                    EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
+                    NewEnemy.SetActive(true);
+                    if (NewEnemy.GetComponent<DefenseTurret>() != null) {
+                        NewEnemy.GetComponent<Monster>().onlyAggroViaTrigger = false;
+                    }
+                    if (NewEnemy.GetComponent<TunicKnightVoid>() != null && NewEnemy.GetComponent<Creature>().defaultStartingMaxHP != null) {
+                        NewEnemy.GetComponent<Creature>().defaultStartingMaxHP._value = 200;
+                    }
+                    if (NewEnemy.name.Contains("BlobBigger") && NewEnemy.GetComponent<Creature>().defaultStartingMaxHP != null) {
+                        NewEnemy.GetComponent<Creature>().defaultStartingMaxHP._value = 25;
+                    }
+                    if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
+                        GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
+                    }
+                    GameObject.Destroy(Enemy.gameObject);
+                    i++;
+                } catch (Exception ex) {
+                    if (NewEnemy != null) {
+                        GameObject.Destroy(NewEnemy);
+                        Logger.LogError("An error occurred spawning the following randomized enemy: " + NewEnemy.name);
+                        Logger.LogError(ex.Message + " " + ex.StackTrace);
+                    }
                 }
-                if(NewEnemy.GetComponent<TunicKnightVoid>() != null) {
-                    NewEnemy.GetComponent<Creature>().defaultStartingMaxHP._value = 200;
-                }
-                if (NewEnemy.name.Contains("BlobBigger")) {
-                    NewEnemy.GetComponent<Creature>().defaultStartingMaxHP._value = 25;
-                }
-                if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
-                    GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
-                }
-                GameObject.Destroy(Enemy.gameObject);
-                i++;
             }
 
             foreach (string Key in Enemies.Keys) {
@@ -384,7 +392,9 @@ namespace TunicRandomizer {
                 if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
                     DefeatedEnemyTracker.Add(SceneName, new List<string>());
                 }
-                DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[__instance.name]);
+                if (EnemiesInCurrentScene.ContainsKey(__instance.name)) {
+                    DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[__instance.name]);
+                }
                 if (__instance.GetComponent<TunicKnightVoid>() != null) {
 
                     CoinSpawner.SpawnCoins(50, __instance.transform.position);

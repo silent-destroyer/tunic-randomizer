@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 using System.IO;
 using TinyJson;
 using UnityEngine;
-using UnityEngine.UI;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
 using BepInEx.Logging;
-using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
 
@@ -45,7 +42,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
                 OptionsGUI.addButton("Keys Behind Bosses", SaveFile.GetInt("randomizer keys behind bosses") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Sword Progression", SaveFile.GetInt("randomizer sword progression enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
-                OptionsGUI.addButton("Start With Sword", SaveFile.GetInt("randomizer sword progression enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                OptionsGUI.addButton("Started With Sword", SaveFile.GetInt("randomizer started with sword") == 1 ? "<#00ff00>Yes" : "<#ff0000>No", null);
                 OptionsGUI.addButton("Shuffled Abilities", SaveFile.GetInt("randomizer shuffled abilities") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
             }
             OptionsGUI.setHeading("Logic");

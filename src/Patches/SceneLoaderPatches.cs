@@ -5,9 +5,6 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using BepInEx.Logging;
-using UnhollowerBaseLib;
-using UnityEngine.UI;
-using UnityEngine.Animations;
 
 namespace TunicRandomizer {
     public class SceneLoaderPatches {
@@ -232,8 +229,13 @@ namespace TunicRandomizer {
                 Fool.Reward.Name = "money";
             }
 
-            if (!ModelSwaps.SwappedThisSceneAlready && (ItemRandomizer.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
-                ModelSwaps.SwapItemsInScene();
+            try {
+                if (!ModelSwaps.SwappedThisSceneAlready && (ItemRandomizer.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
+                    ModelSwaps.SwapItemsInScene();
+                }
+            } catch (Exception ex) {
+                Logger.LogError("An error occurred swapping item models in this scene:");
+                Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
@@ -242,24 +244,43 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
-                GhostHints.SpawnHintGhosts(SceneName);
-                SpawnedGhosts = true;
+            try {
+                if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
+                    GhostHints.SpawnHintGhosts(SceneName);
+                    SpawnedGhosts = true;
+                }
+            } catch (Exception ex) {
+                Logger.LogError("An error occurred spawning hint ghost foxes:");
+                Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
+
 
             if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            FairyTargets.CreateFairyTargets();
-            if (TunicRandomizer.Settings.UseCustomTexture) {
-                PaletteEditor.LoadCustomTexture();
+            try {
+                FairyTargets.CreateFairyTargets();
+            } catch (Exception ex) {
+                Logger.LogError("An error occurred creating new fairy seeker spell targets:");
+                Logger.LogError(ex.Message + " " + ex.StackTrace);
+            }
+
+            try {
+                if (TunicRandomizer.Settings.UseCustomTexture) {
+                    PaletteEditor.LoadCustomTexture();
+                }
+            } catch (Exception ex) {
+                Logger.LogError("An error occurred applying custom texture:");
+                Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (TunicRandomizer.Settings.RealestAlwaysOn) {
                 try {
                     GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
-                } catch (Exception e) { }
+                } catch (Exception e) { 
+                    
+                }
             }
         }
 
