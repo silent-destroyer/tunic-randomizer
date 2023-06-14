@@ -32,7 +32,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
   - The Hero's Grave in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
   - The Hero's Grave in East Forest, West Garden, and the Eastern Vault Fortress are "Path of the Hero" hints, which hint towards a major progression item, such as Grapple, Lantern, Fire Wand, Ice Dagger, and/or the Prayer/Holy Cross pages (if playing with Ability Shuffling).
   - The statue in the Sealed Temple will always hint the location of the Hero's Laurels.
-- The "Fairy Seeker" Holy Cross spell (ULURDR) can be used to seek out all items in the game, instead of just fairies. Useful for finding missing checks in areas with lots of obscured or hidden items!
+- The "Fairy Seeker" Holy Cross spell (ULURDR) can now be used to seek out all items in an area, instead of just fairies. If all items in an area have been found, the fairy seeker will seek out the closest load zone that has items immediately beyond it. Useful for finding missing checks in areas with lots of obscured or hidden items!
 - Save files created by the randomizer will be marked with a "randomizer" tag in the file select screen to help differentiate them from your vanilla save files while the mod is loaded.
 - The Randomizer will routinely write to a couple of files in the Randomizer folder under the game's AppData directory (typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend\Randomizer):
   - Spoiler.log - This file lists every check in the game and what item they contain. It will also mark off which checks you have collected.
