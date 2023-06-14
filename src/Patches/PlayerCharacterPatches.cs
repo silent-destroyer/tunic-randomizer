@@ -41,17 +41,16 @@ namespace TunicRandomizer {
                 }
             }*/
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                GenericMessage.ShowMessage($"\"Game Settings\"\n\"-----------------\"\n" +
+                GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "Off" : "On").PadLeft(12, '.')}\"\n" +
                     $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"\n" +
-                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
+                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"", 
+                    (Il2CppSystem.Action)QuickSettings.CopyQuickSettingsInGame, null);
             }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                GUIUtility.systemCopyBuffer = SaveFile.GetInt("seed").ToString();
-            }
+
 /*            if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
                 string PuffColor = ColorPalette.GetColorStringForPopup(ColorPalette.Puff, 1);
