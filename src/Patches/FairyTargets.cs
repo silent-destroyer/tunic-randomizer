@@ -9,6 +9,9 @@ namespace TunicRandomizer {
     public class FairyTargets {
 
         public static void CreateFairyTargets() {
+            foreach(FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
+                GameObject.Destroy(FairyTarget.gameObject);
+            }
             if (ItemRandomizer.ItemList.Count > 0) {
                 List<string> ItemIdsInScene = ItemRandomizer.ItemList.Keys.Where(itemId => ItemRandomizer.ItemList[itemId].Location.SceneName == SceneLoaderPatches.SceneName && !ItemRandomizer.ItemsPickedUp[itemId]).ToList();
                 if (ItemIdsInScene.Count > 0) {
