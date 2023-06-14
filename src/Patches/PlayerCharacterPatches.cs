@@ -555,7 +555,8 @@ namespace TunicRandomizer {
                 "Major Items",
             };
             List<string> MajorItems = new List<string>() { "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shield", "Shotgun",
-                "Key (House)", "Dath Stone", "Relic - Hero Sword", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "12", "21", "26"
+                "Key (House)", "Dath Stone", "Relic - Hero Sword", "Relic - Hero Crown", "Relic - Hero Water", "Relic - Hero Pendant HP", "Relic - Hero Pendant SP",
+                "Relic - Hero Pendant MP", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "12", "21", "26"
             };
             foreach (string MajorItem in MajorItems) { 
                 foreach(ItemData Item in FindAllRandomizedItemsByName(MajorItem)) {
