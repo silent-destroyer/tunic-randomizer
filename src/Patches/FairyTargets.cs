@@ -9,7 +9,7 @@ namespace TunicRandomizer {
     public class FairyTargets {
 
         public static void CreateFairyTargets() {
-            foreach(FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
+            foreach(FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>().Where(Target => !Target.name.Contains("fairy target"))) {
                 GameObject.Destroy(FairyTarget);
             }
             if (ItemRandomizer.ItemList.Count > 0) {
