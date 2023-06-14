@@ -383,10 +383,16 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            
-/*            foreach (string Key in Enemies.Keys) {
-                Enemies[Key].SetActive(false);
-            }*/
+            try {
+                foreach (string Key in Enemies.Keys) {
+                    if (Enemies[Key] != null) {
+                        Enemies[Key].SetActive(false);
+                    }
+                }
+            } catch (Exception e) { 
+                
+            }
+
 
         }
 
