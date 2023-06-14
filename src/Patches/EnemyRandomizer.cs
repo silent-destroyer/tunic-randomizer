@@ -278,7 +278,12 @@ namespace TunicRandomizer {
 
             string CurrentScene = SceneLoaderPatches.SceneName;
 
-            System.Random Random = new System.Random();
+            System.Random Random;
+            if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyGenerationType.SEEDED) {
+                Random = new System.Random(SaveFile.GetInt("seed"));
+            } else {
+                Random = new System.Random();
+            }
             List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name)).ToList();
             if (CurrentScene == "Archipelagos Redux") {
                 Monsters = Monsters.Where(Monster => Monster.transform.parent.parent == null || Monster.transform.parent.parent.name != "_Environment Prefabs").ToList();
@@ -306,10 +311,6 @@ namespace TunicRandomizer {
             foreach (GameObject Enemy in Monsters) {
                 GameObject NewEnemy = null;
                 try {
-                    if (DefeatedEnemyTracker.ContainsKey(CurrentScene) && DefeatedEnemyTracker[CurrentScene].Contains(Enemy.transform.position.ToString())) {
-                        GameObject.Destroy(Enemy);
-                        continue;
-                    }
                     List<string> EnemyKeys = Enemies.Keys.ToList();
                     if (CurrentScene == "Cathedral Arena") {
                         EnemyKeys.Remove("administrator_servant");
@@ -325,9 +326,9 @@ namespace TunicRandomizer {
                         }
                     }
 
-                    if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.RANDOM || CurrentScene == "Cathedral Arena") {
+                    if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.RANDOM || CurrentScene == "Cathedral Arena") {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
-                    } else if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyRandomizationType.BALANCED) {
+                    } else if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.BALANCED) {
                         List<string> EnemyTypes = null;
                         foreach (string Key in EnemyRankings.Keys.Reverse()) {
                             List<string> Rank = EnemyRankings[Key];
@@ -369,8 +370,11 @@ namespace TunicRandomizer {
                     if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                         GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
                     }
-                    GameObject.Destroy(Enemy.gameObject);
                     i++;
+                    if (DefeatedEnemyTracker.ContainsKey(CurrentScene) && DefeatedEnemyTracker[CurrentScene].Contains(Enemy.transform.position.ToString())) {
+                        GameObject.Destroy(NewEnemy);
+                    }
+                    GameObject.Destroy(Enemy.gameObject);
                 } catch (Exception ex) {
                     if (NewEnemy != null) {
                         GameObject.Destroy(NewEnemy);
@@ -379,10 +383,10 @@ namespace TunicRandomizer {
                     }
                 }
             }
-
-            foreach (string Key in Enemies.Keys) {
+            
+/*            foreach (string Key in Enemies.Keys) {
                 Enemies[Key].SetActive(false);
-            }
+            }*/
 
         }
 
@@ -402,13 +406,20 @@ namespace TunicRandomizer {
                     GameObject.Destroy(__instance.gameObject);
                 }
             }
-
-
         }
-        
+
+        public static bool Campfire_RespawnAtLastCampfire_PrefixPatch(Campfire __instance) {
+            DefeatedEnemyTracker.Clear();
+            return true;
+        }
+
         public static bool Campfire_Interact_PrefixPatch(Campfire __instance) {
             DefeatedEnemyTracker.Clear();
             return true;
+        }
+
+        public static bool TunicKnightVoid_onFlinch_PrefixPatch(TunicKnightVoid __instance) {
+            return false;
         }
 
     }

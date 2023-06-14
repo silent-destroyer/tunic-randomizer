@@ -70,12 +70,15 @@ namespace TunicRandomizer {
         }
 
         public static void EnemyRandomizerSettings() {
-            Il2CppStringArray EnemyGenerationTypes = (Il2CppStringArray)new string[] { "Random", "Balanced" };
+            Il2CppStringArray EnemyDifficulties = (Il2CppStringArray)new string[] { "Random", "Balanced" };
+            Il2CppStringArray EnemyGenerationTypes = (Il2CppStringArray)new string[] { "Random", "Seeded" };
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Enemy Randomization");
             OptionsGUI.addToggle("Enemy Randomizer", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
             OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
-            OptionsGUI.addMultiSelect("Enemy Difficulty", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
+            OptionsGUI.addMultiSelect("Enemy Difficulty", EnemyDifficulties, GetEnemyDifficulty(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerDifficulty).wrap = true;
+            OptionsGUI.addMultiSelect("Enemy Generation", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
+
         }
 
         public static void CustomFoxSettingsPage() {
@@ -222,12 +225,21 @@ namespace TunicRandomizer {
             SaveSettings();
         }
         
+        public static int GetEnemyDifficulty() {
+            return (int)TunicRandomizer.Settings.EnemyDifficulty;
+        }
+
         public static int GetEnemyGenerationType() {
             return (int)TunicRandomizer.Settings.EnemyGeneration;
         }
 
+        public static void ChangeEnemyRandomizerDifficulty(int index) {
+            TunicRandomizer.Settings.EnemyDifficulty = (RandomizerSettings.EnemyRandomizationType)index;
+            SaveSettings();
+        }
+
         public static void ChangeEnemyRandomizerGenerationType(int index) {
-            TunicRandomizer.Settings.EnemyGeneration = (RandomizerSettings.EnemyRandomizationType)index;
+            TunicRandomizer.Settings.EnemyGeneration = (RandomizerSettings.EnemyGenerationType)index;
             SaveSettings();
         }
 
@@ -247,8 +259,9 @@ namespace TunicRandomizer {
 
         public static void ToggleCustomTexture(int index) {
             TunicRandomizer.Settings.UseCustomTexture = !TunicRandomizer.Settings.UseCustomTexture;
-            TunicRandomizer.Settings.RandomFoxColorsEnabled = false;
-            PaletteEditor.LoadCustomTexture();
+            if (TunicRandomizer.Settings.UseCustomTexture) {
+                PaletteEditor.LoadCustomTexture();
+            }
         }
 
 

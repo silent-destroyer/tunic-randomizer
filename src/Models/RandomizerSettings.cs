@@ -81,7 +81,12 @@ namespace TunicRandomizer {
             set;
         }
 
-        public EnemyRandomizationType EnemyGeneration {
+        public EnemyRandomizationType EnemyDifficulty {
+            get;
+            set;
+        }
+
+        public EnemyGenerationType EnemyGeneration {
             get;
             set;
         }
@@ -120,10 +125,16 @@ namespace TunicRandomizer {
             ONSLAUGHT,
         }
 
+        public enum EnemyGenerationType { 
+            RANDOM,
+            SEEDED
+        }
+
         public enum EnemyRandomizationType { 
             RANDOM,
             BALANCED
         }
+
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
             KeysBehindBosses = false;
@@ -142,7 +153,8 @@ namespace TunicRandomizer {
             FoolTrapIntensity = FoolTrapOption.NORMAL;
             
             EnemyRandomizerEnabled = false;
-            EnemyGeneration = EnemyRandomizationType.RANDOM;
+            EnemyDifficulty = EnemyRandomizationType.RANDOM;
+            EnemyGeneration = EnemyGenerationType.RANDOM;
             ExtraEnemiesEnabled = false;
 
             RandomFoxColorsEnabled = true;

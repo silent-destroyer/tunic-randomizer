@@ -49,6 +49,9 @@ namespace TunicRandomizer {
                     $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"\n" +
                     $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "No" : "Yes").PadLeft(12, '.')}\"");
             }
+            if (Input.GetKeyDown(KeyCode.Alpha3)) {
+                GUIUtility.systemCopyBuffer = SaveFile.GetInt("seed").ToString();
+            }
 /*            if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
                 string PuffColor = ColorPalette.GetColorStringForPopup(ColorPalette.Puff, 1);
