@@ -30,7 +30,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 - Regarding Hints:
   - The Mailbox will always give you a "First Step" hint, which will generally try to lead you to a useful item that is not blocked by progression. In the rare event that all of the Mailbox hint items are locked by something else, it will lead you to one of the things needed to unlock a more useful items.
   - The Hero's Grave in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
-  - The Hero's Grave in East Forest, West Garden, and the Eastern Vault Fortress will hint towards a major progression item, such as Grapple, Lantern, Fire Wand, and the Prayer/Holy Cross pages (if playing with Ability Shuffling).
+  - The Hero's Grave in East Forest, West Garden, and the Eastern Vault Fortress are "Path of the Hero" hints, which hint towards a major progression item, such as Grapple, Lantern, Fire Wand, Ice Dagger, and/or the Prayer/Holy Cross pages (if playing with Ability Shuffling).
   - The statue in the Sealed Temple will always hint the location of the Hero's Laurels.
 - The "Fairy Seeker" Holy Cross spell (ULURDR) can be used to seek out all items in the game, instead of just fairies. Useful for finding missing checks in areas with lots of obscured or hidden items!
 - Save files created by the randomizer will be marked with a "randomizer" tag in the file select screen to help differentiate them from your vanilla save files while the mod is loaded.
@@ -86,12 +86,16 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - !esirprus a rof no nruT
 ### Enemy Randomization
 - Enemy Randomizer
-  - Randomly swaps out enemies with new ones when you load into a scene. Currently this is not seed-based so the enemies will change everytime you leave and re-enter an area.
+  - Randomly swaps out enemies with new ones when you load into a scene. See below settings for ways to affect enemy difficulty/generation.
+  - There is currently no logic for certain edge cases where grappling to an enemy may be required to reach a check (ex. East Forest Slime, Turret in Overworld/Frog's Domain). The Enemy Randomizer can be toggled on or off at any point while playing however, so if you find yourself unable to reach certain checks it is recommended to briefly turn the setting off to get the check and then turn it back on afterwards.
 - Extra Enemies
   - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos.
 - Enemy Difficulty
   - Random: No balancing is performed, and all new enemy spawns are chosen randomly from the full pool of enemies.
   - Balanced: Enemies will only be replaced with an enemy of similar difficulty.
+- Enemy Generation
+  - Random: Enemies will change every time you leave and come back to an area.
+  - Seeded: Enemy spawns will remain consistent per area.
 ### Fox Customization 🦊
 - Random Fox Colors
   - Fox colors will randomize everytime you enter a new scene, rest at a shrine, or load from the menu.

@@ -21,7 +21,7 @@ namespace TunicRandomizer {
             GUI.skin.font = OdinRounded == null ? GUI.skin.font : OdinRounded;
             if (SceneLoaderPatches.SceneName == "TitleScreen") {
                 Cursor.visible = true;
-                GUI.Window(101, new Rect(20f, 150f, 400f, 345f), new Action<int>(QuickSettingsWindow), "Quick Settings");
+                GUI.Window(101, new Rect(20f, 150f, 420f, 345f), new Action<int>(QuickSettingsWindow), "Quick Settings");
             }
         }
 
@@ -47,30 +47,38 @@ namespace TunicRandomizer {
             GUI.Label(new Rect(10f, 95f, 200f, 30f), "Logic Settings");
             bool TopggleBossKeys = GUI.Toggle(new Rect(10f, 140f, 180f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
             TunicRandomizer.Settings.KeysBehindBosses = TopggleBossKeys;
-            bool ToggleSwordProgression = GUI.Toggle(new Rect(210f, 140f, 180f, 30f), TunicRandomizer.Settings.SwordProgressionEnabled, "Sword Progression");
+            bool ToggleSwordProgression = GUI.Toggle(new Rect(230f, 140f, 180f, 30f), TunicRandomizer.Settings.SwordProgressionEnabled, "Sword Progression");
             TunicRandomizer.Settings.SwordProgressionEnabled = ToggleSwordProgression;
             bool ToggleSwordStart = GUI.Toggle(new Rect(10f, 180f, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
             TunicRandomizer.Settings.StartWithSwordEnabled = ToggleSwordStart;
-            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(210f, 180f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
+            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(230f, 180f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
             TunicRandomizer.Settings.ShuffleAbilities = ToggleAbilityShuffle;
             GUI.skin.button.fontSize = 20;
             GUI.Label(new Rect(10f, 220f, 300f, 30f), $"Custom Seed: {(CustomSeed == 0 ? "Not Set" : CustomSeed.ToString())}");
 
-            bool GenerateSeed = GUI.Button(new Rect(10f, 260f, 185f, 30f), "Generate Seed");
+            bool GenerateSeed = GUI.Button(new Rect(10f, 260f, 195f, 30f), "Generate Seed");
             if(GenerateSeed) {
                 CustomSeed = new System.Random().Next();
             }
-            bool CopySettings = GUI.Button(new Rect(10f, 300f, 185f, 30f), "Copy Settings");
+            bool PasteSeed = GUI.Button(new Rect(215f, 260f, 195f, 30f), "Paste Seed");
+            if (PasteSeed) {
+                try {
+                    CustomSeed = int.Parse(GUIUtility.systemCopyBuffer);
+                } catch (System.Exception e) {
+
+                }
+            }
+            bool CopySettings = GUI.Button(new Rect(10f, 300f, 195f, 30f), "Copy Seed+Settings");
             if(CopySettings) {
                 CopyQuickSettings();
             }
-            bool PasteSettings = GUI.Button(new Rect(205f, 300f, 185f, 30f), "Paste Settings");
+            bool PasteSettings = GUI.Button(new Rect(215f, 300f, 195f, 30f), "Paste Seed+Settings");
             if(PasteSettings) {
                 PasteQuickSettings();
             }
 
             if (CustomSeed != 0) {
-                bool ClearSeed = GUI.Button(new Rect(205f, 260f, 185f, 30f), "Clear Seed");
+                bool ClearSeed = GUI.Button(new Rect(300f, 220f, 110f, 30f), "Clear");
                 if (ClearSeed) {
                     CustomSeed = 0;
                 }
@@ -80,8 +88,8 @@ namespace TunicRandomizer {
         public static void CopyQuickSettings() {
             string SettingsString = $"{CustomSeed},";
             SettingsString += $"{(int)TunicRandomizer.Settings.GameMode},";
-            SettingsString += $"{(TunicRandomizer.Settings.SwordProgressionEnabled ? "1" : "0")},";
             SettingsString += $"{(TunicRandomizer.Settings.KeysBehindBosses ? "1" : "0")},";
+            SettingsString += $"{(TunicRandomizer.Settings.SwordProgressionEnabled ? "1" : "0")},";
             SettingsString += $"{(TunicRandomizer.Settings.StartWithSwordEnabled ? "1" : "0")},";
             SettingsString += $"{(TunicRandomizer.Settings.ShuffleAbilities ? "1" : "0")}";
             GUIUtility.systemCopyBuffer = SettingsString;
@@ -90,8 +98,8 @@ namespace TunicRandomizer {
         public static void CopyQuickSettingsInGame() {
             string SettingsString = $"{SaveFile.GetInt("seed")},";
             SettingsString += $"{(int)TunicRandomizer.Settings.GameMode},";
-            SettingsString += $"{SaveFile.GetInt("randomizer sword progression enabled")},";
             SettingsString += $"{SaveFile.GetInt("randomizer keys behind bosses")},";
+            SettingsString += $"{SaveFile.GetInt("randomizer sword progression enabled")},";
             SettingsString += $"{SaveFile.GetInt("randomizer started with sword")},";
             SettingsString += $"{SaveFile.GetInt("randomizer shuffled abilities")}";
             GUIUtility.systemCopyBuffer = SettingsString;
@@ -104,8 +112,8 @@ namespace TunicRandomizer {
                 if (SplitSettings.Count() == 6) {
                     CustomSeed = int.Parse((string)SplitSettings[0]);
                     TunicRandomizer.Settings.GameMode = (RandomizerSettings.GameModes)int.Parse(SplitSettings[1]);
-                    TunicRandomizer.Settings.SwordProgressionEnabled = SplitSettings[2] == "1";
-                    TunicRandomizer.Settings.KeysBehindBosses = SplitSettings[3] == "1";
+                    TunicRandomizer.Settings.KeysBehindBosses = SplitSettings[2] == "1";
+                    TunicRandomizer.Settings.SwordProgressionEnabled = SplitSettings[3] == "1";
                     TunicRandomizer.Settings.StartWithSwordEnabled = SplitSettings[4] == "1";
                     TunicRandomizer.Settings.ShuffleAbilities = SplitSettings[5] == "1";
                 }
