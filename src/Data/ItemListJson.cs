@@ -1253,7 +1253,7 @@ namespace TunicRandomizer {
             {
                 ""Location"": {
                     ""LocationId"": ""5"",
-                    ""Position"": ""(-130.0, 12.0, -119.0)"",
+                    ""Position"": ""(65.0, 22.0, -138.0)"",
                     ""RequiredItems"": [],
                     ""SceneId"": 24,
                     ""SceneName"": ""Overworld Redux""

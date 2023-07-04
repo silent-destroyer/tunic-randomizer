@@ -134,15 +134,16 @@ namespace TunicRandomizer {
             if (Camera.main != null && Camera.main.gameObject.GetComponentInParent<CycleController>() == null) {
                 Camera.main.transform.parent.gameObject.AddComponent<CycleController>();
             }
-            if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1) {
-                CycleController.IsNight = false;
-                CycleController.AnimateSunrise();
-                SaveFile.SetInt("randomizer died to heir", 1);
-            }
+
             Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
 
+            if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1) {
+                PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
+                Logger.LogInfo("Resetting time of day to daytime!");
+            }
+     
             PlayerCharacterPatches.StungByBee = false;
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
@@ -184,6 +185,9 @@ namespace TunicRandomizer {
                 if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
                     SetupDayNightHourglass();
                 }
+                if (GameObject.Find("_Offerings/ash group/")) {
+                    GameObject.Find("_Offerings/ash group/").transform.position = new Vector3(-24.2824f, 29.8f, -45.4f);
+                }
             } else if (SceneName == "TitleScreen") {
                 TitleVersion.Initialize();
             } else if (SceneName == "Temple") {
@@ -223,6 +227,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance._CompletelyInvulnerableEvenToIFrameIgnoringAttacks_k__BackingField = false;
                 PlayerCharacter.instance.ClearPoison();
                 PlayerCharacterPatches.IsTeleporting = false;
+                GameObject.Destroy(PlayerCharacter.instance.gameObject.GetComponent<Rotate>());
             }
 
             foreach (ItemData Fool in ItemRandomizer.ItemList.Values.ToList().Where(Item => Item.Reward.Type == "FOOL")) {
@@ -269,7 +274,7 @@ namespace TunicRandomizer {
 
             try {
                 if (TunicRandomizer.Settings.UseCustomTexture) {
-                    PaletteEditor.LoadCustomTexture();
+                    PlayerCharacterPatches.LoadCustomTexture = true;
                 }
             } catch (Exception ex) {
                 Logger.LogError("An error occurred applying custom texture:");
@@ -323,10 +328,11 @@ namespace TunicRandomizer {
             GlowEffect.transform.GetChild(0).gameObject.SetActive(false);
             GlowEffect.transform.GetChild(1).gameObject.SetActive(false);
             GlowEffect.transform.GetChild(2).gameObject.SetActive(false);
-            GlowEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            GlowEffect.transform.localPosition = new Vector3(-0.4f, -1.4f, 0f);
+            GlowEffect.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            GlowEffect.transform.localPosition = new Vector3(-0.5f, -1f, -0.1f);
             GlowEffect.SetActive(true);
-            DayNightSwitch.transform.position = new Vector3(-25.6759f, 28.447f, -54.4082f);
+            DayNightSwitch.transform.position = new Vector3(-26.3723f, 28.9452f, -46.1847f);
+            DayNightSwitch.transform.localScale = new Vector3(0.85f, 0.85f, 0.85f);
         }
     }
 }

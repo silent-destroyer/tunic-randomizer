@@ -37,7 +37,7 @@ namespace TunicRandomizer {
         public static GameObject GreenKeyMaterial;
         public static GameObject BlueKeyMaterial;
         public static GameObject HeroRelicMaterial;
-        public static bool SetupDathStonePresentation = false;
+        public static bool DathStonePresentationAlreadySetup = false;
 
         public static GameObject GlowEffect;
 
@@ -147,6 +147,15 @@ namespace TunicRandomizer {
             Items["money medium"].SetActive(false);
             Items["money large"].SetActive(false);
             MoneySfx.SetActive(false);
+
+            PaletteEditor.ToonFox = new GameObject("toon fox");
+            GameObject.DontDestroyOnLoad(PaletteEditor.ToonFox);
+            PaletteEditor.RegularFox = new GameObject("regular fox");
+            PaletteEditor.RegularFox.AddComponent<MeshRenderer>().material = FindMaterial("fox redux");
+            GameObject.DontDestroyOnLoad(PaletteEditor.RegularFox);
+            PaletteEditor.GhostFox = new GameObject("ghost fox");
+            PaletteEditor.GhostFox.AddComponent<MeshRenderer>().material = FindMaterial("ghost material");
+            GameObject.DontDestroyOnLoad(PaletteEditor.GhostFox);
 
             foreach (TrinketItem TrinketItem in Resources.FindObjectsOfTypeAll<TrinketItem>()) {
                 Cards[TrinketItem.name] = TrinketItem.CardGraphic;
@@ -299,12 +308,22 @@ namespace TunicRandomizer {
 
                 NewItem.transform.localRotation = ItemPositions.ItemPickupRotations.ContainsKey(Item.Reward.Name) ? ItemPositions.ItemPickupRotations[Item.Reward.Name] : Quaternion.Euler(0, 0, 0);
                 NewItem.transform.localPosition = ItemPositions.ItemPickupPositions.ContainsKey(Item.Reward.Name) ? ItemPositions.ItemPickupPositions[Item.Reward.Name] : Vector3.zero;
+                if (Item.Reward.Name == "Sword Progression") {
+                    int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                    TransformData TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.Reward.Name];
+                    NewItem.transform.localPosition = TransformData.pos;
+                    NewItem.transform.localRotation = TransformData.rot;
+                    NewItem.transform.localScale = TransformData.scale;
+                }
                 NewItem.transform.localScale *= 2;
                 if (Item.Reward.Type == "FAIRY") {
                     NewItem.transform.localScale = Vector3.one;
                 }
                 if (NewItem.GetComponent<Rotate>() == null) {
-                    NewItem.AddComponent<Rotate>().eulerAnglesPerSecond = (Item.Reward.Name == "Stick" || Item.Reward.Name == "Techbow") ? new Vector3(0f, 0f, 25f) : new Vector3(0f, 25f, 0f);
+                    NewItem.AddComponent<Rotate>().eulerAnglesPerSecond = (Item.Reward.Name == "Relic - Hero Water" || Item.Reward.Name == "Upgrade Offering - PotionEfficiency Swig - Ash" || Item.Reward.Name == "Techbow") ? new Vector3(0f, 0f, 25f) : new Vector3(0f, 25f, 0f);
+                    if (Item.Reward.Name == "Sword Progression" && (SaveFile.GetInt("randomizer sword progression level") == 0 || SaveFile.GetInt("randomizer sword progression level") == 3)) {
+                        NewItem.GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(0f, 0f, 25f);
+                    }
                 }
                 NewItem.SetActive(true);
             }
@@ -352,6 +371,9 @@ namespace TunicRandomizer {
                             } else {
                                 TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name]["money large"];
                             }
+                        } else if (Item.Reward.Name == "Sword Progression") {
+                            int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                            TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][$"Sword Progression {SwordLevel}"] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Item.Reward.Name];
                         } else {
                             TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Item.Reward.Name];
                         }
@@ -376,7 +398,7 @@ namespace TunicRandomizer {
                 GameObject Page = PagePickup.gameObject.transform.GetChild(2).GetChild(0).gameObject;
                 string ItemId = $"{PagePickup.pageName} [{SceneLoaderPatches.SceneName}]";
                 if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
-                    if(ItemRandomizer.ItemsPickedUp.ContainsKey(ItemId) && ItemRandomizer.ItemsPickedUp[ItemId]) {
+                    if (ItemRandomizer.ItemsPickedUp.ContainsKey(ItemId) && ItemRandomizer.ItemsPickedUp[ItemId]) {
                         GameObject.Destroy(PagePickup.gameObject);
                         return;
                     }
@@ -407,6 +429,9 @@ namespace TunicRandomizer {
                         } else {
                             TransformData = ItemPositions.Techbow["money large"];
                         }
+                    } else if (Item.Reward.Name == "Sword Progression") {
+                        int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                        TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.Reward.Name];
                     } else {
                         TransformData = ItemPositions.Techbow.ContainsKey(Item.Reward.Name) ? ItemPositions.Techbow[Item.Reward.Name] : ItemPositions.Techbow[Item.Reward.Type];
                     }
@@ -448,7 +473,9 @@ namespace TunicRandomizer {
                     for (int j = 0; j < ItemHolder.transform.childCount; j++) {
                         GameObject.Destroy(ItemHolder.transform.GetChild(j).gameObject);
                     }
-
+                    for (int j = 1; j < ItemHolder.transform.parent.childCount; j++) {
+                        GameObject.Destroy(ItemHolder.transform.parent.GetChild(j).gameObject);
+                    }
                     if (ShopItem.Reward.Type == "PAGE") {
                         NewItem = SetupPageShopItem(ItemHolder);
                     } else if (ShopItem.Reward.Type == "FAIRY") {
@@ -456,7 +483,13 @@ namespace TunicRandomizer {
                     } else {
                         NewItem = SetupRegularShopItem(ItemHolder, ShopItem);
                     }
-
+                    if (ShopItem.Reward.Name == "Sword Progression") {
+                        int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                        TransformData TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[ShopItem.Reward.Name];
+                        NewItem.transform.localPosition = TransformData.pos;
+                        NewItem.transform.localRotation = TransformData.rot;
+                        NewItem.transform.localScale = TransformData.scale;
+                    }
                     NewItem.layer = 12;
                     NewItem.transform.localPosition = Vector3.zero;
                     for (int j = 0; j < NewItem.transform.childCount; j++) {
@@ -481,6 +514,19 @@ namespace TunicRandomizer {
                     NewItem = GameObject.Instantiate(Items["money medium"], ItemHolder.transform.position, ItemHolder.transform.rotation);
                 } else {
                     NewItem = GameObject.Instantiate(Items["money large"], ItemHolder.transform.position, ItemHolder.transform.rotation);
+                }
+            } else if (Item.Reward.Name == "Sword Progression") {
+                int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                if (SwordLevel == 0) {
+                    NewItem = GameObject.Instantiate(Items["Stick"], ItemHolder.transform.position, ItemHolder.transform.rotation);
+                } else if (SwordLevel == 1) {
+                    NewItem = GameObject.Instantiate(Items["Sword"], ItemHolder.transform.position, ItemHolder.transform.rotation);
+                } else if (SwordLevel == 2) {
+                    NewItem = GameObject.Instantiate(SecondSword, ItemHolder.transform.position, ItemHolder.transform.rotation);
+                } else if (SwordLevel == 3) {
+                    NewItem = GameObject.Instantiate(ThirdSword, ItemHolder.transform.position, ItemHolder.transform.rotation);
+                } else {
+                    NewItem = GameObject.Instantiate(Items["Sword"], ItemHolder.transform.position, ItemHolder.transform.rotation);
                 }
             } else {
                 NewItem = GameObject.Instantiate(Items[Item.Reward.Name], ItemHolder.transform.position, ItemHolder.transform.rotation);
@@ -530,23 +576,26 @@ namespace TunicRandomizer {
         }
 
         public static void SetupDathStoneItemPresentation() {
-            try {
-                GameObject KeySpecial = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(Item => Item.gameObject.name == "key twist (special)").ToList()[0].gameObject;
-                if (KeySpecial.GetComponent<MeshFilter>() != null) {
-                    GameObject.Destroy(KeySpecial.GetComponent<MeshRenderer>());
-                    GameObject.Destroy(KeySpecial.GetComponent<MeshFilter>());
+            if (!DathStonePresentationAlreadySetup) {
+                try {
+                    GameObject KeySpecial = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(Item => Item.gameObject.name == "key twist (special)").ToList()[0].gameObject;
+                    if (KeySpecial.GetComponent<MeshFilter>() != null) {
+                        GameObject.Destroy(KeySpecial.GetComponent<MeshRenderer>());
+                        GameObject.Destroy(KeySpecial.GetComponent<MeshFilter>());
+                    }
+
+                    KeySpecial.AddComponent<SpriteRenderer>().sprite = Inventory.GetItemByName("Dash Stone").Icon;
+                    KeySpecial.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
+                    KeySpecial.GetComponent<SpriteRenderer>().material = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
+
+                    KeySpecial.transform.localScale = Vector3.one;
+                    KeySpecial.transform.localPosition = Vector3.zero;
+                    KeySpecial.transform.localRotation = Quaternion.identity;
+                    Inventory.GetItemByName("Key Special").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    Inventory.GetItemByName("Key Special").collectionMessage.text = $"dah% stOn\"!?\"";
+                    DathStonePresentationAlreadySetup = true;
+                } catch (Exception e) {
                 }
-
-                KeySpecial.AddComponent<SpriteRenderer>().sprite = Inventory.GetItemByName("Dash Stone").Icon;
-                KeySpecial.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
-                KeySpecial.GetComponent<SpriteRenderer>().material = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
-
-                KeySpecial.transform.localScale = Vector3.one;
-                KeySpecial.transform.localPosition = Vector3.zero;
-                KeySpecial.transform.localRotation = Quaternion.identity;
-                Inventory.GetItemByName("Key Special").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Key Special").collectionMessage.text = $"dah% stOn!?";
-            } catch (Exception e) {
             }
         }
 
@@ -601,6 +650,9 @@ namespace TunicRandomizer {
                     } else {
                         TransformData = ItemPositions.VaultKeyRed["money large"];
                     }
+                } else if (VaultKeyItem.Reward.Name == "Sword Progression") {
+                    int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                    TransformData = ItemPositions.VaultKeyRed.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.VaultKeyRed[$"Sword Progression {SwordLevel}"] : ItemPositions.VaultKeyRed[VaultKeyItem.Reward.Name];
                 } else {
                     TransformData = ItemPositions.VaultKeyRed.ContainsKey(VaultKeyItem.Reward.Name) ? ItemPositions.VaultKeyRed[VaultKeyItem.Reward.Name] : ItemPositions.VaultKeyRed[VaultKeyItem.Reward.Type];
                 }
@@ -629,6 +681,19 @@ namespace TunicRandomizer {
                 NewItem = GameObject.Instantiate(PagePickup, Parent.transform.position, Parent.transform.rotation);
             } else if (Item.Reward.Type == "FAIRY") {
                 NewItem = GameObject.Instantiate(Chests["Fairy"], Parent.transform.position, Parent.transform.rotation);
+            } else if (Item.Reward.Name == "Sword Progression") {
+                int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                if (SwordLevel == 0) {
+                    NewItem = GameObject.Instantiate(Items["Stick"], Parent.transform.position, Parent.transform.rotation);
+                } else if (SwordLevel == 1) {
+                    NewItem = GameObject.Instantiate(Items["Sword"], Parent.transform.position, Parent.transform.rotation);
+                } else if (SwordLevel == 2) {
+                    NewItem = GameObject.Instantiate(SecondSword, Parent.transform.position, Parent.transform.rotation);
+                } else if (SwordLevel == 3) {
+                    NewItem = GameObject.Instantiate(ThirdSword, Parent.transform.position, Parent.transform.rotation);
+                } else {
+                    NewItem = GameObject.Instantiate(Items["Sword"], Parent.transform.position, Parent.transform.rotation);
+                }
             } else {
                 NewItem = GameObject.Instantiate(Items[Item.Reward.Name], Parent.transform.position, Parent.transform.rotation);
             }
@@ -652,7 +717,9 @@ namespace TunicRandomizer {
                     GameObject.Destroy(Plinth.GetComponent<MeshRenderer>());
                     GameObject.Destroy(Plinth.GetComponent<MeshFilter>());
                 }
-
+                for (int i = 0; i < Plinth.transform.childCount; i++) {
+                    Plinth.transform.GetChild(i).gameObject.SetActive(false);
+                }
                 GameObject NewItem = SetupItemBase(Plinth.transform, Item);
                 TransformData TransformData;
                 if (Item.Reward.Name.Contains("Trinket - ") || Item.Reward.Name == "Mask") {
@@ -665,6 +732,9 @@ namespace TunicRandomizer {
                     } else {
                         TransformData = ItemPositions.HexagonRed["money large"];
                     }
+                } else if (Item.Reward.Name == "Sword Progression") {
+                    int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                    TransformData = ItemPositions.HexagonRed.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.HexagonRed[$"Sword Progression {SwordLevel}"] : ItemPositions.HexagonRed[Item.Reward.Name];
                 } else {
                     TransformData = ItemPositions.HexagonRed.ContainsKey(Item.Reward.Name) ? ItemPositions.HexagonRed[Item.Reward.Name] : ItemPositions.HexagonRed[Item.Reward.Type];
                 }
@@ -688,6 +758,9 @@ namespace TunicRandomizer {
                     GameObject.Destroy(Plinth.GetComponent<MeshRenderer>());
                     GameObject.Destroy(Plinth.GetComponent<MeshFilter>());
                 }
+                for (int i = 0; i < Plinth.transform.childCount; i++) {
+                    Plinth.transform.GetChild(i).gameObject.SetActive(false);
+                }
 
                 GameObject NewItem = SetupItemBase(Plinth.transform, Item);
                 TransformData TransformData;
@@ -701,6 +774,9 @@ namespace TunicRandomizer {
                     } else {
                         TransformData = ItemPositions.HexagonRed["money large"];
                     }
+                } else if (Item.Reward.Name == "Sword Progression") {
+                    int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
+                    TransformData = ItemPositions.HexagonRed.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.HexagonRed[$"Sword Progression {SwordLevel}"] : ItemPositions.HexagonRed[Item.Reward.Name];
                 } else {
                     TransformData = ItemPositions.HexagonRed.ContainsKey(Item.Reward.Name) ? ItemPositions.HexagonRed[Item.Reward.Name] : ItemPositions.HexagonRed[Item.Reward.Type];
                 }

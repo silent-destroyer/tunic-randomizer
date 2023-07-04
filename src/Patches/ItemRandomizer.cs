@@ -4,6 +4,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using UnityEngine.UI;
 using System.Linq;
+using System.Globalization;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
@@ -12,26 +13,26 @@ namespace TunicRandomizer {
         public static Dictionary<string, ItemData> ItemList = new Dictionary<string, ItemData>();
         public static Dictionary<string, bool> ItemsPickedUp = new Dictionary<string, bool>();
         public static Dictionary<string, Fairy> FairyLookup = new Dictionary<string, Fairy>() {
-                {"Overworld Redux-(64.5, 44.0, -40.0)", new Fairy("SV_Fairy_1_Overworld_Flowers_Upper_Opened", $"flowurz \"1\"")},
-                {"Overworld Redux-(-52.0, 2.0, -174.8)", new Fairy("SV_Fairy_2_Overworld_Flowers_Lower_Opened", $"flowurz \"2\"")},
-                {"Overworld Redux-(-132.0, 28.0, -55.5)", new Fairy("SV_Fairy_3_Overworld_Moss_Opened", $"maws")},
-                {"Overworld Cave-(-90.4, 515.0, -738.9)", new Fairy("SV_Fairy_4_Caustics_Opened", $"kawstik lIt")},
-                {"Waterfall-(-47.0, 45.0, 10.0)", new Fairy("SV_Fairy_5_Waterfall_Opened", $"\"SECRET GATHERING PLACE\"")},
-                {"Temple-(14.0, 0.1, 42.4)", new Fairy("SV_Fairy_6_Temple_Opened", $"\"SEALED TEMPLE\"")},
-                {"Quarry Redux-(0.7, 68.0, 84.7)", new Fairy("SV_Fairy_7_Quarry_Opened", $"\"THE QUARRY\"")},
-                {"East Forest Redux-(104.0, 16.0, 61.0)", new Fairy("SV_Fairy_8_Dancer_Opened", $"\"EAST FOREST\"")},
-                {"Library Hall-(133.3, 10.0, -43.2)", new Fairy("SV_Fairy_9_Library_Rug_Opened", $"\"THE GREAT LIBRARY\"")},
-                {"Town Basement-(-202.0, 28.0, 150.0)", new Fairy("SV_Fairy_10_3DPillar_Opened", $"mAz (kawluhm)")},
-                {"Overworld Redux-(90.4, 36.0, -122.1)", new Fairy("SV_Fairy_11_WeatherVane_Opened", $"vAn")},
-                {"Overworld Interiors-(-28.0, 27.0, -50.5)", new Fairy("SV_Fairy_12_House_Opened", $"hOs (hows)")},
-                {"PatrolCave-(74.0, 46.0, 24.0)", new Fairy("SV_Fairy_13_Patrol_Opened", $"puhtrOl")},
-                {"CubeRoom-(321.1, 3.0, 217.0)", new Fairy("SV_Fairy_14_Cube_Opened", $"kyoob")},
-                {"Maze Room-(1.0, 0.0, -1.0)", new Fairy("SV_Fairy_15_Maze_Opened", $"mAz (inviziboul)")},
-                {"Overworld Redux-(-83.0, 20.0, -117.5)", new Fairy("SV_Fairy_16_Fountain_Opened", $"fowntin")},
-                {"Archipelagos Redux-(-396.3, 1.4, 42.3)", new Fairy("SV_Fairy_17_GardenTree_Opened", $"\"WEST GARDEN\"")},
-                {"Archipelagos Redux-(-236.0, 8.0, 86.3)", new Fairy("SV_Fairy_18_GardenCourtyard_Opened", $"\"WEST GARDEN\"")},
-                {"Fortress Main-(-75.0, -1.0, 17.0)", new Fairy("SV_Fairy_19_FortressCandles_Opened", $"\"FORTRESS OF THE EASTERN VAULT\"")},
-                {"East Forest Redux-(164.0, -25.0, -56.0)", new Fairy("SV_Fairy_20_ForestMonolith_Opened", $"\"EAST FOREST\"")}
+            {"Overworld Redux-(64.5, 44.0, -40.0)", new Fairy("SV_Fairy_1_Overworld_Flowers_Upper_Opened", $"flowurz \"1\"")},
+            {"Overworld Redux-(-52.0, 2.0, -174.8)", new Fairy("SV_Fairy_2_Overworld_Flowers_Lower_Opened", $"flowurz \"2\"")},
+            {"Overworld Redux-(-132.0, 28.0, -55.5)", new Fairy("SV_Fairy_3_Overworld_Moss_Opened", $"maws")},
+            {"Overworld Cave-(-90.4, 515.0, -738.9)", new Fairy("SV_Fairy_4_Caustics_Opened", $"kawstik lIt")},
+            {"Waterfall-(-47.0, 45.0, 10.0)", new Fairy("SV_Fairy_5_Waterfall_Opened", $"\"SECRET GATHERING PLACE\"")},
+            {"Temple-(14.0, 0.1, 42.4)", new Fairy("SV_Fairy_6_Temple_Opened", $"\"SEALED TEMPLE\"")},
+            {"Quarry Redux-(0.7, 68.0, 84.7)", new Fairy("SV_Fairy_7_Quarry_Opened", $"\"THE QUARRY\"")},
+            {"East Forest Redux-(104.0, 16.0, 61.0)", new Fairy("SV_Fairy_8_Dancer_Opened", $"\"EAST FOREST\"")},
+            {"Library Hall-(133.3, 10.0, -43.2)", new Fairy("SV_Fairy_9_Library_Rug_Opened", $"\"THE GREAT LIBRARY\"")},
+            {"Town Basement-(-202.0, 28.0, 150.0)", new Fairy("SV_Fairy_10_3DPillar_Opened", $"mAz (kawluhm)")},
+            {"Overworld Redux-(90.4, 36.0, -122.1)", new Fairy("SV_Fairy_11_WeatherVane_Opened", $"vAn")},
+            {"Overworld Interiors-(-28.0, 27.0, -50.5)", new Fairy("SV_Fairy_12_House_Opened", $"hOs (hows)")},
+            {"PatrolCave-(74.0, 46.0, 24.0)", new Fairy("SV_Fairy_13_Patrol_Opened", $"puhtrOl")},
+            {"CubeRoom-(321.1, 3.0, 217.0)", new Fairy("SV_Fairy_14_Cube_Opened", $"kyoob")},
+            {"Maze Room-(1.0, 0.0, -1.0)", new Fairy("SV_Fairy_15_Maze_Opened", $"mAz (inviziboul)")},
+            {"Overworld Redux-(-83.0, 20.0, -117.5)", new Fairy("SV_Fairy_16_Fountain_Opened", $"fowntin")},
+            {"Archipelagos Redux-(-396.3, 1.4, 42.3)", new Fairy("SV_Fairy_17_GardenTree_Opened", $"\"WEST GARDEN\"")},
+            {"Archipelagos Redux-(-236.0, 8.0, 86.3)", new Fairy("SV_Fairy_18_GardenCourtyard_Opened", $"\"WEST GARDEN\"")},
+            {"Fortress Main-(-75.0, -1.0, 17.0)", new Fairy("SV_Fairy_19_FortressCandles_Opened", $"\"FORTRESS OF THE EASTERN VAULT\"")},
+            {"East Forest Redux-(164.0, -25.0, -56.0)", new Fairy("SV_Fairy_20_ForestMonolith_Opened", $"\"EAST FOREST\"")}
         };
         public static Dictionary<string, HeroRelic> HeroRelicLookup = new Dictionary<string, HeroRelic>() {
             {"Relic - Hero Pendant SP", new HeroRelic("SV_RelicVoid_Got_Pendant_SP", "Upgrade Offering - Stamina SP - Feather", "Hero Relic - <#8ddc6e>SP", "Relic PIckup (1) (SP) [RelicVoid]", "Level Up - Stamina")},
@@ -303,7 +304,7 @@ namespace TunicRandomizer {
                 GameObject.Instantiate(ModelSwaps.FairyAnimation, SpawnPosition, Quaternion.identity).SetActive(true);
             } else if (Reward.Type == "PAGE") {
                 SaveFile.SetInt($"randomizer obtained page {Reward.Name}", 1);
-                PageDisplay.ShowPage(int.Parse(Reward.Name));
+                PageDisplay.ShowPage(int.Parse(Reward.Name, CultureInfo.InvariantCulture));
                 if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                     if (Reward.Name == "12" || Reward.Name == "21" || Reward.Name == "26") {
                         PageDisplayPatches.ShowAbilityUnlock = true;
@@ -338,6 +339,9 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Sword Progression"]++;
                     SaveFile.SetInt("randomizer sword progression level", TunicRandomizer.Tracker.ImportantItems["Sword Progression"]);
                     SwordProgression.UpgradeSword(TunicRandomizer.Tracker.ImportantItems["Sword Progression"]);
+                    if (TunicRandomizer.Settings.ShowItemsEnabled) {
+                        ModelSwaps.SwapItemsInScene();
+                    }
                 } else if (Reward.Name == "Hexagon Gold") {
                     TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]++;
                     SaveFile.SetInt("randomizer inventory quantity Hexagon Gold", TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]);
@@ -397,6 +401,15 @@ namespace TunicRandomizer {
             if (ItemList.Keys.Where(ItemId => ItemList[ItemId].Location.SceneName == SceneLoaderPatches.SceneName && !ItemsPickedUp[ItemId]).ToList().Count == 0) {
                 FairyTargets.CreateLoadZoneTargets();
             }
+            List<string> TimedItems = new List<string>() { "Hexagon Red", "Hexagon Green", "Hexagon Blue", "Hexagon Gold", "Wand", "Hyperdash", "Sword", "Sword Progression", "12", "21"};
+            string ItemName = ItemData.Reward.Name;
+            if (TimedItems.Contains(ItemName)) {
+                if (ItemData.Reward.Type == "PAGE") {
+                    SaveFile.SetFloat($"randomizer Page {ItemName} time", SpeedrunData.inGameTime);
+                } else {
+                    SaveFile.SetFloat($"randomizer {ItemName} {TunicRandomizer.Tracker.ImportantItems[ItemName]} time", SpeedrunData.inGameTime);
+                }
+            }
         }
 
         public static void CheckFoolTrapSetting(string RewardId) {
@@ -449,7 +462,7 @@ namespace TunicRandomizer {
             try {
                 Position = Position.Replace("(", "").Replace(")", "");
                 string[] coords = Position.Split(',');
-                Vector3 vector = new Vector3(float.Parse(coords[0]), float.Parse(coords[1]), float.Parse(coords[2]));
+                Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
                 return vector;
             } catch (Exception e) {
                 return PlayerCharacter.instance.transform.position;

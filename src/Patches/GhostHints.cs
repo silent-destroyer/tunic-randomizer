@@ -67,6 +67,7 @@ public class GhostHints {
             "Shield",
             "SlowmoItem",
             "Mask",
+            "Key (House)",
             "Relic - Hero Sword",
             "Relic - Hero Pendant MP",
             "Relic - Hero Water",
@@ -116,7 +117,7 @@ public class GhostHints {
                new HintGhost("Overworld Redux", new Vector3(51.20462f, 28.00694f, -129.722f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.SIT, $"I %awt #aht Jehst wuhz ehmptE. how suhspi$is.") }
             },
             { "Early Overworld Spawns", new List<HintGhost>() {
-               new HintGhost("Overworld Redux", new Vector3(-5.4483f, 44.1363f, -8.43854f), new Quaternion(0f, 0.9396926f, 0f, 0.3420202f), NPC.NPCAnimState.WOE, $"sEld forehvur? nO... #Ar muhst bE uhnuh#ur wA..."),
+               new HintGhost("Overworld Redux", new Vector3(-9.441f, 43.9363f, -8.4385f), new Quaternion(0f, 0.7069f, 0f, -0.7069f), NPC.NPCAnimState.SIT, $"sEld forehvur? nO... #Ar muhst bE uhnuh#ur wA..."),
                new HintGhost("Overworld Redux", new Vector3(-34.0649f, 37.9833f, -59.2506f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.GAZE, $"sO mehnE roodli^z. Im stAi^ uhp hEr.") }
             },
             { "Inside Temple", new List<HintGhost>() {
@@ -168,7 +169,7 @@ public class GhostHints {
             { "West Garden", new List<HintGhost>() {
                 new HintGhost("Archipelagos Redux", new Vector3(-290.3334f, 4.0667f, 153.9145f), new Quaternion(0f, 0.9659259f, 0f, -0.2588191f), NPC.NPCAnimState.GAZE, $"wawJ owt for tArE uhp uhhehd. hE wil trI too Jawmp yoo."),
                 new HintGhost("Archipelagos Redux", new Vector3(-137.9978f, 2.0781f, 150.5348f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"iz #is pRt uhv suhm%i^ ehls? hmm..."),
-                new HintGhost("Archipelagos Redux", new Vector3(-164.9391f, 10.1164f, 144.4981f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.WOE, $"wil #uh hErO ehvur kuhm bahk?---...R yoo #uh hErO?"),
+                new HintGhost("Archipelagos Redux", new Vector3(-190.6887f, 2.0667f, 126.7101f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.FISHING, $"bE kArfuhl if yoo R gOi^ uhp #Ar. #aht mawnstur iz nO jOk."),
                 new HintGhost("Archipelagos Redux", new Vector3(-256.3194f, 4.1667f, 168.15f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"doo #A louk fuhmilyur too yoo?") }
             },
             { "West Bell", new List<HintGhost>() {
@@ -235,6 +236,11 @@ public class GhostHints {
                     LanguageLine HintText = ScriptableObject.CreateInstance<LanguageLine>();
                     HintText.text = $"{HintGhost.Dialogue}---{HintGhost.Hint}";
                     NewGhostFox.GetComponent<NPC>().script = HintText;
+
+                    if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) { 
+                        NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
+                    }
+
                     NewGhostFox.SetActive(true);
                 }
             }

@@ -10,12 +10,12 @@ using UnhollowerRuntimeLib;
 using BepInEx.Logging;
 namespace TunicRandomizer {
     public class PaletteEditor : MonoBehaviour {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
-		public static int SelectedIndex = 0;
+        public static int SelectedIndex = 0;
 		public static Color SelectedColor;
 		public static bool ApplyColor = true;
 		public static bool EditorOpen = false;
-		public static ManualLogSource Logger = TunicRandomizer.Logger;
 		public static Dictionary<int, string> ColorNames = new Dictionary<int, string>() {
 			{0, "Fur"},
 			{1, "Hair"},
@@ -70,6 +70,13 @@ namespace TunicRandomizer {
             {14, new Color(0.9882353f, 0.4431373f, 0.945098f) },
             {15, new Color(0.9882353f, 0.4431373f, 0.945098f) },
         };
+
+		public static bool CelShadingEnabled = false;
+		public static bool PartyHatEnabled = false;
+		public static GameObject ToonFox;
+		public static GameObject RegularFox;
+		public static GameObject GhostFox;
+
         private void OnGUI() {
 
 			if (EditorOpen && SceneLoaderPatches.SceneName != "TitleScreen") {
@@ -287,12 +294,73 @@ namespace TunicRandomizer {
 				GameObject TheRealest = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/therealest");
 				if (TheRealest != null) {
 					TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
-					TheRealest.GetComponent<MeshRenderer>().material.color = GlassesColor;
+                    TheRealest.GetComponent<MeshRenderer>().material.color = GlassesColor;
 				}
 			} catch (Exception e) {
 
 			}
 		}
 
-	}
+        public static void SetupPartyHat(PlayerCharacter Player) {
+            GameObject FloppyHat = new GameObject("floppy hat");
+            FloppyHat.transform.parent = Player.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3);//GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/").transform;
+            Material ToonFox = PlayerCharacter.instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().material;
+            FloppyHat.AddComponent<MeshFilter>().mesh = PlayerCharacter.instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().sharedMesh;
+            FloppyHat.AddComponent<MeshRenderer>().material = ToonFox;
+            FloppyHat.transform.localScale = new Vector3(0.75f, 0.5f, 0.75f);
+            FloppyHat.transform.localPosition = new Vector3(-0.2f, -0.3f, 0);
+            FloppyHat.transform.localRotation = new Quaternion(0f, 0f, 0f, 1f);
+            FloppyHat.SetActive(false);
+        }
+
+        public static void ApplyCelShading() {
+			Material[] Body = new Material[] {
+                    ToonFox.GetComponent<MeshRenderer>().material,
+                    PlayerCharacter.instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials[1]
+                };
+			Material[] Hair = new Material[] {
+                    ToonFox.GetComponent<MeshRenderer>().material,
+                    PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials[1]
+                };
+            if (GoldenItemBehavior.CanTakeGoldenHit) {
+				GoldenItemBehavior.FoxBody.GetComponent<MeshRenderer>().materials = Body;
+				GoldenItemBehavior.FoxHair.GetComponent<MeshRenderer>().materials = Hair;
+            } else {
+                PlayerCharacter.instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Body;
+                PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = Hair;
+            }
+
+            PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(9).GetComponent<MeshRenderer>().material = ToonFox.GetComponent<MeshRenderer>().material;
+            //GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat").GetComponent<MeshRenderer>().material = ToonFox;
+            foreach (NPC npc in Resources.FindObjectsOfTypeAll<NPC>().ToList()) {
+				npc.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = ToonFox.GetComponent<MeshRenderer>().material;
+			}
+            CelShadingEnabled = true;
+        }
+
+        public static void DisableCelShading() {
+			Material[] Body = new Material[] {
+                    RegularFox.GetComponent<MeshRenderer>().material,
+                    PlayerCharacter.instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials[1]
+                };
+			Material[] Hair = new Material[] {
+                    RegularFox.GetComponent<MeshRenderer>().material,
+                    PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials[1]
+                };
+            if (GoldenItemBehavior.CanTakeGoldenHit) {
+				GoldenItemBehavior.FoxBody.GetComponent<MeshRenderer>().materials = Body;
+				GoldenItemBehavior.FoxHair.GetComponent<MeshRenderer>().materials = Hair;
+			} else {
+				PlayerCharacter.instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Body;
+				PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = Hair;
+            }
+ 
+            PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(9).GetComponent<MeshRenderer>().material = RegularFox.GetComponent<MeshRenderer>().material;
+            foreach (NPC npc in Resources.FindObjectsOfTypeAll<NPC>().ToList()) {
+                npc.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = GhostFox.GetComponent<MeshRenderer>().material;
+            }
+            CelShadingEnabled = false;
+        }
+
+    }
 }

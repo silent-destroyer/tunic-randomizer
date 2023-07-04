@@ -14,6 +14,9 @@ namespace TunicRandomizer {
     public class OptionsGUIPatches {
 
         private static ManualLogSource Logger = TunicRandomizer.Logger;
+
+        public static bool BonusOptionsUnlocked = false;
+
         public static bool OptionsGUI_page_root_PrefixPatch(OptionsGUI __instance) {
             addPageButton("Randomizer Settings", RandomizerSettingsPage);
             return true;
@@ -27,7 +30,6 @@ namespace TunicRandomizer {
             addPageButton("General Settings", GeneralSettingsPage);
             addPageButton("Enemy Randomizer Settings", EnemyRandomizerSettings);
             addPageButton("Fox Customization", CustomFoxSettingsPage);
-
         }
 
         public static void LogicSettingsPage() {
@@ -88,6 +90,10 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Keepin' It Real", "Off", "On", TunicRandomizer.Settings.RealestAlwaysOn ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSunglasses);
             OptionsGUI.addToggle("Show Fox Color Editor", "Off", "On", PaletteEditor.EditorOpen ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePaletteEditor);
             OptionsGUI.addToggle("Use Custom Texture", "Off", "On", TunicRandomizer.Settings.UseCustomTexture ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCustomTexture);
+            if (BonusOptionsUnlocked && SceneLoaderPatches.SceneName != "TitleScreen") {
+                OptionsGUI.addToggle("<#FFA500>BONUS: Cel Shaded Fox", "Off", "On", PaletteEditor.CelShadingEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCelShading);
+                OptionsGUI.addToggle("<#00FFFF>BONUS: Party Hat", "Off", "On", PaletteEditor.PartyHatEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePartyHat);
+            }
             OptionsGUI.addButton("Reset to Defaults", (Action)ResetToDefaults);
         }
 
@@ -252,7 +258,11 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
                 PaletteEditor.RandomizeFoxColors();
             } else {
-                PaletteEditor.RevertFoxColors();
+                if (TunicRandomizer.Settings.UseCustomTexture) {
+                    PaletteEditor.LoadCustomTexture();
+                } else {
+                    PaletteEditor.RevertFoxColors();
+                }
             }
             SaveSettings();
         }
@@ -261,9 +271,32 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.UseCustomTexture = !TunicRandomizer.Settings.UseCustomTexture;
             if (TunicRandomizer.Settings.UseCustomTexture) {
                 PaletteEditor.LoadCustomTexture();
+            } else {
+                if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
+                    PaletteEditor.RandomizeFoxColors();
+                } else {
+                    PaletteEditor.RevertFoxColors();
+                }
             }
         }
 
+        public static void ToggleCelShading(int index) {
+            if (PaletteEditor.CelShadingEnabled) {
+                PaletteEditor.DisableCelShading();
+            } else {
+                PaletteEditor.ApplyCelShading();
+            }
+        }
+
+        public static void TogglePartyHat(int index) {
+            try {
+                GameObject PartyHat = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat");
+                PartyHat.SetActive(!PartyHat.active);
+                PaletteEditor.PartyHatEnabled = PartyHat.active;
+            } catch (Exception ex) {
+
+            }
+        }
 
         public static void ResetToDefaults() {
             PaletteEditor.RevertFoxColors();

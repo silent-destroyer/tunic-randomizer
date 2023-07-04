@@ -258,5 +258,149 @@ namespace TunicRandomizer {
             {"26", "Pages 52-53 (Ice Rod)"},
             {"27", "Pages 54-55"},
         };
+
+        public static List<string> AllScenes = new List<string>();
+
+        public static Dictionary<string, List<string>> MainAreasToSubAreas = new Dictionary<string, List<string>>() {
+            {
+                "Overworld",
+                new List<string>() {
+                    "Waterfall",
+                    "Overworld Cave",
+                    "Furnace",
+                    "Windmill",
+                    "ShopSpecial",
+                    "CubeRoom",
+                    "PatrolCave",
+                    "Maze Room",
+                    "Sword Cave",
+                    "Ruined Shop",
+                    "Town Basement",
+                    "Ruins Passage",
+                    "EastFiligreeCache",
+                    "Temple",
+                    "Overworld Redux",
+                    "Overworld Interiors",
+                    "Town_FiligreeRoom",
+                    "Changing Room"
+                }
+            },
+            {
+                "East Forest",
+                new List<string>() {
+                    "Forest Belltower",
+                    "East Forest Redux",
+                    "East Forest Redux Interior",
+                    "East Forest Redux Laddercave",
+                    "Sword Access",
+                    "Forest Boss Room"
+                }
+            },
+            { 
+                "West Garden",
+                new List<string>() {
+                    "Archipelagos Redux",
+                    "archipelagos_house"
+                }
+            },
+            {
+                "Eastern Vault Fortress",
+                new List<string>() {
+                    "Fortress Basement",
+                    "Fortress Main",
+                    "Fortress Courtyard",
+                    "Fortress Arena",
+                    "Fortress East",
+                    "Fortress Reliquary",
+                    "Dusty"
+                }
+            },
+            {
+                "Ruined Atoll",
+                new List<string>() {
+                    "Atoll Redux"
+                }
+            },
+            {
+                "Library",
+                new List<string>() {
+                    "Library Lab",
+                    "Library Hall",
+                    "Library Rotunda",
+                    "Library Arena",
+                    "Library Exterior"
+                }
+            },
+            {
+                "Quarry/Mountain",
+                new List<string>() {
+                    "Quarry Redux",
+                    "Monastery",
+                    "Darkwoods Tunnel",
+                    "Mountain",
+                    "Mountaintop",
+                }
+            },
+            {
+                "Rooted Ziggurat",
+                new List<string>() {
+                    "ziggurat2020_2",
+                    "ziggurat2020_1",
+                    "ziggurat2020_3",
+                    "ziggurat2020_0",
+                    "ziggurat2020_FTRoom"
+                }
+            },
+            {
+                "Swamp",
+                new List<string>() {
+                    "Swamp Redux 2"
+                }
+            },
+            {
+                "Cathedral",
+                new List<string>() {
+                    "Cathedral Arena",
+                    "Cathedral Redux"
+                }
+            },
+            {
+                "Dark Tomb",
+                new List<string>() {
+                    "Crypt Redux"
+                }
+            },
+            {
+                "Bottom of the Well",
+                new List<string>() {
+                    "Sewer",
+                    "Sewer_Boss"
+                }
+            },
+            {
+                "Frog's Domain",
+                new List<string>() {
+                    "Frog Stairs",
+                    "frog cave main"
+                }
+            },
+            {
+                "Spirit Areas",
+                new List<string>() {
+                    "Resurrection",
+                    "Transit",
+                    "RelicVoid",
+                    "Playable Intro",
+                    "Spirit Arena"
+                }
+            },
+            {
+                "Shop/Coin Wells",
+                new List<string>() {
+                    "Shop",
+                    "Trinket Well"
+                }
+            },
+        }; 
     }
 }

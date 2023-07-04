@@ -2,6 +2,7 @@
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnhollowerBaseLib;
@@ -17,10 +18,10 @@ namespace TunicRandomizer {
 
         public static int CustomSeed = 0;
         public static Font OdinRounded;
+
         private void OnGUI() {
-            Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList();
-            GUI.skin.font = OdinRounded == null ? GUI.skin.font : OdinRounded;
-            if (SceneLoaderPatches.SceneName == "TitleScreen") {
+            if (SceneLoaderPatches.SceneName == "TitleScreen" && OdinRounded != null && GameObject.FindObjectOfType<TitleScreen>() != null) {
+                GUI.skin.font = OdinRounded;
                 Cursor.visible = true;
                 GUI.Window(101, new Rect(20f, 150f, 430f, 345f), new Action<int>(QuickSettingsWindow), "Quick Settings");
             }
@@ -64,7 +65,7 @@ namespace TunicRandomizer {
             bool PasteSeed = GUI.Button(new Rect(220f, 260f, 200f, 30f), "Paste Seed");
             if (PasteSeed) {
                 try {
-                    CustomSeed = int.Parse(GUIUtility.systemCopyBuffer);
+                    CustomSeed = int.Parse(GUIUtility.systemCopyBuffer, CultureInfo.InvariantCulture);
                 } catch (System.Exception e) {
 
                 }
@@ -101,10 +102,6 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ShuffleAbilities) {
                 Settings.Add("shuffle_abilities");
             }
-            foreach (string s in Settings) {
-                Logger.LogInfo(s);
-            }
-            Logger.LogInfo(string.Join(",", Settings));
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
 
@@ -129,7 +126,7 @@ namespace TunicRandomizer {
             try {
                 string SettingsString = GUIUtility.systemCopyBuffer;
                 string[] SplitSettings = SettingsString.Split(',');
-                CustomSeed = int.Parse(SplitSettings[0]);
+                CustomSeed = int.Parse(SplitSettings[0], CultureInfo.InvariantCulture);
                 RandomizerSettings.GameModes NewGameMode;
                 if (Enum.TryParse<RandomizerSettings.GameModes>(SplitSettings[1].ToUpper(), true, out NewGameMode)) {
                     TunicRandomizer.Settings.GameMode = NewGameMode;

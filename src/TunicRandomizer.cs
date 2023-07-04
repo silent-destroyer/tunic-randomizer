@@ -7,6 +7,7 @@ using HarmonyLib;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 using TinyJson;
+using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
 
@@ -25,6 +26,7 @@ namespace TunicRandomizer {
             Log.LogInfo("Tunic Randomizer v" + PluginInfo.VERSION + " is loaded!");
             Logger = Log;
             Harmony harmony = new Harmony(PluginInfo.GUID);
+            ClassInjector.RegisterTypeInIl2Cpp<WaveSpell>();
             ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Type[]
             {
@@ -60,7 +62,7 @@ namespace TunicRandomizer {
                 Settings = JSONParser.FromJson<RandomizerSettings>(File.ReadAllText(SettingsPath));
                 Log.LogInfo("Loaded settings from file: " + JSONWriter.ToJson(Settings));
             }
-
+            Profile.SetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode, true);
             // Item Randomizer Patches
             harmony.Patch(AccessTools.Method(typeof(Chest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(ItemRandomizer), "Chest_IInteractionReceiver_Interact_PrefixPatch")));
 
@@ -97,6 +99,14 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Update_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Start_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "creature_Awake"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_creature_Awake_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(MagicSpell), "CheckInput"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "MagicSpell_CheckInput_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(PlayerCharacter._Die_d__481), "MoveNext"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Die_MoveNext_PostfixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(Monster._Die_d__77), "MoveNext"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_Die_MoveNext_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_Die_MoveNext_PostfixPatch")));
             
             // Page Display Patches
             harmony.Patch(AccessTools.Method(typeof(PageDisplay), "ShowPage"), new HarmonyMethod(AccessTools.Method(typeof(PageDisplayPatches), "PageDisplay_Show_PostfixPatch")));
@@ -122,7 +132,11 @@ namespace TunicRandomizer {
             
             harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "HideFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_HideFinishline_PrefixPatch")));
+
             harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "addParadeIcon"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_addParadeIcon_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "AndTime"), null, new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_AndTime_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(GameOverDecision), "__retry"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "GameOverDecision___retry_PrefixPatch")));
             
@@ -132,7 +146,7 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(SpearItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(GoldenItemBehavior), "SpearItemBehaviour_onActionButtonDown_PrefixPatch")));
 
-            harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Monster_IDamageable_ReceiveDamage_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_IDamageable_ReceiveDamage_PostfixPatch")));
+            harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(BloodstainChest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "BloodstainChest_IInteractionReceiver_Interact_PrefixPatch")));
 

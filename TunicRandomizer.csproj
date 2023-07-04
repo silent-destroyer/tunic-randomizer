@@ -189,6 +189,7 @@
     <Compile Include="src\Patches\SwordProgression.cs" />
     <Compile Include="src\Patches\TitleVersion.cs" />
     <Compile Include="src\Patches\TrackerOverlay.cs" />
+    <Compile Include="src\Patches\WaveSpell.cs" />
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
   </ItemGroup>

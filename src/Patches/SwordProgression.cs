@@ -8,7 +8,7 @@ using BepInEx.Logging;
 
 namespace TunicRandomizer {
     public class SwordProgression {
-
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
         public static void UpgradeSword(int SwordLevel) {
             GameObject SwordPresentation = Resources.FindObjectsOfTypeAll<GameObject>().Where(Item => Item.name == "User Rotation Root").ToList()[0].transform.GetChild(9).gameObject;
             if (SwordLevel == 1) {
@@ -83,9 +83,11 @@ namespace TunicRandomizer {
             Sword.transform.localScale = new Vector3(0.5f, 0.3f, 0.5f);
             Sword.transform.localRotation = Quaternion.identity;
             Sword.transform.localPosition = Vector3.zero;
+            PlayerCharacterPatches.LoadSecondSword = false;
         }
 
         public static void EnableThirdSword() {
+
             string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
             GameObject SwordProxy = GameObject.Find(SwordPath);
             GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());
@@ -105,6 +107,7 @@ namespace TunicRandomizer {
             Sword.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             Sword.transform.localRotation = new Quaternion(0.7071f, 0f, 0f, -0.7071f);
             Sword.transform.localPosition = Vector3.zero;
+            PlayerCharacterPatches.LoadThirdSword = false;
         }
     }
 }
