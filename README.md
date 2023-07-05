@@ -88,6 +88,7 @@ With the exception of the Logic settings, all options can be freely toggled or c
 - Enemy Randomizer
   - Randomly swaps out enemies with new ones when you load into a scene. See below settings for ways to affect enemy difficulty/generation.
   - There is currently no logic for certain edge cases where grappling to an enemy may be required to reach a check (ex. East Forest Slime, Turret in Overworld/Frog's Domain). The Enemy Randomizer can be toggled on or off at any point while playing however, so if you find yourself unable to reach certain checks it is recommended to briefly turn the setting off to get the check and then turn it back on afterwards.
+  - Playing with Enemy Randomization on may cause the game to stutter and/or lag after a while. If this happens, restarting the game should temporarily fix the issue.
 - Extra Enemies
   - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos.
 - Enemy Difficulty
@@ -108,6 +109,26 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - When enabled, will always apply the saved custom texture to the fox. Note: Random Fox Colors should be disabled when using this setting or it may not work properly.
   - The custom texture can be found under AppData in the same folder as the Spoiler log and Item Tracker file.
 
+## Custom Items
+### Dath Stone
+![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/a5797e96-66c6-4abd-ba94-ca61019a79d8)
+- This item combines two unused items in the game into one and allows you to warp back to the last statue you saved at when used.
+- What does Dath mean? The trunic characters on the item icon were presumably meant to spell "Dash", but instead they spell out "Dath", so the community has dubbed this item the "Dath Stone".
+
+### Librarian and Heir Swords
+![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/412935ea-b5ab-4d96-b181-678a39025901) ![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/92e6b5d3-1d30-49ff-a344-1d8295e593dd)
+- These familiar swords are now usable in the game as part of the Sword Progression mode!
+- The Librarian Sword (Level 3) offers additional reach over the base sword, as well as a free +1 to your Attack stat level.
+- the Heir Sword (Level 4) offers slightly more range than the Librarian Sword, another free +1 Attack, and also has the added bonus of ignoring collision with metalllic objecs, including enemy shields.
+
+## Golden Hexagons
+![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/361efdaa-1849-44ee-9b2c-504d7f05c46e)
+- These appear when playing the Hexagon Quest mode. Finding 20 of them allows you to end the game by visiting The Heir.
+
+## ???
+![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/ed015b2c-7b93-4d23-8728-b36b5cba36d1)
+- ???
+  
 ## Credits
 - Glace and RisingStar111 for helping research how to mod this game.
 - Radicoon, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, and many others for playtesting and helping to improve the mod.
