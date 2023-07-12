@@ -63,11 +63,15 @@ namespace TunicRandomizer {
         }
 
         public static void Chest_openSequence_MoveNext_PostfixPatch(Chest._openSequence_d__35 __instance, ref bool __result) {
-            __instance._delay_5__2 = 1.35f;
+
+            string RewardId = GetChestRewardID(__instance.__4__this);
+            ItemData Item = ItemList[RewardId];
+
+            if (Item.Reward.Type != "MONEY") {
+                __instance._delay_5__2 = 1.35f;
+            }
 
             if (!__result && !__instance.__4__this.interrupted) {
-                string RewardId = GetChestRewardID(__instance.__4__this);
-                ItemData Item = ItemList[RewardId];
             
                 if (__instance.__4__this.chestID == 0) {
                     string FairyId = $"{__instance.__4__this.gameObject.scene.name}-{__instance.__4__this.transform.position.ToString()}";
