@@ -30,6 +30,7 @@ namespace TunicRandomizer {
         public static float FinishLineSwordTimer = 0.0f;
         public static float CompletionTimer = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
+        public static string MailboxHintId = "";
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
 
@@ -294,6 +295,7 @@ namespace TunicRandomizer {
             ModelSwaps.SetupDathStoneItemPresentation();
             SetupGoldenTrophyCollectionLines();
             PopulateSpoilerLog();
+            Logger.LogInfo("Wrote Spoiler Log to " + TunicRandomizer.SpoilerLogPath);
             PopulateHints();
 
             if (!ModelSwaps.SwappedThisSceneAlready) {
@@ -319,6 +321,9 @@ namespace TunicRandomizer {
                 }
             }
             PaletteEditor.SetupPartyHat(__instance);
+            if (TunicRandomizer.Settings.UseCustomTexture) {
+                LoadCustomTexture = true;
+            }
             if (PaletteEditor.CelShadingEnabled) { 
                 PaletteEditor.ApplyCelShading();
             }
@@ -674,7 +679,6 @@ namespace TunicRandomizer {
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             }
 
-            Logger.LogInfo("Wrote Spoiler Log to " + TunicRandomizer.SpoilerLogPath);
         }
 
         private static void PopulateHints() {
@@ -746,11 +750,12 @@ namespace TunicRandomizer {
             } else {
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>First Steps<#ffffff>\" ahn yor jurnE.";
+                HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.";
                 if (HintItem.Reward.Name == "Techbow") { techbowHinted = true; }
                 if (HintItem.Reward.Name == "Wand") { wandHinted = true; }
                 if (HintItem.Reward.Name == "12") { prayerHinted = true; }
                 if (HintItem.Reward.Name == "21") { hcHinted = true; }
+                MailboxHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
             }
             Hints.HintMessages.Add("Mailbox", HintMessage);
 

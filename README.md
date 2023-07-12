@@ -79,16 +79,18 @@ With the exception of the Logic settings, all options can be freely toggled or c
 - Bonus Upgrades
   - Makes the Golden Trophy items give free Level Ups for certain stats, allowing you to get up to +8 in every stat in a single playthrough when combined with the regular stat upgrades and the +2 Attack levels from Sword Progression.
   - Note: Bonus upgrades will not be retroactively awarded if this setting is turned on after obtaining Golden Trophies with it disabled. The +2 Attack Levels from Sword Progression are always awarded and not affected by this setting.
+- Disable Chest Interruption
+  - Enemies will not be able to interrupt you while opening chests if this option is turned on.
 - Fool Traps
   - Enables fool traps, which replace low-value money rewards when enabled and apply damage or other negative effects to the player.
   - The different options determine how many fools are present, with None/Normal/Double/Onslaught containing 0/15/32/50 fools respectively.
 - ???
   - !esirprus a rof no nruT
-### Enemy Randomization
+### Enemy Randomization 
 - Enemy Randomizer
   - Randomly swaps out enemies with new ones when you load into a scene. See below settings for ways to affect enemy difficulty/generation.
   - There is currently no logic for certain edge cases where grappling to an enemy may be required to reach a check (ex. East Forest Slime, Turret in Overworld/Frog's Domain). The Enemy Randomizer can be toggled on or off at any point while playing however, so if you find yourself unable to reach certain checks it is recommended to briefly turn the setting off to get the check and then turn it back on afterwards.
-  - Playing with Enemy Randomization on may cause the game to stutter and/or lag after a while. If this happens, restarting the game should temporarily fix the issue.
+  - Enemy Randomization is still a work-in-progress feature and may randomly stop working or cause the game to stutter/lag after a while. If either of these situations occur, restarting the game should temporarily fix the issue.
 - Extra Enemies
   - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos.
 - Enemy Difficulty

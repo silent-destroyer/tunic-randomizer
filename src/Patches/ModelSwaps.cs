@@ -339,7 +339,7 @@ namespace TunicRandomizer {
                 if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
                     ItemData Item = ItemRandomizer.ItemList[ItemId];
                     if (Item.Reward.Name == ItemPickup.itemToGive.name) {
-                        //return;
+                        return;
                     }
                     for (int i = 0; i < ItemPickup.transform.childCount; i++) {
                         ItemPickup.transform.GetChild(i).gameObject.SetActive(false);

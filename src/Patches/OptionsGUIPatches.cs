@@ -67,6 +67,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
             OptionsGUI.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
             OptionsGUI.addToggle("Bonus Upgrades", "Off", "On", TunicRandomizer.Settings.BonusStatUpgradesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBonusStatUpgrades);
+            OptionsGUI.addToggle("Disable Chest Interruption", "Off", "On", TunicRandomizer.Settings.DisableChestInterruption ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestInterruption);
             OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
             OptionsGUI.addToggle("???", "Off", "On", CameraController.Flip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
         }
@@ -206,6 +207,11 @@ namespace TunicRandomizer {
         public static void ToggleBonusStatUpgrades(int index) {
             TunicRandomizer.Settings.BonusStatUpgradesEnabled = !TunicRandomizer.Settings.BonusStatUpgradesEnabled;
             PlayerCharacterPatches.SetupGoldenTrophyCollectionLines();
+            SaveSettings();
+        }
+
+        public static void ToggleChestInterruption(int index) {
+            TunicRandomizer.Settings.DisableChestInterruption = !TunicRandomizer.Settings.DisableChestInterruption;
             SaveSettings();
         }
 

@@ -58,92 +58,67 @@ namespace TunicRandomizer {
         public static bool Chest_IInteractionReceiver_Interact_PrefixPatch(Item i, Chest __instance) {
             string RewardId = GetChestRewardID(__instance);
             CheckFoolTrapSetting(RewardId);
-
-            if (__instance.isFairy) {
-                string FairyId = $"{__instance.gameObject.scene.name}-{__instance.transform.position.ToString()}";
-                SaveFile.SetInt(FairyLookup[FairyId].Flag, 1);
-                SaveFile.SetInt($"randomizer opened fairy chest {FairyId}", 1);
-            }
-            
             __instance.isFairy = false;
             return true;
         }
 
-        public static bool Chest_InterruptOpening_PrefixPatch(Chest __instance) {
-            string FairyId = $"{__instance.gameObject.scene.name}-{__instance.transform.position.ToString()}";
-             
-            if (__instance.chestID == 5) {
-                return false;
-            }
-            if (FairyLookup.ContainsKey(FairyId)) {
-                return false;
-            }
-            string ChestId = GetChestRewardID(__instance);
-            if (ItemList.ContainsKey(ChestId)) {
-                Reward Reward = ItemList[ChestId].Reward;
-                if (HeroRelicLookup.ContainsKey(Reward.Name) || Reward.Name.Contains("GoldenTrophy") || Reward.Name == "Sword Progression" || Reward.Name == "Hexagon Gold" || Reward.Type == "FAIRY") {
-                    return false;
+        public static void Chest_openSequence_MoveNext_PostfixPatch(Chest._openSequence_d__35 __instance, ref bool __result) {
+            __instance._delay_5__2 = 1.35f;
+
+            if (!__result && !__instance.__4__this.interrupted) {
+                string RewardId = GetChestRewardID(__instance.__4__this);
+                ItemData Item = ItemList[RewardId];
+            
+                if (__instance.__4__this.chestID == 0) {
+                    string FairyId = $"{__instance.__4__this.gameObject.scene.name}-{__instance.__4__this.transform.position.ToString()}";
+                    SaveFile.SetInt(FairyLookup[FairyId].Flag, 1);
+                    SaveFile.SetInt($"randomizer opened fairy chest {FairyId}", 1);
                 }
-                if (ItemsPickedUp[ChestId] && !__instance.shouldShowAsOpen) {
-                    SaveFile.SetInt("randomizer picked up " + ChestId, 0);
-                    TunicRandomizer.Tracker.ItemsCollected.RemoveAt(TunicRandomizer.Tracker.ItemsCollected.Count - 1);
-                    ItemsPickedUp[ChestId] = false;
-                    if (TunicRandomizer.Tracker.ImportantItems.ContainsKey(Reward.Name)) {
-                        if (Reward.Name.Contains("Trinket -") || Reward.Name == "Mask") {
-                            TunicRandomizer.Tracker.ImportantItems["Trinket Cards"]--;
-                        } else {
-                            TunicRandomizer.Tracker.ImportantItems[Reward.Name]--;
-                        }
-                        Logger.LogInfo("Player was interrupted when picking up " + ChestId + " (" + ItemList[ChestId].Reward.Name + " - " + ItemList[ChestId].Reward.Amount + ")!");
+                
+                if (!ItemsPickedUp[RewardId]) {
+                    if (Item.Reward.Type != "MONEY") {
+                        GiveReward(ItemList[RewardId]);
                     }
+                    SetCollectedReward(RewardId);
                 }
+            
+            }
+
+        }
+
+        public static bool Chest_InterruptOpening_PrefixPatch(Chest __instance) {
+            if (TunicRandomizer.Settings.DisableChestInterruption) {
+                return false;
+            }
+            if (__instance.chestID == 5 || __instance.chestID == 0) {
+                return false;
             }
             return true;
         }
 
         public static bool Chest_moneySprayQuantityFromDatabase_GetterPatch(Chest __instance, ref int __result) {
             string RewardId = GetChestRewardID(__instance);
+            ItemData Item = ItemList[RewardId];
 
-            ItemData ItemData = ItemList[RewardId];
-            Reward Reward = ItemData.Reward;
-            if (Reward.Type == "MONEY") {
-                if (!ItemsPickedUp[RewardId]) {
-                    SetCollectedReward(RewardId);
-                }
-                __result = Reward.Amount;
+            if (Item.Reward.Type == "MONEY") {
+                __result = Item.Reward.Amount;
             } else {
-                if (!ItemsPickedUp[RewardId]) {
-                    GiveReward(ItemData);
-                    SetCollectedReward(RewardId);
-                }
+                __result = 0;
             }
 
             return false;
         }
 
         public static bool Chest_itemContentsfromDatabase_GetterPatch(Chest __instance, ref Item __result) {
-            string RewardId = GetChestRewardID(__instance); 
             
-            Reward Reward = ItemList[RewardId].Reward;
-
-            if (Reward.Type == "INVENTORY") {
-                if (!ItemsPickedUp[RewardId]) {
-                    SetCollectedReward(RewardId);
-                }
-                __result = Inventory.GetItemByName(Reward.Name);
-            }
-
+            __result = null;
+            
             return false;
         }
 
         public static bool Chest_itemQuantityFromDatabase_GetterPatch(Chest __instance, ref int __result) {
-            string RewardId = GetChestRewardID(__instance); 
-            
-            Reward Reward = ItemList[RewardId].Reward;
-            
-            if (Reward.Type == "INVENTORY") {
-                __result = Reward.Amount;
-            }
+
+            __result = 0;
 
             return false;
         }
@@ -376,6 +351,8 @@ namespace TunicRandomizer {
         }
 
         private static void SetCollectedReward(string RewardId) {
+
+
             SaveFile.SetInt("randomizer picked up " + RewardId, 1);
             ItemsPickedUp[RewardId] = true;
             ItemData ItemData = ItemList[RewardId];
@@ -384,7 +361,9 @@ namespace TunicRandomizer {
             UpdateItemTracker(RewardId);
             ItemTracker.SaveTrackerFile();
             PlayerCharacterPatches.PopulateSpoilerLog();
-
+            if (RewardId == PlayerCharacterPatches.MailboxHintId) {
+                SaveFile.SetInt("randomizer got mailbox hint item", 1);
+            }
             if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                 foreach (string Key in GoldenTrophyStatUpgrades.Keys) {
                     if (GoldenTrophyStatUpgrades[Key].Contains(ItemList[RewardId].Reward.Name)) {

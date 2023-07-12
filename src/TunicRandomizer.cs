@@ -76,6 +76,8 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.PropertyGetter(typeof(Chest), "shouldShowAsOpen"), new HarmonyMethod(AccessTools.Method(typeof(ItemRandomizer), "Chest_shouldShowAsOpen_GetterPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(Chest._openSequence_d__35), "MoveNext"), null, new HarmonyMethod(AccessTools.Method(typeof(ItemRandomizer), "Chest_openSequence_MoveNext_PostfixPatch")));
+
             harmony.Patch(AccessTools.Method(typeof(PagePickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemRandomizer), "PagePickup_onGetIt_PrefixPatch")));
             
             harmony.Patch(AccessTools.Method(typeof(ItemPickup), "onGetIt"), new HarmonyMethod(AccessTools.Method(typeof(ItemRandomizer), "ItemPickup_onGetIt_PrefixPatch")));

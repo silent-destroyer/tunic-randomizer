@@ -70,6 +70,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool DisableChestInterruption {
+            get;
+            set;
+        }
+
         public FoolTrapOption FoolTrapIntensity {
             get;
             set;
@@ -150,6 +155,7 @@ namespace TunicRandomizer {
             HeirAssistModeEnabled = false;
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
+            DisableChestInterruption = false;
             FoolTrapIntensity = FoolTrapOption.NORMAL;
             
             EnemyRandomizerEnabled = false;

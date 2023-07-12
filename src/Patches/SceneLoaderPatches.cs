@@ -205,7 +205,7 @@ namespace TunicRandomizer {
                 }
             } else if (SceneName == "Overworld Redux") {
                 GameObject.Find("_Signposts/Signpost (3)/").GetComponent<Signpost>().message.text = $"#is wA too \"West Garden\"\n<#33FF33>[death] bEwAr uhv tArE [death]";
-                if (TunicRandomizer.Settings.HeroPathHintsEnabled && Inventory.GetItemByName("Lantern").Quantity == 0) {
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got mailbox hint item") == 0) {
                     GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f,-0.5f, 0.5f, 0.5f);
                 }
             } else {
@@ -274,7 +274,7 @@ namespace TunicRandomizer {
 
             try {
                 if (TunicRandomizer.Settings.UseCustomTexture) {
-                    PlayerCharacterPatches.LoadCustomTexture = true;
+                    PaletteEditor.LoadCustomTexture();
                 }
             } catch (Exception ex) {
                 Logger.LogError("An error occurred applying custom texture:");
