@@ -87,10 +87,7 @@ namespace TunicRandomizer {
                 return;
             }
             if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
-                ModelSwaps.GlowEffect = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Night Glow").ToList()[0]);
-                GameObject.Destroy(ModelSwaps.GlowEffect.GetComponent<StatefulActive>());
-                ModelSwaps.GlowEffect.SetActive(false);
-                GameObject.DontDestroyOnLoad(ModelSwaps.GlowEffect);
+                ModelSwaps.SetupGlowEffect();
                 EnemyRandomizer.InitializeEnemies("Archipelagos Redux");
                 SceneLoader.LoadScene("Atoll Redux");
                 return;
@@ -171,7 +168,7 @@ namespace TunicRandomizer {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
                 PlayerCharacterPatches.HeirAssistModeDamageValue = ItemRandomizer.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
-                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
+                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                     Resources.FindObjectsOfTypeAll<Foxgod>().ToList()[0].gameObject.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
                     Resources.FindObjectsOfTypeAll<Foxgod>().ToList()[0].gameObject.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
                 }

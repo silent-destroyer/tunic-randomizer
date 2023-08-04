@@ -163,7 +163,7 @@ namespace TunicRandomizer {
             }
             if (SpeedrunData.timerRunning && SceneLoaderPatches.SceneName != null && Hints.AllScenes.Count > 0) {
                 float AreaPlaytime = SaveFile.GetFloat($"randomizer play time {SceneLoaderPatches.SceneName}");
-                SaveFile.SetFloat($"randomizer play time {SceneLoaderPatches.SceneName}", AreaPlaytime + Time.fixedUnscaledDeltaTime);
+                SaveFile.SetFloat($"randomizer play time {SceneLoaderPatches.SceneName}", AreaPlaytime + Time.unscaledDeltaTime);
             }
             if (IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = true;
@@ -181,6 +181,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt($"randomizer obtained page 26") == 0) {
                 TechbowItemBehaviour.kIceShotWindow = 0;
             }
+
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
@@ -379,12 +380,26 @@ namespace TunicRandomizer {
         }
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
-            __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"{Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}\"?";
+            if (SceneLoaderPatches.SceneName == "g_elements") {
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"???\"";
+            } else if (SceneLoaderPatches.SceneName == "Posterity") {
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"Overworld\"?";
+            } else {
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"{Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}\"?";
+            }
 
             return true;
         }
 
         public static bool BoneItemBehavior_confirmBoneUseCallback_PrefixPatch(BoneItemBehaviour __instance) {
+            if (SceneLoaderPatches.SceneName == "g_elements") {
+                SaveFile.SetString("last campfire scene name", "Posterity");
+                SaveFile.SetString("last campfire id", "campfire");
+            }
+            if (SceneLoaderPatches.SceneName == "Posterity") {
+                SaveFile.SetString("last campfire scene name", "Overworld Redux");
+                SaveFile.SetString("last campfire id", "checkpoint");
+            }
             PlayerCharacter.instance.gameObject.AddComponent<Rotate>();
             IsTeleporting = true;
             return true;
@@ -654,7 +669,7 @@ namespace TunicRandomizer {
                 "Major Items",
             };
             List<string> MajorItems = new List<string>() { "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shield", "Shotgun",
-                "Key (House)", "Dath Stone", "Relic - Hero Sword", "Relic - Hero Crown", "Relic - Hero Water", "Relic - Hero Pendant HP", "Relic - Hero Pendant SP",
+                "Key (House)", "Vault Key (Red)", "Dath Stone", "Relic - Hero Sword", "Relic - Hero Crown", "Relic - Hero Water", "Relic - Hero Pendant HP", "Relic - Hero Pendant SP",
                 "Relic - Hero Pendant MP", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "12", "21", "26"
             };
             foreach (string MajorItem in MajorItems) { 
@@ -926,6 +941,10 @@ namespace TunicRandomizer {
                 int Deaths = SaveFile.GetInt("randomizer death count");
                 SaveFile.SetInt("randomizer death count", Deaths + 1);
             }
+        }
+
+        public static void CreditsCardController_Awake_PrefixPatch(CreditsCardController __instance) {
+            Logger.LogInfo("credits started");
         }
         
         /*        public static void CrossbowItemBehavior___fireBow_PostfixPatch(CrossbowItemBehaviour __instance) {

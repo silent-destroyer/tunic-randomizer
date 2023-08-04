@@ -27,12 +27,12 @@ namespace TunicRandomizer {
             {"Furnace", "Overworld Belltower"},
             {"CubeRoom", "Cube Cave"},
             {"Sword Cave", "Stick House"},
-            {"EastFiligreeCache", "Overworld East Secret"},
+            {"EastFiligreeCache", "Southeast Cross Door"},
             {"Overworld Cave", "Caustic Light Cave"},
             {"Ruins Passage", "Ruined Passage"},
             {"PatrolCave", "Patrol Cave"},
             {"Waterfall", "Secret Gathering Place"},
-            {"Town_FiligreeRoom", "Overworld West Secret"},
+            {"Town_FiligreeRoom", "Fountain Cross Door"},
             {"Town Basement", "Hourglass Cave"},
             {"Maze Room", "Maze Cave"},
             {"Ruined Shop", "Ruined Shop"},
@@ -63,7 +63,7 @@ namespace TunicRandomizer {
             {"Fortress East", "Fortress East Shortcut"},
             {"Fortress Reliquary", "Fortress Grave Path"},
             {"Fortress Courtyard", "Fortress Courtyard"},
-            {"Dusty", "Dusty"},
+            {"Dusty", "Fortress Leaf Piles"},
             {"Fortress Arena", "Fortress Arena"},
             {"Mountain", "Lower Mountain"},
             {"Mountaintop", "Top of the Mountain"},
@@ -282,7 +282,8 @@ namespace TunicRandomizer {
                     "Overworld Redux",
                     "Overworld Interiors",
                     "Town_FiligreeRoom",
-                    "Changing Room"
+                    "Changing Room",
+                    "Posterity"
                 }
             },
             {
@@ -385,13 +386,14 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Spirit Areas",
+                "Far Shore/Hero's Grave",
                 new List<string>() {
                     "Resurrection",
                     "Transit",
                     "RelicVoid",
                     "Playable Intro",
-                    "Spirit Arena"
+                    "Spirit Arena",
+                    "g_elements"
                 }
             },
             {
