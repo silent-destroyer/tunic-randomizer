@@ -13,7 +13,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 - Extract the zip folder you downloaded from the previous step into your game's install directory (For example: C:\Program Files (x86)\Steam\steamapps\common\TUNIC)
   - For the PC Game Pass version, extract the zip into the "Content" folder, i.e. C:\XboxGames\Tunic\Content
 - Launch the game and close it. This will finalize the BepInEx installation.
-- [Download the TunicRandomizer.dll file from the latest release](https://github.com/silent-destroyer/tunic-randomizer/releases) and copy it into BepInEx/plugins under your game's install directory
+- [Download the TunicRandomizer.dll file from the latest release](https://github.com/silent-destroyer/tunic-randomizer/releases/latest) and copy it into BepInEx/plugins under your game's install directory
 - Launch the game again and you should see "Randomizer Mod Ver. x.y.z" on the title screen!
 - To uninstall the mod, either remove/delete the TunicRandomizer.dll file from the plugins folder or rename the winhttp.dll file located in the game's root directory (this will disable all installed mods from running).
 
