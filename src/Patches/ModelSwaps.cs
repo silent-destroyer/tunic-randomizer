@@ -179,6 +179,13 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupGlowEffect() {
+            GlowEffect = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Night Glow").ToList()[0]);
+            GameObject.Destroy(GlowEffect.GetComponent<StatefulActive>());
+            GlowEffect.SetActive(false);
+            GameObject.DontDestroyOnLoad(GlowEffect);
+        }
+
         public static void InitializeHeroRelics() {
             GameObject ItemRoot = Resources.FindObjectsOfTypeAll<GameObject>().Where(Item => Item.name == "User Rotation Root").ToList()[0];
 

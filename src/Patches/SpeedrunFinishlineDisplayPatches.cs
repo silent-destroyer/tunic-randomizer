@@ -63,7 +63,7 @@ namespace TunicRandomizer {
             { "Shop/Coin Wells", "Shop/Coin We<#eaa614>l<#ffffff>ls" },
             { "Bosses Defeated", "Bosses <#eaa614>D<#ffffff>efeate<#eaa614>d<#ffffff>" },
             { "Bottom of the Well", "Bottom of the We<#eaa614>ll<#ffffff>" },
-            { "Spirit Areas", "Spi<#eaa614>r<#ffffff>it Areas" },
+            { "Far Shore/Hero's Grave", "Far Sho<#eaa614>r<#ffffff>e/Hero's Grave" },
             { "Holy Cross Checks", "Ho<#eaa614>l<#ffffff>y Cross Checks" },
             { "Player Deaths", "P<#eaa614>l<#ffffff>ayer Deaths" },
             { "Time Found", "Time Foun<#eaa614>d<#ffffff>" },
@@ -192,20 +192,19 @@ namespace TunicRandomizer {
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(-60f, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {CheckCount}/{ItemRandomizer.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
+            string Color = CheckCount == ItemRandomizer.ItemList.Count ? $"<#eaa614>" : "<#FFFFFF>";
+            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{ItemRandomizer.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
             if ((int)CheckPercentage == 69) {
                 TotalCompletion.GetComponent<TextMeshPro>().text += " <size=40%>nice";
             }
-            if ((int)CheckPercentage == 100) {
-                TotalCompletion.GetComponent<TextMeshPro>().color = new Color32(234, 166, 20, 255);
-            }
+
             TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
             TotalCompletion.SetActive(true);
             List<List<string>> Columns = new List<List<string>>() { 
                 new List<string>(){"Overworld", "West Garden", "Ruined Atoll", "Quarry/Mountain", "Swamp"},
                 new List<string>(){"East Forest", "Eastern Vault Fortress", "Library", "Rooted Ziggurat", "Cathedral"},
                 new List<string>(){"Dark Tomb", "Frog's Domain", "Shop/Coin Wells", "Bosses Defeated", "Time Found"},
-                new List<string>(){"Bottom of the Well", "Spirit Areas", "Holy Cross Checks", "Player Deaths"},
+                new List<string>(){"Bottom of the Well", "Far Shore/Hero's Grave", "Holy Cross Checks", "Player Deaths"},
             };
             List<int> Spacings = new List<int>() { -300, -198, 370, 465 };
             if ((Screen.width == 1920 && Screen.height == 1080) || (Screen.width == 2560 && Screen.height == 1440)) {
@@ -257,6 +256,9 @@ namespace TunicRandomizer {
 
                 if (Area == "Swamp") {
                     AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>(Press 1 to hide stats)";
+                }
+                if (Area == "Far Shore/Hero's Grave") {
+                    AreaCount.GetComponent<TextMeshPro>().text = $"<size=90%>{AreaCount.GetComponent<TextMeshPro>().text}";
                 }
             }
 

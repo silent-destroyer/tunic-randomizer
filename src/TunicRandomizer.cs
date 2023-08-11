@@ -33,7 +33,7 @@ namespace TunicRandomizer {
                 Il2CppType.Of<PaletteEditor>()
             }) {
                 hideFlags = HideFlags.HideAndDontSave
-            }); 
+            });
             ClassInjector.RegisterTypeInIl2Cpp<QuickSettings>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("quick settings gui", new Type[]
             {
@@ -103,6 +103,7 @@ namespace TunicRandomizer {
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Start_PostfixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "creature_Awake"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_creature_Awake_PostfixPatch")));
+            harmony.Patch(AccessTools.Method(typeof(CreditsCardController), "Awake"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "CreditsCardController_Awake_PrefixPatch")));
 
             harmony.Patch(AccessTools.Method(typeof(MagicSpell), "CheckInput"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "MagicSpell_CheckInput_PostfixPatch")));
 

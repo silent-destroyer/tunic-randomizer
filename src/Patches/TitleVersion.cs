@@ -29,7 +29,7 @@ namespace TunicRandomizer {
                     dynamic Releases = JSONParser.FromJson<dynamic>(JsonResponse);
                     UpdateAvailable = Releases[0]["tag_name"] != PluginInfo.VERSION;
                     UpdateVersion = Releases[0]["tag_name"];
-                } catch (Exception e) { 
+                } catch (Exception e) {
                 }
 
                 TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
@@ -38,6 +38,12 @@ namespace TunicRandomizer {
                 TitleVersion.AddComponent<TextMeshProUGUI>().text = $"Randomizer Mod Ver. {PluginInfo.VERSION}";
                 if (UpdateAvailable) {
                     TitleVersion.GetComponent<TextMeshProUGUI>().text += $" (Update Available: v{UpdateVersion}!)";
+ /*                   AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
+                    AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
+                    AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
+                    AreaData.topLine.text = $"\"UPDATE AVAILABLE\"";
+                    AreaData.bottomLine.text = $"plEz uhpdAt too vur&uhn \"{UpdateVersion}!!\"";
+                    AreaLabel.ShowLabel(AreaData);*/
                 }
                 TitleVersion.GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 0.64f, 0.0f);
                 TitleVersion.GetComponent<TextMeshProUGUI>().fontMaterial = FontMaterial;
