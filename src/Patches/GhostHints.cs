@@ -298,7 +298,14 @@ public class GhostHints {
 
         public static void GenerateLocationHints() {
             LocationHints.Clear();
-            foreach (string Key in HintableLocationIds.Keys) {
+            List<String> HintableLocations = HintableLocationIds.Keys.ToList();
+            if (SaveFile.GetInt("randomizer keys behind bosses") == 1) {
+                // Remove boss hints if keys behind bosses is on
+                HintableLocations.Remove("Vault Key (Red) [Fortress Arena]");
+                HintableLocations.Remove("Hexagon Green [Library Arena]");
+                HintableLocations.Remove("Hexagon Blue [ziggurat2020_3]");
+            }
+            foreach (string Key in HintableLocations) {
                 string ItemName = Hints.SimplifiedItemNames[ItemRandomizer.ItemList[Key].Reward.Name];
                 string LocationSuffix = HintableLocationIds[Key][HintableLocationIds[Key].Length-1] == 'S' ? "R" : "iz";
                 string ItemPrefix = ItemName == "Money" ? "suhm" : Vowels.Contains(ItemName.ToUpper()[0]) ? "ahn" : "uh";
