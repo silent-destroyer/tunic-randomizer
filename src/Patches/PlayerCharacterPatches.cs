@@ -299,17 +299,23 @@ namespace TunicRandomizer {
             Logger.LogInfo("Wrote Spoiler Log to " + TunicRandomizer.SpoilerLogPath);
             PopulateHints();
 
-            if (!ModelSwaps.SwappedThisSceneAlready) {
-                ModelSwaps.SwapItemsInScene();
+
+            if (TunicRandomizer.Settings.UseCustomTexture) {
+                LoadCustomTexture = true;
             }
 
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
                 PaletteEditor.RandomizeFoxColors();
             }
 
+            if (!ModelSwaps.SwappedThisSceneAlready) {
+                ModelSwaps.SwapItemsInScene();
+            }
+            
             if (TunicRandomizer.Settings.RealestAlwaysOn) {
                 GameObject.FindObjectOfType<RealestSpell>().SpellEffect();
             }
+
             FairyTargets.CreateFairyTargets();
             GhostHints.GenerateHints();
             OptionsGUIPatches.SaveSettings();
@@ -322,15 +328,14 @@ namespace TunicRandomizer {
                 }
             }
             PaletteEditor.SetupPartyHat(__instance);
-            if (TunicRandomizer.Settings.UseCustomTexture) {
-                LoadCustomTexture = true;
-            }
+
             if (PaletteEditor.CelShadingEnabled) { 
                 PaletteEditor.ApplyCelShading();
             }
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
+
         }
 
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {

@@ -147,6 +147,15 @@ namespace TunicRandomizer {
                 PaletteEditor.RandomizeFoxColors();
             }
 
+            try {
+                if (TunicRandomizer.Settings.UseCustomTexture) {
+                    PaletteEditor.LoadCustomTexture();
+                }
+            } catch (Exception ex) {
+                Logger.LogError("An error occurred applying custom texture:");
+                Logger.LogError(ex.Message + " " + ex.StackTrace);
+            }
+
             UpdateTrackerSceneInfo();
             if (SceneName == "Waterfall") {
                 List<string> RandomObtainedFairies = new List<string>();
@@ -203,7 +212,21 @@ namespace TunicRandomizer {
             } else if (SceneName == "Overworld Redux") {
                 GameObject.Find("_Signposts/Signpost (3)/").GetComponent<Signpost>().message.text = $"#is wA too \"West Garden\"\n<#33FF33>[death] bEwAr uhv tArE [death]";
                 if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got mailbox hint item") == 0) {
-                    GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f,-0.5f, 0.5f, 0.5f);
+                    GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f, -0.5f, 0.5f, 0.5f);
+                }
+            } else if (SceneName == "Swamp Redux 2") {
+                GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.GAZE;
+                GameObject DoorHint = GameObject.Instantiate(GhostHints.GhostFox);
+                DoorHint.transform.position = new Vector3(82.5f, 14f, 143.7f);
+                DoorHint.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
+                LanguageLine DoorSecret = ScriptableObject.CreateInstance<LanguageLine>();
+                DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
+                DoorHint.GetComponent<NPC>().script = DoorSecret;
+                DoorHint.SetActive(true);
+            } else if (SceneName == "Shop") {
+                if (new System.Random().Next(100) < 3) {
+                    GameObject.Find("merchant").SetActive(false);
+                    GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
                 }
             } else {
                 foreach (string Key in ItemRandomizer.FairyLookup.Keys) {
@@ -266,15 +289,6 @@ namespace TunicRandomizer {
                 FairyTargets.CreateFairyTargets();
             } catch (Exception ex) {
                 Logger.LogError("An error occurred creating new fairy seeker spell targets:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
-            }
-
-            try {
-                if (TunicRandomizer.Settings.UseCustomTexture) {
-                    PaletteEditor.LoadCustomTexture();
-                }
-            } catch (Exception ex) {
-                Logger.LogError("An error occurred applying custom texture:");
                 Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
