@@ -120,7 +120,8 @@ namespace TunicRandomizer {
 
         public enum GameModes { 
             RANDOMIZER,
-            HEXAGONQUEST
+            HEXAGONQUEST,
+            VANILLA
         }
 
         public enum FoolTrapOption { 

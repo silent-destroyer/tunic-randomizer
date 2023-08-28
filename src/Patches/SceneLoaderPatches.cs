@@ -136,7 +136,7 @@ namespace TunicRandomizer {
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
 
-            if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1 && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
+            if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1 && SaveFile.GetString("randomizer game mode") == "RANDOMIZER") {
                 PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
                 Logger.LogInfo("Resetting time of day to daytime!");
             }
@@ -145,15 +145,6 @@ namespace TunicRandomizer {
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
                 PaletteEditor.RandomizeFoxColors();
-            }
-
-            try {
-                if (TunicRandomizer.Settings.UseCustomTexture) {
-                    PaletteEditor.LoadCustomTexture();
-                }
-            } catch (Exception ex) {
-                Logger.LogError("An error occurred applying custom texture:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             UpdateTrackerSceneInfo();
@@ -228,6 +219,11 @@ namespace TunicRandomizer {
                     GameObject.Find("merchant").SetActive(false);
                     GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
                 }
+            } else if (SceneName == "ShopSpecial") {
+                if (new System.Random().Next(100) < 3) {
+                    GameObject.Find("merchant (1)").SetActive(false);
+                    GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
+                }
             } else {
                 foreach (string Key in ItemRandomizer.FairyLookup.Keys) {
                     StateVariable.GetStateVariableByName(ItemRandomizer.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
@@ -254,6 +250,14 @@ namespace TunicRandomizer {
                 Fool.Reward.Type = "MONEY";
                 Fool.Reward.Name = "money";
             }
+            try {
+                if (TunicRandomizer.Settings.UseCustomTexture) {
+                    PaletteEditor.LoadCustomTexture();
+                }
+            } catch (Exception ex) {
+                Logger.LogError("An error occurred applying custom texture:");
+                Logger.LogError(ex.Message + " " + ex.StackTrace);
+            }
 
             try {
                 if (!ModelSwaps.SwappedThisSceneAlready && (ItemRandomizer.ItemList.Count > 0 && SaveFile.GetInt("seed") != 0)) {
@@ -264,7 +268,7 @@ namespace TunicRandomizer {
                 Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer obtained page 21") == 0) {
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer holy cross unlocked") == 0) {
                 foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
                     SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
                 }

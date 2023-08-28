@@ -282,10 +282,16 @@ namespace TunicRandomizer {
                 }
                 GameObject.Instantiate(ModelSwaps.FairyAnimation, SpawnPosition, Quaternion.identity).SetActive(true);
             } else if (Reward.Type == "PAGE") {
+                Dictionary<string, string> pagesForAbilities = new Dictionary<string, string>() {
+                    { "12", "randomizer prayer unlocked" },
+                    { "21", "randomizer holy cross unlocked" },
+                    { "26", "randomizer ice rod unlocked" },
+                };
                 SaveFile.SetInt($"randomizer obtained page {Reward.Name}", 1);
                 PageDisplay.ShowPage(int.Parse(Reward.Name, CultureInfo.InvariantCulture));
                 if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                     if (Reward.Name == "12" || Reward.Name == "21" || Reward.Name == "26") {
+                        SaveFile.SetInt(pagesForAbilities[Reward.Name], 1);
                         PageDisplayPatches.ShowAbilityUnlock = true;
                         PageDisplayPatches.AbilityUnlockPage = Reward.Name;
                     }
@@ -324,6 +330,26 @@ namespace TunicRandomizer {
                 } else if (Reward.Name == "Hexagon Gold") {
                     TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]++;
                     SaveFile.SetInt("randomizer inventory quantity Hexagon Gold", TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]);
+                    int GoldHexes = SaveFile.GetInt("randomizer inventory quantity Hexagon Gold");
+
+                    if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
+                        SaveFile.SetInt("randomizer prayer unlocked", 1);
+                        SaveFile.SetFloat("randomizer prayer unlocked time", SpeedrunData.inGameTime);
+                        ShowNotification($"\"PRAYER Unlocked\"", $"Jahnuhl yor wizduhm, rooin sEkur");
+                    }
+                    if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest holy cross requirement")) {
+                        SaveFile.SetInt("randomizer holy cross unlocked", 1);
+                        SaveFile.SetFloat("randomizer holy cross unlocked time", SpeedrunData.inGameTime);
+                        ShowNotification($"\"HOLY CROSS Unlocked\"", $"sEk wuht iz rItfuhlE yorz");
+                        foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                            SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = true;
+                        }
+                    }
+                    if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest ice rod requirement")) {
+                        SaveFile.SetInt("randomizer ice rod unlocked", 1);
+                        SaveFile.SetFloat("randomizer ice rod unlocked time", SpeedrunData.inGameTime);
+                        ShowNotification($"\"ICE ROD Unlocked\"", $"#A wOnt nO wuht hit #ehm");
+                    }
                     ItemPresentation.PresentItem(Inventory.GetItemByName("Hexagon Blue"));
                 }
             }
@@ -450,6 +476,20 @@ namespace TunicRandomizer {
             } catch (Exception e) {
                 return PlayerCharacter.instance.transform.position;
             }
+        }
+
+        public static void ShowNotification(string topLine, string bottomLine) {
+            LanguageLine topLineObject = ScriptableObject.CreateInstance<LanguageLine>();
+            topLineObject.text = topLine;
+
+            LanguageLine bottomLineObject = ScriptableObject.CreateInstance<LanguageLine>();
+            bottomLineObject.text = bottomLine;
+
+            AreaData areaData = ScriptableObject.CreateInstance<AreaData>();
+            areaData.topLine = topLineObject;
+            areaData.bottomLine = bottomLineObject;
+
+            AreaLabel.ShowLabel(areaData);
         }
     }
 }
