@@ -96,6 +96,8 @@ namespace TunicRandomizer {
 
             // Scene Loader Patches
             harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PostfixPatch")));
+            
+            harmony.Patch(AccessTools.Method(typeof(ScenePortal), "DepartToScene"), new HarmonyMethod(AccessTools.Method(typeof(ScenePortalPatches), "ScenePortal_DepartToScene_PrefixPatch")));
 
             // Player Character Patches
             harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "Update"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Update_PostfixPatch")));

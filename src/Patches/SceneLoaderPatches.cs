@@ -23,7 +23,7 @@ namespace TunicRandomizer {
             if (SceneName == "Sword Cave") {
                 SaveFile.SetInt("chest open 19", ItemRandomizer.ItemsPickedUp["19 [Sword Cave]"] ? 1 : 0);
             }
-
+            
             return true;
         }
 

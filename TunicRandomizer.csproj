@@ -185,6 +185,7 @@
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
+    <Compile Include="src\Patches\ScenePortalPatches.cs" />
     <Compile Include="src\Patches\SpeedrunFinishlineDisplayPatches.cs" />
     <Compile Include="src\Patches\SwordProgression.cs" />
     <Compile Include="src\Patches\TitleVersion.cs" />
