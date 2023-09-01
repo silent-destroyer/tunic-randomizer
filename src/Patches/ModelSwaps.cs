@@ -38,6 +38,7 @@ namespace TunicRandomizer {
         public static GameObject BlueKeyMaterial;
         public static GameObject HeroRelicMaterial;
         public static bool DathStonePresentationAlreadySetup = false;
+        public static bool OldHouseKeyPresentationAlreadySetup = false;
 
         public static GameObject GlowEffect;
 
@@ -99,7 +100,6 @@ namespace TunicRandomizer {
             Items["GoldenTrophy_12"] = ItemRoot.transform.GetChild(44).gameObject;
 
             Items["Key"] = ItemRoot.transform.GetChild(4).gameObject;
-            Items["Key (House)"] = ItemRoot.transform.GetChild(4).gameObject;
             Items["Vault Key (Red)"] = ItemRoot.transform.GetChild(23).gameObject;
 
             Items["Hexagon Red"] = ItemRoot.transform.GetChild(24).GetChild(0).gameObject;
@@ -161,7 +161,11 @@ namespace TunicRandomizer {
                 Cards[TrinketItem.name] = TrinketItem.CardGraphic;
             }
 
+            SetupOldHouseKeyItemPresentation();
+            Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
+
             SetupDathStoneItemPresentation();
+
             LoadTexture();
             InitializeExtras();
         }
@@ -345,7 +349,7 @@ namespace TunicRandomizer {
                 }
                 if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
                     ItemData Item = ItemRandomizer.ItemList[ItemId];
-                    if (Item.Reward.Name == ItemPickup.itemToGive.name) {
+                    if (Item.Reward.Name == ItemPickup.itemToGive.name && Item.Reward.Name != "Key (House)") {
                         return;
                     }
                     for (int i = 0; i < ItemPickup.transform.childCount; i++) {
@@ -580,6 +584,32 @@ namespace TunicRandomizer {
             ThirdSword.AddComponent<MeshRenderer>().materials = Temp.GetComponent<MeshRenderer>().materials;
             ThirdSword.SetActive(false);
             GameObject.DontDestroyOnLoad(ThirdSword);
+        }
+
+        public static void SetupOldHouseKeyItemPresentation() {
+            if (!OldHouseKeyPresentationAlreadySetup) {
+                try {
+                    Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.gameObject.name == "key twist")
+                        .ToList()[0].gameObject.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Key") };
+                    GameObject housekey = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.gameObject.name == "key twist (special)")
+                        .ToList()[0].gameObject);
+                    housekey.SetActive(false);
+                    housekey.transform.parent = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.gameObject.name == "key twist (special)")
+                        .ToList()[0].gameObject.transform.parent;
+                    housekey.transform.localPosition = Vector3.zero;
+                    housekey.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Key (House)") };
+                    GameObject.DontDestroyOnLoad(housekey);
+                    List<ItemPresentationGraphic> newipgs = new List<ItemPresentationGraphic>() { };
+                    foreach (ItemPresentationGraphic ipg in ItemPresentation.instance.itemGraphics) {
+                        newipgs.Add(ipg);
+                    }
+                    newipgs.Add(housekey.GetComponent<ItemPresentationGraphic>());
+                    ItemPresentation.instance.itemGraphics = newipgs.ToArray();
+                    OldHouseKeyPresentationAlreadySetup = true;
+                } catch (Exception e) {
+
+                }
+            }
         }
 
         public static void SetupDathStoneItemPresentation() {

@@ -182,6 +182,11 @@ namespace TunicRandomizer {
                 TechbowItemBehaviour.kIceShotWindow = 0;
             }
 
+            foreach (string Key in EnemyRandomizer.Enemies.Keys.ToList()) {
+                EnemyRandomizer.Enemies[Key].SetActive(false);
+                EnemyRandomizer.Enemies[Key].transform.position = new Vector3(-30000f, -30000f, -30000f);
+            }
+
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
@@ -268,7 +273,9 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Spear").TryCast<ButtonAssignableItem>().useMPUsesForQuantity = true;
                 Dat.floatDatabase["mpCost_Spear_mp2"] = 40f;
             }
+            Inventory.GetItemByName("Key (House)").icon = Inventory.GetItemByName("Key Special").icon;
             Inventory.GetItemByName("MoneyLevelItem").Quantity = 1;
+
             if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
                 int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
                 TunicRandomizer.Tracker.ImportantItems["Sword Progression"] = SwordLevel;
@@ -451,6 +458,13 @@ namespace TunicRandomizer {
                 }
                 return false;
             }
+            if (SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(-38.0, 29.0, -55.0)") {
+                PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key (House)"].GetComponent<MeshRenderer>().materials;
+            }
+            if ((SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(21.0, 20.0, -122.0)") ||
+                (SceneLoaderPatches.SceneName == "Atoll Redux") && __instance.transform.position.ToString() == "(64.0, 4.0, 0.0)") {
+                PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key"].GetComponent<MeshRenderer>().materials;
+            }
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                 if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
                     GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
@@ -494,9 +508,13 @@ namespace TunicRandomizer {
             List<string> ProgressionNames = new List<string>{
                 "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                ProgressionNames.Add("12"); // Prayer
-                ProgressionNames.Add("21"); // Holy Cross
-                ProgressionNames.Add("26"); // Ice Rod
+                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
+                    ProgressionNames.Add("Hexagon Gold");
+                } else {
+                    ProgressionNames.Add("12"); // Prayer
+                    ProgressionNames.Add("21"); // Holy Cross
+                    ProgressionNames.Add("26"); // Ice Rod
+                }
             }
 
             List<ItemData> InitialItems = JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList);
@@ -506,6 +524,18 @@ namespace TunicRandomizer {
             List<Reward> ProgressionRewards = new List<Reward>();
             Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
+
+            if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                List<string> abilities = new List<string>() { "prayer", "holy cross", "ice rod" }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
+                List<int> ability_unlocks = new List<int>() { 5, 10, 15 }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
+                for (int i = 0; i < 3; i++) {
+                    int index = TunicRandomizer.Randomizer.Next(abilities.Count);
+                    int index2 = TunicRandomizer.Randomizer.Next(ability_unlocks.Count);
+                    SaveFile.SetInt($"randomizer hexagon quest {abilities[index]} requirement", ability_unlocks[index2]);
+                    abilities.RemoveAt(index);
+                    ability_unlocks.RemoveAt(index2);
+                }
+            }
 
             foreach (ItemData Item in InitialItems) {
                 if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
@@ -538,14 +568,28 @@ namespace TunicRandomizer {
                             }
                         }
                         if(SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                            List<string> abilities = new List<string>(){ "prayer", "holy cross", "ice rod" };
-                            List<int> ability_unlocks = new List<int>() { 5, 10, 15 };
-                            for(int i = 0; i < abilities.Count; i++) { 
-                                int index = TunicRandomizer.Randomizer.Next(ability_unlocks.Count);
-                                SaveFile.SetInt($"randomizer hexagon quest {abilities[index]} requirement", ability_unlocks[index]);
+                            if (Item.Location.RequiredItems.Count > 0) {
+                                for (int i = 0; i < Item.Location.RequiredItems.Count; i++) {
+                                    if (Item.Location.RequiredItems[i].ContainsKey("12") && Item.Location.RequiredItems[i].ContainsKey("21")) {
+                                        int amt = SaveFile.GetInt($"randomizer hexagon quest prayer requirement") > SaveFile.GetInt($"randomizer hexagon quest holy cross requirement") ? SaveFile.GetInt($"randomizer hexagon quest prayer requirement") : SaveFile.GetInt($"randomizer hexagon quest holy cross requirement");
+                                        Item.Location.RequiredItems[i].Remove("12");
+                                        Item.Location.RequiredItems[i].Remove("21");
+                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", amt);
+                                    }
+                                    if (Item.Location.RequiredItems[i].ContainsKey("12")) {
+                                        Item.Location.RequiredItems[i].Remove("12");
+                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
+                                    }
+                                    if (Item.Location.RequiredItems[i].ContainsKey("21")) {
+                                        Item.Location.RequiredItems[i].Remove("21");
+                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
+                                    }
+                                    if (Item.Location.RequiredItems[i].ContainsKey("26")) {
+                                        Item.Location.RequiredItems[i].Remove("26");
+                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest ice rod requirement"));
+                                    }
+                                }
                             }
-                            abilities.RemoveAt(index);
-                            ability_unlocks.RemoveAt(index);
                         }
                     }
                     if (ProgressionNames.Contains(Item.Reward.Name) || ItemRandomizer.FairyLookup.Keys.Contains(Item.Reward.Name)) {
