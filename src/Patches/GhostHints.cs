@@ -306,7 +306,7 @@ public class GhostHints {
                 HintableLocations.Remove("Hexagon Blue [ziggurat2020_3]");
             }
             foreach (string Key in HintableLocations) {
-                string ItemName = Hints.SimplifiedItemNames[ItemRandomizer.ItemList[Key].Reward.Name];
+                string ItemName = Hints.SimplifiedItemNames[ItemPatches.ItemList[Key].Reward.Name];
                 string LocationSuffix = HintableLocationIds[Key][HintableLocationIds[Key].Length-1] == 'S' ? "R" : "iz";
                 string ItemPrefix = ItemName == "Money" ? "suhm" : Vowels.Contains(ItemName.ToUpper()[0]) ? "ahn" : "uh";
                 string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key]}\"\n{LocationSuffix} gRdi^ {ItemPrefix} \"{ItemName.ToUpper()}.\"";
@@ -345,7 +345,7 @@ public class GhostHints {
                 string Scene = Hints.SimplifiedSceneNames[Key].ToUpper();
                 int SceneItemCount = 0;
                 int MoneyInScene = 0;
-                foreach (ItemData Item in ItemRandomizer.ItemList.Values.Where(item => item.Location.SceneName == Key).ToList()) {
+                foreach (ItemData Item in ItemPatches.ItemList.Values.Where(item => item.Location.SceneName == Key).ToList()) {
                     ItemsInScene.Add(Item.Reward.Name);
                     if (Item.Reward.Name == "money") {
                         MoneyInScene += Item.Reward.Amount;
@@ -383,8 +383,8 @@ public class GhostHints {
 
         public static List<ItemData> FindAllRandomizedItemsByName(string ItemName) {
             List<ItemData> Items = new List<ItemData>();
-            foreach (string Key in ItemRandomizer.ItemList.Keys) {
-                ItemData Item = ItemRandomizer.ItemList[Key];
+            foreach (string Key in ItemPatches.ItemList.Keys) {
+                ItemData Item = ItemPatches.ItemList[Key];
                 if (Item.Reward.Name == ItemName) {
                     Items.Add(Item);
                 }

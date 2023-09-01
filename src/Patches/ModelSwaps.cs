@@ -278,8 +278,8 @@ namespace TunicRandomizer {
             //hyperdash chest Spirit Realm Doorway Glow (Instance)
             if (Chest != null) {
                 string ItemId = Chest.chestID == 0 ? $"{SceneLoaderPatches.SceneName}-{Chest.transform.position.ToString()} [{SceneLoaderPatches.SceneName}]" : $"{Chest.chestID} [{SceneLoaderPatches.SceneName}]";
-                if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
-                    ItemData Item = ItemRandomizer.ItemList[ItemId];
+                if (ItemPatches.ItemList.ContainsKey(ItemId)) {
+                    ItemData Item = ItemPatches.ItemList[ItemId];
                     //TODO: questagon chest textures
                     if (Item.Reward.Type == "FAIRY") {
                         Chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = Chests["Fairy"].GetComponent<MeshRenderer>().materials;
@@ -305,8 +305,8 @@ namespace TunicRandomizer {
 
         public static void SetupHeroRelicPickup(HeroRelicPickup HeroRelicPickup) {
             string ItemId = $"{HeroRelicPickup.name} [{SceneLoaderPatches.SceneName}]";
-            if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
-                ItemData Item = ItemRandomizer.ItemList[ItemId];
+            if (ItemPatches.ItemList.ContainsKey(ItemId)) {
+                ItemData Item = ItemPatches.ItemList[ItemId];
 
                 for (int i = 0; i < HeroRelicPickup.transform.childCount; i++) {
                     HeroRelicPickup.transform.GetChild(i).gameObject.SetActive(false);
@@ -344,11 +344,11 @@ namespace TunicRandomizer {
             if (ItemPickup != null && ItemPickup.itemToGive != null) {
                 string ItemId = $"{ItemPickup.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
 
-                if (ItemRandomizer.ItemsPickedUp.ContainsKey(ItemId) && ItemRandomizer.ItemsPickedUp[ItemId]) {
+                if (ItemPatches.ItemsPickedUp.ContainsKey(ItemId) && ItemPatches.ItemsPickedUp[ItemId]) {
                     return;
                 }
-                if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
-                    ItemData Item = ItemRandomizer.ItemList[ItemId];
+                if (ItemPatches.ItemList.ContainsKey(ItemId)) {
+                    ItemData Item = ItemPatches.ItemList[ItemId];
                     if (Item.Reward.Name == ItemPickup.itemToGive.name && Item.Reward.Name != "Key (House)") {
                         return;
                     }
@@ -408,12 +408,12 @@ namespace TunicRandomizer {
             if (PagePickup != null) {
                 GameObject Page = PagePickup.gameObject.transform.GetChild(2).GetChild(0).gameObject;
                 string ItemId = $"{PagePickup.pageName} [{SceneLoaderPatches.SceneName}]";
-                if (ItemRandomizer.ItemList.ContainsKey(ItemId)) {
-                    if (ItemRandomizer.ItemsPickedUp.ContainsKey(ItemId) && ItemRandomizer.ItemsPickedUp[ItemId]) {
+                if (ItemPatches.ItemList.ContainsKey(ItemId)) {
+                    if (ItemPatches.ItemsPickedUp.ContainsKey(ItemId) && ItemPatches.ItemsPickedUp[ItemId]) {
                         GameObject.Destroy(PagePickup.gameObject);
                         return;
                     }
-                    ItemData Item = ItemRandomizer.ItemList[ItemId];
+                    ItemData Item = ItemPatches.ItemList[ItemId];
                     if (Item.Reward.Type == "PAGE") {
                         return;
                     }
@@ -472,9 +472,9 @@ namespace TunicRandomizer {
                 "Shop/Item Holder/Trinket Coin 2 (night)/rotation/Trinket Coin" 
             };
             for (int i = 0; i < ShopItemIDs.Count; i++) {
-                if (!ItemRandomizer.ItemsPickedUp[ShopItemIDs[i]]) {
+                if (!ItemPatches.ItemsPickedUp[ShopItemIDs[i]]) {
                     GameObject ItemHolder = GameObject.Find(ShopGameObjectIDs[i]);
-                    ItemData ShopItem = ItemRandomizer.ItemList[ShopItemIDs[i]];
+                    ItemData ShopItem = ItemPatches.ItemList[ShopItemIDs[i]];
                     GameObject NewItem;
 
                     if (ItemHolder.name.Contains("Trinket Coin")) {
@@ -660,7 +660,7 @@ namespace TunicRandomizer {
 
         public static void SwapSiegeEngineCrown() {
             GameObject VaultKey = GameObject.Find("Spidertank/Spidertank_skeleton/root/thorax/vault key graphic");
-            ItemData VaultKeyItem = ItemRandomizer.ItemList["Vault Key (Red) [Fortress Arena]"];
+            ItemData VaultKeyItem = ItemPatches.ItemList["Vault Key (Red) [Fortress Arena]"];
             if (VaultKey != null) {
                 if (VaultKeyItem.Reward.Name == "Vault Key (Red)") {
                     return;
@@ -745,7 +745,7 @@ namespace TunicRandomizer {
 
         public static void SetupRedHexagonPlinth() {
             GameObject Plinth = GameObject.Find("_Hexagon Plinth Assembly/hexagon plinth/PRISM/questagon");
-            ItemData Item = ItemRandomizer.ItemList["Hexagon Red [Fortress Arena]"];
+            ItemData Item = ItemPatches.ItemList["Hexagon Red [Fortress Arena]"];
             if (Plinth != null && Item != null) {
                 if (Item.Reward.Name == "Hexagon Red") {
                     return;
@@ -786,7 +786,7 @@ namespace TunicRandomizer {
 
         public static void SetupBlueHexagonPlinth() {
             GameObject Plinth = GameObject.Find("_Plinth/turn off when taken/questagon");
-            ItemData Item = ItemRandomizer.ItemList["Hexagon Blue [ziggurat2020_3]"];
+            ItemData Item = ItemPatches.ItemList["Hexagon Blue [ziggurat2020_3]"];
             if (Plinth != null && Item != null) {
                 if (Item.Reward.Name == "Hexagon Blue") {
                     return;

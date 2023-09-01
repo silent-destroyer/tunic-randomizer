@@ -65,6 +65,25 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void ResetSword() {
+            string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
+            GameObject SwordProxy = GameObject.Find(SwordPath);
+            if (SwordProxy.GetComponent<MeshFilter>() == null) {
+                GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());
+            }
+            if (SwordProxy.GetComponent<MeshRenderer>() == null) {
+                GameObject.Destroy(SwordProxy.GetComponent<MeshRenderer>());
+            }
+            SwordProxy.AddComponent<MeshFilter>().mesh = ModelSwaps.Items["Sword"].GetComponent<MeshFilter>().mesh;
+            SwordProxy.AddComponent<MeshRenderer>().materials = ModelSwaps.Items["Sword"].GetComponent<MeshRenderer>().materials;
+            SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 0.7653f, 0f);
+            SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 1.25f, 1f);
+            SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.2f, 1.32f, 0.2f);
+            if (SwordProxy.transform.childCount == 5) {
+                GameObject.Destroy(SwordProxy.transform.GetChild(4).gameObject);
+            }
+        }
+
         public static void EnableSecondSword() {
             string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
             GameObject SwordProxy = GameObject.Find(SwordPath);

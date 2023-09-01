@@ -187,13 +187,13 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.position = new Vector3(0f, 0f, 300f);
             CompletionCanvas.SetActive(false);
 
-            int CheckCount = ItemRandomizer.ItemsPickedUp.Values.Where(Item => Item).ToList().Count;
-            float CheckPercentage = ((float)CheckCount /ItemRandomizer.ItemList.Count) * 100.0f;
+            int CheckCount = ItemPatches.ItemsPickedUp.Values.Where(Item => Item).ToList().Count;
+            float CheckPercentage = ((float)CheckCount /ItemPatches.ItemList.Count) * 100.0f;
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(-60f, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-            string Color = CheckCount == ItemRandomizer.ItemList.Count ? $"<#eaa614>" : "<#FFFFFF>";
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{ItemRandomizer.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
+            string Color = CheckCount == ItemPatches.ItemList.Count ? $"<#eaa614>" : "<#FFFFFF>";
+            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{ItemPatches.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
             if ((int)CheckPercentage == 69) {
                 TotalCompletion.GetComponent<TextMeshPro>().text += " <size=40%>nice";
             }
@@ -243,8 +243,8 @@ namespace TunicRandomizer {
                 int AreaChecksFound = 0;
                 float Percentage = 0;
                 foreach (string SubArea in Hints.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += ItemRandomizer.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea).Count();
-                    AreaChecksFound += ItemRandomizer.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea && ItemRandomizer.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]).Count();
+                    TotalAreaChecks += ItemPatches.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea).Count();
+                    AreaChecksFound += ItemPatches.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea && ItemPatches.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]).Count();
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }
                 if (TotalAreaChecks > 0) {
@@ -266,11 +266,11 @@ namespace TunicRandomizer {
                 int TotalChecks = 0;
                 int ChecksFound = 0;
                 float Percentage = 0;
-                foreach (ItemData Item in ItemRandomizer.ItemList.Values) {
+                foreach (ItemData Item in ItemPatches.ItemList.Values) {
                     foreach (Dictionary<string, int> items in Item.Location.RequiredItems) {
                         if (items.ContainsKey("21")) {
                             TotalChecks++;
-                            if (ItemRandomizer.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]) {
+                            if (ItemPatches.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]) {
                                 ChecksFound++;
                             }
                             continue;
