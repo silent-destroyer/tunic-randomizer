@@ -9,6 +9,7 @@ using UnityEngine;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
 using BepInEx.Logging;
+using static TunicRandomizer.RandomizerSettings;
 
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
@@ -35,7 +36,8 @@ namespace TunicRandomizer {
         public static void LogicSettingsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             if (SceneLoaderPatches.SceneName == "TitleScreen") {
-                OptionsGUI.addToggle("Game Mode", "<#FFA300>Randomizer", "<#ffd700>Hexagon Quest", (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGameMode);
+                Il2CppStringArray GameModes = (Il2CppStringArray)new string[] { "<#FFA300>Randomizer", "<#ffd700>Hexagon Quest", "<#4FF5D4>Vanilla" };
+                OptionsGUI.addMultiSelect("Game Mode", GameModes, GetGameModeIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeGameMode).wrap = true;
                 OptionsGUI.addToggle("Keys Behind Bosses", "Off", "On", TunicRandomizer.Settings.KeysBehindBosses ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleKeysBehindBosses);
                 OptionsGUI.addToggle("Sword Progression", "Off", "On", TunicRandomizer.Settings.SwordProgressionEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSwordProgression);
                 OptionsGUI.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleStartWithSword);
@@ -145,9 +147,14 @@ namespace TunicRandomizer {
 
         // Logic Settings
 
-        public static void ToggleGameMode(int index) {
-            TunicRandomizer.Settings.GameMode = (RandomizerSettings.GameModes) index;
+        public static void ChangeGameMode(int index) {
+            TunicRandomizer.Settings.GameMode = (RandomizerSettings.GameModes)index;
             SaveSettings();
+        }
+
+        public static int GetGameModeIndex() { 
+               
+            return (int)TunicRandomizer.Settings.GameMode;
         }
 
         public static void ToggleKeysBehindBosses(int index) {
