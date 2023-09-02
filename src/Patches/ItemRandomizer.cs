@@ -10,6 +10,7 @@ using System.IO;
 namespace TunicRandomizer {
     public class ItemRandomizer {
 
+        public static bool CreateSpoilerLog = true;
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
         public static void PopulateSphereZero() {
@@ -25,6 +26,9 @@ namespace TunicRandomizer {
         }
 
         public static void RandomizeAndPlaceItems() {
+            ItemPatches.ItemList.Clear();
+            ItemPatches.ItemsPickedUp.Clear();
+
             List<string> ProgressionNames = new List<string>{
                 "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
@@ -236,8 +240,11 @@ namespace TunicRandomizer {
         }
 
         public static void PopulateHints() {
+            Hints.HintMessages.Clear();
+            Hints.TrunicHintMessages.Clear();
             ItemData HintItem = null;
             string HintMessage;
+            string TrunicHint;
             List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
             bool techbowHinted = false;
             bool wandHinted = false;
@@ -301,10 +308,12 @@ namespace TunicRandomizer {
             }
             if (HintItem == null) {
                 HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEker.\nyoo hahv uh difikuhlt rOd uhhehd.";
+                TrunicHint = HintMessage;
             } else {
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.";
+                TrunicHint = $"lehjehnd sehz {ScenePrefix} {Translations.Translate(Scene, false)}\nkuhntAnz wuhn uhv mehnE <#00FFFF>furst stehps<#ffffff> ahn yor jurnE.";
                 if (HintItem.Reward.Name == "Techbow") { techbowHinted = true; }
                 if (HintItem.Reward.Name == "Wand") { wandHinted = true; }
                 if (HintItem.Reward.Name == "12") { prayerHinted = true; }
@@ -312,13 +321,17 @@ namespace TunicRandomizer {
                 PlayerCharacterPatches.MailboxHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
             }
             Hints.HintMessages.Add("Mailbox", HintMessage);
+            Hints.TrunicHintMessages.Add("Mailbox", TrunicHint);
 
             // Golden Path hints
             HintItem = FindRandomizedItemByName("Hyperdash");
             Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
             HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
+            TrunicHint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} {Translations.Translate(Scene, false)}\"...\"";
+
             Hints.HintMessages.Add("Temple Statue", HintMessage);
+            Hints.TrunicHintMessages.Add("Temple Statue", TrunicHint);
 
             List<string> HintItems = new List<string>() { techbowHinted ? "Lantern" : "Techbow", wandHinted ? "Lantern" : "Wand", "Stundagger" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
@@ -336,7 +349,9 @@ namespace TunicRandomizer {
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\niz lOkAtid awn #uh \"<#ffd700>PATH OF THE HERO<#ffffff>...\"";
+                TrunicHint = $"lehjehnd sehz {ScenePrefix} {Translations.Translate(Scene, false)}\niz lOkAtid awn #uh <#ffd700>pah% uhv #uh hErO<#ffffff>\"...\"";
                 Hints.HintMessages.Add(HintScene, HintMessage);
+                Hints.TrunicHintMessages.Add(HintScene, TrunicHint);
 
                 HintItems.Remove(HintItem.Reward.Name);
                 HintScenes.Remove(HintScene);
@@ -360,7 +375,9 @@ namespace TunicRandomizer {
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"#A sA {ScenePrefix} \"{Scene.ToUpper()}\" iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
+                TrunicHint = $"#A sA {ScenePrefix} {Translations.Translate(Scene, false)} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                 Hints.HintMessages.Add(HexagonHintArea, HintMessage);
+                Hints.TrunicHintMessages.Add(HexagonHintArea, TrunicHint);
 
                 Hexagons.Remove(Hexagon);
                 HexagonHintAreas.Remove(HexagonHintArea);
@@ -454,34 +471,6 @@ namespace TunicRandomizer {
             }
 
             return results;
-        }
-
-        public static void SetupGoldenTrophyCollectionLines() {
-            //kawngrahJoulA$uhnz!
-            if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                foreach (string StaminaTrophy in ItemPatches.GoldenTrophyStatUpgrades["Level Up - Stamina"]) {
-                    Inventory.GetItemByName(StaminaTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Inventory.GetItemByName(StaminaTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#8ddc6e>+1 SP<#FFFFFF>)\"";
-
-                }
-                foreach (string MagicTrophy in ItemPatches.GoldenTrophyStatUpgrades["Level Up - Magic"]) {
-                    Inventory.GetItemByName(MagicTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Inventory.GetItemByName(MagicTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#2a8fed>+1 MP<#FFFFFF>)\"";
-                }
-                foreach (string DefenseTrophy in ItemPatches.GoldenTrophyStatUpgrades["Level Up - DamageResist"]) {
-                    Inventory.GetItemByName(DefenseTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Inventory.GetItemByName(DefenseTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#5de7cf>+1 DEF<#FFFFFF>)\"";
-                }
-                foreach (string PotionTrophy in ItemPatches.GoldenTrophyStatUpgrades["Level Up - PotionEfficiency"]) {
-                    Inventory.GetItemByName(PotionTrophy).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Inventory.GetItemByName(PotionTrophy).collectionMessage.text = $"kawngrahJoulA$uhnz! \"(<#ca7be4>+1 POTION<#FFFFFF>)\"";
-                }
-            } else {
-                for (int i = 1; i < 13; i++) {
-                    Inventory.GetItemByName($"GoldenTrophy_{i}").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Inventory.GetItemByName($"GoldenTrophy_{i}").collectionMessage.text = $"kawngrahJoulA$uhnz!";
-                }
-            }
         }
     }
 }

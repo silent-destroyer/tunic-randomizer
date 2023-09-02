@@ -58,6 +58,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
             OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
             OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
+            OptionsGUI.addToggle("Untranslated Text", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUntranslatedHints);
             OptionsGUI.setHeading("Hints");
         }
 
@@ -199,6 +200,11 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void ToggleUntranslatedHints(int index) {
+            TunicRandomizer.Settings.UseTrunicTranslations = !TunicRandomizer.Settings.UseTrunicTranslations;
+            SaveSettings();
+        }
+
         // Gameplay
 
         public static void ToggleHeirAssistMode(int index) {
@@ -213,7 +219,6 @@ namespace TunicRandomizer {
 
         public static void ToggleBonusStatUpgrades(int index) {
             TunicRandomizer.Settings.BonusStatUpgradesEnabled = !TunicRandomizer.Settings.BonusStatUpgradesEnabled;
-            ItemRandomizer.SetupGoldenTrophyCollectionLines();
             SaveSettings();
         }
 

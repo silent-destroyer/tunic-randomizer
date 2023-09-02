@@ -215,6 +215,36 @@ namespace TunicRandomizer {
                 DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
                 DoorHint.GetComponent<NPC>().script = DoorSecret;
                 DoorHint.SetActive(true);
+            } else if (SceneName == "g_elements") {
+                if (SaveFile.GetInt("randomizer sent lost fox home") == 0) {
+                    GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                    GameObject LostFox = GameObject.Instantiate(GhostHints.GhostFox);
+                    LostFox.transform.position = new Vector3(-1.4098f, 0.0585f, 12.9491f);
+                    LostFox.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
+
+                    LanguageLine LostFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
+                    if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 0) {
+                        LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nitz smawl ahnd grA.";
+                    } else {
+                        LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
+                    }
+                    LostFox.GetComponent<NPC>().script = LostFoxScript;
+
+                    LostFox.SetActive(true);
+                }
+            } else if (SceneName == "Posterity") {
+                if (SaveFile.GetInt("randomizer sent lost fox home") == 1) {
+                    GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                    GameObject SavedFox = GameObject.Instantiate(GhostHints.GhostFox);
+                    SavedFox.transform.position = new Vector3(80.6991f, 15.9245f, 115.0217f);
+                    SavedFox.transform.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+
+                    LanguageLine SavedFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
+                    SavedFoxScript.text = $"%ah^k yoo for sehnding mE hOm.---plEz kEp #aht stOn ahs A rEword. it wil tAk yoo\nbahk too yor wurld.";
+                    SavedFox.GetComponent<NPC>().script = SavedFoxScript;
+
+                    SavedFox.SetActive(true);
+                }
             } else if (SceneName == "Shop") {
                 if (new System.Random().Next(100) < 3) {
                     GameObject.Find("merchant").SetActive(false);

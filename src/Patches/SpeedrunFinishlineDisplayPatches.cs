@@ -1,9 +1,9 @@
 ﻿using BepInEx.Logging;
-using Il2CppSystem.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TinyJson;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -266,7 +266,7 @@ namespace TunicRandomizer {
                 int TotalChecks = 0;
                 int ChecksFound = 0;
                 float Percentage = 0;
-                foreach (ItemData Item in ItemPatches.ItemList.Values) {
+                foreach (ItemData Item in JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList)) {
                     foreach (Dictionary<string, int> items in Item.Location.RequiredItems) {
                         if (items.ContainsKey("21")) {
                             TotalChecks++;
@@ -328,8 +328,10 @@ namespace TunicRandomizer {
                         $"Laurels:\t{FormatTime(HyperdashTime, true)}\n";
                 int Total = 6;
                 if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                    float PrayerTime = SaveFile.GetFloat("randomizer Page 12 time");
-                    float HolyCrossTime = SaveFile.GetFloat("randomizer Page 21 time");
+                    float PrayerTime = SaveFile.GetFloat("randomizer prayer unlocked time");
+                    float HolyCrossTime = SaveFile.GetFloat("randomizer holy cross unlocked time");
+                   
+
                     Text += $"Prayer:\t{FormatTime(PrayerTime, true)}\t" +
                             $"Holy Cross:\t{FormatTime(HolyCrossTime, true)}";
                     Total = 8;

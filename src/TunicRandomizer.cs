@@ -8,6 +8,7 @@ using UnhollowerRuntimeLib;
 using UnityEngine;
 using TinyJson;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.GhostHints;
 
 namespace TunicRandomizer {
 

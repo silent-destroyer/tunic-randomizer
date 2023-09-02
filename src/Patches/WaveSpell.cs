@@ -48,9 +48,9 @@ namespace TunicRandomizer {
             if (!OptionsGUIPatches.BonusOptionsUnlocked) {
                 AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
                 AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
-                AreaData.topLine.text = $"\"BONUS CUSTOMIZATION UNLOCKED\"";
+                AreaData.topLine.text = $"{Translations.Translate("BONUS CUSTOMIZATION Unlocked", true)}";
                 AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
-                AreaData.bottomLine.text = $"%ah^ks for plAi^! (prehs 3 too wAv)";
+                AreaData.bottomLine.text = $"%ah^ks for plAi^! (prehs 3 too wAv!)";
                 AreaLabel.ShowLabel(AreaData);
                 OptionsGUIPatches.BonusOptionsUnlocked = true;
             }

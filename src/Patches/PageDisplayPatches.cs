@@ -59,16 +59,16 @@ namespace TunicRandomizer {
                 AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
                 AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
                 if (AbilityUnlockPage == "12") {
-                    AreaData.topLine.text = $"\"PRAYER Unlocked\"";
+                    AreaData.topLine.text = $"{Translations.Translate("PRAYER Unlocked", true)}";
                     AreaData.bottomLine.text = $"Jahnuhl yor wizduhm, rooin sEkur";
                 } else if (AbilityUnlockPage == "21") {
-                    AreaData.topLine.text = $"\"HOLY CROSS Unlocked\"";
+                    AreaData.topLine.text = $"{Translations.Translate("HOLY CROSS Unlocked", true)}";
                     AreaData.bottomLine.text = $"sEk wuht iz rItfuhlE yorz";
                     foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
                         SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = true;
                     }
                 } else if (AbilityUnlockPage == "26") {
-                    AreaData.topLine.text = $"\"ICE ROD Unlocked\"";
+                    AreaData.topLine.text = $"{Translations.Translate("ICE ROD Unlocked", true)}";
                     AreaData.bottomLine.text = $"#A wOnt nO wuht hit #ehm";
                 } else {
                     AreaData.topLine.text = $"";

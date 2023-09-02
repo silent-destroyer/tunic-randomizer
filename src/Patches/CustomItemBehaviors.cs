@@ -65,11 +65,11 @@ namespace TunicRandomizer {
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
             if (SceneLoaderPatches.SceneName == "g_elements") {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"???\"";
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm ahnd rEturn too ???";
             } else if (SceneLoaderPatches.SceneName == "Posterity") {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"Overworld\"?";
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too {Translations.Translate("Overworld", true)}?";
             } else {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too \"{Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}\"?";
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too {Translations.Translate(Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")], true)}?";
             }
 
             return true;
@@ -79,6 +79,7 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "g_elements") {
                 SaveFile.SetString("last campfire scene name", "Posterity");
                 SaveFile.SetString("last campfire id", "campfire");
+                SaveFile.SetInt("randomizer sent lost fox home", 1);
             }
             if (SceneLoaderPatches.SceneName == "Posterity") {
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");

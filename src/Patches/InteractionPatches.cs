@@ -1,13 +1,20 @@
 ﻿using UnityEngine;
+using static TunicRandomizer.GhostHints;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
 
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
+
+            if (__instance.gameObject.GetComponent<NPC>() != null && GhostHints.HintGhosts.ContainsKey(__instance.name)) {
+                HintGhost HintGhost = GhostHints.HintGhosts[__instance.name];
+                __instance.GetComponent<NPC>().script.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"{HintGhost.TrunicDialogue}---{HintGhost.TrunicHint}" : $"{HintGhost.Dialogue}---{HintGhost.Hint}";
+            }
+
             if (Hints.HintLocations.ContainsKey(InteractionLocation) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 LanguageLine Hint = ScriptableObject.CreateInstance<LanguageLine>();
-                Hint.text = Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
+                Hint.text = TunicRandomizer.Settings.UseTrunicTranslations ? Hints.TrunicHintMessages[Hints.HintLocations[InteractionLocation]] : Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
                 GenericMessage.ShowMessage(Hint);
                 return false;
             }

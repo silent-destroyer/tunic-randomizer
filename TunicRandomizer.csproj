@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Data\ItemListJson.cs" />
+    <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Json\JSONParser.cs" />
     <Compile Include="src\Json\JSONWriter.cs" />
     <Compile Include="src\Models\ColorPalette.cs" />

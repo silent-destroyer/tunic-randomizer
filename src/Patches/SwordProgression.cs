@@ -15,7 +15,7 @@ namespace TunicRandomizer {
                 //fownd ahn Itehm!
                 Inventory.GetItemByName("Stick").Quantity = 1;
                 Inventory.GetItemByName("Stick").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Stick").collectionMessage.text = $"fownd ahn Itehm! \"(<#8ddc6e>Lv. 1<#FFFFFF>)\"";
+                Inventory.GetItemByName("Stick").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"fownd ahn Itehm! (<#8ddc6e>lehvuhl 1<#FFFFFF>)" : $"fownd ahn Itehm! \"(<#8ddc6e>Lv. 1<#FFFFFF>)\"";
 
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Stick"));
                 TunicRandomizer.Tracker.ImportantItems["Stick"] = 1;
@@ -27,7 +27,7 @@ namespace TunicRandomizer {
                 SwordPresentation.transform.localRotation = new Quaternion(-0.2071f, -0.1216f, 0.3247f, -0.9148f);
 
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Sword").collectionMessage.text = $"fownd ahn Itehm! \"(<#e99d4c>Lv. 2<#FFFFFF>)\"";
+                Inventory.GetItemByName("Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"fownd ahn Itehm! (<#e99d4c>lehvuhl 2<#FFFFFF>)" : $"fownd ahn Itehm! \"(<#e99d4c>Lv. 2<#FFFFFF>)\"";
                 Inventory.GetItemByName("Sword").useAlreadyHaveOneMessage = false;
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 TunicRandomizer.Tracker.ImportantItems["Sword"] = 2;
@@ -39,7 +39,7 @@ namespace TunicRandomizer {
                 SwordPresentation.transform.localRotation = new Quaternion(-0.2071f, -0.1216f, 0.3247f, -0.9148f);
 
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Sword").collectionMessage.text = $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
+                Inventory.GetItemByName("Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ? ? ?    (<#ca7be4>lehvuhl 3<#FFFFFF>)" : $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
                 Inventory.GetItemByName("Sword").useAlreadyHaveOneMessage = false;
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
@@ -55,7 +55,7 @@ namespace TunicRandomizer {
                 SwordPresentation.transform.localScale = new Vector3(0.175f, 0.175f, 0.175f);
 
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Sword").collectionMessage.text = $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
+                Inventory.GetItemByName("Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ! ! !    (<#5de7cf>lehvuhl 4<#FFFFFF>)" : $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
                 Inventory.GetItemByName("Sword").useAlreadyHaveOneMessage = false;
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
