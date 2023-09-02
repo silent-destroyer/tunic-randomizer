@@ -18,7 +18,7 @@ namespace TunicRandomizer {
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
-        public static int index = 225;
+        public static int index = 0;
 
         public static bool LoadSecondSword = false;
         public static bool LoadThirdSword = false;
@@ -112,10 +112,6 @@ namespace TunicRandomizer {
             }
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) {
-                GenericMessage.ShowMessage(Translations.EnglishToTrunic.Values.ToList()[index]);
-                index++;
             }
 
             if (StungByBee) {
@@ -272,10 +268,14 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Spear").TryCast<ButtonAssignableItem>().useMPUsesForQuantity = true;
                 Dat.floatDatabase["mpCost_Spear_mp2"] = 40f;
             }
-/*            if (Inventory.GetItemByName("Crystal Ball").TryCast<ButtonAssignableItem>() != null) {
-                Inventory.GetItemByName("Crystal Ball").TryCast<ButtonAssignableItem>().useMPUsesForQuantity = true;
-                Dat.floatDatabase["mpCost_Crystal Ball_mp2"] = 40f;
-            }*/
+            /*            if (Inventory.GetItemByName("Crystal Ball").TryCast<ButtonAssignableItem>() != null) {
+                            Inventory.GetItemByName("Crystal Ball").TryCast<ButtonAssignableItem>().useMPUsesForQuantity = true;
+                            Dat.floatDatabase["mpCost_Crystal Ball_mp2"] = 40f;
+                        }*/
+            foreach (string RelicItem in ItemPatches.HeroRelicLookup.Keys) { 
+                Inventory.GetItemByName(RelicItem).collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                Inventory.GetItemByName(RelicItem).collectionMessage.text = $"\"{ItemPatches.HeroRelicLookup[RelicItem].CollectionMessage}\"";
+            }
             Inventory.GetItemByName("Crystal Ball").icon = ModelSwaps.FindSprite("Inventory items_specialitem");
             Inventory.GetItemByName("Key (House)").icon = Inventory.GetItemByName("Key Special").icon;
             Inventory.GetItemByName("MoneyLevelItem").Quantity = 1;

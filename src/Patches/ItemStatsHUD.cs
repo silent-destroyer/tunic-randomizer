@@ -240,9 +240,13 @@ namespace TunicRandomizer {
                 }
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
                     QuestionMark.SetActive(false);
+                } else {
+                    QuestionMark.SetActive(true);
                 }
 /*                if (Inventory.GetItemByName("Crystal Ball").Quantity == 1) {
                     QuestionMark2.SetActive(false);
+                } else {
+                    QuestionMark2.SetActive(true);
                 }*/
                 Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= 302) ? new Color(0.917f, 0.65f, .08f) : Color.white;
 
