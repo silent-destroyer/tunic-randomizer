@@ -290,7 +290,7 @@ namespace TunicRandomizer {
                     Item.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                         Inventory.GetItemByName(BonusUpgrades[Reward.Name].LevelUp).Quantity += 1;
-                        Item.collectionMessage.text = Translations.Translate(BonusUpgrades[Reward.Name].CustomPickupMessage, true);
+                        Item.collectionMessage.text = Translations.TranslateDefaultNoQuotes(BonusUpgrades[Reward.Name].CustomPickupMessage);
                     } else {
                         Item.collectionMessage.text = $"kawngrahJoulA$uhnz!";
                     }

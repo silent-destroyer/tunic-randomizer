@@ -11,9 +11,8 @@ namespace TunicRandomizer {
 
             return ((CheckSetting ? TunicRandomizer.Settings.UseTrunicTranslations : true) && EnglishToTrunic.ContainsKey(Input)) ? EnglishToTrunic[Input] : Input.StartsWith($"\"") ? Input : $"\"{Input}\"";
         }
-
-
-        public static string TranslateEnemy(string Input) { 
+  
+        public static string TranslateDefaultNoQuotes(string Input) { 
             
             return (TunicRandomizer.Settings.UseTrunicTranslations && EnglishToTrunic.ContainsKey(Input)) ? EnglishToTrunic[Input] : Input;
         }
