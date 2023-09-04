@@ -16,7 +16,7 @@ namespace TunicRandomizer {
         public static bool SpawnedGhosts = false;
 
         public static bool SceneLoader_OnSceneLoaded_PrefixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-            
+            Logger.LogInfo("scene loader prefix patch");
             if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", ItemRandomizer.ItemsPickedUp["19 [Forest Belltower]"] ? 1 : 0);
             }
@@ -28,7 +28,22 @@ namespace TunicRandomizer {
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
+            foreach (ScenePortal portal in Portals)
+            {
+                if (portal.FullID == "Quarry Redux_" && loadingScene.name == "ziggurat2020_0")
+                {
+                    portal.destinationSceneName = "Sword Cave";
+                    portal.id = "two";
+                    portal.optionalIDToSpawnAt = "two";
+                }
+                if (portal.FullID == "Overworld Redux_" && loadingScene.name == "Sword Cave")
+                {
+                    portal.destinationSceneName = "ziggurat2020_0";
+                    portal.id = "two";
+                    portal.optionalIDToSpawnAt = "two";
+                }
+            }
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
