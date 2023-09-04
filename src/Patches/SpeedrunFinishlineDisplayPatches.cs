@@ -1,9 +1,9 @@
 ﻿using BepInEx.Logging;
-using Il2CppSystem.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TinyJson;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -187,13 +187,13 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.position = new Vector3(0f, 0f, 300f);
             CompletionCanvas.SetActive(false);
 
-            int CheckCount = ItemRandomizer.ItemsPickedUp.Values.Where(Item => Item).ToList().Count;
-            float CheckPercentage = ((float)CheckCount /ItemRandomizer.ItemList.Count) * 100.0f;
+            int CheckCount = ItemPatches.ItemsPickedUp.Values.Where(Item => Item).ToList().Count;
+            float CheckPercentage = ((float)CheckCount /ItemPatches.ItemList.Count) * 100.0f;
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(-60f, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-            string Color = CheckCount == ItemRandomizer.ItemList.Count ? $"<#eaa614>" : "<#FFFFFF>";
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{ItemRandomizer.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
+            string Color = CheckCount == ItemPatches.ItemList.Count ? $"<#eaa614>" : "<#FFFFFF>";
+            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{ItemPatches.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
             if ((int)CheckPercentage == 69) {
                 TotalCompletion.GetComponent<TextMeshPro>().text += " <size=40%>nice";
             }
@@ -243,8 +243,8 @@ namespace TunicRandomizer {
                 int AreaChecksFound = 0;
                 float Percentage = 0;
                 foreach (string SubArea in Hints.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += ItemRandomizer.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea).Count();
-                    AreaChecksFound += ItemRandomizer.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea && ItemRandomizer.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]).Count();
+                    TotalAreaChecks += ItemPatches.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea).Count();
+                    AreaChecksFound += ItemPatches.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea && ItemPatches.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]).Count();
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }
                 if (TotalAreaChecks > 0) {
@@ -266,11 +266,11 @@ namespace TunicRandomizer {
                 int TotalChecks = 0;
                 int ChecksFound = 0;
                 float Percentage = 0;
-                foreach (ItemData Item in ItemRandomizer.ItemList.Values) {
+                foreach (ItemData Item in JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList)) {
                     foreach (Dictionary<string, int> items in Item.Location.RequiredItems) {
                         if (items.ContainsKey("21")) {
                             TotalChecks++;
-                            if (ItemRandomizer.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]) {
+                            if (ItemPatches.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]) {
                                 ChecksFound++;
                             }
                             continue;
@@ -328,8 +328,10 @@ namespace TunicRandomizer {
                         $"Laurels:\t{FormatTime(HyperdashTime, true)}\n";
                 int Total = 6;
                 if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                    float PrayerTime = SaveFile.GetFloat("randomizer Page 12 time");
-                    float HolyCrossTime = SaveFile.GetFloat("randomizer Page 21 time");
+                    float PrayerTime = SaveFile.GetFloat("randomizer prayer unlocked time");
+                    float HolyCrossTime = SaveFile.GetFloat("randomizer holy cross unlocked time");
+                   
+
                     Text += $"Prayer:\t{FormatTime(PrayerTime, true)}\t" +
                             $"Holy Cross:\t{FormatTime(HolyCrossTime, true)}";
                     Total = 8;

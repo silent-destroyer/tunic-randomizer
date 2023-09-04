@@ -34,6 +34,7 @@ namespace TunicRandomizer {
         public static GameObject BlueHexagon;
         public static GameObject HexagonQuest;
         public static GameObject QuestionMark;
+        //public static GameObject QuestionMark2;
         public static List<GameObject> SecondSwordIcons = new List<GameObject>();
         public static List<GameObject> ThirdSwordIcons = new List<GameObject>();
         public static List<GameObject> EquipButtons = new List<GameObject>();
@@ -136,6 +137,13 @@ namespace TunicRandomizer {
                 QuestionMark.transform.localRotation = new Quaternion(0f, 0f, 0.1305f, -0.9914f);
                 QuestionMark.AddComponent<Image>().sprite = Resources.FindObjectsOfTypeAll<Sprite>().Where(sprite => sprite.name == "trinkets 1_slot_grey").ToList()[0];
                 GameObject.DontDestroyOnLoad(QuestionMark);
+/*
+                QuestionMark2 = GameObject.Instantiate(QuestionMark);
+                QuestionMark2.transform.parent = Stats.transform;
+                QuestionMark2.transform.localEulerAngles = new Vector3(0f, 0f, 15f);
+                QuestionMark2.transform.localPosition = new Vector3(397f, 11f, -1f);
+                GameObject.DontDestroyOnLoad(QuestionMark2);
+*/
                 Stats.transform.SetAsFirstSibling();
                 if (SecondSwordIcons.Count < 3) {
                     for (int i = 1; i < 4; i++) {
@@ -213,7 +221,7 @@ namespace TunicRandomizer {
             try {
                 int ObtainedItemCount = TunicRandomizer.Tracker.ItemsCollected.Count;
                 int ObtainedItemCountInCurrentScene = TunicRandomizer.Tracker.ItemsCollected.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
-                int TotalItemCountInCurrentScene = ItemRandomizer.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
+                int TotalItemCountInCurrentScene = ItemPatches.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
                 Title.GetComponent<TextMeshProUGUI>().text = $"Randomizer Stats";
                 Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
                 Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? new Color(0.917f, 0.65f, .08f) : Color.white;
@@ -232,7 +240,14 @@ namespace TunicRandomizer {
                 }
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
                     QuestionMark.SetActive(false);
+                } else {
+                    QuestionMark.SetActive(true);
                 }
+/*                if (Inventory.GetItemByName("Crystal Ball").Quantity == 1) {
+                    QuestionMark2.SetActive(false);
+                } else {
+                    QuestionMark2.SetActive(true);
+                }*/
                 Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= 302) ? new Color(0.917f, 0.65f, .08f) : Color.white;
 
 

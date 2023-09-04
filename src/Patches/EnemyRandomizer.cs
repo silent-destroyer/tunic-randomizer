@@ -465,7 +465,7 @@ namespace TunicRandomizer {
                         TopLine.text = $"\"Enemy\"";
                         foreach (string Key in ProperEnemyNames.Keys) {
                             if (NewEnemy.name.Replace(" Prefab", "").Replace("(Clone)", "") == Key) {
-                                TopLine.text = ProperEnemyNames[Key];
+                                TopLine.text = Translations.TranslateDefaultNoQuotes(ProperEnemyNames[Key]);
                                 if (NewEnemy.name.Contains("crocodoo")) {
                                     BottomLine.text = $"#uh wuhn ahnd OnlE";
                                 } else if (EnemyRankings["Average"].Contains(Key)) {

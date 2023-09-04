@@ -54,6 +54,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool UseTrunicTranslations {
+            get;
+            set;
+        }
+
         // Gameplay Settings
         public bool HeirAssistModeEnabled {
             get;
@@ -152,6 +157,7 @@ namespace TunicRandomizer {
             GhostFoxHintsEnabled = true;
             ShowItemsEnabled = true;
             ChestsMatchContentsEnabled = true;
+            UseTrunicTranslations = false;
 
             HeirAssistModeEnabled = false;
             CheaperShopItemsEnabled = true;

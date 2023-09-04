@@ -15,7 +15,7 @@ namespace TunicRandomizer {
                 //fownd ahn Itehm!
                 Inventory.GetItemByName("Stick").Quantity = 1;
                 Inventory.GetItemByName("Stick").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Stick").collectionMessage.text = $"fownd ahn Itehm! \"(<#8ddc6e>Lv. 1<#FFFFFF>)\"";
+                Inventory.GetItemByName("Stick").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"fownd ahn Itehm! (<#8ddc6e>lehvuhl 1<#FFFFFF>)" : $"fownd ahn Itehm! \"(<#8ddc6e>Lv. 1<#FFFFFF>)\"";
 
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Stick"));
                 TunicRandomizer.Tracker.ImportantItems["Stick"] = 1;
@@ -27,7 +27,7 @@ namespace TunicRandomizer {
                 SwordPresentation.transform.localRotation = new Quaternion(-0.2071f, -0.1216f, 0.3247f, -0.9148f);
 
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Sword").collectionMessage.text = $"fownd ahn Itehm! \"(<#e99d4c>Lv. 2<#FFFFFF>)\"";
+                Inventory.GetItemByName("Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"fownd ahn Itehm! (<#e99d4c>lehvuhl 2<#FFFFFF>)" : $"fownd ahn Itehm! \"(<#e99d4c>Lv. 2<#FFFFFF>)\"";
                 Inventory.GetItemByName("Sword").useAlreadyHaveOneMessage = false;
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 TunicRandomizer.Tracker.ImportantItems["Sword"] = 2;
@@ -39,7 +39,7 @@ namespace TunicRandomizer {
                 SwordPresentation.transform.localRotation = new Quaternion(-0.2071f, -0.1216f, 0.3247f, -0.9148f);
 
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Sword").collectionMessage.text = $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
+                Inventory.GetItemByName("Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ? ? ?    (<#ca7be4>lehvuhl 3<#FFFFFF>)" : $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
                 Inventory.GetItemByName("Sword").useAlreadyHaveOneMessage = false;
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
@@ -55,13 +55,32 @@ namespace TunicRandomizer {
                 SwordPresentation.transform.localScale = new Vector3(0.175f, 0.175f, 0.175f);
 
                 Inventory.GetItemByName("Sword").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                Inventory.GetItemByName("Sword").collectionMessage.text = $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
+                Inventory.GetItemByName("Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ! ! !    (<#5de7cf>lehvuhl 4<#FFFFFF>)" : $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
                 Inventory.GetItemByName("Sword").useAlreadyHaveOneMessage = false;
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
                 TunicRandomizer.Tracker.ImportantItems["Level Up - Attack"] = Inventory.GetItemByName("Level Up - Attack").Quantity;
                 EnableThirdSword();
                 TunicRandomizer.Tracker.ImportantItems["Sword"] = 4;
+            }
+        }
+
+        public static void ResetSword() {
+            string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
+            GameObject SwordProxy = GameObject.Find(SwordPath);
+            if (SwordProxy.GetComponent<MeshFilter>() == null) {
+                GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());
+            }
+            if (SwordProxy.GetComponent<MeshRenderer>() == null) {
+                GameObject.Destroy(SwordProxy.GetComponent<MeshRenderer>());
+            }
+            SwordProxy.AddComponent<MeshFilter>().mesh = ModelSwaps.Items["Sword"].GetComponent<MeshFilter>().mesh;
+            SwordProxy.AddComponent<MeshRenderer>().materials = ModelSwaps.Items["Sword"].GetComponent<MeshRenderer>().materials;
+            SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 0.7653f, 0f);
+            SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 1.25f, 1f);
+            SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.2f, 1.32f, 0.2f);
+            if (SwordProxy.transform.childCount == 5) {
+                GameObject.Destroy(SwordProxy.transform.GetChild(4).gameObject);
             }
         }
 

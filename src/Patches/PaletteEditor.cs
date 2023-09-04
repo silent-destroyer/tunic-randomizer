@@ -321,9 +321,9 @@ namespace TunicRandomizer {
                     ToonFox.GetComponent<MeshRenderer>().material,
                     PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials[1]
                 };
-            if (GoldenItemBehavior.CanTakeGoldenHit) {
-				GoldenItemBehavior.FoxBody.GetComponent<MeshRenderer>().materials = Body;
-				GoldenItemBehavior.FoxHair.GetComponent<MeshRenderer>().materials = Hair;
+            if (CustomItemBehaviors.CanTakeGoldenHit) {
+				CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials = Body;
+				CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials = Hair;
             } else {
                 PlayerCharacter.instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Body;
                 PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = Hair;
@@ -346,9 +346,9 @@ namespace TunicRandomizer {
                     RegularFox.GetComponent<MeshRenderer>().material,
                     PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials[1]
                 };
-            if (GoldenItemBehavior.CanTakeGoldenHit) {
-				GoldenItemBehavior.FoxBody.GetComponent<MeshRenderer>().materials = Body;
-				GoldenItemBehavior.FoxHair.GetComponent<MeshRenderer>().materials = Hair;
+            if (CustomItemBehaviors.CanTakeGoldenHit) {
+				CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials = Body;
+				CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials = Hair;
 			} else {
 				PlayerCharacter.instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Body;
 				PlayerCharacter.instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = Hair;

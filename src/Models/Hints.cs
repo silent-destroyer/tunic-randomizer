@@ -22,6 +22,8 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
 
+        public static Dictionary<string, string> TrunicHintMessages = new Dictionary<string, string>();
+
         public static Dictionary<string, string> SimplifiedSceneNames = new Dictionary<string, string>() {
             {"Overworld Redux", "Overworld"},
             {"Furnace", "Overworld Belltower"},

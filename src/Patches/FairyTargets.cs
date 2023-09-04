@@ -13,11 +13,11 @@ namespace TunicRandomizer {
             foreach(FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>().Where(Target => !Target.name.Contains("fairy target"))) {
                 GameObject.Destroy(FairyTarget);
             }
-            if (ItemRandomizer.ItemList.Count > 0) {
-                List<string> ItemIdsInScene = ItemRandomizer.ItemList.Keys.Where(itemId => ItemRandomizer.ItemList[itemId].Location.SceneName == SceneLoaderPatches.SceneName && !ItemRandomizer.ItemsPickedUp[itemId]).ToList();
+            if (ItemPatches.ItemList.Count > 0) {
+                List<string> ItemIdsInScene = ItemPatches.ItemList.Keys.Where(itemId => ItemPatches.ItemList[itemId].Location.SceneName == SceneLoaderPatches.SceneName && !ItemPatches.ItemsPickedUp[itemId]).ToList();
                 if (ItemIdsInScene.Count > 0) {
                     foreach (string ItemId in ItemIdsInScene) {
-                        ItemData Item = ItemRandomizer.ItemList[ItemId];
+                        ItemData Item = ItemPatches.ItemList[ItemId];
 
                         if (GameObject.Find($"fairy target {Item.Location.Position}") == null) {
                             CreateFairyTarget($"fairy target {Item.Location.Position}", StringToVector3(Item.Location.Position));
@@ -26,7 +26,7 @@ namespace TunicRandomizer {
                     if (GameObject.FindObjectOfType<TrinketWell>() != null) {
                         int CoinCount = Inventory.GetItemByName("Trinket Coin").Quantity + TunicRandomizer.Tracker.ImportantItems["Coins Tossed"];
                         Dictionary<int, int> CoinLevels = new Dictionary<int, int>() { { 0, 3 }, { 1, 6 }, { 2, 10 }, { 3, 15 }, { 4, 20 } };
-                        int CoinsNeededForNextReward = CoinLevels[ItemRandomizer.ItemList.Keys.Where(ItemId => ItemRandomizer.ItemList[ItemId].Location.SceneName == "Trinket Well" && ItemRandomizer.ItemsPickedUp[ItemId]).ToList().Count];
+                        int CoinsNeededForNextReward = CoinLevels[ItemPatches.ItemList.Keys.Where(ItemId => ItemPatches.ItemList[ItemId].Location.SceneName == "Trinket Well" && ItemPatches.ItemsPickedUp[ItemId]).ToList().Count];
 
                         if ((Inventory.GetItemByName("Trinket Coin").Quantity + TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]) > CoinsNeededForNextReward) {
                             CreateFairyTarget($"fairy target trinket well", GameObject.FindObjectOfType<TrinketWell>().transform.position);
@@ -45,8 +45,8 @@ namespace TunicRandomizer {
                 FairyTarget.enabled = false;
             }
 
-            foreach (string ItemId in ItemRandomizer.ItemList.Keys.Where(itemId => ItemRandomizer.ItemList[itemId].Location.SceneName != SceneLoaderPatches.SceneName && !ItemRandomizer.ItemsPickedUp[itemId])) {
-                ScenesWithItems.Add(ItemRandomizer.ItemList[ItemId].Location.SceneName);
+            foreach (string ItemId in ItemPatches.ItemList.Keys.Where(itemId => ItemPatches.ItemList[itemId].Location.SceneName != SceneLoaderPatches.SceneName && !ItemPatches.ItemsPickedUp[itemId])) {
+                ScenesWithItems.Add(ItemPatches.ItemList[ItemId].Location.SceneName);
             }
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {

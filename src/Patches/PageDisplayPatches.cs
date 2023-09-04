@@ -14,7 +14,7 @@ namespace TunicRandomizer {
             }
 
             bool[] RandomFairiesObtained = new bool[20];
-            List<string> Fairies = new List<string>(ItemRandomizer.FairyLookup.Keys);
+            List<string> Fairies = new List<string>(ItemPatches.FairyLookup.Keys);
             int Counter = 0;
             foreach (string Key in Fairies) {
                 if (SaveFile.GetInt($"randomizer obtained fairy {Key}") == 1) {
@@ -23,7 +23,7 @@ namespace TunicRandomizer {
                 Counter++;
             }
             for (int i = 0; i < 20; i++) {
-                SaveFile.SetInt(ItemRandomizer.FairyLookup[Fairies[i]].Flag, RandomFairiesObtained[i] ? 1 : 0);
+                SaveFile.SetInt(ItemPatches.FairyLookup[Fairies[i]].Flag, RandomFairiesObtained[i] ? 1 : 0);
             }
 
             SaveFile.SaveToDisk();
@@ -42,7 +42,7 @@ namespace TunicRandomizer {
 
 
             bool[] OpenedFairyChests = new bool[28];
-            List<string> Fairies = new List<string>(ItemRandomizer.FairyLookup.Keys);
+            List<string> Fairies = new List<string>(ItemPatches.FairyLookup.Keys);
             int Counter = 0;
             foreach (string Key in Fairies) {
                 if (SaveFile.GetInt($"randomizer opened fairy chest {Key}") == 1) {
@@ -51,7 +51,7 @@ namespace TunicRandomizer {
                 Counter++;
             }
             for (int i = 0; i < 20; i++) {
-                SaveFile.SetInt(ItemRandomizer.FairyLookup[Fairies[i]].Flag, OpenedFairyChests[i] ? 1 : 0);
+                SaveFile.SetInt(ItemPatches.FairyLookup[Fairies[i]].Flag, OpenedFairyChests[i] ? 1 : 0);
             }
 
             if (ShowAbilityUnlock) {
@@ -59,16 +59,16 @@ namespace TunicRandomizer {
                 AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
                 AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
                 if (AbilityUnlockPage == "12") {
-                    AreaData.topLine.text = $"\"PRAYER Unlocked\"";
+                    AreaData.topLine.text = $"{Translations.Translate("PRAYER Unlocked", true)}";
                     AreaData.bottomLine.text = $"Jahnuhl yor wizduhm, rooin sEkur";
                 } else if (AbilityUnlockPage == "21") {
-                    AreaData.topLine.text = $"\"HOLY CROSS Unlocked\"";
+                    AreaData.topLine.text = $"{Translations.Translate("HOLY CROSS Unlocked", true)}";
                     AreaData.bottomLine.text = $"sEk wuht iz rItfuhlE yorz";
                     foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
                         SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = true;
                     }
                 } else if (AbilityUnlockPage == "26") {
-                    AreaData.topLine.text = $"\"ICE ROD Unlocked\"";
+                    AreaData.topLine.text = $"{Translations.Translate("ICE ROD Unlocked", true)}";
                     AreaData.bottomLine.text = $"#A wOnt nO wuht hit #ehm";
                 } else {
                     AreaData.topLine.text = $"";

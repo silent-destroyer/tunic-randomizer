@@ -4,7 +4,9 @@ An extensive randomizer mod for TUNIC, the action adventure game about a tiny fo
 This mod features randomization of every item in the game, as well as enemy randomization, enhanced fox customization, custom items, and much, much more!
 
 For questions, feedback, or discussion related to the randomizer, please visit the dedicated randomizer channel in the [Tunic Speedrunning Discord](https://discord.gg/HXkztJgQWj)! 
-  
+
+Note: This is the standalone, single-player version of the TUNIC Randomizer. For the version that supports Archipelago Multiworlds, see [Tunic Archipelago](https://github.com/silent-destroyer/tunic-randomizer-archipelago).
+
 ## Installation
 - Must use the latest PC version of Tunic. The mod has been tested on the Steam and PC Game Pass version, but should work on any PC version. The mod can also be installed on the Steam Deck via Proton using this guide: https://docs.bepinex.dev/articles/advanced/proton_wine.html.
 - Download the correct build/version of BepInEx from here: https://builds.bepinex.dev/projects/bepinex_be/572/BepInEx_UnityIL2CPP_x64_9c2b17f_6.0.0-be.572.zip, or alternatively search for it yourself by going to https://builds.bepinex.dev/projects/bepinex_be, finding <b>Artifact #572</b>, and downloading the <b>"BepInEx Unity IL2CPP for Windows (x64) games"</b> build. 
@@ -36,6 +38,7 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 - Save files created by the randomizer will be marked with a "randomizer" tag in the file select screen to help differentiate them from your vanilla save files while the mod is loaded.
 - The Randomizer will routinely write to a couple of files in the Randomizer folder under the game's AppData directory (typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend\Randomizer):
   - Spoiler.log - This file lists every check in the game and what item they contain. It will also mark off which checks you have collected.
+    - In order to better facilitate things like races, the creation of the spoiler log can be toggled on/off on the title screen.
   - ItemTracker.json - This file contains information such as the current seed number, what important items have been obtained, and a running list of all checks that have been found. Can be useful for creating external programs that interface with the randomizer, such as this [Tunic Rando Tracker](https://github.com/radicoon/tunic-rando-tracker) by Radicoon.
 - Custom seeds can be set on the title screen before starting a New Game, or can be changed by modifying the seed value in the save file created after starting a New Game. Pressing '2' on keyboard while in-game will display the current seed and settings being used.
 - The Randomizer will notify you on the title screen if a new update is available for the mod.
@@ -45,9 +48,10 @@ For questions, feedback, or discussion related to the randomizer, please visit t
 With the exception of the Logic settings, all options can be freely toggled or changed at any point while playing.
 ### Logic
 - Game Mode
-  - Choose between a classic randomizer experience or Hexagon Quest, a separate game mode inspired by Triforce Hunt in Zelda randomizers.
+  - Choose between a classic randomizer experience or Hexagon Quest, a separate game mode inspired by Triforce Hunt in Zelda randomizers. A vanilla mode is also available that doesn't randomize items.
     - Classic Randomizer: Find the three Hexagon Keys and defeat The Heir or Share Your Wisdom to win.
     - Hexagon Quest: 30 Gold Hexagons are shuffled into the item pool. Find 20 of them and visit The Heir to win.
+    - Vanilla: Leaves all the items in their vanilla locations. For those who want to play non-randomized Tunic but still enjoy all the other features of the mod.
 - Keys Behind Bosses 
   - Choose if the three Hexagon Keys are randomly shuffled or placed behind their respective bossfight.
   - In Hexagon Quest, this option guarantees a Gold Hexagon is placed behind each of the three major bosses.
@@ -61,7 +65,7 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - Locks the ability to use Prayer, most Holy Cross codes*, and the Ice Rod combo technique until the respective manual page for each ability is found.
   - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and Ice Rod is unlocked by Page 53.
   - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
-  - This option does not currently apply when playing Hexagon Quest, as all pages are given from the start in that mode.
+  - In Hexagon Quest, rather than unlocked abilities via pages, a random ability is unlocked at 5, 10, and 15 Gold Hexagons found
 ### Hints
 - Path of the Hero
   - Places a major hint at specific locations around the world, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple. These hint towards major progression items, such as Magic Items, Laurels, Hexagons, and more.
@@ -71,6 +75,8 @@ With the exception of the Logic settings, all options can be freely toggled or c
 - Freestanding Items and Chests Match Contents
   - All freestanding items (Item Pickups, Page Pickups, Shop Items, Hero's Grave Relics, etc.) will have their model swapped to appear as the item they are randomized as.
   - Chest textures will be swapped to indicate what item is in them. Currently, the items with different chest textures are Fairies, Golden Trophies, the three Hexagons, and the Hero's Laurels.
+- Untranslated Text
+  - For the experienced Ruin Seekers out there, this option removes all English words from any custom dialogue, hints, or other text produced by the randomizer, leaving it up to your own knowledge to figure out what is where.
 ### General
 - Easier Heir Fight
   - Attacks deal additional damage to The Heir based on the total number of checks found.
@@ -133,6 +139,6 @@ With the exception of the Logic settings, all options can be freely toggled or c
   
 ## Credits
 - Glace and RisingStar111 for helping research how to mod this game.
-- Radicoon, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, and many others for playtesting and helping to improve the mod.
+- Radicoon, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, Scipio, Jabberrock, and many others for playing and helping to improve the mod.
 - Andrew Shouldice, Kevin Regamey, Finji, and everyone else involved in making this wonderful game.
 - zanders3 for [TinyJson](https://github.com/zanders3/json).

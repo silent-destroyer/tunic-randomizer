@@ -46,6 +46,11 @@ namespace TunicRandomizer {
             if (ToggleHexagonQuest) {
                 TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.HEXAGONQUEST;
             }
+            GUI.skin.toggle.fontSize = 15;
+            bool ToggleSpoilerLog = GUI.Toggle(new Rect(330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
+            ItemRandomizer.CreateSpoilerLog = ToggleSpoilerLog;
+            GUI.skin.toggle.fontSize = 20;
+
             GUI.Label(new Rect(10f, 95f, 200f, 30f), "Logic Settings");
             bool TopggleBossKeys = GUI.Toggle(new Rect(10f, 140f, 180f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
             TunicRandomizer.Settings.KeysBehindBosses = TopggleBossKeys;
