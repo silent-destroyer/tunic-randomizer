@@ -304,23 +304,23 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Sword Access_", "lower", "Forest Hero Grave Lower Entrance"),
                     new TunicPortal("East Forest Redux Laddercave_", "upper", "Fox Dance Door"),
-                    new TunicPortal("East Forest Redux Interior_", "lower", "Portal (7)"),
-                    new TunicPortal("East Forest Redux Laddercave_", "gate", "Upper Guard House 1 Entrance"),
+                    new TunicPortal("East Forest Redux Interior_", "lower", "Guard House 2 Lower Entrance"),
+                    new TunicPortal("East Forest Redux Laddercave_", "gate", "Guard House 1 Lower Entrance"),
                     new TunicPortal("Sword Access_", "upper", "Forest Hero Grave Upper Entrance"),
-                    new TunicPortal("East Forest Redux Interior_", "upper", "Portal (4)"),
-                    new TunicPortal("East Forest Redux Laddercave_", "lower", "Portal (1)"),
-                    new TunicPortal("Forest Belltower_", "", "Portal"),
-                    new TunicPortal("Transit_", "teleporter_forest teleporter", "Portal"),
+                    new TunicPortal("East Forest Redux Interior_", "upper", "Guard House 2 Upper Entrance"),
+                    new TunicPortal("East Forest Redux Laddercave_", "lower", "Guard House 1 Lower Entrance"),
+                    new TunicPortal("Forest Belltower_", "", "East Forest main entry point"),
+                    new TunicPortal("Transit_", "teleporter_forest teleporter", "East Forest Portal"),
                 }
             },
             {
                 "East Forest Redux Laddercave", // the place with the two ladders that leads to the boss room
                 new List<TunicPortal>
                 {
-                    new TunicPortal("East Forest Redux_", "upper", "Portal (2)"),
-                    new TunicPortal("East Forest Redux_", "lower", "Portal (1)"),
-                    new TunicPortal("East Forest Redux_", "gate", "Portal (3)"),
-                    new TunicPortal("Forest Boss Room_", "", "Portal"),
+                    new TunicPortal("East Forest Redux_", "upper", "Guard House 1 Dance Exit"),
+                    new TunicPortal("East Forest Redux_", "lower", "Guard House 1 Lower Exit"),
+                    new TunicPortal("East Forest Redux_", "gate", "Guard House 1 Exit to Upper Forest"),
+                    new TunicPortal("Forest Boss Room_", "", "Guard House to Boss Room"),
                 }
             },
             {
@@ -340,27 +340,28 @@ namespace TunicRandomizer
                 "East Forest Redux Interior", // Guardhouse 2
                 new List<TunicPortal>
                 {
-                    new TunicPortal("East Forest Redux_", "lower", "Portal (1)"),
-                    new TunicPortal("East Forest Redux_", "upper", "Portal"),
+                    new TunicPortal("East Forest Redux_", "lower", "Guard House 2 Lower Exit"),
+                    new TunicPortal("East Forest Redux_", "upper", "Guard House 2 Upper Exit"),
                 }
             },
             {
                 "Forest Boss Room",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("East Forest Redux Laddercave_", "", "Portal"),
+                    new TunicPortal("East Forest Redux Laddercave_", "", "Forest Boss to Forest"),
+                    new TunicPortal("Forest Belltower_", "", "Forest Boss to Belltower"),
+                    
                     new TunicPortal("Archipelagos Redux_", "showfloordemo2022", "Portal (2)"),
-                    new TunicPortal("Forest Belltower_", "", "Portal (1)"),
                 }
             },
             {
                 "Forest Belltower",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Courtyard_", "", "Portal (2)"),
-                    new TunicPortal("East Forest Redux_", "", "Portal (3)"),
-                    new TunicPortal("Overworld Redux_", "", "Portal (1)"),
-                    new TunicPortal("Forest Boss Room_", "", "Portal"),
+                    new TunicPortal("Fortress Courtyard_", "", "Forest Bell to Fortress"),
+                    new TunicPortal("East Forest Redux_", "", "Forest Bell to Forest"),
+                    new TunicPortal("Overworld Redux_", "", "Forest Bell to Overworld"),
+                    new TunicPortal("Forest Boss Room_", "", "Forest Bell to Boss"),
                 }
             },
             {
@@ -371,29 +372,29 @@ namespace TunicRandomizer
                     new TunicPortal("Fortress Reliquary_", "Upper", "Portal (5)"),
                     new TunicPortal("Fortress Main_", "Big Door", "Portal"),
                     new TunicPortal("Fortress East_", "", "Portal (1)"),
-                    new TunicPortal("Fortress Basement_", "", "Portal (3)"),
-                    new TunicPortal("Forest Belltower_", "", "Portal (7)"),
+                    new TunicPortal("Fortress Basement_", "", "Fortress to Under Fortress outside"),
+                    new TunicPortal("Forest Belltower_", "", "Fortress to Forest Bell"),
                     new TunicPortal("Overworld Redux_", "", "Portal (8)"),  // Why are there two of these????
                     new TunicPortal("Overworld Redux_", "", "Portal (4)"),
-                    new TunicPortal("Shop_", "", "Portal (2)"),
+                    new TunicPortal("Shop_", "", "Fortress outside shop"),
                 }
             },
             {
                 "Fortress Basement", // Under the fortress
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main_", "", "Portal (1)"),
-                    new TunicPortal("Fortress Courtyard_", "", "Portal"),
+                    new TunicPortal("Fortress Main_", "", "Under Fortress to inside"),
+                    new TunicPortal("Fortress Courtyard_", "", "Under Fortress to outside"),
                 }
             },
             {
                 "Fortress Main", // Inside the fortress
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Shop_", "", "Portal (2)"),
-                    new TunicPortal("Fortress Basement_", "", "Portal"),
+                    new TunicPortal("Shop_", "", "Inside Fortress Shop"),
+                    new TunicPortal("Fortress Basement_", "", "Fortress inside to under fortress"),
                     new TunicPortal("Fortress Courtyard_", "Big Door", "Portal (1)"),
-                    new TunicPortal("Fortress Arena_", "", "Portal (3)"),
+                    new TunicPortal("Fortress Arena_", "", "Fortress big gold door"),
                     new TunicPortal("Fortress East_", "upper", "Portal (4)"),
                     new TunicPortal("Fortress East_", "lower", "Portal (5)"),
                 }
@@ -412,49 +413,49 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Courtyard_", "Lower", "Portal"),
-                    new TunicPortal("Dusty_", "", "Portal (2)"),
+                    new TunicPortal("Dusty_", "", "Dusty Entrance"),
                     new TunicPortal("Fortress Courtyard_", "Upper", "Portal (1)"),
-                    new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Portal"),
+                    new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Fortress Hero Grave"),
                 }
             },
             {
                 "Fortress Arena", // Where the boss is
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main_", "", "Portal"),
-                    new TunicPortal("Fortress Main_", "", "Portal"),
-                    new TunicPortal("Transit_", "teleporter_spidertank", "Portal"),
+                    new TunicPortal("Fortress Main_", "", "Boss to Fortress"),
+                    new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these?
+                    new TunicPortal("Transit_", "teleporter_spidertank", "Fortress Portal"),
                 }
             },
             {
                 "Dusty", // broom
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Reliquary_", "", "Portal"),
+                    new TunicPortal("Fortress Reliquary_", "", "Dusty Exit"),
                 }
             },
             {
                 "Mountain",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Mountaintop_", "", "Portal"),
-                    new TunicPortal("Quarry Redux_", "", "Portal (2)"),
-                    new TunicPortal("Overworld Redux_", "", "Portal (1)"),
+                    new TunicPortal("Mountaintop_", "", "Follow the Golden Path"),
+                    new TunicPortal("Quarry Redux_", "", "Mountain to Quarry"),
+                    new TunicPortal("Overworld Redux_", "", "Mountain to Overworld"),
                 }
             },
             {
                 "Mountaintop",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Mountain_", "", "Portal"),
+                    new TunicPortal("Mountain_", "", "Top of the Mountain exit"),
                 }
             },
             {
                 "Darkwoods Tunnel", // tunnel between overworld and quarry
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux_", "", "Portal"),
-                    new TunicPortal("Quarry Redux_", "", "Portal (1)"),
+                    new TunicPortal("Overworld Redux_", "", "Quarry Connector to Overworld"),
+                    new TunicPortal("Quarry Redux_", "", "Quarry Connector to Quarry"),
                 }
             },
             {
@@ -548,8 +549,8 @@ namespace TunicRandomizer
                 "Cathedral Arena", // Gauntlet
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Swamp Redux 2_", "", "Portal"),
-                    new TunicPortal("Cathedral Redux_", "", "Portal (1)"),
+                    new TunicPortal("Swamp Redux 2_", "", "Gauntlet to Swamp"),
+                    new TunicPortal("Cathedral Redux_", "", "Gauntlet to "),
                     new TunicPortal("Shop_", "", "Portal (1)"),
                 }
             },
@@ -557,19 +558,19 @@ namespace TunicRandomizer
                 "Shop", // Every shop is just this region. Need to figure out how it determines where to go back to, since its destination is _
                 new List<TunicPortal>
                 {
-                    new TunicPortal("_", "", "Portal"),
+                    new TunicPortal("_", "", "Shop Exit Portal"),
                 }
             },
             {
                 "RelicVoid", // Hero relic area
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Reliquary_", "teleporter_relic plinth", "Portal"),
-                    new TunicPortal("Monastery_", "teleporter_relic plinth", "Portal"),
-                    new TunicPortal("Archipelagos Redux_", "teleporter_relic plinth", "Portal"),
-                    new TunicPortal("Sword Access_", "teleporter_relic plinth", "Portal"),
-                    new TunicPortal("Library Hall_", "teleporter_relic plinth", "Portal"),
-                    new TunicPortal("Swamp Redux 2_", "teleporter_relic plinth", "Portal"),
+                    new TunicPortal("Fortress Reliquary_", "teleporter_relic plinth", "Hero Relic to Fortress"),
+                    new TunicPortal("Monastery_", "teleporter_relic plinth", "Hero Relic to Monastery"),
+                    new TunicPortal("Archipelagos Redux_", "teleporter_relic plinth", "Hero Relic to West Garden"),
+                    new TunicPortal("Sword Access_", "teleporter_relic plinth", "Hero Relic to East Forest"),
+                    new TunicPortal("Library Hall_", "teleporter_relic plinth", "Hero Relic to Library"),
+                    new TunicPortal("Swamp Redux 2_", "teleporter_relic plinth", "Hero Relic to Swamp"),
                 }
             },
             {
