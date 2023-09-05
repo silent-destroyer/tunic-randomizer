@@ -28,13 +28,13 @@ namespace TunicRandomizer
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name I gave the portal to make it easier to identify
+                PortalName = portalName; // this is name we gave the portals to make them easier to identify
                 DestinationPair = destination + destinationTag;
             }
         }
 
         public static Dictionary<string, List<TunicPortal>> PortalList = new Dictionary<string, List<TunicPortal>>
-        {   // formatted with region the portal is in, with the dict being the tag combo and portal name
+        {   
             {
                 "Overworld Redux",
                 new List<TunicPortal>
@@ -606,44 +606,5 @@ namespace TunicRandomizer
                 }
             },
         };
-
-        //public static void ScenePortal_DepartToScene_PrefixPatch(MonoBehaviour coroutineRunner, bool whiteout, float transitionDuration, string destinationSceneName, string id, bool pauseTime, float delay)
-        public static void SwapSwampPortals()
-        {
-            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
-            foreach (var portal in Portals)
-            {
-                //Logger.LogInfo("new TunicPortal(\"" + portal.destinationSceneName + "_\", \"" + portal.id + "\", \"" + portal.name + "\"),");
-                if (portal.FullID == "Overworld Redux_conduit")
-                {
-                    portal.optionalIDToSpawnAt = "wall";
-                }
-                if (portal.FullID == "Swamp Redux 2_conduit")
-                {
-                    portal.optionalIDToSpawnAt = "wall";
-                }
-                if (portal.FullID == "Overworld Redux_wall")
-                {
-                    portal.optionalIDToSpawnAt = "conduit";
-                }
-                if (portal.FullID == "Swamp Redux 2_wall")
-                {
-                    portal.optionalIDToSpawnAt = "conduit";
-                }
-            }
-        }
-        // [Message:UnityExplorer] [Unity] [Player Character Spawn] going to Shop, Cathedral Arena_
-
-        //   compare this list of portals to one created to assign the tags we want after randomizing the portals
-        //then change the destination and destinationtag to match
-        //   It makes the most sense to just straight number all of the portal tags
-        //that way like numbers can match up and be two sides of the same portal
-
-        //Resources.FindObjectsOfTypeAll<ScenePortal>()
-        //foreach (KeyValuePair<string, List<TunicPortal>> RegionGroup in PortalList)
-        //    {
-        //        string RegionName = RegionGroup.Key;
-        //    }
-        //    string TestString = "ScenePortal.DepartToScene(MonoBehaviour coroutineRunner, bool whiteout, float transitionDuration, string id, bool pauseTime, float delay"
     }
 }
