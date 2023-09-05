@@ -16,7 +16,6 @@ namespace TunicRandomizer {
         public static bool SpawnedGhosts = false;
 
         public static bool SceneLoader_OnSceneLoaded_PrefixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-            Logger.LogInfo("scene loader prefix patch");
             if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", ItemPatches.ItemsPickedUp["19 [Forest Belltower]"] ? 1 : 0);
             }
