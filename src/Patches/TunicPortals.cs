@@ -295,7 +295,7 @@ namespace TunicRandomizer
                 "Library Arena",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Lab_", "", "Library Boss Arena")
+                    new TunicPortal("Library Lab_", "", "Library Boss Arena exit")
                 }
             },
             {
@@ -579,7 +579,6 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Archipelagos Redux_", "teleporter_archipelagos_teleporter", "Portal"),
                     new TunicPortal("Library Lab_", "teleporter_library teleporter", "Portal"),
-                    new TunicPortal("Transit_", "teleporter_", "Portal"), // Unused portal, far away and not enabled
                     new TunicPortal("Quarry Redux_", "teleporter_quarry teleporter", "Portal"),
                     new TunicPortal("East Forest Redux_", "teleporter_forest teleporter", "Portal"),
                     new TunicPortal("Fortress Arena_", "teleporter_spidertank", "Portal"),
@@ -588,6 +587,8 @@ namespace TunicRandomizer
                     new TunicPortal("Spirit Arena_", "teleporter_spirit arena", "Portal"),
                     new TunicPortal("Overworld Redux_", "teleporter_town", "Portal"),
                     new TunicPortal("Overworld Redux_", "teleporter_starting island", "Portal"),
+
+                    new TunicPortal("Transit_", "teleporter_", "Portal"), // Unused portal, far away and not enabled
                 }
             },
             {
@@ -606,5 +607,22 @@ namespace TunicRandomizer
                 }
             },
         };
+        public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+        public static void RandomizePortals()
+        {
+            foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList) {
+                string region_name = region_group.Key;
+                List<TunicPortal> region_portals = region_group.Value;
+                foreach (TunicPortal portal in region_portals)
+                {
+                    // make an enumerated dict
+                    // not sure how to format it yet
+                    // probably like, a string and PortalCombo, where the PortalCombo is just the full name of each portal
+                    // so, "1": PortalCombo("Quarry Redux_back", "Library Lab_")
+                    // probably need the scene name in there somewhere too
+                }
+            }
+        }
+
     }
 }

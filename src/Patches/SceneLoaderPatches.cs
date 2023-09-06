@@ -30,17 +30,17 @@ namespace TunicRandomizer {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (ScenePortal portal in Portals)
             {
-                if (portal.FullID == "Quarry Redux_" && loadingScene.name == "ziggurat2020_0")
+                if (portal.FullID == "Windmill_" && loadingScene.name == "Overworld Redux")
                 {
-                    portal.destinationSceneName = "Sword Cave";
-                    portal.id = "two";
-                    portal.optionalIDToSpawnAt = "two";
+                    portal.destinationSceneName = "Overworld Redux";
+                    portal.id = "3";
+                    portal.optionalIDToSpawnAt = "2";
                 }
-                if (portal.FullID == "Overworld Redux_" && loadingScene.name == "Sword Cave")
+                if (portal.FullID == "Sword Cave_" && loadingScene.name == "Overworld Redux")
                 {
-                    portal.destinationSceneName = "ziggurat2020_0";
-                    portal.id = "two";
-                    portal.optionalIDToSpawnAt = "two";
+                    portal.destinationSceneName = "Overworld Redux";
+                    portal.id = "2";
+                    portal.optionalIDToSpawnAt = "3";
                 }
             }
             ModelSwaps.SwappedThisSceneAlready = false;
