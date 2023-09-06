@@ -392,7 +392,9 @@ namespace TunicRandomizer {
                         SaveFile.SetFloat("randomizer holy cross unlocked time", SpeedrunData.inGameTime);
                         ShowNotification($"{Translations.Translate("HOLY CROSS Unlocked", true)}", $"sEk wuht iz rItfuhlE yorz");
                         foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                            SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = true;
+                            foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
+                                Spell.enabled = true;
+                            }
                         }
                     }
                     if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest ice rod requirement")) {

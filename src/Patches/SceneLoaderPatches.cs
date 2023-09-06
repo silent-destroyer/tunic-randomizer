@@ -156,7 +156,7 @@ namespace TunicRandomizer {
                         RandomObtainedFairies.Add(Key);
                     }
                 }
-
+                
                 StateVariable.GetStateVariableByName("SV_Fairy_5_Waterfall_Opened").BoolValue = SaveFile.GetInt("randomizer opened fairy chest Waterfall-(-47.0, 45.0, 10.0)") == 1;
 
                 StateVariable.GetStateVariableByName("SV_Fairy_00_Enough Fairies Found").BoolValue = true;
@@ -215,6 +215,12 @@ namespace TunicRandomizer {
                 DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
                 DoorHint.GetComponent<NPC>().script = DoorSecret;
                 DoorHint.SetActive(true);
+
+                // Remove barricades from swamp shop
+                if (GameObject.Find("_Setpieces Etc/plank_4u") != null && GameObject.Find("_Setpieces Etc/plank_4u (1)") != null) {
+                    GameObject.Find("_Setpieces Etc/plank_4u").SetActive(false);
+                    GameObject.Find("_Setpieces Etc/plank_4u (1)").SetActive(false);
+                }
             } else if (SceneName == "g_elements") {
                 if (SaveFile.GetInt("randomizer sent lost fox home") == 0) {
                     GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
@@ -301,7 +307,9 @@ namespace TunicRandomizer {
 
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer holy cross unlocked") == 0) {
                 foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                    SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
+                    foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
+                        Spell.enabled = false;
+                    }
                 }
             }
 

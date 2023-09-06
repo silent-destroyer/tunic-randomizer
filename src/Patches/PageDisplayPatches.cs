@@ -65,7 +65,9 @@ namespace TunicRandomizer {
                     AreaData.topLine.text = $"{Translations.Translate("HOLY CROSS Unlocked", true)}";
                     AreaData.bottomLine.text = $"sEk wuht iz rItfuhlE yorz";
                     foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                        SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = true;
+                        foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
+                            Spell.enabled = true;
+                        }
                     }
                 } else if (AbilityUnlockPage == "26") {
                     AreaData.topLine.text = $"{Translations.Translate("ICE ROD Unlocked", true)}";
