@@ -31,8 +31,30 @@ namespace TunicRandomizer
                 PortalName = portalName; // this is name we gave the portals to make them easier to identify
                 DestinationPair = destination + destinationTag;
             }
+            
+            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems)
+            {
+                Destination = destination;
+                DestinationTag = destinationTag;
+                PortalName = portalName; // this is name we gave the portals to make them easier to identify
+                RequiredItems = requiredItems; // the requirements to get from the center of a region to the center of it
+                DestinationPair = destination + destinationTag;
+            }
+
+            // if there are different requirements that can be met (x OR y), use a list instead
+            public TunicPortal(string destination, string destinationTag, string portalName, List<Dictionary<string, int>> requiredItems)
+            {
+                Destination = destination;
+                DestinationTag = destinationTag;
+                PortalName = portalName; // this is name we gave the portals to make them easier to identify
+                RequiredItems = requiredItems; // the requirements to get from the center of a region to the center of it
+                DestinationPair = destination + destinationTag;
+            }
         }
 
+        // this is a big list of every portal in the game
+        // we'll need to convert these into Portals (see Models/Portal.cs)
+        // maybe it'll need to be less overcomplicated later to remove the conversion? Hard to say, will have to see how it goes
         public static Dictionary<string, List<TunicPortal>> PortalList = new Dictionary<string, List<TunicPortal>>
         {   
             {
@@ -43,7 +65,7 @@ namespace TunicRandomizer
                     new TunicPortal("Windmill_", "", "Windmill Entrance"),
                     new TunicPortal("Sewer_", "entrance", "Well Entrance"),
                     new TunicPortal("Sewer_", "west_aqueduct", "Well Rail Left Entrance"),
-                    new TunicPortal("Overworld Interiors_", "house", "Old House Entry Door"),
+                    new TunicPortal("Overworld Interiors_", "house", "Old House Entry Door", new Dictionary<string, int> {{"old house key": 1}}),
                     new TunicPortal("Overworld Interiors_", "under_checkpoint", "Old House Other Entrance"),
                     new TunicPortal("Furnace_", "gyro_upper_north", "OW Furnace Upper North Entrance"),
                     new TunicPortal("Furnace_", "gyro_upper_east", "OW Furance Upper East Entrance"),
