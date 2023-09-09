@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using BepInEx.Logging;
 using Lib;
+using HarmonyLib;
 
 namespace TunicRandomizer
 {
@@ -607,22 +608,47 @@ namespace TunicRandomizer
                 }
             },
         };
+        public static List<Portal> PortalsList = new List<Portal>();
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
-        public static void RandomizePortals()
+
+        // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
+        public static void CreatePortals()
         {
+            PortalList.Clear();
             foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList) {
                 string region_name = region_group.Key;
                 List<TunicPortal> region_portals = region_group.Value;
                 foreach (TunicPortal portal in region_portals)
                 {
-                    // make an enumerated dict
-                    // not sure how to format it yet
-                    // probably like, a string and PortalCombo, where the PortalCombo is just the full name of each portal
-                    // so, "1": PortalCombo("Quarry Redux_back", "Library Lab_")
-                    // probably need the scene name in there somewhere too
+                    PortalsList.Add(new Portal(portal.Destination, portal.DestinationTag, portal.PortalName, region_name));
                 }
             }
+            Logger.LogInfo("number of portals is " + PortalsList.Count);
         }
 
+        public static void RandomizePortals(int seed)
+        {
+
+            foreach (Portal portal in PortalsList)
+            {
+                // use the spawn as the starting point for the time being, can change to starting point rando later
+                // then add all connectors (connectors are portals in regions with multiple portals... usually)
+                // after adding each connector, check if the region can be reached. if it can, can attach connectors to that region
+                // 
+                // place the progression items in random locations
+                // pick a starting region
+                // connect connectors. If the connector has a progression item in it, check the rules to see if you can get it. If you can't, skip it and come back later
+                // place the dead ends, starting with any that contain progression items
+                // connect remaining connectors
+                // do a final sweep to check and make sure you can reach every portal?
+            }
+            {
+                // make an enumerated dict
+                // not sure how to format it yet
+                // probably like, a string and PortalCombo, where the PortalCombo is just the full name of each portal
+                // so, "1": PortalCombo("Quarry Redux_back", "Library Lab_")
+                // probably need the scene name in there somewhere too
+            }
+        }
     }
 }

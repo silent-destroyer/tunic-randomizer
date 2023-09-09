@@ -257,6 +257,12 @@ namespace TunicRandomizer {
             TunicRandomizer.Randomizer = new System.Random(seed);
             SaveName = SaveFile.saveDestinationName;
 
+            if (TunicRandomizer.Settings.PortalRandoEnabled)
+            {
+                TunicPortals.CreatePortals();
+                TunicPortals.RandomizePortals(seed);
+            }
+            
             ItemRandomizer.PopulateSphereZero();
             ItemRandomizer.RandomizeAndPlaceItems();
 

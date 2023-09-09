@@ -33,6 +33,12 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool PortalRandoEnabled
+        {
+            get;
+            set;
+        }
+
         // Hint Settings
         public bool HeroPathHintsEnabled {
             get;
@@ -152,6 +158,7 @@ namespace TunicRandomizer {
             SwordProgressionEnabled = true;
             StartWithSwordEnabled = false;
             ShuffleAbilities = false;
+            PortalRandoEnabled = true;
 
             HeroPathHintsEnabled = true;
             GhostFoxHintsEnabled = true;
