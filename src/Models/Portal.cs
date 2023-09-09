@@ -1,5 +1,9 @@
 ﻿namespace TunicRandomizer {
     public class Portal {
+        public string Scene {
+            get;
+            set;
+        }
         public string Destination {
             get;
             set;
@@ -11,6 +15,10 @@
         }
 
         public string Name {
+            get;
+            set;
+        }
+        public List<Dictionary<string, int>> RequiredItems {
             get;
             set;
         }
