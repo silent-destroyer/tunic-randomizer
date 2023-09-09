@@ -65,7 +65,6 @@ namespace TunicRandomizer {
                     $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"", 
                     (Il2CppSystem.Action)QuickSettings.CopyQuickSettingsInGame, null);
             }
-
             /*            if (Input.GetKeyDown(KeyCode.Alpha3)) {
                             string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
                             string PuffColor = ColorPalette.GetColorStringForPopup(ColorPalette.Puff, 1);
@@ -342,12 +341,14 @@ namespace TunicRandomizer {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer holy cross unlocked") == 0) {
-                    foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                    SpellToggle.gameObject.GetComponent<ToggleObjectBySpell>().enabled = false;
+                foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                    foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
+                        Spell.enabled = false;
+                    }
                 }
             }
             PaletteEditor.SetupPartyHat(__instance);
-
+            
             if (PaletteEditor.CelShadingEnabled) { 
                 PaletteEditor.ApplyCelShading();
             }
