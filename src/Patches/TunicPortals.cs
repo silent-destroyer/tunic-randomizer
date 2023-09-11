@@ -660,6 +660,7 @@ namespace TunicRandomizer
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
+            Logger.LogInfo("randomize portals started");
             PortalList.Clear();
 
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
@@ -762,14 +763,17 @@ namespace TunicRandomizer
         public static void ModifyPortals(Scene loadingScene, Dictionary<string, PortalCombo> portalComboList)
         {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
-            string sceneName = loadingScene.name;
             foreach (var portal in Portals)
             {
+                Logger.LogInfo("portal in world is this " + portal.name + portal.destinationSceneName + portal.id);
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
+
+                    Logger.LogInfo("portal1 is " + portal1.Name);
+                    Logger.LogInfo("portal2 is " + portal2.Name);
 
                     if (portal1.Scene == loadingScene.name)
                     {
