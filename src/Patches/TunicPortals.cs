@@ -7,6 +7,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using Lib;
 using HarmonyLib;
+using JetBrains.Annotations;
 
 namespace TunicRandomizer
 {
@@ -20,8 +21,8 @@ namespace TunicRandomizer
             public string DestinationTag;
             public string DestinationPair;
             public string PortalName;
-            public Vector3 Position;
-            public Quaternion Rotation;
+            public Dictionary<string, int> RequiredItemCount;
+            public List<Dictionary<string, int>> RequiredItems;
 
             public TunicPortal() { }
 
@@ -38,7 +39,7 @@ namespace TunicRandomizer
                 Destination = destination;
                 DestinationTag = destinationTag;
                 PortalName = portalName; // this is name we gave the portals to make them easier to identify
-                RequiredItems = requiredItems; // the requirements to get from the center of a region to the center of it
+                RequiredItemCount = requiredItems; // the requirements to get from the center of a region to the center of it
                 DestinationPair = destination + destinationTag;
             }
 
@@ -57,7 +58,7 @@ namespace TunicRandomizer
         // we'll need to convert these into Portals (see Models/Portal.cs)
         // maybe it'll need to be less overcomplicated later to remove the conversion? Hard to say, will have to see how it goes
         public static Dictionary<string, List<TunicPortal>> PortalList = new Dictionary<string, List<TunicPortal>>
-        {   
+        {
             {
                 "Overworld Redux",
                 new List<TunicPortal>
@@ -65,8 +66,8 @@ namespace TunicRandomizer
                     new TunicPortal("Sword Cave_", "", "Sword Cave Entrance"),
                     new TunicPortal("Windmill_", "", "Windmill Entrance"),
                     new TunicPortal("Sewer_", "entrance", "Well Entrance"),
-                    new TunicPortal("Sewer_", "west_aqueduct", "Well Rail Left Entrance"),
-                    new TunicPortal("Overworld Interiors_", "house", "Old House Entry Door", new Dictionary<string, int> {{"old house key": 1}}),
+                    new TunicPortal("Sewer_", "west_aqueduct", "Well Rail Left Entrance", new Dictionary<string, int> { {"Aqueduct Rail access", 1} }),
+                    new TunicPortal("Overworld Interiors_", "house", "Old House Entry Door", new Dictionary<string, int> { {"old house key", 1}, {"Overworld Redux access", 1} }),
                     new TunicPortal("Overworld Interiors_", "under_checkpoint", "Old House Other Entrance"),
                     new TunicPortal("Furnace_", "gyro_upper_north", "OW Furnace Upper North Entrance"),
                     new TunicPortal("Furnace_", "gyro_upper_east", "OW Furance Upper East Entrance"),
@@ -373,7 +374,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("East Forest Redux Laddercave_", "", "Forest Boss to Forest"),
                     new TunicPortal("Forest Belltower_", "", "Forest Boss to Belltower"),
-                    
+
                     new TunicPortal("Archipelagos Redux_", "showfloordemo2022", "Portal (2)"),
                 }
             },
@@ -391,15 +392,16 @@ namespace TunicRandomizer
                 "Fortress Courtyard", // Outside the fortress, the area connected to east forest and overworld
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Reliquary_", "Lower", "Portal (6)"),
-                    new TunicPortal("Fortress Reliquary_", "Upper", "Portal (5)"),
-                    new TunicPortal("Fortress Main_", "Big Door", "Portal"),
-                    new TunicPortal("Fortress East_", "", "Portal (1)"),
+                    new TunicPortal("Fortress Reliquary_", "Lower", "Lower Fortress Grave Path Entrance"),
+                    new TunicPortal("Fortress Reliquary_", "Upper", "Upper Fortress Grave Path Entrance"),
+                    new TunicPortal("Fortress Main_", "Big Door", "Fortress Main Entrance"),
+                    new TunicPortal("Fortress East_", "", "Fortress Outside to Fortress Mage Area"),
                     new TunicPortal("Fortress Basement_", "", "Fortress to Under Fortress outside"),
                     new TunicPortal("Forest Belltower_", "", "Fortress to Forest Bell"),
-                    new TunicPortal("Overworld Redux_", "", "Portal (8)"),  // Why are there two of these????
-                    new TunicPortal("Overworld Redux_", "", "Portal (4)"),
+                    new TunicPortal("Overworld Redux_", "", "Fortress to Overworld"),
                     new TunicPortal("Shop_", "", "Fortress outside shop"),
+
+                    // new TunicPortal("Overworld Redux_", "", "Portal (4)"), // unused and disabled
                 }
             },
             {
@@ -416,28 +418,28 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Shop_", "", "Inside Fortress Shop"),
                     new TunicPortal("Fortress Basement_", "", "Fortress inside to under fortress"),
-                    new TunicPortal("Fortress Courtyard_", "Big Door", "Portal (1)"),
+                    new TunicPortal("Fortress Courtyard_", "Big Door", "Fortress Main Exit"),
                     new TunicPortal("Fortress Arena_", "", "Fortress big gold door"),
-                    new TunicPortal("Fortress East_", "upper", "Portal (4)"),
-                    new TunicPortal("Fortress East_", "lower", "Portal (5)"),
+                    new TunicPortal("Fortress East_", "upper", "Fortress to East Fortress Upper"),
+                    new TunicPortal("Fortress East_", "lower", "Fortress to East Fortress Lower"),
                 }
             },
             {
                 "Fortress East", // that tiny area with the couple mages up high, and the ladder in the lower right
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main_", "lower", "Portal (5)"),
-                    new TunicPortal("Fortress Courtyard_", "", "Portal (2)"),
-                    new TunicPortal("Fortress Main_", "upper", "Portal (4)"),
+                    new TunicPortal("Fortress Main_", "lower", "East Fortress to Inside Lower"),
+                    new TunicPortal("Fortress Courtyard_", "", "East Fortress to Courtyard"),
+                    new TunicPortal("Fortress Main_", "upper", "East Fortress to Inside Upper"),
                 }
             },
             {
                 "Fortress Reliquary", // Where the grave is
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Courtyard_", "Lower", "Portal"),
+                    new TunicPortal("Fortress Courtyard_", "Lower", "Bottom Fortress Grave Path Exit"),
                     new TunicPortal("Dusty_", "", "Dusty Entrance"),
-                    new TunicPortal("Fortress Courtyard_", "Upper", "Portal (1)"),
+                    new TunicPortal("Fortress Courtyard_", "Upper", "Top Fortress Grave Path Exit"),
                     new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Fortress Hero Grave"),
                 }
             },
@@ -446,8 +448,9 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Main_", "", "Boss to Fortress"),
-                    new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these?
                     new TunicPortal("Transit_", "teleporter_spidertank", "Fortress Portal"),
+
+                    // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these?
                 }
             },
             {
@@ -485,87 +488,88 @@ namespace TunicRandomizer
                 "Quarry Redux",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Monastery_", "front", "Portal"),
-                    new TunicPortal("Shop_", "", "Portal"),
-                    new TunicPortal("Monastery_", "back", "Portal (1)"),
-                    new TunicPortal("Mountain_", "", "Portal (2)"),
-                    new TunicPortal("ziggurat2020_0_", "", "Portal (3)"),
-                    new TunicPortal("Darkwoods Tunnel_", "", "Portal"),
-                    new TunicPortal("Transit_", "teleporter_quarry teleporter", "Portal")
+                    new TunicPortal("Monastery_", "front", "Quarry to Monastery Front"),
+                    new TunicPortal("Shop_", "", "Quarry Shop"),
+                    new TunicPortal("Monastery_", "back", "Quarry to Monastery Back"),
+                    new TunicPortal("Mountain_", "", "Quarry to Mountain"),
+                    new TunicPortal("ziggurat2020_0_", "", "Zig Entrance"),
+                    new TunicPortal("Darkwoods Tunnel_", "", "Quarry to Overworld Connector"),
+                    new TunicPortal("Transit_", "teleporter_quarry teleporter", "Quarry Portal")
                 }
             },
             {
                 "Monastery",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Quarry Redux_", "back", "Portal (2)"),
-                    new TunicPortal("Quarry Redux_", "front", "Portal (1)"),
-                    new TunicPortal("Quarry_", "lower", "Portal (1)"), // Unused portal, disabled, and very high up
-                    new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Portal"),
+                    new TunicPortal("Quarry Redux_", "back", "Monastery to Quarry Back"),
+                    new TunicPortal("Quarry Redux_", "front", "Monastery to Quarry Front"),
+                    new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Quarry Hero Grave"),
+
+                    // new TunicPortal("Quarry_", "lower", "Portal (1)"), // Unused portal, disabled, and very high up
                 }
             },
             {
                 "ziggurat2020_0", // Zig entrance
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_1_", "", "Portal (1)"),
-                    new TunicPortal("Quarry Redux_", "", "Portal"),
+                    new TunicPortal("ziggurat2020_1_", "", "Zig to Zig 1"),
+                    new TunicPortal("Quarry Redux_", "", "Zig to Quarry"),
                 }
             },
             {
                 "ziggurat2020_1", // Upper zig
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_3_", "zig2_skip", "Portal (1)"), // the elevator skip to lower zig
-                    new TunicPortal("ziggurat2020_0_", "", "Portal"),
-                    new TunicPortal("ziggurat2020_2_", "", "Portal"),
+                    new TunicPortal("ziggurat2020_3_", "zig2_skip", "Zig Skip"), // the elevator skip to lower zig
+                    new TunicPortal("ziggurat2020_0_", "", "Zig 1 to 0"),
+                    new TunicPortal("ziggurat2020_2_", "", "Zig 1 to 2"),
                 }
             },
             {
                 "ziggurat2020_2", // Zig intermediate elevator
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_1_", "", "Portal"),
-                    new TunicPortal("ziggurat2020_3_", "", "Portal (1)"),
+                    new TunicPortal("ziggurat2020_1_", "", "Zig 2 to 1"),
+                    new TunicPortal("ziggurat2020_3_", "", "Zig 2 to 3"),
                 }
             },
             {
                 "ziggurat2020_3", // Lower zig
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_FTRoom_", "", "Portal (1)"), // Prayer portal room
-                    new TunicPortal("ziggurat2020_1_", "zig2_skip", "Portal (2)"), // the elevator skip to lower zig
-                    new TunicPortal("ziggurat2020_2_", "", "Portal"),
+                    new TunicPortal("ziggurat2020_FTRoom_", "", "Zig Portal Room"), // Prayer portal room
+                    new TunicPortal("ziggurat2020_1_", "zig2_skip", "Zig Skip Exit"), // the elevator skip to lower zig
+                    new TunicPortal("ziggurat2020_2_", "", "Zig 3 to Zig 2"),
                 }
             },
             {
                 "ziggurat2020_FTRoom", // The room with the prayer portal
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_3_", "", "Portal"),
-                    new TunicPortal("Transit_", "teleporter_ziggurat teleporter", "Portal"),
+                    new TunicPortal("ziggurat2020_3_", "", "Zig Portal Room to Zig"),
+                    new TunicPortal("Transit_", "teleporter_ziggurat teleporter", "Zig Portal"),
                 }
             },
             {
                 "Swamp Redux 2",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux_", "conduit", "Portal"),
-                    new TunicPortal("Cathedral Redux_", "main", "Portal (4)"),
-                    new TunicPortal("Cathedral Redux_", "secret", "Portal (3)"),
-                    new TunicPortal("Cathedral Arena_", "", "Portal (5)"),
-                    new TunicPortal("Shop_", "", "Portal (2)"),
-                    new TunicPortal("Overworld Redux_", "wall", "Portal (1)"),
-                    new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Portal"),
+                    new TunicPortal("Overworld Redux_", "conduit", "Bottom Swamp Exit"),
+                    new TunicPortal("Cathedral Redux_", "main", "Swamp Entrance to Cathedral"),
+                    new TunicPortal("Cathedral Redux_", "secret", "Swamp to Treasure Room"),
+                    new TunicPortal("Cathedral Arena_", "", "Swamp to Gauntlet"),
+                    new TunicPortal("Shop_", "", "Swamp Shop"),
+                    new TunicPortal("Overworld Redux_", "wall", "Top Swamp Exit"),
+                    new TunicPortal("RelicVoid_", "teleporter_relic plinth", "Swamp Hero Grave"),
                 }
             },
             {
-                "Cathedral Redux", // Gauntlet
+                "Cathedral Redux",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Swamp Redux 2_", "main", "Portal (1)"),
-                    new TunicPortal("Cathedral Arena_", "", "Portal"),
-                    new TunicPortal("Swamp Redux 2_", "secret", "Portal (2)"),
+                    new TunicPortal("Swamp Redux 2_", "main", "Cathedral Main Exit"),
+                    new TunicPortal("Cathedral Arena_", "", "Cathedral Elevator"),
+                    new TunicPortal("Swamp Redux 2_", "secret", "Cathedral Treasure Exit"),
                 }
             },
             {
@@ -573,17 +577,17 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Swamp Redux 2_", "", "Gauntlet to Swamp"),
-                    new TunicPortal("Cathedral Redux_", "", "Gauntlet to "),
-                    new TunicPortal("Shop_", "", "Portal (1)"),
+                    new TunicPortal("Cathedral Redux_", "", "Gauntlet to Cathedral"),
+                    new TunicPortal("Shop_", "", "Gauntlet Shop"),
                 }
             },
-            {
-                "Shop", // Every shop is just this region. Need to figure out how it determines where to go back to, since its destination is _
-                new List<TunicPortal>
-                {
-                    new TunicPortal("_", "", "Shop Exit Portal"),
-                }
-            },
+            //{
+            //    "Shop", // Every shop is just this region. Need to figure out how it determines where to go back to, since its destination is _
+            //    new List<TunicPortal>
+            //    {
+            //        new TunicPortal("_", "", "Shop Exit Portal"),
+            //    }
+            //},
             {
                 "RelicVoid", // Hero relic area
                 new List<TunicPortal>
@@ -600,77 +604,158 @@ namespace TunicRandomizer
                 "Transit", // Teleporter hub
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Archipelagos Redux_", "teleporter_archipelagos_teleporter", "Portal"),
-                    new TunicPortal("Library Lab_", "teleporter_library teleporter", "Portal"),
-                    new TunicPortal("Quarry Redux_", "teleporter_quarry teleporter", "Portal"),
-                    new TunicPortal("East Forest Redux_", "teleporter_forest teleporter", "Portal"),
-                    new TunicPortal("Fortress Arena_", "teleporter_spidertank", "Portal"),
-                    new TunicPortal("Atoll Redux_", "teleporter_atoll", "Portal"),
-                    new TunicPortal("ziggurat2020_FTRoom_", "teleporter_ziggurat teleporter", "Portal"),
-                    new TunicPortal("Spirit Arena_", "teleporter_spirit arena", "Portal"),
-                    new TunicPortal("Overworld Redux_", "teleporter_town", "Portal"),
-                    new TunicPortal("Overworld Redux_", "teleporter_starting island", "Portal"),
+                    new TunicPortal("Archipelagos Redux_", "teleporter_archipelagos_teleporter", "Transit to West Garden"),
+                    new TunicPortal("Library Lab_", "teleporter_library teleporter", "Transit to Library"),
+                    new TunicPortal("Quarry Redux_", "teleporter_quarry teleporter", "Transit to Quarry"),
+                    new TunicPortal("East Forest Redux_", "teleporter_forest teleporter", "Transit to East Forest"),
+                    new TunicPortal("Fortress Arena_", "teleporter_spidertank", "Transit to Fortress"),
+                    new TunicPortal("Atoll Redux_", "teleporter_atoll", "Transit to Atoll"),
+                    new TunicPortal("ziggurat2020_FTRoom_", "teleporter_ziggurat teleporter", "Transit to Zig"),
+                    new TunicPortal("Spirit Arena_", "teleporter_spirit arena", "Transit to Heir"),
+                    new TunicPortal("Overworld Redux_", "teleporter_town", "Transit to Town"),
+                    new TunicPortal("Overworld Redux_", "teleporter_starting island", "Transit to Spawn"),
 
-                    new TunicPortal("Transit_", "teleporter_", "Portal"), // Unused portal, far away and not enabled
+                    // new TunicPortal("Transit_", "teleporter_", "Portal"), // Unused portal, far away and not enabled
                 }
             },
             {
                 "Spirit Arena", // Heir fight
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Transit_", "teleporter_spirit arena", "Portal"),
+                    new TunicPortal("Transit_", "teleporter_spirit arena", "Heir Exit"),
                 }
             },
             {
                 "Purgatory", // Second save hallway
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Purgatory_", "bottom", "Portal"),
-                    new TunicPortal("Purgatory_", "top", "Portal (1)"),
+                    new TunicPortal("Purgatory_", "bottom", "Purgatory Top Exit"),
+                    new TunicPortal("Purgatory_", "top", "Purgatory Bottom Exit"),
                 }
             },
         };
-        public static List<Portal> PortalsList = new List<Portal>();
+        public static List<List<Portal>> PortalsList = new List<List<Portal>>();
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+        
+        public static List<string> deadEndNames = new List<string> {"g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
+        public static List<string> hallwayNames = new List<string> { "Windmill", "Ruins Passage", "Temple", "Sewer_Boss", "frog cave main", "Library Exterior", "Library Rotunda", "East Forest Interior Redux", "Forest Boss Room", "Fortress Basement", "Darkwoods Tunnel", "ziggurat2020_0", "ziggurat2020_2", "ziggurat2020_FTRoom", "Purgatory" };
+        public static List<string> twoPlusNames = new List<string>();
+
+        // taken from the internet, don't fully understand how it works but as long as it works, whatever
+        public static void ShuffleList<T>(IList<T> list, int seed)
+        {
+            var rng = new System.Random(seed);
+            int n = list.Count;
+
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
-        public static void CreatePortals()
+        public static void RandomizePortals(int seed)
         {
             PortalList.Clear();
+
+            // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
+            List<Portal> deadEndPortals = new List<Portal>();
+            // List<Portal> hallwayPortals = new List<Portal>();
+            List<Portal> twoPlusPortals = new List<Portal>();
+
+            // separate the portals into their respective lists
             foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList) {
                 string region_name = region_group.Key;
                 List<TunicPortal> region_portals = region_group.Value;
+                // populating twoPlusNames here since we're looping through the list anyway
+                if (!deadEndNames.Contains(region_name))
+                {
+                    twoPlusNames.Add(region_name);
+                }
                 foreach (TunicPortal portal in region_portals)
                 {
-                    PortalsList.Add(new Portal(portal.Destination, portal.DestinationTag, portal.PortalName, region_name));
+                    Portal newPortal = new Portal(portal.Destination, portal.DestinationTag, portal.PortalName, region_name, portal.RequiredItems);
+                    if (deadEndNames.Contains(portal.SceneName))
+                    {
+                        deadEndPortals.Add(newPortal);
+                    }
+                    //else if (hallwayNames.Contains(portal.SceneName))
+                    //{
+                    //    hallwayPortals.Add(newPortal);
+                    //}
+                    else twoPlusPortals.Add(newPortal);
                 }
             }
-            Logger.LogInfo("number of portals is " + PortalsList.Count);
-        }
 
-        public static void RandomizePortals(int seed)
-        {
+            // making a list of accessible regions that will be updated as we gain access to more regions
+            List<string> accessibleRegions = new List<string>();
 
-            foreach (Portal portal in PortalsList)
+            // just picking a static start region for now, can modify later if we want to do random start location
+            string start_region = "Overworld Redux";
+            accessibleRegions.Add(start_region);
+            
+            int comboNumber = 0;
+
+            // This might be way too much shuffling -- was done to not favor connecting new regions to the first regions added to the list
+            // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
+            while (accessibleRegions.Count < twoPlusNames.Count)
             {
-                // use the spawn as the starting point for the time being, can change to starting point rando later
-                // then add all connectors (connectors are portals in regions with multiple portals... usually)
-                // after adding each connector, check if the region can be reached. if it can, can attach connectors to that region
-                // 
-                // place the progression items in random locations
-                // pick a starting region
-                // connect connectors. If the connector has a progression item in it, check the rules to see if you can get it. If you can't, skip it and come back later
-                // place the dead ends, starting with any that contain progression items
-                // connect remaining connectors
-                // do a final sweep to check and make sure you can reach every portal?
+                ShuffleList(twoPlusPortals, seed);
+                // later on, start by making the first several portals into shop portals
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    // find a portal in a region we can't access yet
+                    if (!accessibleRegions.Contains(portal.Scene))
+                    {
+                        Portal portal1 = portal;
+                        twoPlusPortals.Remove(portal);
+                        Portal portal2 = null;
+
+                        // find a portal in a region we can access
+                        ShuffleList(twoPlusPortals, seed);
+                        foreach (Portal secondPortal in twoPlusPortals)
+                        {
+                            if (accessibleRegions.Contains(secondPortal.Scene))
+                            {
+                                portal2 = secondPortal;
+                                break;
+                            }
+                        }
+
+                        // add the portal combo to the randomized portals list
+                        RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                        accessibleRegions.Add(portal.Scene);
+                        comboNumber++;
+                        break;
+                    }
+                }
             }
+
+            // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
+            ShuffleList(deadEndPortals, seed);
+            ShuffleList(twoPlusPortals, seed);
+            while (deadEndPortals.Count > 0)
             {
-                // make an enumerated dict
-                // not sure how to format it yet
-                // probably like, a string and PortalCombo, where the PortalCombo is just the full name of each portal
-                // so, "1": PortalCombo("Quarry Redux_back", "Library Lab_")
-                // probably need the scene name in there somewhere too
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                comboNumber++;
             }
+            
+            // now we have every region accessible (if we ignore rules -- that's a problem for later)
+            // the twoPlusPortals list still has items left in it, so now we pair them off
+            while (twoPlusPortals.Count > 1)
+            {
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[0], twoPlusPortals[1]));
+            }
+            if (twoPlusPortals.Count == 1)
+            {
+                // ya dun fucked up
+                Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
+            }
+
         }
     }
 }
