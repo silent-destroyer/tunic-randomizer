@@ -27,22 +27,25 @@ namespace TunicRandomizer {
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
-            foreach (ScenePortal portal in Portals)
-            {
-                if (portal.FullID == "Windmill_" && loadingScene.name == "Overworld Redux")
-                {
-                    portal.destinationSceneName = "Overworld Redux";
-                    portal.id = "3";
-                    portal.optionalIDToSpawnAt = "2";
-                }
-                if (portal.FullID == "Sword Cave_" && loadingScene.name == "Overworld Redux")
-                {
-                    portal.destinationSceneName = "Overworld Redux";
-                    portal.id = "2";
-                    portal.optionalIDToSpawnAt = "3";
-                }
-            }
+            //var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
+            //foreach (ScenePortal portal in Portals)
+            //{
+            //    if (portal.FullID == "Windmill_" && loadingScene.name == "Overworld Redux")
+            //    {
+            //        portal.destinationSceneName = "Overworld Redux";
+            //        portal.id = "3";
+            //        portal.optionalIDToSpawnAt = "2";
+            //    }
+            //    if (portal.FullID == "Sword Cave_" && loadingScene.name == "Overworld Redux")
+            //    {
+            //        portal.destinationSceneName = "Overworld Redux";
+            //        portal.id = "2";
+            //        portal.optionalIDToSpawnAt = "3";
+            //    }
+            //}
+            
+            // todo: get the seed in here somehow
+            TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(seed));
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {

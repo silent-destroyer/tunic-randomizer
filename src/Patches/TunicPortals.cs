@@ -658,7 +658,7 @@ namespace TunicRandomizer
         }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
-        public static void RandomizePortals(int seed)
+        public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
             PortalList.Clear();
 
@@ -755,7 +755,37 @@ namespace TunicRandomizer
                 // ya dun fucked up
                 Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
+            return RandomizedPortals;
+        }
 
+        // a function to apply the randomized portal list to portals during on scene loaded
+        public static void ModifyPortals(Scene loadingScene, Dictionary<string, PortalCombo> portalComboList)
+        {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
+            string sceneName = loadingScene.name;
+            foreach (var portal in Portals)
+            {
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
+                {
+                    string comboTag = portalCombo.Key;
+                    Portal portal1 = portalCombo.Value.Portal1;
+                    Portal portal2 = portalCombo.Value.Portal2;
+
+                    if (portal1.Scene == loadingScene.name)
+                    {
+                        portal.destinationSceneName = portal2.Scene;
+                        portal.id = comboTag;
+                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
+                    }
+
+                    if (portal2.Scene == loadingScene.name)
+                    {
+                        portal.destinationSceneName = portal1.Scene;
+                        portal.id = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
+                        portal.optionalIDToSpawnAt = comboTag;
+                    }
+                }
+            }
         }
     }
 }

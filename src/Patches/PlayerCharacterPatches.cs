@@ -258,7 +258,6 @@ namespace TunicRandomizer {
 
             if (TunicRandomizer.Settings.PortalRandoEnabled)
             {
-                TunicPortals.CreatePortals();
                 TunicPortals.RandomizePortals(seed);
             }
             
