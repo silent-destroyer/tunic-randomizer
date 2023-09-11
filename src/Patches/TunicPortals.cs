@@ -777,14 +777,14 @@ namespace TunicRandomizer
                     Logger.LogInfo("portal2 is " + portal2.Name);
 
                     // check these later, they're probably wrong since I edited them in a browser instead of an IDE
-                    if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.destinationSceneName == portal.destinationSceneName)
+                    if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
                         portal.destinationSceneName = portal2.Scene;
                         portal.id = comboTag;
                         portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
                     }
 
-                    if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.destinationSceneName == portal.destinationSceneName)
+                    if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
                         portal.destinationSceneName = portal1.Scene;
                         portal.id = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
