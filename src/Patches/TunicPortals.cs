@@ -635,7 +635,6 @@ namespace TunicRandomizer
             },
         };
         public static List<List<Portal>> PortalsList = new List<List<Portal>>();
-        public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
         
         public static List<string> deadEndNames = new List<string> {"g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
         public static List<string> hallwayNames = new List<string> { "Windmill", "Ruins Passage", "Temple", "Sewer_Boss", "frog cave main", "Library Exterior", "Library Rotunda", "East Forest Interior Redux", "Forest Boss Room", "Fortress Basement", "Darkwoods Tunnel", "ziggurat2020_0", "ziggurat2020_2", "ziggurat2020_FTRoom", "Purgatory" };
@@ -660,6 +659,7 @@ namespace TunicRandomizer
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
+            Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
             Logger.LogInfo("randomize portals started");
             PortalList.Clear();
 
@@ -766,6 +766,7 @@ namespace TunicRandomizer
             foreach (var portal in Portals)
             {
                 Logger.LogInfo("portal in world is this " + portal.name + portal.destinationSceneName + portal.id);
+                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
                     string comboTag = portalCombo.Key;
@@ -775,14 +776,15 @@ namespace TunicRandomizer
                     Logger.LogInfo("portal1 is " + portal1.Name);
                     Logger.LogInfo("portal2 is " + portal2.Name);
 
-                    if (portal1.Scene == loadingScene.name)
+                    // check these later, they're probably wrong since I edited them in a browser instead of an IDE
+                    if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.destinationSceneName == portal.destinationSceneName)
                     {
                         portal.destinationSceneName = portal2.Scene;
                         portal.id = comboTag;
                         portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
                     }
 
-                    if (portal2.Scene == loadingScene.name)
+                    if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.destinationSceneName == portal.destinationSceneName)
                     {
                         portal.destinationSceneName = portal1.Scene;
                         portal.id = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
