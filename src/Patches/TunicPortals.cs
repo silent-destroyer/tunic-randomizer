@@ -102,10 +102,10 @@ namespace TunicRandomizer
                     new TunicPortal("Transit_", "teleporter_town", "Town Portal"),
                     new TunicPortal("Transit_", "teleporter_starting island", "Spawn Portal"),
 
-                    new TunicPortal("Waterfall_", "", "Portal (38)"), // Is this unused?
-                    new TunicPortal("_", "", "Portal"), // ?
-                    new TunicPortal("Forest Belltower_", "showfloordemo2022", "Portal (12)"), // ?
-                    new TunicPortal("DEMO_altEnd_", "", "_Portal (Secret Demo End)"), // ?
+                    // new TunicPortal("Waterfall_", "", "Portal (38)"), // Is this unused?
+                    // new TunicPortal("_", "", "Portal"), // ?
+                    // new TunicPortal("Forest Belltower_", "showfloordemo2022", "Portal (12)"), // ?
+                    // new TunicPortal("DEMO_altEnd_", "", "_Portal (Secret Demo End)"), // ?
                 }
             },
             {
@@ -124,7 +124,7 @@ namespace TunicRandomizer
                     new TunicPortal("g_elements_", "", "Teleport to Secret Treasure Room"),
                     new TunicPortal("Overworld Redux_", "under_checkpoint", "Exit from Old House from not the door"),
 
-                    new TunicPortal("Archipelagos Redux_", "", "_ShowfloorDemo2022 Portal"), // unused and disabled
+                    // new TunicPortal("Archipelagos Redux_", "", "_ShowfloorDemo2022 Portal"), // unused and disabled
                 }
             },
             {
@@ -260,7 +260,7 @@ namespace TunicRandomizer
                     new TunicPortal("Frog Stairs_", "mouth", "Frog Mouth Entrance"),
                     new TunicPortal("Shop_", "", "Atoll Shop"),
                     new TunicPortal("Transit_", "teleporter_atoll", "Atoll Portal"),
-                    new TunicPortal("Forest Lake_", "teleporter", "Portal"), // Unused portal, same spot as library portal
+                    // new TunicPortal("Forest Lake_", "teleporter", "Portal"), // Unused portal, same spot as library portal
                 }
             },
             {
@@ -355,9 +355,9 @@ namespace TunicRandomizer
                     new TunicPortal("East Forest Redux_", "lower", "Lower Forest Grave Exit"),
                     new TunicPortal("RelicVoid_", "teleporter_relic plinth", "East Forest Hero Grave"), // There's two of these, one is inactive
                     
-                    new TunicPortal("Forest 1_", "lower", "Portal (1)"),
-                    new TunicPortal("Forest 1_", "", "Portal"),
-                    new TunicPortal("Forest 1_", "upper", "Portal (2)"),
+                    // new TunicPortal("Forest 1_", "lower", "Portal (1)"),
+                    // new TunicPortal("Forest 1_", "", "Portal"),
+                    // new TunicPortal("Forest 1_", "upper", "Portal (2)"),
                 }
             },
             {
@@ -375,7 +375,7 @@ namespace TunicRandomizer
                     new TunicPortal("East Forest Redux Laddercave_", "", "Forest Boss to Forest"),
                     new TunicPortal("Forest Belltower_", "", "Forest Boss to Belltower"),
 
-                    new TunicPortal("Archipelagos Redux_", "showfloordemo2022", "Portal (2)"),
+                    // new TunicPortal("Archipelagos Redux_", "showfloordemo2022", "Portal (2)"),
                 }
             },
             {
@@ -494,7 +494,7 @@ namespace TunicRandomizer
                     new TunicPortal("Mountain_", "", "Quarry to Mountain"),
                     new TunicPortal("ziggurat2020_0_", "", "Zig Entrance"),
                     new TunicPortal("Darkwoods Tunnel_", "", "Quarry to Overworld Connector"),
-                    new TunicPortal("Transit_", "teleporter_quarry teleporter", "Quarry Portal")
+                    new TunicPortal("Transit_", "teleporter_quarry teleporter", "Quarry Portal"),
                 }
             },
             {
@@ -634,11 +634,10 @@ namespace TunicRandomizer
                 }
             },
         };
-        public static List<List<Portal>> PortalsList = new List<List<Portal>>();
-        
-        public static List<string> deadEndNames = new List<string> {"g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
+
+        // public static List<string> deadEndNames = new List<string> { "g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
         public static List<string> hallwayNames = new List<string> { "Windmill", "Ruins Passage", "Temple", "Sewer_Boss", "frog cave main", "Library Exterior", "Library Rotunda", "East Forest Interior Redux", "Forest Boss Room", "Fortress Basement", "Darkwoods Tunnel", "ziggurat2020_0", "ziggurat2020_2", "ziggurat2020_FTRoom", "Purgatory" };
-        public static List<string> twoPlusNames = new List<string>();
+        // public static List<string> twoPlusNames = new List<string>();
 
         // taken from the internet, don't fully understand how it works but as long as it works, whatever
         public static void ShuffleList<T>(IList<T> list, int seed)
@@ -660,9 +659,11 @@ namespace TunicRandomizer
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
             Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+            List<string> twoPlusNames = new List<string>();
+            RandomizedPortals.Clear();
+            twoPlusNames.Clear();
             Logger.LogInfo("randomize portals started");
-            PortalList.Clear();
-
+            List<string> deadEndNames = new List<string> { "g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
             // List<Portal> hallwayPortals = new List<Portal>();
@@ -680,8 +681,9 @@ namespace TunicRandomizer
                 foreach (TunicPortal portal in region_portals)
                 {
                     Portal newPortal = new Portal(portal.Destination, portal.DestinationTag, portal.PortalName, region_name, portal.RequiredItems);
-                    if (deadEndNames.Contains(portal.SceneName))
+                    if (deadEndNames.Contains(newPortal.Scene))
                     {
+                        Logger.LogInfo("adding " + portal.PortalName + " to deadEndPortals");
                         deadEndPortals.Add(newPortal);
                     }
                     //else if (hallwayNames.Contains(portal.SceneName))
@@ -694,6 +696,7 @@ namespace TunicRandomizer
 
             // making a list of accessible regions that will be updated as we gain access to more regions
             List<string> accessibleRegions = new List<string>();
+            accessibleRegions.Clear();
 
             // just picking a static start region for now, can modify later if we want to do random start location
             string start_region = "Overworld Redux";
@@ -726,7 +729,6 @@ namespace TunicRandomizer
                                 break;
                             }
                         }
-
                         // add the portal combo to the randomized portals list
                         RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
                         accessibleRegions.Add(portal.Scene);
@@ -737,19 +739,26 @@ namespace TunicRandomizer
             }
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
+            Logger.LogInfo("successfully added regions to accessible regions and portals to randomized portals list");
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
+            Logger.LogInfo("dead end portals count is " + deadEndPortals.Count);
             while (deadEndPortals.Count > 0)
             {
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
                 comboNumber++;
+                Logger.LogInfo("combo number is " + comboNumber.ToString());
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                deadEndPortals.RemoveAt(0);
             }
             
             // now we have every region accessible (if we ignore rules -- that's a problem for later)
             // the twoPlusPortals list still has items left in it, so now we pair them off
             while (twoPlusPortals.Count > 1)
             {
+                comboNumber++;
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[0], twoPlusPortals[1]));
+                twoPlusPortals.RemoveAt(1);
+                twoPlusPortals.RemoveAt(0);
             }
             if (twoPlusPortals.Count == 1)
             {
