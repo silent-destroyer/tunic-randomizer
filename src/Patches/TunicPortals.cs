@@ -762,7 +762,7 @@ namespace TunicRandomizer
             }
             if (twoPlusPortals.Count == 1)
             {
-                // ya dun fucked up
+                // if this triggers, increase shop count by one (at least, when we actually have that as a thing later, for now just ignore it)
                 Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
             return RandomizedPortals;
