@@ -44,8 +44,7 @@ namespace TunicRandomizer {
             //    }
             //}
             
-            // todo: get the seed in here somehow
-            TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+            TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(12));
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {

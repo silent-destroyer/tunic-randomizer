@@ -101,7 +101,8 @@ namespace TunicRandomizer
                     new TunicPortal("Forest Belltower", "", "East Forest Entrance"),
                     new TunicPortal("Transit", "teleporter_town", "Town Portal"),
                     new TunicPortal("Transit", "teleporter_starting island", "Spawn Portal"),
-                    new TunicPortal("Waterfall_", "", "Portal (38)"),
+                    new TunicPortal("Waterfall", "", "Entrance to fairy cave"),
+
                     // new TunicPortal("_", "", "Portal"), // ?
                     // new TunicPortal("Forest Belltower_", "showfloordemo2022", "Portal (12)"), // ?
                     // new TunicPortal("DEMO_altEnd_", "", "_Portal (Secret Demo End)"), // ?
@@ -690,7 +691,6 @@ namespace TunicRandomizer
                     Portal newPortal = new Portal(portal.Destination, portal.DestinationTag, portal.PortalName, region_name, portal.RequiredItems);
                     if (deadEndNames.Contains(newPortal.Scene))
                     {
-                        Logger.LogInfo("adding " + portal.PortalName + " to deadEndPortals");
                         deadEndPortals.Add(newPortal);
                     }
                     //else if (hallwayNames.Contains(portal.SceneName))
@@ -749,11 +749,9 @@ namespace TunicRandomizer
             Logger.LogInfo("successfully added regions to accessible regions and portals to randomized portals list");
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
-            Logger.LogInfo("dead end portals count is " + deadEndPortals.Count);
             while (deadEndPortals.Count > 0)
             {
                 comboNumber++;
-                Logger.LogInfo("combo number is " + comboNumber.ToString());
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
                 deadEndPortals.RemoveAt(0);
             }
@@ -778,6 +776,7 @@ namespace TunicRandomizer
         // a function to apply the randomized portal list to portals during on scene loaded
         public static void ModifyPortals(Scene loadingScene, Dictionary<string, PortalCombo> portalComboList)
         {
+            Logger.LogInfo("current time is " + SpeedrunData.inGameTime);
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
@@ -788,26 +787,32 @@ namespace TunicRandomizer
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
-                    Logger.LogInfo("portal1.Scene is " + portal1.Scene);
-                    Logger.LogInfo("portal2.Scene is " + portal2.Scene);
-                    Logger.LogInfo("loadingscene.name is " + loadingScene.name);
-                    Logger.LogInfo("portal1.Tag is " + portal1.Tag);
-                    Logger.LogInfo("portal2.Tag is " + portal2.Tag);
-                    Logger.LogInfo("portal.id is " + portal.id);
-                    Logger.LogInfo("portal1.Destination is " + portal1.Destination);
-                    Logger.LogInfo("portal2.Destination is " + portal2.Destination);
-                    Logger.LogInfo("portal.destinationSceneName is " + portal.destinationSceneName);
                     if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
+                        Logger.LogInfo("portal 1 matched");
+                        Logger.LogInfo("current scene is " + loadingScene.name);
+                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
+                        Logger.LogInfo("portal destination is now " + portal2.Scene+ "_" + comboTag);
+                        Logger.LogInfo("portal 1 is " + portal1.Scene + "_" + portal1.Tag);
+                        Logger.LogInfo("portal 2 is " + portal2.Scene + "_" + portal2.Tag);
+                        Logger.LogInfo("finished, moving on to next portal");
+                        
                         portal.destinationSceneName = portal2.Scene;
                         portal.id = comboTag;
-                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
+                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                     }
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
+                        Logger.LogInfo("portal 2 matched");
+                        Logger.LogInfo("current scene is " + loadingScene.name);
+                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
+                        Logger.LogInfo("portal destination is now " + portal1.Scene+ "_" + comboTag);
+                        Logger.LogInfo("portal 1 is " + portal1.Scene + "_" + portal1.Tag);
+                        Logger.LogInfo("portal 2 is " + portal2.Scene + "_" + portal2.Tag);
+                        Logger.LogInfo("finished, moving on to next portal");
                         portal.destinationSceneName = portal1.Scene;
-                        portal.id = comboTag + comboTag + comboTag; // tripling since doubling can have overlaps
+                        portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         portal.optionalIDToSpawnAt = comboTag;
                     }
                 }
