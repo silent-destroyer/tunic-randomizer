@@ -93,7 +93,7 @@ namespace TunicRandomizer
                     new TunicPortal("Changing Room", "", "Changing Room Entrance"),
                     new TunicPortal("CubeRoom", "", "Cube Entrance"),
                     new TunicPortal("Mountain", "", "Stairs from Overworld to Mountain"),
-                    new TunicPortal("Fortress Courtyard", "", "Fortress Entrance"),
+                    new TunicPortal("Fortress Courtyard", "", "Overworld to Fortress"),
                     new TunicPortal("Town_FiligreeRoom", "", "HC Room Entrance next to Changing Room"), // ? verify this is the one in the middle
                     new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance"),
                     new TunicPortal("Darkwoods Tunnel", "", "Entrance to Quarry Connector"),
@@ -733,6 +733,7 @@ namespace TunicRandomizer
                             if (accessibleRegions.Contains(secondPortal.Scene))
                             {
                                 portal2 = secondPortal;
+                                twoPlusPortals.Remove(secondPortal);
                                 break;
                             }
                         }
@@ -793,8 +794,8 @@ namespace TunicRandomizer
                         Logger.LogInfo("current scene is " + loadingScene.name);
                         Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
                         Logger.LogInfo("portal destination is now " + portal2.Scene+ "_" + comboTag);
-                        Logger.LogInfo("portal 1 is " + portal1.Scene + "_" + portal1.Tag);
-                        Logger.LogInfo("portal 2 is " + portal2.Scene + "_" + portal2.Tag);
+                        Logger.LogInfo("portal 1 is " + portal1.Name);
+                        Logger.LogInfo("portal 2 is " + portal2.Name);
                         Logger.LogInfo("finished, moving on to next portal");
                         
                         portal.destinationSceneName = portal2.Scene;
@@ -807,9 +808,9 @@ namespace TunicRandomizer
                         Logger.LogInfo("portal 2 matched");
                         Logger.LogInfo("current scene is " + loadingScene.name);
                         Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
-                        Logger.LogInfo("portal destination is now " + portal1.Scene+ "_" + comboTag);
-                        Logger.LogInfo("portal 1 is " + portal1.Scene + "_" + portal1.Tag);
-                        Logger.LogInfo("portal 2 is " + portal2.Scene + "_" + portal2.Tag);
+                        Logger.LogInfo("portal destination is now " + portal1.Scene + "_" + comboTag);
+                        Logger.LogInfo("portal 1 is " + portal1.Name);
+                        Logger.LogInfo("portal 2 is " + portal2.Name);
                         Logger.LogInfo("finished, moving on to next portal");
                         portal.destinationSceneName = portal1.Scene;
                         portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps

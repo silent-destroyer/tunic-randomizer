@@ -44,7 +44,7 @@ namespace TunicRandomizer {
             //    }
             //}
             
-            TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(12));
+            TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(22));
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
