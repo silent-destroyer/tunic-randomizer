@@ -81,7 +81,12 @@ namespace TunicRandomizer {
                 SaveFile.SetString("last campfire id", "campfire");
                 SaveFile.SetInt("randomizer sent lost fox home", 1);
             }
-            if (SceneLoaderPatches.SceneName == "Posterity") {
+            else if (SceneLoaderPatches.SceneName == "Posterity") {
+                SaveFile.SetString("last campfire scene name", "Overworld Redux");
+                SaveFile.SetString("last campfire id", "checkpoint");
+            }
+            else if (TunicRandomizer.Settings.PortalRandoEnabled)
+            {
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");
                 SaveFile.SetString("last campfire id", "checkpoint");
             }

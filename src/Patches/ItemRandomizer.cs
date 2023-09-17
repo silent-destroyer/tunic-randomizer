@@ -23,6 +23,10 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer started with sword") == 1) {
                 SphereZero.Add("Sword", 1);
             }
+            if (SaveFile.GetInt("randomizer door rando enabled") == 1)
+            {
+                SphereZero.Add("Dath Stone", 1);
+            }
         }
 
         public static void RandomizeAndPlaceItems() {

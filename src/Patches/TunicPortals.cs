@@ -755,6 +755,18 @@ namespace TunicRandomizer
                 comboNumber++;
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
                 deadEndPortals.RemoveAt(0);
+                twoPlusPortals.RemoveAt(0);
+            }
+
+            int shopCount = 7;
+            while (shopCount > 0)
+            {
+                // something here to make sure there aren't multiple shops in one region
+                comboNumber++;
+                Portal shopPortal = new Portal("Previous Region", "", "Shop portal", "Shop", new List<Dictionary<string, int>>());
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(shopPortal, twoPlusPortals[0]));
+                twoPlusPortals.RemoveAt(0);
+                shopCount--;
             }
             
             // now we have every region accessible (if we ignore rules -- that's a problem for later)
@@ -768,7 +780,7 @@ namespace TunicRandomizer
             }
             if (twoPlusPortals.Count == 1)
             {
-                // if this triggers, increase shop count by one (at least, when we actually have that as a thing later, for now just ignore it)
+                // if this triggers, increase or decrease shop count by 1
                 Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
             return RandomizedPortals;
@@ -785,9 +797,13 @@ namespace TunicRandomizer
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
+
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
+                    Logger.LogInfo("portal 1 is " + portal1.Name);
+                    Logger.LogInfo("portal 2 is " + portal2.Name);
+                    // put something here to deal with the shop
                     if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
                         Logger.LogInfo("portal 1 matched");
@@ -796,17 +812,80 @@ namespace TunicRandomizer
                         Logger.LogInfo("portal destination is now " + portal2.Scene+ "_" + comboTag);
                         Logger.LogInfo("portal 1 is " + portal1.Name);
                         Logger.LogInfo("portal 2 is " + portal2.Name);
+
+                        if (portal2.Scene == "Shop")
+                        {
+                            portal.destinationSceneName = portal2.Scene;
+                            portal.id = "";
+                            portal.optionalIDToSpawnAt = "";
+                        }
+                        else
+                        {
+                            portal.destinationSceneName = portal2.Scene;
+                            portal.id = comboTag;
+                            portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
+                        }
                         Logger.LogInfo("finished, moving on to next portal");
-                        
-                        portal.destinationSceneName = portal2.Scene;
-                        portal.id = comboTag;
-                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                     }
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
                         Logger.LogInfo("portal 2 matched");
                         Logger.LogInfo("current scene is " + loadingScene.name);
+                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
+                        Logger.LogInfo("portal destination is now " + portal1.Scene + "_" + comboTag);
+                        Logger.LogInfo("portal 1 is " + portal1.Name);
+                        Logger.LogInfo("portal 2 is " + portal2.Name);
+                        if (portal1.Scene == "Shop")
+                        {
+                            portal.destinationSceneName = portal1.Scene;
+                            portal.id = "";
+                            portal.optionalIDToSpawnAt = "";
+                        }
+                        else
+                        {
+                            portal.destinationSceneName = portal1.Scene;
+                            portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
+                            portal.optionalIDToSpawnAt = comboTag;
+                        }
+
+                        Logger.LogInfo("finished, moving on to next portal");
+                    }
+                }
+            }
+        }
+        public static void AltModifyPortals(Dictionary<string, PortalCombo> portalComboList)
+        {
+            // this is for use in PlayerCharacterPatches. Will probably need a refactor later if we do random player spawn
+            Logger.LogInfo("starting alt modify portals");
+            Logger.LogInfo("current time is " + SpeedrunData.inGameTime);
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
+            foreach (var portal in Portals)
+            {
+                Logger.LogInfo("portal in world is this " + portal.name + portal.destinationSceneName + portal.id);
+                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
+                {
+                    string comboTag = portalCombo.Key;
+                    Portal portal1 = portalCombo.Value.Portal1;
+                    Portal portal2 = portalCombo.Value.Portal2;
+                    if (portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
+                    {
+                        Logger.LogInfo("portal 1 matched");
+                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
+                        Logger.LogInfo("portal destination is now " + portal2.Scene + "_" + comboTag);
+                        Logger.LogInfo("portal 1 is " + portal1.Name);
+                        Logger.LogInfo("portal 2 is " + portal2.Name);
+                        Logger.LogInfo("finished, moving on to next portal");
+
+                        portal.destinationSceneName = portal2.Scene;
+                        portal.id = comboTag;
+                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
+                    }
+
+                    if (portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
+                    {
+                        Logger.LogInfo("portal 2 matched");
                         Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
                         Logger.LogInfo("portal destination is now " + portal1.Scene + "_" + comboTag);
                         Logger.LogInfo("portal 1 is " + portal1.Name);
