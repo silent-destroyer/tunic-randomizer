@@ -21,12 +21,25 @@ namespace TunicRandomizer {
             set;
         }
 
-        public List<Dictionary<string, int>> RequiredItems {
+        public List<Dictionary<string, int>> RequiredItemsOr {
             get;
             set;
         }
 
-        public Portal(string destination, string tag, string name, string scene, List<Dictionary<string, int>> requiredItems)
+        public Dictionary<string, int> RequiredItems {
+            get;
+            set;
+        }
+
+        public Portal(string destination, string tag, string name, string scene, List<Dictionary<string, int>> requiredItemsOr)
+        {
+            Destination = destination;
+            Tag = tag;
+            Name = name;
+            Scene = scene;
+            RequiredItemsOr = requiredItemsOr;
+        }
+        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems)
         {
             Destination = destination;
             Tag = tag;
