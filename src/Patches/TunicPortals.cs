@@ -24,9 +24,9 @@ namespace TunicRandomizer
             public Dictionary<string, int> RequiredItems; // required items if there is only one item or set of items required. A FullID for a portal or a scene name counts as an item.
             public List<Dictionary<string, int>> RequiredItemsOr; // required items if there are multiple different possible requirements. A FullID for a portal or a scene name counts as an item.
             public List<string> GivesAccess; // portals that are given access to by this portal. If empty, then it defaults to giving access to the center of the region
-            public Dictionary<string, int> EntryItems; // portals that require some item(s) to enter. To be used when these entry items don't block you from getting to the center of the region (hero's grave, prayer pad, etc.)
+            public Dictionary<string, int> EntryItems; // portals that require some item(s) to enter. To be used when these entry items don't block you from getting to the center of the region (basically, if they drop you outside of the door like hero's graves or the overworld holy cross doors do)
             public bool IsDeadEnd; // portals that are dead ends but share the region with other portals, like the gauntlet lower entry or zig 2 from behind
-            public bool PrayerPortal; // portals that require prayer to enter
+            public bool PrayerPortal; // portals that require prayer to enter. This is a more convenient version of GivesAccess for prayer portals
             public bool OneWay; // portals that are one-way, such as the back entrance to monastery and the forest belltower top portal
             public bool CantReach; // portals that cannot reach the center of the region
 
