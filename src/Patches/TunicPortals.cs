@@ -283,7 +283,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Overworld Redux", "", "Dark Tomb Entrance"),
-                    new TunicPortal("Furnace", "", "Dark Tomb main exit"),
+                    new TunicPortal("Furnace", "", "Dark Tomb main exit", requiredItems: new Dictionary<string, int> { {"lantern", 1} }),
                     new TunicPortal("Sewer_Boss", "", "Dark Tomb to Well Boss"),
                 }
             },
@@ -447,17 +447,17 @@ namespace TunicRandomizer
                 }
             },
             {
-                "Fortress Courtyard", // Outside the fortress, the area connected to east forest and overworld
+                "Fortress Courtyard", // Outside the fortress, the area connected to east forest and overworld. Center of the area is on the fortress-side of the bridge
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Reliquary", "Lower", "Lower Fortress Grave Path Entrance"),
-                    new TunicPortal("Fortress Reliquary", "Upper", "Upper Fortress Grave Path Entrance"),
+                    new TunicPortal("Fortress Reliquary", "Upper", "Upper Fortress Grave Path Entrance", oneWay: true, givesAccess: new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }),
                     new TunicPortal("Fortress Main", "Big Door", "Fortress Main Entrance"),
-                    new TunicPortal("Fortress East", "", "Fortress Outside to Fortress Mage Area"),
-                    new TunicPortal("Fortress Basement", "", "Fortress to Under Fortress outside", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"prayer", 1 } }, new Dictionary<string, int> { { "laurels", 1 } } }),
+                    new TunicPortal("Fortress East", "", "Fortress Outside to Fortress Mage Area", oneWay: true, givesAccess: new Dictionary<string, int> { {"Fortress Courtyard, Fortress Reliquary_Upper", 1} }),
+                    new TunicPortal("Fortress Basement", "", "Fortress to Under Fortress outside", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"prayer", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 }, new Dictionary<string, int> { { "laurels", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
                     new TunicPortal("Forest Belltower", "", "Fortress to Forest Bell", requiredItems: new Dictionary<string, int>{ { "laurels", 1 } }),
-                    new TunicPortal("Overworld Redux", "", "Fortress to Overworld"),
-                    new TunicPortal("Shop", "", "Fortress outside shop", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"prayer", 1 } }, new Dictionary<string, int> { { "laurels", 1 } } }),
+                    new TunicPortal("Overworld Redux", "", "Fortress to Overworld", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"laurels", 1} }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "orb", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
+                    new TunicPortal("Shop", "", "Fortress exterior shop", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"prayer", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 }, new Dictionary<string, int> { { "laurels", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
 
                     // new TunicPortal("Overworld Redux_", "", "Portal (4)"), // unused and disabled
                 }
@@ -474,7 +474,7 @@ namespace TunicRandomizer
                 "Fortress Main", // Inside the fortress
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Shop", "", "Inside Fortress Shop"),
+                    new TunicPortal("Shop", "", "Fortress interior shop"),
                     new TunicPortal("Fortress Basement", "", "Fortress inside to under fortress"),
                     new TunicPortal("Fortress Courtyard", "Big Door", "Fortress Main Exit"),
                     new TunicPortal("Fortress Arena", "", "Fortress big gold door", requiredItems: new Dictionary<string, int> { { "prayer", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Reliquary_upper", 1 }, {"Fortress Main, Fortress Courtyard_Big Door", 1 } }), // requires that one prayer thing to be down
@@ -507,8 +507,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Fortress Main", "", "Boss to Fortress"),
                     new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", prayerPortal: true, entryItems: new Dictionary<string, int> { { "prayer", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
-
-                    // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these?
+                    // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these, one is disabled
                 }
             },
             {
