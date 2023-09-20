@@ -17,30 +17,18 @@ namespace TunicRandomizer
 
         public class TunicPortal
         {
-            // the scene the portal is in
-            public string SceneName;
-            // the vanilla destination scene
-            public string Destination;
-            // the vanilla destination tag
-            public string DestinationTag;
-            // a human-readable name for the portal
-            public string PortalName;
-            // required items if there is only one item or set of items required. A FullID for a portal or a scene name counts as an item.
-            public Dictionary<string, int> RequiredItems;
-            // required items if there are multiple different possible requirements. A FullID for a portal or a scene name counts as an item.
-            public List<Dictionary<string, int>> RequiredItemsOr;
-            // portals that are given access to by this portal. If empty, then it defaults to giving access to the center of the region
-            public List<string> GivesAccess;
-            // portals that require some item(s) to enter
-            public Dictionary<string, int> EntryItems;
-            // portals that are dead ends but share the region with other portals, like the gauntlet lower entry or zig 2 from behind
-            public bool IsDeadEnd;
-            // portals that require prayer to enter
-            public bool PrayerPortal;
-            // portals that are one-way, specifically the back entrance to monastery and the forest belltower top portal
-            public bool OneWay;
-            // portals that cannot reach the center of the region
-            public bool CantReach;
+            public string SceneName; // the scene the portal is in
+            public string Destination; // the vanilla destination scene
+            public string DestinationTag; // the vanilla destination tag
+            public string PortalName; // a human-readable name for the portal
+            public Dictionary<string, int> RequiredItems; // required items if there is only one item or set of items required. A FullID for a portal or a scene name counts as an item.
+            public List<Dictionary<string, int>> RequiredItemsOr; // required items if there are multiple different possible requirements. A FullID for a portal or a scene name counts as an item.
+            public List<string> GivesAccess; // portals that are given access to by this portal. If empty, then it defaults to giving access to the center of the region
+            public Dictionary<string, int> EntryItems; // portals that require some item(s) to enter. To be used when these entry items don't block you from getting to the center of the region (hero's grave, prayer pad, etc.)
+            public bool IsDeadEnd; // portals that are dead ends but share the region with other portals, like the gauntlet lower entry or zig 2 from behind
+            public bool PrayerPortal; // portals that require prayer to enter
+            public bool OneWay; // portals that are one-way, such as the back entrance to monastery and the forest belltower top portal
+            public bool CantReach; // portals that cannot reach the center of the region
 
             public TunicPortal() { }
 
@@ -48,13 +36,13 @@ namespace TunicRandomizer
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
+                PortalName = portalName;
             }
             public TunicPortal(string destination, string destinationTag, string portalName, bool prayerPortal = false, bool isDeadEnd = false, bool oneWay = false, bool cantReach = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
+                PortalName = portalName;
                 PrayerPortal = prayerPortal;
                 IsDeadEnd = isDeadEnd;
                 OneWay = oneWay;
@@ -64,7 +52,7 @@ namespace TunicRandomizer
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
+                PortalName = portalName;
                 EntryItems = entryItems;
                 PrayerPortal = prayerPortal;
                 IsDeadEnd = isDeadEnd;
@@ -75,7 +63,7 @@ namespace TunicRandomizer
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
+                PortalName = portalName;
                 RequiredItems = requiredItems;
                 PrayerPortal = prayerPortal;
                 IsDeadEnd = isDeadEnd;
@@ -85,26 +73,23 @@ namespace TunicRandomizer
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
-                GivesAccess = givesAccess; // portals that we get access to from this portal
+                PortalName = portalName;
+                GivesAccess = givesAccess;
                 CantReach = cantReach;
             }
-
             public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
-                RequiredItems = requiredItems; // the requirements to get from the center of a region to the center of it
+                PortalName = portalName;
+                RequiredItems = requiredItems;
             }
-
-            // if there are different requirements that can be met (x OR y), use a list instead
             public TunicPortal(string destination, string destinationTag, string portalName, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool cantReach = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
-                RequiredItemsOr = requiredItemsOr; // the requirements to get from the center of a region to the center of it
+                PortalName = portalName;
+                RequiredItemsOr = requiredItemsOr;
                 PrayerPortal = prayerPortal;
                 CantReach = cantReach;
             }
@@ -113,9 +98,9 @@ namespace TunicRandomizer
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
-                PortalName = portalName; // this is name we gave the portals to make them easier to identify
-                RequiredItems = requiredItems; // the requirements to get from the portal to the center of its region
-                GivesAccess = givesAccess; // portals that we get access to from this portal
+                PortalName = portalName;
+                RequiredItems = requiredItems;
+                GivesAccess = givesAccess;
             }
         }
 
