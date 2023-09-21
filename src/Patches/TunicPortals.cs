@@ -69,7 +69,7 @@ namespace TunicRandomizer
                 IsDeadEnd = isDeadEnd;
                 CantReach = cantReach;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, List<string> givesAccess, bool cantReach = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, List<string> givesAccess, bool cantReach = false, bool oneWay = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -101,6 +101,20 @@ namespace TunicRandomizer
                 PortalName = portalName;
                 RequiredItems = requiredItems;
                 GivesAccess = givesAccess;
+            }
+            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool prayerPortal = false, bool isDeadEnd = false, bool oneWay = false, bool cantReach = false)
+            {
+                Destination = destination;
+                DestinationTag = destinationTag;
+                PortalName = portalName;
+                RequiredItems = requiredItems;
+                RequiredItemsOr = requiredItemsOr;
+                GivesAccess = givesAccess;
+                EntryItems = entryItems;
+                PrayerPortal = prayerPortal;
+                IsDeadEnd = isDeadEnd;
+                OneWay = oneWay;
+                CantReach = cantReach;
             }
         }
 
@@ -451,13 +465,13 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Reliquary", "Lower", "Lower Fortress Grave Path Entrance"),
-                    new TunicPortal("Fortress Reliquary", "Upper", "Upper Fortress Grave Path Entrance", oneWay: true, givesAccess: new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }),
+                    new TunicPortal("Fortress Reliquary", "Upper", "Upper Fortress Grave Path Entrance", oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress East_" }),
                     new TunicPortal("Fortress Main", "Big Door", "Fortress Main Entrance"),
-                    new TunicPortal("Fortress East", "", "Fortress Outside to Fortress Mage Area", oneWay: true, givesAccess: new Dictionary<string, int> { {"Fortress Courtyard, Fortress Reliquary_Upper", 1} }),
-                    new TunicPortal("Fortress Basement", "", "Fortress to Under Fortress outside", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"prayer", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 }, new Dictionary<string, int> { { "laurels", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
+                    new TunicPortal("Fortress East", "", "Fortress Outside to Fortress Mage Area", oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress Reliquary_Upper" }),
+                    new TunicPortal("Fortress Basement", "", "Fortress to Under Fortress outside", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "prayer", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "laurels", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
                     new TunicPortal("Forest Belltower", "", "Fortress to Forest Bell", requiredItems: new Dictionary<string, int>{ { "laurels", 1 } }),
                     new TunicPortal("Overworld Redux", "", "Fortress to Overworld", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"laurels", 1} }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "orb", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
-                    new TunicPortal("Shop", "", "Fortress exterior shop", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"prayer", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 }, new Dictionary<string, int> { { "laurels", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
+                    new TunicPortal("Shop", "", "Fortress exterior shop", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "prayer", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "laurels", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
 
                     // new TunicPortal("Overworld Redux_", "", "Portal (4)"), // unused and disabled
                 }
