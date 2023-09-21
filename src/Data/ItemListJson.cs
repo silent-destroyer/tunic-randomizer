@@ -8,6 +8,10 @@ namespace TunicRandomizer {
                     ""RequiredItems"": [
                         {""Hyperdash"": 1}
                     ],
+                    ""RequiredItemsDoors"": [
+                        {""Hyperdash"": 1, ""Cathedral Arena, Swamp Redux_"": 1},
+                        {""Cathedral Arena, Shop_"": 1}
+                    ],
                     ""SceneId"": 61,
                     ""SceneName"": ""Cathedral Arena""
                 },

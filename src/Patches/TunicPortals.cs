@@ -102,20 +102,6 @@ namespace TunicRandomizer
                 RequiredItems = requiredItems;
                 GivesAccess = givesAccess;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool prayerPortal = false, bool isDeadEnd = false, bool oneWay = false, bool cantReach = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                RequiredItems = requiredItems;
-                RequiredItemsOr = requiredItemsOr;
-                GivesAccess = givesAccess;
-                EntryItems = entryItems;
-                PrayerPortal = prayerPortal;
-                IsDeadEnd = isDeadEnd;
-                OneWay = oneWay;
-                CantReach = cantReach;
-            }
         }
 
         // this is a big list of every portal in the game
@@ -752,7 +738,7 @@ namespace TunicRandomizer
                 }
                 foreach (TunicPortal portal in region_portals)
                 {
-                    Portal newPortal = new Portal(portal.Destination, portal.DestinationTag, portal.PortalName, region_name, portal.RequiredItems);
+                    Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, isDeadEnd: portal.IsDeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, cantReach: portal.CantReach);
                     if (deadEndNames.Contains(newPortal.Scene))
                     {
                         deadEndPortals.Add(newPortal);
@@ -827,7 +813,7 @@ namespace TunicRandomizer
             while (shopCount > 0)
             {
                 // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal("Previous Region", "", "Shop portal", "Shop", new List<Dictionary<string, int>>());
+                Portal shopPortal = new Portal("Previous Region", "", "Shop portal", "Shop");
                 // check that a shop has not already been added to this region, since two shops in the same region causes problems
                 if (!shopRegionList.Contains(twoPlusPortals[regionNumber].Scene))
                 {
