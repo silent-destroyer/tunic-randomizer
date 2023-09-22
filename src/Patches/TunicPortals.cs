@@ -486,7 +486,7 @@ namespace TunicRandomizer
                 "Fortress East", // that tiny area with the couple mages up high, and the ladder in the lower right
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main", "lower", "East Fortress to Inside Lower"),
+                    new TunicPortal("Fortress Main", "lower", "East Fortress to Inside Lower", requiredItems: new Dictionary<string, int> { { "Fortress East, Fortress Main_upper", 1} }),
                     new TunicPortal("Fortress Courtyard", "", "East Fortress to Courtyard"),
                     new TunicPortal("Fortress Main", "upper", "East Fortress to Inside Upper"),
                 }
