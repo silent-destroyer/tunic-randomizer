@@ -129,6 +129,23 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFile.GetInt("randomizer door rando enabled") == 1)
+            {
+                PlacedInventory.Add("Overworld Redux", 1);
+                // getting the randomized portal list the same way as we randomize it normally
+                Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo> (TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+
+
+
+                foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next()))
+                {
+                    int l;
+                    l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
+
+
+                }
+            }
+
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
                 // pick a location 

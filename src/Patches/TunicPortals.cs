@@ -506,7 +506,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Main", "", "Boss to Fortress"),
-                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", prayerPortal: true, entryItems: new Dictionary<string, int> { { "prayer", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
+                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
                     // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these, one is disabled
                 }
             },
@@ -626,7 +626,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Swamp Redux 2", "main", "Cathedral Main Exit"),
                     new TunicPortal("Cathedral Arena", "", "Cathedral Elevator"),
-                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Exit", cantReach: true, requiredItems: new Dictionary<string, int> { { "holy cross", 1 } }),
+                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Exit", cantReach: true, isDeadEnd: true), // only one chest, just use item access rules for it
                 }
             },
             {
@@ -663,12 +663,12 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Archipelagos Redux", "teleporter_archipelagos_teleporter", "Transit to West Garden", entryItems: new Dictionary<string, int>{ { "prayer", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1} }),
-                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Transit to Library", requiredItems: new Dictionary<string, int>{ { "prayer", 1 }, { "Library Lab, Library Arena_", 1} }),
-                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Transit to Quarry", requiredItems: new Dictionary<string, int>{ { "prayer", 1 }, { "Quarry Redux, Darkwoods Tunnel_", 1 }, {"Darkwoods Tunnel, Quarry Redux_", 1 }, { "orb", 1 } }),
+                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Transit to Library", entryItems: new Dictionary<string, int>{ { "prayer", 1 }, { "Library Lab, Library Arena_", 1} }),
+                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Transit to Quarry", entryItems: new Dictionary<string, int>{ { "prayer", 1 }, { "Quarry Redux, Darkwoods Tunnel_", 1 }, {"Darkwoods Tunnel, Quarry Redux_", 1 }, { "orb", 1 } }),
                     new TunicPortal("East Forest Redux", "teleporter_forest teleporter", "Transit to East Forest", requiredItems: new Dictionary<string, int> { { "laurels", 1 } }),
                     new TunicPortal("Fortress Arena", "teleporter_spidertank", "Transit to Fortress", entryItems: new Dictionary<string, int> { { "prayer", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
                     new TunicPortal("Atoll Redux", "teleporter_atoll", "Transit to Atoll"),
-                    new TunicPortal("ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", "Transit to Zig", requiredItems: new Dictionary<string, int>{ { "prayer", 1 }, { "ziggurat2020_3, ziggurat2020_FTRoom_", 1 } }),
+                    new TunicPortal("ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", "Transit to Zig"),
                     new TunicPortal("Spirit Arena", "teleporter_spirit arena", "Transit to Heir"),
                     new TunicPortal("Overworld Redux", "teleporter_town", "Transit to Town"),
                     new TunicPortal("Overworld Redux", "teleporter_starting island", "Transit to Spawn", requiredItems: new Dictionary<string, int> { { "laurels", 1 } }),
