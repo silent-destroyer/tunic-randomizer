@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TunicRandomizer {
     public class PortalCombo {
@@ -32,7 +34,7 @@ namespace TunicRandomizer {
 
         // the idea is to do something like, we check if we can get any rewards from this portal combo based on what we have
         // if we have the region a portal is in, we add that portal to the rewards list (if it meets the requirements)
-        public List<string> comboRewards(Dictionary<string, int> inventory)
+        public List<string> ComboRewards(Dictionary<string, int> inventory)
         {
             List<string> rewardsList = new List<string>();
 
@@ -40,7 +42,7 @@ namespace TunicRandomizer {
             if (!inventory.ContainsKey(this.Portal1.SceneDestinationTag) || !inventory.ContainsKey(this.Portal2.SceneDestinationTag))
             {
                 // check if we can get to the other portal from the first portal
-                if (this.Portal1.reachable(inventory))
+                if (this.Portal1.Reachable(inventory))
                 {
                     List<string> entryItems = new List<string>();
                     if (this.Portal1.PrayerPortal)
@@ -80,7 +82,7 @@ namespace TunicRandomizer {
                 }
 
                 // and then we do the same for the second portal
-                if (this.Portal2.reachable(inventory))
+                if (this.Portal2.Reachable(inventory))
                 {
                     List<string> entryItems = new List<string>();
                     if (this.Portal2.PrayerPortal)
@@ -119,13 +121,18 @@ namespace TunicRandomizer {
                 }
             }
 
+            // and now, we grab the regions or portals that we're given access to from having either portal and add them to the rewards list
             if (inventory.ContainsKey(this.Portal1.SceneDestinationTag))
             {
+                rewardsList.AddRange(this.Portal1.Rewards().Except(rewardsList));
+            }
 
+            if (inventory.ContainsKey(this.Portal2.SceneDestinationTag))
+            {
+                rewardsList.AddRange(this.Portal2.Rewards().Except(rewardsList));
             }
 
             return rewardsList;
         }
-
     }
 }

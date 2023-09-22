@@ -147,7 +147,7 @@ namespace TunicRandomizer {
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
 
-        public bool reachable(Dictionary<string, int> inventory)
+        public bool Reachable(Dictionary<string, int> inventory)
         {
             // if the portal is already in our inventory, no need to go through this process
             if (inventory.ContainsKey(this.SceneDestinationTag))
@@ -221,7 +221,7 @@ namespace TunicRandomizer {
         }
 
         // separate function to say "this is what you get if you have access to this portal"
-        public List<string> rewards(Dictionary<string, int> inventory)
+        public List<string> Rewards()
         {
             List<string> rewardsList = new List<string>();
 
