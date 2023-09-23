@@ -29,6 +29,7 @@ namespace TunicRandomizer {
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             if (TunicRandomizer.Settings.PortalRandoEnabled && SaveFile.GetInt("seed") != 0)
             {
+                Logger.LogInfo("about to start randomize portals in scene loader patches");
                 TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             }
             // ladder storage fix

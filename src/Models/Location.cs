@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using BepInEx.Logging;
 using HarmonyLib;
 
 namespace TunicRandomizer {
     public class Location
     {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
         public string LocationId
         {
             get;
@@ -85,6 +87,7 @@ namespace TunicRandomizer {
 
         public bool reachable(Dictionary<string, int> inventory)
         {
+            Logger.LogInfo("starting location.reachable");
             List<Dictionary<string, int>> itemsRequired;
             if (SaveFile.GetInt("randomizer door rando enabled") == 1)
             {
@@ -96,24 +99,30 @@ namespace TunicRandomizer {
             }
 
             //if there are no requirements, the location is reachable
+            Logger.LogInfo("location reachable step 1");
             if (itemsRequired.Count == 0)
             {
+                Logger.LogInfo("location reachable step 2");
                 return true;
             }
 
             //if there are requirements, loop through each requirement to see if any are fully met
             foreach (Dictionary<string, int> req in itemsRequired)
             {
+                Logger.LogInfo("location reachable step 3");
                 //ensure req and items use same terms
                 if (SaveFile.GetInt("randomizer sword progression enabled") != 0)
                 {
+                    Logger.LogInfo("location reachable step 4");
                     if (req.ContainsKey("Stick"))
                     {
+                        Logger.LogInfo("location reachable step 5");
                         req["Sword Progression"] = 1;
                         req.Remove("Stick");
                     }
                     if (req.ContainsKey("Sword"))
                     {
+                        Logger.LogInfo("location reachable step 6");
                         req["Sword Progression"] = 2;
                         req.Remove("Sword");
                     }
@@ -121,23 +130,28 @@ namespace TunicRandomizer {
 
                 //check if this requirement is fully met, otherwise move to the next requirement
                 int met = 0;
+                Logger.LogInfo("location reachable step 7");
                 foreach (string item in req.Keys)
                 {
+                    Logger.LogInfo("location reachable step 8");
                     if (!inventory.ContainsKey(item))
                     {
+                        Logger.LogInfo("location reachable step 9");
                         break;
                     }
                     else if (inventory[item] >= req[item])
                     {
+                        Logger.LogInfo("location reachable step 10");
                         met += 1;
                     }
                 }
                 if (met == req.Count)
                 {
+                    Logger.LogInfo("location reachable step 11");
                     return true;
                 }
             }
-
+            Logger.LogInfo("location reachable step 12");
             //if no requirements are met, the location isn't reachable
             return false;
         }
