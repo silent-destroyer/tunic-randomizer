@@ -796,7 +796,6 @@ namespace TunicRandomizer
             }
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
-            Logger.LogInfo("successfully added regions to accessible regions and portals to randomized portals list");
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
             while (deadEndPortals.Count > 0)
@@ -856,7 +855,6 @@ namespace TunicRandomizer
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
-                Logger.LogInfo("portal in world is this " + portal.name + portal.destinationSceneName + portal.id);
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
@@ -866,10 +864,6 @@ namespace TunicRandomizer
 
                     if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 1 matched");
-                        Logger.LogInfo("current scene is " + loadingScene.name);
-                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
-                        Logger.LogInfo("portal destination is now " + portal2.Scene+ "_" + comboTag);
                         Logger.LogInfo("portal 1 is " + portal1.Name);
                         Logger.LogInfo("portal 2 is " + portal2.Name);
 
@@ -885,15 +879,10 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
-                        Logger.LogInfo("finished, moving on to next portal");
                     }
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 2 matched");
-                        Logger.LogInfo("current scene is " + loadingScene.name);
-                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
-                        Logger.LogInfo("portal destination is now " + portal1.Scene + "_" + comboTag);
                         Logger.LogInfo("portal 1 is " + portal1.Name);
                         Logger.LogInfo("portal 2 is " + portal2.Name);
                         if (portal1.Scene == "Shop")
@@ -908,8 +897,6 @@ namespace TunicRandomizer
                             portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                             portal.optionalIDToSpawnAt = comboTag;
                         }
-
-                        Logger.LogInfo("finished, moving on to next portal");
                     }
                 }
             }
@@ -931,9 +918,6 @@ namespace TunicRandomizer
                     Portal portal2 = portalCombo.Value.Portal2;
                     if (portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 1 matched");
-                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
-                        Logger.LogInfo("portal destination is now " + portal2.Scene+ "_" + comboTag);
                         Logger.LogInfo("portal 1 is " + portal1.Name);
                         Logger.LogInfo("portal 2 is " + portal2.Name);
 
@@ -949,14 +933,10 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
-                        Logger.LogInfo("finished, moving on to next portal");
                     }
 
                     if (portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 2 matched");
-                        Logger.LogInfo("portal destination was " + portal.destinationSceneName + "_" + portal.id);
-                        Logger.LogInfo("portal destination is now " + portal1.Scene + "_" + comboTag);
                         Logger.LogInfo("portal 1 is " + portal1.Name);
                         Logger.LogInfo("portal 2 is " + portal2.Name);
                         if (portal1.Scene == "Shop")
@@ -971,8 +951,6 @@ namespace TunicRandomizer
                             portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                             portal.optionalIDToSpawnAt = comboTag;
                         }
-
-                        Logger.LogInfo("finished, moving on to next portal");
                     }
                 }
             }
