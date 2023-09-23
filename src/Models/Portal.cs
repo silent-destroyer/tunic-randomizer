@@ -87,6 +87,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             CantReach = cantReach;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems)
         {
@@ -95,6 +96,7 @@ namespace TunicRandomizer {
             Name = name;
             Scene = scene;
             RequiredItems = requiredItems;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> entryItems, bool isDeadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
         {
@@ -107,6 +109,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             CantReach = cantReach;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, List<string> givesAccess, bool isDeadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
         {
@@ -119,6 +122,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             CantReach = cantReach;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<string> givesAccess, bool isDeadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
         {
@@ -132,6 +136,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             CantReach = cantReach;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool isDeadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
         {
@@ -152,44 +157,34 @@ namespace TunicRandomizer {
 
         public bool Reachable(Dictionary<string, int> inventory)
         {
-            Logger.LogInfo("reachable started");
             // if the portal is already in our inventory, no need to go through this process
             if (inventory.ContainsKey(this.SceneDestinationTag))
             {
                 return true;
             }
 
-            Logger.LogInfo("step 2");
             // create our list of dicts of required items
             List <Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
-            Logger.LogInfo("step 3");
             if (this.RequiredItems != null)
             {
                 // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                Logger.LogInfo("step 4");
                 if (this.CantReach == false && this.OneWay == false)
                 {
-                    Logger.LogInfo("step 5");
                     this.RequiredItems.Add(this.Scene, 1);
                 }
-                Logger.LogInfo("step 6");
                 itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
             }
             else if (this.RequiredItemsOr != null)
             {
-                Logger.LogInfo("step 7");
                 foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                 {
                     if (this.CantReach == false && this.OneWay == false)
                     {
-                        Logger.LogInfo("step 8");
                         reqSet.Add(this.Scene, 1);
                     }
-                    Logger.LogInfo("step 9");
                     itemsRequired.Add(reqSet);
                 }
             }
-            Logger.LogInfo("step 10");
 
             // see if we meet any of the requirement dicts for the portal
             if (itemsRequired != null)
@@ -236,7 +231,6 @@ namespace TunicRandomizer {
         // separate function to say "this is what you get if you have access to this portal"
         public List<string> Rewards()
         {
-            Logger.LogInfo("step 11");
             List<string> rewardsList = new List<string>();
 
             // GivesAccess means the portal gives access to a specific other portal immediately (ex: fortress exterior shop and beneath the earth)
@@ -247,7 +241,6 @@ namespace TunicRandomizer {
                     rewardsList.Add(accessiblePortal);
                 }
             }
-            Logger.LogInfo("step 12");
 
             // if you canreach, you get the center of the region. One-ways give you the center too
             if (this.CantReach == false)

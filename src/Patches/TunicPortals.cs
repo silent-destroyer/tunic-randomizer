@@ -813,7 +813,7 @@ namespace TunicRandomizer
             while (shopCount > 0)
             {
                 // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop");
+                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), isDeadEnd: true, prayerPortal: false, oneWay: false, cantReach: false);
                 // check that a shop has not already been added to this region, since two shops in the same region causes problems
                 if (!shopRegionList.Contains(twoPlusPortals[regionNumber].Scene))
                 {
