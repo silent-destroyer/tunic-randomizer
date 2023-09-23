@@ -132,47 +132,47 @@ namespace TunicRandomizer {
             }
 
             // door rando time
-            //if (SaveFile.GetInt("randomizer door rando enabled") == 1)
-            //{
-            //    PlacedInventory.Add("Overworld Redux", 1);
-            //    // getting the randomized portal list the same way as we randomize it normally
-            //    Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo> (TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+            if (SaveFile.GetInt("randomizer door rando enabled") == 1)
+            {
+                PlacedInventory.Add("Overworld Redux", 1);
+                // getting the randomized portal list the same way as we randomize it normally
+                Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
 
-            //    Logger.LogInfo("testing portal rando now");
-            //    // this should keep looping until every portal either doesn't give a reward, or has already given its reward
-            //    int checkP = 0;
-            //    while (checkP < randomizedPortalsList.Count)
-            //    {
-            //        checkP = 0;
-            //        foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
-            //        {
-            //            Logger.LogInfo("checking whether the portal's comborewards is greater than 0");
-            //            if (portalCombo.ComboRewards(PlacedInventory).Count > 0)
-            //            {
-            //                Logger.LogInfo("combo rewards was greater than 0");
-            //                foreach (string item in portalCombo.ComboRewards(PlacedInventory))
-            //                {
-            //                    Logger.LogInfo("checking if inventory contains the item already");
-            //                    if (!PlacedInventory.ContainsKey(item))
-            //                    {
-            //                        Logger.LogInfo("adding item to list");
-            //                        PlacedInventory.Add(item, 1);
-            //                    }
-            //                    else { checkP++; }
-            //                }
-            //            }
-            //            else { checkP++; }
-            //        }
-            //    }
+                Logger.LogInfo("testing portal rando now");
+                // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+                int checkP = 0;
+                while (checkP < randomizedPortalsList.Count)
+                {
+                    checkP = 0;
+                    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                    {
+                        Logger.LogInfo("checking whether the portal's comborewards is greater than 0");
+                        if (portalCombo.ComboRewards(PlacedInventory).Count > 0)
+                        {
+                            Logger.LogInfo("combo rewards was greater than 0");
+                            foreach (string item in portalCombo.ComboRewards(PlacedInventory))
+                            {
+                                Logger.LogInfo("checking if inventory contains the item already");
+                                if (!PlacedInventory.ContainsKey(item))
+                                {
+                                    Logger.LogInfo("adding item to list");
+                                    PlacedInventory.Add(item, 1);
+                                }
+                                else { checkP++; }
+                            }
+                        }
+                        else { checkP++; }
+                    }
+                }
 
-            //    //foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next()))
-            //    //{
-            //    //    int l;
-            //    //    l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
+                //foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next()))
+                //{
+                //    int l;
+                //    l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
 
 
-            //    //}
-            //}
+                //}
+            }
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx.Logging;
+using System.Collections.Generic;
 
 namespace TunicRandomizer {
     public class Portal {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
         public string Scene {
             get;
             set;
@@ -25,24 +27,25 @@ namespace TunicRandomizer {
         {
             get;
             set;
-        }
+        } = new Dictionary<string, int>();
 
-        public List<Dictionary<string, int>> RequiredItemsOr {
+        public List<Dictionary<string, int>> RequiredItemsOr
+        {
             get;
             set;
-        }
+        } = new List<Dictionary<string, int>>();
 
         public Dictionary<string, int> EntryItems
         {
             get;
             set;
-        }
+        } = new Dictionary<string, int>();
 
         public List<string> GivesAccess
         {
             get;
             set;
-        }
+        } = new List<string>();
 
         public bool IsDeadEnd
         {
@@ -55,7 +58,7 @@ namespace TunicRandomizer {
             get;
             set;
         }
-        
+
         public bool OneWay
         {
             get;
@@ -149,37 +152,47 @@ namespace TunicRandomizer {
 
         public bool Reachable(Dictionary<string, int> inventory)
         {
+            Logger.LogInfo("reachable started");
             // if the portal is already in our inventory, no need to go through this process
             if (inventory.ContainsKey(this.SceneDestinationTag))
             {
                 return true;
             }
 
+            Logger.LogInfo("step 2");
             // create our list of dicts of required items
-            List<Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
-            if (this.RequiredItems.Count != 0)
+            List <Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
+            Logger.LogInfo("step 3");
+            if (this.RequiredItems != null)
             {
                 // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
+                Logger.LogInfo("step 4");
                 if (this.CantReach == false && this.OneWay == false)
                 {
+                    Logger.LogInfo("step 5");
                     this.RequiredItems.Add(this.Scene, 1);
                 }
+                Logger.LogInfo("step 6");
                 itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
             }
-            else if (this.RequiredItemsOr.Count != 0)
+            else if (this.RequiredItemsOr != null)
             {
+                Logger.LogInfo("step 7");
                 foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                 {
                     if (this.CantReach == false && this.OneWay == false)
                     {
+                        Logger.LogInfo("step 8");
                         reqSet.Add(this.Scene, 1);
                     }
+                    Logger.LogInfo("step 9");
                     itemsRequired.Add(reqSet);
                 }
             }
+            Logger.LogInfo("step 10");
 
             // see if we meet any of the requirement dicts for the portal
-            if (this.RequiredItems.Count != 0)
+            if (itemsRequired != null)
             {
                 foreach (Dictionary<string, int> req in itemsRequired)
                 {
@@ -223,16 +236,18 @@ namespace TunicRandomizer {
         // separate function to say "this is what you get if you have access to this portal"
         public List<string> Rewards()
         {
+            Logger.LogInfo("step 11");
             List<string> rewardsList = new List<string>();
 
             // GivesAccess means the portal gives access to a specific other portal immediately (ex: fortress exterior shop and beneath the earth)
-            if (this.GivesAccess.Count != 0)
+            if (this.GivesAccess != null)
             {
                 foreach (string accessiblePortal in this.GivesAccess)
                 {
                     rewardsList.Add(accessiblePortal);
                 }
             }
+            Logger.LogInfo("step 12");
 
             // if you canreach, you get the center of the region. One-ways give you the center too
             if (this.CantReach == false)
