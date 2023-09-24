@@ -293,7 +293,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Overworld Redux", "lower", "West Garden Exit to Dark Tomb"),
                     new TunicPortal("archipelagos_house", "", "Magic Dagger House Entrance"),
-                    new TunicPortal("Overworld Redux", "upper", "West Garden after boss", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
+                    new TunicPortal("Overworld Redux", "upper", "West Garden after boss", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
                     new TunicPortal("Shop", "", "West Garden to Shop"), // there's two of these, one is unused and disabled
                     new TunicPortal("Overworld Redux", "lowest", "West Garden Laurel Exit"),
                     new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero Grave", prayerPortal: true), // Hero grave

@@ -32,6 +32,7 @@ namespace TunicRandomizer {
                 Logger.LogInfo("about to start randomize portals in scene loader patches");
                 TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             }
+            
             // ladder storage fix
             if (PlayerCharacter.instance != null)
             {
@@ -166,7 +167,7 @@ namespace TunicRandomizer {
                         RandomObtainedFairies.Add(Key);
                     }
                 }
-                
+
                 StateVariable.GetStateVariableByName("SV_Fairy_5_Waterfall_Opened").BoolValue = SaveFile.GetInt("randomizer opened fairy chest Waterfall-(-47.0, 45.0, 10.0)") == 1;
 
                 StateVariable.GetStateVariableByName("SV_Fairy_00_Enough Fairies Found").BoolValue = true;
@@ -185,6 +186,7 @@ namespace TunicRandomizer {
             } else if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", 0);
             } else if (SceneName == "Overworld Interiors") {
+                GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject.SetActive(true);
                 foreach (string Key in ItemPatches.HeroRelicLookup.Keys) {
                     StateVariable.GetStateVariableByName(ItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
                 }
@@ -270,6 +272,16 @@ namespace TunicRandomizer {
                 if (new System.Random().Next(100) < 3) {
                     GameObject.Find("merchant (1)").SetActive(false);
                     GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
+                }
+            } else if (SceneName == "Cathedral Arena") {
+                if (TunicRandomizer.Settings.PortalRandoEnabled)
+                {
+                    StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = false;
+                }
+            } else if (SceneName == "Cathedral Redux") {
+                if (TunicRandomizer.Settings.PortalRandoEnabled)
+                {
+                    StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
                 }
             } else {
                 foreach (string Key in ItemPatches.FairyLookup.Keys) {
