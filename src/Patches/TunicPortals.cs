@@ -275,7 +275,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Sewer", "", "Well Boss to Well"),
-                    new TunicPortal("Crypt Redux", "", "Well Boss to Dark Tomb", requiredItems: new Dictionary<string, int> { { "Sewer_Boss, Sewer_", 1 } }),
+                    new TunicPortal("Crypt Redux", "", "Well Boss to Dark Tomb", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sewer_Boss, Sewer_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
                 }
             },
             {
@@ -385,9 +385,9 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Sword Access", "lower", "Forest Hero Grave Lower Entrance"),
-                    new TunicPortal("East Forest Redux Laddercave", "upper", "Fox Dance Door outside", isDeadEnd: true),
+                    new TunicPortal("East Forest Redux Laddercave", "upper", "Fox Dance Door outside", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } } ),
                     new TunicPortal("East Forest Redux Interior", "lower", "Guard House 2 Lower Entrance"),
-                    new TunicPortal("East Forest Redux Laddercave", "gate", "Guard House 1 Gate Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Sword", 1 } }, new Dictionary<string, int> { { "Techbow", 1 } } }),
+                    new TunicPortal("East Forest Redux Laddercave", "gate", "Guard House 1 Gate Entrance"),
                     new TunicPortal("Sword Access", "upper", "Forest Hero Grave Upper Entrance"),
                     new TunicPortal("East Forest Redux Interior", "upper", "Guard House 2 Upper Entrance"),
                     new TunicPortal("East Forest Redux Laddercave", "lower", "Guard House 1 Lower Entrance"),
