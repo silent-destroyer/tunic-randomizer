@@ -145,7 +145,7 @@ namespace TunicRandomizer
                     new TunicPortal("Mountain", "", "Stairs from Overworld to Mountain"),
                     new TunicPortal("Fortress Courtyard", "", "Overworld to Fortress"),
                     new TunicPortal("Town_FiligreeRoom", "", "HC Room Entrance next to Changing Room", entryItems: new Dictionary<string, int> { { "21", 1 } }),
-                    new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance", entryItems: new Dictionary<string, int> { { "21", 1 } }),
+                    new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
                     new TunicPortal("Darkwoods Tunnel", "", "Entrance to Quarry Connector"),
                     new TunicPortal("Crypt Redux", "", "Dark Tomb Entrance"),
                     new TunicPortal("Forest Belltower", "", "East Forest Entrance"),
@@ -369,7 +369,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Library Arena", "", "Library lab ladder"),
-                    new TunicPortal("Library Rotunda", "", "Library lab to circle", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                    new TunicPortal("Library Rotunda", "", "Library lab to circle", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
                     new TunicPortal("Transit", "teleporter_library teleporter", "Library Portal", prayerPortal : true),
                 }
             },
@@ -586,7 +586,7 @@ namespace TunicRandomizer
                 "ziggurat2020_2", // Zig intermediate elevator
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to 1"),
+                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to 1", oneWay: true),
                     new TunicPortal("ziggurat2020_3", "", "Zig 2 to 3"),
                 }
             },
@@ -879,6 +879,7 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        continue;
                     }
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
@@ -897,6 +898,7 @@ namespace TunicRandomizer
                             portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                             portal.optionalIDToSpawnAt = comboTag;
                         }
+                        continue;
                     }
                 }
             }
