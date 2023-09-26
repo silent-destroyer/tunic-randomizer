@@ -29,8 +29,16 @@ Note: This is the standalone, single-player version of the TUNIC Randomizer. For
   - The Holy Cross chest from the dancing fox ghost in East Forest can be spawned in during the daytime. 
   - The Secret Legend chest in the Cathedral can similarly be obtained during the day by opening the Holy Cross door from the outside.
   - Nighttime is not considered in logic. Every check in the game is logically obtainable before the first visit to The Heir, and since nighttime restricts access to several locations it would limit the amount of options overall if certain items were required to always be obtainable at night. The game will automatically switch back to daytime if you die to The Heir on the first visit, but you can optionally switch to nighttime at any point after that by interacting with a special object in the Old House.
+  - In Entrance Rando:
+    - You can use the [[ITEM NAME HERE]] to return to the Overworld save point at any time.
+    - The dancing ghost fox area can be accessed using the Hero's Laurels from the gate entrance of Guard House 1.
+    - Using the Hero's Laurels, you can dash through the gate in the Bottom of the Well boss room.
+    - Activating a fuse to turn on a Prayer teleporter also activates its counterpart in the Far Shore.
+    - The elevators in Ziggurat only go down.
+    - The portal in the trophy room in the back of the Old House is active from the start.
+    - The elevator in Cathedral is immediately accessible without activating the fuse. Activating the fuse does nothing.
 - Regarding Hints:
-  - The Mailbox will always give you a "First Step" hint, which will generally try to lead you to a useful item that is not blocked by progression. In the rare event that all of the Mailbox hint items are locked by something else, it will lead you to one of the things needed to unlock a more useful items.
+  - The Mailbox will always give you a "First Step" hint, which will generally try to lead you to a useful item that is not blocked by progression. In the rare event that all of the Mailbox hint items are locked by something else, it will lead you to one of the things needed to unlock a more useful item.
   - The Hero's Grave in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
   - The Hero's Grave in East Forest, West Garden, and the Eastern Vault Fortress are "Path of the Hero" hints, which hint towards a major progression item, such as Grapple, Lantern, Fire Wand, Ice Dagger, and/or the Prayer/Holy Cross pages (if playing with Ability Shuffling).
   - The statue in the Sealed Temple will always hint the location of the Hero's Laurels.
