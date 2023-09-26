@@ -817,7 +817,7 @@ namespace TunicRandomizer
                 {
                     comboNumber++;
                     shopRegionList.Add(twoPlusPortals[regionNumber].Scene);
-                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(shopPortal, twoPlusPortals[regionNumber]));
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[regionNumber], shopPortal));
                     twoPlusPortals.RemoveAt(regionNumber);
                     shopCount--;
                 }
@@ -884,20 +884,12 @@ namespace TunicRandomizer
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
+                        // a shop can only be portal 2, so no need to do the if else here
                         Logger.LogInfo("portal 1 is " + portal1.Name);
                         Logger.LogInfo("portal 2 is " + portal2.Name);
-                        if (portal1.Scene == "Shop")
-                        {
-                            portal.destinationSceneName = portal1.Scene;
-                            portal.id = "";
-                            portal.optionalIDToSpawnAt = "";
-                        }
-                        else
-                        {
-                            portal.destinationSceneName = portal1.Scene;
-                            portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
-                            portal.optionalIDToSpawnAt = comboTag;
-                        }
+                        portal.destinationSceneName = portal1.Scene;
+                        portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
+                        portal.optionalIDToSpawnAt = comboTag;
                         continue;
                     }
                 }
