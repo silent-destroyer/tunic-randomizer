@@ -19,16 +19,16 @@ namespace TunicRandomizer
         {
             public string SceneName; // the scene the portal is in
             public string Destination; // the vanilla destination scene
-            public string DestinationTag; // the vanilla destination tag
+            public string DestinationTag; // the vanilla destination tag, aka ID
             public string PortalName; // a human-readable name for the portal
-            public Dictionary<string, int> RequiredItems; // required items if there is only one item or set of items required. A FullID for a portal or a scene name counts as an item.
-            public List<Dictionary<string, int>> RequiredItemsOr; // required items if there are multiple different possible requirements. A FullID for a portal or a scene name counts as an item.
-            public List<string> GivesAccess; // portals that are given access to by this portal. If empty, then it defaults to giving access to the center of the region
-            public Dictionary<string, int> EntryItems; // portals that require some item(s) to enter. To be used when these entry items don't block you from getting to the center of the region (basically, if they drop you outside of the door like hero's graves or the overworld holy cross doors do)
-            public bool IsDeadEnd; // portals that are dead ends but share the region with other portals, like the gauntlet lower entry or zig 2 from behind
-            public bool PrayerPortal; // portals that require prayer to enter. This is a more convenient version of GivesAccess for prayer portals
+            public Dictionary<string, int> RequiredItems; // required items if there is only one item or one set of items required. A string like "scene, destination_tag" counts as an item.
+            public List<Dictionary<string, int>> RequiredItemsOr; // required items if there are multiple different possible requirements. A string like "scene, destination_tag" counts as an item.
+            public List<string> GivesAccess; // portals that you are given access to by this portal. ex: the dance fox portal to the lower east forest portal in guardhouse 1.
+            public Dictionary<string, int> EntryItems; // portals that require items to enter, but not exit from. ex: hero's graves, the yellow prayer portal pads, and the fountain holy cross door in overworld.
+            public bool IsDeadEnd; // portals that are dead ends, like stick house or the gauntlet lower entry.
+            public bool PrayerPortal; // portals that require prayer to enter. This is a more convenient version of GivesAccess for prayer portals.
             public bool OneWay; // portals that are one-way, such as the back entrance to monastery and the forest belltower top portal
-            public bool CantReach; // portals that cannot reach the center of the region
+            public bool CantReach; // portals that cannot reach the center of the region, and as such do not give region access, like the rail between bottom of the well and furnace
 
             public TunicPortal() { }
 
@@ -104,9 +104,8 @@ namespace TunicRandomizer
             }
         }
 
-        // this is a big list of every portal in the game
-        // we'll need to convert these into Portals (see Models/Portal.cs)
-        // maybe it'll need to be less overcomplicated later to remove the conversion? Hard to say, will have to see how it goes
+        // this is a big list of every portal in the game, along with their access requirements
+        // a portal without access requirements just means you can get to the center of the region from that portal and vice versa
         public static Dictionary<string, List<TunicPortal>> PortalList = new Dictionary<string, List<TunicPortal>>
         {
             {
@@ -135,7 +134,7 @@ namespace TunicRandomizer
                     new TunicPortal("Archipelagos Redux", "upper", "West Garden Entrance by Belltower", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance by Dark Tomb", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Overworld Redux, Furnace_gyro_west", 1 } } }),
                     new TunicPortal("Archipelagos Redux", "lowest", "West Garden Laurel Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Temple", "main", "Temple Door Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Wand", 1 } } }), // technically laurels too
+                    new TunicPortal("Temple", "main", "Temple Door Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Techbow", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Techbow", 1 } } }),
                     new TunicPortal("Temple", "rafters", "Temple Upper Entrance"),
                     new TunicPortal("Ruined Shop", "", "Ruined Shop Entrance"),
                     new TunicPortal("PatrolCave", "", "Patrol Cave Entrance"),
@@ -144,8 +143,8 @@ namespace TunicRandomizer
                     new TunicPortal("CubeRoom", "", "Cube Entrance"),
                     new TunicPortal("Mountain", "", "Stairs from Overworld to Mountain"),
                     new TunicPortal("Fortress Courtyard", "", "Overworld to Fortress"),
-                    new TunicPortal("Town_FiligreeRoom", "", "HC Room Entrance next to Changing Room", entryItems: new Dictionary<string, int> { { "21", 1 } }),
-                    new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
+                    new TunicPortal("Town_FiligreeRoom", "", "HC Room Entrance next to Changing Room", entryItems: new Dictionary<string, int> { { "21", 1 } }), // this is entry items because when you exit from this portal, you end up in front of the door
+                    new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance", requiredItems: new Dictionary<string, int> { { "21", 1 } }), // this is required items because when you exit from this portal, you end up behind the door
                     new TunicPortal("Darkwoods Tunnel", "", "Entrance to Quarry Connector"),
                     new TunicPortal("Crypt Redux", "", "Dark Tomb Entrance"),
                     new TunicPortal("Forest Belltower", "", "East Forest Entrance"),
