@@ -335,7 +335,7 @@ namespace TunicRandomizer
                 "frog cave main", // Frog's domain, yes it's lowercase
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Frog Stairs", "Exit", "Lower frog exit exit", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                    new TunicPortal("Frog Staris", "Exit", "Lower frog exit exit", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }, new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } } }),
                     new TunicPortal("Frog Stairs", "Entrance", "Lower frog entrance exit"),
                 }
             },
@@ -855,6 +855,7 @@ namespace TunicRandomizer
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
+                Logger.LogInfo("portal in world is " + portal.destinationSceneName + "_" + portal.FullID);
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
@@ -879,8 +880,9 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
-                        continue;
+                        break;
                     }
+                    
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
@@ -890,7 +892,7 @@ namespace TunicRandomizer
                         portal.destinationSceneName = portal1.Scene;
                         portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         portal.optionalIDToSpawnAt = comboTag;
-                        continue;
+                        break;
                     }
                 }
             }

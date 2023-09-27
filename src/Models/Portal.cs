@@ -98,6 +98,15 @@ namespace TunicRandomizer {
             RequiredItems = requiredItems;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
+        public Portal(string destination, string tag, string name, string scene, List<Dictionary<string, int>> requiredItemsOr)
+        {
+            Destination = destination;
+            Tag = tag;
+            Name = name;
+            Scene = scene;
+            RequiredItemsOr = requiredItemsOr;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
+        }
         public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> entryItems, bool isDeadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
         {
             Destination = destination;
@@ -167,7 +176,7 @@ namespace TunicRandomizer {
             if (this.RequiredItems != null)
             {
                 // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                if (this.CantReach == false && this.OneWay == false && !this.RequiredItems.ContainsKey(this.Scene))
+                if ((this.CantReach == false || this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
                 {
                     this.RequiredItems.Add(this.Scene, 1);
                 }
@@ -177,7 +186,7 @@ namespace TunicRandomizer {
             {
                 foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                 {
-                    if (this.CantReach == false && this.OneWay == false && !reqSet.ContainsKey(this.Scene))
+                    if ((this.CantReach == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
                     {
                         reqSet.Add(this.Scene, 1);
                     }
