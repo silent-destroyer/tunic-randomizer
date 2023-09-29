@@ -191,6 +191,13 @@ namespace TunicRandomizer
                 }
             },
             {
+                "Changing Room", // Secret treasure room
+                new List<TunicPortal>
+                {
+                    new TunicPortal("Overworld Redux", "", "Changing Room Exit", isDeadEnd: true),
+                }
+            },
+            {
                 "Furnace", // Under the west belltower
                 // I'm calling the "center" of this region the space accessible by the windmill and beach
                 new List<TunicPortal>
@@ -805,7 +812,7 @@ namespace TunicRandomizer
                 twoPlusPortals.RemoveAt(0);
             }
             List<string> shopRegionList = new List<string>();
-            int shopCount = 7;
+            int shopCount = 8;
             int regionNumber = 0;
             while (shopCount > 0)
             {
