@@ -147,31 +147,23 @@ namespace TunicRandomizer {
                     Logger.LogInfo("testing portal rando now");
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
                     int checkP = 0;
-                    Logger.LogInfo("randomized portals list count is " + randomizedPortalsList.Count);
                     while (checkP < randomizedPortalsList.Count)
                     {
-                        Logger.LogInfo("starting checkP loop");
                         checkP = 0;
                         foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
                         {
-                            Logger.LogInfo("checking whether the portal's comborewards is greater than 0");
                             if (portalCombo.ComboRewards(PlacedInventory).Count > 0)
                             {
-                                Logger.LogInfo("combo rewards was greater than 0");
                                 foreach (string itemDoors in portalCombo.ComboRewards(PlacedInventory))
                                 {
-                                    Logger.LogInfo("checking if inventory contains the item already");
                                     if (!PlacedInventory.ContainsKey(itemDoors))
                                     {
-                                        Logger.LogInfo("adding item to list");
                                         PlacedInventory.Add(itemDoors, 1);
                                     }
                                     else { checkP++; }
-                                    Logger.LogInfo("checkP now is " + checkP.ToString());
                                 }
                             }
                             else { checkP++; }
-                            Logger.LogInfo("checkP is now " + checkP.ToString());
                         }
                     }
                 }
