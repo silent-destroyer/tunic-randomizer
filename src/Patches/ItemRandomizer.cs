@@ -7,6 +7,7 @@ using UnityEngine;
 using TinyJson;
 using System.IO;
 using BepInEx.Logging;
+using UnityEngine.Playables;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
@@ -131,7 +132,20 @@ namespace TunicRandomizer {
                 }
             }
 
-            int loopNumber = 0;
+            // adding the progression rewards to the start inventory, so we can reverse fill
+            foreach (Reward item in ProgressionRewards)
+            {
+                string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                if (PlacedInventory.ContainsKey(itemName))
+                {
+                    PlacedInventory[itemName] += 1;
+                }
+                else
+                {
+                    PlacedInventory.Add(itemName, 1);
+                }
+            }
+
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
                 // door rando time
@@ -145,7 +159,6 @@ namespace TunicRandomizer {
                     // getting the randomized portal list the same way as we randomize it normally
                     Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
 
-                    Logger.LogInfo("testing portal rando now");
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
                     int checkP = 0;
                     while (checkP < randomizedPortalsList.Count)
@@ -167,31 +180,27 @@ namespace TunicRandomizer {
                             else { checkP++; }
                         }
                     }
-                    if (loopNumber == 0)
-                    {
-                        SphereZero = PlacedInventory;
-                        foreach (KeyValuePair<string, int> itemstuff in PlacedInventory)
-                        {
-                            Logger.LogInfo("itemstuff is " + itemstuff.Key);
-                        }
-                    }
+                }
+
+                // pick an item
+                string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                // remove item from placed inv for reachability checks
+                if (PlacedInventory.Keys.Contains(itemName))
+                {
+                    PlacedInventory[itemName] -= 1;
+                }
+                if (PlacedInventory[itemName] == 0)
+                {
+                    PlacedInventory.Remove(itemName);
                 }
 
                 // pick a location
                 int l;
                 l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
 
-                // if location isn't reachable with placed inv, pick a new location
+                // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
                 while (!InitialLocations[l].reachable(PlacedInventory)) {
                     l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
-                }
-
-                // add item to placed inv for future reachability checks
-                string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                if (PlacedInventory.Keys.Contains(itemName)) {
-                    PlacedInventory[itemName] += 1;
-                } else {
-                    PlacedInventory.Add(itemName, 1);
                 }
 
                 // prepare matched list of progression items and locations
@@ -200,14 +209,9 @@ namespace TunicRandomizer {
                 ProgressionLocations.Add(DictionaryId, ItemData);
 
                 InitialLocations.Remove(InitialLocations[l]);
-
-                loopNumber++;
-
-                Logger.LogInfo("checking placed inventory");
-                foreach (KeyValuePair<string, int> thing in PlacedInventory) {
-                    Logger.LogInfo("placed inventory has " + thing.Key);
-                }
             }
+
+            SphereZero = PlacedInventory;
 
             // shuffle remaining rewards and locations
             Shuffle(InitialRewards, InitialLocations);

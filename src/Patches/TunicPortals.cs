@@ -600,7 +600,7 @@ namespace TunicRandomizer
                 "ziggurat2020_3", // Lower zig, center is designated as before the prayer spot with the two cube minibosses
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room", prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 } }, new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } } }), // Prayer portal room
+                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room", prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } }, new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } } }), // Prayer portal room
                     // new TunicPortal("ziggurat2020_1", "zig2_skip", "Zig Skip Exit"), // the elevator skip to lower zig
                     new TunicPortal("ziggurat2020_2", "", "Zig 3 to Zig 2"),
                 }
