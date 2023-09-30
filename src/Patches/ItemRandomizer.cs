@@ -131,6 +131,7 @@ namespace TunicRandomizer {
                 }
             }
 
+            int loopNumber = 0;
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
                 // door rando time
@@ -166,6 +167,14 @@ namespace TunicRandomizer {
                             else { checkP++; }
                         }
                     }
+                    if (loopNumber == 0)
+                    {
+                        SphereZero = PlacedInventory;
+                        foreach (KeyValuePair<string, int> itemstuff in PlacedInventory)
+                        {
+                            Logger.LogInfo("itemstuff is " + itemstuff.Key);
+                        }
+                    }
                 }
 
                 // pick a location
@@ -191,6 +200,13 @@ namespace TunicRandomizer {
                 ProgressionLocations.Add(DictionaryId, ItemData);
 
                 InitialLocations.Remove(InitialLocations[l]);
+
+                loopNumber++;
+
+                Logger.LogInfo("checking placed inventory");
+                foreach (KeyValuePair<string, int> thing in PlacedInventory) {
+                    Logger.LogInfo("placed inventory has " + thing.Key);
+                }
             }
 
             // shuffle remaining rewards and locations

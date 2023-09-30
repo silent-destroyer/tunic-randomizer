@@ -74,7 +74,7 @@ namespace TunicRandomizer {
                         }
                     }
                     // if we have all of the entry items, we get the portal
-                    if (count == entryItems.Count)
+                    if (count >= entryItems.Count)
                     {
                         if (!rewardsList.Contains(this.Portal2.SceneDestinationTag))
                         {
@@ -93,6 +93,7 @@ namespace TunicRandomizer {
                     List<string> entryItems = new List<string>();
                     if (this.Portal2.PrayerPortal)
                     {
+                        entryItems.Add("12");
                     }
                     if (this.Portal2.EntryItems != null)
                     {
@@ -117,7 +118,7 @@ namespace TunicRandomizer {
                             count++;
                         }
                     }
-                    // if we have all of the entry items, we get the scene
+                    // if we have all of the entry items, we get the portal
                     if (count == entryItems.Count)
                     {
                         if (!rewardsList.Contains(this.Portal1.SceneDestinationTag))

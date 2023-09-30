@@ -685,7 +685,7 @@ namespace TunicRandomizer
                 "Spirit Arena", // Heir fight
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Exit"),
+                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Exit", isDeadEnd: true),
                 }
             },
             {
@@ -698,7 +698,6 @@ namespace TunicRandomizer
             },
         };
 
-        // public static List<string> deadEndNames = new List<string> { "g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
         public static List<string> hallwayNames = new List<string> { "Windmill", "Ruins Passage", "Temple", "Sewer_Boss", "frog cave main", "Library Exterior", "Library Rotunda", "East Forest Interior Redux", "Forest Boss Room", "Fortress Basement", "Darkwoods Tunnel", "ziggurat2020_0", "ziggurat2020_2", "ziggurat2020_FTRoom", "Purgatory" };
         // public static List<string> twoPlusNames = new List<string>();
 
@@ -744,14 +743,10 @@ namespace TunicRandomizer
                 foreach (TunicPortal portal in region_portals)
                 {
                     Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, isDeadEnd: portal.IsDeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, cantReach: portal.CantReach);
-                    if (deadEndNames.Contains(newPortal.Scene))
+                    if (newPortal.IsDeadEnd == true)
                     {
                         deadEndPortals.Add(newPortal);
                     }
-                    //else if (hallwayNames.Contains(portal.SceneName))
-                    //{
-                    //    hallwayPortals.Add(newPortal);
-                    //}
                     else twoPlusPortals.Add(newPortal);
                 }
             }
@@ -768,7 +763,7 @@ namespace TunicRandomizer
 
             // This might be way too much shuffling -- was done to not favor connecting new regions to the first regions added to the list
             // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
-            while (accessibleRegions.Count < twoPlusNames.Count)
+            while (accessibleRegions.Count < 43)
             {
                 ShuffleList(twoPlusPortals, seed);
                 // later on, start by making the first several portals into shop portals

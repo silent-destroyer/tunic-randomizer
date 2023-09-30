@@ -51,25 +51,25 @@ namespace TunicRandomizer {
         {
             get;
             set;
-        }
+        } = false;
 
         public bool PrayerPortal
         {
             get;
             set;
-        }
+        } = false;
 
         public bool OneWay
         {
             get;
             set;
-        }
+        } = false;
 
         public bool CantReach
         {
             get;
             set;
-        }
+        } = false;
 
         public string SceneDestinationTag
         {
@@ -197,6 +197,10 @@ namespace TunicRandomizer {
             // see if we meet any of the requirement dicts for the portal
             if (itemsRequired != null)
             {
+                if (itemsRequired.Count == 0)
+                {
+                    return true;
+                }
                 foreach (Dictionary<string, int> req in itemsRequired)
                 {
                     //ensure req and items use same terms
@@ -232,6 +236,11 @@ namespace TunicRandomizer {
                         return true;
                     }
                 }
+            }
+            else
+            {
+                Logger.LogInfo("returning true because itemsRequired is null");
+                return true;
             }
             return false;
         }
