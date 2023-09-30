@@ -263,8 +263,8 @@ namespace TunicRandomizer
                 "Temple", // Where you put the hexes
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "rafters", "Temple Upper Exit"),
-                    new TunicPortal("Overworld Redux", "main", "Temple Main Exit"),
+                    new TunicPortal("Overworld Redux", "rafters", "Temple Rafters Exit"),
+                    new TunicPortal("Overworld Redux", "main", "Temple Door Exit"),
                 }
             },
             {
@@ -692,8 +692,8 @@ namespace TunicRandomizer
                 "Purgatory", // Second save hallway
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Purgatory", "bottom", "Purgatory Top Exit"),
-                    new TunicPortal("Purgatory", "top", "Purgatory Bottom Exit"),
+                    new TunicPortal("Purgatory", "bottom", "Purgatory Bottom Exit"),
+                    new TunicPortal("Purgatory", "top", "Purgatory Top Exit"),
                 }
             },
         };
