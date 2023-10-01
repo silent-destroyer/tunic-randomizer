@@ -239,7 +239,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.EntranceRandoEnabled)
                 {
                     Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
-                    SaveFile.SetInt("randomizer door rando enabled", 1);
+                    SaveFile.SetInt("randomizer entrance rando enabled", 1);
                 }
                 if (TunicRandomizer.Settings.ShuffleAbilities) {
                     SaveFile.SetInt("randomizer shuffled abilities", 1);

@@ -26,7 +26,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer started with sword") == 1) {
                 SphereZero.Add("Sword", 1);
             }
-            if (SaveFile.GetInt("randomizer door rando enabled") == 1)
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
             {
                 SphereZero.Add("Dath Stone", 1);
             }
@@ -149,7 +149,7 @@ namespace TunicRandomizer {
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
                 // door rando time
-                if (SaveFile.GetInt("randomizer door rando enabled") == 1)
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
                 {
                     // start by adding overworld if we don't have it already, change this later if we do random starting location
                     if (!PlacedInventory.ContainsKey("Overworld Redux"))

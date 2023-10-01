@@ -154,11 +154,11 @@ namespace TunicRandomizer {
 
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
+            EntranceRandoEnabled = false;
             KeysBehindBosses = false;
             SwordProgressionEnabled = true;
             StartWithSwordEnabled = false;
             ShuffleAbilities = false;
-            EntranceRandoEnabled = true;
 
             HeroPathHintsEnabled = true;
             GhostFoxHintsEnabled = true;
