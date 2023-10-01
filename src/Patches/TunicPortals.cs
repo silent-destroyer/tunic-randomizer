@@ -25,7 +25,7 @@ namespace TunicRandomizer
             public List<Dictionary<string, int>> RequiredItemsOr; // required items if there are multiple different possible requirements. A string like "scene, destination_tag" counts as an item.
             public List<string> GivesAccess; // portals that you are given access to by this portal. ex: the dance fox portal to the lower east forest portal in guardhouse 1.
             public Dictionary<string, int> EntryItems; // portals that require items to enter, but not exit from. ex: hero's graves, the yellow prayer portal pads, and the fountain holy cross door in overworld.
-            public bool IsDeadEnd; // portals that are dead ends, like stick house or the gauntlet lower entry.
+            public bool DeadEnd; // portals that are dead ends, like stick house or the gauntlet lower entry.
             public bool PrayerPortal; // portals that require prayer to enter. This is a more convenient version of GivesAccess for prayer portals.
             public bool OneWay; // portals that are one-way, such as the back entrance to monastery and the forest belltower top portal
             public bool CantReach; // portals that cannot reach the center of the region, and as such do not give region access, like the rail between bottom of the well and furnace
@@ -38,35 +38,35 @@ namespace TunicRandomizer
                 DestinationTag = destinationTag;
                 PortalName = portalName;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, bool prayerPortal = false, bool isDeadEnd = false, bool oneWay = false, bool cantReach = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool cantReach = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
                 PortalName = portalName;
                 PrayerPortal = prayerPortal;
-                IsDeadEnd = isDeadEnd;
+                DeadEnd = deadEnd;
                 OneWay = oneWay;
                 CantReach = cantReach;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> entryItems, bool prayerPortal = false, bool isDeadEnd = false, bool oneWay = false, bool cantReach = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> entryItems, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool cantReach = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
                 PortalName = portalName;
                 EntryItems = entryItems;
                 PrayerPortal = prayerPortal;
-                IsDeadEnd = isDeadEnd;
+                DeadEnd = deadEnd;
                 OneWay = oneWay;
                 CantReach = cantReach;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems, bool prayerPortal = false, bool isDeadEnd = false, bool cantReach = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems, bool prayerPortal = false, bool deadEnd = false, bool cantReach = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
                 PortalName = portalName;
                 RequiredItems = requiredItems;
                 PrayerPortal = prayerPortal;
-                IsDeadEnd = isDeadEnd;
+                DeadEnd = deadEnd;
                 CantReach = cantReach;
             }
             public TunicPortal(string destination, string destinationTag, string portalName, List<string> givesAccess, bool cantReach = false, bool oneWay = false)
@@ -112,7 +112,7 @@ namespace TunicRandomizer
                 "Overworld Redux",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Sword Cave", "", "Sword Cave Entrance"),
+                    new TunicPortal("Sword Cave", "", "Stick House Entrance"),
                     new TunicPortal("Windmill", "", "Windmill Entrance"),
                     new TunicPortal("Sewer", "entrance", "Well Main Entrance"),
                     new TunicPortal("Sewer", "west_aqueduct", "Entrance to Well from Well Rail", cantReach: true, givesAccess: new List<string> { "Overworld Redux, Furnace_gyro_upper_north" }),
@@ -161,7 +161,7 @@ namespace TunicRandomizer
                 "Waterfall", // fairy cave
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Waterfall exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Waterfall exit", deadEnd: true),
                 }
             },
             {
@@ -187,14 +187,14 @@ namespace TunicRandomizer
                 "g_elements", // Secret treasure room
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Interiors", "", "Exit from Secret Treasure Room", isDeadEnd: true),
+                    new TunicPortal("Overworld Interiors", "", "Exit from Secret Treasure Room", deadEnd: true),
                 }
             },
             {
                 "Changing Room", // Secret treasure room
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Changing Room Exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Changing Room Exit", deadEnd: true),
                 }
             },
             {
@@ -213,7 +213,7 @@ namespace TunicRandomizer
                 "Sword Cave", // Stick house
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Sword Cave Exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Sword Cave Exit", deadEnd: true),
                 }
             },
             {
@@ -228,35 +228,35 @@ namespace TunicRandomizer
                 "EastFiligreeCache", // The holy cross room with the 3 chests near swamp entrance
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Glass Cannon HC Exit", isDeadEnd : true),
+                    new TunicPortal("Overworld Redux", "", "Glass Cannon HC Exit", deadEnd : true),
                 }
             },
             {
                 "Overworld Cave", // East beach, next to swamp entrance, rotating lights room
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Rotating Lights Exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Rotating Lights Exit", deadEnd: true),
                 }
             },
             {
                 "Maze Room", // Invisible maze
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Maze Exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Maze Exit", deadEnd: true),
                 }
             },
             {
                 "Town Basement", // Hourglass cave
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "beach", "Hourglass Exit", isDeadEnd: true), // yes, it has a tag even though it doesn't need one
+                    new TunicPortal("Overworld Redux", "beach", "Hourglass Exit", deadEnd: true), // yes, it has a tag even though it doesn't need one
                 }
             },
             {
                 "ShopSpecial", // Special shop, laurel across from that platform between east forest and fortress
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Special Shop Exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Special Shop Exit", deadEnd: true),
                 }
             },
             {
@@ -303,14 +303,14 @@ namespace TunicRandomizer
                     new TunicPortal("Shop", "", "West Garden to Shop"), // there's two of these, one is unused and disabled
                     new TunicPortal("Overworld Redux", "lowest", "West Garden Laurel Exit"),
                     new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero Grave", prayerPortal: true), // Hero grave
-                    new TunicPortal("Transit", "teleporter_archipelagos_teleporter", "West Garden Portal", prayerPortal: true, isDeadEnd: true), // Portal to the thing behind dagger house
+                    new TunicPortal("Transit", "teleporter_archipelagos_teleporter", "West Garden Portal", prayerPortal: true, deadEnd: true), // Portal to the thing behind dagger house
                 }
             },
             {
                 "archipelagos_house", // Magic Dagger house in West Garden
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Archipelagos Redux", "", "Magic Dagger House Exit", isDeadEnd: true),
+                    new TunicPortal("Archipelagos Redux", "", "Magic Dagger House Exit", deadEnd: true),
                 }
             },
             {
@@ -320,7 +320,7 @@ namespace TunicRandomizer
                     new TunicPortal("Frog Stairs", "eye", "Frog Eye Entrance"),
                     new TunicPortal("Library Exterior", "", "Atoll to Library", prayerPortal : true),
                     new TunicPortal("Overworld Redux", "upper", "Upper Atoll Exit"),
-                    new TunicPortal("Overworld Redux", "lower", "Lower Atoll Exit", isDeadEnd: true),
+                    new TunicPortal("Overworld Redux", "lower", "Lower Atoll Exit", deadEnd: true),
                     new TunicPortal("Frog Stairs", "mouth", "Frog Mouth Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Wand", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
                     new TunicPortal("Shop", "", "Atoll Shop"),
                     new TunicPortal("Transit", "teleporter_atoll", "Atoll Portal", prayerPortal: true),
@@ -383,7 +383,7 @@ namespace TunicRandomizer
                 "Library Arena",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Lab", "", "Library Boss Arena exit", isDeadEnd: true),
+                    new TunicPortal("Library Lab", "", "Library Boss Arena exit", deadEnd: true),
                 }
             },
             {
@@ -447,7 +447,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Courtyard", "", "Forest Bell to Fortress"),
-                    new TunicPortal("East Forest Redux", "", "Forest Bell to Forest", isDeadEnd: true),
+                    new TunicPortal("East Forest Redux", "", "Forest Bell to Forest", deadEnd: true),
                     new TunicPortal("Overworld Redux", "", "Forest Bell to Overworld"),
                     new TunicPortal("Forest Boss Room", "", "Forest Bell to Boss", oneWay: true),
                 }
@@ -520,7 +520,7 @@ namespace TunicRandomizer
                 "Dusty", // broom
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Reliquary", "", "Dusty Exit", isDeadEnd: true),
+                    new TunicPortal("Fortress Reliquary", "", "Dusty Exit", deadEnd: true),
                 }
             },
             {
@@ -536,7 +536,7 @@ namespace TunicRandomizer
                 "Mountaintop",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Mountain", "", "Top of the Mountain exit", isDeadEnd: true),
+                    new TunicPortal("Mountain", "", "Top of the Mountain exit", deadEnd: true),
                 }
             },
             {
@@ -632,7 +632,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Swamp Redux 2", "main", "Cathedral Main Exit"),
                     new TunicPortal("Cathedral Arena", "", "Cathedral Elevator"),
-                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Exit", cantReach: true, isDeadEnd: true), // only one chest, just use item access rules for it
+                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Exit", cantReach: true, deadEnd: true), // only one chest, just use item access rules for it
                 }
             },
             {
@@ -655,12 +655,12 @@ namespace TunicRandomizer
                 "RelicVoid", // Hero relic area
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Reliquary", "teleporter_relic plinth", "Hero Relic to Fortress", isDeadEnd: true),
-                    new TunicPortal("Monastery", "teleporter_relic plinth", "Hero Relic to Monastery", isDeadEnd: true),
-                    new TunicPortal("Archipelagos Redux", "teleporter_relic plinth", "Hero Relic to West Garden", isDeadEnd: true),
-                    new TunicPortal("Sword Access", "teleporter_relic plinth", "Hero Relic to East Forest", isDeadEnd: true),
-                    new TunicPortal("Library Hall", "teleporter_relic plinth", "Hero Relic to Library", isDeadEnd: true),
-                    new TunicPortal("Swamp Redux 2", "teleporter_relic plinth", "Hero Relic to Swamp", isDeadEnd: true),
+                    new TunicPortal("Fortress Reliquary", "teleporter_relic plinth", "Hero Relic to Fortress", deadEnd: true),
+                    new TunicPortal("Monastery", "teleporter_relic plinth", "Hero Relic to Monastery", deadEnd: true),
+                    new TunicPortal("Archipelagos Redux", "teleporter_relic plinth", "Hero Relic to West Garden", deadEnd: true),
+                    new TunicPortal("Sword Access", "teleporter_relic plinth", "Hero Relic to East Forest", deadEnd: true),
+                    new TunicPortal("Library Hall", "teleporter_relic plinth", "Hero Relic to Library", deadEnd: true),
+                    new TunicPortal("Swamp Redux 2", "teleporter_relic plinth", "Hero Relic to Swamp", deadEnd: true),
                 }
             },
             {
@@ -685,7 +685,7 @@ namespace TunicRandomizer
                 "Spirit Arena", // Heir fight
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Exit", isDeadEnd: true),
+                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Exit", deadEnd: true),
                 }
             },
             {
@@ -724,7 +724,6 @@ namespace TunicRandomizer
             List<string> twoPlusNames = new List<string>();
             RandomizedPortals.Clear();
             twoPlusNames.Clear();
-            Logger.LogInfo("randomize portals started");
             List<string> deadEndNames = new List<string> { "g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
@@ -742,8 +741,8 @@ namespace TunicRandomizer
                 }
                 foreach (TunicPortal portal in region_portals)
                 {
-                    Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, isDeadEnd: portal.IsDeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, cantReach: portal.CantReach);
-                    if (newPortal.IsDeadEnd == true)
+                    Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, deadEnd: portal.DeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, cantReach: portal.CantReach);
+                    if (newPortal.DeadEnd == true)
                     {
                         deadEndPortals.Add(newPortal);
                     }
@@ -812,7 +811,7 @@ namespace TunicRandomizer
             while (shopCount > 0)
             {
                 // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), isDeadEnd: true, prayerPortal: false, oneWay: false, cantReach: false);
+                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, cantReach: false);
                 // check that a shop has not already been added to this region, since two shops in the same region causes problems
                 if (!shopRegionList.Contains(twoPlusPortals[regionNumber].Scene))
                 {
@@ -852,11 +851,9 @@ namespace TunicRandomizer
         // a function to apply the randomized portal list to portals during on scene loaded
         public static void ModifyPortals(Scene loadingScene, Dictionary<string, PortalCombo> portalComboList)
         {
-            Logger.LogInfo("current time is " + SpeedrunData.inGameTime);
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
-                Logger.LogInfo("portal in world is " + portal.destinationSceneName + "_" + portal.FullID);
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
@@ -866,9 +863,6 @@ namespace TunicRandomizer
 
                     if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 1 is " + portal1.Name);
-                        Logger.LogInfo("portal 2 is " + portal2.Name);
-
                         if (portal2.Scene == "Shop")
                         {
                             portal.destinationSceneName = portal2.Scene;
@@ -887,9 +881,6 @@ namespace TunicRandomizer
 
                     if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 1 is " + portal1.Name);
-                        Logger.LogInfo("portal 2 is " + portal2.Name);
-
                         if (portal1.Scene == "Shop")
                         {
                             portal.destinationSceneName = portal1.Scene;
@@ -907,15 +898,12 @@ namespace TunicRandomizer
                 }
             }
         }
-        // this is for use in PlayerCharacterPatches. Will probably need a refactor later if we do random player spawn
+        // this is for use in PlayerCharacterPatches. Will need to refactor later if we do random player spawn
         public static void AltModifyPortals(Dictionary<string, PortalCombo> portalComboList)
         {
-            Logger.LogInfo("starting alt modify portals");
-            Logger.LogInfo("current time is " + SpeedrunData.inGameTime);
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
-                Logger.LogInfo("portal in world is this " + portal.name + portal.destinationSceneName + portal.id);
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
                 {
@@ -924,9 +912,6 @@ namespace TunicRandomizer
                     Portal portal2 = portalCombo.Value.Portal2;
                     if (portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 1 is " + portal1.Name);
-                        Logger.LogInfo("portal 2 is " + portal2.Name);
-
                         if (portal2.Scene == "Shop")
                         {
                             portal.destinationSceneName = portal2.Scene;
@@ -943,8 +928,6 @@ namespace TunicRandomizer
 
                     if (portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
-                        Logger.LogInfo("portal 1 is " + portal1.Name);
-                        Logger.LogInfo("portal 2 is " + portal2.Name);
                         if (portal1.Scene == "Shop")
                         {
                             portal.destinationSceneName = portal1.Scene;

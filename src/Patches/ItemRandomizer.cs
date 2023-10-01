@@ -492,13 +492,27 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (TunicRandomizer.Settings.EntranceRandoEnabled)
+            {
+                Dictionary<string, PortalCombo> PortalList = TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                List<string> PortalSpoiler = new List<string>();
+                SpoilerLogLines.Add("\nEntrance Connections");
+                foreach (PortalCombo portalCombo in PortalList.Values)
+                {
+                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name);
+                }
+                foreach (string combo in PortalSpoiler)
+                {
+                    SpoilerLogLines.Add(combo);
+                }
+            }
+
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             } else {
                 File.Delete(TunicRandomizer.SpoilerLogPath);
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             }
-
         }
 
         public static ItemData FindRandomizedItemByName(string Name) {
