@@ -27,7 +27,7 @@ namespace TunicRandomizer {
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-            if (TunicRandomizer.Settings.PortalRandoEnabled && SaveFile.GetInt("seed") != 0)
+            if (TunicRandomizer.Settings.EntranceRandoEnabled && SaveFile.GetInt("seed") != 0)
             {
                 Logger.LogInfo("about to start randomize portals in scene loader patches");
                 TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
@@ -274,12 +274,12 @@ namespace TunicRandomizer {
                     GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
                 }
             } else if (SceneName == "Cathedral Arena") {
-                if (TunicRandomizer.Settings.PortalRandoEnabled)
+                if (TunicRandomizer.Settings.EntranceRandoEnabled)
                 {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = false;
                 }
             } else if (SceneName == "Cathedral Redux") {
-                if (TunicRandomizer.Settings.PortalRandoEnabled)
+                if (TunicRandomizer.Settings.EntranceRandoEnabled)
                 {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
                 }

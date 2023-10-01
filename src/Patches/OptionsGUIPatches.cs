@@ -42,7 +42,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Sword Progression", "Off", "On", TunicRandomizer.Settings.SwordProgressionEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSwordProgression);
                 OptionsGUI.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleStartWithSword);
                 OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
-                OptionsGUI.addToggle("Portal Rando", "Off", "On", TunicRandomizer.Settings.PortalRandoEnabled? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePortalRando);
+                OptionsGUI.addToggle("Entrance Rando", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
             } else {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
                 OptionsGUI.addButton("Keys Behind Bosses", SaveFile.GetInt("randomizer keys behind bosses") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
@@ -179,9 +179,9 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        public static void TogglePortalRando(int index)
+        public static void ToggleEntranceRando(int index)
         {
-            TunicRandomizer.Settings.PortalRandoEnabled = !TunicRandomizer.Settings.PortalRandoEnabled;
+            TunicRandomizer.Settings.EntranceRandoEnabled = !TunicRandomizer.Settings.EntranceRandoEnabled;
             SaveSettings();
         }
 

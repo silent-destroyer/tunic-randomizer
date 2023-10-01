@@ -236,7 +236,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-                if (TunicRandomizer.Settings.PortalRandoEnabled)
+                if (TunicRandomizer.Settings.EntranceRandoEnabled)
                 {
                     Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
                     SaveFile.SetInt("randomizer door rando enabled", 1);
@@ -262,7 +262,7 @@ namespace TunicRandomizer {
             SaveName = SaveFile.saveDestinationName;
 
             // this is here for the first time you're loading in, assumes you're in Overworld
-            if (TunicRandomizer.Settings.PortalRandoEnabled)
+            if (TunicRandomizer.Settings.EntranceRandoEnabled)
             {
                 Logger.LogInfo("savefile.getint test");
                 Logger.LogInfo("result is " + SaveFile.GetInt("seed"));

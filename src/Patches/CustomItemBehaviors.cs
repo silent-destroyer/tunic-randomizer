@@ -85,7 +85,7 @@ namespace TunicRandomizer {
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");
                 SaveFile.SetString("last campfire id", "checkpoint");
             }
-            else if (TunicRandomizer.Settings.PortalRandoEnabled)
+            else if (TunicRandomizer.Settings.EntranceRandoEnabled)
             {
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");
                 SaveFile.SetString("last campfire id", "checkpoint");
