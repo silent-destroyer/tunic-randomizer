@@ -54,6 +54,7 @@ namespace TunicRandomizer {
             List<ItemData> Hexagons = new List<ItemData>();
             List<Reward> ProgressionRewards = new List<Reward>();
             Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
+            Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
 
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
@@ -146,45 +147,18 @@ namespace TunicRandomizer {
                 }
             }
 
+            // getting the randomized portal list the same way as we randomize it normally
+            Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+            // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
+            Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
+            Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
+
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
-                // door rando time
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-                {
-                    // start by adding overworld if we don't have it already, change this later if we do random starting location
-                    if (!PlacedInventory.ContainsKey("Overworld Redux"))
-                    {
-                        PlacedInventory.Add("Overworld Redux", 1);
-                    }
-                    // getting the randomized portal list the same way as we randomize it normally
-                    Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
-
-                    // this should keep looping until every portal either doesn't give a reward, or has already given its reward
-                    int checkP = 0;
-                    while (checkP < randomizedPortalsList.Count)
-                    {
-                        checkP = 0;
-                        foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
-                        {
-                            if (portalCombo.ComboRewards(PlacedInventory).Count > 0)
-                            {
-                                foreach (string itemDoors in portalCombo.ComboRewards(PlacedInventory))
-                                {
-                                    if (!PlacedInventory.ContainsKey(itemDoors))
-                                    {
-                                        PlacedInventory.Add(itemDoors, 1);
-                                    }
-                                    else { checkP++; }
-                                }
-                            }
-                            else { checkP++; }
-                        }
-                    }
-                }
 
                 // pick an item
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                // remove item from placed inv for reachability checks
+                // remove item from inventory for reachability checks
                 if (PlacedInventory.Keys.Contains(itemName))
                 {
                     PlacedInventory[itemName] -= 1;
@@ -194,12 +168,59 @@ namespace TunicRandomizer {
                     PlacedInventory.Remove(itemName);
                 }
 
+                // door rando time
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+                {
+                    // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+                    int checkP = 0;
+                    SceneInventory.Clear();
+                    SceneInventory.Add("Overworld Redux", 1);
+                    // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
+                    while (checkP < randomizedPortalsList.Count)
+                    {
+                        checkP = 0;
+                        CombinedInventory.Clear();
+                        foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+                        {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
+                        foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+                        {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
+
+                        foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                        {
+                            if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
+                            {
+                                int testValue = 0;
+                                int testValue2 = 0;
+                                foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory))
+                                {
+                                    testValue2++;
+                                    if (!SceneInventory.ContainsKey(itemDoors))
+                                    {
+                                        SceneInventory.Add(itemDoors, 1);
+                                    }
+                                    else { testValue++; }
+                                }
+                                if (testValue == testValue2)
+                                { checkP++; }
+                            }
+                            else { checkP++; }
+                        }
+                    }
+                }
+
                 // pick a location
                 int l;
                 l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
 
+                // empty combined inventory, refill it with whatever is currently in scene inventory and placed inventory
+                CombinedInventory.Clear();
+                foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+                {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
+                foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+                {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
+
                 // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
-                while (!InitialLocations[l].reachable(PlacedInventory)) {
+                while (!InitialLocations[l].reachable(CombinedInventory)) {
                     l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
                 }
 
@@ -211,7 +232,52 @@ namespace TunicRandomizer {
                 InitialLocations.Remove(InitialLocations[l]);
             }
 
-            SphereZero = PlacedInventory;
+            // and now we get what sphere zero actually is when we have entrance rando enabled
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+            {
+                // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+                int checkP = 0;
+                SceneInventory.Clear();
+                SceneInventory.Add("Overworld Redux", 1);
+                // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
+                while (checkP < randomizedPortalsList.Count)
+                {
+                    checkP = 0;
+                    CombinedInventory.Clear();
+                    foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+                    { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
+                    foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+                    { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
+
+                    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                    {
+                        if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
+                        {
+                            int testValue = 0;
+                            int testValue2 = 0;
+                            foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory))
+                            {
+                                testValue2++;
+                                if (!SceneInventory.ContainsKey(itemDoors))
+                                {
+                                    SceneInventory.Add(itemDoors, 1);
+                                }
+                                else { testValue++; }
+                            }
+                            if (testValue == testValue2)
+                            { checkP++; }
+                        }
+                        else { checkP++; }
+                    }
+                }
+            }
+            CombinedInventory.Clear();
+            foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+            { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
+            foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+            { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
+
+            SphereZero = CombinedInventory;
 
             // shuffle remaining rewards and locations
             Shuffle(InitialRewards, InitialLocations);
