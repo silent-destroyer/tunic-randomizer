@@ -23,7 +23,7 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "TitleScreen" && OdinRounded != null && GameObject.FindObjectOfType<TitleScreen>() != null) {
                 GUI.skin.font = OdinRounded;
                 Cursor.visible = true;
-                GUI.Window(101, new Rect(20f, 150f, 430f, 345f), new Action<int>(QuickSettingsWindow), "Quick Settings");
+                GUI.Window(101, new Rect(20f, 150f, 430f, 385f), new Action<int>(QuickSettingsWindow), "Quick Settings");
             }
         }
 
@@ -46,28 +46,32 @@ namespace TunicRandomizer {
             if (ToggleHexagonQuest) {
                 TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.HEXAGONQUEST;
             }
+
+            bool ToggleEntranceRando = GUI.Toggle(new Rect(10f, 100f, 175f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Rando");
+            TunicRandomizer.Settings.EntranceRandoEnabled = ToggleEntranceRando;
+
             GUI.skin.toggle.fontSize = 15;
             bool ToggleSpoilerLog = GUI.Toggle(new Rect(330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
             ItemRandomizer.CreateSpoilerLog = ToggleSpoilerLog;
             GUI.skin.toggle.fontSize = 20;
 
-            GUI.Label(new Rect(10f, 95f, 200f, 30f), "Logic Settings");
-            bool TopggleBossKeys = GUI.Toggle(new Rect(10f, 140f, 180f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
-            TunicRandomizer.Settings.KeysBehindBosses = TopggleBossKeys;
-            bool ToggleSwordProgression = GUI.Toggle(new Rect(240f, 140f, 180f, 30f), TunicRandomizer.Settings.SwordProgressionEnabled, "Sword Progression");
+            GUI.Label(new Rect(10f, 135f, 200f, 30f), "Logic Settings");
+            bool ToggleBossKeys = GUI.Toggle(new Rect(10f, 180f, 180f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
+            TunicRandomizer.Settings.KeysBehindBosses = ToggleBossKeys;
+            bool ToggleSwordProgression = GUI.Toggle(new Rect(240f, 180f, 180f, 30f), TunicRandomizer.Settings.SwordProgressionEnabled, "Sword Progression");
             TunicRandomizer.Settings.SwordProgressionEnabled = ToggleSwordProgression;
-            bool ToggleSwordStart = GUI.Toggle(new Rect(10f, 180f, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
+            bool ToggleSwordStart = GUI.Toggle(new Rect(10f, 220f, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
             TunicRandomizer.Settings.StartWithSwordEnabled = ToggleSwordStart;
-            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(240f, 180f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
+            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(240f, 220f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
             TunicRandomizer.Settings.ShuffleAbilities = ToggleAbilityShuffle;
             GUI.skin.button.fontSize = 20;
-            GUI.Label(new Rect(10f, 220f, 300f, 30f), $"Custom Seed: {(CustomSeed == 0 ? "Not Set" : CustomSeed.ToString())}");
+            GUI.Label(new Rect(10f, 260f, 300f, 30f), $"Custom Seed: {(CustomSeed == 0 ? "Not Set" : CustomSeed.ToString())}");
 
-            bool GenerateSeed = GUI.Button(new Rect(10f, 260f, 200f, 30f), "Generate Seed");
+            bool GenerateSeed = GUI.Button(new Rect(10f, 300f, 200f, 30f), "Generate Seed");
             if(GenerateSeed) {
                 CustomSeed = new System.Random().Next();
             }
-            bool PasteSeed = GUI.Button(new Rect(220f, 260f, 200f, 30f), "Paste Seed");
+            bool PasteSeed = GUI.Button(new Rect(220f, 300f, 200f, 30f), "Paste Seed");
             if (PasteSeed) {
                 try {
                     CustomSeed = int.Parse(GUIUtility.systemCopyBuffer, CultureInfo.InvariantCulture);
@@ -75,17 +79,17 @@ namespace TunicRandomizer {
 
                 }
             }
-            bool CopySettings = GUI.Button(new Rect(10f, 300f, 200f, 30f), "Copy Seed + Settings");
+            bool CopySettings = GUI.Button(new Rect(10f, 340f, 200f, 30f), "Copy Seed + Settings");
             if(CopySettings) {
                 CopyQuickSettings();
             }
-            bool PasteSettings = GUI.Button(new Rect(220f, 300f, 200f, 30f), "Paste Seed + Settings");
+            bool PasteSettings = GUI.Button(new Rect(220f, 340f, 200f, 30f), "Paste Seed + Settings");
             if(PasteSettings) {
                 PasteQuickSettings();
             }
 
             if (CustomSeed != 0) {
-                bool ClearSeed = GUI.Button(new Rect(300f, 220f, 110f, 30f), "Clear");
+                bool ClearSeed = GUI.Button(new Rect(300f, 260f, 110f, 30f), "Clear");
                 if (ClearSeed) {
                     CustomSeed = 0;
                 }
