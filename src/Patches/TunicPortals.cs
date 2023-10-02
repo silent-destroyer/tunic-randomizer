@@ -742,7 +742,7 @@ namespace TunicRandomizer
                 foreach (TunicPortal portal in region_portals)
                 {
                     Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, deadEnd: portal.DeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, cantReach: portal.CantReach);
-                    if (newPortal.DeadEnd == true)
+                    if (newPortal.DeadEnd == true || newPortal.OneWay == true)
                     {
                         deadEndPortals.Add(newPortal);
                     }
