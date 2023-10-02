@@ -114,10 +114,10 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Sword Cave", "", "Stick House Entrance"),
                     new TunicPortal("Windmill", "", "Windmill Entrance"),
-                    new TunicPortal("Sewer", "entrance", "Well Main Entrance"),
+                    new TunicPortal("Sewer", "entrance", "Well Ladder Entrance"),
                     new TunicPortal("Sewer", "west_aqueduct", "Entrance to Well from Well Rail", cantReach: true, givesAccess: new List<string> { "Overworld Redux, Furnace_gyro_upper_north" }),
                     new TunicPortal("Overworld Interiors", "house", "Old House Entry Door", requiredItems: new Dictionary<string, int> { {"Key (House)", 1} }), // make this match actual item name
-                    new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Other Entrance"),
+                    new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Waterfall Entrance"),
                     new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", cantReach: true, givesAccess : new List<string> { "Overworld Redux, Sewer_west_aqueduct" }),
                     new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace from Windmill"),
                     new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace from West Garden"),
@@ -125,32 +125,32 @@ namespace TunicRandomizer
                     new TunicPortal("Overworld Cave", "", "Rotating Lights Entrance"),
                     new TunicPortal("Swamp Redux 2", "wall", "Swamp Upper Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
                     new TunicPortal("Swamp Redux 2", "conduit", "Swamp Lower Entrance"),
-                    new TunicPortal("Ruins Passage", "east", "Ruins Hall Entrance Not-door"),
-                    new TunicPortal("Ruins Passage", "west", "Ruins Hall Entrance Door", requiredItems: new Dictionary<string, int> { { "Key", 2 } }), // and access to any overworld portal, but we start in overworld so no need to put it here
+                    new TunicPortal("Ruins Passage", "east", "Ruined Hall Entrance Not-Door"),
+                    new TunicPortal("Ruins Passage", "west", "Ruined Hall Entrance Door", requiredItems: new Dictionary<string, int> { { "Key", 2 } }), // and access to any overworld portal, but we start in overworld so no need to put it here
                     new TunicPortal("Atoll Redux", "upper", "Atoll Upper Entrance"),
                     new TunicPortal("Atoll Redux", "lower", "Atoll Lower Entrance"),
                     new TunicPortal("ShopSpecial", "", "Special Shop Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
-                    new TunicPortal("Maze Room", "", "Maze Entrance"),
+                    new TunicPortal("Maze Room", "", "Maze Cave Entrance"),
                     new TunicPortal("Archipelagos Redux", "upper", "West Garden Entrance by Belltower", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance by Dark Tomb", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Overworld Redux, Furnace_gyro_west", 1 } } }),
                     new TunicPortal("Archipelagos Redux", "lowest", "West Garden Laurel Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("Temple", "main", "Temple Door Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Techbow", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Techbow", 1 } } }),
-                    new TunicPortal("Temple", "rafters", "Temple Upper Entrance"),
+                    new TunicPortal("Temple", "rafters", "Temple Rafters Entrance"),
                     new TunicPortal("Ruined Shop", "", "Ruined Shop Entrance"),
                     new TunicPortal("PatrolCave", "", "Patrol Cave Entrance"),
                     new TunicPortal("Town Basement", "beach", "Hourglass Cave Entrance"),
                     new TunicPortal("Changing Room", "", "Changing Room Entrance"),
-                    new TunicPortal("CubeRoom", "", "Cube Entrance"),
+                    new TunicPortal("CubeRoom", "", "Cube Room Entrance"),
                     new TunicPortal("Mountain", "", "Stairs from Overworld to Mountain"),
                     new TunicPortal("Fortress Courtyard", "", "Overworld to Fortress"),
                     new TunicPortal("Town_FiligreeRoom", "", "HC Room Entrance next to Changing Room", entryItems: new Dictionary<string, int> { { "21", 1 } }), // this is entry items because when you exit from this portal, you end up in front of the door
                     new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance", requiredItems: new Dictionary<string, int> { { "21", 1 } }), // this is required items because when you exit from this portal, you end up behind the door
-                    new TunicPortal("Darkwoods Tunnel", "", "Entrance to Quarry Connector"),
-                    new TunicPortal("Crypt Redux", "", "Dark Tomb Entrance"),
-                    new TunicPortal("Forest Belltower", "", "East Forest Entrance"),
+                    new TunicPortal("Darkwoods Tunnel", "", "Overworld to Quarry Connector"),
+                    new TunicPortal("Crypt Redux", "", "Dark Tomb Main Entrance"),
+                    new TunicPortal("Forest Belltower", "", "Overworld to Forest Belltower"),
                     new TunicPortal("Transit", "teleporter_town", "Town Portal", prayerPortal: true),
                     new TunicPortal("Transit", "teleporter_starting island", "Spawn Portal", prayerPortal: true),
-                    new TunicPortal("Waterfall", "", "Entrance to fairy cave"),
+                    new TunicPortal("Waterfall", "", "Entrance to Fairy Cave"),
 
                     // new TunicPortal("_", "", "Portal"), // ?
                     // new TunicPortal("Forest Belltower_", "showfloordemo2022", "Portal (12)"), // ?
@@ -161,7 +161,7 @@ namespace TunicRandomizer
                 "Waterfall", // fairy cave
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Waterfall exit", deadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Fairy Cave Exit", deadEnd: true),
                 }
             },
             {
@@ -169,16 +169,16 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Overworld Redux", "", "Windmill Exit"),
-                    new TunicPortal("Shop", "", "Windmill Shop Entrance"),
+                    new TunicPortal("Shop", "", "Windmill Shop"),
                 }
             },
             {
                 "Overworld Interiors", // House in town
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "house", "Exit from Front Door of Old House"),
+                    new TunicPortal("Overworld Redux", "house", "Front Door of Old House Exit"),
                     new TunicPortal("g_elements", "", "Teleport to Secret Treasure Room"),
-                    new TunicPortal("Overworld Redux", "under_checkpoint", "Exit from Old House from not the door", requiredItems: new Dictionary<string, int> { { "Overworld Interiors, Overworld Redux_house", 1 } }), // since you get access to the center of a region from either portal, only one of these two is actually needed
+                    new TunicPortal("Overworld Redux", "under_checkpoint", "Exit from Old House Back Door", requiredItems: new Dictionary<string, int> { { "Overworld Interiors, Overworld Redux_house", 1 } }), // since you get access to the center of a region from either portal, only one of these two is actually needed
 
                     // new TunicPortal("Archipelagos Redux_", "", "_ShowfloorDemo2022 Portal"), // unused and disabled
                 }
@@ -187,7 +187,7 @@ namespace TunicRandomizer
                 "g_elements", // Secret treasure room
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Interiors", "", "Exit from Secret Treasure Room", deadEnd: true),
+                    new TunicPortal("Overworld Interiors", "", "Secret Treasure Room Exit", deadEnd: true),
                 }
             },
             {
@@ -213,22 +213,22 @@ namespace TunicRandomizer
                 "Sword Cave", // Stick house
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Sword Cave Exit", deadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Stick House Exit", deadEnd: true),
                 }
             },
             {
                 "Ruins Passage", // That little hallway with the key door near the start in Overworld
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "east", "Ruins Passage Door Exit"),
-                    new TunicPortal("Overworld Redux", "west", "Ruins Passage Not-door Exit"),
+                    new TunicPortal("Overworld Redux", "east", "Ruined Passage Door Exit"),
+                    new TunicPortal("Overworld Redux", "west", "Ruined Passage Not-door Exit"),
                 }
             },
             {
                 "EastFiligreeCache", // The holy cross room with the 3 chests near swamp entrance
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Glass Cannon HC Exit", deadEnd : true),
+                    new TunicPortal("Overworld Redux", "", "Glass Cannon HC Room Exit", deadEnd : true),
                 }
             },
             {
@@ -242,14 +242,14 @@ namespace TunicRandomizer
                 "Maze Room", // Invisible maze
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Maze Exit", deadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Maze Cave Exit", deadEnd: true),
                 }
             },
             {
                 "Town Basement", // Hourglass cave
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "beach", "Hourglass Exit", deadEnd: true), // yes, it has a tag even though it doesn't need one
+                    new TunicPortal("Overworld Redux", "beach", "Hourglass Cave Exit", deadEnd: true), // yes, it has a tag even though it doesn't need one
                 }
             },
             {
@@ -271,7 +271,7 @@ namespace TunicRandomizer
                 "Sewer", // Bottom of the Well
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "entrance", "Well Exit from main entrance"),
+                    new TunicPortal("Overworld Redux", "entrance", "Well Ladder Exit"),
                     new TunicPortal("Sewer_Boss", "", "Well to Well Boss"),
                     new TunicPortal("Overworld Redux", "west_aqueduct", "Well Rail Exit"),
                 }
@@ -288,8 +288,8 @@ namespace TunicRandomizer
                 "Crypt Redux",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "", "Dark Tomb Entrance"),
-                    new TunicPortal("Furnace", "", "Dark Tomb main exit", requiredItems: new Dictionary<string, int> { {"Lantern", 1} }),
+                    new TunicPortal("Overworld Redux", "", "Dark Tomb to Overworld"),
+                    new TunicPortal("Furnace", "", "Dark Tomb to Furnace", requiredItems: new Dictionary<string, int> { {"Lantern", 1} }),
                     new TunicPortal("Sewer_Boss", "", "Dark Tomb to Well Boss"),
                 }
             },
@@ -297,12 +297,12 @@ namespace TunicRandomizer
                 "Archipelagos Redux", // West Garden
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "lower", "West Garden Exit to Dark Tomb"),
+                    new TunicPortal("Overworld Redux", "lower", "West Garden towards Dark Tomb"),
                     new TunicPortal("archipelagos_house", "", "Magic Dagger House Entrance"),
                     new TunicPortal("Overworld Redux", "upper", "West Garden after boss", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
-                    new TunicPortal("Shop", "", "West Garden to Shop"), // there's two of these, one is unused and disabled
+                    new TunicPortal("Shop", "", "West Garden Shop"), // there's two of these, one is unused and disabled
                     new TunicPortal("Overworld Redux", "lowest", "West Garden Laurel Exit"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero Grave", prayerPortal: true), // Hero grave
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero's Grave", prayerPortal: true), // Hero grave
                     new TunicPortal("Transit", "teleporter_archipelagos_teleporter", "West Garden Portal", prayerPortal: true, deadEnd: true), // Portal to the thing behind dagger house
                 }
             },
@@ -332,50 +332,50 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Atoll Redux", "mouth", "Frog Mouth Exit"),
-                    new TunicPortal("frog cave main", "Exit", "Upper Frog to lower frog exit"),
+                    new TunicPortal("frog cave main", "Exit", "Upper Frog to Lower Frog Exit"),
                     new TunicPortal("Atoll Redux", "eye", "Frog Eye Exit"),
-                    new TunicPortal("frog cave main", "Entrance", "Upper frog to lower frog entrance"),
+                    new TunicPortal("frog cave main", "Entrance", "Upper Frog to Lower Frog Entrance"),
                 }
             },
             {
                 "frog cave main", // Frog's domain, yes it's lowercase
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Frog Stairs", "Exit", "Lower frog exit exit", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }, new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } } }),
-                    new TunicPortal("Frog Stairs", "Entrance", "Lower frog entrance exit"),
+                    new TunicPortal("Frog Stairs", "Exit", "Lower Frog Ladder Exit", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }, new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } } }),
+                    new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Orb/Laurels Exit"),
                 }
             },
             {
                 "Library Exterior",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Hall", "", "Library entry ladder", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
-                    new TunicPortal("Atoll Redux", "", "Can't go to library with no hook or laurels dummy", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                    new TunicPortal("Library Hall", "", "Library Entry Ladder", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                    new TunicPortal("Atoll Redux", "", "Library Exterior to Atoll", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
                 }
             },
             {
                 "Library Hall", // Entry area with hero grave
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Rotunda", "", "Library entrance to circle room"),
-                    new TunicPortal("Library Exterior", "", "Library Bookshelf"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Library hero grave", prayerPortal: true),
+                    new TunicPortal("Library Rotunda", "", "Lower Library to Circle Room"),
+                    new TunicPortal("Library Exterior", "", "Library Bookshelf Exit"),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Library Hero's Grave", prayerPortal: true),
                 }
             },
             {
                 "Library Rotunda", // The circular room with the ladder
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Hall", "", "Library circle down"),
-                    new TunicPortal("Library Lab", "", "Library circle up"),
+                    new TunicPortal("Library Hall", "", "Library Circle Down"),
+                    new TunicPortal("Library Lab", "", "Library Circle Up"),
                 }
             },
             {
                 "Library Lab",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Arena", "", "Library lab ladder"),
-                    new TunicPortal("Library Rotunda", "", "Library lab to circle", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
+                    new TunicPortal("Library Arena", "", "Upper Library to Librarian"),
+                    new TunicPortal("Library Rotunda", "", "Upper Library to Circle Room", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
                     new TunicPortal("Transit", "teleporter_library teleporter", "Library Portal", prayerPortal : true),
                 }
             },
@@ -383,21 +383,21 @@ namespace TunicRandomizer
                 "Library Arena",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Lab", "", "Library Boss Arena exit", deadEnd: true),
+                    new TunicPortal("Library Lab", "", "Library Librarian Boss Arena Exit", deadEnd: true),
                 }
             },
             {
                 "East Forest Redux",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Sword Access", "lower", "Forest Hero Grave Lower Entrance"),
-                    new TunicPortal("East Forest Redux Laddercave", "upper", "Fox Dance Door outside", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } } ),
+                    new TunicPortal("Sword Access", "lower", "Forest Grave Path Lower Entrance"),
+                    new TunicPortal("East Forest Redux Laddercave", "upper", "Fox Dance Door Outside", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } } ),
                     new TunicPortal("East Forest Redux Interior", "lower", "Guard House 2 Lower Entrance"),
                     new TunicPortal("East Forest Redux Laddercave", "gate", "Guard House 1 Gate Entrance"),
-                    new TunicPortal("Sword Access", "upper", "Forest Hero Grave Upper Entrance"),
+                    new TunicPortal("Sword Access", "upper", "Forest Grave Path Upper Entrance"),
                     new TunicPortal("East Forest Redux Interior", "upper", "Guard House 2 Upper Entrance"),
                     new TunicPortal("East Forest Redux Laddercave", "lower", "Guard House 1 Lower Entrance"),
-                    new TunicPortal("Forest Belltower", "", "East Forest main entry point"),
+                    new TunicPortal("Forest Belltower", "", "East Forest to Forest Belltower"),
                     new TunicPortal("Transit", "teleporter_forest teleporter", "East Forest Portal", prayerPortal: true),
                 }
             },
@@ -407,17 +407,17 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("East Forest Redux", "upper", "Guard House 1 Dance Exit", givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_upper" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }), // making the upper ones the "center" for easier logic writing
                     new TunicPortal("East Forest Redux", "lower", "Guard House 1 Lower Exit", givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_lower" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }),
-                    new TunicPortal("East Forest Redux", "gate", "Guard House 1 Exit to Upper Forest"),
-                    new TunicPortal("Forest Boss Room", "", "Guard House to Boss Room"),
+                    new TunicPortal("East Forest Redux", "gate", "Guard House 1 Upper Forest Exit"),
+                    new TunicPortal("Forest Boss Room", "", "Guard House 1 to Guard Captain Room"),
                 }
             },
             {
                 "Sword Access", // East forest hero grave area
                 new List<TunicPortal>
                 {
-                    new TunicPortal("East Forest Redux", "upper", "Upper Forest Grave Exit", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("East Forest Redux", "lower", "Lower Forest Grave Exit"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "East Forest Hero Grave", prayerPortal: true, requiredItems: new Dictionary<string, int> { {"Sword Access, East Forest Redux_lower", 1 } }), // Can't open the gate from behind
+                    new TunicPortal("East Forest Redux", "upper", "Upper Forest Grave Path Exit", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
+                    new TunicPortal("East Forest Redux", "lower", "Lower Forest Grave Path Exit"),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "East Forest Hero's Grave", prayerPortal: true, requiredItems: new Dictionary<string, int> { {"Sword Access, East Forest Redux_lower", 1 } }), // Can't open the gate from behind
                     
                     // new TunicPortal("Forest 1_", "lower", "Portal (1)"),
                     // new TunicPortal("Forest 1_", "", "Portal"),
@@ -436,8 +436,8 @@ namespace TunicRandomizer
                 "Forest Boss Room",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("East Forest Redux Laddercave", "", "Forest Boss to Forest"), // entering it from behind puts you in the room, not behind the gate
-                    new TunicPortal("Forest Belltower", "", "Forest Boss to Belltower"),
+                    new TunicPortal("East Forest Redux Laddercave", "", "Guard Captain Room to Forest"), // entering it from behind puts you in the room, not behind the gate
+                    new TunicPortal("Forest Belltower", "", "Guard Captain Room to Belltower"),
 
                     // new TunicPortal("Archipelagos Redux_", "showfloordemo2022", "Portal (2)"),
                 }
@@ -446,10 +446,10 @@ namespace TunicRandomizer
                 "Forest Belltower",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Courtyard", "", "Forest Bell to Fortress"),
-                    new TunicPortal("East Forest Redux", "", "Forest Bell to Forest", deadEnd: true),
-                    new TunicPortal("Overworld Redux", "", "Forest Bell to Overworld"),
-                    new TunicPortal("Forest Boss Room", "", "Forest Bell to Boss", oneWay: true),
+                    new TunicPortal("Fortress Courtyard", "", "Forest Belltower to Fortress"),
+                    new TunicPortal("East Forest Redux", "", "Forest Belltower to Forest", deadEnd: true),
+                    new TunicPortal("Overworld Redux", "", "Forest Belltower to Overworld"),
+                    new TunicPortal("Forest Boss Room", "", "Forest Belltower to Guard Captain Room", oneWay: true),
                 }
             },
             {
@@ -459,11 +459,11 @@ namespace TunicRandomizer
                     new TunicPortal("Fortress Reliquary", "Lower", "Lower Fortress Grave Path Entrance"),
                     new TunicPortal("Fortress Reliquary", "Upper", "Upper Fortress Grave Path Entrance", oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress East_" }),
                     new TunicPortal("Fortress Main", "Big Door", "Fortress Main Entrance"),
-                    new TunicPortal("Fortress East", "", "Fortress Outside to Fortress Mage Area", oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress Reliquary_Upper" }),
-                    new TunicPortal("Fortress Basement", "", "Fortress to Under Fortress outside", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
-                    new TunicPortal("Forest Belltower", "", "Fortress to Forest Bell", requiredItems: new Dictionary<string, int>{ { "Hyperdash", 1 } }),
-                    new TunicPortal("Overworld Redux", "", "Fortress to Overworld", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1} }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "Wand", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
-                    new TunicPortal("Shop", "", "Fortress exterior shop", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
+                    new TunicPortal("Fortress East", "", "Fortress Exterior to Fortress East", oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress Reliquary_Upper" }),
+                    new TunicPortal("Fortress Basement", "", "Fortress Exterior to Beneath the Earth", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
+                    new TunicPortal("Forest Belltower", "", "Fortress Exterior to Forest Belltower", requiredItems: new Dictionary<string, int>{ { "Hyperdash", 1 } }),
+                    new TunicPortal("Overworld Redux", "", "Fortress Exterior to Overworld", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1} }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "Wand", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
+                    new TunicPortal("Shop", "", "Fortress Exterior Shop", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
 
                     // new TunicPortal("Overworld Redux_", "", "Portal (4)"), // unused and disabled
                 }
@@ -472,8 +472,8 @@ namespace TunicRandomizer
                 "Fortress Basement", // Under the fortress
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main", "", "Under Fortress to inside"),
-                    new TunicPortal("Fortress Courtyard", "", "Under Fortress to outside"),
+                    new TunicPortal("Fortress Main", "", "Beneath the Earth to Fortress Interior"),
+                    new TunicPortal("Fortress Courtyard", "", "Beneath the Earth to Fortress Exterior"),
                 }
             },
             {
@@ -481,37 +481,37 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Courtyard", "Big Door", "Fortress Main Exit"),
-                    new TunicPortal("Fortress Basement", "", "Fortress inside to under fortress"),
-                    new TunicPortal("Fortress Arena", "", "Fortress big gold door", requiredItems: new Dictionary<string, int> { { "12", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Reliquary_upper", 1 }, {"Fortress Main, Fortress Courtyard_Big Door", 1 } }), // requires that one prayer thing to be down
-                    new TunicPortal("Shop", "", "Fortress interior shop"),
-                    new TunicPortal("Fortress East", "upper", "Fortress to East Fortress Upper"),
-                    new TunicPortal("Fortress East", "lower", "Fortress to East Fortress Lower"),
+                    new TunicPortal("Fortress Basement", "", "Fortress Interior to Beneath the Earth"),
+                    new TunicPortal("Fortress Arena", "", "Fortress Interior to Siege Engine", requiredItems: new Dictionary<string, int> { { "12", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Reliquary_upper", 1 }, {"Fortress Main, Fortress Courtyard_Big Door", 1 } }), // requires that one prayer thing to be down
+                    new TunicPortal("Shop", "", "Fortress Interior Shop"),
+                    new TunicPortal("Fortress East", "upper", "Fortress Interior to East Fortress Upper"),
+                    new TunicPortal("Fortress East", "lower", "Fortress Interior to East Fortress Lower"),
                 }
             },
             {
                 "Fortress East", // that tiny area with the couple mages up high, and the ladder in the lower right
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main", "lower", "East Fortress to Inside Lower", requiredItems: new Dictionary<string, int> { { "Fortress East, Fortress Main_upper", 1} }),
-                    new TunicPortal("Fortress Courtyard", "", "East Fortress to Courtyard"),
-                    new TunicPortal("Fortress Main", "upper", "East Fortress to Inside Upper"),
+                    new TunicPortal("Fortress Main", "lower", "East Fortress to Interior Lower", requiredItems: new Dictionary<string, int> { { "Fortress East, Fortress Main_upper", 1} }),
+                    new TunicPortal("Fortress Courtyard", "", "East Fortress to Exterior"),
+                    new TunicPortal("Fortress Main", "upper", "East Fortress to Interior Upper"),
                 }
             },
             {
                 "Fortress Reliquary", // Where the grave is
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Courtyard", "Lower", "Bottom Fortress Grave Path Exit"),
+                    new TunicPortal("Fortress Courtyard", "Lower", "Lower Fortress Grave Path Exit"),
                     new TunicPortal("Dusty", "", "Dusty Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Fortress Courtyard", "Upper", "Top Fortress Grave Path Exit"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Fortress Hero Grave", prayerPortal: true),
+                    new TunicPortal("Fortress Courtyard", "Upper", "Upper Fortress Grave Path Exit"),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Fortress Hero's Grave", prayerPortal: true),
                 }
             },
             {
                 "Fortress Arena", // Where the boss is
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main", "", "Boss to Fortress"),
+                    new TunicPortal("Fortress Main", "", "Siege Engine to Fortress"),
                     new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
                     // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these, one is disabled
                 }
@@ -536,7 +536,7 @@ namespace TunicRandomizer
                 "Mountaintop",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Mountain", "", "Top of the Mountain exit", deadEnd: true),
+                    new TunicPortal("Mountain", "", "Top of the Mountain Exit", deadEnd: true),
                 }
             },
             {
@@ -566,7 +566,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Quarry Redux", "back", "Monastery to Quarry Back"),
                     new TunicPortal("Quarry Redux", "front", "Monastery to Quarry Front"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Quarry Hero Grave", prayerPortal: true),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Quarry Hero's Grave", prayerPortal: true),
 
                     // new TunicPortal("Quarry_", "lower", "Portal (1)"), // Unused portal, disabled, and very high up
                 }
@@ -575,8 +575,8 @@ namespace TunicRandomizer
                 "ziggurat2020_0", // Zig entrance
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_1", "", "Zig to Zig 1"),
-                    new TunicPortal("Quarry Redux", "", "Zig to Quarry"),
+                    new TunicPortal("ziggurat2020_1", "", "Zig Entry to Zig 1"),
+                    new TunicPortal("Quarry Redux", "", "Zig Entry to Quarry"),
                 }
             },
             {
@@ -584,23 +584,23 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     // new TunicPortal("ziggurat2020_3", "zig2_skip", "Zig Skip"), // the elevator skip to lower zig, put a secret here later
-                    new TunicPortal("ziggurat2020_0", "", "Zig 1 to 0"),
-                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to 2"),
+                    new TunicPortal("ziggurat2020_0", "", "Zig 1 to Zig Entry"),
+                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to Zig 2"),
                 }
             },
             {
                 "ziggurat2020_2", // Zig intermediate elevator
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to 1", oneWay: true),
-                    new TunicPortal("ziggurat2020_3", "", "Zig 2 to 3"),
+                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to Zig 1", oneWay: true),
+                    new TunicPortal("ziggurat2020_3", "", "Zig 2 to Zig 3"),
                 }
             },
             {
                 "ziggurat2020_3", // Lower zig, center is designated as before the prayer spot with the two cube minibosses
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room", prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } }, new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } } }), // Prayer portal room
+                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room Entrance", prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } }, new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } } }), // Prayer portal room
                     // new TunicPortal("ziggurat2020_1", "zig2_skip", "Zig Skip Exit"), // the elevator skip to lower zig
                     new TunicPortal("ziggurat2020_2", "", "Zig 3 to Zig 2"),
                 }
@@ -609,7 +609,7 @@ namespace TunicRandomizer
                 "ziggurat2020_FTRoom", // The room with the prayer portal
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_3", "", "Zig Portal Room to Zig", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_FTRoom", 1 } }),
+                    new TunicPortal("ziggurat2020_3", "", "Zig Portal Room Exit", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_FTRoom", 1 } }),
                     new TunicPortal("Transit", "teleporter_ziggurat teleporter", "Zig Portal", prayerPortal: true),
                 }
             },
@@ -617,13 +617,13 @@ namespace TunicRandomizer
                 "Swamp Redux 2",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "conduit", "Bottom Swamp Exit"),
-                    new TunicPortal("Cathedral Redux", "main", "Swamp Entrance to Cathedral", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "Hyperdash", 1 }, { "Overworld Redux, Swamp Redux 2_wall", 1 } } ),
-                    new TunicPortal("Cathedral Redux", "secret", "Swamp to Treasure Room", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
+                    new TunicPortal("Overworld Redux", "conduit", "Lower Swamp Exit"),
+                    new TunicPortal("Cathedral Redux", "main", "Swamp to Cathedral Main", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "Hyperdash", 1 }, { "Overworld Redux, Swamp Redux 2_wall", 1 } } ),
+                    new TunicPortal("Cathedral Redux", "secret", "Cathedral Treasure Room Entrance", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
                     new TunicPortal("Cathedral Arena", "", "Swamp to Gauntlet", cantReach: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, {"Swamp Redux 2, Overworld Redux_wall", 1 } }, new Dictionary<string, int> { { "Swamp Redux 2, RelicVoid_teleporter_relic plinth", 1 } } }),
                     new TunicPortal("Shop", "", "Swamp Shop"),
-                    new TunicPortal("Overworld Redux", "wall", "Top Swamp Exit", cantReach: true, requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 }, { "Swamp Redux 2, Cathedral Arena_", 1 } }),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero Grave", cantReach: true, prayerPortal : true, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
+                    new TunicPortal("Overworld Redux", "wall", "Upper Swamp Exit", cantReach: true, requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 }, { "Swamp Redux 2, Cathedral Arena_", 1 } }),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero's Grave", cantReach: true, prayerPortal : true, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
                 }
             },
             {
@@ -632,16 +632,16 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Swamp Redux 2", "main", "Cathedral Main Exit"),
                     new TunicPortal("Cathedral Arena", "", "Cathedral Elevator"),
-                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Exit", cantReach: true, deadEnd: true), // only one chest, just use item access rules for it
+                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Room Exit", cantReach: true, deadEnd: true), // only one chest, just use item access rules for it
                 }
             },
             {
                 "Cathedral Arena", // Gauntlet
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", cantReach: true),
+                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", deadEnd: true, cantReach: true),
                     new TunicPortal("Cathedral Redux", "", "Gauntlet to Cathedral", givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}),
-                    new TunicPortal("Shop", "", "Gauntlet Shop", givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}),
+                    new TunicPortal("Shop", "", "Gauntlet Shop", givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}), // we love gauntlet shop
                 }
             },
             //{
@@ -667,16 +667,16 @@ namespace TunicRandomizer
                 "Transit", // Teleporter hub
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Archipelagos Redux", "teleporter_archipelagos_teleporter", "Transit to West Garden", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1} }),
-                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Transit to Library", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Library Lab, Library Arena_", 1} }),
-                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Transit to Quarry", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Quarry Redux, Darkwoods Tunnel_", 1 }, {"Darkwoods Tunnel, Quarry Redux_", 1 }, { "Wand", 1 } }),
-                    new TunicPortal("East Forest Redux", "teleporter_forest teleporter", "Transit to East Forest", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Fortress Arena", "teleporter_spidertank", "Transit to Fortress", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
-                    new TunicPortal("Atoll Redux", "teleporter_atoll", "Transit to Atoll"),
-                    new TunicPortal("ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", "Transit to Zig"),
-                    new TunicPortal("Spirit Arena", "teleporter_spirit arena", "Transit to Heir"),
-                    new TunicPortal("Overworld Redux", "teleporter_town", "Transit to Town"),
-                    new TunicPortal("Overworld Redux", "teleporter_starting island", "Transit to Spawn", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
+                    new TunicPortal("Archipelagos Redux", "teleporter_archipelagos_teleporter", "Far Shore to West Garden", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1} }),
+                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Far Shore to Library", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Library Lab, Library Arena_", 1} }),
+                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Far Shore to Quarry", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Quarry Redux, Darkwoods Tunnel_", 1 }, {"Darkwoods Tunnel, Quarry Redux_", 1 }, { "Wand", 1 } }),
+                    new TunicPortal("East Forest Redux", "teleporter_forest teleporter", "Far Shore to East Forest", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
+                    new TunicPortal("Fortress Arena", "teleporter_spidertank", "Far Shore to Fortress", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
+                    new TunicPortal("Atoll Redux", "teleporter_atoll", "Far Shore to Atoll"),
+                    new TunicPortal("ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", "Far Shore to Zig"),
+                    new TunicPortal("Spirit Arena", "teleporter_spirit arena", "Far Shore to Heir"),
+                    new TunicPortal("Overworld Redux", "teleporter_town", "Far Shore to Town"),
+                    new TunicPortal("Overworld Redux", "teleporter_starting island", "Far Shore to Spawn", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
 
                     // new TunicPortal("Transit_", "teleporter_", "Portal"), // Unused portal, far away and not enabled
                 }
@@ -685,7 +685,7 @@ namespace TunicRandomizer
                 "Spirit Arena", // Heir fight
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Exit", deadEnd: true),
+                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Arena Exit", deadEnd: true),
                 }
             },
             {
