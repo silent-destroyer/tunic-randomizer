@@ -30,7 +30,7 @@ Note: This is the standalone, single-player version of the TUNIC Randomizer. For
   - The Secret Legend chest in the Cathedral can similarly be obtained during the day by opening the Holy Cross door from the outside.
   - Nighttime is not considered in logic. Every check in the game is logically obtainable before the first visit to The Heir, and since nighttime restricts access to several locations it would limit the amount of options overall if certain items were required to always be obtainable at night. The game will automatically switch back to daytime if you die to The Heir on the first visit, but you can optionally switch to nighttime at any point after that by interacting with a special object in the Old House.
   - In Entrance Rando:
-    - You can use the [[ITEM NAME HERE]] to return to the Overworld save point at any time.
+    - You can use the Torch to return to the Overworld save point at any time.
     - The dancing ghost fox area can be accessed using the Hero's Laurels from the gate entrance of Guard House 1.
     - Using the Hero's Laurels, you can dash through the gate in the Bottom of the Well boss room.
     - Activating a fuse to turn on a Prayer teleporter also activates its counterpart in the Far Shore.
