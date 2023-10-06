@@ -379,6 +379,7 @@ namespace TunicRandomizer {
             bool hcHinted = false;
             string Scene;
             string ScenePrefix;
+            int Seed = SaveFile.GetInt("seed");
 
             // Mailbox Hint
             List<string> mailboxNames = new List<string>() { "Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword" };
@@ -441,6 +442,29 @@ namespace TunicRandomizer {
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.";
                 TrunicHint = $"lehjehnd sehz {ScenePrefix} {Translations.Translate(Scene, false)}\nkuhntAnz wuhn uhv mehnE <#00FFFF>furst stehps<#ffffff> ahn yor jurnE.";
+                //if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+                //{
+                //    Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(Seed);
+                //    List<TunicPortals.TunicPortal> portalList = TunicPortals.PortalList[HintItem.Location.SceneName];
+                //    TunicPortals.ShuffleList(portalList, Seed);
+                //    string portalToHint = "blame scipio";
+                //    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                //    {
+                //        if (portalCombo.Portal1.Scene == HintItem.Location.SceneName)
+                //        {
+                //            Logger.LogInfo("portal1 scene is " +  portalCombo.Portal1.Scene);
+                //            portalToHint = portalCombo.Portal2.Name;
+                //            break;
+                //        }
+                //        if (portalCombo.Portal2.Scene == HintItem.Location.SceneName)
+                //        {
+                //            Logger.LogInfo("portal2 scene is " + portalCombo.Portal2.Scene);
+                //            portalToHint = portalCombo.Portal1.Name;
+                //            break;
+                //        }
+                //    }
+                //    HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.\n\"{portalToHint.ToUpper()}\"";
+                //}
                 if (HintItem.Reward.Name == "Techbow") { techbowHinted = true; }
                 if (HintItem.Reward.Name == "Wand") { wandHinted = true; }
                 if (HintItem.Reward.Name == "12") { prayerHinted = true; }
