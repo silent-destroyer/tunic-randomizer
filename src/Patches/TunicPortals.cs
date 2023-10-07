@@ -321,7 +321,7 @@ namespace TunicRandomizer
                     new TunicPortal("Frog Stairs", "eye", "Frog Eye Entrance"),
                     new TunicPortal("Library Exterior", "", "Atoll to Library", prayerPortal : true),
                     new TunicPortal("Overworld Redux", "upper", "Upper Atoll Exit"),
-                    new TunicPortal("Overworld Redux", "lower", "Lower Atoll Exit", deadEnd: true),
+                    new TunicPortal("Overworld Redux", "lower", "Lower Atoll Exit", requiredItems: new Dictionary<string, int> {{"Hyperdash", 1}}),
                     new TunicPortal("Frog Stairs", "mouth", "Frog Mouth Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Wand", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
                     new TunicPortal("Shop", "", "Atoll Shop"),
                     new TunicPortal("Transit", "teleporter_atoll", "Atoll Portal", prayerPortal: true),
@@ -343,7 +343,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Frog Stairs", "Exit", "Lower Frog Orb/Laurels Exit", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }, new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } } }),
-                    new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Ladder Exit"),
+                    new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Ladder Exit", oneWay: true),
                 }
             },
             {
@@ -728,18 +728,12 @@ namespace TunicRandomizer
             List<string> deadEndNames = new List<string> { "g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
-            // List<Portal> hallwayPortals = new List<Portal>();
             List<Portal> twoPlusPortals = new List<Portal>();
 
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList) {
                 string region_name = region_group.Key;
                 List<TunicPortal> region_portals = region_group.Value;
-                // populating twoPlusNames here since we're looping through the list anyway
-                if (!deadEndNames.Contains(region_name))
-                {
-                    twoPlusNames.Add(region_name);
-                }
                 foreach (TunicPortal portal in region_portals)
                 {
                     Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, deadEnd: portal.DeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, cantReach: portal.CantReach);
@@ -832,7 +826,7 @@ namespace TunicRandomizer
                 }
             }
             
-            // now we have every region accessible (if we ignore rules -- that's a problem for later)
+            // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
             while (twoPlusPortals.Count > 1)
             {
