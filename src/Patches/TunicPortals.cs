@@ -905,6 +905,7 @@ namespace TunicRandomizer
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
+
                     if (portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
                         if (portal2.Scene == "Shop")
@@ -919,7 +920,9 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        break;
                     }
+
 
                     if (portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
@@ -932,9 +935,10 @@ namespace TunicRandomizer
                         else
                         {
                             portal.destinationSceneName = portal1.Scene;
-                            portal.id = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
-                            portal.optionalIDToSpawnAt = comboTag;
+                            portal.id = comboTag + comboTag + comboTag + comboTag;
+                            portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        break;
                     }
                 }
             }
