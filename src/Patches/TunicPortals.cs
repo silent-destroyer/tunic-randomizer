@@ -906,7 +906,7 @@ namespace TunicRandomizer
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
 
-                    if (portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
+                    if (portal1.Scene == "Overworld Redux" && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
                         if (portal2.Scene == "Shop")
                         {
@@ -924,7 +924,7 @@ namespace TunicRandomizer
                     }
 
 
-                    if (portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
+                    if (portal2.Scene == "Overworld Redux" && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
                     {
                         if (portal1.Scene == "Shop")
                         {
