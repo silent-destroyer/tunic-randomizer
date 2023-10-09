@@ -190,6 +190,7 @@
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
+    <Compile Include="src\Patches\TextBuilderPatches.cs" />
     <Compile Include="src\Patches\TunicPortals.cs" />
     <Compile Include="src\Patches\SpeedrunFinishlineDisplayPatches.cs" />
     <Compile Include="src\Patches\SwordProgression.cs" />

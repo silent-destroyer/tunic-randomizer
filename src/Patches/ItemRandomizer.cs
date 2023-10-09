@@ -582,8 +582,8 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (TunicRandomizer.Settings.EntranceRandoEnabled)
-            {
+
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 Dictionary<string, PortalCombo> PortalList = TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 List<string> PortalSpoiler = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");

@@ -64,35 +64,47 @@ namespace TunicRandomizer {
 
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
-            if (SceneLoaderPatches.SceneName == "g_elements") {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm ahnd rEturn too ???";
-            } else if (SceneLoaderPatches.SceneName == "Posterity") {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too {Translations.Translate("Overworld", true)}?";
+            if (__instance.item.name == "Torch") {
+                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too {Translations.Translate("Overworld", true)}?";
             } else {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm \n ahnd rEturn too {Translations.Translate(Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")], true)}?";
+                if (SceneLoaderPatches.SceneName == "g_elements") {
+                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm ahnd rEturn too ???";
+                } else if (SceneLoaderPatches.SceneName == "Posterity") {
+                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too {Translations.Translate("Overworld", true)}?";
+                } else {
+                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too {Translations.Translate(Hints.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")], true)}?";
+                }
             }
-
             return true;
         }
 
         public static bool BoneItemBehavior_confirmBoneUseCallback_PrefixPatch(BoneItemBehaviour __instance) {
-            if (SceneLoaderPatches.SceneName == "g_elements") {
-                SaveFile.SetString("last campfire scene name", "Posterity");
-                SaveFile.SetString("last campfire id", "campfire");
-                SaveFile.SetInt("randomizer sent lost fox home", 1);
-            }
-            else if (SceneLoaderPatches.SceneName == "Posterity") {
+            if (__instance.item.name == "Torch") {
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");
                 SaveFile.SetString("last campfire id", "checkpoint");
-            }
-            else if (TunicRandomizer.Settings.EntranceRandoEnabled)
-            {
-                SaveFile.SetString("last campfire scene name", "Overworld Redux");
-                SaveFile.SetString("last campfire id", "checkpoint");
+            } else {
+                if (SceneLoaderPatches.SceneName == "g_elements") {
+                    SaveFile.SetString("last campfire scene name", "Posterity");
+                    SaveFile.SetString("last campfire id", "campfire");
+                    SaveFile.SetInt("randomizer sent lost fox home", 1);
+                }
+                if (SceneLoaderPatches.SceneName == "Posterity") {
+                    SaveFile.SetString("last campfire scene name", "Overworld Redux");
+                    SaveFile.SetString("last campfire id", "checkpoint");
+                }
             }
             PlayerCharacter.instance.gameObject.AddComponent<Rotate>();
             IsTeleporting = true;
             return true;
+        }
+
+        public static void SetupTorchItemBehaviour(PlayerCharacter instance) {
+            List<ItemBehaviour> itemBehaviours = instance.itemBehaviours.ToList();
+            BoneItemBehaviour bone = instance.gameObject.AddComponent<BoneItemBehaviour>();
+            bone.confirmationPromptLine = instance.gameObject.GetComponent<BoneItemBehaviour>().confirmationPromptLine;
+            bone.item = Inventory.GetItemByName("Torch").TryCast<ButtonAssignableItem>();
+            itemBehaviours.Add(bone);
+            instance.itemBehaviours = itemBehaviours.ToArray();
         }
     }
 }

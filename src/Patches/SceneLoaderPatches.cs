@@ -26,13 +26,7 @@ namespace TunicRandomizer {
             return true;
         }
 
-        public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-            if (TunicRandomizer.Settings.EntranceRandoEnabled && SaveFile.GetInt("seed") != 0)
-            {
-                Logger.LogInfo("about to start randomize portals in scene loader patches");
-                TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
-            }
-            
+        public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {            
             // ladder storage fix
             if (PlayerCharacter.instance != null)
             {
@@ -218,51 +212,20 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got mailbox hint item") == 0) {
                     GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.5f, -0.5f, 0.5f, 0.5f);
                 }
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 || (TunicRandomizer.Settings.EntranceRandoEnabled && SaveFile.GetInt("seed") == 0)) {
+                    GhostHints.SpawnTorchHintGhost();
+                }
             } else if (SceneName == "Swamp Redux 2") {
-                GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.GAZE;
-                GameObject DoorHint = GameObject.Instantiate(GhostHints.GhostFox);
-                DoorHint.transform.position = new Vector3(82.5f, 14f, 143.7f);
-                DoorHint.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
-                LanguageLine DoorSecret = ScriptableObject.CreateInstance<LanguageLine>();
-                DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
-                DoorHint.GetComponent<NPC>().script = DoorSecret;
-                DoorHint.SetActive(true);
-
+                GhostHints.SpawnCathedralDoorGhost();
                 // Remove barricades from swamp shop
                 if (GameObject.Find("_Setpieces Etc/plank_4u") != null && GameObject.Find("_Setpieces Etc/plank_4u (1)") != null) {
                     GameObject.Find("_Setpieces Etc/plank_4u").SetActive(false);
                     GameObject.Find("_Setpieces Etc/plank_4u (1)").SetActive(false);
                 }
             } else if (SceneName == "g_elements") {
-                if (SaveFile.GetInt("randomizer sent lost fox home") == 0) {
-                    GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
-                    GameObject LostFox = GameObject.Instantiate(GhostHints.GhostFox);
-                    LostFox.transform.position = new Vector3(-1.4098f, 0.0585f, 12.9491f);
-                    LostFox.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
-
-                    LanguageLine LostFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
-                    if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 0) {
-                        LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nitz smawl ahnd grA.";
-                    } else {
-                        LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
-                    }
-                    LostFox.GetComponent<NPC>().script = LostFoxScript;
-
-                    LostFox.SetActive(true);
-                }
+                GhostHints.SpawnLostGhostFox();
             } else if (SceneName == "Posterity") {
-                if (SaveFile.GetInt("randomizer sent lost fox home") == 1) {
-                    GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
-                    GameObject SavedFox = GameObject.Instantiate(GhostHints.GhostFox);
-                    SavedFox.transform.position = new Vector3(80.6991f, 15.9245f, 115.0217f);
-                    SavedFox.transform.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
-
-                    LanguageLine SavedFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
-                    SavedFoxScript.text = $"%ah^k yoo for sehnding mE hOm.---plEz kEp #aht stOn ahs A rEword. it wil tAk yoo\nbahk too yor wurld.";
-                    SavedFox.GetComponent<NPC>().script = SavedFoxScript;
-
-                    SavedFox.SetActive(true);
-                }
+                GhostHints.SpawnRescuedGhostFox();
             } else if (SceneName == "Shop") {
                 if (new System.Random().Next(100) < 3) {
                     GameObject.Find("merchant").SetActive(false);
@@ -274,13 +237,11 @@ namespace TunicRandomizer {
                     GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
                 }
             } else if (SceneName == "Cathedral Arena") {
-                if (TunicRandomizer.Settings.EntranceRandoEnabled)
-                {
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = false;
                 }
             } else if (SceneName == "Cathedral Redux") {
-                if (TunicRandomizer.Settings.EntranceRandoEnabled)
-                {
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
                 }
             } else {
@@ -294,7 +255,7 @@ namespace TunicRandomizer {
                     StateVariable.GetStateVariableByName(ItemPatches.HeroRelicLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer picked up " + ItemPatches.HeroRelicLookup[Key].OriginalPickupLocation) == 1;
                 }
             }
-
+            
             if (CustomItemBehaviors.IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = false;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = false;
@@ -316,6 +277,11 @@ namespace TunicRandomizer {
             } catch (Exception ex) {
                 Logger.LogError("An error occurred applying custom texture:");
                 Logger.LogError(ex.Message + " " + ex.StackTrace);
+            }
+
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                Logger.LogInfo("about to start randomize portals in scene loader patches");
+                TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             }
 
             try {

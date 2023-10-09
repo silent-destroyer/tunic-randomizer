@@ -238,7 +238,7 @@ namespace TunicRandomizer {
                 }
                 if (TunicRandomizer.Settings.EntranceRandoEnabled)
                 {
-                    Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
+                    Inventory.GetItemByName("Torch").Quantity = 1;
                     SaveFile.SetInt("randomizer entrance rando enabled", 1);
                 }
                 if (TunicRandomizer.Settings.ShuffleAbilities) {
@@ -261,17 +261,10 @@ namespace TunicRandomizer {
             TunicRandomizer.Randomizer = new System.Random(seed);
             SaveName = SaveFile.saveDestinationName;
 
-            // this is here for the first time you're loading in, assumes you're in Overworld
-            if (TunicRandomizer.Settings.EntranceRandoEnabled)
-            {
-                Logger.LogInfo("savefile.getint test");
-                Logger.LogInfo("result is " + SaveFile.GetInt("seed"));
-                TunicPortals.AltModifyPortals(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
-            }
+            TextBuilderPatches.SetupCustomGlyphSprites();
 
             ItemRandomizer.PopulateSphereZero();
             ItemRandomizer.RandomizeAndPlaceItems();
-
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
             HeirAssistModeDamageValue = ItemPatches.ItemsPickedUp.Values.ToList().Where(item => item == true).ToList().Count / 15;
             Inventory.GetItemByName("Homeward Bone Statue").icon = Inventory.GetItemByName("Dash Stone").icon;
@@ -291,6 +284,7 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Crystal Ball").icon = ModelSwaps.FindSprite("Inventory items_specialitem");
             Inventory.GetItemByName("Key (House)").icon = Inventory.GetItemByName("Key Special").icon;
             Inventory.GetItemByName("MoneyLevelItem").Quantity = 1;
+            CustomItemBehaviors.SetupTorchItemBehaviour(__instance);
 
             if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
                 int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
@@ -344,9 +338,11 @@ namespace TunicRandomizer {
             FairyTargets.CreateFairyTargets();
             GhostHints.GenerateHints();
             OptionsGUIPatches.SaveSettings();
+
             if (TunicRandomizer.Settings.GhostFoxHintsEnabled && !SceneLoaderPatches.SpawnedGhosts) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
+
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer holy cross unlocked") == 0) {
                 foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
                     foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
@@ -354,6 +350,14 @@ namespace TunicRandomizer {
                     }
                 }
             }
+
+            // this is here for the first time you're loading in, assumes you're in Overworld
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                Logger.LogInfo("savefile.getint test");
+                Logger.LogInfo("result is " + SaveFile.GetInt("seed"));
+                TunicPortals.AltModifyPortals(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+            }
+
             PaletteEditor.SetupPartyHat(__instance);
             
             if (PaletteEditor.CelShadingEnabled) { 

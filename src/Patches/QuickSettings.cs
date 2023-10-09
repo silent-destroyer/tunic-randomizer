@@ -47,23 +47,22 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.HEXAGONQUEST;
             }
 
-            bool ToggleEntranceRando = GUI.Toggle(new Rect(10f, 100f, 175f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Rando");
-            TunicRandomizer.Settings.EntranceRandoEnabled = ToggleEntranceRando;
-
             GUI.skin.toggle.fontSize = 15;
             bool ToggleSpoilerLog = GUI.Toggle(new Rect(330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
             ItemRandomizer.CreateSpoilerLog = ToggleSpoilerLog;
             GUI.skin.toggle.fontSize = 20;
 
-            GUI.Label(new Rect(10f, 135f, 200f, 30f), "Logic Settings");
-            bool ToggleBossKeys = GUI.Toggle(new Rect(10f, 180f, 180f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
-            TunicRandomizer.Settings.KeysBehindBosses = ToggleBossKeys;
-            bool ToggleSwordProgression = GUI.Toggle(new Rect(240f, 180f, 180f, 30f), TunicRandomizer.Settings.SwordProgressionEnabled, "Sword Progression");
+            GUI.Label(new Rect(10f, 95f, 200f, 30f), "Logic Settings");
+            bool TopggleBossKeys = GUI.Toggle(new Rect(10f, 140f, 200f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
+            TunicRandomizer.Settings.KeysBehindBosses = TopggleBossKeys;
+            bool ToggleSwordProgression = GUI.Toggle(new Rect(240f, 140f, 180f, 30f), TunicRandomizer.Settings.SwordProgressionEnabled, "Sword Progression");
             TunicRandomizer.Settings.SwordProgressionEnabled = ToggleSwordProgression;
-            bool ToggleSwordStart = GUI.Toggle(new Rect(10f, 220f, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
+            bool ToggleSwordStart = GUI.Toggle(new Rect(10f, 180f, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
             TunicRandomizer.Settings.StartWithSwordEnabled = ToggleSwordStart;
-            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(240f, 220f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
+            bool ToggleAbilityShuffle = GUI.Toggle(new Rect(240f, 180f, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
             TunicRandomizer.Settings.ShuffleAbilities = ToggleAbilityShuffle;
+            bool ToggleEntranceRando = GUI.Toggle(new Rect(10f, 220f, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
+            TunicRandomizer.Settings.EntranceRandoEnabled = ToggleEntranceRando;
             GUI.skin.button.fontSize = 20;
             GUI.Label(new Rect(10f, 260f, 300f, 30f), $"Custom Seed: {(CustomSeed == 0 ? "Not Set" : CustomSeed.ToString())}");
 
