@@ -53,7 +53,7 @@ namespace TunicRandomizer {
             List<Location> InitialLocations = new List<Location>();
             List<ItemData> Hexagons = new List<ItemData>();
             List<Reward> ProgressionRewards = new List<Reward>();
-            Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
+            Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
 
@@ -137,13 +137,13 @@ namespace TunicRandomizer {
             foreach (Reward item in ProgressionRewards)
             {
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                if (PlacedInventory.ContainsKey(itemName))
+                if (UnplacedInventory.ContainsKey(itemName))
                 {
-                    PlacedInventory[itemName] += 1;
+                    UnplacedInventory[itemName] += 1;
                 }
                 else
                 {
-                    PlacedInventory.Add(itemName, 1);
+                    UnplacedInventory.Add(itemName, 1);
                 }
             }
 
@@ -159,13 +159,13 @@ namespace TunicRandomizer {
                 // pick an item
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 // remove item from inventory for reachability checks
-                if (PlacedInventory.Keys.Contains(itemName))
+                if (UnplacedInventory.Keys.Contains(itemName))
                 {
-                    PlacedInventory[itemName] -= 1;
+                    UnplacedInventory[itemName] -= 1;
                 }
-                if (PlacedInventory[itemName] == 0)
+                if (UnplacedInventory[itemName] == 0)
                 {
-                    PlacedInventory.Remove(itemName);
+                    UnplacedInventory.Remove(itemName);
                 }
 
                 // door rando time
@@ -182,7 +182,7 @@ namespace TunicRandomizer {
                         CombinedInventory.Clear();
                         foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
                         {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
-                        foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+                        foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                         {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
 
                         foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
@@ -216,7 +216,7 @@ namespace TunicRandomizer {
                 CombinedInventory.Clear();
                 foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
                 {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
-                foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+                foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                 {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
 
                 // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
@@ -246,7 +246,7 @@ namespace TunicRandomizer {
                     CombinedInventory.Clear();
                     foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
                     { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
-                    foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+                    foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                     { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
 
                     foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
@@ -274,7 +274,7 @@ namespace TunicRandomizer {
             CombinedInventory.Clear();
             foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
             { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
-            foreach (KeyValuePair<string, int> placedItem in PlacedInventory)
+            foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
             { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
 
             SphereZero = CombinedInventory;

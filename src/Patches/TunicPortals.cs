@@ -342,7 +342,7 @@ namespace TunicRandomizer
                 "frog cave main", // Frog's domain, yes it's lowercase
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Frog Stairs", "Exit", "Lower Frog Orb/Laurels Exit", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }, new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } } }),
+                    new TunicPortal("Frog Stairs", "Exit", "Lower Frog Orb/Laurels Exit", requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }),
                     new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Ladder Exit", oneWay: true),
                 }
             },
