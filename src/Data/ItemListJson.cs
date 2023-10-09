@@ -2158,8 +2158,9 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Wand"": 1, ""frog cave main"": 1},
-                        {""Hyperdash"": 1, ""frog cave main"": 1}
+                        {""Wand"": 1, ""frog cave main, Frog Stairs_Exit"": 1},
+                        {""Hyperdash"": 1, ""frog cave main, Frog Stairs_Exit"": 1},
+                        {""Wand"": 1, ""frog cave main, Frog Stairs_Entrance"": 1}
                     ],
                     ""SceneId"": 52,
                     ""SceneName"": ""frog cave main""
