@@ -26,10 +26,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer started with sword") == 1) {
                 SphereZero.Add("Sword", 1);
             }
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-            {
-                SphereZero.Add("Dath Stone", 1);
-            }
         }
 
         public static void RandomizeAndPlaceItems() {
@@ -271,12 +267,10 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            Logger.LogInfo("test check here");
             CombinedInventory.Clear();
             foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
             {
                 CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
-                Logger.LogInfo(sceneItem.Key);
             }
             foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
             { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
