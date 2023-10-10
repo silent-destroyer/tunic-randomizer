@@ -39,6 +39,15 @@ namespace TunicRandomizer {
         {
             List<string> rewardsList = new List<string>();
 
+            if (this.Portal1.Reachable(inventory))
+            {
+                rewardsList.Add(this.Portal1.SceneDestinationTag);
+            }
+            if (this.Portal2.Reachable(inventory))
+            {
+                rewardsList.Add(this.Portal2.SceneDestinationTag);
+            }
+
             // first, let's just see if we have both portals here already so we can skip processing them
             if (!inventory.ContainsKey(this.Portal1.SceneDestinationTag) || !inventory.ContainsKey(this.Portal2.SceneDestinationTag))
             {
@@ -76,10 +85,6 @@ namespace TunicRandomizer {
                     // if we have all of the entry items, we get the portal
                     if (count >= entryItems.Count)
                     {
-                        if (!rewardsList.Contains(this.Portal2.SceneDestinationTag))
-                        {
-                            rewardsList.Add(this.Portal2.SceneDestinationTag);
-                        }
                         if (!inventory.ContainsKey(this.Portal2.SceneDestinationTag))
                         {
                             inventory.Add(this.Portal2.SceneDestinationTag, 1);
@@ -121,10 +126,6 @@ namespace TunicRandomizer {
                     // if we have all of the entry items, we get the portal
                     if (count == entryItems.Count)
                     {
-                        if (!rewardsList.Contains(this.Portal1.SceneDestinationTag))
-                        {
-                            rewardsList.Add(this.Portal1.SceneDestinationTag);
-                        }
                         if (!inventory.ContainsKey(this.Portal1.SceneDestinationTag))
                         {
                             inventory.Add(this.Portal1.SceneDestinationTag, 1);

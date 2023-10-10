@@ -271,9 +271,13 @@ namespace TunicRandomizer {
             foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
             {
                 CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
+                Logger.LogInfo(sceneItem.Key);
             }
             foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
-            { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
+            { 
+                CombinedInventory.Add(placedItem.Key, placedItem.Value); 
+                Logger.LogInfo(placedItem.Key);
+            }
 
             SphereZero = CombinedInventory;
 

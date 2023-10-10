@@ -263,12 +263,17 @@ namespace TunicRandomizer {
                     itemsRequired.Add(reqSet);
                 }
             }
+            else
+            {
+                itemsRequired.Add(new Dictionary<string, int> { { this.Scene, 1 } });
+            }
 
             // see if we meet any of the requirement dicts for the portal
             if (itemsRequired != null)
             {
                 if (itemsRequired.Count == 0)
                 {
+                    Logger.LogInfo("itemsRequired == 0 so giving it here");
                     return true;
                 }
                 foreach (Dictionary<string, int> req in itemsRequired)
