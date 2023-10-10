@@ -619,7 +619,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Overworld Redux", "conduit", "Lower Swamp Exit"),
-                    new TunicPortal("Cathedral Redux", "main", "Swamp to Cathedral Main Entrance", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "Hyperdash", 1 }, { "Overworld Redux, Swamp Redux 2_conduit", 1 } } ),
+                    new TunicPortal("Cathedral Redux", "main", "Swamp to Cathedral Main Entrance", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "Hyperdash", 1 }, { "Overworld Redux, Swamp Redux 2_wall", 1 }, { "Swamp Redux 2, Overworld Redux_conduit", 1 } } ),
                     new TunicPortal("Cathedral Redux", "secret", "Swamp to Cathedral Treasure Room Entrance", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
                     new TunicPortal("Cathedral Arena", "", "Swamp to Gauntlet", cantReach: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, {"Swamp Redux 2, Overworld Redux_wall", 1 } }, new Dictionary<string, int> { { "Swamp Redux 2, RelicVoid_teleporter_relic plinth", 1 } } }),
                     new TunicPortal("Shop", "", "Swamp Shop"),

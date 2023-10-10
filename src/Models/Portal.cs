@@ -164,6 +164,76 @@ namespace TunicRandomizer {
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
 
+        public bool CanReachCenterFromPortal(Dictionary<string, int> inventory)
+        {
+            if (this.CantReach == true)
+            { return false; }
+
+            // create our list of dicts of required items
+            List<Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
+            if (this.RequiredItems != null)
+            {
+                itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
+            }
+            else if (this.RequiredItemsOr != null)
+            {
+                foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
+                {
+                    itemsRequired.Add(reqSet);
+                }
+            }
+
+            // see if we meet any of the requirement dicts for the portal
+            if (itemsRequired != null)
+            {
+                if (itemsRequired.Count == 0)
+                {
+                    return true;
+                }
+                foreach (Dictionary<string, int> req in itemsRequired)
+                {
+                    //ensure req and items use same terms
+                    if (SaveFile.GetInt("randomizer sword progression enabled") != 0)
+                    {
+                        if (req.ContainsKey("Stick"))
+                        {
+                            req["Sword Progression"] = 1;
+                            req.Remove("Stick");
+                        }
+                        if (req.ContainsKey("Sword"))
+                        {
+                            req["Sword Progression"] = 2;
+                            req.Remove("Sword");
+                        }
+                    }
+
+                    //check if this requirement is fully met, otherwise move to the next requirement
+                    int met = 0;
+                    foreach (string item in req.Keys)
+                    {
+                        if (!inventory.ContainsKey(item))
+                        {
+                            break;
+                        }
+                        else if (inventory[item] >= req[item])
+                        {
+                            met += 1;
+                        }
+                    }
+                    if (met == req.Count)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                Logger.LogInfo("returning true because itemsRequired is null");
+                return true;
+            }
+            return false;
+        }
+
         public bool Reachable(Dictionary<string, int> inventory)
         {
             // if the portal is already in our inventory, no need to go through this process
@@ -259,80 +329,8 @@ namespace TunicRandomizer {
                 }
             }
 
-            bool canReachCenter = false;
-            // create our list of dicts of required items
-            List<Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
-            if (this.RequiredItems != null)
-            {
-                // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                if ((this.CantReach == false || this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
-                {
-                    this.RequiredItems.Add(this.Scene, 1);
-                }
-                itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
-            }
-            else if (this.RequiredItemsOr != null)
-            {
-                foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
-                {
-                    if ((this.CantReach == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
-                    {
-                        reqSet.Add(this.Scene, 1);
-                    }
-                    itemsRequired.Add(reqSet);
-                }
-            }
-
-            // see if we meet any of the requirement dicts for the portal
-            if (itemsRequired != null)
-            {
-                if (itemsRequired.Count == 0)
-                {
-                    canReachCenter = true;
-                }
-                if (canReachCenter != true)
-                {
-
-                    foreach (Dictionary<string, int> req in itemsRequired)
-                    {
-                        //ensure req and items use same terms
-                        if (SaveFile.GetInt("randomizer sword progression enabled") != 0)
-                        {
-                            if (req.ContainsKey("Stick"))
-                            {
-                                req["Sword Progression"] = 1;
-                                req.Remove("Stick");
-                            }
-                            if (req.ContainsKey("Sword"))
-                            {
-                                req["Sword Progression"] = 2;
-                                req.Remove("Sword");
-                            }
-                        }
-
-                        //check if this requirement is fully met, otherwise move to the next requirement
-                        int met = 0;
-                        foreach (string item in req.Keys)
-                        {
-                            if (!inventory.ContainsKey(item))
-                            {
-                                break;
-                            }
-                            else if (inventory[item] >= req[item])
-                            {
-                                met += 1;
-                            }
-                        }
-                        if (met == req.Count)
-                        {
-                            canReachCenter = true;
-                        }
-                    }
-                }
-            }
-
             // if you can reach, you get the center of the region. One-ways give you the center too
-            if (this.CantReach == false && canReachCenter == true)
+            if (CanReachCenterFromPortal(inventory))
             {
                 rewardsList.Add(this.Scene);
             }
