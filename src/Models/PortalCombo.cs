@@ -135,12 +135,12 @@ namespace TunicRandomizer {
             // and now, we grab the regions or portals that we're given access to from having either portal and add them to the rewards list
             if (inventory.ContainsKey(this.Portal1.SceneDestinationTag))
             {
-                rewardsList.AddRange(this.Portal1.Rewards().Except(rewardsList));
+                rewardsList.AddRange(this.Portal1.Rewards(inventory).Except(rewardsList));
             }
 
             if (inventory.ContainsKey(this.Portal2.SceneDestinationTag))
             {
-                rewardsList.AddRange(this.Portal2.Rewards().Except(rewardsList));
+                rewardsList.AddRange(this.Portal2.Rewards(inventory).Except(rewardsList));
             }
 
             return rewardsList;

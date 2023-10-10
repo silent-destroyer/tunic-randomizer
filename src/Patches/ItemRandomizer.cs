@@ -271,9 +271,13 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            Logger.LogInfo("test check here");
             CombinedInventory.Clear();
             foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
-            { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
+            {
+                CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
+                Logger.LogInfo(sceneItem.Key);
+            }
             foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
             { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
 

@@ -577,7 +577,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("ziggurat2020_1", "", "Zig Entry Hallway to Zig 1"),
-                    new TunicPortal("Quarry Redux", "", "Zig Entry Hallwya to Quarry"),
+                    new TunicPortal("Quarry Redux", "", "Zig Entry Hallway to Quarry"),
                 }
             },
             {
