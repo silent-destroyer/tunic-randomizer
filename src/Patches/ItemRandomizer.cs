@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using UnityEngine;
 using TinyJson;
 using System.IO;
+using BepInEx.Logging;
+using UnityEngine.Playables;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static bool CreateSpoilerLog = true;
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
@@ -46,7 +49,8 @@ namespace TunicRandomizer {
             List<Location> InitialLocations = new List<Location>();
             List<ItemData> Hexagons = new List<ItemData>();
             List<Reward> ProgressionRewards = new List<Reward>();
-            Dictionary<string, int> PlacedInventory = new Dictionary<string, int>(SphereZero);
+            Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>(SphereZero);
+            Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
 
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
@@ -125,23 +129,95 @@ namespace TunicRandomizer {
                 }
             }
 
+            // adding the progression rewards to the start inventory, so we can reverse fill
+            foreach (Reward item in ProgressionRewards)
+            {
+                string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                if (UnplacedInventory.ContainsKey(itemName))
+                {
+                    UnplacedInventory[itemName] += 1;
+                }
+                else
+                {
+                    UnplacedInventory.Add(itemName, 1);
+                }
+            }
+
+            // getting the randomized portal list the same way as we randomize it normally
+            Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+            // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
+            Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
+            Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
+
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
-                // pick a location 
+
+                // pick an item
+                string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                // remove item from inventory for reachability checks
+                if (UnplacedInventory.Keys.Contains(itemName))
+                {
+                    UnplacedInventory[itemName] -= 1;
+                }
+                if (UnplacedInventory[itemName] == 0)
+                {
+                    UnplacedInventory.Remove(itemName);
+                }
+
+                // door rando time
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+                {
+                    // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+                    int checkP = 0;
+                    SceneInventory.Clear();
+                    SceneInventory.Add("Overworld Redux", 1);
+                    // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
+                    while (checkP < randomizedPortalsList.Count)
+                    {
+                        checkP = 0;
+                        CombinedInventory.Clear();
+                        foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+                        {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
+                        foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
+                        {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
+
+                        foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                        {
+                            if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
+                            {
+                                int testValue = 0;
+                                int testValue2 = 0;
+                                foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory))
+                                {
+                                    testValue2++;
+                                    if (!SceneInventory.ContainsKey(itemDoors))
+                                    {
+                                        SceneInventory.Add(itemDoors, 1);
+                                    }
+                                    else { testValue++; }
+                                }
+                                if (testValue == testValue2)
+                                { checkP++; }
+                            }
+                            else { checkP++; }
+                        }
+                    }
+                }
+
+                // pick a location
                 int l;
                 l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
 
-                // if location isn't reachable with placed inv, pick a new location
-                while (!InitialLocations[l].reachable(PlacedInventory)) {
-                    l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
-                }
+                // empty combined inventory, refill it with whatever is currently in scene inventory and placed inventory
+                CombinedInventory.Clear();
+                foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+                {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
+                foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
+                {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
 
-                // add item to placed inv for future reachability checks
-                string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                if (PlacedInventory.Keys.Contains(itemName)) {
-                    PlacedInventory[itemName] += 1;
-                } else {
-                    PlacedInventory.Add(itemName, 1);
+                // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
+                while (!InitialLocations[l].reachable(CombinedInventory)) {
+                    l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
                 }
 
                 // prepare matched list of progression items and locations
@@ -151,6 +227,59 @@ namespace TunicRandomizer {
 
                 InitialLocations.Remove(InitialLocations[l]);
             }
+
+            // and now we get what sphere zero actually is when we have entrance rando enabled
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+            {
+                // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+                int checkP = 0;
+                SceneInventory.Clear();
+                SceneInventory.Add("Overworld Redux", 1);
+                // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
+                while (checkP < randomizedPortalsList.Count)
+                {
+                    checkP = 0;
+                    CombinedInventory.Clear();
+                    foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+                    { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
+                    foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
+                    { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
+
+                    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                    {
+                        if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
+                        {
+                            int testValue = 0;
+                            int testValue2 = 0;
+                            foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory))
+                            {
+                                testValue2++;
+                                if (!SceneInventory.ContainsKey(itemDoors))
+                                {
+                                    SceneInventory.Add(itemDoors, 1);
+                                }
+                                else { testValue++; }
+                            }
+                            if (testValue == testValue2)
+                            { checkP++; }
+                        }
+                        else { checkP++; }
+                    }
+                }
+            }
+            CombinedInventory.Clear();
+            foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
+            {
+                CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
+                Logger.LogInfo(sceneItem.Key);
+            }
+            foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
+            { 
+                CombinedInventory.Add(placedItem.Key, placedItem.Value); 
+                Logger.LogInfo(placedItem.Key);
+            }
+
+            SphereZero = CombinedInventory;
 
             // shuffle remaining rewards and locations
             Shuffle(InitialRewards, InitialLocations);
@@ -252,6 +381,7 @@ namespace TunicRandomizer {
             bool hcHinted = false;
             string Scene;
             string ScenePrefix;
+            int Seed = SaveFile.GetInt("seed");
 
             // Mailbox Hint
             List<string> mailboxNames = new List<string>() { "Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword" };
@@ -314,6 +444,29 @@ namespace TunicRandomizer {
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.";
                 TrunicHint = $"lehjehnd sehz {ScenePrefix} {Translations.Translate(Scene, false)}\nkuhntAnz wuhn uhv mehnE <#00FFFF>furst stehps<#ffffff> ahn yor jurnE.";
+                //if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+                //{
+                //    Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(Seed);
+                //    List<TunicPortals.TunicPortal> portalList = TunicPortals.PortalList[HintItem.Location.SceneName];
+                //    TunicPortals.ShuffleList(portalList, Seed);
+                //    string portalToHint = "blame scipio";
+                //    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                //    {
+                //        if (portalCombo.Portal1.Scene == HintItem.Location.SceneName)
+                //        {
+                //            Logger.LogInfo("portal1 scene is " +  portalCombo.Portal1.Scene);
+                //            portalToHint = portalCombo.Portal2.Name;
+                //            break;
+                //        }
+                //        if (portalCombo.Portal2.Scene == HintItem.Location.SceneName)
+                //        {
+                //            Logger.LogInfo("portal2 scene is " + portalCombo.Portal2.Scene);
+                //            portalToHint = portalCombo.Portal1.Name;
+                //            break;
+                //        }
+                //    }
+                //    HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.\n\"{portalToHint.ToUpper()}\"";
+                //}
                 if (HintItem.Reward.Name == "Techbow") { techbowHinted = true; }
                 if (HintItem.Reward.Name == "Wand") { wandHinted = true; }
                 if (HintItem.Reward.Name == "12") { prayerHinted = true; }
@@ -431,13 +584,27 @@ namespace TunicRandomizer {
                 }
             }
 
+
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                Dictionary<string, PortalCombo> PortalList = TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                List<string> PortalSpoiler = new List<string>();
+                SpoilerLogLines.Add("\nEntrance Connections");
+                foreach (PortalCombo portalCombo in PortalList.Values)
+                {
+                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name);
+                }
+                foreach (string combo in PortalSpoiler)
+                {
+                    SpoilerLogLines.Add(combo);
+                }
+            }
+
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             } else {
                 File.Delete(TunicRandomizer.SpoilerLogPath);
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             }
-
         }
 
         public static ItemData FindRandomizedItemByName(string Name) {

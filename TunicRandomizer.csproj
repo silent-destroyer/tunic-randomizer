@@ -167,9 +167,11 @@
     <Compile Include="src\Models\HeroRelic.cs" />
     <Compile Include="src\Models\Hints.cs" />
     <Compile Include="src\Models\ImageData.cs" />
+    <Compile Include="src\Models\PortalCombo.cs" />
     <Compile Include="src\Models\ItemData.cs" />
     <Compile Include="src\Models\ItemPositions.cs" />
     <Compile Include="src\Models\Location.cs" />
+    <Compile Include="src\Models\Portal.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
     <Compile Include="src\Patches\InteractionPatches.cs" />
@@ -188,6 +190,8 @@
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
+    <Compile Include="src\Patches\TextBuilderPatches.cs" />
+    <Compile Include="src\Patches\TunicPortals.cs" />
     <Compile Include="src\Patches\SpeedrunFinishlineDisplayPatches.cs" />
     <Compile Include="src\Patches\SwordProgression.cs" />
     <Compile Include="src\Patches\TitleVersion.cs" />

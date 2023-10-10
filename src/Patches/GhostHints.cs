@@ -408,6 +408,65 @@ public class GhostHints {
             }
         }
 
+        public static void SpawnTorchHintGhost() {
+            GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+            GameObject TorchFox = GameObject.Instantiate(GhostHints.GhostFox);
+            TorchFox.transform.position = new Vector3(-12.3128f, 11.9833f, -145.3333f);
+            TorchFox.transform.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+
+            LanguageLine TorchFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
+            TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm.---I sE yoo hahv A torJ [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
+            TorchFox.GetComponent<NPC>().script = TorchFoxScript;
+
+            TorchFox.SetActive(true);
+        }
+
+        public static void SpawnLostGhostFox() {
+            if (SaveFile.GetInt("randomizer sent lost fox home") == 0) {
+                GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                GameObject LostFox = GameObject.Instantiate(GhostHints.GhostFox);
+                LostFox.transform.position = new Vector3(-1.4098f, 0.0585f, 12.9491f);
+                LostFox.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
+
+                LanguageLine LostFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
+                if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 0) {
+                    LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nit louks lIk #is: [dath]";
+                } else {
+                    LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
+                }
+                LostFox.GetComponent<NPC>().script = LostFoxScript;
+
+                LostFox.SetActive(true);
+            }
+        }
+
+        public static void SpawnRescuedGhostFox() {
+            if (SaveFile.GetInt("randomizer sent lost fox home") == 1) {
+                GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                GameObject SavedFox = GameObject.Instantiate(GhostHints.GhostFox);
+                SavedFox.transform.position = new Vector3(80.6991f, 15.9245f, 115.0217f);
+                SavedFox.transform.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+
+                LanguageLine SavedFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
+                SavedFoxScript.text = $"%ah^k yoo for sehnding mE hOm.---plEz kEp #aht stOn ahs A rEword. it wil tAk yoo\nbahk too yor wurld.";
+                SavedFox.GetComponent<NPC>().script = SavedFoxScript;
+
+                SavedFox.SetActive(true);
+            }
+        }
+
+        public static void SpawnCathedralDoorGhost() {
+            GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.GAZE;
+            GameObject DoorHint = GameObject.Instantiate(GhostHints.GhostFox);
+            DoorHint.transform.position = new Vector3(82.5f, 14f, 143.7f);
+            DoorHint.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
+            LanguageLine DoorSecret = ScriptableObject.CreateInstance<LanguageLine>();
+            DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
+            DoorHint.GetComponent<NPC>().script = DoorSecret;
+            DoorHint.SetActive(true);
+
+        }
+
         public static List<ItemData> FindAllRandomizedItemsByName(string ItemName) {
             List<ItemData> Items = new List<ItemData>();
             foreach (string Key in ItemPatches.ItemList.Keys) {

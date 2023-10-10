@@ -165,6 +165,10 @@ namespace TunicRandomizer {
 
             harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(SwordProgression), "HitReceiver_ReceiveHit_PrefixPatch")));
 
+            harmony.Patch(AccessTools.Method(typeof(Parser), "findSymbol"), new HarmonyMethod(AccessTools.Method(typeof(TextBuilderPatches), "Parser_findSymbol_PrefixPatch")));
+
+            harmony.Patch(AccessTools.Method(typeof(SpriteBuilder), "rebuild"), null, new HarmonyMethod(AccessTools.Method(typeof(TextBuilderPatches), "SpriteBuilder_rebuild_PostfixPatch")));
+
             //harmony.Patch(AccessTools.Method(typeof(CrossbowItemBehaviour), "__fireBow"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "CrossbowItemBehavior___fireBow_PostfixPatch")));
 
         }

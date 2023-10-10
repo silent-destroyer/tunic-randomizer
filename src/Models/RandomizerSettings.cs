@@ -33,6 +33,12 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool EntranceRandoEnabled
+        {
+            get;
+            set;
+        }
+
         // Hint Settings
         public bool HeroPathHintsEnabled {
             get;
@@ -148,6 +154,7 @@ namespace TunicRandomizer {
 
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
+            EntranceRandoEnabled = false;
             KeysBehindBosses = false;
             SwordProgressionEnabled = true;
             StartWithSwordEnabled = false;
