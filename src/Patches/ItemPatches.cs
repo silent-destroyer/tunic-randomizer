@@ -77,6 +77,18 @@ namespace TunicRandomizer {
             { "Relic - Hero Pendant MP", new BonusUpgrade("Level Up - Magic", $"Hero Relic - <#2a8fed>MP") },
         };
 
+        public static Dictionary<string, List<int>> FillerItems = new Dictionary<string, List<int>>() {
+            { "Firecracker", new List<int>() { 2, 3, 4, 5, 6 } },
+            { "Firebomb", new List<int>() { 2, 3 } },
+            { "Ice Bomb", new List<int>() { 2, 3, 5 } },
+            { "Bait", new List<int>() { 1, 2 } },
+            { "Pepper", new List<int>() { 2 } },
+            { "Ivy", new List<int>() { 3 } },
+            { "Berry_HP", new List<int>() { 1, 2, 3 } },
+            { "Berry_MP", new List<int>() { 1, 2, 3 } },
+            { "money", new List<int>() { 20, 25, 30, 32, 40, 48, 50 } },
+        };
+
         private static string GetChestRewardID(Chest Chest) {
             return Chest.chestID == 0 ? $"{SceneLoaderPatches.SceneName}-{Chest.transform.position.ToString()} [{SceneLoaderPatches.SceneName}]" : $"{Chest.chestID} [{SceneLoaderPatches.SceneName}]";
         }

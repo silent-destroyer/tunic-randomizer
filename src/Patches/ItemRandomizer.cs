@@ -52,10 +52,17 @@ namespace TunicRandomizer {
             Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
-
+            int GoldHexagonsAdded = 0;
+            int HexagonsToAdd = (100 + SaveFile.GetInt("randomizer hexagon quest extras")) / 100 * SaveFile.GetInt("randomizer hexagon quest goal");
+            Logger.LogInfo("Hexagon Goal: " + SaveFile.GetInt("randomizer hexagon quest goal"));
+            Logger.LogInfo("Extra Hexagon Percentage: " + SaveFile.GetInt("randomizer hexagon quest extras"));
+            Logger.LogInfo("Extra Hexagons Calculated: " + (((100 + SaveFile.GetInt("randomizer hexagon quest extras")) / 100) * SaveFile.GetInt("randomizer hexagon quest goal")));
+            Logger.LogInfo(HexagonsToAdd);
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                int HexGoal = SaveFile.GetInt("randomizer hexagon quest goal");
+                Logger.LogInfo(HexGoal + " [" + HexGoal / 4 + " " + (HexGoal / 4) * 2 + " " + (HexGoal / 4) * 3 +"]");
                 List<string> abilities = new List<string>() { "prayer", "holy cross", "ice rod" }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
-                List<int> ability_unlocks = new List<int>() { 5, 10, 15 }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
+                List<int> ability_unlocks = new List<int>() { HexGoal/4, (HexGoal/4)*2, (HexGoal/4)*3 }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
                 for (int i = 0; i < 3; i++) {
                     int index = TunicRandomizer.Randomizer.Next(abilities.Count);
                     int index2 = TunicRandomizer.Randomizer.Next(ability_unlocks.Count);
@@ -64,7 +71,7 @@ namespace TunicRandomizer {
                     ability_unlocks.RemoveAt(index2);
                 }
             }
-
+            Shuffle(InitialItems);
             foreach (ItemData Item in InitialItems) {
                 if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
                     if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
@@ -86,20 +93,22 @@ namespace TunicRandomizer {
                     }
                     if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                         if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
-                            if (Item.Reward.Name == "0") {
-                                Item.Reward.Name = "money";
-                                Item.Reward.Type = "MONEY";
-                                Item.Reward.Amount = 1;
-                            } else {
-                                Item.Reward.Name = "Hexagon Gold";
-                                Item.Reward.Type = "SPECIAL";
-                            }
+                            string FillerItem = ItemPatches.FillerItems.Keys.ToList()[TunicRandomizer.Randomizer.Next(ItemPatches.FillerItems.Count)];
+                            Item.Reward.Name = FillerItem;
+                            Item.Reward.Type = "INVENTORY";
+                            Item.Reward.Amount = ItemPatches.FillerItems[FillerItem][TunicRandomizer.Randomizer.Next(ItemPatches.FillerItems[FillerItem].Count)];
+                        }
+                        if(ItemPatches.FillerItems.ContainsKey(Item.Reward.Name) && GoldHexagonsAdded < HexagonsToAdd) {
+                            Item.Reward.Name = "Hexagon Gold";
+                            Item.Reward.Type = "SPECIAL";
+                            Item.Reward.Amount = 1;
+                            GoldHexagonsAdded++;
                         }
                         if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                             if (Item.Location.RequiredItems.Count > 0) {
                                 for (int i = 0; i < Item.Location.RequiredItems.Count; i++) {
                                     if (Item.Location.RequiredItems[i].ContainsKey("12") && Item.Location.RequiredItems[i].ContainsKey("21")) {
-                                        int amt = SaveFile.GetInt($"randomizer hexagon quest prayer requirement") > SaveFile.GetInt($"randomizer hexagon quest holy cross requirement") ? SaveFile.GetInt($"randomizer hexagon quest prayer requirement") : SaveFile.GetInt($"randomizer hexagon quest holy cross requirement");
+                                        int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
                                         Item.Location.RequiredItems[i].Remove("12");
                                         Item.Location.RequiredItems[i].Remove("21");
                                         Item.Location.RequiredItems[i].Add("Hexagon Gold", amt);
@@ -575,6 +584,16 @@ namespace TunicRandomizer {
                     string Spoiler = $"\t{(ItemPatches.ItemsPickedUp[Key] ? "x" : "-")} {Hints.SimplifiedItemNames[Item.Reward.Name]}: {Hints.SceneNamesForSpoilerLog[Item.Location.SceneName]} - {Descriptions[Key]}";
                     SpoilerLogLines.Add(Spoiler);
                 }
+            }
+            if(SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
+                int Prayer = SaveFile.GetInt($"randomizer hexagon quest prayer requirement");
+                int HolyCross = SaveFile.GetInt($"randomizer hexagon quest holy cross requirement");
+                int IceRod = SaveFile.GetInt($"randomizer hexagon quest ice rod requirement");
+                int Hexagons = SaveFile.GetInt("randomizer inventory quantity Hexagon Gold");
+
+                SpoilerLogLines.Add($"\t{(Hexagons < Prayer ? "-" : "x")} Prayer: {Prayer} Gold Hexagons");
+                SpoilerLogLines.Add($"\t{(Hexagons < HolyCross ? "-" : "x")} Holy Cross: {HolyCross} Gold Hexagons");
+                SpoilerLogLines.Add($"\t{(Hexagons < IceRod ? "-" : "x")} Ice Rod: {IceRod} Gold Hexagons");
             }
             foreach (string Key in SpoilerLog.Keys) {
                 SpoilerLogLines.Add(Hints.SceneNamesForSpoilerLog[Key]);

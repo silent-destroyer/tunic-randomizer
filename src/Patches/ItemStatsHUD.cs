@@ -235,8 +235,8 @@ namespace TunicRandomizer {
                 ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? new Color(0.917f, 0.65f, .08f) : Color.white;
                 Total.GetComponent<TextMeshProUGUI>().text = $"Total:\t\t  {ObtainedItemCount}/302";
                 if (GoldHexagons != null) {
-                    GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]}/20";
-                    GoldHexagons.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] >= 20 ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]}/{SaveFile.GetInt("randomizer hexagon quest goal")}";
+                    GoldHexagons.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest goal") ? new Color(0.917f, 0.65f, .08f) : Color.white;
                 }
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
                     QuestionMark.SetActive(false);

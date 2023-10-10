@@ -47,6 +47,8 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.HEXAGONQUEST;
             }
 
+            //TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(140f, 90f, 175f, 30f), (float)TunicRandomizer.Settings.HexagonQuestGoal, 15f, 50f);
+
             GUI.skin.toggle.fontSize = 15;
             bool ToggleSpoilerLog = GUI.Toggle(new Rect(330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
             ItemRandomizer.CreateSpoilerLog = ToggleSpoilerLog;
