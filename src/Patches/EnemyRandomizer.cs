@@ -390,15 +390,25 @@ namespace TunicRandomizer {
                     List<string> EnemyKeys = Enemies.Keys.ToList();
                     if (CurrentScene == "Cathedral Arena") {
                         EnemyKeys.Remove("administrator_servant");
-                        EnemyKeys.Remove("administrator");
                         EnemyKeys.Remove("Hedgehog Trap");
+                        if (Inventory.GetItemByName("Wand").Quantity == 0) {
+                            EnemyKeys.Remove("Crabbit with Shell");
+                        }
+                        if (Enemy.transform.parent.name.Contains("Wave")) {
+                            Enemy.transform.position = Vector3.zero;
+                            
+                        }
                     }
                     if (CurrentScene == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
-                        EnemyKeys.Remove("Hedgehog Trap");
-                    }
-                    if (SceneLoaderPatches.SceneName == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         EnemyKeys.Remove("administrator_servant");
                         EnemyKeys.Remove("Hedgehog Trap");
+                    }
+                    if (CurrentScene == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
+                        EnemyKeys.Remove("administrator_servant");
+                        EnemyKeys.Remove("Hedgehog Trap");
+                    }
+                    if (CurrentScene == "Sewer" && Enemy.name.Contains("Spinnerbot") && !Enemy.name.Contains("Corrupted")) {
+                        Enemy.name = Enemy.name.Replace("Spinnerbot", "Spinnerbot Corrupted");
                     }
                     if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                         if (Enemy.transform.parent != null && Enemy.transform.parent.name.Contains("NG+")) {
@@ -406,7 +416,7 @@ namespace TunicRandomizer {
                         }
                     }
                     string NewEnemyName = "";
-                    if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.RANDOM || CurrentScene == "Cathedral Arena") {
+                    if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.RANDOM) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.BALANCED) {
                         List<string> EnemyTypes = null;
@@ -436,6 +446,13 @@ namespace TunicRandomizer {
                         if (EnemyTypes == null) {
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                         } else {
+                            if (CurrentScene == "Cathedral Arena") {
+                                EnemyTypes.Remove("administrator_servant");
+                                EnemyTypes.Remove("Hedgehog Trap");
+                                if (Inventory.GetItemByName("Wand").Quantity == 0) {
+                                    EnemyTypes.Remove("Crabbit with Shell");
+                                }
+                            }
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                         }
                     } else {
@@ -527,8 +544,8 @@ namespace TunicRandomizer {
                 int EnemiesDefeated = SaveFile.GetInt("randomizer enemies defeated");
                 SaveFile.SetInt("randomizer enemies defeated", EnemiesDefeated + 1);
 
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
-                    string SceneName = SceneLoaderPatches.SceneName;
+                string SceneName = SceneLoaderPatches.SceneName;
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && SceneName != "Cathedral Arena") {
                     if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
                         DefeatedEnemyTracker.Add(SceneName, new List<string>());
                     }

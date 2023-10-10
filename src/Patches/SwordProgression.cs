@@ -129,10 +129,12 @@ namespace TunicRandomizer {
             PlayerCharacterPatches.LoadThirdSword = false;
         }
 
-        public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref bool unblockable) {
-            if (__instance.GetComponent<TuningForkBell>() != null) {
+        public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
+
+            if ((__instance.GetComponent<TuningForkBell>() != null || __instance.GetComponent<PowerSwitch>() != null) && isPlayerCharacterMelee) {
                 unblockable = false;
             }
+
             return true;
         }
     }
