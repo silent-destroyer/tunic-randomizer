@@ -215,9 +215,14 @@ namespace TunicRandomizer {
 
                 SaveFile.SetString("randomizer game mode", Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode));
                 if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
+
+                    SaveFile.SetInt("randomizer hexagon quest goal", TunicRandomizer.Settings.HexagonQuestGoal);
+                    SaveFile.SetInt("randomizer hexagon quest extras", TunicRandomizer.Settings.HexagonQuestExtraPercentage);
+
                     for (int i = 0; i < 28; i++) {
                         SaveFile.SetInt($"randomizer obtained page {i}", 1);
                     }
+
                     StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue = true;
                     StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue = true;
                     StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue = true;
@@ -353,8 +358,6 @@ namespace TunicRandomizer {
 
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                Logger.LogInfo("savefile.getint test");
-                Logger.LogInfo("result is " + SaveFile.GetInt("seed"));
                 TunicPortals.AltModifyPortals(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             }
 
