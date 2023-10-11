@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class Portal {
@@ -166,20 +167,26 @@ namespace TunicRandomizer {
 
         public bool CanReachCenterFromPortal(Dictionary<string, int> inventory)
         {
-            if (this.CantReach == true)
+            if (this.CantReach == true || DeadEnd == true)
             { return false; }
 
             // create our list of dicts of required items
             List<Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
             if (this.RequiredItems != null)
             {
-                itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
+                if (this.RequiredItems.Count != 0)
+                {
+                    itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
+                }
             }
             else if (this.RequiredItemsOr != null)
             {
-                foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
+                if (this.RequiredItemsOr.Count != 0)
                 {
-                    itemsRequired.Add(reqSet);
+                    foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
+                    {
+                        itemsRequired.Add(reqSet);
+                    }
                 }
             }
 
@@ -239,42 +246,49 @@ namespace TunicRandomizer {
             // if the portal is already in our inventory, no need to go through this process
             if (inventory.ContainsKey(this.SceneDestinationTag))
             {
+                Logger.LogInfo("returning true because the portal " + this.Name + " is already in the inventory");
                 return true;
             }
             // create our list of dicts of required items
             List <Dictionary<string, int>> itemsRequired = new List<Dictionary<string, int>>();
             if (this.RequiredItems != null)
             {
-                // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                if ((this.CantReach == false || this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
+                if (this.RequiredItems.Count != 0)
                 {
-                    this.RequiredItems.Add(this.Scene, 1);
+                    // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
+                    if ((this.CantReach == false || this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
+                    {
+                        this.RequiredItems.Add(this.Scene, 1);
+                    }
+                    itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
                 }
-                itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
             }
             else if (this.RequiredItemsOr != null)
             {
-                foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
+                if (this.RequiredItemsOr.Count != 0)
                 {
-                    if ((this.CantReach == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
+                    foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                     {
-                        reqSet.Add(this.Scene, 1);
+                        if ((this.CantReach == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
+                        {
+                            reqSet.Add(this.Scene, 1);
+                        }
+                        itemsRequired.Add(reqSet);
                     }
-                    itemsRequired.Add(reqSet);
                 }
             }
-            else
+            else if (this.CantReach == false || this.DeadEnd == false)
             {
                 itemsRequired.Add(new Dictionary<string, int> { { this.Scene, 1 } });
             }
 
             // see if we meet any of the requirement dicts for the portal
-            if (itemsRequired != null)
+            if (itemsRequired != null && DeadEnd == false && CantReach == false)
             {
                 if (itemsRequired.Count == 0)
                 {
-                    Logger.LogInfo("itemsRequired == 0 so giving it here");
-                    return true;
+                    Logger.LogInfo("Portal " + this.Name + " has no requirements, so it's probably a dead end or cant reach");
+                    return false;
                 }
                 foreach (Dictionary<string, int> req in itemsRequired)
                 {
@@ -303,6 +317,7 @@ namespace TunicRandomizer {
                         }
                         else if (inventory[item] >= req[item])
                         {
+                            Logger.LogInfo("for the portal " + this.Name + ", you needed " + item + " and you had it");
                             met += 1;
                         }
                     }
