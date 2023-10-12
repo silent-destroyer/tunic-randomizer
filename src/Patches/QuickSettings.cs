@@ -1,16 +1,9 @@
 ﻿using BepInEx.Logging;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class QuickSettings : MonoBehaviour {
@@ -85,7 +78,7 @@ namespace TunicRandomizer {
             y += 40f;
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
-            bool ToggleEnemyRandomizer = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Enemy Randomizer");
+            bool ToggleEnemyRandomizer = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
             TunicRandomizer.Settings.EnemyRandomizerEnabled = ToggleEnemyRandomizer;
             GUI.skin.button.fontSize = 20;
             y += 40f;
@@ -125,7 +118,10 @@ namespace TunicRandomizer {
 
         public static void CopyQuickSettings() {
             List<string> Settings = new List<string>() { CustomSeed.ToString(), Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode).ToLower() };
-
+            if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
+                Settings.Add($"hexagon_quest_goal={TunicRandomizer.Settings.HexagonQuestGoal}=");
+                Settings.Add($"hexagon_quest_extras~{TunicRandomizer.Settings.HexagonQuestExtraPercentage}~");
+            }
             if (TunicRandomizer.Settings.KeysBehindBosses) {
                 Settings.Add("keys_behind_bosses");
             }
@@ -138,11 +134,19 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ShuffleAbilities) {
                 Settings.Add("shuffle_abilities");
             }
+            if (TunicRandomizer.Settings.EntranceRandoEnabled) {
+                Settings.Add("entrance_randomizer");
+            }
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
 
         public static void CopyQuickSettingsInGame() {
             List<string> Settings = new List<string>() { SaveFile.GetInt("seed").ToString(), SaveFile.GetString("randomizer game mode").ToLower() };
+            if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
+
+                Settings.Add($"hexagon_quest_goal={SaveFile.GetInt("randomizer hexagon quest goal")}=");
+                Settings.Add($"hexagon_quest_extras~{SaveFile.GetInt("randomizer hexagon quest extras")}~");
+            }
             if (SaveFile.GetInt("randomizer keys behind bosses") == 1) {
                 Settings.Add("keys_behind_bosses");
             }
@@ -155,8 +159,12 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 Settings.Add("shuffle_abilities");
             }
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                Settings.Add("entrance_randomizer");
+            }
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
+
 
         public static void PasteQuickSettings() {
             try {
@@ -169,10 +177,25 @@ namespace TunicRandomizer {
                 } else {
                     TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.RANDOMIZER;
                 }
+                if (SettingsString.Split('=').Count() > 1) {
+                    try {
+                        TunicRandomizer.Settings.HexagonQuestGoal = int.Parse(SettingsString.Split('=')[1]);
+                    } catch (Exception e) {
+                        TunicRandomizer.Settings.HexagonQuestGoal = 20;
+                    }
+                }
+                if (SettingsString.Split('~').Count() > 1) {
+                    try {
+                        TunicRandomizer.Settings.HexagonQuestExtraPercentage = int.Parse(SettingsString.Split('~')[1]);
+                    } catch (Exception e) {
+                        TunicRandomizer.Settings.HexagonQuestExtraPercentage = 50;
+                    }
+                }
                 TunicRandomizer.Settings.KeysBehindBosses = SettingsString.Contains("keys_behind_bosses");
                 TunicRandomizer.Settings.SwordProgressionEnabled = SettingsString.Contains("sword_progression");
                 TunicRandomizer.Settings.StartWithSwordEnabled = SettingsString.Contains("start_with_sword");
                 TunicRandomizer.Settings.ShuffleAbilities = SettingsString.Contains("shuffle_abilities");
+                TunicRandomizer.Settings.EntranceRandoEnabled = SettingsString.Contains("entrance_randomizer");
             } catch (Exception e) {
                 Logger.LogError("Error parsing quick settings string!");
             }
