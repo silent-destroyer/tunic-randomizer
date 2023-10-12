@@ -859,6 +859,40 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void AddNewShopItems() {
+            try {
+                GameObject IceBombs = GameObject.Instantiate(GameObject.Find("Shop/Item Holder/Firebombs/"));
+                GameObject Pepper = GameObject.Instantiate(GameObject.Find("Shop/Item Holder/Ivy/"));
+                IceBombs.name = "Ice Bombs";
+                Pepper.name = "Pepper";
+                IceBombs.transform.parent = GameObject.Find("Shop/Item Holder/Firebombs/").transform.parent;
+                Pepper.transform.parent = GameObject.Find("Shop/Item Holder/Ivy/").transform.parent;
+
+                IceBombs.GetComponent<ShopItem>().itemToGive = Inventory.GetItemByName("Ice Bomb");
+                IceBombs.GetComponent<ShopItem>().price = 200;
+                Pepper.GetComponent<ShopItem>().itemToGive = Inventory.GetItemByName("Pepper");
+                Pepper.GetComponent<ShopItem>().price = 130;
+
+                for (int i = 0; i < 3; i++) {
+                    GameObject.Destroy(IceBombs.transform.GetChild(0).GetChild(i).GetChild(0).gameObject);
+                    IceBombs.transform.GetChild(0).GetChild(i).GetComponent<MeshFilter>().mesh = Items["Ice Bomb"].GetComponent<MeshFilter>().mesh;
+                    IceBombs.transform.GetChild(0).GetChild(i).GetComponent<MeshRenderer>().materials = Items["Ice Bomb"].GetComponent<MeshRenderer>().materials;
+                    IceBombs.transform.GetChild(0).GetChild(i).localScale = Vector3.one;
+                }
+
+                Pepper.transform.GetChild(0).GetChild(0).GetComponent<MeshFilter>().mesh = Items["Pepper"].GetComponent<MeshFilter>().mesh;
+                Pepper.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().materials = Items["Pepper"].GetComponent<MeshRenderer>().materials;
+                Pepper.transform.GetChild(0).GetChild(0).localScale = new Vector3(1.2f, 1.2f, 1.2f);
+
+                List<ShopItem> items = ShopManager.cachedShopItems != null ? ShopManager.cachedShopItems.ToList() : new List<ShopItem>();
+                items.Add(IceBombs.GetComponent<ShopItem>());
+                items.Add(Pepper.GetComponent<ShopItem>());
+                ShopManager.cachedShopItems = items.ToArray();
+            } catch (Exception e) {
+                Logger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
+            }
+        }
+
         public static void LoadTexture() {
 
             Texture2D GoldHexTexture = new Texture2D(160, 160, TextureFormat.DXT1, false);
