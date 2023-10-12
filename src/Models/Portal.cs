@@ -235,7 +235,7 @@ namespace TunicRandomizer {
             }
             else
             {
-                Logger.LogInfo("returning true because itemsRequired is null");
+                Logger.LogInfo("returning true because itemsRequired is null in canreachcenter for " + this.Name);
                 return true;
             }
             return false;
@@ -329,7 +329,7 @@ namespace TunicRandomizer {
             }
             else
             {
-                Logger.LogInfo("returning true because itemsRequired is null");
+                Logger.LogInfo("returning true because itemsRequired is null in reachable for " + this.Name);
                 return true;
             }
             return false;

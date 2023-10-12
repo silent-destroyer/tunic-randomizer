@@ -77,6 +77,7 @@ namespace TunicRandomizer
                 PortalName = portalName;
                 GivesAccess = givesAccess;
                 CantReach = cantReach;
+                OneWay = oneWay;
             }
             public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems)
             {
@@ -84,6 +85,15 @@ namespace TunicRandomizer
                 DestinationTag = destinationTag;
                 PortalName = portalName;
                 RequiredItems = requiredItems;
+            }
+            public TunicPortal(string destination, string destinationTag, string portalName, Dictionary<string, int> requiredItems, List<string> givesAccess, bool cantReach = false)
+            {
+                Destination = destination;
+                DestinationTag = destinationTag;
+                PortalName = portalName;
+                RequiredItems = requiredItems;
+                CantReach = cantReach;
+                GivesAccess = givesAccess;
             }
             public TunicPortal(string destination, string destinationTag, string portalName, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool cantReach = false)
             {
@@ -116,10 +126,10 @@ namespace TunicRandomizer
                     new TunicPortal("Sword Cave", "", "Stick House Entrance"),
                     new TunicPortal("Windmill", "", "Windmill Entrance"),
                     new TunicPortal("Sewer", "entrance", "Well Ladder Entrance"),
-                    new TunicPortal("Sewer", "west_aqueduct", "Entrance to Well from Well Rail", cantReach: true, givesAccess: new List<string> { "Overworld Redux, Furnace_gyro_upper_north" }),
+                    new TunicPortal("Sewer", "west_aqueduct", "Entrance to Well from Well Rail", cantReach: true, givesAccess: new List<string> { "Overworld Redux, Furnace_gyro_upper_north" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Furnace_gyro_upper_north", 1 } }),
                     new TunicPortal("Overworld Interiors", "house", "Old House Entry Door", requiredItems: new Dictionary<string, int> { {"Key (House)", 1} }), // make this match actual item name
                     new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Waterfall Entrance"),
-                    new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", cantReach: true, givesAccess : new List<string> { "Overworld Redux, Sewer_west_aqueduct" }),
+                    new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", cantReach: true, givesAccess: new List<string> { "Overworld Redux, Sewer_west_aqueduct" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Sewer_west_aqueduct", 1 } }),
                     new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace from Windmill"),
                     new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace from West Garden", cantReach: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}),
                     new TunicPortal("Furnace", "gyro_lower", "Entrance to Furnace from Beach"),
@@ -513,7 +523,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Main", "", "Siege Engine Arena to Fortress"),
-                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
+                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Main, Fortress Courtyard_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
                     // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these, one is disabled
                 }
             },
