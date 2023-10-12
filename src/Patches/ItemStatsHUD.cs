@@ -313,7 +313,7 @@ namespace TunicRandomizer {
                 if (StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue) {
                     BossScavenger.GetComponent<Image>().color = new Color(0f, 0f, 1f, 1f);
                 }
-                
+
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
                     Equipment.transform.GetChild(0).transform.position = new Vector3(20f, -20f, 0);
                     Equipment.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = new Color(0, 0, 0, 1);
@@ -321,13 +321,24 @@ namespace TunicRandomizer {
                         Vector3 Position = Equipment.transform.GetChild(i).transform.position;
                         Equipment.transform.GetChild(i).transform.position = new Vector3(-331.975f + ((i - 1) * 52.5f), Position.y, Position.z);
                     }
-                }
-
-                if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 1 && Equipment.transform.childCount > 7) {
-                    Equipment.transform.GetChild(Equipment.transform.childCount - 1).transform.position = new Vector3(-331.975f, -245.9078f, -98f);
+                    if (Equipment.transform.childCount > 8) {
+                        for (int i = 8; i < Equipment.transform.childCount; i++) {
+                            Equipment.transform.GetChild(i).transform.position = new Vector3(-331.975f + ((i - 8) * 52.5f), -245.9078f, -98f);
+                        }
+                    }
+                } else {
+                    if (Equipment.transform.childCount > 7) {
+                        for (int i = 7; i < Equipment.transform.childCount; i++) {
+                            Equipment.transform.GetChild(i).transform.position = new Vector3(-331.975f + ((i - 7) * 52.5f), -245.9078f, -98f);
+                        }
+                    }
                 }
 
                 for (int i = 0; i < Equipment.transform.childCount; i++) {
+                    if (Equipment.transform.GetChild(i).GetChild(1).GetComponent<Image>().sprite.name == "Inventory items_torch") {
+                        GameObject Torch = Equipment.transform.GetChild(i).gameObject;
+                        Torch.transform.SetAsLastSibling();
+                    }
                     if (Equipment.transform.GetChild(i).GetChild(1).GetComponent<Image>().sprite.name == "Inventory items_sword") {
                         if (Equipment.transform.GetChild(i).childCount == 3) {
                         } else {
@@ -346,6 +357,7 @@ namespace TunicRandomizer {
                             } 
                         }
                     }
+
                 }
                 // -331.975
                 // -279.475
