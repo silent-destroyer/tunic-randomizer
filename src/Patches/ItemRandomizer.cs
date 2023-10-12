@@ -53,16 +53,11 @@ namespace TunicRandomizer {
             Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, ItemData> ProgressionLocations = new Dictionary<string, ItemData> { };
             int GoldHexagonsAdded = 0;
-            int HexagonsToAdd = (100 + SaveFile.GetInt("randomizer hexagon quest extras")) / 100 * SaveFile.GetInt("randomizer hexagon quest goal");
-            Logger.LogInfo("Hexagon Goal: " + SaveFile.GetInt("randomizer hexagon quest goal"));
-            Logger.LogInfo("Extra Hexagon Percentage: " + SaveFile.GetInt("randomizer hexagon quest extras"));
-            Logger.LogInfo("Extra Hexagons Calculated: " + (((100 + SaveFile.GetInt("randomizer hexagon quest extras")) / 100) * SaveFile.GetInt("randomizer hexagon quest goal")));
-            Logger.LogInfo(HexagonsToAdd);
+            int HexagonsToAdd = (int)Math.Round((100f + TunicRandomizer.Settings.HexagonQuestExtraPercentage) / 100f * TunicRandomizer.Settings.HexagonQuestGoal);
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST" && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 int HexGoal = SaveFile.GetInt("randomizer hexagon quest goal");
-                Logger.LogInfo(HexGoal + " [" + HexGoal / 4 + " " + (HexGoal / 4) * 2 + " " + (HexGoal / 4) * 3 +"]");
                 List<string> abilities = new List<string>() { "prayer", "holy cross", "ice rod" }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
-                List<int> ability_unlocks = new List<int>() { HexGoal/4, (HexGoal/4)*2, (HexGoal/4)*3 }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
+                List<int> ability_unlocks = new List<int>() { (int)(HexGoal/4f), (int)((HexGoal/4f)*2), (int)((HexGoal/4f)*3) }.OrderBy(r => TunicRandomizer.Randomizer.Next()).ToList();
                 for (int i = 0; i < 3; i++) {
                     int index = TunicRandomizer.Randomizer.Next(abilities.Count);
                     int index2 = TunicRandomizer.Randomizer.Next(ability_unlocks.Count);
@@ -280,12 +275,10 @@ namespace TunicRandomizer {
             foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
             {
                 CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
-                Logger.LogInfo(sceneItem.Key);
             }
             foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
             { 
                 CombinedInventory.Add(placedItem.Key, placedItem.Value); 
-                Logger.LogInfo(placedItem.Key);
             }
 
             SphereZero = CombinedInventory;

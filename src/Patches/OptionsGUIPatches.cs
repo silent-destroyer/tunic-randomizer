@@ -39,7 +39,6 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "TitleScreen") {
                 Il2CppStringArray GameModes = (Il2CppStringArray)new string[] { "<#FFA300>Randomizer", "<#ffd700>Hexagon Quest", "<#4FF5D4>Vanilla" };
                 OptionsGUI.addMultiSelect("Game Mode", GameModes, GetGameModeIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeGameMode).wrap = true;
-                addPageButton("Configure Hexagon Quest", ConfigureHexagonQuestPage);
                 OptionsGUI.addToggle("Keys Behind Bosses", "Off", "On", TunicRandomizer.Settings.KeysBehindBosses ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleKeysBehindBosses);
                 OptionsGUI.addToggle("Sword Progression", "Off", "On", TunicRandomizer.Settings.SwordProgressionEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSwordProgression);
                 OptionsGUI.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleStartWithSword);
@@ -49,7 +48,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
                 if(SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") { 
                     OptionsGUI.addButton("Hexagon Quest Goal", SaveFile.GetInt("randomizer hexagon quest goal").ToString(), null);
-                    OptionsGUI.addButton("Extra Hexagon (%)", SaveFile.GetInt("randomizer hexagon quest extras").ToString(), null);
+                    OptionsGUI.addButton("Hexagons in Item Pool", ((int)Math.Round((100f + SaveFile.GetInt("randomizer hexagon quest extras")) / 100f * SaveFile.GetInt("randomizer hexagon quest goal"))).ToString(), null);
                 }
                 OptionsGUI.addButton("Keys Behind Bosses", SaveFile.GetInt("randomizer keys behind bosses") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Sword Progression", SaveFile.GetInt("randomizer sword progression enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
@@ -58,20 +57,6 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt("randomizer entrance rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
             }
             OptionsGUI.setHeading("Logic");
-        }
-
-        public static void ConfigureHexagonQuestPage() {
-            List<string> goals = new List<string>();
-            for(int i = 15; i <= 50; i++) { 
-                goals.Add(i.ToString());
-            }
-            List<string> percentages = new List<string>();
-            for(int i = 0; i <= 100; i++) {
-                percentages.Add(i.ToString());
-            }
-            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.addMultiSelect("Hexagons Required", goals.ToArray(), GetHexagonQuestGoalIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeHexagonQuestGoal);
-            OptionsGUI.addMultiSelect("Extra Hexagons", percentages.ToArray(), GetHexagonQuestPercentageIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeHexagonQuestPercentage);
         }
 
         public static void HintsSettingsPage() {
@@ -178,24 +163,6 @@ namespace TunicRandomizer {
         public static int GetGameModeIndex() { 
                
             return (int)TunicRandomizer.Settings.GameMode;
-        }
-
-        public static void ChangeHexagonQuestGoal(int index) {
-            TunicRandomizer.Settings.HexagonQuestGoal = index + 15;
-            SaveSettings();
-        }
-
-        public static int GetHexagonQuestGoalIndex() {
-            return TunicRandomizer.Settings.HexagonQuestGoal - 15;
-        }
-
-        public static void ChangeHexagonQuestPercentage(int index) {
-            TunicRandomizer.Settings.HexagonQuestExtraPercentage = index;
-            SaveSettings();
-        }
-
-        public static int GetHexagonQuestPercentageIndex() {
-            return TunicRandomizer.Settings.HexagonQuestExtraPercentage;
         }
 
         public static void ToggleKeysBehindBosses(int index) {
