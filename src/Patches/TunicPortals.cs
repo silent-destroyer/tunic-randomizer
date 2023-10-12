@@ -131,7 +131,7 @@ namespace TunicRandomizer
                     new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Waterfall Entrance"),
                     new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", cantReach: true, givesAccess: new List<string> { "Overworld Redux, Sewer_west_aqueduct" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Sewer_west_aqueduct", 1 } }),
                     new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace from Windmill"),
-                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace from West Garden", cantReach: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}),
+                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace from West Garden", cantReach: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Archipelagos Redux_lower", 1 } }),
                     new TunicPortal("Furnace", "gyro_lower", "Entrance to Furnace from Beach"),
                     new TunicPortal("Overworld Cave", "", "Rotating Lights Entrance"),
                     new TunicPortal("Swamp Redux 2", "wall", "Swamp Upper Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
@@ -143,7 +143,7 @@ namespace TunicRandomizer
                     new TunicPortal("ShopSpecial", "", "Special Shop Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
                     new TunicPortal("Maze Room", "", "Maze Cave Entrance"),
                     new TunicPortal("Archipelagos Redux", "upper", "West Garden Entrance by Belltower", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance by Dark Tomb", cantReach: true, givesAccess: new List<string> {"Overworld Redux, Furnace_gyro_west"}),
+                    new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance by Dark Tomb", cantReach: true, givesAccess: new List<string> {"Overworld Redux, Furnace_gyro_west"}, requiredItems: new Dictionary<string, int> {{"Overworld Redux, Furnace_gyro_west", 1}}),
                     new TunicPortal("Archipelagos Redux", "lowest", "West Garden Laurel Entrance", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("Temple", "main", "Temple Door Entrance", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Techbow", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Techbow", 1 } } }),
                     new TunicPortal("Temple", "rafters", "Temple Rafters Entrance"),
@@ -634,7 +634,7 @@ namespace TunicRandomizer
                     new TunicPortal("Cathedral Arena", "", "Swamp to Gauntlet", cantReach: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, {"Swamp Redux 2, Overworld Redux_wall", 1 } }, new Dictionary<string, int> { { "Swamp Redux 2, RelicVoid_teleporter_relic plinth", 1 } } }),
                     new TunicPortal("Shop", "", "Swamp Shop"),
                     new TunicPortal("Overworld Redux", "wall", "Upper Swamp Exit", cantReach: true, requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 }, { "Swamp Redux 2, Cathedral Arena_", 1 } }),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero's Grave", cantReach: true, prayerPortal : true, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero's Grave", cantReach: true, prayerPortal: true, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
                 }
             },
             {
@@ -643,16 +643,16 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Swamp Redux 2", "main", "Cathedral Main Exit"),
                     new TunicPortal("Cathedral Arena", "", "Cathedral Elevator"),
-                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Room Exit", cantReach: true, deadEnd: true), // only one chest, just use item access rules for it
+                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Treasure Room Exit", deadEnd: true), // only one chest, just use item access rules for it
                 }
             },
             {
                 "Cathedral Arena", // Gauntlet
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", deadEnd: true, cantReach: true),
-                    new TunicPortal("Cathedral Redux", "", "Gauntlet Elevator", givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}),
-                    new TunicPortal("Shop", "", "Gauntlet Shop", givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}), // we love gauntlet shop
+                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", deadEnd: true, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}, {"Hyperdash", 1}}),
+                    new TunicPortal("Cathedral Redux", "", "Gauntlet Elevator", givesAccess: new List<string> {"Cathedral Arena, Shop_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Shop_", 1}}),
+                    new TunicPortal("Shop", "", "Gauntlet Shop", givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}}), // we love gauntlet shop
                 }
             },
             //{
