@@ -195,17 +195,45 @@ namespace TunicRandomizer
                 }
             },
             {
-                "g_elements", // Secret treasure room
+                "g_elements", // Relic tower
                 new List<TunicPortal>
                 {
                     new TunicPortal("Overworld Interiors", "", "Secret Treasure Room Exit", deadEnd: true),
                 }
             },
             {
-                "Changing Room", // Secret treasure room
+                "Changing Room",
                 new List<TunicPortal>
                 {
                     new TunicPortal("Overworld Redux", "", "Changing Room Exit", deadEnd: true),
+                }
+            },
+            {
+                "Town_FiligreeRoom", // the one next to the fountain
+                new List<TunicPortal>
+                {
+                    new TunicPortal("Overworld Redux", "", "Fountain HC Room Exit", deadEnd: true),
+                }
+            },
+            {
+                "CubeRoom",
+                new List<TunicPortal>
+                {
+                    new TunicPortal("Overworld Redux", "", "Cube Room Exit", deadEnd: true),
+                }
+            },
+            {
+                "PatrolCave",
+                new List<TunicPortal>
+                {
+                    new TunicPortal("Overworld Redux", "", "Guard Patrol Cave Exit", deadEnd: true),
+                }
+            },
+            {
+                "Ruined Shop",
+                new List<TunicPortal>
+                {
+                    new TunicPortal("Overworld Redux", "", "Ruined Shop Exit", deadEnd: true),
                 }
             },
             {
