@@ -66,7 +66,7 @@ namespace TunicRandomizer {
             set;
         } = false;
 
-        public bool CantReach
+        public bool IgnoreScene
         {
             get;
             set;
@@ -78,7 +78,7 @@ namespace TunicRandomizer {
             set;
         }
 
-        public Portal(string destination, string tag, string name, string scene, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
+        public Portal(string destination, string tag, string name, string scene, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
@@ -87,7 +87,7 @@ namespace TunicRandomizer {
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
-            CantReach = cantReach;
+            IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems)
@@ -108,7 +108,7 @@ namespace TunicRandomizer {
             RequiredItemsOr = requiredItemsOr;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
+        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
@@ -118,10 +118,10 @@ namespace TunicRandomizer {
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
-            CantReach = cantReach;
+            IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
+        public Portal(string destination, string tag, string name, string scene, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
@@ -131,10 +131,10 @@ namespace TunicRandomizer {
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
-            CantReach = cantReach;
+            IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
+        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
@@ -145,10 +145,10 @@ namespace TunicRandomizer {
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
-            CantReach = cantReach;
+            IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool cantReach = false)
+        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
@@ -161,13 +161,13 @@ namespace TunicRandomizer {
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
-            CantReach = cantReach;
+            IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
 
         public bool CanReachCenterFromPortal(Dictionary<string, int> inventory)
         {
-            if (this.CantReach == true || DeadEnd == true)
+            if (this.IgnoreScene == true || DeadEnd == true)
             { return false; }
 
             // create our list of dicts of required items
@@ -235,7 +235,7 @@ namespace TunicRandomizer {
             }
             else
             {
-                Logger.LogInfo("returning true because itemsRequired is null in canreachcenter for " + this.Name);
+                //Logger.LogInfo("returning true because itemsRequired is null in canreachcenter for " + this.Name);
                 return true;
             }
             return false;
@@ -246,7 +246,7 @@ namespace TunicRandomizer {
             // if the portal is already in our inventory, no need to go through this process
             if (inventory.ContainsKey(this.SceneDestinationTag))
             {
-                Logger.LogInfo("returning true because the portal " + this.Name + " is already in the inventory");
+                //Logger.LogInfo("returning true because the portal " + this.Name + " is already in the inventory");
                 return true;
             }
             // create our list of dicts of required items
@@ -255,12 +255,13 @@ namespace TunicRandomizer {
             {
                 if (this.RequiredItems.Count != 0)
                 {
+                    //itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
+                    itemsRequired.Add(this.RequiredItems);
                     // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                    if ((this.CantReach == false || this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
+                    if ((this.IgnoreScene == false && this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
                     {
                         this.RequiredItems.Add(this.Scene, 1);
                     }
-                    itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
                 }
             }
             else if (this.RequiredItemsOr != null)
@@ -269,7 +270,7 @@ namespace TunicRandomizer {
                 {
                     foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                     {
-                        if ((this.CantReach == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
+                        if ((this.IgnoreScene == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
                         {
                             reqSet.Add(this.Scene, 1);
                         }
@@ -277,17 +278,17 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            else if (this.CantReach == false || this.DeadEnd == false)
+            else if (this.IgnoreScene == false && this.DeadEnd == false && this.OneWay == false)
             {
                 itemsRequired.Add(new Dictionary<string, int> { { this.Scene, 1 } });
             }
 
             // see if we meet any of the requirement dicts for the portal
-            if (itemsRequired != null && DeadEnd == false && CantReach == false)
+            if (itemsRequired != null && DeadEnd == false)
             {
                 if (itemsRequired.Count == 0)
                 {
-                    Logger.LogInfo("Portal " + this.Name + " has no requirements, so it's probably a dead end or cant reach");
+                    //Logger.LogInfo("Portal " + this.Name + " has no requirements, so it's probably a dead end or cant reach");
                     return false;
                 }
                 foreach (Dictionary<string, int> req in itemsRequired)
@@ -309,16 +310,19 @@ namespace TunicRandomizer {
 
                     //check if this requirement is fully met, otherwise move to the next requirement
                     int met = 0;
+                    //Logger.LogInfo("req.Count is " + req.Count + " for the portal " + this.Name);
                     foreach (string item in req.Keys)
                     {
                         if (!inventory.ContainsKey(item))
                         {
+                            //Logger.LogInfo("you do not have " + item + ", so you don't get " + this.Name);
                             break;
                         }
                         else if (inventory[item] >= req[item])
                         {
-                            Logger.LogInfo("for the portal " + this.Name + ", you needed " + item + " and you had it");
-                            met += 1;
+                            //Logger.LogInfo("for the portal " + this.Name + ", you needed " + item + " and you had it");
+                            met++;
+                            //Logger.LogInfo("met is now equal to " + met);
                         }
                     }
                     if (met == req.Count)
@@ -329,8 +333,8 @@ namespace TunicRandomizer {
             }
             else
             {
-                Logger.LogInfo("returning true because itemsRequired is null in reachable for " + this.Name);
-                return true;
+                //Logger.LogInfo("returning false because itemsRequired is null in reachable for " + this.Name);
+                return false;
             }
             return false;
         }
