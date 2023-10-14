@@ -225,6 +225,7 @@ namespace TunicRandomizer {
             {"\"Scavenger\" (snIpur)", "skahvuhnjur (snIpur)"},
             {"\"Scavenger\" (mInur)", "skahvuhnjur (mInur)"},
             {"\"Scavenger\" (suhport)", "skahvuhnjur (suhport)"},
+            {"\"Scavenger\" (stuhnur)", "skahvuhnjur (stuhnur)"},
             {"\"Fleemer\" (fehnsur)", "flEmur (fehnsur)"},
             {"\"Lost Echo\"", "lawst ehkO"},
             {"\"Voidling\"", "voidli^"},

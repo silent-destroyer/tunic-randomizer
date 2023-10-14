@@ -92,6 +92,12 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Quarry",
+                new List<string>() {
+                    "Scavenger_stunner"
+                }
+            },
+            {
                 "Quarry Redux",
                 new List<string>() {
                     "Scavenger",
@@ -199,6 +205,7 @@ namespace TunicRandomizer {
                     "Scavenger",
                     "Scavenger_miner",
                     "Scavenger_support",
+                    "Scavenger_stunner",
                     "bomezome_fencer",
                     "Ghostfox_monster",
                     "voidling redux",
@@ -262,6 +269,7 @@ namespace TunicRandomizer {
             { "Scavenger", $"\"Scavenger\" (snIpur)" },
             { "Scavenger_miner", $"\"Scavenger\" (mInur)" },
             { "Scavenger_support", $"\"Scavenger\" (suhport)" },
+            { "Scavenger_stunner", $"\"Scavenger\" (stuhnur)" },
             { "bomezome_fencer", $"\"Fleemer\" (fehnsur)" },
             { "Ghostfox_monster", $"\"Lost Echo\"" },
             { "voidling redux", $"\"Voidling\"" },

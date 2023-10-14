@@ -5,6 +5,7 @@ using BepInEx.Logging;
 using UnityEngine.UI;
 using System.Linq;
 using System.Globalization;
+using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class ItemPatches {
@@ -166,6 +167,10 @@ namespace TunicRandomizer {
         }
 
         public static bool Chest_shouldShowAsOpen_GetterPatch(Chest __instance, ref bool __result) {
+            if (SceneManager.GetActiveScene().name == "Quarry") {
+                __result = false;
+                return false;
+            }
             if (__instance.chestID == 19) {
                 if (__instance.transform.position.ToString() == "(8.8, 0.0, 9.9)") {
                     __result = SaveFile.GetInt("randomizer picked up 19 [Sword Cave]") == 1;
