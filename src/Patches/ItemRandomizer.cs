@@ -122,6 +122,35 @@ namespace TunicRandomizer {
                                     }
                                 }
                             }
+                            if (Item.Location.RequiredItemsDoors.Count > 0)
+                            {
+                                for (int i = 0; i < Item.Location.RequiredItemsDoors.Count; i++)
+                                {
+                                    Logger.LogInfo("item is " + Item.Location.LocationId);
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12") && Item.Location.RequiredItemsDoors[i].ContainsKey("21"))
+                                    {
+                                        int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
+                                        Item.Location.RequiredItemsDoors[i].Remove("12");
+                                        Item.Location.RequiredItemsDoors[i].Remove("21");
+                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", amt);
+                                    }
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12"))
+                                    {
+                                        Item.Location.RequiredItemsDoors[i].Remove("12");
+                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
+                                    }
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("21"))
+                                    {
+                                        Item.Location.RequiredItemsDoors[i].Remove("21");
+                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
+                                    }
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("26"))
+                                    {
+                                        Item.Location.RequiredItemsDoors[i].Remove("26");
+                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest ice rod requirement"));
+                                    }
+                                }
+                            }
                         }
                     }
                     if (ProgressionNames.Contains(Item.Reward.Name) || ItemPatches.FairyLookup.Keys.Contains(Item.Reward.Name)) {
@@ -138,13 +167,9 @@ namespace TunicRandomizer {
             {
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 if (UnplacedInventory.ContainsKey(itemName))
-                {
-                    UnplacedInventory[itemName] += 1;
-                }
+                { UnplacedInventory[itemName] += 1; }
                 else
-                {
-                    UnplacedInventory.Add(itemName, 1);
-                }
+                { UnplacedInventory.Add(itemName, 1); }
             }
 
             // getting the randomized portal list the same way as we randomize it normally
@@ -236,49 +261,46 @@ namespace TunicRandomizer {
             {
                 // this should keep looping until every portal either doesn't give a reward, or has already given its reward
                 int checkP = 0;
+                string startingScene = "Overworld Redux";
                 SceneInventory.Clear();
-                SceneInventory.Add("Overworld Redux", 1);
+                SceneInventory.Add(startingScene, 1);
                 // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
                 while (checkP < randomizedPortalsList.Count)
                 {
                     checkP = 0;
                     CombinedInventory.Clear();
+                    // fill up the CombinedInventory with the current contents of the Scene Inventory and Unplaced Inventory
                     foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
                     { CombinedInventory.Add(sceneItem.Key, sceneItem.Value); }
                     foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                     { CombinedInventory.Add(placedItem.Key, placedItem.Value); }
 
+                    // cycle through the randomized portals list, check for if we get any scenes with our current inventory
+                    // if we get any rewards at all that weren't already in the inventory, we continue the loop
+                    // keep looping until we don't get any new rewards
                     foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
                     {
                         if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
                         {
-                            int testValue = 0;
-                            int testValue2 = 0;
+                            int alreadyHadRewardCount = 0;
+                            int rewardCount = 0;
                             foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory))
                             {
-                                testValue2++;
+                                rewardCount++;
                                 if (!SceneInventory.ContainsKey(itemDoors))
                                 {
                                     SceneInventory.Add(itemDoors, 1);
+                                    if (!CombinedInventory.ContainsKey(itemDoors))
+                                    { CombinedInventory.Add(itemDoors, 1); }
                                 }
-                                else { testValue++; }
+                                else { alreadyHadRewardCount++; }
                             }
-                            if (testValue == testValue2)
+                            if (alreadyHadRewardCount == rewardCount)
                             { checkP++; }
                         }
                         else { checkP++; }
                     }
                 }
-            }
-            Logger.LogInfo("LOOK HERE");
-            CombinedInventory.Clear();
-            foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
-            {
-                CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
-            }
-            foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
-            { 
-                CombinedInventory.Add(placedItem.Key, placedItem.Value); 
             }
 
             SphereZero = CombinedInventory;
@@ -429,7 +451,8 @@ namespace TunicRandomizer {
                                 HintItem = itemData;
                             }
                         }
-                    } else if (mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
+                    } else if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && mailboxHintables[n].Location.RequiredItemsDoors.Count == 1 && mailboxHintables[n].Location.RequiredItemsDoors[0].ContainsKey("Mask")
+                        || mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
                         ItemData itemData = FindRandomizedItemByName("Mask");
                         if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;

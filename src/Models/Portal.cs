@@ -167,6 +167,7 @@ namespace TunicRandomizer {
 
         public bool CanReachCenterFromPortal(Dictionary<string, int> inventory)
         {
+            // if ignore scene is set, we don't care about this function since we give the region elsewhere
             if (this.IgnoreScene == true)
             { return false; }
 
@@ -175,28 +176,24 @@ namespace TunicRandomizer {
             if (this.RequiredItems != null)
             {
                 if (this.RequiredItems.Count != 0)
-                {
-                    itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
-                }
+                { itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems)); }
             }
             else if (this.RequiredItemsOr != null)
             {
                 if (this.RequiredItemsOr.Count != 0)
                 {
                     foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
-                    {
-                        itemsRequired.Add(reqSet);
-                    }
+                    { itemsRequired.Add(reqSet); }
                 }
             }
 
             // see if we meet any of the requirement dicts for the portal
             if (itemsRequired != null)
             {
+                // if there are no required items, we can reach the center of the region without items (can just walk there)
                 if (itemsRequired.Count == 0)
-                {
-                    return true;
-                }
+                { return true; }
+
                 foreach (Dictionary<string, int> req in itemsRequired)
                 {
                     //ensure req and items use same terms
@@ -219,23 +216,17 @@ namespace TunicRandomizer {
                     foreach (string item in req.Keys)
                     {
                         if (!inventory.ContainsKey(item))
-                        {
-                            break;
-                        }
+                        { break; }
                         else if (inventory[item] >= req[item])
-                        {
-                            met += 1;
-                        }
+                        { met += 1; }
                     }
                     if (met == req.Count)
-                    {
-                        return true;
-                    }
+                    { return true; }
                 }
             }
             else
             {
-                //Logger.LogInfo("returning true because itemsRequired is null in canreachcenter for " + this.Name);
+                Logger.LogInfo("returning true because itemsRequired is null in canReachCenter for " + this.Name);
                 return true;
             }
             return false;
