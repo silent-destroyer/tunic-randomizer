@@ -126,7 +126,6 @@ namespace TunicRandomizer {
                             {
                                 for (int i = 0; i < Item.Location.RequiredItemsDoors.Count; i++)
                                 {
-                                    Logger.LogInfo("item is " + Item.Location.LocationId);
                                     if (Item.Location.RequiredItemsDoors[i].ContainsKey("12") && Item.Location.RequiredItemsDoors[i].ContainsKey("21"))
                                     {
                                         int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
