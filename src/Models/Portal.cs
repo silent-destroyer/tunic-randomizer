@@ -167,7 +167,7 @@ namespace TunicRandomizer {
 
         public bool CanReachCenterFromPortal(Dictionary<string, int> inventory)
         {
-            if (this.IgnoreScene == true || DeadEnd == true)
+            if (this.IgnoreScene == true)
             { return false; }
 
             // create our list of dicts of required items
@@ -258,7 +258,7 @@ namespace TunicRandomizer {
                     //itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
                     itemsRequired.Add(this.RequiredItems);
                     // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                    if ((this.IgnoreScene == false && this.OneWay == false) && !this.RequiredItems.ContainsKey(this.Scene))
+                    if (this.IgnoreScene == false && !this.RequiredItems.ContainsKey(this.Scene))
                     {
                         this.RequiredItems.Add(this.Scene, 1);
                     }
@@ -270,7 +270,7 @@ namespace TunicRandomizer {
                 {
                     foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                     {
-                        if ((this.IgnoreScene == false || this.OneWay == false) && !reqSet.ContainsKey(this.Scene))
+                        if (this.IgnoreScene == false && !reqSet.ContainsKey(this.Scene))
                         {
                             reqSet.Add(this.Scene, 1);
                         }
@@ -278,7 +278,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            else if (this.IgnoreScene == false && this.DeadEnd == false && this.OneWay == false)
+            else if (this.IgnoreScene == false)
             {
                 itemsRequired.Add(new Dictionary<string, int> { { this.Scene, 1 } });
             }
@@ -354,7 +354,7 @@ namespace TunicRandomizer {
             }
 
             // if you can reach, you get the center of the region. One-ways give you the center too
-            if (CanReachCenterFromPortal(inventory))
+            if (CanReachCenterFromPortal(inventory) || this.OneWay == true)
             {
                 rewardsList.Add(this.Scene);
             }

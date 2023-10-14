@@ -231,7 +231,6 @@ namespace TunicRandomizer {
 
                 InitialLocations.Remove(InitialLocations[l]);
             }
-            Logger.LogInfo("LOOK HERE FIRST");
             // and now we get what sphere zero actually is when we have entrance rando enabled
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
             {

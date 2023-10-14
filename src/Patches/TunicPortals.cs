@@ -381,7 +381,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Frog Stairs", "Exit", "Lower Frog Orb Exit", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }),
-                    new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Ladder Exit", oneWay: true),
+                    new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Ladder Exit", ignoreScene: true, oneWay: true),
                 }
             },
             {
@@ -488,7 +488,7 @@ namespace TunicRandomizer
                     new TunicPortal("Fortress Courtyard", "", "Forest Belltower to Fortress"),
                     new TunicPortal("East Forest Redux", "", "Forest Belltower to Forest", deadEnd: true),
                     new TunicPortal("Overworld Redux", "", "Forest Belltower to Overworld"),
-                    new TunicPortal("Forest Boss Room", "", "Forest Belltower to Guard Captain Room", oneWay: true),
+                    new TunicPortal("Forest Boss Room", "", "Forest Belltower to Guard Captain Room", ignoreScene: true, oneWay: true),
                 }
             },
             {
@@ -593,7 +593,7 @@ namespace TunicRandomizer
                     new TunicPortal("Darkwoods Tunnel", "", "Quarry to Overworld Exit"),
                     new TunicPortal("Shop", "", "Quarry Shop"),
                     new TunicPortal("Monastery", "front", "Quarry to Monastery Front"),
-                    new TunicPortal("Monastery", "back", "Quarry to Monastery Back", oneWay: true),
+                    new TunicPortal("Monastery", "back", "Quarry to Monastery Back", ignoreScene: true, oneWay: true),
                     new TunicPortal("Mountain", "", "Quarry to Mountain"),
                     new TunicPortal("ziggurat2020_0", "", "Quarry Zig Entrance", entryItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwood Tunnel, Quarry Redux_", 1 }, { "12", 1 } }),
                     new TunicPortal("Transit", "teleporter_quarry teleporter", "Quarry Portal", prayerPortal: true),
@@ -737,10 +737,6 @@ namespace TunicRandomizer
             },
         };
 
-        public static List<string> hallwayNames = new List<string> { "Windmill", "Ruins Passage", "Temple", "Sewer_Boss", "frog cave main", "Library Exterior", "Library Rotunda", "East Forest Interior Redux", "Forest Boss Room", "Fortress Basement", "Darkwoods Tunnel", "ziggurat2020_0", "ziggurat2020_2", "ziggurat2020_FTRoom", "Purgatory" };
-        // public static List<string> twoPlusNames = new List<string>();
-
-        // taken from the internet, don't fully understand how it works but as long as it works, whatever
         public static void ShuffleList<T>(IList<T> list, int seed)
         {
             var rng = new System.Random(seed);
@@ -760,10 +756,7 @@ namespace TunicRandomizer
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
             Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
-            List<string> twoPlusNames = new List<string>();
             RandomizedPortals.Clear();
-            twoPlusNames.Clear();
-            List<string> deadEndNames = new List<string> { "g_elements", "Sword Cave", "EastFiligreeCache", "Overworld Cave", "Maze Room", "Town Basement", "ShopSpecial", "archipelagos_house", "Library Arena", "Dusty", "Mountaintop", "RelicVoid", "Spirit Arena" };
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
             List<Portal> twoPlusPortals = new List<Portal>();
@@ -839,7 +832,7 @@ namespace TunicRandomizer
                 twoPlusPortals.RemoveAt(0);
             }
             List<string> shopRegionList = new List<string>();
-            int shopCount = 8;
+            int shopCount = 6;
             int regionNumber = 0;
             while (shopCount > 0)
             {
@@ -878,6 +871,11 @@ namespace TunicRandomizer
                 // if this triggers, increase or decrease shop count by 1
                 Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
+            comboNumber++;
+            Portal betaQuarryPortal = new Portal(destination: "Darkwoods", tag: "", name: "Beta Quarry", scene: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
+            Portal zigSkipPortal = new Portal(destination: "ziggurat2020_3", tag: "zig2_skip", name: "Zig Skip", scene: "ziggurat2020_1", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
+            RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(betaQuarryPortal, zigSkipPortal));
+
             return RandomizedPortals;
         }
 
