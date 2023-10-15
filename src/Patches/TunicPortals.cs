@@ -872,7 +872,7 @@ namespace TunicRandomizer
                 Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
             comboNumber++;
-            Portal betaQuarryPortal = new Portal(destination: "Darkwoods", tag: "", name: "Beta Quarry", scene: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
+            Portal betaQuarryPortal = new Portal(destination: "Darkwood", tag: "", name: "Beta Quarry", scene: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
             Portal zigSkipPortal = new Portal(destination: "ziggurat2020_3", tag: "zig2_skip", name: "Zig Skip", scene: "ziggurat2020_1", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
             RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(betaQuarryPortal, zigSkipPortal));
 
@@ -978,6 +978,262 @@ namespace TunicRandomizer
                     }
                 }
             }
+        }
+
+
+        public static string PythonOutput()
+        {
+            string pythonFormat = "";
+
+            foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList)
+            {
+                string region_name = region_group.Key;
+                List<TunicPortal> region_portals = region_group.Value;
+                foreach (TunicPortal portal in region_portals)
+                {
+                    if (region_name == "Overworld Redux")
+                    {
+                        region_name = "Overworld";
+                    }
+                    else if (region_name == "Swamp Redux 2")
+                    {
+                        region_name = "Swamp";
+                    }
+                    else if (region_name == "Sword Cave")
+                    {
+                        region_name = "Stick House";
+                    }
+                    else if (region_name == "Overworld Interiors")
+                    {
+                        region_name = "Old House";
+                    }
+                    else if (region_name == "g_elements")
+                    {
+                        region_name = "Relic Tower";
+                    }
+                    else if (region_name == "Waterfall")
+                    {
+                        region_name = "Secret Gathering Place";
+                    }
+                    else if (region_name == "PatrolCave")
+                    {
+                        region_name = "Patrol Cave";
+                    }
+                    else if (region_name == "Ruins Passage")
+                    {
+                        region_name = "Ruined Passage";
+                    }
+                    else if (region_name == "ShopSpecial")
+                    {
+                        region_name = "Special Shop";
+                    }
+                    else if (region_name == "Overworld Cave")
+                    {
+                        region_name = "Caustic Light Cave";
+                    }
+                    else if (region_name == "Maze Room")
+                    {
+                        region_name = "Maze Cave";
+                    }
+                    else if (region_name == "CubeRoom")
+                    {
+                        region_name = "Cube Cave";
+                    }
+                    else if (region_name == "EastFiligreeCache")
+                    {
+                        region_name = "Southeast Cross Room";
+                    }
+                    else if (region_name == "Town_FiligreeRoom")
+                    {
+                        region_name = "Fountain Cross Room";
+                    }
+                    else if (region_name == "Town Basement")
+                    {
+                        region_name = "Hourglass Cave";
+                    }
+                    else if (region_name == "Temple")
+                    {
+                        region_name = "Sealed Temple";
+                    }
+                    else if (region_name == "East Forest Redux")
+                    {
+                        region_name = "East Forest";
+                    }
+                    else if (region_name == "East Forest Redux Laddercave")
+                    {
+                        region_name = "Guard House 1";
+                    }
+                    else if (region_name == "East Forest Redux Interior")
+                    {
+                        region_name = "Guard House 2";
+                    }
+                    else if (region_name == "Sword Access")
+                    {
+                        region_name = "Forest Grave Path";
+                    }
+                    else if (region_name == "Crypt Redux")
+                    {
+                        region_name = "Dark Tomb";
+                    }
+                    else if (region_name == "Sewer_Boss")
+                    {
+                        region_name = "Dark Tomb Checkpoint";
+                    }
+                    else if (region_name == "Sewer")
+                    {
+                        region_name = "Bottom of the Well";
+                    }
+                    else if (region_name == "Archipelagos Redux")
+                    {
+                        region_name = "West Garden";
+                    }
+                    else if (region_name == "archipelagos_house")
+                    {
+                        region_name = "Magic Dagger House";
+                    }
+                    else if (region_name == "Atoll Redux")
+                    {
+                        region_name = "Ruined Atoll";
+                    }
+                    else if (region_name == "Frog Stairs")
+                    {
+                        region_name = "Frog's Domain Entry";
+                    }
+                    else if (region_name == "frog cave main")
+                    {
+                        region_name = "Frog's Domain";
+                    }
+                    else if (region_name == "Fortress Basement")
+                    {
+                        region_name = "Beneath the Vault";
+                    }
+                    else if (region_name == "Fortress Main")
+                    {
+                        region_name = "Eastern Vault Fortress";
+                    }
+                    else if (region_name == "Fortress Reliquary")
+                    {
+                        region_name = "Fortress Grave Path";
+                    }
+                    else if (region_name == "Dusty")
+                    {
+                        region_name = "Fortress Leaf Piles";
+                    }
+                    else if (region_name == "Mountain")
+                    {
+                        region_name = "Lower Mountain";
+                    }
+                    else if (region_name == "Mountaintop")
+                    {
+                        region_name = "Top of the Mountain";
+                    }
+                    else if (region_name == "Darkwoods Tunnel")
+                    {
+                        region_name = "Quarry Connector";
+                    }
+                    else if (region_name == "Quarry Redux")
+                    {
+                        region_name = "Quarry";
+                    }
+                    else if (region_name == "ziggurat_2020_0")
+                    {
+                        region_name = "Rooted Ziggurat Entry";
+                    }
+                    else if (region_name == "ziggurat_2020_1")
+                    {
+                        region_name = "Rooted Ziggurat Upper";
+                    }
+                    else if (region_name == "ziggurat_2020_2")
+                    {
+                        region_name = "Rooted Ziggurat Middle";
+                    }
+                    else if (region_name == "ziggurat_2020_3")
+                    {
+                        region_name = "Rooted Ziggurat Lower";
+                    }
+                    else if (region_name == "ziggurat2020_FTRoom")
+                    {
+                        region_name = "Rooted Ziggurat Portal Room";
+                    }
+                    else if (region_name == "Cathedral Redux")
+                    {
+                        region_name = "Cathedral";
+                    }
+                    else if (region_name == "Cathedral Arena")
+                    {
+                        region_name = "Cathedral Gauntlet";
+                    }
+                    else if (region_name == "Transit")
+                    {
+                        region_name = "Far Shore";
+                    }
+                    else if (region_name == "RelicVoid")
+                    {
+                        region_name = "Hero's Grave - ";
+                    }
+                    pythonFormat += "Portal(\"" + portal.PortalName + "\", \"" + region_name + "\", \"" + portal.Destination + "\", \"" + portal.DestinationTag + "\"";
+                    if (portal.RequiredItems != null && portal.RequiredItems.Count > 0)
+                    {
+                        pythonFormat += ",\nrequired_items=[{";
+                        foreach (KeyValuePair<string, int> item in portal.RequiredItems)
+                        {
+                            string name = item.Key;
+                            if (name == "12")
+                            { name = "Prayer"; }
+                            else if (name == "21")
+                            { name = "Holy Cross"; }
+
+                            pythonFormat += "\"" + name + "\": " + item.Value.ToString() + ", ";
+                        }
+                        pythonFormat += "}]";
+                    }
+
+                    if (portal.RequiredItemsOr != null && portal.RequiredItemsOr.Count > 0)
+                    {
+                        pythonFormat += ",\nrequired_items=[";
+                        for (int i = 0; i < portal.RequiredItemsOr.Count; i++)
+                        {
+                            pythonFormat += "{";
+                            Dictionary<string, int> req = portal.RequiredItemsOr[i];
+                            foreach (KeyValuePair<string, int> item in req)
+                            {
+                                string name = item.Key;
+                                if (name == "12")
+                                { name = "Prayer"; }
+                                else if (name == "21")
+                                { name = "Holy Cross"; }
+
+                                pythonFormat += "\"" + name + "\": " + item.Value.ToString() + ", ";
+                            }
+                            pythonFormat += "}, ";
+                        }
+                        pythonFormat += "],\n";
+                    }
+
+                    if (portal.EntryItems != null && portal.EntryItems.Count > 0)
+                    {
+                        pythonFormat += ",\nentry_items=[";
+                        if (portal.PrayerPortal == true)
+                        {
+                            pythonFormat += "\"Prayer\", ";
+                        }
+                        foreach (KeyValuePair<string, int> item in portal.EntryItems)
+                        {
+                            string name = item.Key;
+                            if (name == "12")
+                            { name = "Prayer"; }
+                            else if (name == "21")
+                            { name = "Holy Cross"; }
+
+                            pythonFormat += "\"" + name + "\", ";
+                        }
+                        pythonFormat += "]";
+                    }
+                    pythonFormat += "),\n";
+                }
+            }
+            pythonFormat += "]";
+            return pythonFormat;
         }
     }
 }
