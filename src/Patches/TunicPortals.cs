@@ -827,9 +827,17 @@ namespace TunicRandomizer
             while (deadEndPortals.Count > 0)
             {
                 comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
-                deadEndPortals.RemoveAt(0);
-                twoPlusPortals.RemoveAt(0);
+                // this is the only connection we realistically need to hard-disallow, since you can't open the temple door without the upper belltower
+                if (deadEndPortals[0].SceneDestinationTag == "Forest Belltower, Forest Boss Room_" && twoPlusPortals[0].SceneDestinationTag == "Overworld Redux, Temple_main") {
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                    deadEndPortals.RemoveAt(0);
+                    twoPlusPortals.RemoveAt(1);
+                }
+                else {
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                    deadEndPortals.RemoveAt(0);
+                    twoPlusPortals.RemoveAt(0);
+                }
             }
             List<string> shopRegionList = new List<string>();
             int shopCount = 6;
