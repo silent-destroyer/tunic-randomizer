@@ -906,17 +906,16 @@ namespace TunicRandomizer
                     return true;
                 }
             }
-            else {return false;}
+            return false;
         }
-
+        // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
+        public static List<Portal> deadEndPortals = new List<Portal>();
+        public static List<Portal> twoPlusPortals = new List<Portal>();
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
             Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
             RandomizedPortals.Clear();
-            // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
-            List<Portal> deadEndPortals = new List<Portal>();
-            List<Portal> twoPlusPortals = new List<Portal>();
 
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList) {
@@ -1028,7 +1027,7 @@ namespace TunicRandomizer
                 // I don't think the LockBeforeKey check can lead to an infinite loop?
                 if (LockBeforeKey(twoPlusPortals[0]) == true || LockBeforeKey(twoPlusPortals[1]) == true)
                 {
-                    ShuffleList(twoPlusPortals, seed)
+                    ShuffleList(twoPlusPortals, seed);
                 }
                 else
                 {
