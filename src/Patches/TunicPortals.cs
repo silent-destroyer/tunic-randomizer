@@ -892,6 +892,23 @@ namespace TunicRandomizer
                         continue;
                     }
                 }
+                if (twoPlusPortals[0].SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_main")
+                {
+                    int i = 0;
+                    foreach (Portal portal in twoPlusPortals)
+                    {
+                        if (portal.SceneDestinationTag == "Swamp Redux 2, Overworld Redux_conduit" 
+                            || portal.SceneDestinationTag == "Swamp Redux 2, Shop_"
+                            || portal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_secret")
+                        { i++; }
+                    }
+                    if (i == 3)
+                    {
+                        Logger.LogInfo("cathedral main entry portal tried connecting before the the front of swamp, reshuffling");
+                        ShuffleList(twoPlusPortals, seed);
+                        continue;
+                    }
+                }
                 if (twoPlusPortals[0].SceneDestinationTag == "ziggurat2020_FTRoom, ziggurat2020_3")
                 {
                     int i = 0;
