@@ -4629,7 +4629,7 @@ namespace TunicRandomizer {
                         {""Wand"": 1, ""Mask"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""ziggurat2020_3"": 1, ""12"": 1}
+                        {""ziggurat2020_3"": 1, ""12"": 1, ""Sword"": 1}
                     ],
                     ""SceneId"": 44,
                     ""SceneName"": ""ziggurat2020_3""
