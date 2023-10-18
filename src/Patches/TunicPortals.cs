@@ -768,10 +768,7 @@ namespace TunicRandomizer
                     }
                 }
                 if (i == 1)
-                {
-                    Logger.LogInfo("temple tried connecting before forest belltower");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Fortress Main, Fortress Arena_")
             {
@@ -790,10 +787,7 @@ namespace TunicRandomizer
                     { k++; }
                 }
                 if (i == 2 || j == 2 || k == 6)
-                {
-                    Logger.LogInfo("fortress gold door tried connecting before any of its fuse rooms");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Fortress Arena, Transit_teleporter_spidertank"
                 || checkPortal.SceneDestinationTag == "Transit, Fortress Arena_teleporter_spidertank")
@@ -812,10 +806,7 @@ namespace TunicRandomizer
                     { k++; }
                 }
                 if (i == 8 || j == 2 || k == 6)
-                {
-                    Logger.LogInfo("fortress portals tried connecting before any of their fuse rooms, reshuffling");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_main")
             {
@@ -828,10 +819,7 @@ namespace TunicRandomizer
                     { i++; }
                 }
                 if (i == 3)
-                {
-                    Logger.LogInfo("cathedral main entry portal tried connecting before the the front of swamp");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "ziggurat2020_FTRoom, ziggurat2020_3")
             {
@@ -842,10 +830,7 @@ namespace TunicRandomizer
                     { i++; }
                 }
                 if (i == 2)
-                {
-                    Logger.LogInfo("zig portal room door portal tried connecting before zig 3");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Quarry Redux, Transit_teleporter_quarry teleporter")
             {
@@ -856,10 +841,7 @@ namespace TunicRandomizer
                     { i++; }
                 }
                 if (i == 2)
-                {
-                    Logger.LogInfo("quarry portal tried connecting before darkwoods");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Transit, Quarry Redux_teleporter_quarry teleporter")
             {
@@ -873,10 +855,7 @@ namespace TunicRandomizer
                     { j++; }
                 }
                 if (i == 2 || j == 7)
-                {
-                    Logger.LogInfo("quarry portal at transit tried connecting before darkwoods or quarry");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Transit, Library Lab_teleporter_library teleporter")
             {
@@ -887,10 +866,7 @@ namespace TunicRandomizer
                     { i++; }
                 }
                 if (i == 3)
-                {
-                    Logger.LogInfo("library portal at transit tried connecting before library lab");
-                    return true;
-                }
+                { return true; }
             }
             else if (checkPortal.SceneDestinationTag == "Transit, Archipelagos Redux_teleporter_archipelagos_teleporter")
             {
@@ -901,10 +877,7 @@ namespace TunicRandomizer
                     { i++; }
                 }
                 if (i == 7)
-                {
-                    Logger.LogInfo("west garden portal at transit tried connecting before library lab, reshuffling");
-                    return true;
-                }
+                { return true; }
             }
             return false;
         }
