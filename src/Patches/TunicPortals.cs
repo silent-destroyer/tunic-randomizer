@@ -752,6 +752,163 @@ namespace TunicRandomizer
             }
         }
 
+        // function to see if we're placing a lock before its key, since doing that can possibly self-lock
+        public static bool LockBeforeKey(Portal checkPortal)
+        {
+            if (checkPortal.SceneDestinationTag == "Overworld Redux, Temple_main")
+            {
+                // check if the belltower upper has been placed yet, if not then reshuffle the two plus portals list (since this list is gonna be the bigger one)
+                int i = 0;
+                foreach (Portal portal in deadEndPortals)
+                {
+                    if (portal.SceneDestinationTag == "Forest Belltower, Forest Boss Room_")
+                    { 
+                        i++;
+                        break; 
+                    }
+                }
+                if (i == 1)
+                {
+                    Logger.LogInfo("temple tried connecting before forest belltower");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Fortress Main, Fortress Arena_")
+            {
+                // check if none of the portals that lead to the necessary fuses have been placed
+                int i = 0;
+                int j = 0;
+                int k = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.SceneDestinationTag == "Fortress Courtyard, Fortress Reliquary_upper" 
+                        || portal.SceneDestinationTag == "Fortress Courtyard, Fortress East_")
+                    { i++; }
+                    if (portal.Scene == "Fortress Basement")
+                    { j++; }
+                    if (portal.Scene == "Fortress Main")
+                    { k++; }
+                }
+                if (i == 2 || j == 2 || k == 6)
+                {
+                    Logger.LogInfo("fortress gold door tried connecting before any of its fuse rooms");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Fortress Arena, Transit_teleporter_spidertank"
+                || checkPortal.SceneDestinationTag == "Transit, Fortress Arena_teleporter_spidertank")
+            {
+                // check if none of the portals that lead to the necessary fuses have been placed
+                int i = 0;
+                int j = 0;
+                int k = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.Scene == "Fortress Courtyard")
+                    { i++; }
+                    if (portal.Scene == "Fortress Basement")
+                    { j++; }
+                    if (portal.Scene == "Fortress Main")
+                    { k++; }
+                }
+                if (i == 8 || j == 2 || k == 6)
+                {
+                    Logger.LogInfo("fortress portals tried connecting before any of their fuse rooms, reshuffling");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_main")
+            {
+                int i = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.SceneDestinationTag == "Swamp Redux 2, Overworld Redux_conduit" 
+                        || portal.SceneDestinationTag == "Swamp Redux 2, Shop_"
+                        || portal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_secret")
+                    { i++; }
+                }
+                if (i == 3)
+                {
+                    Logger.LogInfo("cathedral main entry portal tried connecting before the the front of swamp");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "ziggurat2020_FTRoom, ziggurat2020_3")
+            {
+                int i = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.Scene == "ziggurat2020_3")
+                    { i++; }
+                }
+                if (i == 2)
+                {
+                    Logger.LogInfo("zig portal room door portal tried connecting before zig 3");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Quarry Redux, Transit_teleporter_quarry teleporter")
+            {
+                int i = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.Scene == "Darkwoods Tunnel")
+                    { i++; }
+                }
+                if (i == 2)
+                {
+                    Logger.LogInfo("quarry portal tried connecting before darkwoods");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Transit, Quarry Redux_teleporter_quarry teleporter")
+            {
+                int i = 0;
+                int j = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.Scene == "Darkwoods Tunnel")
+                    { i++; }
+                    if (portal.Scene == "Quarry Redux") 
+                    { j++; }
+                }
+                if (i == 2 || j == 7)
+                {
+                    Logger.LogInfo("quarry portal at transit tried connecting before darkwoods or quarry");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Transit, Library Lab_teleporter_library teleporter")
+            {
+                int i = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.Scene == "Library Lab") 
+                    { i++; }
+                }
+                if (i == 3)
+                {
+                    Logger.LogInfo("library portal at transit tried connecting before library lab");
+                    return true;
+                }
+            }
+            else if (checkPortal.SceneDestinationTag == "Transit, Archipelagos Redux_teleporter_archipelagos_teleporter")
+            {
+                int i = 0;
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.Scene == "Archipelagos Redux")
+                    { i++; }
+                }
+                if (i == 7)
+                {
+                    Logger.LogInfo("west garden portal at transit tried connecting before library lab, reshuffling");
+                    return true;
+                }
+            }
+            else {return false;}
+        }
+
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
@@ -797,6 +954,8 @@ namespace TunicRandomizer
                     // find a portal in a region we can't access yet
                     if (!accessibleRegions.Contains(portal.Scene))
                     {
+                        if (LockBeforeKey(portal) == true)
+                        { break; }
                         Portal portal1 = portal;
                         twoPlusPortals.Remove(portal);
                         Portal portal2 = null;
@@ -805,7 +964,7 @@ namespace TunicRandomizer
                         ShuffleList(twoPlusPortals, seed);
                         foreach (Portal secondPortal in twoPlusPortals)
                         {
-                            if (accessibleRegions.Contains(secondPortal.Scene))
+                            if (LockBeforeKey(secondPortal) == false && accessibleRegions.Contains(secondPortal.Scene))
                             {
                                 portal2 = secondPortal;
                                 twoPlusPortals.Remove(secondPortal);
@@ -826,170 +985,15 @@ namespace TunicRandomizer
             ShuffleList(twoPlusPortals, seed);
             while (deadEndPortals.Count > 0)
             {
-                comboNumber++;
-                if (twoPlusPortals[0].SceneDestinationTag == "Overworld Redux, Temple_main")
+                if (LockBeforeKey(twoPlusPortals[0]) == true) 
+                { ShuffleList(twoPlusPortals, seed); }
+                else 
                 {
-                    // check if the belltower upper has been placed yet, if not then reshuffle the two plus portals list (since this list is gonna be the bigger one)
-                    int i = 0;
-                    foreach (Portal portal in deadEndPortals)
-                    {
-                        if (portal.SceneDestinationTag == "Forest Belltower, Forest Boss Room_")
-                        { 
-                            i++;
-                            break; 
-                        }
-                    }
-                    if (i == 1)
-                    {
-                        Logger.LogInfo("temple tried connecting before forest belltower, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue; 
-                    }
+                    comboNumber++;
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                    deadEndPortals.RemoveAt(0);
+                    twoPlusPortals.RemoveAt(0);
                 }
-                if (twoPlusPortals[0].SceneDestinationTag == "Fortress Main, Fortress Arena_")
-                {
-                    // check if none of the portals that lead to the necessary fuses have been placed
-                    int i = 0;
-                    int j = 0;
-                    int k = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.SceneDestinationTag == "Fortress Courtyard, Fortress Reliquary_upper" 
-                            || portal.SceneDestinationTag == "Fortress Courtyard, Fortress East_")
-                        { i++; }
-                        if (portal.Scene == "Fortress Basement")
-                        { j++; }
-                        if (portal.Scene == "Fortress Main")
-                        { k++; }
-                    }
-                    if (i == 2 || j == 2 || k == 6)
-                    {
-                        Logger.LogInfo("fortress gold door tried connecting before any of its fuse rooms, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "Fortress Arena, Transit_teleporter_spidertank"
-                    || twoPlusPortals[0].SceneDestinationTag == "Transit, Fortress Arena_teleporter_spidertank")
-                {
-                    // check if none of the portals that lead to the necessary fuses have been placed
-                    int i = 0;
-                    int j = 0;
-                    int k = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.Scene == "Fortress Courtyard")
-                        { i++; }
-                        if (portal.Scene == "Fortress Basement")
-                        { j++; }
-                        if (portal.Scene == "Fortress Main")
-                        { k++; }
-                    }
-                    if (i == 8 || j == 2 || k == 6)
-                    {
-                        Logger.LogInfo("fortress portals tried connecting before any of their fuse rooms, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_main")
-                {
-                    int i = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.SceneDestinationTag == "Swamp Redux 2, Overworld Redux_conduit" 
-                            || portal.SceneDestinationTag == "Swamp Redux 2, Shop_"
-                            || portal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_secret")
-                        { i++; }
-                    }
-                    if (i == 3)
-                    {
-                        Logger.LogInfo("cathedral main entry portal tried connecting before the the front of swamp, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "ziggurat2020_FTRoom, ziggurat2020_3")
-                {
-                    int i = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.Scene == "ziggurat2020_3")
-                        { i++; }
-                    }
-                    if (i == 2)
-                    {
-                        Logger.LogInfo("zig portal room door portal tried connecting before zig 3, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "Quarry Redux, Transit_teleporter_quarry teleporter")
-                {
-                    int i = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.Scene == "Darkwoods Tunnel")
-                        { i++; }
-                    }
-                    if (i == 2)
-                    {
-                        Logger.LogInfo("quarry portal tried connecting before darkwoods, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "Transit, Quarry Redux_teleporter_quarry teleporter")
-                {
-                    int i = 0;
-                    int j = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.Scene == "Darkwoods Tunnel")
-                        { i++; }
-                        if (portal.Scene == "Quarry Redux") 
-                        { j++; }
-                    }
-                    if (i == 2 || j == 7)
-                    {
-                        Logger.LogInfo("quarry portal at transit tried connecting before darkwoods or quarry, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "Transit, Library Lab_teleporter_library teleporter")
-                {
-                    int i = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.Scene == "Library Lab") 
-                        { i++; }
-                    }
-                    if (i == 3)
-                    {
-                        Logger.LogInfo("library portal at transit tried connecting before library lab, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                if (twoPlusPortals[0].SceneDestinationTag == "Transit, Archipelagos Redux_teleporter_archipelagos_teleporter")
-                {
-                    int i = 0;
-                    foreach (Portal portal in twoPlusPortals)
-                    {
-                        if (portal.Scene == "Archipelagos Redux")
-                        { i++; }
-                    }
-                    if (i == 7)
-                    {
-                        Logger.LogInfo("west garden portal at transit tried connecting before library lab, reshuffling");
-                        ShuffleList(twoPlusPortals, seed);
-                        continue;
-                    }
-                }
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
-                deadEndPortals.RemoveAt(0);
-                twoPlusPortals.RemoveAt(0);
             }
             List<string> shopRegionList = new List<string>();
             int shopCount = 6;
@@ -1021,10 +1025,18 @@ namespace TunicRandomizer
             // the twoPlusPortals list still has items left in it, so now we pair them off
             while (twoPlusPortals.Count > 1)
             {
+                // I don't think the LockBeforeKey check can lead to an infinite loop?
+                if (LockBeforeKey(twoPlusPortals[0]) == true || LockBeforeKey(twoPlusPortals[1]) == true)
+                {
+                    ShuffleList(twoPlusPortals, seed)
+                }
+                else
+                {
                 comboNumber++;
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[0], twoPlusPortals[1]));
                 twoPlusPortals.RemoveAt(1); // I could do removeat0 twice, but I don't like how that looks
                 twoPlusPortals.RemoveAt(0);
+                }
             }
             if (twoPlusPortals.Count == 1)
             {
