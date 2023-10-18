@@ -996,7 +996,7 @@ namespace TunicRandomizer
                 }
                 if (regionNumber == twoPlusPortals.Count - 1)
                 {
-                    Logger.LogInfo("too many shops, not enough regions");
+                    Logger.LogInfo("too many shops, not enough regions, add more shops");
                 }
             }
             
