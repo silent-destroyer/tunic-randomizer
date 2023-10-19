@@ -32,9 +32,9 @@ Note: This is the standalone, single-player version of the TUNIC Randomizer. For
   - For Entrance Rando:
     - You can use the Torch to return to the Overworld save point at any time.
     - The dancing ghost fox area in East Forest can be accessed using the Hero's Laurels from the gate entrance of Guard House 1.
-    - Using the Hero's Laurels, you can dash through the gate in the Bottom of the Well boss room.
+    - Using the Hero's Laurels, you can dash through the gate in the Bottom of the Well boss room and Monastery.
     - Activating a fuse to turn on a Prayer teleporter also activates its counterpart in the Far Shore.
-    - The Ruined Atoll fuse can be activated from below.
+    - The West Garden fuse can be activated from below.
     - You can reach the main part of Ruined Atoll from the lower entrance area using the Hero's Laurels.
     - The elevators in Ziggurat only go down.
     - The portal in the trophy room in the back of the Old House is active from the start.
