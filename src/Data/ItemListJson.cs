@@ -3544,7 +3544,7 @@ namespace TunicRandomizer {
                         {""Lantern"": 1, ""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                    {""Fortress Basement"": 1}
+                        {""Lantern"": 1, ""Fortress Basement"": 1}
                     ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Basement""
@@ -3566,9 +3566,9 @@ namespace TunicRandomizer {
                         {""Lantern"": 1, ""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Stick"": 1, ""Fortress Basement"": 1},
-                        {""Sword"": 1, ""Fortress Basement"": 1},
-                        {""Techbow"": 1, ""Fortress Basement"": 1}
+                        {""Lantern"": 1, ""Stick"": 1, ""Fortress Basement"": 1},
+                        {""Lantern"": 1, ""Sword"": 1, ""Fortress Basement"": 1},
+                        {""Lantern"": 1, ""Techbow"": 1, ""Fortress Basement"": 1}
                     ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Basement""
@@ -3588,7 +3588,8 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                    {""Fortress Basement"": 1}
+                        {""Lantern"": 1, ""Fortress Basement, Fortress Courtyard_"": 1},
+                        {""Hyperdash"": 1, ""Fortress Basement, Fortress Main_"": 1}
                     ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Basement""
@@ -3608,7 +3609,8 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                    {""Fortress Basement"": 1}
+                        {""Lantern"": 1, ""Fortress Basement, Fortress Courtyard_"": 1},
+                        {""Hyperdash"": 1, ""Fortress Basement, Fortress Main_"": 1}
                     ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Basement""
@@ -3628,7 +3630,8 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                    {""Fortress Basement"": 1}
+                        {""Lantern"": 1, ""Fortress Basement, Fortress Courtyard_"": 1},
+                        {""Hyperdash"": 1, ""Fortress Basement, Fortress Main_"": 1}
                     ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Basement""
@@ -3648,7 +3651,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                    {""Fortress Main"": 1}
+                        {""Fortress Main"": 1}
                     ],
                     ""SceneId"": 13,
                     ""SceneName"": ""Fortress Main""
