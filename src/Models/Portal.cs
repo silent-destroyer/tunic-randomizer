@@ -24,6 +24,12 @@ namespace TunicRandomizer {
             set;
         }
 
+        public string Region
+        {
+            get;
+            set;
+        }
+
         public Dictionary<string, int> RequiredItems
         {
             get;
@@ -78,42 +84,46 @@ namespace TunicRandomizer {
             set;
         }
 
-        public Portal(string destination, string tag, string name, string scene, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             RequiredItems = requiredItems;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, List<Dictionary<string, int>> requiredItemsOr)
+        public Portal(string destination, string tag, string name, string scene, string region, List<Dictionary<string, int>> requiredItemsOr)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             RequiredItemsOr = requiredItemsOr;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             EntryItems = entryItems;
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
@@ -121,12 +131,13 @@ namespace TunicRandomizer {
             IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             GivesAccess = givesAccess;
             DeadEnd = deadEnd;
             PrayerPortal = prayerPortal;
@@ -134,12 +145,13 @@ namespace TunicRandomizer {
             IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             RequiredItems = requiredItems;
             GivesAccess = givesAccess;
             DeadEnd = deadEnd;
@@ -148,12 +160,13 @@ namespace TunicRandomizer {
             IgnoreScene = ignoreScene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;
             Tag = tag;
             Name = name;
             Scene = scene;
+            Region = region;
             RequiredItems = requiredItems;
             RequiredItemsOr = requiredItemsOr;
             EntryItems = entryItems;
