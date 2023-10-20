@@ -71,9 +71,14 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("ziggurat2020_1");
                 return;
             }
+            if (loadingScene.name == "Quarry" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger_stunner")) {
+                EnemyRandomizer.InitializeEnemies("Quarry");
+                SceneLoader.LoadScene("Swamp Redux 2");
+                return;
+            }
             if (loadingScene.name == "Quarry Redux" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger")) {
                 EnemyRandomizer.InitializeEnemies("Quarry Redux");
-                SceneLoader.LoadScene("Swamp Redux 2");
+                SceneLoader.LoadScene("Quarry");
                 return;
             }
             if (loadingScene.name == "Fortress Basement" && !EnemyRandomizer.Enemies.ContainsKey("Spider Small")) {
@@ -231,6 +236,7 @@ namespace TunicRandomizer {
                     GameObject.Find("merchant").SetActive(false);
                     GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
                 }
+                ModelSwaps.AddNewShopItems();
             } else if (SceneName == "ShopSpecial") {
                 if (new System.Random().Next(100) < 3) {
                     GameObject.Find("merchant (1)").SetActive(false);
@@ -280,7 +286,6 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                Logger.LogInfo("about to start randomize portals in scene loader patches");
                 TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             }
 

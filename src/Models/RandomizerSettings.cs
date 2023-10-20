@@ -39,6 +39,16 @@ namespace TunicRandomizer {
             set;
         }
 
+        public int HexagonQuestGoal {
+            get;
+            set;
+        }
+
+        public int HexagonQuestExtraPercentage {
+            get;
+            set;
+        }
+
         // Hint Settings
         public bool HeroPathHintsEnabled {
             get;
@@ -154,11 +164,13 @@ namespace TunicRandomizer {
 
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
-            EntranceRandoEnabled = false;
             KeysBehindBosses = false;
             SwordProgressionEnabled = true;
             StartWithSwordEnabled = false;
             ShuffleAbilities = false;
+            EntranceRandoEnabled = false;
+            HexagonQuestGoal = 20;
+            HexagonQuestExtraPercentage = 50;
 
             HeroPathHintsEnabled = true;
             GhostFoxHintsEnabled = true;

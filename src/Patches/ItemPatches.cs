@@ -5,6 +5,7 @@ using BepInEx.Logging;
 using UnityEngine.UI;
 using System.Linq;
 using System.Globalization;
+using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class ItemPatches {
@@ -75,6 +76,18 @@ namespace TunicRandomizer {
             { "Relic - Hero Pendant HP", new BonusUpgrade("Level Up - Health", $"Hero Relic - <#f03c67>HP") },
             { "Relic - Hero Pendant SP", new BonusUpgrade("Level Up - Stamina", $"Hero Relic - <#8ddc6e>SP") },
             { "Relic - Hero Pendant MP", new BonusUpgrade("Level Up - Magic", $"Hero Relic - <#2a8fed>MP") },
+        };
+
+        public static Dictionary<string, List<int>> FillerItems = new Dictionary<string, List<int>>() {
+            { "Firecracker", new List<int>() { 2, 3, 4, 5, 6 } },
+            { "Firebomb", new List<int>() { 2, 3 } },
+            { "Ice Bomb", new List<int>() { 2, 3, 5 } },
+            { "Bait", new List<int>() { 1, 2 } },
+            { "Pepper", new List<int>() { 2 } },
+            { "Ivy", new List<int>() { 3 } },
+            { "Berry_HP", new List<int>() { 1, 2, 3 } },
+            { "Berry_MP", new List<int>() { 1, 2, 3 } },
+            { "money", new List<int>() { 20, 25, 30, 32, 40, 48, 50 } },
         };
 
         private static string GetChestRewardID(Chest Chest) {
@@ -154,6 +167,10 @@ namespace TunicRandomizer {
         }
 
         public static bool Chest_shouldShowAsOpen_GetterPatch(Chest __instance, ref bool __result) {
+            if (SceneManager.GetActiveScene().name == "Quarry") {
+                __result = false;
+                return false;
+            }
             if (__instance.chestID == 19) {
                 if (__instance.transform.position.ToString() == "(8.8, 0.0, 9.9)") {
                     __result = SaveFile.GetInt("randomizer picked up 19 [Sword Cave]") == 1;

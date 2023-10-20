@@ -92,6 +92,12 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Quarry",
+                new List<string>() {
+                    "Scavenger_stunner"
+                }
+            },
+            {
                 "Quarry Redux",
                 new List<string>() {
                     "Scavenger",
@@ -199,6 +205,7 @@ namespace TunicRandomizer {
                     "Scavenger",
                     "Scavenger_miner",
                     "Scavenger_support",
+                    "Scavenger_stunner",
                     "bomezome_fencer",
                     "Ghostfox_monster",
                     "voidling redux",
@@ -262,6 +269,7 @@ namespace TunicRandomizer {
             { "Scavenger", $"\"Scavenger\" (snIpur)" },
             { "Scavenger_miner", $"\"Scavenger\" (mInur)" },
             { "Scavenger_support", $"\"Scavenger\" (suhport)" },
+            { "Scavenger_stunner", $"\"Scavenger\" (stuhnur)" },
             { "bomezome_fencer", $"\"Fleemer\" (fehnsur)" },
             { "Ghostfox_monster", $"\"Lost Echo\"" },
             { "voidling redux", $"\"Voidling\"" },
@@ -357,6 +365,9 @@ namespace TunicRandomizer {
             } else {
                 Random = new System.Random();
             }
+
+            List<BombFlask> bombFlasks = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name != "Firecracker").ToList();
+
             List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab")).ToList();
             if (CurrentScene == "Archipelagos Redux") {
                 Monsters = Monsters.Where(Monster => Monster.transform.parent.parent == null || Monster.transform.parent.parent.name != "_Environment Prefabs").ToList();
@@ -499,6 +510,27 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<BossAnnounceOnAggro>().bossTitleTopLine = TopLine;
                         NewEnemy.GetComponent<BossAnnounceOnAggro>().bossTitleBottomLine = BottomLine;
                     }
+
+                    // Randomize support scavengers bomb type
+                    if (NewEnemy.GetComponent<Scavenger_Support>() != null) {
+                        Rigidbody randomBomb = bombFlasks[Random.Next(bombFlasks.Count)].gameObject.GetComponent<Rigidbody>();
+                        NewEnemy.GetComponent<Scavenger_Support>().bombPrefab = randomBomb;
+                        if (!randomBomb.gameObject.name.Contains("Firecracker")) {
+                            NewEnemy.GetComponent<Scavenger_Support>().tossAngle = 15f;
+                        }
+                        if (randomBomb.gameObject.name.Contains("Ice")) {
+                            NewEnemy.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = Enemies["Scavenger_stunner"].transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials;
+                        }
+                    }
+
+                    // For ice snipers
+                    if (NewEnemy.GetComponent<Scavenger>() != null) {
+                        NewEnemy.GetComponent<Scavenger>().useStunBulletPool = NewEnemy.name.Contains("stunner");
+                        if (NewEnemy.name.Contains("stunner")) {
+                            NewEnemy.GetComponent<Scavenger>().laserEndSphere = Enemies["Scavenger"].GetComponent<Scavenger>().laserEndSphere;
+                        }
+                    }
+
                     NewEnemy.name += $" {i}";
                     EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
                     i++;

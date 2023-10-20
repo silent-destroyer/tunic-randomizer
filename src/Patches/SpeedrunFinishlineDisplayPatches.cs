@@ -311,9 +311,11 @@ namespace TunicRandomizer {
                 List<float> HexTimes = new List<float>();
                 List<string> Times = new List<string>();
                 if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
+                    int HexGoal = SaveFile.GetInt("randomizer hexagon quest goal");
+                    int HalfGoal = HexGoal / 2;
                     Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Gold 1 time"), true)}\t" +
-                            $"10th Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Gold 10 time"), true)}\n" +
-                            $"20th Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Gold 20 time"), true)}\t";
+                            $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Hexagon Gold {HalfGoal} time"), true)}\n" +
+                            $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Hexagon Gold {HexGoal} time"), true)}\t";
                 } else {
                     Text += $"Red Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Red 1 time"), true)}\t" +
                             $"Green Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Green 1 time"), true)}\n" +
@@ -351,6 +353,15 @@ namespace TunicRandomizer {
             TimeSpan TimeSpan = TimeSpan.FromSeconds(Seconds);
             string TimeString = $"{TimeSpan.Hours.ToString().PadLeft(2, '0')}:{TimeSpan.Minutes.ToString().PadLeft(2, '0')}:{TimeSpan.Seconds.ToString().PadLeft(2, '0')}";
             return TimeString.PadRight(10).Replace(":", "<size=100%>:<size=80%>");
+        }
+
+        private static string GetOrdinalSuffix(int num) {
+            string number = num.ToString();
+            if (number.EndsWith("11") || number.EndsWith("12") || number.EndsWith("13")) return "th";
+            if (number.EndsWith("1")) return "st";
+            if (number.EndsWith("2")) return "nd";
+            if (number.EndsWith("3")) return "rd";
+            return "th";
         }
 
         public static bool GameOverDecision___retry_PrefixPatch(GameOverDecision __instance) {

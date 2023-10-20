@@ -61,6 +61,10 @@ namespace TunicRandomizer {
                 File.WriteAllText(SettingsPath, JSONWriter.ToJson(Settings));
             } else {
                 Settings = JSONParser.FromJson<RandomizerSettings>(File.ReadAllText(SettingsPath));
+                if (Settings.HexagonQuestGoal == 0) {
+                    Settings.HexagonQuestGoal = 20;
+                    Settings.HexagonQuestExtraPercentage = 50;
+                }
                 Log.LogInfo("Loaded settings from file: " + JSONWriter.ToJson(Settings));
             }
             Profile.SetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode, true);

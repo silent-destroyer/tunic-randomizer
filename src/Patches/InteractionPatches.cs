@@ -40,7 +40,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key"].GetComponent<MeshRenderer>().materials;
             }
             if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
-                if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < 20) {
+                if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < SaveFile.GetInt("randomizer hexagon quest goal")) {
                     GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
                     return false;
                 }
