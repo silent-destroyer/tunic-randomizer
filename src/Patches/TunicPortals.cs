@@ -330,7 +330,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Sewer", "", "Well Boss to Well", "Sewer_Boss"),
-                    new TunicPortal("Crypt Redux", "", "Well Boss to Dark Tomb", "Sewer_Boss", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sewer_Boss, Sewer_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
+                    new TunicPortal("Crypt Redux", "", "Checkpoint to Dark Tomb", "Sewer_Boss", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sewer_Boss, Sewer_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
                 }
             },
             {
@@ -339,7 +339,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Overworld Redux", "", "Dark Tomb to Overworld", "Crypt Redux"),
                     new TunicPortal("Furnace", "", "Dark Tomb to Furnace", "Crypt Redux", requiredItems: new Dictionary<string, int> { {"Lantern", 1} }),
-                    new TunicPortal("Sewer_Boss", "", "Dark Tomb to Well Boss", "Crypt Redux"),
+                    new TunicPortal("Sewer_Boss", "", "Dark Tomb to Checkpoint", "Crypt Redux"),
                 }
             },
             {
@@ -633,8 +633,8 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     // new TunicPortal("ziggurat2020_3", "zig2_skip", "Zig Skip"), // the elevator skip to lower zig, put a secret here later
-                    new TunicPortal("ziggurat2020_0", "", "Zig 1 to Zig Entry", "Zig 1"),
-                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to Zig 2", "Zig 1"),
+                    new TunicPortal("ziggurat2020_0", "", "Zig 1 to Zig Entry", "Zig 1 Top", ignoreScene: true, oneWay: true),
+                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to Zig 2", "Zig 1 Bottom", deadEnd: true, ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_1, ziggurat2020_0_", 1}}),
                 }
             },
             {
@@ -925,6 +925,7 @@ namespace TunicRandomizer
 
             // This might be way too much shuffling -- was done to not favor connecting new regions to the first regions added to the list
             // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
+            // todo: make it add regions to the list based on previously gotten regions
             while (accessibleRegions.Count < 54)
             {
                 ShuffleList(twoPlusPortals, seed);
