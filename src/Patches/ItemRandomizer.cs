@@ -90,10 +90,10 @@ namespace TunicRandomizer {
                         if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
                             string FillerItem = ItemPatches.FillerItems.Keys.ToList()[TunicRandomizer.Randomizer.Next(ItemPatches.FillerItems.Count)];
                             Item.Reward.Name = FillerItem;
-                            Item.Reward.Type = "INVENTORY";
+                            Item.Reward.Type = FillerItem == "money" ? "MONEY": "INVENTORY";
                             Item.Reward.Amount = ItemPatches.FillerItems[FillerItem][TunicRandomizer.Randomizer.Next(ItemPatches.FillerItems[FillerItem].Count)];
                         }
-                        if(ItemPatches.FillerItems.ContainsKey(Item.Reward.Name) && GoldHexagonsAdded < HexagonsToAdd) {
+                        if(ItemPatches.FillerItems.ContainsKey(Item.Reward.Name) && ItemPatches.FillerItems[Item.Reward.Name].Contains(Item.Reward.Amount) && GoldHexagonsAdded < HexagonsToAdd) {
                             Item.Reward.Name = "Hexagon Gold";
                             Item.Reward.Type = "SPECIAL";
                             Item.Reward.Amount = 1;
@@ -559,6 +559,22 @@ namespace TunicRandomizer {
                 Hexagons.Remove(Hexagon);
                 HexagonHintAreas.Remove(HexagonHintArea);
             }
+
+/*            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                Dictionary<string, PortalCombo> Portals = TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+
+                //Hints.HintMessages.Add("East Forest Sign", $" [arrow_right]");
+                foreach (PortalCombo Portal in Portals.Values) {
+                    Logger.LogInfo(Portal.Portal1.Scene + " " + Portal.Portal1.Destination + ": " + Portal.Portal2.Scene + " " + Portal.Portal2.Destination);
+                    if (Portal.Portal1.Scene == "Overworld Redux" && Portal.Portal1.Destination == "Forest Belltower") {
+                        Hints.HintMessages.Add("East Forest Sign", $"\"{Portal.Portal2.Scene}\" [arrow_right]");
+                    }
+                    if (Portal.Portal2.Scene == "Overworld Redux" && Portal.Portal2.Destination == "Forest Belltower") {
+                        Hints.HintMessages.Add("East Forest Sign", $"\"{Portal.Portal1.Scene}\" [arrow_right]");
+                    }
+
+                }
+            }*/
 
         }
 
