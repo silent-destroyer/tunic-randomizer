@@ -17,7 +17,13 @@ namespace TunicRandomizer {
             {"Library Hall (131.0, 19.0, -8.5)", "Library Relic"},
             {"Monastery (-6.0, 26.0, 180.5)", "Monastery Relic"},
             {"Fortress Reliquary (198.5, 5.0, -40.0)", "Fortress Relic"},
-            {"Temple (14.0, -0.5, 49.0)", "Temple Statue"}
+            {"Temple (14.0, -0.5, 49.0)", "Temple Statue"},
+/*            {"Overworld Redux (89.0, 44.0, -107.0)", "East Forest Sign"},
+            {"Overworld Redux (-5.0, 36.0, -70.0)", "Overworld Sign"},
+            {"Overworld Redux (8.0, 20.0, -115.0)", "Swamp Sign"},
+            {"Overworld Redux (-156.0, 12.0, -44.3)", "West Garden Sign"},
+            {"Overworld Redux (73.0, 44.0, -38.0)", "Fortress Sign"},
+            {"Overworld Redux (-141.0, 40.0, 34.8)", "Quarry Sign"},*/
         };
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
@@ -77,7 +83,8 @@ namespace TunicRandomizer {
             {"Swamp Redux 2", "Swamp"},
             {"Cathedral Redux", "Cathedral"},
             {"Cathedral Arena", "Gauntlet"},
-            {"RelicVoid", "Hero's Grave"}
+            {"RelicVoid", "Hero's Grave"},
+            {"g_elements", "Glyph Tower"}
         };
 
         public static Dictionary<string, string> SceneNamesForSpoilerLog = new Dictionary<string, string>() {
