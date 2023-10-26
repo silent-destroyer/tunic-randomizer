@@ -32,6 +32,7 @@ namespace TunicRandomizer {
         public static GameObject GardenKnightVoid;
         public static GameObject MoneySfx;
         public static GameObject FairyAnimation;
+        public static GameObject IceFlask;
 
         public static GameObject RedKeyMaterial;
         public static GameObject GreenKeyMaterial;
@@ -861,6 +862,11 @@ namespace TunicRandomizer {
 
         public static void AddNewShopItems() {
             try {
+                if (IceFlask == null) {
+                    if (Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name == "Ice flask").Count() > 0) {
+                        IceFlask = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name == "Ice flask").ToList()[0].transform.GetChild(0).gameObject;
+                    }
+                }
                 GameObject IceBombs = GameObject.Instantiate(GameObject.Find("Shop/Item Holder/Firebombs/"));
                 GameObject Pepper = GameObject.Instantiate(GameObject.Find("Shop/Item Holder/Ivy/"));
                 IceBombs.name = "Ice Bombs";
@@ -875,9 +881,19 @@ namespace TunicRandomizer {
 
                 for (int i = 0; i < 3; i++) {
                     GameObject.Destroy(IceBombs.transform.GetChild(0).GetChild(i).GetChild(0).gameObject);
-                    IceBombs.transform.GetChild(0).GetChild(i).GetComponent<MeshFilter>().mesh = Items["Ice Bomb"].GetComponent<MeshFilter>().mesh;
-                    IceBombs.transform.GetChild(0).GetChild(i).GetComponent<MeshRenderer>().materials = Items["Ice Bomb"].GetComponent<MeshRenderer>().materials;
-                    IceBombs.transform.GetChild(0).GetChild(i).localScale = Vector3.one;
+                    if (IceFlask != null) {
+                        GameObject newIceBomb = GameObject.Instantiate(IceFlask);
+                        newIceBomb.transform.position = IceBombs.transform.GetChild(0).GetChild(i).position;
+                        newIceBomb.transform.localEulerAngles = IceBombs.transform.GetChild(0).GetChild(i).localEulerAngles;
+                        GameObject.Destroy(IceBombs.transform.GetChild(0).GetChild(i).gameObject);
+                        newIceBomb.transform.parent = IceBombs.transform.GetChild(0);
+                        newIceBomb.transform.GetChild(0).gameObject.SetActive(false);
+                        newIceBomb.transform.localScale = Vector3.one;
+                    } else {
+                        IceBombs.transform.GetChild(0).GetChild(i).GetComponent<MeshFilter>().mesh = Items["Ice Bomb"].GetComponent<MeshFilter>().mesh;
+                        IceBombs.transform.GetChild(0).GetChild(i).GetComponent<MeshRenderer>().materials = Items["Ice Bomb"].GetComponent<MeshRenderer>().materials;
+                        IceBombs.transform.GetChild(0).GetChild(i).localScale = Vector3.one;
+                    }
                 }
 
                 Pepper.transform.GetChild(0).GetChild(0).GetComponent<MeshFilter>().mesh = Items["Pepper"].GetComponent<MeshFilter>().mesh;
@@ -890,6 +906,16 @@ namespace TunicRandomizer {
                 ShopManager.cachedShopItems = items.ToArray();
             } catch (Exception e) {
                 Logger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
+            }
+        }
+
+        public static void ShopManager_entrySequence_MoveNext_PostfixPatch(ShopManager._entrySequence_d__14 __instance, ref bool __result) {
+            if (__instance._f_5__2 > 0.5f && __instance._f_5__2 < 0.6f) {
+                for (int i = 0; i < 3; i++) {
+                    if (IceFlask != null) {
+                        __instance.__4__this.transform.GetChild(0).GetChild(10).GetChild(0).GetChild(i).GetChild(0).gameObject.SetActive(true);
+                    }
+                }
             }
         }
 

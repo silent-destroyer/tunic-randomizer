@@ -432,7 +432,7 @@ public class GhostHints {
                 if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 0) {
                     LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nit louks lIk #is: [dath]";
                 } else {
-                    LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
+                    LostFoxScript.text = $"I lawst mI mahjik stOn [dath] ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
                 }
                 LostFox.GetComponent<NPC>().script = LostFoxScript;
 
