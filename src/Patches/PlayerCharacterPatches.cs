@@ -358,7 +358,7 @@ namespace TunicRandomizer {
 
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                TunicPortals.AltModifyPortals(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+                TunicPortals.AltModifyPortals(TunicPortals.RandomizedPortals);
             }
 
             PaletteEditor.SetupPartyHat(__instance);

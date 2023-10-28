@@ -31,6 +31,7 @@ namespace TunicRandomizer {
         public static void RandomizeAndPlaceItems() {
             ItemPatches.ItemList.Clear();
             ItemPatches.ItemsPickedUp.Clear();
+            TunicPortals.RandomizedPortals.Clear();
 
             List<string> ProgressionNames = new List<string>{
                 "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
@@ -171,8 +172,6 @@ namespace TunicRandomizer {
                 { UnplacedInventory.Add(itemName, 1); }
             }
 
-            // getting the randomized portal list the same way as we randomize it normally
-            Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
             Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
@@ -195,12 +194,14 @@ namespace TunicRandomizer {
                 // door rando time
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
                 {
+                    // randomize the portals here
+                    TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
                     int checkP = 0;
                     SceneInventory.Clear();
                     SceneInventory.Add("Overworld Redux", 1);
                     // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
-                    while (checkP < randomizedPortalsList.Count)
+                    while (checkP < TunicPortals.RandomizedPortals.Count)
                     {
                         checkP = 0;
                         CombinedInventory.Clear();
@@ -209,7 +210,7 @@ namespace TunicRandomizer {
                         foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                         {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
 
-                        foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
                         {
                             if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
                             {
@@ -264,7 +265,7 @@ namespace TunicRandomizer {
                 SceneInventory.Clear();
                 SceneInventory.Add(startingScene, 1);
                 // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
-                while (checkP < randomizedPortalsList.Count)
+                while (checkP < TunicPortals.RandomizedPortals.Count)
                 {
                     checkP = 0;
                     CombinedInventory.Clear();
@@ -277,7 +278,7 @@ namespace TunicRandomizer {
                     // cycle through the randomized portals list, check for if we get any scenes with our current inventory
                     // if we get any rewards at all that weren't already in the inventory, we continue the loop
                     // keep looping until we don't get any new rewards
-                    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                    foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
                     {
                         if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
                         {
@@ -636,10 +637,10 @@ namespace TunicRandomizer {
 
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                Dictionary<string, PortalCombo> PortalList = TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 List<string> PortalSpoiler = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
-                foreach (PortalCombo portalCombo in PortalList.Values)
+                Logger.LogInfo("test 1");
+                foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
                 {
                     PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name);
                 }
@@ -647,6 +648,7 @@ namespace TunicRandomizer {
                 {
                     SpoilerLogLines.Add(combo);
                 }
+                Logger.LogInfo("test 2");
             }
 
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {

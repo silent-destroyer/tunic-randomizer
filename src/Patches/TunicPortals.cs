@@ -15,6 +15,7 @@ namespace TunicRandomizer
 {
     public class TunicPortals {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
+        public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
 
         public class TunicPortal
         {
@@ -198,7 +199,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Overworld Redux", "house", "Front Door of Old House Exit", "Old House Front"),
-                    new TunicPortal("g_elements", "", "Teleport to Secret Treasure Room", "Old House Front"),
+                    new TunicPortal("g_elements", "", "Teleport to Glyph Tower", "Old House Front"),
                     new TunicPortal("Overworld Redux", "under_checkpoint", "Exit from Old House Back Door", "Old House Back", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Overworld Interiors, Overworld Redux_house", 1 } }), // since you get access to the center of a region from either portal, only one of these two is actually needed
 
                     // new TunicPortal("Archipelagos Redux_", "", "_ShowfloorDemo2022 Portal"), // unused and disabled
@@ -208,7 +209,7 @@ namespace TunicRandomizer
                 "g_elements", // Relic tower
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Interiors", "", "Secret Treasure Room Exit", "g_elements", deadEnd: true),
+                    new TunicPortal("Overworld Interiors", "", "Glyph Tower Exit", "g_elements", deadEnd: true),
                 }
             },
             {
@@ -269,8 +270,8 @@ namespace TunicRandomizer
                 "Ruins Passage", // That little hallway with the key door near the start in Overworld
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Overworld Redux", "east", "Ruins Passage", "Ruined Passage Door Exit"),
-                    new TunicPortal("Overworld Redux", "west", "Ruins Passage", "Ruined Passage Not-door Exit"),
+                    new TunicPortal("Overworld Redux", "east", "Ruins Passage", "Ruined Hall Door Exit"),
+                    new TunicPortal("Overworld Redux", "west", "Ruins Passage", "Ruined Hall Not-door Exit"),
                 }
             },
             {
@@ -897,7 +898,6 @@ namespace TunicRandomizer
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
         {
-            Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
             RandomizedPortals.Clear();
 
             // separate the portals into their respective lists

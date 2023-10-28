@@ -112,7 +112,7 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Transit");
                 return;
             }
-            if(loadingScene.name == "Library Arena" && ModelSwaps.SecondSword == null) {
+            if (loadingScene.name == "Library Arena" && ModelSwaps.SecondSword == null) {
                 ModelSwaps.InitializeSecondSword();
                 SceneLoader.LoadScene("Spirit Arena");
                 return;
@@ -286,7 +286,7 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+                TunicPortals.ModifyPortals(loadingScene, TunicPortals.RandomizedPortals);
             }
 
             try {
