@@ -896,7 +896,7 @@ namespace TunicRandomizer
         public static List<Portal> deadEndPortals = new List<Portal>();
         public static List<Portal> twoPlusPortals = new List<Portal>();
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
-        public static Dictionary<string, PortalCombo> RandomizePortals(int seed)
+        public static void RandomizePortals(int seed)
         {
             RandomizedPortals.Clear();
 
@@ -1029,18 +1029,16 @@ namespace TunicRandomizer
             Portal betaQuarryPortal = new Portal(destination: "Darkwoods", tag: "", name: "Beta Quarry", scene: "Quarry", region: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
             Portal zigSkipPortal = new Portal(destination: "ziggurat2020_3", tag: "zig2_skip", name: "Zig Skip", scene: "ziggurat2020_1", region: "Zig 1", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
             RandomizedPortals.Add("zigsecret", new PortalCombo(betaQuarryPortal, zigSkipPortal));
-
-            return RandomizedPortals;
         }
 
         // a function to apply the randomized portal list to portals during on scene loaded
-        public static void ModifyPortals(Scene loadingScene, Dictionary<string, PortalCombo> portalComboList)
+        public static void ModifyPortals(Scene loadingScene)
         {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals)
                 {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
@@ -1084,13 +1082,13 @@ namespace TunicRandomizer
             }
         }
         // this is for use in PlayerCharacterPatches. Will need to refactor later if we do random player spawn
-        public static void AltModifyPortals(Dictionary<string, PortalCombo> portalComboList)
+        public static void AltModifyPortals()
         {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in portalComboList)
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals)
                 {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
