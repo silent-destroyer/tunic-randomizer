@@ -31,11 +31,12 @@ Note: This is the standalone, single-player version of the TUNIC Randomizer. For
   - Nighttime is not considered in logic. Every check in the game is logically obtainable before the first visit to The Heir, and since nighttime restricts access to several locations it would limit the amount of options overall if certain items were required to always be obtainable at night. The game will automatically switch back to daytime if you die to The Heir on the first visit, but you can optionally switch to nighttime at any point after that by interacting with a special object in the Old House.
   - For Entrance Rando:
     - You can use the Torch to return to the Overworld save point at any time.
-    - The dancing ghost fox area in East Forest can be accessed using the Hero's Laurels from the gate entrance of Guard House 1.
+    - The dancing ghost fox area in East Forest can be accessed using the Hero's Laurels.
     - Using the Hero's Laurels, you can dash through the gate in the Bottom of the Well boss room and Monastery.
     - Activating a fuse to turn on a Prayer teleporter also activates its counterpart in the Far Shore.
     - The West Garden fuse can be activated from below.
     - You can reach the main part of Ruined Atoll from the lower entrance area using the Hero's Laurels.
+    - You can pray at the tree at the exterior of the Library.
     - The elevators in Ziggurat only go down.
     - The portal in the trophy room in the back of the Old House is active from the start.
     - The elevator in Cathedral is immediately accessible without activating the fuse. Activating the fuse does nothing.
