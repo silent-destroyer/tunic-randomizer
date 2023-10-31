@@ -84,7 +84,7 @@ namespace TunicRandomizer {
             {"Cathedral Redux", "Cathedral"},
             {"Cathedral Arena", "Gauntlet"},
             {"RelicVoid", "Hero's Grave"},
-            {"g_elements", "Glyph Tower"}
+            //{"g_elements", "Glyph Tower"}
         };
 
         public static Dictionary<string, string> SceneNamesForSpoilerLog = new Dictionary<string, string>() {
