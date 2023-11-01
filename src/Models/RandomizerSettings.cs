@@ -39,6 +39,12 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ERFixedShops
+        {
+            get;
+            set;
+        }
+
         public int HexagonQuestGoal {
             get;
             set;
@@ -169,6 +175,7 @@ namespace TunicRandomizer {
             StartWithSwordEnabled = false;
             ShuffleAbilities = false;
             EntranceRandoEnabled = false;
+            ERFixedShops = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
 
