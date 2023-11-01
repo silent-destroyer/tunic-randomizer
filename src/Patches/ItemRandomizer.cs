@@ -175,6 +175,8 @@ namespace TunicRandomizer {
             // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
             Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+            { TunicPortals.RandomizePortals(SaveFile.GetInt("seed")); }
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
@@ -194,8 +196,6 @@ namespace TunicRandomizer {
                 // door rando time
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
                 {
-                    // randomize the portals here
-                    TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
                     int checkP = 0;
                     SceneInventory.Clear();
@@ -639,16 +639,10 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 List<string> PortalSpoiler = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
-                Logger.LogInfo("test 1");
                 foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
-                {
-                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name);
-                }
+                { PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name); }
                 foreach (string combo in PortalSpoiler)
-                {
-                    SpoilerLogLines.Add(combo);
-                }
-                Logger.LogInfo("test 2");
+                { SpoilerLogLines.Add(combo); }
             }
 
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {
