@@ -352,7 +352,7 @@ namespace TunicRandomizer
                     new TunicPortal("Overworld Redux", "upper", "West Garden after Boss", granularRegion: "West Garden", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, {"Archipelagos Redux", 1 } } }),
                     new TunicPortal("Shop", "", "West Garden Shop", granularRegion: "West Garden"), // there's two of these, one is unused and disabled
                     new TunicPortal("Overworld Redux", "lowest", "West Garden Laurel Exit", granularRegion: "West Garden", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero's Grave", granularRegion: granularRegion: "West Garden", prayerPortal: true), // Hero grave
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero's Grave", granularRegion: "West Garden", prayerPortal: true), // Hero grave
                     new TunicPortal("Transit", "teleporter_archipelagos_teleporter", "West Garden Portal", granularRegion: "West Garden Portal", prayerPortal: true, deadEnd: true), // Portal to the thing behind dagger house
                 }
             },
@@ -973,44 +973,43 @@ namespace TunicRandomizer
             // This might be way too much shuffling -- was done to not favor connecting new regions to the first regions added to the list
             // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
             // todo: make it add regions to the list based on previously gotten regions
-            while (accessibleRegions.Count < 54)
+            while (accessibleRegions.Count < 56)
             {
                 ShuffleList(twoPlusPortals, seed);
                 // later on, start by making the first several portals into shop portals
+                Portal portal1 = null;
+                Portal portal2 = null;
                 foreach (Portal portal in twoPlusPortals)
                 {
                     // find a portal in a region we can't access yet
-                    if (!accessibleRegions.Contains(portal.Region))
+                    if (LockBeforeKey(portal) == false && !accessibleRegions.Contains(portal.Region))
                     {
-                        if (LockBeforeKey(portal) == true)
-                        { break; }
-                        Portal portal1 = portal;
-                        twoPlusPortals.Remove(portal);
-                        Portal portal2 = null;
-
-                        // find a portal in a region we can access
-                        ShuffleList(twoPlusPortals, seed);
-                        foreach (Portal secondPortal in twoPlusPortals)
-                        {
-                            if (LockBeforeKey(secondPortal) == false && accessibleRegions.Contains(secondPortal.Region))
-                            {
-                                portal2 = secondPortal;
-                                twoPlusPortals.Remove(secondPortal);
-                                break;
-                            }
-                        }
-                        // add the portal combo to the randomized portals list
-                        RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
-                        foreach (string region in AddDependentRegions(portal.Region)) {
-                            if (!accessibleRegions.Contains(region) {
-                                accessibleRegions.Add(region);
-                            }
-                        }
-                        // accessibleRegions.Add(portal.Region);
-                        comboNumber++;
+                        portal1 = portal;
+                    }
+                }
+                if (portal1 == null)
+                { Logger.LogInfo("something messed up in portal pairing for portal 1"); }
+                twoPlusPortals.Remove(portal1);
+                ShuffleList(twoPlusPortals, seed);
+                foreach (Portal secondPortal in twoPlusPortals)
+                {
+                    if (LockBeforeKey(secondPortal) == false && accessibleRegions.Contains(secondPortal.Region))
+                    {
+                        portal2 = secondPortal;
+                        twoPlusPortals.Remove(secondPortal);
                         break;
                     }
                 }
+                if (portal2 == null)
+                { Logger.LogInfo("something messed up in portal pairing for portal 2"); }
+                // add the portal combo to the randomized portals list
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                foreach (string region in AddDependentRegions(portal1.Region)) {
+                    if (!accessibleRegions.Contains(region)) {
+                        accessibleRegions.Add(region);
+                    }
+                }
+                comboNumber++;
             }
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
