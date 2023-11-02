@@ -77,6 +77,9 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and Ice Rod is unlocked by Page 53.
   - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
   - In Hexagon Quest, rather than unlocked abilities via pages, a random ability is unlocked at 5, 10, and 15 Gold Hexagons found
+- Entrance Randomizer
+  - Shuffles all entrances in the game. Good luck finding your way, little fox!
+  - The Fixed Shop option makes it so there is always a shop in the Windmill, and only one other shop in the pool.
 ### Hints
 - Path of the Hero
   - Places a major hint at specific locations around the world, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple. These hint towards major progression items, such as Magic Items, Laurels, Hexagons, and more.
