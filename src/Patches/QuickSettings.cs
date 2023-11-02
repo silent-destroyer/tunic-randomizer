@@ -75,6 +75,10 @@ namespace TunicRandomizer {
             y += 40f;
             bool ToggleEntranceRando = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
             TunicRandomizer.Settings.EntranceRandoEnabled = ToggleEntranceRando;
+            if (ToggleEntranceRando)
+            {
+                TunicRandomizer.Settings.ERFixedShops = GUI.Toggle(new Rect(240f, y, 175f, 30f), TunicRandomizer.Settings.ERFixedShops, "Fixed Shops");
+            }
             y += 40f;
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
