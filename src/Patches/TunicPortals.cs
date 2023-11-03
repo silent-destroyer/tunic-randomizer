@@ -1046,6 +1046,7 @@ namespace TunicRandomizer
                 Portal windmillPortal = new Portal(destination: "Windmill", tag: "", name: "Windmill Entrance", scene: "Overworld Redux");
                 Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop");
                 RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
+                shopRegionList.Add("Overworld Redux");
             }
             int regionNumber = 0;
             while (shopCount > 0)
