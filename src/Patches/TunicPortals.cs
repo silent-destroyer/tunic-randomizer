@@ -1040,17 +1040,13 @@ namespace TunicRandomizer
             }
             List<string> shopRegionList = new List<string>();
             int shopCount = 6;
-            Logger.LogInfo("test 1");
             if (SaveFile.GetInt("randomizer ER fixed shop") == 1)
             {
-                Logger.LogInfo("test 11");
                 shopCount = 1;
-                Logger.LogInfo("test 2");
                 Portal windmillPortal = new Portal(destination: "Windmill", tag: "", name: "Windmill Entrance", scene: "Overworld Redux");
                 Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop");
                 RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
             }
-            Logger.LogInfo("test 3");
             int regionNumber = 0;
             while (shopCount > 0)
             {
@@ -1074,7 +1070,6 @@ namespace TunicRandomizer
                     Logger.LogInfo("too many shops, not enough regions, add more shops");
                 }
             }
-            Logger.LogInfo("test 4");
 
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
