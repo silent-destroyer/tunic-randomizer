@@ -56,7 +56,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Shuffled Abilities", SaveFile.GetInt("randomizer shuffled abilities") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt("randomizer entrance rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                    OptionsGUI.addButton("ER Fixed Shops", SaveFile.GetInt("randomizer ER fixed shops") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                    OptionsGUI.addButton("ER Fixed Shop", SaveFile.GetInt("randomizer ER fixed shop") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 }
             }
             OptionsGUI.setHeading("Logic");

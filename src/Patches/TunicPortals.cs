@@ -959,6 +959,17 @@ namespace TunicRandomizer
                     else twoPlusPortals.Add(newPortal);
                 }
             }
+            if (SaveFile.GetInt("randomizer ER fixed shop") == 1)
+            {
+                foreach (Portal portal in twoPlusPortals)
+                {
+                    if (portal.SceneDestinationTag == "Overworld Redux, Windmill_")
+                    { 
+                        twoPlusPortals.Remove(portal);
+                        break;
+                    }
+                }
+            }
 
             // making a list of accessible regions that will be updated as we gain access to more regions
             List<string> accessibleRegions = new List<string>();
@@ -1029,11 +1040,22 @@ namespace TunicRandomizer
             }
             List<string> shopRegionList = new List<string>();
             int shopCount = 6;
+            Logger.LogInfo("test 1");
+            if (SaveFile.GetInt("randomizer ER fixed shop") == 1)
+            {
+                Logger.LogInfo("test 11");
+                shopCount = 1;
+                Logger.LogInfo("test 2");
+                Portal windmillPortal = new Portal(destination: "Windmill", tag: "", name: "Windmill Entrance", scene: "Overworld Redux");
+                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop");
+                RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
+            }
+            Logger.LogInfo("test 3");
             int regionNumber = 0;
             while (shopCount > 0)
             {
                 // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
+                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop");
                 // check that a shop has not already been added to this region, since two shops in the same region causes problems
                 if (!shopRegionList.Contains(twoPlusPortals[regionNumber].Scene))
                 {
@@ -1052,7 +1074,8 @@ namespace TunicRandomizer
                     Logger.LogInfo("too many shops, not enough regions, add more shops");
                 }
             }
-            
+            Logger.LogInfo("test 4");
+
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
             while (twoPlusPortals.Count > 1)
@@ -1085,13 +1108,9 @@ namespace TunicRandomizer
         // a function to apply the randomized portal list to portals during on scene loaded
         public static void ModifyPortals(Scene loadingScene)
         {
-            Logger.LogInfo("testing, loading scene is " + loadingScene.name);
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
             foreach (var portal in Portals)
             {
-
-                Logger.LogInfo("destination scene name is " + portal.destinationSceneName);
-                Logger.LogInfo("id is " + portal.id);
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals)
                 {

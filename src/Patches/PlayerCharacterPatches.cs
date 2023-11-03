@@ -246,6 +246,10 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Torch").Quantity = 1;
                     SaveFile.SetInt("randomizer entrance rando enabled", 1);
                 }
+                if (TunicRandomizer.Settings.ERFixedShop)
+                {
+                    SaveFile.SetInt("randomizer ER fixed shop", 1);
+                }
                 if (TunicRandomizer.Settings.ShuffleAbilities) {
                     SaveFile.SetInt("randomizer shuffled abilities", 1);
                 }
