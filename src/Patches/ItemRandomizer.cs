@@ -598,11 +598,11 @@ namespace TunicRandomizer {
                     { Hints.HintMessages.Add("Town Sign", $"[arrow_left] \"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\""); }
 
                     if (Portal.Portal1.SceneDestinationTag == "East Forest Redux, Sword Access_lower")
-                    { Hints.HintMessages.Add("East Forest Sign 1", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]");
-                      Hints.HintMessages.Add("East Forest Sign 2", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
+                    { Hints.HintMessages.Add("West East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]");
+                      Hints.HintMessages.Add("East East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
                     if (Portal.Portal2.SceneDestinationTag == "East Forest Redux, Sword Access_lower")
-                    { Hints.HintMessages.Add("East Forest Sign 1", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]");
-                      Hints.HintMessages.Add("East Forest Sign 2", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]"); }
+                    { Hints.HintMessages.Add("West East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]");
+                      Hints.HintMessages.Add("East East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]"); }
                 }
             }
 
