@@ -1111,7 +1111,6 @@ namespace TunicRandomizer
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
-                    Logger.LogInfo("portal combo is " + portal1.Name + " " + portal2.Name + " " + comboTag);
                     if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
                         if (portal2.Scene == "Shop")
