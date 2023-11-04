@@ -1078,9 +1078,7 @@ namespace TunicRandomizer
             {
                 // I don't think the LockBeforeKey check can lead to an infinite loop?
                 if (LockBeforeKey(twoPlusPortals[0]) == true || LockBeforeKey(twoPlusPortals[1]) == true)
-                {
-                    ShuffleList(twoPlusPortals, seed);
-                }
+                { ShuffleList(twoPlusPortals, seed); }
                 else
                 {
                 comboNumber++;
@@ -1113,7 +1111,7 @@ namespace TunicRandomizer
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
-
+                    Logger.LogInfo("portal combo is " + portal1.Name + " " + portal2.Name + " " + comboTag);
                     if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
                     {
                         if (portal2.Scene == "Shop")

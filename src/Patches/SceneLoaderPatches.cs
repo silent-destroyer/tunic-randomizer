@@ -288,6 +288,7 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 TunicPortals.ModifyPortals(loadingScene);
             }
 

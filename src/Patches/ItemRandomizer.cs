@@ -31,7 +31,6 @@ namespace TunicRandomizer {
         public static void RandomizeAndPlaceItems() {
             ItemPatches.ItemList.Clear();
             ItemPatches.ItemsPickedUp.Clear();
-            TunicPortals.RandomizedPortals.Clear();
 
             List<string> ProgressionNames = new List<string>{
                 "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
@@ -175,8 +174,7 @@ namespace TunicRandomizer {
             // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
             Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-            { TunicPortals.RandomizePortals(SaveFile.GetInt("seed")); }
+            TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
