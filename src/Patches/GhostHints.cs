@@ -378,8 +378,10 @@ public class GhostHints {
                     }
                     SceneItemCount++;
                 }
+
                 if (SceneItemCount == 0)
                 { continue; }
+
                 if (MoneyInScene >= 200 && SceneItemCount < 10) {
                     string ScenePrefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
                     string Hint = $"ahn EzE plAs too fInd A \"LOT OF MONEY\" iz {ScenePrefix}\n\"{Scene.ToUpper()}.\"";

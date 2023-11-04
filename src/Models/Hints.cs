@@ -92,7 +92,7 @@ namespace TunicRandomizer {
             {"ziggurat2020_FTRoom", "Rooted Ziggurat Portal Room"},
             {"Swamp Redux 2", "Swamp"},
             {"Cathedral Redux", "Cathedral"},
-            {"Cathedral Arena", "Gauntlet"},
+            {"Cathedral Arena", "Cathedral Gauntlet"},
             {"RelicVoid", "Hero's Grave"},
             {"g_elements", "Glyph Tower"},
             {"Spirit Arena", "The Heir"},

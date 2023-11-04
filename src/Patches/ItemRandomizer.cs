@@ -560,13 +560,10 @@ namespace TunicRandomizer {
                 HexagonHintAreas.Remove(HexagonHintArea);
             }
 
-            Logger.LogInfo("test message 0");
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
             {
                 foreach (PortalCombo Portal in TunicPortals.RandomizedPortals.Values)
                 {
-                    Logger.LogInfo("check here");
-                    Logger.LogInfo(Portal.Portal1.SceneDestinationTag + ": " + Portal.Portal2.SceneDestinationTag);
                     if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
                     { Hints.HintMessages.Add("East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
                     if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
