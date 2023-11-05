@@ -25,7 +25,7 @@ namespace TunicRandomizer {
             {"Overworld Redux (73.0, 44.0, -38.0)", "Fortress Sign"},
             {"Overworld Redux (-141.0, 40.0, 34.8)", "Quarry Sign"},
             {"East Forest Redux (128.0, 0.0, 33.5)", "West East Forest Sign"},
-            {"East Forest Redux (144.0, 0.0003, -23)", "East East Forest Sign"},
+            {"East Forest Redux (144.0, 0.0, -23.0)", "East East Forest Sign"},
         };
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
