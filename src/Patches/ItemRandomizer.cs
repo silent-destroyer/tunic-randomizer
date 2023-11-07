@@ -8,6 +8,7 @@ using TinyJson;
 using System.IO;
 using BepInEx.Logging;
 using UnityEngine.Playables;
+using JetBrains.Annotations;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
@@ -90,10 +91,10 @@ namespace TunicRandomizer {
                         if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
                             string FillerItem = ItemPatches.FillerItems.Keys.ToList()[TunicRandomizer.Randomizer.Next(ItemPatches.FillerItems.Count)];
                             Item.Reward.Name = FillerItem;
-                            Item.Reward.Type = "INVENTORY";
+                            Item.Reward.Type = FillerItem == "money" ? "MONEY": "INVENTORY";
                             Item.Reward.Amount = ItemPatches.FillerItems[FillerItem][TunicRandomizer.Randomizer.Next(ItemPatches.FillerItems[FillerItem].Count)];
                         }
-                        if(ItemPatches.FillerItems.ContainsKey(Item.Reward.Name) && GoldHexagonsAdded < HexagonsToAdd) {
+                        if(ItemPatches.FillerItems.ContainsKey(Item.Reward.Name) && ItemPatches.FillerItems[Item.Reward.Name].Contains(Item.Reward.Amount) && GoldHexagonsAdded < HexagonsToAdd) {
                             Item.Reward.Name = "Hexagon Gold";
                             Item.Reward.Type = "SPECIAL";
                             Item.Reward.Amount = 1;
@@ -171,11 +172,10 @@ namespace TunicRandomizer {
                 { UnplacedInventory.Add(itemName, 1); }
             }
 
-            // getting the randomized portal list the same way as we randomize it normally
-            Dictionary<string, PortalCombo> randomizedPortalsList = new Dictionary<string, PortalCombo>(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
             // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
             Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
+            TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
@@ -200,7 +200,7 @@ namespace TunicRandomizer {
                     SceneInventory.Clear();
                     SceneInventory.Add("Overworld Redux", 1);
                     // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
-                    while (checkP < randomizedPortalsList.Count)
+                    while (checkP < TunicPortals.RandomizedPortals.Count)
                     {
                         checkP = 0;
                         CombinedInventory.Clear();
@@ -209,7 +209,7 @@ namespace TunicRandomizer {
                         foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                         {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
 
-                        foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
                         {
                             if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
                             {
@@ -264,7 +264,7 @@ namespace TunicRandomizer {
                 SceneInventory.Clear();
                 SceneInventory.Add(startingScene, 1);
                 // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
-                while (checkP < randomizedPortalsList.Count)
+                while (checkP < TunicPortals.RandomizedPortals.Count)
                 {
                     checkP = 0;
                     CombinedInventory.Clear();
@@ -277,7 +277,7 @@ namespace TunicRandomizer {
                     // cycle through the randomized portals list, check for if we get any scenes with our current inventory
                     // if we get any rewards at all that weren't already in the inventory, we continue the loop
                     // keep looping until we don't get any new rewards
-                    foreach (PortalCombo portalCombo in randomizedPortalsList.Values)
+                    foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
                     {
                         if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
                         {
@@ -560,6 +560,49 @@ namespace TunicRandomizer {
                 HexagonHintAreas.Remove(HexagonHintArea);
             }
 
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+            {
+                foreach (PortalCombo Portal in TunicPortals.RandomizedPortals.Values)
+                {
+                    if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
+                    { Hints.HintMessages.Add("East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
+                    if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
+                    { Hints.HintMessages.Add("East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]"); }
+                    
+                    if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Archipelagos Redux_lower")
+                    { Hints.HintMessages.Add("West Garden Sign", $"[arrow_left] \"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\""); }
+                    if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Archipelagos Redux_lower")
+                    { Hints.HintMessages.Add("West Garden Sign", $"[arrow_left] \"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\""); }
+
+                    if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Fortress Courtyard_")
+                    { Hints.HintMessages.Add("Fortress Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
+                    if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Fortress Courtyard_")
+                    { Hints.HintMessages.Add("Fortress Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]"); }
+
+                    if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Darkwoods Tunnel_")
+                    { Hints.HintMessages.Add("Quarry Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_up]"); }
+                    if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Darkwoods Tunnel_")
+                    { Hints.HintMessages.Add("Quarry Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_up]"); }
+
+                    if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Ruins Passage_west")
+                    { Hints.HintMessages.Add("Ruined Hall Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
+                    if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Ruins Passage_west")
+                    { Hints.HintMessages.Add("Ruined Hall Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]"); }
+
+                    if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house")
+                    { Hints.HintMessages.Add("Town Sign", $"[arrow_left] \"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\""); }
+                    if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house")
+                    { Hints.HintMessages.Add("Town Sign", $"[arrow_left] \"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\""); }
+
+                    if (Portal.Portal1.SceneDestinationTag == "East Forest Redux, Sword Access_lower")
+                    { Hints.HintMessages.Add("West East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]");
+                      Hints.HintMessages.Add("East East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal2.Scene]}\" [arrow_right]"); }
+                    if (Portal.Portal2.SceneDestinationTag == "East Forest Redux, Sword Access_lower")
+                    { Hints.HintMessages.Add("West East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]");
+                      Hints.HintMessages.Add("East East Forest Sign", $"\"{Hints.SimplifiedSceneNames[Portal.Portal1.Scene]}\" [arrow_right]"); }
+                }
+            }
+
         }
 
         public static void PopulateSpoilerLog() {
@@ -620,17 +663,12 @@ namespace TunicRandomizer {
 
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                Dictionary<string, PortalCombo> PortalList = TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 List<string> PortalSpoiler = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
-                foreach (PortalCombo portalCombo in PortalList.Values)
-                {
-                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name);
-                }
+                foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
+                { PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name); }
                 foreach (string combo in PortalSpoiler)
-                {
-                    SpoilerLogLines.Add(combo);
-                }
+                { SpoilerLogLines.Add(combo); }
             }
 
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {

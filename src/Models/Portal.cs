@@ -83,7 +83,14 @@ namespace TunicRandomizer {
             get;
             set;
         }
-
+        public Portal(string destination, string tag, string name, string scene)
+        {
+            Destination = destination;
+            Tag = tag;
+            Name = name;
+            Scene = scene;
+            SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
+        }
         public Portal(string destination, string tag, string name, string scene, string region, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
         {
             Destination = destination;

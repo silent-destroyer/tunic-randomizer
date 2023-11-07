@@ -31,11 +31,12 @@ Note: This is the standalone, single-player version of the TUNIC Randomizer. For
   - Nighttime is not considered in logic. Every check in the game is logically obtainable before the first visit to The Heir, and since nighttime restricts access to several locations it would limit the amount of options overall if certain items were required to always be obtainable at night. The game will automatically switch back to daytime if you die to The Heir on the first visit, but you can optionally switch to nighttime at any point after that by interacting with a special object in the Old House.
   - For Entrance Rando:
     - You can use the Torch to return to the Overworld save point at any time.
-    - The dancing ghost fox area in East Forest can be accessed using the Hero's Laurels from the gate entrance of Guard House 1.
+    - The dancing ghost fox area in East Forest can be accessed using the Hero's Laurels.
     - Using the Hero's Laurels, you can dash through the gate in the Bottom of the Well boss room and Monastery.
     - Activating a fuse to turn on a Prayer teleporter also activates its counterpart in the Far Shore.
     - The West Garden fuse can be activated from below.
     - You can reach the main part of Ruined Atoll from the lower entrance area using the Hero's Laurels.
+    - You can pray at the tree at the exterior of the Library.
     - The elevators in Ziggurat only go down.
     - The portal in the trophy room in the back of the Old House is active from the start.
     - The elevator in Cathedral is immediately accessible without activating the fuse. Activating the fuse does nothing.
@@ -76,6 +77,9 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and Ice Rod is unlocked by Page 53.
   - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
   - In Hexagon Quest, rather than unlocked abilities via pages, a random ability is unlocked at 5, 10, and 15 Gold Hexagons found
+- Entrance Randomizer
+  - Shuffles all entrances in the game. Good luck finding your way, little fox!
+  - The Fixed Shop option makes it so there is always a shop in the Windmill, and only one other shop in the pool.
 ### Hints
 - Path of the Hero
   - Places a major hint at specific locations around the world, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple. These hint towards major progression items, such as Magic Items, Laurels, Hexagons, and more.

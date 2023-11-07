@@ -231,7 +231,9 @@ public class GhostHints {
                 new HintGhost("Hint Ghost Frog's Domain 1", "frog cave main", new Vector3(19.7682f, 9.1943f, -23.3269f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"I wuhndur wAr #uh kwehstuhgawn iz?"),
                 new HintGhost("Hint Ghost Frog's Domain 2", "frog cave main", new Vector3(27.09619f, 9.2581f, -37.28336f), new Quaternion(0f, 0.5000001f, 0f, -0.8660254f), NPC.NPCAnimState.FISHING, $"$hhh. Im hIdi^ fruhm #uh frawgs.") }
             },
-
+            { "Purgatory", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
+            },
         };
 
         public static void InitializeGhostFox() {
@@ -258,7 +260,6 @@ public class GhostHints {
                     if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
                         NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
                     }
-
                     NewGhostFox.SetActive(true);
                 }
                 
@@ -268,6 +269,8 @@ public class GhostHints {
         public static void GenerateHints() {
             HintGhosts.Clear();
             List<string> GhostSpawns = GhostLocations.Keys.ToList();
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 0 && GhostLocations.ContainsKey("Hint Ghost Purgatory"))
+            { GhostLocations.Remove("Hint Ghost Purgatory"); }
             List<string> SelectedSpawns = new List<string>();
             for (int i = 0; i < 15; i++) {
                 string Location = GhostSpawns[TunicRandomizer.Randomizer.Next(GhostSpawns.Count)];
@@ -375,6 +378,10 @@ public class GhostHints {
                     }
                     SceneItemCount++;
                 }
+
+                if (SceneItemCount == 0)
+                { continue; }
+
                 if (MoneyInScene >= 200 && SceneItemCount < 10) {
                     string ScenePrefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
                     string Hint = $"ahn EzE plAs too fInd A \"LOT OF MONEY\" iz {ScenePrefix}\n\"{Scene.ToUpper()}.\"";
@@ -432,7 +439,7 @@ public class GhostHints {
                 if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 0) {
                     LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nit louks lIk #is: [dath]";
                 } else {
-                    LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
+                    LostFoxScript.text = $"I lawst mI mahjik stOn [dath] ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
                 }
                 LostFox.GetComponent<NPC>().script = LostFoxScript;
 
