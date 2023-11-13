@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using BepInEx.Logging;
-using Lib;
-using HarmonyLib;
-using JetBrains.Annotations;
-using System.Globalization;
-using HarmonyLib.Tools;
 
 namespace TunicRandomizer
 {
@@ -141,8 +133,8 @@ namespace TunicRandomizer
                     new TunicPortal("Overworld Interiors", "house", "Old House Entry Door", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { {"Key (House)", 1} }), // make this match actual item name
                     new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Waterfall Entrance", granularRegion: "Overworld"),
                     new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", granularRegion: "Overworld Well to Furnace Rail", ignoreScene: true, givesAccess: new List<string> { "Overworld Redux, Sewer_west_aqueduct" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Sewer_west_aqueduct", 1 } }),
-                    new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace from Windmill", granularRegion: "Overworld"),
-                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace from West Garden", granularRegion: "Overworld", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Archipelagos Redux_lower", 1 } }),
+                    new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace under Windmill", granularRegion: "Overworld"),
+                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace near West Garden", granularRegion: "Overworld", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Archipelagos Redux_lower", 1 } }),
                     new TunicPortal("Furnace", "gyro_lower", "Entrance to Furnace from Beach", granularRegion: "Overworld"),
                     new TunicPortal("Overworld Cave", "", "Rotating Lights Entrance", granularRegion: "Overworld"),
                     new TunicPortal("Swamp Redux 2", "wall", "Swamp Upper Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),

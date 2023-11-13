@@ -610,7 +610,7 @@ namespace TunicRandomizer {
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Sword Access, RelicVoid_teleporter_relic plinth"": 1, ""21"", 1}
+                        {""Sword Access, RelicVoid_teleporter_relic plinth"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 12,
                     ""SceneName"": ""Sword Access""

@@ -58,6 +58,7 @@ public class GhostHints {
         public static List<(string, string)> LocationHints = new List<(string, string)>();
         public static List<(string, string)> ItemHints = new List<(string, string)>();
         public static List<(string, string)> BarrenAndTreasureHints = new List<(string, string)>();
+        public static (string, string) HeirHint;
 
         public static Dictionary<string, HintGhost> HintGhosts = new Dictionary<string, HintGhost>();
 
@@ -294,6 +295,12 @@ public class GhostHints {
                 (string, string) ItemHint = ItemHints[TunicRandomizer.Randomizer.Next(ItemHints.Count)];
                 Hints.Add(ItemHint);
                 ItemHints.Remove(ItemHint);
+
+                if (i == 0 && SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+                {
+                    GenerateHeirHint();
+                    Hints.Add(HeirHint);
+                }
                 try {
                     (string, string) BarrenHint = BarrenAndTreasureHints[TunicRandomizer.Randomizer.Next(BarrenAndTreasureHints.Count)];
                     Hints.Add(BarrenHint);
@@ -413,6 +420,29 @@ public class GhostHints {
                     }
                 }
             }
+        }
+
+        public static void GenerateHeirHint()
+        {
+            Logger.LogInfo("heir hint creation started");
+            string heirPortal = "error finding heir";
+            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
+            {
+                if (portalCombo.Portal1.Scene == "Spirit Arena")
+                {
+                    Logger.LogInfo("found the heir, they're at " + portalCombo.Portal2.Name);
+                    heirPortal = portalCombo.Portal2.Name;
+                    break;
+                }
+                if (portalCombo.Portal2.Scene == "Spirit Arena")
+                {
+                    Logger.LogInfo("found the heir, they're at " + portalCombo.Portal1.Name);
+                    heirPortal = portalCombo.Portal1.Name;
+                    break;
+                }
+            }
+            HeirHint = ($"bI #uh wA, I hurd #aht #uh \"HEIR\" moovd, yoo kahn \nfInd #ehm aht \"{heirPortal.ToUpper()}\"",
+                        $"bI #uh wA, I hurd #aht #uh \"HEIR\" moovd, yoo kahn \nfInd #ehm aht \"{Translations.Translate(heirPortal, false).ToUpper()}\"");
         }
 
         public static void SpawnTorchHintGhost() {
