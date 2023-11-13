@@ -40,6 +40,7 @@ namespace TunicRandomizer {
         public static GameObject HeroRelicMaterial;
         public static bool DathStonePresentationAlreadySetup = false;
         public static bool CustomItemPresentationsAlreadySetup = false;
+        public static bool SwordPresentationsAlreadySetup = false;
 
         public static GameObject GlowEffect;
 
@@ -659,6 +660,44 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Key Special").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     Inventory.GetItemByName("Key Special").collectionMessage.text = $"dah% stOn\"!?\"";
                     DathStonePresentationAlreadySetup = true;
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        public static void SetupCustomSwordItemPresentations() {
+            if (!SwordPresentationsAlreadySetup) {
+                try {
+                    GameObject SwordPresentation = Resources.FindObjectsOfTypeAll<GameObject>().Where(Item => Item.name == "User Rotation Root").ToList()[0].transform.GetChild(9).gameObject;
+                    GameObject LibrarianSword = GameObject.Instantiate(SwordPresentation);
+                    LibrarianSword.transform.parent = SwordPresentation.transform.parent;
+                    LibrarianSword.GetComponent<MeshFilter>().mesh = SecondSword.GetComponent<MeshFilter>().mesh;
+                    LibrarianSword.GetComponent<MeshRenderer>().materials = SecondSword.GetComponent<MeshRenderer>().materials;
+                    LibrarianSword.transform.localScale = new Vector3(0.25f, 0.2f, 0.25f);
+                    LibrarianSword.transform.localRotation = new Quaternion(-0.2071f, -0.1216f, 0.3247f, -0.9148f);
+                    LibrarianSword.transform.localPosition = SwordPresentation.transform.localPosition;
+                    LibrarianSword.SetActive(false);
+                    GameObject.DontDestroyOnLoad(LibrarianSword);
+
+                    GameObject HeirSword = GameObject.Instantiate(SwordPresentation);
+                    HeirSword.transform.parent = SwordPresentation.transform.parent;
+                    HeirSword.GetComponent<MeshFilter>().mesh = ThirdSword.GetComponent<MeshFilter>().mesh;
+                    HeirSword.GetComponent<MeshRenderer>().materials = ThirdSword.GetComponent<MeshRenderer>().materials;
+                    HeirSword.transform.localScale = new Vector3(0.175f, 0.175f, 0.175f);
+                    HeirSword.transform.localRotation = new Quaternion(-0.6533f, 0.2706f, -0.2706f, 0.6533f);
+                    HeirSword.transform.localPosition = SwordPresentation.transform.localPosition;
+                    HeirSword.SetActive(false);
+                    GameObject.DontDestroyOnLoad(HeirSword);
+
+                    LibrarianSword.GetComponent<ItemPresentationGraphic>().items = new List<Item>() { Inventory.GetItemByName("Librarian Sword") }.ToArray();
+                    HeirSword.GetComponent<ItemPresentationGraphic>().items = new List<Item>() { Inventory.GetItemByName("Heir Sword") }.ToArray();
+
+                    List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
+                    newipgs.Add(LibrarianSword.GetComponent<ItemPresentationGraphic>());
+                    newipgs.Add(HeirSword.GetComponent<ItemPresentationGraphic>());
+                    ItemPresentation.instance.itemGraphics = newipgs.ToArray();
+
+                    SwordPresentationsAlreadySetup = true;
                 } catch (Exception e) {
                 }
             }

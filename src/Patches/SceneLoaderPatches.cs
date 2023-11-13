@@ -37,6 +37,7 @@ namespace TunicRandomizer {
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
+                SwordProgression.CreateSwordItems();
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 SceneLoader.LoadScene("TitleScreen");
                 return;
