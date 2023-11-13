@@ -504,8 +504,8 @@ namespace TunicRandomizer {
             HintItem = FindRandomizedItemByName("Hyperdash");
             Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
-            TrunicHint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} {Translations.Translate(Scene, false)}\"...\"";
+            HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE <#FFFFFF>[laurels]\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
+            TrunicHint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE <#FFFFFF>[laurels]\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} {Translations.Translate(Scene, false)}\"...\"";
 
             Hints.HintMessages.Add("Temple Statue", HintMessage);
             Hints.TrunicHintMessages.Add("Temple Statue", TrunicHint);
