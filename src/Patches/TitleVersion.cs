@@ -16,6 +16,7 @@ namespace TunicRandomizer {
 
         public static bool Loaded = false;
         public static GameObject TitleLogo;
+        public static bool DevBuild = true;
         public static void Initialize() {
             if (!Loaded) {
                 bool UpdateAvailable = false;
@@ -27,7 +28,7 @@ namespace TunicRandomizer {
                     StreamReader Reader = new StreamReader(response.GetResponseStream());
                     string JsonResponse = Reader.ReadToEnd();
                     dynamic Releases = JSONParser.FromJson<dynamic>(JsonResponse);
-                    UpdateAvailable = Releases[0]["tag_name"] != PluginInfo.VERSION;
+                    UpdateAvailable = Releases[0]["tag_name"] != PluginInfo.VERSION && !DevBuild;
                     UpdateVersion = Releases[0]["tag_name"];
                 } catch (Exception e) {
                 }

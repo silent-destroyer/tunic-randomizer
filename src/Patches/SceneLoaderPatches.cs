@@ -26,7 +26,7 @@ namespace TunicRandomizer {
             return true;
         }
 
-        public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {            
+        public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             // ladder storage fix
             if (PlayerCharacter.instance != null)
             {
@@ -61,9 +61,14 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Fortress Main");
                 return;
             }
+            if (loadingScene.name == "ziggurat2020_3" && !EnemyRandomizer.Enemies.ContainsKey("Centipede")) {
+                EnemyRandomizer.InitializeEnemies("ziggurat2020_3");
+                SceneLoader.LoadScene("Fortress Reliquary");
+                return;
+            }
             if (loadingScene.name == "ziggurat2020_1" && !EnemyRandomizer.Enemies.ContainsKey("administrator")) {
                 EnemyRandomizer.InitializeEnemies("ziggurat2020_1");
-                SceneLoader.LoadScene("Fortress Reliquary");
+                SceneLoader.LoadScene("ziggurat2020_3");
                 return;
             }
             if (loadingScene.name == "Swamp Redux 2" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_easy")) {
@@ -81,9 +86,14 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Quarry");
                 return;
             }
+            if (loadingScene.name == "Crypt" && !EnemyRandomizer.Enemies.ContainsKey("Shadowreaper")) {
+                EnemyRandomizer.InitializeEnemies("Crypt");
+                SceneLoader.LoadScene("Quarry Redux");
+                return;
+            }
             if (loadingScene.name == "Fortress Basement" && !EnemyRandomizer.Enemies.ContainsKey("Spider Small")) {
                 EnemyRandomizer.InitializeEnemies("Fortress Basement");
-                SceneLoader.LoadScene("Quarry Redux");
+                SceneLoader.LoadScene("Crypt");
                 return;
             }
             if (loadingScene.name == "frog cave main" && !EnemyRandomizer.Enemies.ContainsKey("Frog Small")) {

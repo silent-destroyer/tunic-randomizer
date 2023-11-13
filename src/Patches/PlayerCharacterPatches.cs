@@ -205,14 +205,14 @@ namespace TunicRandomizer {
 
             CustomItemBehaviors.CanTakeGoldenHit = false;
             CustomItemBehaviors.CanSwingGoldenSword = false;
-
+            
             int seed = SaveFile.GetInt("seed");
-
+            
             if (seed == 0) {
                 seed = QuickSettings.CustomSeed == 0 ? new System.Random().Next() : QuickSettings.CustomSeed;
                 Logger.LogInfo($"Generated new seed: " + seed);
                 SaveFile.SetInt("seed", seed);
-
+                SaveFile.SetInt("randomizer", 1);
                 SaveFile.SetString("randomizer game mode", Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode));
                 if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
 
