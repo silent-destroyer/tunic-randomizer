@@ -92,6 +92,12 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Crypt",
+                new List<string>() {
+                    "Shadowreaper"
+                }
+            },
+            {
                 "Quarry",
                 new List<string>() {
                     "Scavenger_stunner"
@@ -129,6 +135,12 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "ziggurat2020_3",
+                new List<string>() {
+                    "Centipede from egg (Varient)",
+                }
+            },
+            {
                 "Fortress Reliquary",
                 new List<string> () {
                     "voidling redux"
@@ -136,7 +148,7 @@ namespace TunicRandomizer {
             },
             {
                 "Fortress Main",
-                new List<string> () { 
+                new List<string> () {
                     "woodcutter"
                 }
             },
@@ -153,7 +165,7 @@ namespace TunicRandomizer {
                     "administrator_servant"
                 }
             },
-            { 
+            {
                 "Posterity",
                 new List<string> () {
                     "Phage",
@@ -172,7 +184,6 @@ namespace TunicRandomizer {
                     "plover",
                     "Spinnerbot Baby",
                     "Crabbit",
-                    "Crabbit with Shell",
                     "Fox enemy zombie",
                     "BlobBig",
                     "BlobBigger",
@@ -184,12 +195,10 @@ namespace TunicRandomizer {
                     "Fairyprobe Archipelagos (Dmg)",
                     "Skuladot redux_shield",
                     "Crabbo",
-                    "Spinnerbot Corrupted",                          
+                    "Spinnerbot Corrupted",
                     "Turret",
                     "Hedgehog Trap",
                     "administrator_servant",
-                    "Phage",
-                    "Ghost Knight"
                 }
             },
             {
@@ -217,7 +226,11 @@ namespace TunicRandomizer {
                     "Wizard_Support",
                     "Crow Voidtouched",
                     "woodcutter",
-                    "Fox enemy"
+                    "Fox enemy",
+                    "Ghost Knight",
+                    "Centipede",
+                    "Phage",
+                    "Crabbit with Shell",
                 }
             },
             {
@@ -229,7 +242,8 @@ namespace TunicRandomizer {
                     "bomezome big",
                     "tech knight ghost",
                     "tunic knight void",
-                    "Voidtouched"
+                    "Voidtouched",
+                    "Shadowreaper"
                 }
             }
         };
@@ -289,9 +303,11 @@ namespace TunicRandomizer {
             { "tech knight ghost", $"\"Garden Knight...?\"" },
             { "tunic knight void", $"gRdin nIt...\"?\"" },
             { "Voidtouched", $"\"Voidtouched\"" },
+            { "Centipede", $"\"Centipede\"" },
+            { "Shadowreaper", $"\"Shadowreaper\"" },
         };
 
-        public static void CreateAreaSeeds() { 
+        public static void CreateAreaSeeds() {
             System.Random Random = new System.Random(SaveFile.GetInt("seed"));
             foreach (String Scene in Hints.AllScenes) {
                 SaveFile.SetInt($"randomizer enemy seed {Scene}", Random.Next());
@@ -305,19 +321,18 @@ namespace TunicRandomizer {
                 { "Fairyprobe Archipelagos (2)", "Fairyprobe Archipelagos" },
                 { "Crabbo (1)", "Crabbo" },
                 { "Frog (7)", "Frog" },
-                { "Hedgehog Trap (1)", "Hedgehog Trap" }
-
+                { "Hedgehog Trap (1)", "Hedgehog Trap" },
+                { "Centipede from egg (Varient)", "Centipede" },
             };
             foreach (string LocationEnemy in LocationEnemies[SceneName]) {
                 string EnemyName = LocationEnemy;
-                if (RenamedEnemies.ContainsKey(EnemyName)) { 
+                if (RenamedEnemies.ContainsKey(EnemyName)) {
                     EnemyName = RenamedEnemies[EnemyName];
                 }
                 if (EnemyName == "voidling redux") {
                     Enemies[EnemyName] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == LocationEnemy && Monster.transform.parent.name == "_Night Encounters").ToList()[0].gameObject);
                     Enemies[EnemyName].GetComponent<Voidling>().replacementMonster = null;
-
-                } else { 
+                } else {
                     Enemies[EnemyName] = GameObject.Instantiate(Monsters.Where(Monster => Monster.name == LocationEnemy).ToList()[0].gameObject);
                 }
                 GameObject.DontDestroyOnLoad(Enemies[EnemyName]);
@@ -356,8 +371,10 @@ namespace TunicRandomizer {
 
         public static void SpawnNewEnemies() {
             EnemiesInCurrentScene.Clear();
-  
+
             string CurrentScene = SceneLoaderPatches.SceneName;
+
+            List<BombFlask> bombFlasks = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name != "Firecracker").ToList();
 
             System.Random Random;
             if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyGenerationType.SEEDED) {
@@ -365,9 +382,6 @@ namespace TunicRandomizer {
             } else {
                 Random = new System.Random();
             }
-
-            List<BombFlask> bombFlasks = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name != "Firecracker").ToList();
-
             List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab")).ToList();
             if (CurrentScene == "Archipelagos Redux") {
                 Monsters = Monsters.Where(Monster => Monster.transform.parent.parent == null || Monster.transform.parent.parent.name != "_Environment Prefabs").ToList();
@@ -375,7 +389,7 @@ namespace TunicRandomizer {
             if (CurrentScene == "Forest Belltower") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Library Hall" && !CycleController.IsNight) { 
+            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Library Hall" && !CycleController.IsNight) {
                 GameObject.Find("beefboy statues").SetActive(false);
                 GameObject.Find("beefboy statues (2)").SetActive(false);
                 foreach (GameObject Monster in Monsters) {
@@ -383,7 +397,7 @@ namespace TunicRandomizer {
                 }
             }
             if (CurrentScene == "Fortress East" || CurrentScene == "Frog Stairs") {
-                Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null ) && !Monster.name.Contains("Prefab")).ToList();
+                Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
             if (CurrentScene == "Cathedral Redux") {
                 Monsters.AddRange(Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => Monster.GetComponent<Crow>() != null && !Monster.name.Contains("Prefab")).ToList());
@@ -394,6 +408,9 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Monastery") {
                 Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
             }
+
+            Monsters = Monsters.Where(Monster => Monster.gameObject.scene.name == CurrentScene).ToList();
+
             int i = 0;
             foreach (GameObject Enemy in Monsters) {
                 GameObject NewEnemy = null;
@@ -406,13 +423,14 @@ namespace TunicRandomizer {
                             EnemyKeys.Remove("Crabbit with Shell");
                         }
                         if (Enemy.transform.parent.name.Contains("Wave")) {
-                            Enemy.transform.position = Vector3.zero;
-                            
+                            float x = (float)(Random.NextDouble() * 15) - 15f;
+                            float z = (float)(Random.NextDouble() * 23) - 23f;
+                            Enemy.transform.position = new Vector3(x, 0, z);
                         }
                     }
                     if (CurrentScene == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
-                        EnemyKeys.Remove("administrator_servant");
                         EnemyKeys.Remove("Hedgehog Trap");
+                        EnemyKeys.Remove("administrator_servant");
                     }
                     if (CurrentScene == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         EnemyKeys.Remove("administrator_servant");
@@ -464,6 +482,7 @@ namespace TunicRandomizer {
                                     EnemyTypes.Remove("Crabbit with Shell");
                                 }
                             }
+
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                         }
                     } else {
@@ -488,7 +507,7 @@ namespace TunicRandomizer {
                     }
                     if (SceneLoaderPatches.SceneName == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         NewEnemy.AddComponent<BossAnnounceOnAggro>();
-                        LanguageLine TopLine = ScriptableObject.CreateInstance<LanguageLine>(); 
+                        LanguageLine TopLine = ScriptableObject.CreateInstance<LanguageLine>();
                         LanguageLine BottomLine = ScriptableObject.CreateInstance<LanguageLine>();
                         TopLine.text = $"\"Enemy\"";
                         foreach (string Key in ProperEnemyNames.Keys) {
@@ -513,12 +532,19 @@ namespace TunicRandomizer {
 
                     // Randomize support scavengers bomb type
                     if (NewEnemy.GetComponent<Scavenger_Support>() != null) {
-                        Rigidbody randomBomb = bombFlasks[Random.Next(bombFlasks.Count)].gameObject.GetComponent<Rigidbody>();
+                        int bombChance = Random.Next(100);
+                        Rigidbody randomBomb;
+                        if (bombChance < 4) {
+                            randomBomb = bombFlasks.Where(bomb => bomb.name == "centipede_detritus_head").ToList()[0].gameObject.GetComponent<Rigidbody>();
+                        } else {
+                            List<BombFlask> possibleBombs = bombFlasks.Where(bomb => bomb.name != "Firecracker" && bomb.name != "centipede_detritus_head").ToList();
+                            randomBomb = possibleBombs[Random.Next(possibleBombs.Count)].gameObject.GetComponent<Rigidbody>();
+                        }
                         NewEnemy.GetComponent<Scavenger_Support>().bombPrefab = randomBomb;
                         if (!randomBomb.gameObject.name.Contains("Firecracker")) {
                             NewEnemy.GetComponent<Scavenger_Support>().tossAngle = 15f;
                         }
-                        if (randomBomb.gameObject.name.Contains("Ice")) {
+                        if (randomBomb.gameObject.name.Contains("Ice") || (randomBomb.gameObject.name.Contains("centipede") && bombChance < 2)) {
                             NewEnemy.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = Enemies["Scavenger_stunner"].transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials;
                         }
                     }
@@ -539,6 +565,7 @@ namespace TunicRandomizer {
                     }
                     GameObject.Destroy(Enemy.gameObject);
                 } catch (Exception ex) {
+                    Logger.LogInfo("An error occurred spawning new enemies");
                     if (NewEnemy != null) {
                         GameObject.Destroy(NewEnemy);
                         Logger.LogError("An error occurred spawning the following randomized enemy: " + NewEnemy.name);
@@ -552,8 +579,8 @@ namespace TunicRandomizer {
                         Enemies[Key].SetActive(false);
                     }
                 }
-            } catch (Exception e) { 
-                
+            } catch (Exception e) {
+
             }
         }
 
@@ -561,6 +588,7 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "Forest Boss Room" && __instance.__4__this.GetComponent<BossAnnounceOnAggro>() != null) {
                 StateVariable.GetStateVariableByName("SV_Forest Boss Room_Skuladot redux Big").BoolValue = true;
             }
+
             if (__instance.__4__this.GetComponent<TunicKnightVoid>() != null) {
                 CoinSpawner.SpawnCoins(50, __instance.__4__this.transform.position);
                 MPPickup.Drop(100f, __instance.__4__this.transform.position);
