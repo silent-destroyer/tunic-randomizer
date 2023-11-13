@@ -441,8 +441,8 @@ public class GhostHints {
                     break;
                 }
             }
-            HeirHint = ($"bI #uh wA, I hurd #aht #uh \"HEIR\" moovd, yoo kahn \nfInd #ehm aht \"{heirPortal.ToUpper()}\"",
-                        $"bI #uh wA, I hurd #aht #uh \"HEIR\" moovd, yoo kahn \nfInd #ehm aht \"{Translations.Translate(heirPortal, false).ToUpper()}\"");
+            HeirHint = ($"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now",
+                        $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{Translations.Translate(heirPortal, false).ToUpper()}\" now");
         }
 
         public static void SpawnTorchHintGhost() {
