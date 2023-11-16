@@ -34,26 +34,11 @@ namespace TunicRandomizer {
 
             Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                if (GameObject.Find("_FinishlineDisplay(Clone)/").transform.childCount >= 3) {
-                    GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2).gameObject.SetActive(!GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2).gameObject.active);
+                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null) {
+                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
                 }
             }
-/*
-            if (Input.GetKeyDown(KeyCode.Alpha1) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST" && (TimeWhenLastChangedDayNight + 3.0f < Time.fixedTime)) {
-                TimeWhenLastChangedDayNight = Time.fixedTime;
-                if (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) {
-                    bool isNight = !CycleController.IsNight;
-                    if (isNight) {
-                        CycleController.AnimateSunset();
-                    } else {
-                        CycleController.AnimateSunrise();
-                    }
-                    CycleController.IsNight = isNight;
-                    CycleController.nightStateVar.BoolValue = isNight;
-                } else {
-                    GenericMessage.ShowMessage($"OnlE #Oz hoo \"face The Heir\" R Abl\ntoo\"receive the power of time.\"");
-                }
-            }*/
+
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
                 GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
@@ -61,44 +46,11 @@ namespace TunicRandomizer {
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "<#ff0000>No" : "<#00ff00>Yes").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"", 
+                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Entrance Randomizer..{(SaveFile.GetInt("randomizer entrance rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
                     (Il2CppSystem.Action)QuickSettings.CopyQuickSettingsInGame, null);
             }
-            /*            if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                            string FurColor = ColorPalette.GetColorStringForPopup(ColorPalette.Fur, 0);
-                            string PuffColor = ColorPalette.GetColorStringForPopup(ColorPalette.Puff, 1);
-                            string DetailsColor = ColorPalette.GetColorStringForPopup(ColorPalette.Details, 2);
-                            string TunicColor = ColorPalette.GetColorStringForPopup(ColorPalette.Tunic, 3);
-                            string ScarfColor = ColorPalette.GetColorStringForPopup(ColorPalette.Scarf, 4);
-                            string Palette = $"\"Color Palette\"\n\"-----------------\"\n" +
-                                $"\"(0) Fur:     {FurColor.PadLeft(25)}\"\n" +
-                                $"\"(1) Puff:    {PuffColor.PadLeft(25)}\"\n" +
-                                $"\"(2) Details: {DetailsColor.PadLeft(25)}\"\n" +
-                                $"\"(3) Tunic:   {TunicColor.PadLeft(25)}\"\n" +
-                                $"\"(4) Scarf:   {ScarfColor.PadLeft(25)}\"";
-                            GenericMessage.ShowMessage(Palette);
-                        }
-                        if (Input.GetKeyDown(KeyCode.Alpha4)) {
-                            int ObtainedItemCount = TunicRandomizer.Tracker.ItemsCollected.Count;
-                            int ObtainedItemCountInCurrentScene = TunicRandomizer.Tracker.ItemsCollected.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
-                            int TotalItemCountInCurrentScene = ItemRandomizer.ItemList.Values.Where(item => item.Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
-                            int ObtainedPagesCount = TunicRandomizer.Tracker.ImportantItems["Pages"];
-                            int ObtainedFairiesCount = TunicRandomizer.Tracker.ImportantItems["Fairies"];
-                            int ObtainedGoldenTrophiesCount = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"];
 
-                            string BossesAndKeys = $"{(StateVariable.GetStateVariableByName("SV_Fortress Arena_Spidertank Is Dead").BoolValue ? "<#FF3333>" : "<#FFFFFF>")}[death]  " +
-                                $"{(StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue || Inventory.GetItemByName("Hexagon Red").Quantity == 1 ? "<#FF3333>" : "<#FFFFFF>")}[hexagram]  " +
-                                $"{(StateVariable.GetStateVariableByName("Librarian Dead Forever").BoolValue ? "<#33FF33>" : "<#FFFFFF>")}[death]  " +
-                                $"{(StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue || Inventory.GetItemByName("Hexagon Green").Quantity == 1 ? "<#33FF33>" : "<#FFFFFF>")}[hexagram]  " +
-                                $"{(StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue ? "<#3333FF>" : "<#FFFFFF>")}[death]  " +
-                                $"{(StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue || Inventory.GetItemByName("Hexagon Blue").Quantity == 1 ? "<#3333FF>" : "<#FFFFFF>")}[hexagram]";
-                            GenericMessage.ShowMessage($"\"Collected Items\"\n\"-----------------\"\n\"Pages......{string.Format("{0}/{1}", ObtainedPagesCount, 28).PadLeft(9, '.')}\"\n" +
-                                $"\"Fairies....{string.Format("{0}/{1}", ObtainedFairiesCount, 20).PadLeft(9, '.')}\"\n" +
-                                $"\"Treasures..{string.Format("{0}/{1}", ObtainedGoldenTrophiesCount, 12).PadLeft(9, '.')}\"\n" +
-                                $"\"This Area..{string.Format("{0}/{1}", ObtainedItemCountInCurrentScene, TotalItemCountInCurrentScene).PadLeft(9, '.')}\"\n" +
-                                $"\"Overall....{string.Format("{0}/{1}", ObtainedItemCount, ItemRandomizer.ItemList.Count).PadLeft(9, '.')}\"\n" +
-                                $"{BossesAndKeys}");
-                        }*/
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 if (OptionsGUIPatches.BonusOptionsUnlocked) {
                     PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
@@ -154,7 +106,7 @@ namespace TunicRandomizer {
                 CompletionTimer += Time.fixedUnscaledDeltaTime;
                 if (CompletionTimer > 6.0f) {
                     CompletionTimer = 0.0f;
-                    SpeedrunFinishlineDisplay.instance.transform.GetChild(2).gameObject.SetActive(true);
+                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
                     SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = false;
                 }
             }
@@ -172,6 +124,10 @@ namespace TunicRandomizer {
                     PlayerCharacter.instance.gameObject.GetComponent<Rotate>().eulerAnglesPerSecond += new Vector3(0, 3.5f, 0);
                 }
             }
+            if (SpeedrunData.gameComplete != 0 && !SpeedrunFinishlineDisplayPatches.GameCompleted) {
+                SpeedrunFinishlineDisplayPatches.GameCompleted = true;
+                SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
+            }
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt("randomizer prayer unlocked") == 0) {
                 __instance.prayerBeginTimer = 0;
             }
@@ -187,7 +143,7 @@ namespace TunicRandomizer {
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
-            
+
             if (Hints.AllScenes.Count == 0) {
                 for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++) {
                     string SceneName = Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));

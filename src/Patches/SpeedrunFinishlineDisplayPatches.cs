@@ -70,9 +70,11 @@ namespace TunicRandomizer {
         };
 
         public static GameObject CompletionRate;
+        public static GameObject CompletionCanvas;
 
         public static bool ShowSwordAfterDelay = false;
         public static bool ShowCompletionStatsAfterDelay = false;
+        public static bool GameCompleted = false;
         public static bool SpeedrunFinishlineDisplay_showFinishline_PrefixPatch(SpeedrunFinishlineDisplay __instance) {
 
             SpeedrunReportItem DathStone = ScriptableObject.CreateInstance<SpeedrunReportItem>();
@@ -166,9 +168,15 @@ namespace TunicRandomizer {
                     }
                 }
             } catch (Exception ex) { }
+        }
 
-            if (CompletionRate != null) { 
+        public static void SetupCompletionStatsDisplay() {
+
+            if (CompletionRate != null) {
                 GameObject.Destroy(CompletionRate.gameObject);
+            }
+            if (CompletionCanvas != null) {
+                GameObject.Destroy(CompletionCanvas.gameObject);
             }
             CompletionRate = new GameObject("completion rate");
             CompletionRate.transform.parent = GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(0).GetChild(0);
@@ -180,7 +188,7 @@ namespace TunicRandomizer {
             CompletionRate.transform.position = new Vector3(-345f, 142.5f, 55f);
             CompletionRate.transform.localScale = new Vector3(5f, 5f, 5f);
             CompletionRate.SetActive(false);
-            GameObject CompletionCanvas = new GameObject("completion stats");
+            CompletionCanvas = new GameObject("completion stats");
             CompletionCanvas.layer = 5;
             CompletionCanvas.transform.parent = GameObject.Find("_FinishlineDisplay(Clone)/").transform;
             CompletionCanvas.AddComponent<Canvas>();
@@ -188,7 +196,7 @@ namespace TunicRandomizer {
             CompletionCanvas.SetActive(false);
 
             int CheckCount = ItemPatches.ItemsPickedUp.Values.Where(Item => Item).ToList().Count;
-            float CheckPercentage = ((float)CheckCount /ItemPatches.ItemList.Count) * 100.0f;
+            float CheckPercentage = ((float)CheckCount / ItemPatches.ItemList.Count) * 100.0f;
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(-60f, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
@@ -200,7 +208,7 @@ namespace TunicRandomizer {
 
             TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
             TotalCompletion.SetActive(true);
-            List<List<string>> Columns = new List<List<string>>() { 
+            List<List<string>> Columns = new List<List<string>>() {
                 new List<string>(){"Overworld", "West Garden", "Ruined Atoll", "Quarry/Mountain", "Swamp"},
                 new List<string>(){"East Forest", "Eastern Vault Fortress", "Library", "Rooted Ziggurat", "Cathedral"},
                 new List<string>(){"Dark Tomb", "Frog's Domain", "Shop/Coin Wells", "Bosses Defeated", "Time Found"},
@@ -222,6 +230,10 @@ namespace TunicRandomizer {
             for (int i = 0; i < 4; i++) {
                 SetupCompletionCount(Columns[3][i], i, Spacings[3]);
             }
+
+            CompletionCanvas.transform.parent = GameObject.Find("_GameGUI(Clone)/AreaLabels/").transform;
+            CompletionCanvas.transform.localScale = new Vector3(2, 2, 2);
+            CompletionCanvas.transform.position = new Vector3(0, 0, 200);
 
             ShowCompletionStatsAfterDelay = true;
         }
@@ -368,6 +380,18 @@ namespace TunicRandomizer {
             for (int i = 0; i < 28; i++) {
                 SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
             }
+            if (CompletionCanvas != null) {
+                GameObject.Destroy(CompletionCanvas);
+            }
+            GameCompleted = false;
+            return true;
+        }
+
+        public static bool GameOverDecision___newgame_PrefixPatch(GameOverDecision __instance) {
+            if (CompletionCanvas != null) {
+                GameObject.Destroy(CompletionCanvas);
+            }
+            GameCompleted = false;
             return true;
         }
 
