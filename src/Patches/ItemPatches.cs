@@ -397,6 +397,7 @@ namespace TunicRandomizer {
                 if (Reward.Name == "Dath Stone") {
                     ItemPresentation.PresentItem(Inventory.GetItemByName("Key Special"));
                     Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
+                    Inventory.GetItemByName("Torch").Quantity = 1;
                 } else if (Reward.Name == "Sword Progression") {
                     TunicRandomizer.Tracker.ImportantItems["Sword Progression"]++;
                     SaveFile.SetInt("randomizer sword progression level", TunicRandomizer.Tracker.ImportantItems["Sword Progression"]);

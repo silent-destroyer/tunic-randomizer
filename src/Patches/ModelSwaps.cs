@@ -645,24 +645,59 @@ namespace TunicRandomizer {
             if (!DathStonePresentationAlreadySetup) {
                 try {
                     GameObject KeySpecial = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(Item => Item.gameObject.name == "key twist (special)").ToList()[0].gameObject;
+
+                    Inventory.GetItemByName("Key Special").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    Inventory.GetItemByName("Key Special").collectionMessage.text = $"dah% stOn\"!?\"";
+
                     if (KeySpecial.GetComponent<MeshFilter>() != null) {
                         GameObject.Destroy(KeySpecial.GetComponent<MeshRenderer>());
                         GameObject.Destroy(KeySpecial.GetComponent<MeshFilter>());
                     }
+                    if (KeySpecial.GetComponent<SpriteRenderer>() == null) {
+                        KeySpecial.AddComponent<SpriteRenderer>().sprite = Inventory.GetItemByName("Dash Stone").Icon;
+                        KeySpecial.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
+                        KeySpecial.GetComponent<SpriteRenderer>().material = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
+                    }
 
-                    KeySpecial.AddComponent<SpriteRenderer>().sprite = Inventory.GetItemByName("Dash Stone").Icon;
-                    KeySpecial.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
-                    KeySpecial.GetComponent<SpriteRenderer>().material = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
+                    GameObject Torch = new GameObject("torch");
+                    Torch.AddComponent<SpriteRenderer>().sprite = FindSprite("Inventory items_torch");
+                    Torch.GetComponent<SpriteRenderer>().material = FindMaterial("UI Add");
+                    Torch.layer = KeySpecial.layer;
+                    Torch.transform.parent = KeySpecial.transform;
+                    Torch.transform.localPosition = new Vector3(0.7f, 0.2f, 0f);
+                    Torch.transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
+                    Torch.transform.localEulerAngles = Vector3.zero;
 
+                    GameObject Plus = new GameObject("plus");
+                    Plus.AddComponent<SpriteRenderer>().sprite = FindSprite("game gui_plus sign");
+                    Plus.GetComponent<SpriteRenderer>().material = FindMaterial("UI Add");
+                    Plus.layer = KeySpecial.layer;
+                    Plus.transform.parent = KeySpecial.transform;
+                    Plus.transform.localPosition = new Vector3(0.55f, 0.2f, 0f);
+                    Plus.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+                    Plus.transform.localEulerAngles = Vector3.zero;
+
+                    Torch.SetActive(SaveFile.GetInt("randomizer entrance rando enabled") == 0);
+                    Plus.SetActive(SaveFile.GetInt("randomizer entrance rando enabled") == 0);
+                    
                     KeySpecial.transform.localScale = Vector3.one;
                     KeySpecial.transform.localPosition = Vector3.zero;
                     KeySpecial.transform.localRotation = Quaternion.identity;
-                    Inventory.GetItemByName("Key Special").collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Inventory.GetItemByName("Key Special").collectionMessage.text = $"dah% stOn\"!?\"";
                     DathStonePresentationAlreadySetup = true;
                 } catch (Exception e) {
                 }
+            } else {
+                try {
+                    GameObject KeySpecial = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(Item => Item.gameObject.name == "key twist (special)").ToList()[0].gameObject;
+
+                    for (int i = 0; i < KeySpecial.transform.childCount; i++) {
+                        KeySpecial.transform.GetChild(i).gameObject.SetActive(SaveFile.GetInt("randomizer entrance rando enabled") == 0);
+                    }
+                } catch(Exception e) {
+
+                }
             }
+
         }
 
         public static void SetupCustomSwordItemPresentations() {
