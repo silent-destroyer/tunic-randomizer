@@ -122,7 +122,7 @@ namespace TunicRandomizer {
             {"Pages 52-53 (Ice Rod)", $"pAjuhz \"52-53\" (Is rawd)"},
             {"Pages 54-55", $"pAjuhz \"54-55\""},
             {"Overworld", "Ovurwurld"},
-            {"Overworld Belltower", "Ovurwurld behltowur"},
+            {"West Furnace", "wehst furnis"},
             {"Cube Cave", "kyoob kAv"},
             {"Stick House", "stik hows"},
             {"Windmill", "windmil"},

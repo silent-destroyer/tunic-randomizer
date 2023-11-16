@@ -34,7 +34,7 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> SimplifiedSceneNames = new Dictionary<string, string>() {
             {"Overworld Redux", "Overworld"},
-            {"Furnace", "Overworld Belltower"},
+            {"Furnace", "West Furnace"},
             {"CubeRoom", "Cube Cave"},
             {"Sword Cave", "Stick House"},
             {"Windmill", "Windmill"},
