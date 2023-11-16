@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -57,7 +58,16 @@ namespace TunicRandomizer {
             //TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(140f, 90f, 175f, 30f), (float)TunicRandomizer.Settings.HexagonQuestGoal, 15f, 50f);
 
             GUI.skin.toggle.fontSize = 15;
-            bool ToggleSpoilerLog = GUI.Toggle(new Rect(330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
+            bool ToggleSpoilerLog = GUI.Toggle(new Rect(ItemRandomizer.CreateSpoilerLog ? 280f : 330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
+            if (ToggleSpoilerLog) {
+                GUI.skin.button.fontSize = 15;
+                bool OpenSpoilerLog = GUI.Button(new Rect(370f, 20f, 50f, 25f), "Open");
+                if (OpenSpoilerLog) {
+                    if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
+                        System.Diagnostics.Process.Start(TunicRandomizer.SpoilerLogPath);
+                    }
+                }
+            }
             ItemRandomizer.CreateSpoilerLog = ToggleSpoilerLog;
             GUI.skin.toggle.fontSize = 20;
             float y = ShowHexQuestSliders && ToggleHexagonQuest ? 155f : 95f;
