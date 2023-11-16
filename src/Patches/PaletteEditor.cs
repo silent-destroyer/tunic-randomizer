@@ -133,20 +133,13 @@ namespace TunicRandomizer {
 			}
 			bool RandomizeAll = GUI.Button(new Rect(555f, 235f, 200f, 30f), "Randomize all");
 			if (RandomizeAll) {
-				for (int j = 0; j < 16; j++) {
-					Color RandomColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
-					if (SelectedIndex == 2) {
-						ChangeHyperdashColors(RandomColor);
-					}
-					if (SelectedIndex == 14) {
-						ChangeSunglassesColor(RandomColor);
-					}
-					PlayerPalette.runtimePalette.Apply();
-				}
-			}
+				RandomizeFoxColors();
+            }
 			bool ResetSelected = GUI.Button(new Rect(350f, 285f, 200f, 30f), "Reset Selected");
 			if (ResetSelected) { 
-
+				if (PaletteSelected) {
+                    PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], DefaultColors[SelectedIndex]);
+                }
 			}
 			bool ResetAll = GUI.Button(new Rect(555f, 285f, 200f, 30f), "Reset All");
 			if (ResetAll) {

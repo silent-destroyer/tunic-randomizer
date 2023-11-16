@@ -364,6 +364,16 @@ namespace TunicRandomizer {
                         PageDisplayPatches.AbilityUnlockPage = Reward.Name;
                     }
                 }
+                bool HasAllPages = true;
+                for (int i = 0; i < 28; i++) {
+                    if (SaveFile.GetInt($"randomizer obtained page {i}") == 0) {
+                        HasAllPages = false;
+                        break;
+                    }
+                }
+                if (!StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue && HasAllPages) {
+                    StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue = HasAllPages;
+                }
             } else if (Reward.Type == "RELIC") {
                 Item Relic = Inventory.GetItemByName(Reward.Name);
                 Relic.Quantity = 1;

@@ -157,7 +157,7 @@ namespace TunicRandomizer {
             SceneId = loadingScene.buildIndex;
             SceneName = loadingScene.name;
 
-            if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1 && SaveFile.GetString("randomizer game mode") == "RANDOMIZER") {
+            if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue && StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt("randomizer died to heir") != 1 && SaveFile.GetString("randomizer game mode") == "RANDOMIZER") {
                 PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
                 Logger.LogInfo("Resetting time of day to daytime!");
             }
