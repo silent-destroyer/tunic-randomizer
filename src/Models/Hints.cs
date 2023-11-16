@@ -18,12 +18,14 @@ namespace TunicRandomizer {
             {"Monastery (-6.0, 26.0, 180.5)", "Monastery Relic"},
             {"Fortress Reliquary (198.5, 5.0, -40.0)", "Fortress Relic"},
             {"Temple (14.0, -0.5, 49.0)", "Temple Statue"},
-/*            {"Overworld Redux (89.0, 44.0, -107.0)", "East Forest Sign"},
-            {"Overworld Redux (-5.0, 36.0, -70.0)", "Overworld Sign"},
-            {"Overworld Redux (8.0, 20.0, -115.0)", "Swamp Sign"},
+            {"Overworld Redux (89.0, 44.0, -107.0)", "East Forest Sign"},
+            {"Overworld Redux (-5.0, 36.0, -70.0)", "Town Sign"},
+            {"Overworld Redux (8.0, 20.0, -115.0)", "Ruined Hall Sign"},
             {"Overworld Redux (-156.0, 12.0, -44.3)", "West Garden Sign"},
             {"Overworld Redux (73.0, 44.0, -38.0)", "Fortress Sign"},
-            {"Overworld Redux (-141.0, 40.0, 34.8)", "Quarry Sign"},*/
+            {"Overworld Redux (-141.0, 40.0, 34.8)", "Quarry Sign"},
+            {"East Forest Redux (128.0, 0.0, 33.5)", "West East Forest Sign"},
+            {"East Forest Redux (144.0, 0.0, -23.0)", "East East Forest Sign"},
         };
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
@@ -32,9 +34,10 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> SimplifiedSceneNames = new Dictionary<string, string>() {
             {"Overworld Redux", "Overworld"},
-            {"Furnace", "Overworld Belltower"},
+            {"Furnace", "West Furnace"},
             {"CubeRoom", "Cube Cave"},
             {"Sword Cave", "Stick House"},
+            {"Windmill", "Windmill"},
             {"EastFiligreeCache", "Southeast Cross Door"},
             {"Overworld Cave", "Caustic Light Cave"},
             {"Ruins Passage", "Ruined Passage"},
@@ -56,14 +59,18 @@ namespace TunicRandomizer {
             {"Sword Access", "Forest Grave Path"},
             {"East Forest Redux Interior", "Guardhouse 2"},
             {"East Forest Redux Laddercave", "Guardhouse 1"},
+            {"Forest Boss Room", "Forest Boss Room"},
             {"Sewer", "Bottom of the Well"},
             {"Sewer_Boss", "Dark Tomb Checkpoint"},
             {"Crypt Redux", "Dark Tomb"},
             {"Archipelagos Redux", "West Garden"},
             {"archipelagos_house", "West Garden House"},
             {"Atoll Redux", "Ruined Atoll"},
+            {"Frog Stairs", "Frog Stairway"},
             {"frog cave main", "Frog's Domain"},
+            {"Library Exterior", "Library Exterior"},
             {"Library Hall", "Library Hall"},
+            {"Library Rotunda", "Library Rotunda"},
             {"Library Lab", "Library Lab"},
             {"Library Arena", "Librarian"},
             {"Fortress Basement", "Beneath the Fortress"},
@@ -75,16 +82,21 @@ namespace TunicRandomizer {
             {"Fortress Arena", "Fortress Arena"},
             {"Mountain", "Lower Mountain"},
             {"Mountaintop", "Top of the Mountain"},
+            {"Darkwoods Tunnel", "Quarry Entryway"},
             {"Quarry Redux", "Quarry"},
             {"Monastery", "Monastery"},
+            {"ziggurat2020_0", "Rooted Ziggurat Entrance"},
             {"ziggurat2020_1", "Rooted Ziggurat Upper"},
             {"ziggurat2020_2", "Rooted Ziggurat Tower"},
             {"ziggurat2020_3", "Rooted Ziggurat Lower"},
+            {"ziggurat2020_FTRoom", "Rooted Ziggurat Teleporter"},
             {"Swamp Redux 2", "Swamp"},
             {"Cathedral Redux", "Cathedral"},
-            {"Cathedral Arena", "Gauntlet"},
+            {"Cathedral Arena", "Cathedral Gauntlet"},
             {"RelicVoid", "Hero's Grave"},
-            {"g_elements", "Glyph Tower"}
+            {"g_elements", "Glyph Tower"},
+            {"Spirit Arena", "The Heir"},
+            {"Purgatory", "Purgatory"},
         };
 
         public static Dictionary<string, string> SceneNamesForSpoilerLog = new Dictionary<string, string>() {

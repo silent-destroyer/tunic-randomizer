@@ -201,6 +201,10 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Torch").Quantity = 1;
                     SaveFile.SetInt("randomizer entrance rando enabled", 1);
                 }
+                if (TunicRandomizer.Settings.ERFixedShop)
+                {
+                    SaveFile.SetInt("randomizer ER fixed shop", 1);
+                }
                 if (TunicRandomizer.Settings.ShuffleAbilities) {
                     SaveFile.SetInt("randomizer shuffled abilities", 1);
                 }
@@ -310,7 +314,7 @@ namespace TunicRandomizer {
 
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                TunicPortals.AltModifyPortals(TunicPortals.RandomizePortals(SaveFile.GetInt("seed")));
+                TunicPortals.AltModifyPortals();
             }
 
             PaletteEditor.SetupPartyHat(__instance);

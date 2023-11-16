@@ -58,6 +58,7 @@ public class GhostHints {
         public static List<(string, string)> LocationHints = new List<(string, string)>();
         public static List<(string, string)> ItemHints = new List<(string, string)>();
         public static List<(string, string)> BarrenAndTreasureHints = new List<(string, string)>();
+        public static (string, string) HeirHint;
 
         public static Dictionary<string, HintGhost> HintGhosts = new Dictionary<string, HintGhost>();
 
@@ -231,7 +232,9 @@ public class GhostHints {
                 new HintGhost("Hint Ghost Frog's Domain 1", "frog cave main", new Vector3(19.7682f, 9.1943f, -23.3269f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"I wuhndur wAr #uh kwehstuhgawn iz?"),
                 new HintGhost("Hint Ghost Frog's Domain 2", "frog cave main", new Vector3(27.09619f, 9.2581f, -37.28336f), new Quaternion(0f, 0.5000001f, 0f, -0.8660254f), NPC.NPCAnimState.FISHING, $"$hhh. Im hIdi^ fruhm #uh frawgs.") }
             },
-
+            { "Purgatory", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
+            },
         };
 
         public static void InitializeGhostFox() {
@@ -258,16 +261,16 @@ public class GhostHints {
                     if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
                         NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
                     }
-
                     NewGhostFox.SetActive(true);
                 }
-                
             }
         }
 
         public static void GenerateHints() {
             HintGhosts.Clear();
             List<string> GhostSpawns = GhostLocations.Keys.ToList();
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 0 && GhostLocations.ContainsKey("Hint Ghost Purgatory"))
+            { GhostLocations.Remove("Hint Ghost Purgatory"); }
             List<string> SelectedSpawns = new List<string>();
             for (int i = 0; i < 15; i++) {
                 string Location = GhostSpawns[TunicRandomizer.Randomizer.Next(GhostSpawns.Count)];
@@ -291,6 +294,12 @@ public class GhostHints {
                 (string, string) ItemHint = ItemHints[TunicRandomizer.Randomizer.Next(ItemHints.Count)];
                 Hints.Add(ItemHint);
                 ItemHints.Remove(ItemHint);
+
+                if (i == 0 && SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+                {
+                    GenerateHeirHint();
+                    Hints.Add(HeirHint);
+                }
                 try {
                     (string, string) BarrenHint = BarrenAndTreasureHints[TunicRandomizer.Randomizer.Next(BarrenAndTreasureHints.Count)];
                     Hints.Add(BarrenHint);
@@ -375,6 +384,10 @@ public class GhostHints {
                     }
                     SceneItemCount++;
                 }
+
+                if (SceneItemCount == 0)
+                { continue; }
+
                 if (MoneyInScene >= 200 && SceneItemCount < 10) {
                     string ScenePrefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
                     string Hint = $"ahn EzE plAs too fInd A \"LOT OF MONEY\" iz {ScenePrefix}\n\"{Scene.ToUpper()}.\"";
@@ -406,6 +419,29 @@ public class GhostHints {
                     }
                 }
             }
+        }
+
+        public static void GenerateHeirHint()
+        {
+            //Logger.LogInfo("heir hint creation started");
+            string heirPortal = "error finding heir";
+            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
+            {
+                if (portalCombo.Portal1.Scene == "Spirit Arena")
+                {
+                    //Logger.LogInfo("found the heir, they're at " + portalCombo.Portal2.Name);
+                    heirPortal = portalCombo.Portal2.Name;
+                    break;
+                }
+                if (portalCombo.Portal2.Scene == "Spirit Arena")
+                {
+                    //Logger.LogInfo("found the heir, they're at " + portalCombo.Portal1.Name);
+                    heirPortal = portalCombo.Portal1.Name;
+                    break;
+                }
+            }
+            HeirHint = ($"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.",
+                        $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.");
         }
 
         public static void SpawnTorchHintGhost() {

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -57,7 +58,16 @@ namespace TunicRandomizer {
             //TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(140f, 90f, 175f, 30f), (float)TunicRandomizer.Settings.HexagonQuestGoal, 15f, 50f);
 
             GUI.skin.toggle.fontSize = 15;
-            bool ToggleSpoilerLog = GUI.Toggle(new Rect(330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
+            bool ToggleSpoilerLog = GUI.Toggle(new Rect(ItemRandomizer.CreateSpoilerLog ? 280f : 330f, 20f, 90f, 30f), ItemRandomizer.CreateSpoilerLog, "Spoiler Log");
+            if (ToggleSpoilerLog) {
+                GUI.skin.button.fontSize = 15;
+                bool OpenSpoilerLog = GUI.Button(new Rect(370f, 20f, 50f, 25f), "Open");
+                if (OpenSpoilerLog) {
+                    if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
+                        System.Diagnostics.Process.Start(TunicRandomizer.SpoilerLogPath);
+                    }
+                }
+            }
             ItemRandomizer.CreateSpoilerLog = ToggleSpoilerLog;
             GUI.skin.toggle.fontSize = 20;
             float y = ShowHexQuestSliders && ToggleHexagonQuest ? 155f : 95f;
@@ -75,6 +85,8 @@ namespace TunicRandomizer {
             y += 40f;
             bool ToggleEntranceRando = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
             TunicRandomizer.Settings.EntranceRandoEnabled = ToggleEntranceRando;
+            if (ToggleEntranceRando)
+            { TunicRandomizer.Settings.ERFixedShop = GUI.Toggle(new Rect(240f, y, 175f, 30f), TunicRandomizer.Settings.ERFixedShop, "Fixed Shop"); }
             y += 40f;
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
@@ -137,6 +149,9 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                 Settings.Add("entrance_randomizer");
             }
+            if (TunicRandomizer.Settings.ERFixedShop) {
+                Settings.Add("er_fixed_shop");
+            }
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
 
@@ -161,6 +176,9 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 Settings.Add("entrance_randomizer");
+            }
+            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
+                Settings.Add("er_fixed_shop");
             }
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
@@ -196,6 +214,7 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.StartWithSwordEnabled = SettingsString.Contains("start_with_sword");
                 TunicRandomizer.Settings.ShuffleAbilities = SettingsString.Contains("shuffle_abilities");
                 TunicRandomizer.Settings.EntranceRandoEnabled = SettingsString.Contains("entrance_randomizer");
+                TunicRandomizer.Settings.ERFixedShop = SettingsString.Contains("er_fixed_shop");
             } catch (Exception e) {
                 Logger.LogError("Error parsing quick settings string!");
             }
