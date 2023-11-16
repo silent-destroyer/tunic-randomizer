@@ -139,6 +139,9 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                 Settings.Add("entrance_randomizer");
             }
+            if (TunicRandomizer.Settings.ERFixedShop) {
+                Settings.Add("er_fixed_shop");
+            }
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
 
@@ -163,6 +166,9 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 Settings.Add("entrance_randomizer");
+            }
+            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
+                Settings.Add("er_fixed_shop");
             }
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
         }
@@ -198,6 +204,7 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.StartWithSwordEnabled = SettingsString.Contains("start_with_sword");
                 TunicRandomizer.Settings.ShuffleAbilities = SettingsString.Contains("shuffle_abilities");
                 TunicRandomizer.Settings.EntranceRandoEnabled = SettingsString.Contains("entrance_randomizer");
+                TunicRandomizer.Settings.ERFixedShop = SettingsString.Contains("er_fixed_shop");
             } catch (Exception e) {
                 Logger.LogError("Error parsing quick settings string!");
             }

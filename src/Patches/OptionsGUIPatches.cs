@@ -44,6 +44,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleStartWithSword);
                 OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
                 OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
+                OptionsGUI.addToggle("Fixed Shop Entrance", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFixedShop);
             } else {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
                 if(SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") { 
@@ -188,9 +189,13 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        public static void ToggleEntranceRando(int index)
-        {
+        public static void ToggleEntranceRando(int index) {
             TunicRandomizer.Settings.EntranceRandoEnabled = !TunicRandomizer.Settings.EntranceRandoEnabled;
+            SaveSettings();
+        }
+
+        public static void ToggleFixedShop(int index) {
+            TunicRandomizer.Settings.ERFixedShop = !TunicRandomizer.Settings.ERFixedShop;
             SaveSettings();
         }
 
