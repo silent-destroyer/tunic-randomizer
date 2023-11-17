@@ -44,6 +44,19 @@ namespace TunicRandomizer {
 
         public static GameObject GlowEffect;
 
+        public static List<string> ShopItemIDs = new List<string>() {
+            "Potion (First) [Shop]",
+            "Potion (West Garden) [Shop]",
+            "Trinket Coin 1 (day) [Shop]",
+            "Trinket Coin 2 (night) [Shop]"
+        };
+        public static List<string> ShopGameObjectIDs = new List<string>() {
+            "Shop/Item Holder/Potion (First)/rotation/potion",
+            "Shop/Item Holder/Potion (West Garden)/rotation/potion",
+            "Shop/Item Holder/Trinket Coin 1 (day)/rotation/Trinket Coin",
+            "Shop/Item Holder/Trinket Coin 2 (night)/rotation/Trinket Coin"
+        };
+
         public static void InitializeItems() {
             GameObject ItemRoot = Resources.FindObjectsOfTypeAll<GameObject>().Where(Item => Item.name == "User Rotation Root").ToList()[0];
             Items["Firecracker"] = ItemRoot.transform.GetChild(3).GetChild(0).gameObject;
@@ -242,6 +255,13 @@ namespace TunicRandomizer {
         }
 
         public static void SwapItemsInScene() {
+
+            if (IceFlask == null) {
+                if (Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name == "Ice flask").Count() > 0) {
+                    IceFlask = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name == "Ice flask").ToList()[0].transform.GetChild(0).gameObject;
+                    Items["Ice Bomb"] = IceFlask;
+                }
+            }
 
             if (SceneLoaderPatches.SceneName == "Shop") {
                 SetupShopItems();
@@ -465,18 +485,7 @@ namespace TunicRandomizer {
         }
 
         public static void SetupShopItems() {
-            List<string> ShopItemIDs = new List<string>() { 
-                "Potion (First) [Shop]", 
-                "Potion (West Garden) [Shop]", 
-                "Trinket Coin 1 (day) [Shop]", 
-                "Trinket Coin 2 (night) [Shop]" 
-            };
-            List<string> ShopGameObjectIDs = new List<string>() { 
-                "Shop/Item Holder/Potion (First)/rotation/potion", 
-                "Shop/Item Holder/Potion (West Garden)/rotation/potion", 
-                "Shop/Item Holder/Trinket Coin 1 (day)/rotation/Trinket Coin", 
-                "Shop/Item Holder/Trinket Coin 2 (night)/rotation/Trinket Coin" 
-            };
+
             for (int i = 0; i < ShopItemIDs.Count; i++) {
                 if (!ItemPatches.ItemsPickedUp[ShopItemIDs[i]]) {
                     GameObject ItemHolder = GameObject.Find(ShopGameObjectIDs[i]);
@@ -514,6 +523,9 @@ namespace TunicRandomizer {
                     }
                     if (ShopItem.Reward.Name == "money" && ShopItem.Reward.Amount > 100) {
                         NewItem.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                    }
+                    if (ShopItem.Reward.Name == "Ice Bomb" && IceFlask != null) {
+                        NewItem.transform.GetChild(0).gameObject.SetActive(false);
                     }
                     ItemHolder.SetActive(false);
                 }
@@ -939,6 +951,7 @@ namespace TunicRandomizer {
                 if (IceFlask == null) {
                     if (Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name == "Ice flask").Count() > 0) {
                         IceFlask = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name == "Ice flask").ToList()[0].transform.GetChild(0).gameObject;
+                        Items["Ice Bomb"] = IceFlask;
                     }
                 }
                 GameObject IceBombs = GameObject.Instantiate(GameObject.Find("Shop/Item Holder/Firebombs/"));
@@ -987,7 +1000,17 @@ namespace TunicRandomizer {
             if (__instance._f_5__2 > 0.5f && __instance._f_5__2 < 0.6f) {
                 for (int i = 0; i < 3; i++) {
                     if (IceFlask != null) {
-                        __instance.__4__this.transform.GetChild(0).GetChild(10).GetChild(0).GetChild(i).GetChild(0).gameObject.SetActive(true);
+                        try {
+                            __instance.__4__this.transform.GetChild(0).GetChild(10).GetChild(0).GetChild(i).GetChild(0).gameObject.SetActive(true);
+                            foreach (ShopItem shopItem in ShopManager.cachedShopItems) {
+                                if (ShopItemIDs.Contains($"{shopItem.name} [Shop]") && !ItemPatches.ItemsPickedUp[$"{shopItem.name} [Shop]"]
+                                    && ItemPatches.ItemList[$"{shopItem.name} [Shop]"].Reward.Name == "Ice Bomb") {
+                                    shopItem.transform.GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
+                                }
+                            }
+                        } catch (Exception e) {
+
+                        }
                     }
                 }
             }
