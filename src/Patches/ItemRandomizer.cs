@@ -439,7 +439,7 @@ namespace TunicRandomizer {
                                 HintItem = itemData;
                             }
                         }
-                    } else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors") {
+                    } else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors" && SaveFile.GetInt("randomizer entrance rando enabled") == 0) {
                         ItemData itemData = FindRandomizedItemByName("Key (House)");
                         if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;
@@ -504,8 +504,8 @@ namespace TunicRandomizer {
             HintItem = FindRandomizedItemByName("Hyperdash");
             Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
             ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-            HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE <#FFFFFF>[laurels]\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
-            TrunicHint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE <#FFFFFF>[laurels]\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} {Translations.Translate(Scene, false)}\"...\"";
+            HintMessage = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE  <#FFFFFF>[laurels]\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} \"{Scene.ToUpper()}...\"";
+            TrunicHint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE  <#FFFFFF>[laurels]\n<#FFFFFF>uhwAts yoo aht {ScenePrefix} {Translations.Translate(Scene, false)}\"...\"";
 
             Hints.HintMessages.Add("Temple Statue", HintMessage);
             Hints.TrunicHintMessages.Add("Temple Statue", TrunicHint);
