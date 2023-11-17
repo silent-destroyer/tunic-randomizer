@@ -354,6 +354,10 @@ namespace TunicRandomizer {
                     Enemies["BlobBigger"].name = "BlobBigger Prefab";
                     Enemies["BlobBigger"].GetComponent<Blob>().attackDistance = 3f;
                 }
+                if (EnemyName == "Centipede") {
+                    Enemies[EnemyName].GetComponent<Centipede>().maxBeamDistance = 10f;
+                    Enemies[EnemyName].GetComponent<Centipede>().attackDistance = 5f;
+                }
 
                 Enemies[EnemyName].name = EnemyName + " Prefab";
             }
