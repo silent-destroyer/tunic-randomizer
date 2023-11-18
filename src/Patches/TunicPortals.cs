@@ -107,6 +107,18 @@ namespace TunicRandomizer
                 IgnoreScene = ignoreScene;
             }
 
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false)
+            {
+                Destination = destination;
+                DestinationTag = destinationTag;
+                PortalName = portalName;
+                GranularRegion = granularRegion;
+                GivesAccess = givesAccess;
+                RequiredItemsOr = requiredItemsOr;
+                PrayerPortal = prayerPortal;
+                IgnoreScene = ignoreScene;
+            }
+
             public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, List<string> givesAccess)
             {
                 Destination = destination;
@@ -134,7 +146,7 @@ namespace TunicRandomizer
                     new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Waterfall Entrance", granularRegion: "Overworld"),
                     new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", granularRegion: "Overworld Well to Furnace Rail", ignoreScene: true, givesAccess: new List<string> { "Overworld Redux, Sewer_west_aqueduct" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Sewer_west_aqueduct", 1 } }),
                     new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace under Windmill", granularRegion: "Overworld"),
-                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace near West Garden", granularRegion: "Overworld", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Archipelagos Redux_lower", 1 } }),
+                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace near West Garden", granularRegion: "Overworld West Garden Furnace Connector", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Archipelagos Redux_lower", 1 } }),
                     new TunicPortal("Furnace", "gyro_lower", "Entrance to Furnace from Beach", granularRegion: "Overworld"),
                     new TunicPortal("Overworld Cave", "", "Rotating Lights Entrance", granularRegion: "Overworld"),
                     new TunicPortal("Swamp Redux 2", "wall", "Swamp Upper Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
@@ -146,7 +158,7 @@ namespace TunicRandomizer
                     new TunicPortal("ShopSpecial", "", "Special Shop Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
                     new TunicPortal("Maze Room", "", "Maze Cave Entrance", granularRegion: "Overworld"),
                     new TunicPortal("Archipelagos Redux", "upper", "West Garden Entrance by Belltower", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance by Dark Tomb", granularRegion: "Overworld", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Furnace_gyro_west"}, requiredItems: new Dictionary<string, int> {{"Overworld Redux, Furnace_gyro_west", 1}}),
+                    new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance by Dark Tomb", granularRegion: "Overworld West Garden Furnace Connector", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Furnace_gyro_west"}, requiredItems: new Dictionary<string, int> {{"Overworld Redux, Furnace_gyro_west", 1}}),
                     new TunicPortal("Archipelagos Redux", "lowest", "West Garden Laurel Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("Temple", "main", "Temple Door Entrance", granularRegion: "Overworld", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Techbow", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Techbow", 1 } } }),
                     new TunicPortal("Temple", "rafters", "Temple Rafters Entrance", granularRegion: "Overworld"),
@@ -416,9 +428,9 @@ namespace TunicRandomizer
                 "Library Lab",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Arena", "", "Upper Library to Librarian", granularRegion: "Library Lab", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab", 1 } } }),
-                    new TunicPortal("Library Rotunda", "", "Upper Library to Rotunda", granularRegion: "Library Lab", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
-                    new TunicPortal("Transit", "teleporter_library teleporter", "Library Portal", granularRegion: "Library Lab", ignoreScene: true, prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Library Lab", 1 } } }),
+                    new TunicPortal("Library Arena", "", "Upper Library to Librarian", granularRegion: "Library Lab", ignoreScene: true, givesAccess: new List<string> {"Library Lab, Transit_teleporter_library teleporter"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
+                    new TunicPortal("Library Rotunda", "", "Upper Library to Rotunda", granularRegion: "Library Lab", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Library Lab, Transit_teleporter_library teleporter", 1 }, {"Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                    new TunicPortal("Transit", "teleporter_library teleporter", "Library Portal", granularRegion: "Library Lab", ignoreScene: true, prayerPortal: true, givesAccess: new List<string> {"Library Lab, Library Arena_"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Arena_", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
                 }
             },
             {
@@ -976,7 +988,7 @@ namespace TunicRandomizer
             // This might be way too much shuffling -- was done to not favor connecting new regions to the first regions added to the list
             // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
             // todo: make it add regions to the list based on previously gotten regions
-            while (accessibleRegions.Count < 56)
+            while (accessibleRegions.Count < 57)
             {
                 ShuffleList(twoPlusPortals, seed);
                 // later on, start by making the first several portals into shop portals

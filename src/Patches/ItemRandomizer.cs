@@ -182,6 +182,7 @@ namespace TunicRandomizer {
 
                 // pick an item
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
+                Logger.LogInfo(itemName);
                 // remove item from inventory for reachability checks
                 if (UnplacedInventory.Keys.Contains(itemName))
                 {
@@ -242,9 +243,11 @@ namespace TunicRandomizer {
                 {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
                 foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                 {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
-
+                Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
                 // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
                 while (!InitialLocations[l].reachable(CombinedInventory)) {
+                    Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
+                    Logger.LogInfo("the above location failed");
                     l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
                 }
 
@@ -686,7 +689,7 @@ namespace TunicRandomizer {
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
             {
-                if (portalCombo.Portal1.Scene == "Overworld Redux" && portalCombo.Portal1.Region != "Overworld Well to Furnace Rail")
+                if (portalCombo.Portal1.Scene == "Overworld Redux" && portalCombo.Portal1.Region != "Overworld Well to Furnace Rail" && portalCombo.Portal1.Region != "Overworld West Garden Furnace Connector")
                 {
                     var portal = portalCombo.Portal1;
                     if (!portal.IgnoreScene && portal.RequiredItemsOr != null)
@@ -697,7 +700,7 @@ namespace TunicRandomizer {
                         { PortalInventory.Add(portalCombo.Portal2); }
                     }
                 }
-                if (portalCombo.Portal2.Scene == "Overworld Redux")
+                if (portalCombo.Portal2.Scene == "Overworld Redux" && portalCombo.Portal2.Region != "Overworld Well to Furnace Rail" && portalCombo.Portal2.Region != "Overworld West Garden Furnace Connector")
                 {
                     var portal = portalCombo.Portal2;
                     if (!portal.IgnoreScene && portal.RequiredItemsOr == null)

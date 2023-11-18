@@ -2217,7 +2217,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2237,7 +2237,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2257,7 +2257,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2277,7 +2277,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2297,7 +2297,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2317,7 +2317,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2337,7 +2337,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
