@@ -157,7 +157,7 @@ namespace TunicRandomizer
                     new TunicPortal("CubeRoom", "", "Cube Room Entrance", granularRegion: "Overworld"),
                     new TunicPortal("Mountain", "", "Stairs from Overworld to Mountain", granularRegion: "Overworld"),
                     new TunicPortal("Fortress Courtyard", "", "Overworld to Fortress", granularRegion: "Overworld"),
-                    new TunicPortal("Town_FiligreeRoom", "", "HC Room Entrance next to Changing Room", granularRegion: "Overworld", entryItems: new Dictionary<string, int> { { "21", 1 } }), // this is entry items because when you exit from this portal, you end up in front of the door
+                    new TunicPortal("Town_FiligreeRoom", "", "Fountain HC Room Entrance", granularRegion: "Overworld", entryItems: new Dictionary<string, int> { { "21", 1 } }), // this is entry items because when you exit from this portal, you end up in front of the door
                     new TunicPortal("EastFiligreeCache", "", "Glass Cannon HC Room Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "21", 1 } }), // this is required items because when you exit from this portal, you end up behind the door
                     new TunicPortal("Darkwoods Tunnel", "", "Overworld to Quarry Connector", granularRegion: "Overworld"),
                     new TunicPortal("Crypt Redux", "", "Dark Tomb Main Entrance", granularRegion: "Overworld"),
@@ -598,7 +598,7 @@ namespace TunicRandomizer
                     new TunicPortal("Monastery", "front", "Quarry to Monastery Front", granularRegion: "Quarry"),
                     new TunicPortal("Monastery", "back", "Quarry to Monastery Back", granularRegion: "Monastery Rope", ignoreScene: true, oneWay: true),
                     new TunicPortal("Mountain", "", "Quarry to Mountain", granularRegion: "Quarry"),
-                    new TunicPortal("ziggurat2020_0", "", "Quarry Zig Entrance", granularRegion: "Quarry", entryItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwood Tunnel, Quarry Redux_", 1 }, { "12", 1 } }),
+                    new TunicPortal("ziggurat2020_0", "", "Quarry Zig Entrance", granularRegion: "Quarry", requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwood Tunnel, Quarry Redux_", 1 }, { "12", 1 } }),
                     new TunicPortal("Transit", "teleporter_quarry teleporter", "Quarry Portal", granularRegion: "Quarry", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwood Tunnel, Quarry Redux_", 1 }, { "12", 1 } }),
                 }
             },
@@ -661,7 +661,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Overworld Redux", "conduit", "Lower Swamp Exit", granularRegion: "Swamp Front"),
                     new TunicPortal("Cathedral Redux", "main", "Swamp to Cathedral Main Entrance", granularRegion: "Swamp Front", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "Hyperdash", 1 }, { "Overworld Redux, Swamp Redux 2_wall", 1 } } ),
-                    new TunicPortal("Cathedral Redux", "secret", "Swamp to Cathedral Treasure Room Entrance", granularRegion: "Swamp Front", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
+                    new TunicPortal("Cathedral Redux", "secret", "Swamp to Cathedral Treasure Room Entrance", granularRegion: "Swamp Front", entryItems: new Dictionary<string, int> { { "21", 1 } }),
                     new TunicPortal("Cathedral Arena", "", "Swamp to Gauntlet", granularRegion: "Swamp Back", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, {"Swamp Redux 2, Overworld Redux_wall", 1 } }, new Dictionary<string, int> { { "Swamp Redux 2, RelicVoid_teleporter_relic plinth", 1 } } }),
                     new TunicPortal("Shop", "", "Swamp Shop", granularRegion: "Swamp Front"),
                     new TunicPortal("Overworld Redux", "wall", "Upper Swamp Exit", granularRegion: "Swamp Back", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 }, { "Swamp Redux 2, Cathedral Arena_", 1 } }),
