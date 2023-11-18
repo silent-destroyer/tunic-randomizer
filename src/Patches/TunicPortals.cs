@@ -24,6 +24,7 @@ namespace TunicRandomizer
             public bool PrayerPortal; // portals that require prayer to enter. This is a more convenient version of GivesAccess for prayer portals.
             public bool OneWay; // portals that are one-way, such as the back entrance to monastery and the forest belltower top portal
             public bool IgnoreScene; // portals that cannot reach the center of the region, and as such do not give region access, like the rail between bottom of the well and furnace
+            public bool SpecialReqs; // portals that have weird rules, basically, where we'll be way more verbose in requireditems or requireditemsor
 
             public TunicPortal() { }
 
@@ -34,7 +35,7 @@ namespace TunicRandomizer
                 PortalName = portalName;
                 GranularRegion = granularRegion;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool ignoreScene = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -44,8 +45,9 @@ namespace TunicRandomizer
                 DeadEnd = deadEnd;
                 OneWay = oneWay;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> entryItems, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool ignoreScene = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> entryItems, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -56,8 +58,9 @@ namespace TunicRandomizer
                 DeadEnd = deadEnd;
                 OneWay = oneWay;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, bool prayerPortal = false, bool deadEnd = false, bool ignoreScene = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, bool prayerPortal = false, bool deadEnd = false, bool ignoreScene = false, bool specialReqs = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -67,8 +70,9 @@ namespace TunicRandomizer
                 PrayerPortal = prayerPortal;
                 DeadEnd = deadEnd;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, bool ignoreScene = false, bool oneWay = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, bool ignoreScene = false, bool oneWay = false, bool specialReqs = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -76,6 +80,7 @@ namespace TunicRandomizer
                 GranularRegion = granularRegion;
                 GivesAccess = givesAccess;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
                 OneWay = oneWay;
             }
             public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems)
@@ -86,7 +91,7 @@ namespace TunicRandomizer
                 GranularRegion = granularRegion;
                 RequiredItems = requiredItems;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, List<string> givesAccess, bool ignoreScene = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, List<string> givesAccess, bool ignoreScene = false, bool specialReqs = false, bool prayerPortal = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -94,9 +99,11 @@ namespace TunicRandomizer
                 GranularRegion = granularRegion;
                 RequiredItems = requiredItems;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
                 GivesAccess = givesAccess;
+                PrayerPortal = prayerPortal;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false, bool specialReqs = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -105,9 +112,10 @@ namespace TunicRandomizer
                 RequiredItemsOr = requiredItemsOr;
                 PrayerPortal = prayerPortal;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
             }
 
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false)
+            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false, bool specialReqs = false)
             {
                 Destination = destination;
                 DestinationTag = destinationTag;
@@ -117,6 +125,7 @@ namespace TunicRandomizer
                 RequiredItemsOr = requiredItemsOr;
                 PrayerPortal = prayerPortal;
                 IgnoreScene = ignoreScene;
+                SpecialReqs = specialReqs;
             }
 
             public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, List<string> givesAccess)
@@ -204,7 +213,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Overworld Redux", "house", "Front Door of Old House Exit", granularRegion: "Old House Front"),
                     new TunicPortal("g_elements", "", "Teleport to Glyph Tower", granularRegion: "Old House Front"),
-                    new TunicPortal("Overworld Redux", "under_checkpoint", "Exit from Old House Back Door", granularRegion: "Old House Back", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Overworld Interiors, Overworld Redux_house", 1 } }), // since you get access to the center of a region from either portal, only one of these two is actually needed
+                    new TunicPortal("Overworld Redux", "under_checkpoint", "Exit from Old House Back Door", granularRegion: "Old House Back", specialReqs: true, requiredItems: new Dictionary<string, int> { { "Overworld Interiors, Overworld Redux_house", 1 } }), // since you get access to the center of a region from either portal, only one of these two is actually needed
 
                     // new TunicPortal("Archipelagos Redux_", "", "_ShowfloorDemo2022 Portal"), // unused and disabled
                 }
@@ -353,7 +362,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Overworld Redux", "lower", "West Garden towards Dark Tomb", granularRegion: "West Garden"),
                     new TunicPortal("archipelagos_house", "", "Magic Dagger House Entrance", granularRegion: "West Garden"),
-                    new TunicPortal("Overworld Redux", "upper", "West Garden after Boss", granularRegion: "West Garden", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, {"Archipelagos Redux", 1 } } }),
+                    new TunicPortal("Overworld Redux", "upper", "West Garden after Boss", granularRegion: "West Garden", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, {"Archipelagos Redux", 1 } } }),
                     new TunicPortal("Shop", "", "West Garden Shop", granularRegion: "West Garden"), // there's two of these, one is unused and disabled
                     new TunicPortal("Overworld Redux", "lowest", "West Garden Laurel Exit", granularRegion: "West Garden", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero's Grave", granularRegion: "West Garden", prayerPortal: true), // Hero grave
@@ -395,7 +404,7 @@ namespace TunicRandomizer
                 "frog cave main", // Frog's domain, yes it's lowercase
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Frog Stairs", "Exit", "Lower Frog Orb Exit", granularRegion: "Frog's Domain Back", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }),
+                    new TunicPortal("Frog Stairs", "Exit", "Lower Frog Orb Exit", granularRegion: "Frog's Domain Back", specialReqs: true, requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }),
                     new TunicPortal("Frog Stairs", "Entrance", "Lower Frog Ladder Exit", granularRegion: "Frog's Domain Front", ignoreScene: true, oneWay: true),
                 }
             },
@@ -428,9 +437,9 @@ namespace TunicRandomizer
                 "Library Lab",
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Library Arena", "", "Upper Library to Librarian", granularRegion: "Library Lab", ignoreScene: true, givesAccess: new List<string> {"Library Lab, Transit_teleporter_library teleporter"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
-                    new TunicPortal("Library Rotunda", "", "Upper Library to Rotunda", granularRegion: "Library Lab", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Library Lab, Transit_teleporter_library teleporter", 1 }, {"Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
-                    new TunicPortal("Transit", "teleporter_library teleporter", "Library Portal", granularRegion: "Library Lab", ignoreScene: true, prayerPortal: true, givesAccess: new List<string> {"Library Lab, Library Arena_"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Arena_", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
+                    new TunicPortal("Library Arena", "", "Upper Library to Librarian", granularRegion: "Library Lab", specialReqs: true, givesAccess: new List<string> {"Library Lab, Transit_teleporter_library teleporter"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
+                    new TunicPortal("Library Rotunda", "", "Upper Library to Rotunda", granularRegion: "Library Lab", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Library Lab, Transit_teleporter_library teleporter", 1 }, {"Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                    new TunicPortal("Transit", "teleporter_library teleporter", "Library Portal", granularRegion: "Library Lab", specialReqs: true, prayerPortal: true, givesAccess: new List<string> {"Library Lab, Library Arena_"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Arena_", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
                 }
             },
             {
@@ -459,8 +468,8 @@ namespace TunicRandomizer
                 "East Forest Redux Laddercave", // the place with the two ladders that leads to the boss room
                 new List<TunicPortal>
                 {
-                    new TunicPortal("East Forest Redux", "upper", "Guard House 1 Dance Exit", "Laddercave", ignoreScene: true, givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_upper" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }), // making the upper ones the "center" for easier logic writing
-                    new TunicPortal("East Forest Redux", "lower", "Guard House 1 Lower Exit", "Laddercave", ignoreScene: true, givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_lower" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }),
+                    new TunicPortal("East Forest Redux", "upper", "Guard House 1 Dance Exit", "Laddercave", specialReqs: true, givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_upper" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }), // making the upper ones the "center" for easier logic writing
+                    new TunicPortal("East Forest Redux", "lower", "Guard House 1 Lower Exit", "Laddercave", specialReqs: true, givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_lower" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }),
                     new TunicPortal("East Forest Redux", "gate", "Guard House 1 Upper Forest Exit", "Laddercave"),
                     new TunicPortal("Forest Boss Room", "", "Guard House 1 to Guard Captain Room", "Laddercave"),
                 }
@@ -471,7 +480,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("East Forest Redux", "upper", "Upper Forest Grave Path Exit", granularRegion: "Sword Access", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
                     new TunicPortal("East Forest Redux", "lower", "Lower Forest Grave Path Exit", granularRegion: "Sword Access"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "East Forest Hero's Grave", granularRegion: "Sword Access Back", ignoreScene: true, prayerPortal: true, requiredItems: new Dictionary<string, int> { {"Sword Access, East Forest Redux_lower", 1 } }), // Can't open the gate from behind
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "East Forest Hero's Grave", granularRegion: "Sword Access Back", specialReqs: true, prayerPortal: true, requiredItems: new Dictionary<string, int> { {"Sword Access, East Forest Redux_lower", 1 } }), // Can't open the gate from behind
                     
                     // new TunicPortal("Forest 1_", "lower", "Portal (1)"),
                     // new TunicPortal("Forest 1_", "", "Portal"),
@@ -514,10 +523,10 @@ namespace TunicRandomizer
                     new TunicPortal("Fortress Reliquary", "Upper", "Upper Fortress Grave Path Entrance", granularRegion: "Fortress Courtyard Upper", ignoreScene: true, oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress East_" }),
                     new TunicPortal("Fortress Main", "Big Door", "Fortress Courtyard to Fortress Interior", granularRegion: "Fortress Courtyard"),
                     new TunicPortal("Fortress East", "", "Fortress Courtyard to Fortress East", granularRegion: "Fortress Courtyard Upper", ignoreScene: true, oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress Reliquary_Upper" }),
-                    new TunicPortal("Fortress Basement", "", "Fortress Courtyard to Beneath the Earth", granularRegion: "Fortress Courtyard", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
+                    new TunicPortal("Fortress Basement", "", "Fortress Courtyard to Beneath the Earth", granularRegion: "Fortress Courtyard", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
                     new TunicPortal("Forest Belltower", "", "Fortress Courtyard to Forest Belltower", granularRegion: "Fortress Courtyard", requiredItems: new Dictionary<string, int>{ { "Hyperdash", 1 } }),
-                    new TunicPortal("Overworld Redux", "", "Fortress Courtyard to Overworld", granularRegion: "Fortress Courtyard", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1}, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "Wand", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
-                    new TunicPortal("Shop", "", "Fortress Courtyard Shop", granularRegion: "Fortress Courtyard", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
+                    new TunicPortal("Overworld Redux", "", "Fortress Courtyard to Overworld", granularRegion: "Fortress Courtyard", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1}, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "Wand", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
+                    new TunicPortal("Shop", "", "Fortress Courtyard Shop", granularRegion: "Fortress Courtyard", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
 
                     // new TunicPortal("Overworld Redux_", "", "Portal (4)"), // unused and disabled
                 }
@@ -546,7 +555,7 @@ namespace TunicRandomizer
                 "Fortress East", // that tiny area with the couple mages up high, and the ladder in the lower right
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Fortress Main", "lower", "East Fortress to Interior Lower", granularRegion: "Fortress East Lower", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Fortress East, Fortress Main_upper", 1} }),
+                    new TunicPortal("Fortress Main", "lower", "East Fortress to Interior Lower", granularRegion: "Fortress East Lower", specialReqs: true, requiredItems: new Dictionary<string, int> { { "Fortress East, Fortress Main_upper", 1} }),
                     new TunicPortal("Fortress Courtyard", "", "East Fortress to Courtyard", granularRegion: "Fortress East"),
                     new TunicPortal("Fortress Main", "upper", "East Fortress to Interior Upper", granularRegion: "Fortress East"),
                 }
@@ -639,22 +648,22 @@ namespace TunicRandomizer
                 {
                     // new TunicPortal("ziggurat2020_3", "zig2_skip", "Zig Skip"), // the elevator skip to lower zig, put a secret here later
                     new TunicPortal("ziggurat2020_0", "", "Zig 1 to Zig Entry", granularRegion: "Zig 1 Top", ignoreScene: true, oneWay: true),
-                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to Zig 2", granularRegion: "Zig 1 Bottom", deadEnd: true, ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_1, ziggurat2020_0_", 1}}),
+                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to Zig 2", granularRegion: "Zig 1 Bottom", ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_1, ziggurat2020_0_", 1}}),
                 }
             },
             {
                 "ziggurat2020_2", // Zig intermediate elevator
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to Zig 1", granularRegion: "Zig 2 Top", ignoreScene: true, oneWay: true),
-                    new TunicPortal("ziggurat2020_3", "", "Zig 2 to Zig 3", granularRegion: "Zig 2 Bottom", deadEnd: true, ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_2, ziggurat2020_1_", 1}}),
+                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to Zig 1", granularRegion: "Zig 2 Top", ignoreScene: true, oneWay: true, givesAccess: new List<string> {"ziggurat2020_2, ziggurat2020_3_"}),
+                    new TunicPortal("ziggurat2020_3", "", "Zig 2 to Zig 3", granularRegion: "Zig 2 Bottom", ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_2, ziggurat2020_1_", 1}}),
                 }
             },
             {
                 "ziggurat2020_3", // Lower zig, center is designated as before the prayer spot with the two cube minibosses
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room Entrance", granularRegion: "Zig 3", ignoreScene: true, prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } }, new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_2_", 1 } } }), // Prayer portal room
+                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room Entrance", granularRegion: "Zig 3", specialReqs: true, prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 } }, new Dictionary<string, int> { { "12", 1 } } }), // Prayer portal room
                     // new TunicPortal("ziggurat2020_1", "zig2_skip", "Zig Skip Exit"), // the elevator skip to lower zig
                     new TunicPortal("ziggurat2020_2", "", "Zig 3 to Zig 2", granularRegion: "Zig 3"),
                 }
@@ -663,7 +672,7 @@ namespace TunicRandomizer
                 "ziggurat2020_FTRoom", // The room with the prayer portal
                 new List<TunicPortal>
                 {
-                    new TunicPortal("ziggurat2020_3", "", "Zig Portal Room Exit", "Zig Portal Room", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_FTRoom", 1 } }),
+                    new TunicPortal("ziggurat2020_3", "", "Zig Portal Room Exit", "Zig Portal Room", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_FTRoom", 1 } }, new Dictionary<string, int> { { "12", 1 }, {"ziggurat2020_3, ziggurat2020_2_", 1 } } }),
                     new TunicPortal("Transit", "teleporter_ziggurat teleporter", "Zig Portal", "Zig Portal Room", prayerPortal: true),
                 }
             },
@@ -677,7 +686,7 @@ namespace TunicRandomizer
                     new TunicPortal("Cathedral Arena", "", "Swamp to Gauntlet", granularRegion: "Swamp Back", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, {"Swamp Redux 2, Overworld Redux_wall", 1 } }, new Dictionary<string, int> { { "Swamp Redux 2, RelicVoid_teleporter_relic plinth", 1 } } }),
                     new TunicPortal("Shop", "", "Swamp Shop", granularRegion: "Swamp Front"),
                     new TunicPortal("Overworld Redux", "wall", "Upper Swamp Exit", granularRegion: "Swamp Back", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 }, { "Swamp Redux 2, Cathedral Arena_", 1 } }),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero's Grave", granularRegion: "Swamp Back", ignoreScene: true, prayerPortal: true, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
+                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero's Grave", granularRegion: "Swamp Back", ignoreScene: true, prayerPortal: true, givesAccess: new List<string> {"Swamp Redux 2, Cathedral Arena_"}, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
                 }
             },
             {
@@ -957,7 +966,7 @@ namespace TunicRandomizer
                 List<TunicPortal> region_portals = region_group.Value;
                 foreach (TunicPortal portal in region_portals)
                 {
-                    Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, region: portal.GranularRegion, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, deadEnd: portal.DeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, ignoreScene: portal.IgnoreScene);
+                    Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, region: portal.GranularRegion, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, deadEnd: portal.DeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, ignoreScene: portal.IgnoreScene, specialReqs: portal.SpecialReqs);
                     if (newPortal.DeadEnd == true)
                     { deadEndPortals.Add(newPortal); }
                     else twoPlusPortals.Add(newPortal);

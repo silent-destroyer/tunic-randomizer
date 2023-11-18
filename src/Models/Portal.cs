@@ -83,6 +83,13 @@ namespace TunicRandomizer {
             get;
             set;
         }
+
+        public bool SpecialReqs
+        {
+            get;
+            set;
+        } = false;
+
         public Portal(string destination, string tag, string name, string scene)
         {
             Destination = destination;
@@ -91,7 +98,7 @@ namespace TunicRandomizer {
             Scene = scene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -102,6 +109,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems)
@@ -124,7 +132,7 @@ namespace TunicRandomizer {
             RequiredItemsOr = requiredItemsOr;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -136,9 +144,10 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -150,9 +159,10 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -165,9 +175,10 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -182,6 +193,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
 
@@ -269,7 +281,7 @@ namespace TunicRandomizer {
                     //itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
                     itemsRequired.Add(this.RequiredItems);
                     // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                    if (this.IgnoreScene == false && !this.RequiredItems.ContainsKey(this.Scene))
+                    if (this.IgnoreScene == false && this.SpecialReqs == false && !this.RequiredItems.ContainsKey(this.Scene))
                     {
                         this.RequiredItems.Add(this.Scene, 1);
                     }
@@ -281,7 +293,7 @@ namespace TunicRandomizer {
                 {
                     foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
                     {
-                        if (this.IgnoreScene == false && !reqSet.ContainsKey(this.Scene))
+                        if (this.IgnoreScene == false && this.SpecialReqs == false && !reqSet.ContainsKey(this.Scene))
                         {
                             reqSet.Add(this.Scene, 1);
                         }

@@ -182,7 +182,7 @@ namespace TunicRandomizer {
 
                 // pick an item
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                Logger.LogInfo(itemName);
+                Logger.LogInfo("placing the item " + itemName);
                 // remove item from inventory for reachability checks
                 if (UnplacedInventory.Keys.Contains(itemName))
                 {
@@ -716,7 +716,9 @@ namespace TunicRandomizer {
             // add the new portals and any applicable new scenes to the inventory
             foreach (Portal portal in PortalInventory)
             {
-                CombinedInventory.Add(portal.SceneDestinationTag, 1);
+                if (!CombinedInventory.ContainsKey(portal.SceneDestinationTag))
+                { CombinedInventory.Add(portal.SceneDestinationTag, 1); }
+                
                 foreach (string reward in portal.Rewards(CombinedInventory))
                 {
                     if (!CombinedInventory.ContainsKey(reward))
