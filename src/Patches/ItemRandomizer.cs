@@ -182,7 +182,7 @@ namespace TunicRandomizer {
 
                 // pick an item
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                Logger.LogInfo("placing the item " + itemName);
+                //Logger.LogInfo("placing the item " + itemName);
                 // remove item from inventory for reachability checks
                 if (UnplacedInventory.Keys.Contains(itemName))
                 {
@@ -243,11 +243,11 @@ namespace TunicRandomizer {
                 {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
                 foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                 {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
-                Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
+                //Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
                 // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
                 while (!InitialLocations[l].reachable(CombinedInventory)) {
-                    Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
-                    Logger.LogInfo("the above location failed");
+                    //Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
+                    //Logger.LogInfo("the above location failed");
                     l = TunicRandomizer.Randomizer.Next(InitialLocations.Count);
                 }
 
