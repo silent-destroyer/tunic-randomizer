@@ -413,7 +413,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Library Hall", "", "Library Entry Ladder", granularRegion: "Library Exterior", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
-                    new TunicPortal("Atoll Redux", "", "Library to Atoll", granularRegion: "Library Exterior", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "12", 1 } }, new Dictionary<string, int> { { "Wand", 1}, { "12", 1 } } }),
+                    new TunicPortal("Atoll Redux", "", "Library to Atoll", granularRegion: "Library Exterior", prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
                 }
             },
             {
@@ -545,7 +545,7 @@ namespace TunicRandomizer
                 {
                     new TunicPortal("Fortress Courtyard", "Big Door", "Fortress Main Exit", "Fortress Main"),
                     new TunicPortal("Fortress Basement", "", "Fortress Interior to Beneath the Earth", "Fortress Main"),
-                    new TunicPortal("Fortress Arena", "", "Fortress Interior to Siege Engine", "Fortress Main", requiredItems: new Dictionary<string, int> { { "12", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Reliquary_upper", 1 }, {"Fortress Main, Fortress Courtyard_Big Door", 1 } }), // requires that one prayer thing to be down
+                    new TunicPortal("Fortress Arena", "", "Fortress Interior to Siege Engine", "Fortress Main", requiredItems: new Dictionary<string, int> { { "12", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Reliquary_upper", 1 }, {"Fortress Main", 1 } }),
                     new TunicPortal("Shop", "", "Fortress Interior Shop", "Fortress Main"),
                     new TunicPortal("Fortress East", "upper", "Fortress Interior to East Fortress Upper", "Fortress Main"),
                     new TunicPortal("Fortress East", "lower", "Fortress Interior to East Fortress Lower", "Fortress Main"),
@@ -575,7 +575,7 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Fortress Main", "", "Siege Engine Arena to Fortress", "Fortress Arena"),
-                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", "Fortress Arena", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Main, Fortress Courtyard_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
+                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress Portal", "Fortress Arena", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Main", 1}, { "Fortress Courtyard", 1 } }),
                     // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these, one is disabled
                 }
             },
@@ -619,8 +619,8 @@ namespace TunicRandomizer
                     new TunicPortal("Monastery", "front", "Quarry to Monastery Front", granularRegion: "Quarry"),
                     new TunicPortal("Monastery", "back", "Quarry to Monastery Back", granularRegion: "Monastery Rope", ignoreScene: true, oneWay: true),
                     new TunicPortal("Mountain", "", "Quarry to Mountain", granularRegion: "Quarry"),
-                    new TunicPortal("ziggurat2020_0", "", "Quarry Zig Entrance", granularRegion: "Quarry", requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwood Tunnel, Quarry Redux_", 1 }, { "12", 1 } }),
-                    new TunicPortal("Transit", "teleporter_quarry teleporter", "Quarry Portal", granularRegion: "Quarry", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwood Tunnel, Quarry Redux_", 1 }, { "12", 1 } }),
+                    new TunicPortal("ziggurat2020_0", "", "Quarry Zig Entrance", granularRegion: "Quarry", requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwoods Tunnel", 1 }, { "12", 1 } }),
+                    new TunicPortal("Transit", "teleporter_quarry teleporter", "Quarry Portal", granularRegion: "Quarry", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwoods Tunnel", 1 }, { "12", 1 } }),
                 }
             },
             {
@@ -702,9 +702,9 @@ namespace TunicRandomizer
                 "Cathedral Arena", // Gauntlet
                 new List<TunicPortal>
                 {
-                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", granularRegion: "Gauntlet Bottom", ignoreScene: true, deadEnd: true, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}, {"Hyperdash", 1}}),
-                    new TunicPortal("Cathedral Redux", "", "Gauntlet Elevator", granularRegion: "Gauntlet Top", ignoreScene: true, givesAccess: new List<string> {"Cathedral Arena, Shop_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Shop_", 1}}),
-                    new TunicPortal("Shop", "", "Gauntlet Shop", granularRegion: "Gauntlet Top", ignoreScene: true, givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}}), // we love gauntlet shop
+                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", granularRegion: "Gauntlet Bottom", ignoreScene: true, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}, {"Hyperdash", 1}}),
+                    new TunicPortal("Cathedral Redux", "", "Gauntlet Elevator", granularRegion: "Gauntlet Top", specialReqs: true, givesAccess: new List<string> {"Cathedral Arena, Shop_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Shop_", 1}}),
+                    new TunicPortal("Shop", "", "Gauntlet Shop", granularRegion: "Gauntlet Top", specialReqs: true, givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}}), // we love gauntlet shop
                 }
             },
             //{
@@ -731,10 +731,10 @@ namespace TunicRandomizer
                 new List<TunicPortal>
                 {
                     new TunicPortal("Archipelagos Redux", "teleporter_archipelagos_teleporter", "Far Shore to West Garden", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1} }),
-                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Far Shore to Library", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Library Lab, Library Arena_", 1} }),
-                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Far Shore to Quarry", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Quarry Redux, Darkwoods Tunnel_", 1 }, {"Darkwoods Tunnel, Quarry Redux_", 1 }, { "Wand", 1 } }),
+                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Far Shore to Library", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Library Lab", 1} }),
+                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Far Shore to Quarry", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Quarry Redux", 1 }, {"Darkwoods Tunnel", 1 }, { "Wand", 1 } }),
                     new TunicPortal("East Forest Redux", "teleporter_forest teleporter", "Far Shore to East Forest", "Transit", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Fortress Arena", "teleporter_spidertank", "Far Shore to Fortress", "Transit", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Main_", 1 } }),
+                    new TunicPortal("Fortress Arena", "teleporter_spidertank", "Far Shore to Fortress", "Transit", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard", 1 } }),
                     new TunicPortal("Atoll Redux", "teleporter_atoll", "Far Shore to Atoll", "Transit"),
                     new TunicPortal("ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", "Far Shore to Zig", "Transit"),
                     new TunicPortal("Spirit Arena", "teleporter_spirit arena", "Far Shore to Heir", "Transit"),

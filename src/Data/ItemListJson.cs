@@ -4689,9 +4689,9 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Hyperdash"": 1, ""Swamp Redux, Overworld Redux_wall"": 1},
-                        {""Hyperdash"": 1, ""Swamp Redux, RelicVoid_teleporter_relic plinth"": 1},
-                        {""Hyperdash"": 1, ""Swamp Redux, Cathedral Arena_"": 1}
+                        {""Hyperdash"": 1, ""Swamp Redux 2, Overworld Redux_wall"": 1},
+                        {""Hyperdash"": 1, ""Swamp Redux 2, RelicVoid_teleporter_relic plinth"": 1},
+                        {""Hyperdash"": 1, ""Swamp Redux 2, Cathedral Arena_"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""

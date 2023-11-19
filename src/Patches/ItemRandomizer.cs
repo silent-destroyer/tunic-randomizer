@@ -201,6 +201,7 @@ namespace TunicRandomizer {
                     SceneInventory.Clear();
                     SceneInventory.Add("Overworld Redux", 1);
                     // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
+                    //Logger.LogInfo("number of portals is " + TunicPortals.RandomizedPortals.Count.ToString());
                     while (checkP < TunicPortals.RandomizedPortals.Count)
                     {
                         checkP = 0;
@@ -230,8 +231,13 @@ namespace TunicRandomizer {
                             }
                             else { checkP++; }
                         }
+                        //Logger.LogInfo("checkP equals " + checkP.ToString());
                     }
                 }
+
+                //Logger.LogInfo("scene inventory contains");
+                //foreach (string sceneItem in SceneInventory.Keys)
+                //{ Logger.LogInfo(sceneItem); }
 
                 // pick a location
                 int l;
@@ -243,7 +249,11 @@ namespace TunicRandomizer {
                 {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
                 foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
                 {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
+
+                //foreach (Location loc in InitialLocations)
+                //{ if (!loc.reachable(CombinedInventory)) { Logger.LogInfo("location " + loc.SceneName + " " + loc.LocationId + " is not reachable"); } }
                 //Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
+
                 // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
                 while (!InitialLocations[l].reachable(CombinedInventory)) {
                     //Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);

@@ -48,48 +48,54 @@ namespace TunicRandomizer {
                 rewardsList.Add(this.Portal2.SceneDestinationTag);
             }
 
-            // first, let's just see if we have both portals here already so we can skip processing them
-            if (!inventory.ContainsKey(this.Portal1.SceneDestinationTag) || !inventory.ContainsKey(this.Portal2.SceneDestinationTag))
+            // check if we can get to the other portal from the first portal
+            if (this.Portal1.Reachable(inventory))
             {
-                // check if we can get to the other portal from the first portal
-                if (this.Portal1.Reachable(inventory))
+                List<string> entryItems = new List<string>();
+                if (this.Portal1.PrayerPortal)
                 {
-                    List<string> entryItems = new List<string>();
-                    if (this.Portal1.PrayerPortal)
+                    entryItems.Add("12");
+                }
+                if (this.Portal1.EntryItems != null)
+                {
+                    foreach (KeyValuePair<string, int> items in this.Portal1.EntryItems)
                     {
-                        entryItems.Add("12");
+                        entryItems.Add(items.Key);
                     }
-                    if (this.Portal1.EntryItems != null)
+                }
+                int count = 0;
+                foreach (string item in entryItems)
+                {
+                    // if it's the regular key, check that we have both keys already
+                    if (item == "Key")
                     {
-                        foreach (KeyValuePair<string, int> items in this.Portal1.EntryItems)
-                        {
-                            entryItems.Add(items.Key);
-                        }
-                    }
-                    int count = 0;
-                    foreach (string item in entryItems)
-                    {
-                        // if it's the regular key, check that we have both keys already
-                        if (item == "Key")
-                        {
-                            if (inventory[item] == 2)
-                            {
-                                count++;
-                            }
-                        }
-                        else if (inventory.ContainsKey(item))
+                        if (inventory[item] == 2)
                         {
                             count++;
                         }
                     }
-                    // if we have all of the entry items, we get the portal
-                    if (count >= entryItems.Count)
+                    else if (inventory.ContainsKey(item))
                     {
-                        if (!inventory.ContainsKey(this.Portal2.SceneDestinationTag))
-                        {
-                            inventory.Add(this.Portal2.SceneDestinationTag, 1);
-                        }
+                        count++;
                     }
+                    //else
+                    //{
+                    //    Logger.LogInfo("inventory does not contain " + item);
+                    //}
+                }
+                // if we have all of the entry items, we get the portal
+                if (count >= entryItems.Count)
+                {
+                    if (!inventory.ContainsKey(this.Portal2.SceneDestinationTag))
+                    {
+                        inventory.Add(this.Portal2.SceneDestinationTag, 1);
+                    }
+                }
+                //else
+                //{
+                //    Logger.LogInfo("entry items did not succeed for " + this.Portal1.Name + " <-> " + this.Portal2.Name);
+                //}
+
                 }
 
                 // and then we do the same for the second portal
@@ -122,6 +128,10 @@ namespace TunicRandomizer {
                         {
                             count++;
                         }
+                        //else
+                        //{
+                        //    Logger.LogInfo("inventory does not contain " + item);
+                        //}
                     }
                     // if we have all of the entry items, we get the portal
                     if (count == entryItems.Count)
@@ -131,8 +141,12 @@ namespace TunicRandomizer {
                             inventory.Add(this.Portal1.SceneDestinationTag, 1);
                         }
                     }
+                    //else
+                    //{
+                    //    Logger.LogInfo("entry items did not succeed for " + this.Portal2.Name + " <-> " + this.Portal1.Name);
+                    //}
                 }
-            }
+            //}
             // and now, we grab the regions or portals that we're given access to from having either portal and add them to the rewards list
             if (inventory.ContainsKey(this.Portal1.SceneDestinationTag))
             {
