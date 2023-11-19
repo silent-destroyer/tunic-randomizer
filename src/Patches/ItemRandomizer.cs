@@ -235,9 +235,9 @@ namespace TunicRandomizer {
                     }
                 }
 
-                //Logger.LogInfo("scene inventory contains");
-                //foreach (string sceneItem in SceneInventory.Keys)
-                //{ Logger.LogInfo(sceneItem); }
+                Logger.LogInfo("scene inventory contains");
+                foreach (string sceneItem in SceneInventory.Keys)
+                { Logger.LogInfo(sceneItem); }
 
                 // pick a location
                 int l;

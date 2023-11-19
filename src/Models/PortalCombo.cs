@@ -151,11 +151,15 @@ namespace TunicRandomizer {
             if (inventory.ContainsKey(this.Portal1.SceneDestinationTag))
             {
                 rewardsList.AddRange(this.Portal1.Rewards(inventory).Except(rewardsList));
+                if (this.Portal2.Scene == "Shop" && !inventory.ContainsKey("Shop"))
+                { inventory.Add("Shop", 1); }
             }
 
             if (inventory.ContainsKey(this.Portal2.SceneDestinationTag))
             {
                 rewardsList.AddRange(this.Portal2.Rewards(inventory).Except(rewardsList));
+                if (this.Portal2.Scene == "Shop" && !inventory.ContainsKey("Shop"))
+                { inventory.Add("Shop", 1); }
             }
 
             return rewardsList;
