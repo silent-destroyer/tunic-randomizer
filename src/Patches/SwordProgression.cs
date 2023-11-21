@@ -31,6 +31,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < items.Count; i++) {
                     if (items[i] != null && items[i].name == "Stick") {
                         items[i] = Inventory.GetItemByName("Sword").TryCast<ButtonAssignableItem>();
+                        SaveFile.SetString($"Item on Button {i}", "Sword");
                     }
                 }
                 Inventory.buttonAssignedItems = items.ToArray();
@@ -45,6 +46,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < items.Count; i++) {
                     if (items[i] != null && items[i].name == "Sword") {
                         items[i] = Inventory.GetItemByName("Librarian Sword").TryCast<ButtonAssignableItem>();
+                        SaveFile.SetString($"Item on Button {i}", "Librarian Sword");
                     }
                 }
                 Inventory.buttonAssignedItems = items.ToArray();
@@ -59,6 +61,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < items.Count; i++) {
                     if (items[i] != null && items[i].name == "Librarian Sword") {
                         items[i] = Inventory.GetItemByName("Heir Sword").TryCast<ButtonAssignableItem>();
+                        SaveFile.SetString($"Item on Button {i}", "Heir Sword");
                     }
                 }
                 Inventory.buttonAssignedItems = items.ToArray();

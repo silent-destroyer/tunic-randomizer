@@ -12,7 +12,7 @@ namespace TunicRandomizer {
                 __instance.GetComponent<NPC>().script.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"{HintGhost.TrunicDialogue}---{HintGhost.TrunicHint}" : $"{HintGhost.Dialogue}---{HintGhost.Hint}";
             }
 
-            if (Hints.HintLocations.ContainsKey(InteractionLocation) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
+            if (Hints.HintLocations.ContainsKey(InteractionLocation) && Hints.HintMessages.ContainsKey(Hints.HintLocations[InteractionLocation]) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 LanguageLine Hint = ScriptableObject.CreateInstance<LanguageLine>();
                 Hint.text = TunicRandomizer.Settings.UseTrunicTranslations ? Hints.TrunicHintMessages[Hints.HintLocations[InteractionLocation]] : Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
                 GenericMessage.ShowMessage(Hint);
