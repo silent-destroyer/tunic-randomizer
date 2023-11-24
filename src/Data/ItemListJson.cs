@@ -2217,7 +2217,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2237,7 +2237,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2257,7 +2257,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2277,7 +2277,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2297,7 +2297,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2317,7 +2317,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -2337,7 +2337,7 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1, ""12"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Library Lab"": 1}
+                        {""Library Lab, Library Arena_"": 1}
                     ],
                     ""SceneId"": 18,
                     ""SceneName"": ""Library Lab""
@@ -4689,7 +4689,9 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Hyperdash"": 1, ""Swamp Redux, Overworld Redux_wall"": 1}
+                        {""Hyperdash"": 1, ""Swamp Redux 2, Overworld Redux_wall"": 1},
+                        {""Hyperdash"": 1, ""Swamp Redux 2, RelicVoid_teleporter_relic plinth"": 1},
+                        {""Hyperdash"": 1, ""Swamp Redux 2, Cathedral Arena_"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5033,7 +5035,9 @@ namespace TunicRandomizer {
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Swamp Redux 2, Cathedral Arena_"": 1}
+                        {""Swamp Redux 2, Cathedral Arena_"": 1},
+                        {""Swamp Redux 2, RelicVoid_teleporter_relic plinth"": 1},
+                        {""Hyperdash"": 1, ""Swamp Redux, Overworld Redux_wall"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5446,7 +5450,9 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Potion (First)"",
                     ""Position"": ""(-1.9, 1.2, -2.0)"",
                     ""RequiredItems"": [],
-                    ""RequiredItemsDoors"": [],
+                    ""RequiredItemsDoors"": [
+                        {""Shop"": 1}
+                    ],
                     ""SceneId"": 56,
                     ""SceneName"": ""Shop""
                 },
@@ -5461,7 +5467,9 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Potion (West Garden)"",
                     ""Position"": ""(0.4, 1.2, -2.0)"",
                     ""RequiredItems"": [],
-                    ""RequiredItemsDoors"": [],
+                    ""RequiredItemsDoors"": [
+                        {""Shop"": 1}
+                    ],
                     ""SceneId"": 56,
                     ""SceneName"": ""Shop""
                 },
@@ -5476,7 +5484,9 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Trinket Coin 1 (day)"",
                     ""Position"": ""(0.0, 2.0, -21.5)"",
                     ""RequiredItems"": [],
-                    ""RequiredItemsDoors"": [],
+                    ""RequiredItemsDoors"": [
+                        {""Shop"": 1}
+                    ],
                     ""SceneId"": 56,
                     ""SceneName"": ""Shop""
                 },
@@ -5491,7 +5501,9 @@ namespace TunicRandomizer {
                     ""LocationId"": ""Trinket Coin 2 (night)"",
                     ""Position"": ""(0.0, 2.0, -21.5)"",
                     ""RequiredItems"": [],
-                    ""RequiredItemsDoors"": [],
+                    ""RequiredItemsDoors"": [
+                        {""Shop"": 1}
+                    ],
                     ""SceneId"": 56,
                     ""SceneName"": ""Shop""
                 },

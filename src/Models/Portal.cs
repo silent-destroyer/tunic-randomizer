@@ -83,6 +83,13 @@ namespace TunicRandomizer {
             get;
             set;
         }
+
+        public bool SpecialReqs
+        {
+            get;
+            set;
+        } = false;
+
         public Portal(string destination, string tag, string name, string scene)
         {
             Destination = destination;
@@ -91,7 +98,7 @@ namespace TunicRandomizer {
             Scene = scene;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -102,6 +109,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
         public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems)
@@ -124,7 +132,7 @@ namespace TunicRandomizer {
             RequiredItemsOr = requiredItemsOr;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> entryItems, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -136,9 +144,10 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -150,9 +159,10 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -165,9 +175,10 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
-        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false)
+        public Portal(string destination, string tag, string name, string scene, string region, Dictionary<string, int> requiredItems, List<Dictionary<string, int>> requiredItemsOr, Dictionary<string, int> entryItems, List<string> givesAccess, bool deadEnd = false, bool prayerPortal = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
         {
             Destination = destination;
             Tag = tag;
@@ -182,6 +193,7 @@ namespace TunicRandomizer {
             PrayerPortal = prayerPortal;
             OneWay = oneWay;
             IgnoreScene = ignoreScene;
+            SpecialReqs = specialReqs;
             SceneDestinationTag = (Scene + ", " + Destination + "_" + Tag);
         }
 
@@ -266,22 +278,35 @@ namespace TunicRandomizer {
             {
                 if (this.RequiredItems.Count != 0)
                 {
-                    //itemsRequired.Add(new Dictionary<string, int>(this.RequiredItems));
-                    itemsRequired.Add(this.RequiredItems);
+                    // need to modify requiredItems later, so we're copying them over, why doesn't c# have a nice way of doing this?? no .copy??
+                    Dictionary<string, int> requiredItems = new Dictionary<string, int>();
+                    foreach (KeyValuePair<string, int> kvp in this.RequiredItems)
+                    { requiredItems.Add(kvp.Key, kvp.Value); }
+
                     // if neither of these are set, we still need the scene (since we already check if we have the other portal in the pair elsewhere)
-                    if (this.IgnoreScene == false && !this.RequiredItems.ContainsKey(this.Scene))
+                    if (this.IgnoreScene == false && this.SpecialReqs == false && !this.RequiredItems.ContainsKey(this.Scene) && !requiredItems.ContainsKey(this.Scene))
                     {
-                        this.RequiredItems.Add(this.Scene, 1);
+                        requiredItems.Add(this.Scene, 1);
                     }
+                    itemsRequired.Add(requiredItems);
                 }
             }
             else if (this.RequiredItemsOr != null)
             {
                 if (this.RequiredItemsOr.Count != 0)
                 {
-                    foreach (Dictionary<string, int> reqSet in this.RequiredItemsOr)
+                    List<Dictionary<string, int>> requiredItemsOr = new List<Dictionary<string, int>>();
+                    foreach (Dictionary<string, int> dictionary in this.RequiredItemsOr)
                     {
-                        if (this.IgnoreScene == false && !reqSet.ContainsKey(this.Scene))
+                        Dictionary<string, int> reqDictionary = new Dictionary<string, int>();
+                        foreach (KeyValuePair<string, int> kvp in dictionary)
+                        { reqDictionary.Add(kvp.Key, kvp.Value); }
+                        requiredItemsOr.Add(reqDictionary);
+                    }
+
+                    foreach (Dictionary<string, int> reqSet in requiredItemsOr)
+                    {
+                        if (this.IgnoreScene == false && this.SpecialReqs == false && !reqSet.ContainsKey(this.Scene))
                         {
                             reqSet.Add(this.Scene, 1);
                         }

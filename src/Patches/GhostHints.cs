@@ -334,6 +334,14 @@ public class GhostHints {
                 HintableLocations.Remove("Hexagon Green [Library Arena]");
                 HintableLocations.Remove("Hexagon Blue [ziggurat2020_3]");
             }
+
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
+            {
+                // Remove dead end hints because they literally don't matter
+                HintableLocations.Remove("1011 [Dusty]");
+                HintableLocations.Remove("final [Mountaintop]");
+            }
+
             foreach (string Key in HintableLocations) {
                 string ItemName = Hints.SimplifiedItemNames[ItemPatches.ItemList[Key].Reward.Name];
                 string LocationSuffix = HintableLocationIds[Key][HintableLocationIds[Key].Length-1] == 'S' ? "R" : "iz";
