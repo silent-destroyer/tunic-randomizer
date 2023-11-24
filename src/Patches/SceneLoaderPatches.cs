@@ -168,6 +168,14 @@ namespace TunicRandomizer {
                 PaletteEditor.RandomizeFoxColors();
             }
 
+            foreach (string Key in ItemPatches.FairyLookup.Keys) {
+                StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
+            }
+
+            for (int i = 0; i < 28; i++) {
+                SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
+            }
+
             UpdateTrackerSceneInfo();
             if (SceneName == "Waterfall") {
                 List<string> RandomObtainedFairies = new List<string>();
@@ -197,9 +205,10 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("chest open 19", 0);
             } else if (SceneName == "Overworld Interiors") {
                 GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject.SetActive(true);
-                foreach (string Key in ItemPatches.HeroRelicLookup.Keys) {
-                    StateVariable.GetStateVariableByName(ItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
-                }
+                /*                foreach (string Key in ItemPatches.HeroRelicLookup.Keys) {
+                                    StateVariable.GetStateVariableByName(ItemPatches.HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
+                                }*/
+                ToggleOldHouseRelics();
                 GameObject.Destroy(GameObject.Find("_Special/Bed Toggle Trigger/"));
                 if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
                     InteractionPatches.SetupDayNightHourglass();
@@ -264,15 +273,10 @@ namespace TunicRandomizer {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
                 }
             } else {
-                foreach (string Key in ItemPatches.FairyLookup.Keys) {
-                    StateVariable.GetStateVariableByName(ItemPatches.FairyLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer opened fairy chest " + Key) == 1;
-                }
-                for (int i = 0; i < 28; i++) {
-                    SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
-                }
-                foreach (string Key in ItemPatches.HeroRelicLookup.Keys) {
+
+/*                foreach (string Key in ItemPatches.HeroRelicLookup.Keys) {
                     StateVariable.GetStateVariableByName(ItemPatches.HeroRelicLookup[Key].Flag).BoolValue = SaveFile.GetInt("randomizer picked up " + ItemPatches.HeroRelicLookup[Key].OriginalPickupLocation) == 1;
-                }
+                }*/
             }
             
             if (CustomItemBehaviors.IsTeleporting) {
@@ -348,6 +352,17 @@ namespace TunicRandomizer {
                 } catch (Exception e) { 
                     
                 }
+            }
+        }
+
+        public static void ToggleOldHouseRelics() {
+            if (SceneManager.GetActiveScene().name == "Overworld Interiors" && GameObject.Find("_Offerings") != null && GameObject.Find("_Offerings").transform.childCount >= 5) {
+                GameObject.Find("_Offerings").transform.GetChild(0).gameObject.SetActive(Inventory.GetItemByName("Relic - Hero Water").Quantity > 0);
+                GameObject.Find("_Offerings").transform.GetChild(1).gameObject.SetActive(Inventory.GetItemByName("Relic - Hero Crown").Quantity > 0);
+                GameObject.Find("_Offerings").transform.GetChild(2).gameObject.SetActive(Inventory.GetItemByName("Relic - Hero Pendant SP").Quantity > 0);
+                GameObject.Find("_Offerings").transform.GetChild(3).gameObject.SetActive(Inventory.GetItemByName("Relic - Hero Pendant HP").Quantity > 0);
+                GameObject.Find("_Offerings").transform.GetChild(4).gameObject.SetActive(Inventory.GetItemByName("Relic - Hero Pendant MP").Quantity > 0);
+                GameObject.Find("_Offerings").transform.GetChild(5).gameObject.SetActive(Inventory.GetItemByName("Relic - Hero Sword").Quantity > 0);
             }
         }
 
