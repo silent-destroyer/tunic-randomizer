@@ -272,6 +272,12 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
                 }
+            } else if (SceneName == "Maze Room") {
+                foreach (Chest chest in Resources.FindObjectsOfTypeAll<Chest>().Where(chest => chest.name == "Chest: Fairy")) {
+                    chest.transform.GetChild(4).gameObject.SetActive(false);
+                    chest.transform.GetChild(7).gameObject.SetActive(false);
+                    chest.transform.parent.GetChild(2).gameObject.SetActive(false);
+                }
             } else {
 
 /*                foreach (string Key in ItemPatches.HeroRelicLookup.Keys) {
