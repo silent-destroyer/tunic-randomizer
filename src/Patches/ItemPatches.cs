@@ -473,6 +473,30 @@ namespace TunicRandomizer {
             if (RewardId == PlayerCharacterPatches.MailboxHintId) {
                 SaveFile.SetInt("randomizer got mailbox hint item", 1);
             }
+            if (RewardId == PlayerCharacterPatches.ForestHintId)
+            {
+                SaveFile.SetInt("randomizer got forest hint item", 1);
+            }
+            if (RewardId == PlayerCharacterPatches.FortressHintId)
+            {
+                SaveFile.SetInt("randomizer got fortress hint item", 1);
+            }
+            if (RewardId == PlayerCharacterPatches.GardenHintId)
+            {
+                SaveFile.SetInt("randomizer got garden hint item", 1);
+            }
+            if (RewardId == PlayerCharacterPatches.SwampHintId)
+            {
+                SaveFile.SetInt("randomizer got swamp hint item", 1);
+            }
+            if (RewardId == PlayerCharacterPatches.LibraryHintId)
+            {
+                SaveFile.SetInt("randomizer got library hint item", 1);
+            }
+            if (RewardId == PlayerCharacterPatches.MonasteryHintId)
+            {
+                SaveFile.SetInt("randomizer got monastery hint item", 1);
+            }
 
             GameObject FairyTarget = ItemData.Location.SceneName == "Trinket Well" ? GameObject.Find($"fairy target trinket well"): GameObject.Find($"fairy target {ItemData.Location.Position}");
             if (FairyTarget != null) {
