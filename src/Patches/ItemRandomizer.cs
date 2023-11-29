@@ -394,8 +394,7 @@ namespace TunicRandomizer {
                 }
                 n++;
             }
-            if (HintItem == null)
-            {
+            if (HintItem == null) {
                 n = 0;
                 while (HintItem == null && n < mailboxHintables.Count) {
                     if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
@@ -404,28 +403,24 @@ namespace TunicRandomizer {
                                 HintItem = itemData;
                             }
                         }
-                    }
-                    else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
+                    } else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
                         foreach (ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
                             if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
-                    }
-                    else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors" && SaveFile.GetInt("randomizer entrance rando enabled") == 0) {
+                    } else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors" && SaveFile.GetInt("randomizer entrance rando enabled") == 0) {
                         ItemData itemData = FindRandomizedItemByName("Key (House)");
                         if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;
                         }
-                    }
-                    else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
+                    } else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
                         foreach (ItemData itemData in FindAllRandomizedItemsByName("Key")) {
                             if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
-                    }
-                    else if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && mailboxHintables[n].Location.RequiredItemsDoors.Count == 1 && mailboxHintables[n].Location.RequiredItemsDoors[0].ContainsKey("Mask")
+                    } else if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && mailboxHintables[n].Location.RequiredItemsDoors.Count == 1 && mailboxHintables[n].Location.RequiredItemsDoors[0].ContainsKey("Mask")
                         || mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
                         ItemData itemData = FindRandomizedItemByName("Mask");
                         if (itemData.Location.reachable(SphereZero)) {
