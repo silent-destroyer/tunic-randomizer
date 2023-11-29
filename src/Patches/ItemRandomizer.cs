@@ -361,8 +361,7 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void PopulateHints()
-        {
+        public static void PopulateHints() {
             Hints.HintMessages.Clear();
             Hints.TrunicHintMessages.Clear();
             ItemData HintItem = null;
@@ -379,22 +378,18 @@ namespace TunicRandomizer {
 
             // Mailbox Hint
             List<string> mailboxNames = new List<string>() { "Wand", "Lantern", "Gun", "Techbow", SaveFile.GetInt("randomizer sword progression enabled") != 0 ? "Sword Progression" : "Sword" };
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST")
-            {
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
                 mailboxNames.Add("12");
                 mailboxNames.Add("21");
             }
             List<ItemData> mailboxHintables = new List<ItemData>();
-            foreach (string Item in mailboxNames)
-            {
+            foreach (string Item in mailboxNames) {
                 mailboxHintables.AddRange(FindAllRandomizedItemsByName(Item));
             }
             Shuffle(mailboxHintables);
             int n = 0;
-            while (HintItem == null && n < mailboxHintables.Count)
-            {
-                if (mailboxHintables[n].Location.reachable(SphereZero))
-                {
+            while (HintItem == null && n < mailboxHintables.Count) {
+                if (mailboxHintables[n].Location.reachable(SphereZero)) {
                     HintItem = mailboxHintables[n];
                 }
                 n++;
@@ -402,65 +397,48 @@ namespace TunicRandomizer {
             if (HintItem == null)
             {
                 n = 0;
-                while (HintItem == null && n < mailboxHintables.Count)
-                {
-                    if (mailboxHintables[n].Location.SceneName == "Trinket Well")
-                    {
-                        foreach (ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin"))
-                        {
-                            if (itemData.Location.reachable(SphereZero))
-                            {
+                while (HintItem == null && n < mailboxHintables.Count) {
+                    if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
+                        foreach (ItemData itemData in FindAllRandomizedItemsByName("Trinket Coin")) {
+                            if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     }
-                    else if (mailboxHintables[n].Location.SceneName == "Waterfall")
-                    {
-                        foreach (ItemData itemData in FindAllRandomizedItemsByType("Fairy"))
-                        {
-                            if (itemData.Location.reachable(SphereZero))
-                            {
+                    else if (mailboxHintables[n].Location.SceneName == "Waterfall") {
+                        foreach (ItemData itemData in FindAllRandomizedItemsByType("Fairy")) {
+                            if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     }
-                    else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors" && SaveFile.GetInt("randomizer entrance rando enabled") == 0)
-                    {
+                    else if (mailboxHintables[n].Location.SceneName == "Overworld Interiors" && SaveFile.GetInt("randomizer entrance rando enabled") == 0) {
                         ItemData itemData = FindRandomizedItemByName("Key (House)");
-                        if (itemData.Location.reachable(SphereZero))
-                        {
+                        if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;
                         }
                     }
-                    else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73")
-                    {
-                        foreach (ItemData itemData in FindAllRandomizedItemsByName("Key"))
-                        {
-                            if (itemData.Location.reachable(SphereZero))
-                            {
+                    else if (mailboxHintables[n].Location.LocationId == "71" || mailboxHintables[n].Location.LocationId == "73") {
+                        foreach (ItemData itemData in FindAllRandomizedItemsByName("Key")) {
+                            if (itemData.Location.reachable(SphereZero)) {
                                 HintItem = itemData;
                             }
                         }
                     }
                     else if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && mailboxHintables[n].Location.RequiredItemsDoors.Count == 1 && mailboxHintables[n].Location.RequiredItemsDoors[0].ContainsKey("Mask")
-                        || mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask"))
-                    {
+                        || mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
                         ItemData itemData = FindRandomizedItemByName("Mask");
-                        if (itemData.Location.reachable(SphereZero))
-                        {
+                        if (itemData.Location.reachable(SphereZero)) {
                             HintItem = itemData;
                         }
                     }
                     n++;
                 }
             }
-            if (HintItem == null)
-            {
+            if (HintItem == null) {
                 HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEker.\nyoo hahv uh difikuhlt rOd uhhehd. \"GOOD LUCK\".";
                 TrunicHint = HintMessage;
-            }
-            else
-            {
+            } else {
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
                 ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 HintMessage = $"lehjehnd sehz {ScenePrefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.";
@@ -486,19 +464,16 @@ namespace TunicRandomizer {
             Hints.TrunicHintMessages.Add("Temple Statue", TrunicHint);
 
             List<string> HintItems = new List<string>() { techbowHinted ? "Lantern" : "Techbow", wandHinted ? "Lantern" : "Wand", "Stundagger" };
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST")
-            {
+            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetString("randomizer game mode") != "HEXAGONQUEST") {
                 HintItems.Add(prayerHinted ? "Lantern" : "12");
                 HintItems.Add(hcHinted ? "Lantern" : "21");
                 HintItems.Remove("Stundagger");
             }
             List<string> HintScenes = new List<string>() { "East Forest Relic", "Fortress Relic", "West Garden Relic" };
-            while (HintScenes.Count > 0)
-            {
+            while (HintScenes.Count > 0) {
                 HintItem = FindRandomizedItemByName(HintItems[TunicRandomizer.Randomizer.Next(HintItems.Count)]);
                 string HintScene = HintScenes[TunicRandomizer.Randomizer.Next(HintScenes.Count)];
-                if (HintItem.Reward.Name == "12" && HintScene == "Fortress Relic")
-                {
+                if (HintItem.Reward.Name == "12" && HintScene == "Fortress Relic") {
                     continue;
                 }
                 Scene = Hints.SimplifiedSceneNames[HintItem.Location.SceneName];
