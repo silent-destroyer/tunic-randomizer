@@ -1209,7 +1209,7 @@ namespace TunicRandomizer
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
-                        portal.name = portal2.SceneDestinationTag;
+                        portal.name = portal2.Name;
                         break;
                     }
                 }
