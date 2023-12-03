@@ -478,14 +478,13 @@ namespace TunicRandomizer {
                 Hints.HintMessages.Add(HintScene, HintMessage);
                 Hints.TrunicHintMessages.Add(HintScene, TrunicHint);
 
-                if (HintScene == "East Forest Relic")
-                { PlayerCharacterPatches.ForestHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; }
-
-                if (HintScene == "Fortress Relic")
-                { PlayerCharacterPatches.FortressHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; }
-
-                if (HintScene == "West Garden Relic")
-                { PlayerCharacterPatches.GardenHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; }
+                if (HintScene == "East Forest Relic") {
+                    PlayerCharacterPatches.ForestHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; 
+                } else if (HintScene == "Fortress Relic") {
+                    PlayerCharacterPatches.FortressHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
+                } else if (HintScene == "West Garden Relic") {
+                    PlayerCharacterPatches.GardenHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
+                }
 
                 HintItems.Remove(HintItem.Reward.Name);
                 HintScenes.Remove(HintScene);
@@ -517,14 +516,13 @@ namespace TunicRandomizer {
                 Hints.HintMessages.Add(HexagonHintArea, HintMessage);
                 Hints.TrunicHintMessages.Add(HexagonHintArea, TrunicHint);
 
-                if (HexagonHintArea == "Swamp Relic")
-                { PlayerCharacterPatches.SwampHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; }
-
-                if (HexagonHintArea == "Library Relic")
-                { PlayerCharacterPatches.LibraryHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; }
-
-                if (HexagonHintArea == "Monastery Relic")
-                { PlayerCharacterPatches.MonasteryHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]"; }
+                if (HexagonHintArea == "Swamp Relic") {
+                    PlayerCharacterPatches.SwampHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
+                } else if (HexagonHintArea == "Library Relic") {
+                    PlayerCharacterPatches.LibraryHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
+                } else if (HexagonHintArea == "Monastery Relic") {
+                    PlayerCharacterPatches.MonasteryHintId = $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]";
+                }
 
                 Hexagons.Remove(Hexagon);
                 HexagonHintAreas.Remove(HexagonHintArea);
