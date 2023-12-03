@@ -474,18 +474,43 @@ namespace TunicRandomizer {
             // set this in the save file so that the candles can get turned on
             if (RewardId == PlayerCharacterPatches.MailboxHintId) {
                 SaveFile.SetInt("randomizer got mailbox hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Overworld Redux") {
+                    GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+                }
             } else if (RewardId == PlayerCharacterPatches.ForestHintId) {
                 SaveFile.SetInt("randomizer got forest hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Sword Access") {
+                    GameObject.Find("_Setpieces/RelicPlinth (1)/cathedral_candleflame").SetActive(true);
+                }
             } else if (RewardId == PlayerCharacterPatches.FortressHintId) {
                 SaveFile.SetInt("randomizer got fortress hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Fortress Reliquary") {
+                    GameObject.Find("RelicPlinth/cathedral_candleflame").SetActive(true);
+                }
             } else if (RewardId == PlayerCharacterPatches.GardenHintId) {
                 SaveFile.SetInt("randomizer got garden hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Archipelagos Redux") {
+                    GameObject.Find("_Environment Prefabs/RelicPlinth/cathedral_candleflame").SetActive(true);
+                    GameObject.Find("_Environment Prefabs/RelicPlinth/Point Light").SetActive(true);
+                }
             } else if (RewardId == PlayerCharacterPatches.SwampHintId) {
                 SaveFile.SetInt("randomizer got swamp hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Swamp Redux 2") {
+                    GameObject.Find("_Setpieces Etc/RelicPlinth/cathedral_candleflame").SetActive(true);
+                    GameObject.Find("_Setpieces Etc/RelicPlinth/Point Light").SetActive(true);
+                }
             } else if (RewardId == PlayerCharacterPatches.LibraryHintId) {
                 SaveFile.SetInt("randomizer got library hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Library Hall") {
+                    GameObject.Find("_Special/RelicPlinth/cathedral_candleflame").SetActive(true);
+                    GameObject.Find("_Special/RelicPlinth/Point Light").SetActive(true);
+                }
             } else if (RewardId == PlayerCharacterPatches.MonasteryHintId) {
                 SaveFile.SetInt("randomizer got monastery hint item", 1);
+                if (SceneLoaderPatches.SceneName == "Monastery") {
+                    GameObject.Find("Root/RelicPlinth (1)/cathedral_candleflame").SetActive(true);
+                    GameObject.Find("Root/RelicPlinth (1)/Point Light").SetActive(true);
+                }
             }
 
             GameObject FairyTarget = ItemData.Location.SceneName == "Trinket Well" ? GameObject.Find($"fairy target trinket well"): GameObject.Find($"fairy target {ItemData.Location.Position}");
