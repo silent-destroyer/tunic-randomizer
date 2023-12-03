@@ -470,31 +470,21 @@ namespace TunicRandomizer {
             if (ItemRandomizer.CreateSpoilerLog) {
                 ItemRandomizer.PopulateSpoilerLog();
             }
+
+            // set this in the save file so that the candles can get turned on
             if (RewardId == PlayerCharacterPatches.MailboxHintId) {
                 SaveFile.SetInt("randomizer got mailbox hint item", 1);
-            }
-            if (RewardId == PlayerCharacterPatches.ForestHintId)
-            {
+            } else if (RewardId == PlayerCharacterPatches.ForestHintId) {
                 SaveFile.SetInt("randomizer got forest hint item", 1);
-            }
-            if (RewardId == PlayerCharacterPatches.FortressHintId)
-            {
+            } else if (RewardId == PlayerCharacterPatches.FortressHintId) {
                 SaveFile.SetInt("randomizer got fortress hint item", 1);
-            }
-            if (RewardId == PlayerCharacterPatches.GardenHintId)
-            {
+            } else if (RewardId == PlayerCharacterPatches.GardenHintId) {
                 SaveFile.SetInt("randomizer got garden hint item", 1);
-            }
-            if (RewardId == PlayerCharacterPatches.SwampHintId)
-            {
+            } else if (RewardId == PlayerCharacterPatches.SwampHintId) {
                 SaveFile.SetInt("randomizer got swamp hint item", 1);
-            }
-            if (RewardId == PlayerCharacterPatches.LibraryHintId)
-            {
+            } else if (RewardId == PlayerCharacterPatches.LibraryHintId) {
                 SaveFile.SetInt("randomizer got library hint item", 1);
-            }
-            if (RewardId == PlayerCharacterPatches.MonasteryHintId)
-            {
+            } else if (RewardId == PlayerCharacterPatches.MonasteryHintId) {
                 SaveFile.SetInt("randomizer got monastery hint item", 1);
             }
 
