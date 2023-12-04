@@ -383,9 +383,7 @@ namespace TunicRandomizer {
                 ItemPresentation.PresentItem(Relic);
 
                 if (SceneLoaderPatches.SceneName == "Overworld Interiors") {
-                    foreach (string Key in HeroRelicLookup.Keys) {
-                        StateVariable.GetStateVariableByName(HeroRelicLookup[Key].Flag).BoolValue = Inventory.GetItemByName(Key).Quantity == 1;
-                    }
+                    SceneLoaderPatches.ToggleOldHouseRelics();
                 }
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     Inventory.GetItemByName(BonusUpgrades[Reward.Name].LevelUp).Quantity += 1;

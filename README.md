@@ -153,6 +153,7 @@ With the exception of the Logic settings, all options can be freely toggled or c
   
 ## Credits
 - Glace and RisingStar111 for helping research how to mod this game.
-- Radicoon, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, Scipio, Jabberrock, and many others for playing and helping to improve the mod.
+- Radicoon, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, Jabberrocky, and many others for playing and helping to improve the mod.
+- ScipioWright for working on the Entrance Randomizer.
 - Andrew Shouldice, Kevin Regamey, Finji, and everyone else involved in making this wonderful game.
 - zanders3 for [TinyJson](https://github.com/zanders3/json).
