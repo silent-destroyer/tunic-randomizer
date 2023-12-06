@@ -249,6 +249,11 @@ namespace TunicRandomizer {
                 }
                 // Activate night bridge to allow access to shortcut ladder
                 GameObject.Find("_Setpieces Etc/NightBridge/").GetComponent<DayNightBridge>().dayOrNight = StateVariable.GetStateVariableByName("Is Night").BoolValue ? DayNightBridge.DayNight.NIGHT : DayNightBridge.DayNight.DAY;
+                // Turn off the hero grave candle if you haven't found its hex yet
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got swamp hint item") == 0) {
+                    GameObject.Find("_Setpieces Etc/RelicPlinth/cathedral_candleflame").SetActive(false);
+                    GameObject.Find("_Setpieces Etc/RelicPlinth/Point Light").SetActive(false);
+                }
             } else if (SceneName == "g_elements") {
                 GhostHints.SpawnLostGhostFox();
             } else if (SceneName == "Posterity") {
@@ -277,6 +282,29 @@ namespace TunicRandomizer {
                     chest.transform.GetChild(4).gameObject.SetActive(false);
                     chest.transform.GetChild(7).gameObject.SetActive(false);
                     chest.transform.parent.GetChild(2).gameObject.SetActive(false);
+                }
+            } else if (SceneName == "Sword Access") {
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got forest hint item") == 0) {
+                    GameObject.Find("_Setpieces/RelicPlinth (1)/cathedral_candleflame").SetActive(false);
+                }
+            } else if (SceneName == "Fortress Reliquary") {
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got fortress hint item") == 0) {
+                    GameObject.Find("RelicPlinth/cathedral_candleflame").SetActive(false);
+                }
+            } else if (SceneName == "Archipelagos Redux") {
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got garden hint item") == 0) {
+                    GameObject.Find("_Environment Prefabs/RelicPlinth/cathedral_candleflame").SetActive(false);
+                    GameObject.Find("_Environment Prefabs/RelicPlinth/Point Light").SetActive(false);
+                }
+            } else if (SceneName == "Library Hall") {
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got library hint item") == 0) {
+                    GameObject.Find("_Special/RelicPlinth/cathedral_candleflame").SetActive(false);
+                    GameObject.Find("_Special/RelicPlinth/Point Light").SetActive(false);
+                }
+            } else if (SceneName == "Monastery") {
+                if (TunicRandomizer.Settings.HeroPathHintsEnabled && SaveFile.GetInt("randomizer got monastery hint item") == 0) {
+                    GameObject.Find("Root/RelicPlinth (1)/cathedral_candleflame").SetActive(false);
+                    GameObject.Find("Root/RelicPlinth (1)/Point Light").SetActive(false);
                 }
             } else {
 
@@ -311,6 +339,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 TunicPortals.ModifyPortals(loadingScene);
+                MarkPortals();
             }
 
             try {
@@ -392,5 +421,24 @@ namespace TunicRandomizer {
             ItemTracker.SaveTrackerFile();
         }
 
+        public static void MarkPortals()
+        {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
+
+            foreach (var portal in Portals)
+            {
+                if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt)
+                {
+                    foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals)
+                    {
+                        if (portal.name == portalCombo.Value.Portal1.Name || portal.name == portalCombo.Value.Portal2.Name)
+                        {
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.SceneDestinationTag, 1);
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.SceneDestinationTag, 1);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
