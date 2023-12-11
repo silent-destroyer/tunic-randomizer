@@ -29,6 +29,12 @@ namespace TunicRandomizer {
         public static float CompletionTimer = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
         public static string MailboxHintId = "";
+        public static string ForestHintId = "";
+        public static string FortressHintId = "";
+        public static string GardenHintId = "";
+        public static string SwampHintId = "";
+        public static string LibraryHintId = "";
+        public static string MonasteryHintId = "";
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
 

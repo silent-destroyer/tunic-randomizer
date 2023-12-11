@@ -1138,6 +1138,7 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        portal.name = portal1.Name;
                         break;
                     }
 
@@ -1156,6 +1157,7 @@ namespace TunicRandomizer
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        portal.name = portal2.Name;
                         break;
                     }
                 }
@@ -1188,6 +1190,7 @@ namespace TunicRandomizer
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        portal.name = portal1.Name;
                         break;
                     }
 
@@ -1206,6 +1209,7 @@ namespace TunicRandomizer
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
+                        portal.name = portal2.Name;
                         break;
                     }
                 }
