@@ -55,6 +55,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public FixedLaurelsType FixedLaurelsOption {
+            get;
+            set;
+        }
+
         // Hint Settings
         public bool HeroPathHintsEnabled {
             get;
@@ -168,6 +173,15 @@ namespace TunicRandomizer {
             BALANCED
         }
 
+        public enum FixedLaurelsType {
+            ANYWHERE,
+            //SIXCOINS,
+            //TENCOINS,
+            //FIFTEENCOINS,
+            TENFAIRIES,
+            //TWENTYFAIRIES
+        }
+
         public RandomizerSettings() {
             GameMode = GameModes.RANDOMIZER;
             KeysBehindBosses = false;
@@ -178,6 +192,7 @@ namespace TunicRandomizer {
             ERFixedShop = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
+            FixedLaurelsOption = FixedLaurelsType.ANYWHERE;
 
             HeroPathHintsEnabled = true;
             GhostFoxHintsEnabled = true;
