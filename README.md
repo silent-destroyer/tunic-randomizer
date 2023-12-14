@@ -48,12 +48,12 @@ Note: This is the standalone, single-player version of the TUNIC Randomizer. For
 - The "Fairy Seeker" Holy Cross spell (ULURDR) can now be used to seek out all items in an area, instead of just fairies. If all items in an area have been found, the fairy seeker will seek out the closest load zone that has items immediately beyond it. Useful for finding missing checks in areas with lots of obscured or hidden items!
 - Save files created by the randomizer will be marked with a "randomizer" tag in the file select screen to help differentiate them from your vanilla save files while the mod is loaded.
 - The Randomizer will routinely write to a couple of files in the Randomizer folder under the game's AppData directory (typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend\Randomizer):
-  - Spoiler.log - This file lists every check in the game and what item they contain. It will also mark off which checks you have collected.
+  - Spoiler.log - This file lists every check in the game and what item they contain. It will also mark off which checks you have collected. It also lists entrance connections in Entrance Rando.
     - In order to better facilitate things like races, the creation of the spoiler log can be toggled on/off on the title screen.
   - ItemTracker.json - This file contains information such as the current seed number, what important items have been obtained, and a running list of all checks that have been found. Can be useful for creating external programs that interface with the randomizer, such as this [Tunic Rando Tracker](https://github.com/radicoon/tunic-rando-tracker) by Radicoon.
 - Custom seeds can be set on the title screen before starting a New Game, or can be changed by modifying the seed value in the save file created after starting a New Game. Pressing '2' on keyboard while in-game will display the current seed and settings being used.
 - The Randomizer will notify you on the title screen if a new update is available for the mod.
-- An [EmoTracker Package](https://github.com/SapphireSapphic/TunicTracker) exists for this game with a full map tracker, created by SapphireSapphic and ScoutJD.
+- An [EmoTracker Package](https://github.com/SapphireSapphic/TunicTracker) exists for this game with a full map tracker, created by SapphireSapphic and ScoutJD. The pack also works in Poptracker.
 
 ## Settings
 With the exception of the Logic settings, all options can be freely toggled or changed at any point while playing.
@@ -61,11 +61,11 @@ With the exception of the Logic settings, all options can be freely toggled or c
 - Game Mode
   - Choose between a classic randomizer experience or Hexagon Quest, a separate game mode inspired by Triforce Hunt in Zelda randomizers. A vanilla mode is also available that doesn't randomize items.
     - Classic Randomizer: Find the three Hexagon Keys and defeat The Heir or Share Your Wisdom to win.
-    - Hexagon Quest: 30 Gold Hexagons are shuffled into the item pool. Find 20 of them and visit The Heir to win.
+    - Hexagon Quest: 30 Gold Questagons are shuffled into the item pool. Find 20 of them and visit The Heir to win. The amount of Questagons required can be adjusted between 15 and 50, and the amount of extra Questagons can be adjusted between 0% and 100%.
     - Vanilla: Leaves all the items in their vanilla locations. For those who want to play non-randomized Tunic but still enjoy all the other features of the mod.
 - Keys Behind Bosses 
-  - Choose if the three Hexagon Keys are randomly shuffled or placed behind their respective bossfight.
-  - In Hexagon Quest, this option guarantees a Gold Hexagon is placed behind each of the three major bosses.
+  - Choose if the three Questagon Keys are randomly shuffled or placed behind their respective bossfight.
+  - In Hexagon Quest, this option guarantees a Gold Questagon is placed behind each of the three major bosses.
 - Sword Progression
   - Replaces the stick and swords in the item pool with four Sword Upgrades that progressively level up as you find them.
   - Level 1: Stick -> Level 2: Sword -> Level 3: Librarian's Sword -> Level 4: Heir's Sword
@@ -75,14 +75,14 @@ With the exception of the Logic settings, all options can be freely toggled or c
 - Shuffle Abilities
   - Locks the ability to use Prayer, most Holy Cross codes*, and the Ice Rod combo technique until the respective manual page for each ability is found.
   - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and Ice Rod is unlocked by Page 53.
-  - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
-  - In Hexagon Quest, rather than unlocked abilities via pages, a random ability is unlocked at 5, 10, and 15 Gold Hexagons found
+  - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Heal Spell, Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
+  - In Hexagon Quest, rather than unlocked abilities via pages, a random ability is unlocked at 25%, 50%, and 75% of Gold Questagons found.
 - Entrance Randomizer
   - Shuffles all entrances in the game. Good luck finding your way, little fox!
   - The Fixed Shop option makes it so there is always a shop in the Windmill, and only one other shop in the pool.
 ### Hints
 - Path of the Hero
-  - Places a major hint at specific locations around the world, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple. These hint towards major progression items, such as Magic Items, Laurels, Hexagons, and more.
+  - Places a major hint at specific locations around the world, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple. These hint towards major progression items, such as Magic Items, Laurels, Questagons, and more.
 - Ghost Foxes
   - Spawns 15 Ghost Fox NPCs around the world that give minor hints. These hints include the locations of useful non-progression items, items in hard-to-reach locations, and barren locations.
   - There are over 50 unique Ghost Fox spawns, all with their own custom Trunic dialogue!
@@ -90,27 +90,27 @@ With the exception of the Logic settings, all options can be freely toggled or c
   - All freestanding items (Item Pickups, Page Pickups, Shop Items, Hero's Grave Relics, etc.) will have their model swapped to appear as the item they are randomized as.
   - Chest textures will be swapped to indicate what item is in them. Currently, the items with different chest textures are Fairies, Golden Trophies, the three Hexagons, and the Hero's Laurels.
 - Untranslated Text
-  - For the experienced Ruin Seekers out there, this option removes all English words from any custom dialogue, hints, or other text produced by the randomizer, leaving it up to your own knowledge to figure out what is where.
+  - For the experienced Ruin Seekers out there, this option removes all English words from custom dialogue, hints, or other text produced by the randomizer, leaving it up to your own knowledge to figure out what is where.
 ### General
 - Easier Heir Fight
   - Attacks deal additional damage to The Heir based on the total number of checks found.
 - Cheaper Shop Items
   - Reduces the cost of the four randomized Shop items from 1000 to 300.
 - Bonus Upgrades
-  - Makes the Golden Trophy items give free Level Ups for certain stats, allowing you to get up to +8 in every stat in a single playthrough when combined with the regular stat upgrades and the +2 Attack levels from Sword Progression.
-  - Note: Bonus upgrades will not be retroactively awarded if this setting is turned on after obtaining Golden Trophies with it disabled. The +2 Attack Levels from Sword Progression are always awarded and not affected by this setting.
+  - Makes the Golden Trophy items give free levels for specific stats, allowing you to get up to +8 in every stat in a single playthrough when combined with the regular stat upgrades and the +2 Attack levels from Sword Progression.
+  - Note: Bonus upgrades will not be retroactively awarded if this setting is turned on after obtaining Golden Trophies with it disabled. The +2 Attack Levels from Sword Progression are always awarded and are not affected by this setting.
 - Disable Chest Interruption
-  - Enemies will not be able to interrupt you while opening chests if this option is turned on.
+  - Enemies will not be able to interrupt you while opening chests.
 - Fool Traps
-  - Enables fool traps, which replace low-value money rewards when enabled and apply damage or other negative effects to the player.
-  - The different options determine how many fools are present, with None/Normal/Double/Onslaught containing 0/15/32/50 fools respectively.
+  - Enables fool traps, which replace low-value money rewards when enabled and apply negative effects to the player.
+  - The different options determine how many fools are present, with None/Normal/Double/Onslaught creating 0/15/32/50 fools, respectively.
 - ???
   - !esirprus a rof no nruT
 ### Enemy Randomization 
 - Enemy Randomizer
   - Randomly swaps out enemies with new ones when you load into a scene. See below settings for ways to affect enemy difficulty/generation.
-  - There is currently no logic for certain edge cases where grappling to an enemy may be required to reach a check (ex. East Forest Slime, Turret in Overworld/Frog's Domain). The Enemy Randomizer can be toggled on or off at any point while playing however, so if you find yourself unable to reach certain checks it is recommended to briefly turn the setting off to get the check and then turn it back on afterwards.
-  - Enemy Randomization is still a work-in-progress feature and may randomly stop working or cause the game to stutter/lag after a while. If either of these situations occur, restarting the game should temporarily fix the issue.
+  - The Enemy Randomizer can be toggled on or off at any point while playing however, so if you find yourself unable to reach certain checks, you can turn the setting off to get the check and then turn it back on afterwards.
+  - Enemy Randomization is still a work-in-progress feature and may behave erratically at times.
 - Extra Enemies
   - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos.
 - Enemy Difficulty
@@ -137,6 +137,11 @@ With the exception of the Logic settings, all options can be freely toggled or c
 - This item combines two unused items in the game into one and allows you to warp back to the last statue you saved at when used.
 - What does Dath mean? The trunic characters on the item icon were presumably meant to spell "Dash", but instead they spell out "Dath", so the community has dubbed this item the "Dath Stone".
 
+### Torch
+todo: add torch image
+- This item functions like the Dath Stone, except it only brings you back to the Overworld checkpoint.
+- It does not overwrite where the Dath Stone last sent you, so use them together to get places quickly!
+
 ### Librarian and Heir Swords
 ![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/412935ea-b5ab-4d96-b181-678a39025901) ![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/92e6b5d3-1d30-49ff-a344-1d8295e593dd)
 - These familiar swords are now usable in the game as part of the Sword Progression mode!
@@ -145,7 +150,7 @@ With the exception of the Logic settings, all options can be freely toggled or c
 
 ## Golden Hexagons
 ![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/361efdaa-1849-44ee-9b2c-504d7f05c46e)
-- These appear when playing the Hexagon Quest mode. Finding 20 of them allows you to end the game by visiting The Heir.
+- These appear when playing the Hexagon Quest mode. Finding your goal amount allows you to end the game by visiting The Heir.
 
 ## ???
 ![image](https://github.com/silent-destroyer/tunic-randomizer/assets/110704408/ed015b2c-7b93-4d23-8728-b36b5cba36d1)
