@@ -9,6 +9,8 @@ using System.IO;
 using BepInEx.Logging;
 using UnityEngine.Playables;
 using JetBrains.Annotations;
+using System.Net;
+using System.Diagnostics.Eventing.Reader;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
@@ -30,6 +32,8 @@ namespace TunicRandomizer {
         }
 
         public static void RandomizeAndPlaceItems() {
+            Logger.LogInfo("randomize and place items starting");
+            Logger.LogInfo("laurels option is " + SaveFile.GetInt("randomizer laurels location"));
             ItemPatches.ItemList.Clear();
             ItemPatches.ItemsPickedUp.Clear();
 
@@ -49,6 +53,7 @@ namespace TunicRandomizer {
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
             List<ItemData> Hexagons = new List<ItemData>();
+            ItemData Laurels = new ItemData();
             List<Reward> ProgressionRewards = new List<Reward>();
             Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
@@ -69,6 +74,7 @@ namespace TunicRandomizer {
             }
             Shuffle(InitialItems);
             foreach (ItemData Item in InitialItems) {
+
                 if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
                     if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
                         Hexagons.Add(Item);
@@ -80,12 +86,18 @@ namespace TunicRandomizer {
                         InitialRewards.Add(Item.Reward);
                         InitialLocations.Add(Item.Location);
                     }
-                } else {
-                    if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
-                        if (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5") {
+                } else if ((SaveFile.GetInt("randomizer laurels location") == 1 && Item.Location.LocationId == "Well Reward (6 Coins)")
+                    || (SaveFile.GetInt("randomizer laurels location") == 2 && Item.Location.LocationId == "Well Reward (10 Coins)") 
+                    || (SaveFile.GetInt("randomizer laurels location") == 3 && Item.Location.LocationId == "waterfall")) {
+                    InitialRewards.Add(Item.Reward);
+                    Laurels.Location = Item.Location;
+                } else if (SaveFile.GetInt("randomizer laurels location") != 0 && Item.Reward.Name == "Hyperdash") {
+                    InitialLocations.Add(Item.Location);
+                    Laurels.Reward = Item.Reward;
+                } else { 
+                    if (SaveFile.GetInt("randomizer sword progression enabled") != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
                             Item.Reward.Name = "Sword Progression";
                             Item.Reward.Type = "SPECIAL";
-                        }
                     }
                     if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
                         if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
@@ -123,29 +135,23 @@ namespace TunicRandomizer {
                                     }
                                 }
                             }
-                            if (Item.Location.RequiredItemsDoors.Count > 0)
-                            {
-                                for (int i = 0; i < Item.Location.RequiredItemsDoors.Count; i++)
-                                {
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12") && Item.Location.RequiredItemsDoors[i].ContainsKey("21"))
-                                    {
+                            if (Item.Location.RequiredItemsDoors.Count > 0) {
+                                for (int i = 0; i < Item.Location.RequiredItemsDoors.Count; i++) {
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12") && Item.Location.RequiredItemsDoors[i].ContainsKey("21")) {
                                         int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
                                         Item.Location.RequiredItemsDoors[i].Remove("12");
                                         Item.Location.RequiredItemsDoors[i].Remove("21");
                                         Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", amt);
                                     }
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12"))
-                                    {
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12")) {
                                         Item.Location.RequiredItemsDoors[i].Remove("12");
                                         Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
                                     }
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("21"))
-                                    {
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("21")) {
                                         Item.Location.RequiredItemsDoors[i].Remove("21");
                                         Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
                                     }
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("26"))
-                                    {
+                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("26")) {
                                         Item.Location.RequiredItemsDoors[i].Remove("26");
                                         Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest ice rod requirement"));
                                     }
@@ -163,19 +169,25 @@ namespace TunicRandomizer {
             }
 
             // adding the progression rewards to the start inventory, so we can reverse fill
-            foreach (Reward item in ProgressionRewards)
-            {
+            foreach (Reward item in ProgressionRewards) {
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
-                if (UnplacedInventory.ContainsKey(itemName))
-                { UnplacedInventory[itemName] += 1; }
-                else
-                { UnplacedInventory.Add(itemName, 1); }
+                if (UnplacedInventory.ContainsKey(itemName)) {
+                    UnplacedInventory[itemName] += 1;
+                } else {
+                    UnplacedInventory.Add(itemName, 1);
+                }
+            }
+            // if laurels location is on, manually add laurels to the unplaced inventory
+            if (!UnplacedInventory.ContainsKey("Hyperdash")) {
+                UnplacedInventory.Add("Hyperdash", 1);
             }
 
             // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
             Dictionary<string, int> SceneInventory = new Dictionary<string, int>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>();
             TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+            int fairyCount = 0;
+            bool laurelsPlaced = false;
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => TunicRandomizer.Randomizer.Next())) {
@@ -184,52 +196,61 @@ namespace TunicRandomizer {
                 string itemName = ItemPatches.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 //Logger.LogInfo("placing the item " + itemName);
                 // remove item from inventory for reachability checks
-                if (UnplacedInventory.Keys.Contains(itemName))
-                {
+                if (UnplacedInventory.Keys.Contains(itemName)) {
                     UnplacedInventory[itemName] -= 1;
                 }
-                if (UnplacedInventory[itemName] == 0)
-                {
+                if (UnplacedInventory[itemName] == 0) {
                     UnplacedInventory.Remove(itemName);
                 }
 
+                if (itemName == "Fairy") {
+                    fairyCount++;
+                }
+                if (SaveFile.GetInt("randomizer laurels location") != 0 && !laurelsPlaced && (
+                    (SaveFile.GetInt("randomizer laurels location") == 1 && UnplacedInventory["Trinket Coin"] == 11) 
+                    || (SaveFile.GetInt("randomizer laurels location") == 2 && UnplacedInventory["Trinket Coin"] == 7) 
+                    || (SaveFile.GetInt("randomizer laurels location") == 3 && fairyCount == 10))) {
+                    // laurels will no longer be accessible, remove it from the pool
+                    laurelsPlaced = true;
+                    UnplacedInventory.Remove("Hyperdash");
+                }
+
                 // door rando time
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-                {
+                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
                     int checkP = 0;
                     SceneInventory.Clear();
                     SceneInventory.Add("Overworld Redux", 1);
                     // fill up our SceneInventory with scenes until we stop getting new scenes -- these are of the portals and regions we can currently reach
                     //Logger.LogInfo("number of portals is " + TunicPortals.RandomizedPortals.Count.ToString());
-                    while (checkP < TunicPortals.RandomizedPortals.Count)
-                    {
+                    while (checkP < TunicPortals.RandomizedPortals.Count) {
                         checkP = 0;
                         CombinedInventory.Clear();
-                        foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
-                        {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
-                        foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
-                        {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
+                        foreach (KeyValuePair<string, int> sceneItem in SceneInventory) {
+                            CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
+                        }
+                        foreach (KeyValuePair<string, int> placedItem in UnplacedInventory) {
+                            CombinedInventory.Add(placedItem.Key, placedItem.Value);
+                        }
 
-                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
-                        {
-                            if (portalCombo.ComboRewards(CombinedInventory).Count > 0)
-                            {
+                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                            if (portalCombo.ComboRewards(CombinedInventory).Count > 0) {
                                 int testValue = 0;
                                 int testValue2 = 0;
-                                foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory))
-                                {
+                                foreach (string itemDoors in portalCombo.ComboRewards(CombinedInventory)) {
                                     testValue2++;
-                                    if (!SceneInventory.ContainsKey(itemDoors))
-                                    {
+                                    if (!SceneInventory.ContainsKey(itemDoors)) {
                                         SceneInventory.Add(itemDoors, 1);
+                                    } else {
+                                        testValue++;
                                     }
-                                    else { testValue++; }
                                 }
-                                if (testValue == testValue2)
-                                { checkP++; }
+                                if (testValue == testValue2) {
+                                    checkP++;
+                                }
+                            } else {
+                                checkP++;
                             }
-                            else { checkP++; }
                         }
                         //Logger.LogInfo("checkP equals " + checkP.ToString());
                     }
@@ -245,10 +266,12 @@ namespace TunicRandomizer {
 
                 // empty combined inventory, refill it with whatever is currently in scene inventory and placed inventory
                 CombinedInventory.Clear();
-                foreach (KeyValuePair<string, int> sceneItem in SceneInventory)
-                {CombinedInventory.Add(sceneItem.Key, sceneItem.Value);}
-                foreach (KeyValuePair<string, int> placedItem in UnplacedInventory)
-                {CombinedInventory.Add(placedItem.Key, placedItem.Value);}
+                foreach (KeyValuePair<string, int> sceneItem in SceneInventory) {
+                    CombinedInventory.Add(sceneItem.Key, sceneItem.Value);
+                }
+                foreach (KeyValuePair<string, int> placedItem in UnplacedInventory) {
+                    CombinedInventory.Add(placedItem.Key, placedItem.Value);
+                }
 
                 //foreach (Location loc in InitialLocations)
                 //{ if (!loc.reachable(CombinedInventory)) { Logger.LogInfo("location " + loc.SceneName + " " + loc.LocationId + " is not reachable"); } }
@@ -271,8 +294,9 @@ namespace TunicRandomizer {
             
             SphereZero = CombinedInventory;
 
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-            { SphereZero = GetERSphereOne(); }
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                SphereZero = GetERSphereOne();
+            }
 
             // shuffle remaining rewards and locations
             Shuffle(InitialRewards, InitialLocations);
@@ -297,6 +321,11 @@ namespace TunicRandomizer {
                     string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
                     ItemPatches.ItemList.Add(DictionaryId, Hexagon);
                 }
+            }
+
+            if (TunicRandomizer.Settings.FixedLaurelsOption != 0) {
+                string DictionaryId = $"{Laurels.Location.LocationId} [{Laurels.Location.SceneName}]";
+                ItemPatches.ItemList.Add(DictionaryId, Laurels);
             }
 
             if (SaveFile.GetString("randomizer game mode") == "VANILLA") {

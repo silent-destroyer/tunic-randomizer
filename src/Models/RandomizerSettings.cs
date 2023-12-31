@@ -175,11 +175,9 @@ namespace TunicRandomizer {
 
         public enum FixedLaurelsType {
             ANYWHERE,
-            //SIXCOINS,
-            //TENCOINS,
-            //FIFTEENCOINS,
+            SIXCOINS,
+            TENCOINS,
             TENFAIRIES,
-            //TWENTYFAIRIES
         }
 
         public RandomizerSettings() {
