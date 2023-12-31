@@ -207,9 +207,9 @@ namespace TunicRandomizer {
                     fairyCount++;
                 }
                 if (SaveFile.GetInt("randomizer laurels location") != 0 && !laurelsPlaced && (
-                    (SaveFile.GetInt("randomizer laurels location") == 1 && UnplacedInventory["Trinket Coin"] == 11) 
-                    || (SaveFile.GetInt("randomizer laurels location") == 2 && UnplacedInventory["Trinket Coin"] == 7) 
-                    || (SaveFile.GetInt("randomizer laurels location") == 3 && fairyCount == 10))) {
+                    (SaveFile.GetInt("randomizer laurels location") == 1 && UnplacedInventory["Trinket Coin"] == 10) 
+                    || (SaveFile.GetInt("randomizer laurels location") == 2 && UnplacedInventory["Trinket Coin"] == 6) 
+                    || (SaveFile.GetInt("randomizer laurels location") == 3 && fairyCount == 11))) {
                     // laurels will no longer be accessible, remove it from the pool
                     laurelsPlaced = true;
                     UnplacedInventory.Remove("Hyperdash");
