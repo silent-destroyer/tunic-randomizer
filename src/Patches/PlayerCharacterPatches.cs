@@ -202,7 +202,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-                switch (TunicRandomizer.Settings.FixedLaurelsOption) {
+                SaveFile.SetInt("randomizer laurels location", (int)TunicRandomizer.Settings.FixedLaurelsOption);
                     case RandomizerSettings.FixedLaurelsType.ANYWHERE:
                         SaveFile.SetInt("randomizer laurels location", 0);
                         break;
