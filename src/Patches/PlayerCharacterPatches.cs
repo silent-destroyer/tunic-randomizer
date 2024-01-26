@@ -202,13 +202,14 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName("Sword").Quantity = 1;
                     SaveFile.SetInt("randomizer started with sword", 1);
                 }
-                if (TunicRandomizer.Settings.EntranceRandoEnabled)
-                {
+                
+                SaveFile.SetInt("randomizer laurels location", (int)TunicRandomizer.Settings.FixedLaurelsOption);
+                
+                if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                     Inventory.GetItemByName("Torch").Quantity = 1;
                     SaveFile.SetInt("randomizer entrance rando enabled", 1);
                 }
-                if (TunicRandomizer.Settings.ERFixedShop)
-                {
+                if (TunicRandomizer.Settings.ERFixedShop) {
                     SaveFile.SetInt("randomizer ER fixed shop", 1);
                 }
                 if (TunicRandomizer.Settings.ShuffleAbilities) {

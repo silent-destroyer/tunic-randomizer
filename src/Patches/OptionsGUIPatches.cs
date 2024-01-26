@@ -38,6 +38,7 @@ namespace TunicRandomizer {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             if (SceneLoaderPatches.SceneName == "TitleScreen") {
                 Il2CppStringArray GameModes = (Il2CppStringArray)new string[] { "<#FFA300>Randomizer", "<#ffd700>Hexagon Quest", "<#4FF5D4>Vanilla" };
+                Il2CppStringArray LaurelsLocations = (Il2CppStringArray)new string[] { "<#FFA300>Anywhere", "<#ffd700>6 Coins", "<#ffd700>10 Coins", "<#ffd700>10 Fairies" };
                 OptionsGUI.addMultiSelect("Game Mode", GameModes, GetGameModeIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeGameMode).wrap = true;
                 OptionsGUI.addToggle("Keys Behind Bosses", "Off", "On", TunicRandomizer.Settings.KeysBehindBosses ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleKeysBehindBosses);
                 OptionsGUI.addToggle("Sword Progression", "Off", "On", TunicRandomizer.Settings.SwordProgressionEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSwordProgression);
@@ -45,9 +46,10 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
                 OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
                 OptionsGUI.addToggle("Fixed Shop Entrance", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFixedShop);
+                OptionsGUI.addMultiSelect("Laurels Location", LaurelsLocations, GetLaurelsLocationIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLaurelsLocation).wrap = true;
             } else {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
-                if(SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") { 
+                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") { 
                     OptionsGUI.addButton("Hexagon Quest Goal", SaveFile.GetInt("randomizer hexagon quest goal").ToString(), null);
                     OptionsGUI.addButton("Hexagons in Item Pool", ((int)Math.Round((100f + SaveFile.GetInt("randomizer hexagon quest extras")) / 100f * SaveFile.GetInt("randomizer hexagon quest goal"))).ToString(), null);
                 }
@@ -165,8 +167,16 @@ namespace TunicRandomizer {
         }
 
         public static int GetGameModeIndex() { 
-               
             return (int)TunicRandomizer.Settings.GameMode;
+        }
+
+        public static void ChangeLaurelsLocation(int index) {
+            TunicRandomizer.Settings.FixedLaurelsOption = (RandomizerSettings.FixedLaurelsType)index;
+            SaveSettings();
+        }
+
+        public static int GetLaurelsLocationIndex() {
+            return (int)TunicRandomizer.Settings.FixedLaurelsOption;
         }
 
         public static void ToggleKeysBehindBosses(int index) {
