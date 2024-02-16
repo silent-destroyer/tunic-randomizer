@@ -1,8 +1,5 @@
 # Tunic Randomizer Archipelago Client
 
-# PLEASE READ!
-The Tunic Archipelago mod has been combined with the single-player randomizer into a single mod, and has moved to the [original Tunic Randomizer repository](https://github.com/silent-destroyer/tunic-randomizer). As a result, this repository will no longer be updated, and all future updates for the Tunic Archipelago integration will be released there.
-
 This randomizer features item, entrance, and enemy randomization, as well as a variety of additional settings and features to help customize the experience, such as hints, custom items, and custom fox colors!
 
 This mod contains both the standalone, single-player randomizer and the Archipelago Multiworld integration.
@@ -182,6 +179,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Prevents you from pulling yourself towards frozen enemies with the Magic Orb. (The East Forest blob is excluded from this.)
 - Disable Ladder Storage
   - Prevents the Ladder Storage glitch from being used.
+- Disable Upgrade Stealing
+  - Prevents the Upgrade Stealing glitch from being used.
   
 ## Credits
 - Glace and RisingStar111 for helping research how to mod this game, and Jabberrock for creating an initial Archipelago integration.
