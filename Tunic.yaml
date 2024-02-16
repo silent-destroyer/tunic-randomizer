@@ -1,0 +1,76 @@
+﻿# _________  ___  ___  ________   ________     
+#|\___   ___\\  \|\  \|\   ___  \|\   ____\    
+#\|___ \  \_\ \  \\\  \ \  \\ \  \ \  \___|    
+#     \ \  \ \ \  \\\  \ \  \\ \  \ \  \       
+#      \ \  \ \ \  \\\  \ \  \\ \  \ \  \____  
+#       \ \__\ \ \_______\ \__\\ \__\ \_______\
+#        \|__|  \|_______|\|__| \|__|\|_______|
+#
+name: Ruin Seeker
+description: tunc
+game: TUNIC
+requires:
+  version: 0.4.4
+TUNIC:
+  # Play with sword upgrades enabled.
+  sword_progression: 'true'
+  # Start with a sword.
+  start_with_sword: 'false'
+  # Place the three hexagons behind their respective bosses in your world.
+  keys_behind_bosses: 'false'
+  # Lock the ability to use prayer, holy cross, and ice rod until their corresponding manual page is found.
+  # If playing with Hexagon Quest, abilities are instead unlocked after finding 25%, 50%, and 75% of your required Gold Hexagons.
+  ability_shuffling: 'false'
+  # Alternate goal akin to Triforce Hunt. Find the required amount of Gold Hexagons to win.
+  hexagon_quest: 'false'
+  # The required amount of Gold Hexagons needed to win Hexagon Quest. Goal can be anywhere between 15 and 50.
+  hexagon_goal: 20
+  # The amount of extra Gold Hexagons in the item pool in Hexagon Quest.
+  # Calculated as a percentage of the required goal amount (50 = 50%, so if hexagon_goal is 20 and extra_hexagon_percentage = 50, there will be 30 hexagons total in the item pool)
+  extra_hexagon_percentage: 50
+  progression_balancing: 50
+  # Replaces low-to-medium value money rewards in the item pool with fool traps, which cause random negative
+  # effects to the player. Options are off (0), normal (15), double (32), and onslaught (50).
+  fool_traps: normal
+
+  # Randomize the connections between scenes.
+  # A small, very lost fox on a big adventure.
+  entrance_rando: 'false'
+  # Forces the Windmill entrance to lead to a shop, and places only one other shop in the pool.
+  # Has no effect if Entrance Rando is not enabled.
+  fixed_shop: 'false'
+  
+  # Set which logic rules to use for your world.
+  # Restricted: Standard logic, no glitches.
+  # No Major Glitches: Ice grapples through doors, shooting the west bell, and boss quick kills are included in logic.
+  # Unrestricted: Logic in No Major Glitches, as well as ladder storage to get to certain places early.
+  # *Special Shop is not in logic without the Hero's Laurels in Unrestricted due to soft lock potential.
+  # *Using Ladder Storage to get to individual chests is not in logic to avoid tedium.
+  # *Getting knocked out of the air by enemies during Ladder Storage to reach places is not in logic, except for in
+  # Rooted Ziggurat Lower. This is so you're not punished for playing with enemy rando on.
+  # Options are restricted, no_major_glitches, unrestricted
+  logic_rules: restricted
+  # Force the Hero's Laurels to be placed at a location in your world.
+  # For if you want to avoid or specify early or late Laurels.
+  # If you use the 10 Fairies option in Entrance Rando, Secret Gathering Place will be at its vanilla entrance.
+  # Options are anywhere, 6_coins, 10_coins, 10_fairies
+  laurels_location: anywhere
+  # Choose whether you require the Scavenger's Mask for Lower Quarry.
+  # When enabled, the Scavenger's Mask is marked as Useful instead of Progression.
+  maskless: 'false'
+  # Choose whether you require the Lantern for dark areas.
+  # When enabled, the Lantern is marked as Useful instead of Progression.
+  lanternless: 'false'
+
+  accessibility:
+    locations: 0
+    items: 50
+    minimal: 0
+  local_items: []
+  non_local_items: []
+  start_inventory: {}
+  start_inventory_from_pool: {}
+  start_hints: []
+  start_location_hints: []
+  exclude_locations: []
+  priority_locations: []

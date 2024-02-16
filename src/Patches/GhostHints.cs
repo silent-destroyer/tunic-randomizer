@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using BepInEx.Logging;
-
+using static TunicRandomizer.SaveFlags;
+using static TunicRandomizer.GhostHints;
 
 namespace TunicRandomizer {
 
+    public class GhostHints {
 
-public class GhostHints {
+        public struct ArchipelagoHint {
+            public string Item;
+            public string Location;
+            public long Player;
+
+            public ArchipelagoHint(string item, string location, long player) { 
+                Item = item; 
+                Location = location; 
+                Player = player;
+            }
+        }
 
         public class HintGhost {
             public string Name;
@@ -21,7 +31,9 @@ public class GhostHints {
             public string Dialogue;
             public string TrunicDialogue;
             public string Hint;
-            public string TrunicHint;
+            public string HintedItem;
+            public string OptionalCheckID;
+            public string HexQuestAbilityHint;
 
             public HintGhost() { }
 
@@ -34,9 +46,9 @@ public class GhostHints {
                 TrunicDialogue = dialogue;
                 AnimState = animState;
                 Hint = "";
-                TrunicHint = "";
+                HintedItem = "";
+                OptionalCheckID = "";
             }
-
             public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue) {
                 Name = name;
                 SceneName = sceneName;
@@ -46,7 +58,8 @@ public class GhostHints {
                 TrunicDialogue = trunicDialogue;
                 AnimState = animState;
                 Hint = "";
-                TrunicHint = "";
+                HintedItem = "";
+                OptionalCheckID = "";
             }
         }
 
@@ -54,31 +67,50 @@ public class GhostHints {
 
         public static GameObject GhostFox;
 
-        public static List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U' };
-        public static List<(string, string)> LocationHints = new List<(string, string)>();
-        public static List<(string, string)> ItemHints = new List<(string, string)>();
-        public static List<(string, string)> BarrenAndTreasureHints = new List<(string, string)>();
-        public static (string, string) HeirHint;
+        public static List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u' };
+        public static List<(string, string, string)> LocationHints = new List<(string, string, string)>();
+        public static List<(string, string, string)> ItemHints = new List<(string, string, string)>();
+        public static List<(string, string, string)> BarrenAndTreasureHints = new List<(string, string, string)>();
+        public static string HeirHint;
 
         public static Dictionary<string, HintGhost> HintGhosts = new Dictionary<string, HintGhost>();
+        public static Dictionary<string, string> HexQuestHintLookup = new Dictionary<string, string>();
 
         public static Dictionary<string, string> HintableLocationIds = new Dictionary<string, string>() {
             { "1005 [Swamp Redux 2]", "FOUR SKULLS" },
-            { "1006 [East Forest Redux]", "FOREST SLIME" },
+            { "1006 [East Forest Redux]", "EAST FOREST SLIME" },
             { "999 [Cathedral Arena]", "CATHEDRAL GAUNTLET" },
             { "Vault Key (Red) [Fortress Arena]", "SIEGE ENGINE" },
             { "Hexagon Green [Library Arena]", "LIBRARIAN" },
             { "Hexagon Blue [ziggurat2020_3]", "SCAVENGER BOSS" },
-            { "Hexagon Red [Fortress Arena]", "VAULT KEY" },
+            { "Hexagon Red [Fortress Arena]", "VAULT KEY PLINTH" },
             { "1007 [Waterfall]", "20 FAIRIES" },
             { "Well Reward (10 Coins) [Trinket Well]", "10 COIN TOSSES" },
             { "Well Reward (15 Coins) [Trinket Well]", "15 COIN TOSSES" },
             { "1011 [Dusty]", "PILES OF LEAVES" },
-            { "Archipelagos Redux-(-396.3, 1.4, 42.3) [Archipelagos Redux]", "GARDEN TREE" },
+            { "Archipelagos Redux-(-396.3, 1.4, 42.3) [Archipelagos Redux]", "WEST GARDEN TREE" },
             { "final [Mountaintop]", "TOP OF THE MOUNTAIN" }
         };
-        
+
         public static List<string> HintableItemNames = new List<string>() {
+            "Stick",
+            "Sword",
+            "Sword Upgrade",
+            "Gun",
+            "Shield",
+            "Hourglass",
+            "Scavenger Mask",
+            "Old House Key",
+            "Hero Relic - ATT",
+            "Hero Relic - DEF",
+            "Hero Relic - POTION",
+            "Hero Relic - HP",
+            "Hero Relic - SP",
+            "Hero Relic - MP",
+            "Dath Stone",
+        };
+
+        public static List<string> HintableItemNamesSinglePlayer = new List<string>() {
             "Stick",
             "Sword",
             "Sword Progression",
@@ -97,6 +129,46 @@ public class GhostHints {
         };
 
         public static List<string> BarrenItemNames = new List<string>() {
+            "Firecracker x2",
+            "Firecracker x3",
+            "Firecracker x4",
+            "Firecracker x5",
+            "Firecracker x6",
+            "Fire Bomb x2",
+            "Fire Bomb x3",
+            "Ice Bomb x2",
+            "Ice Bomb x3",
+            "Ice Bomb x5",
+            "Pepper x2",
+            "Ivy x3",
+            "Lure",
+            "Lure x2",
+            "Effigy",
+            "HP Berry",
+            "HP Berry x2",
+            "HP Berry x3",
+            "MP Berry",
+            "MP Berry x2",
+            "MP Berry x3",
+            "Money x1",
+            "Money x10",
+            "Money x15",
+            "Money x16",
+            "Money x20",
+            "Money x25",
+            "Money x30",
+            "Money x32",
+            "Money x40",
+            "Money x48",
+            "Money x50",
+            "Money x64",
+            "Money x100",
+            "Money x128",
+            "Money x200",
+            "Money x255",
+        };
+
+        public static List<string> BarrenItemNamesSinglePlayer = new List<string>() {
             "Firecracker",
             "Ice Bomb",
             "Firebomb",
@@ -118,7 +190,7 @@ public class GhostHints {
                 new HintGhost("Hint Ghost Far Shore 2", "Transit", new Vector3(-18.6177f, 8.0314f, -81.6153f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, "I stoud awn #aht skwAr ahnd ehndid uhp hEr suhmhow.\nwAr igzahktlE R wE?" ) }
             },
             { "Ruined Passage", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Ruins Passage", "Ruins Passage", new Vector3(184.1698f, 17.3268f, 40.54981f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.TIRED, $"nahp tIm! haw haw haw... geht it?") }
+                new HintGhost("Hint Ghost Ruins Passage", "Ruins Passage", new Vector3(184.1698f, 17.3268f, 40.54981f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.TIRED, $"nahp tIm! z z z z z z z. . .") }
             },
             { "Windmill", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Windmill", "Windmill", new Vector3(-58.33329f, 54.0833f, -27.8653f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"viziti^ #uh \"SHOPKEEPER?\" doo nawt bE uhlRmd, #A R\nA frehnd.", $"viziti^ #uh $awpkEpur? doo nawt bE uhlRmd, #A R A frehnd.") }
@@ -246,7 +318,7 @@ public class GhostHints {
                 Logger.LogInfo("Error initalizing ghost foxes for hints!");
             }
         }
-         
+
         public static void SpawnHintGhosts(string SceneName) {
             foreach (HintGhost HintGhost in HintGhosts.Values) {
                 if (HintGhost.SceneName == SceneName) {
@@ -256,11 +328,13 @@ public class GhostHints {
                     NewGhostFox.transform.position = HintGhost.Position;
                     NewGhostFox.transform.rotation = HintGhost.Rotation;
                     LanguageLine HintText = ScriptableObject.CreateInstance<LanguageLine>();
-                    HintText.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"{HintGhost.TrunicDialogue}---{HintGhost.TrunicHint}" : $"{HintGhost.Dialogue}---{HintGhost.Hint}";
+                    HintText.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? HintGhost.TrunicDialogue : HintGhost.Dialogue)}---{HintGhost.Hint}";
                     NewGhostFox.GetComponent<NPC>().script = HintText;
+
                     if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
                         NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
                     }
+
                     NewGhostFox.SetActive(true);
                 }
             }
@@ -268,193 +342,322 @@ public class GhostHints {
 
         public static void GenerateHints() {
             HintGhosts.Clear();
+            HexQuestHintLookup.Clear();
             List<string> GhostSpawns = GhostLocations.Keys.ToList();
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 0 && GhostLocations.ContainsKey("Hint Ghost Purgatory"))
-            { GhostLocations.Remove("Hint Ghost Purgatory"); }
+            if (SaveFile.GetInt(EntranceRando) == 0) { 
+                GhostSpawns.Remove("Purgatory"); 
+            }
             List<string> SelectedSpawns = new List<string>();
+            System.Random random = new System.Random(SaveFile.GetInt("seed"));
             for (int i = 0; i < 15; i++) {
-                string Location = GhostSpawns[TunicRandomizer.Randomizer.Next(GhostSpawns.Count)];
+                string Location = GhostSpawns[random.Next(GhostSpawns.Count)];
                 SelectedSpawns.Add(Location);
                 GhostSpawns.Remove(Location);
             }
             foreach (string Location in SelectedSpawns) {
-                HintGhost HintGhost = GhostLocations[Location][TunicRandomizer.Randomizer.Next(GhostLocations[Location].Count)];
+                HintGhost HintGhost = GhostLocations[Location][random.Next(GhostLocations[Location].Count)];
                 HintGhosts.Add(HintGhost.Name, HintGhost);
             }
+
             GenerateLocationHints();
             GenerateItemHints();
             GenerateBarrenAndMoneySceneHints();
 
-            List<(string, string)> Hints = new List<(string, string)>();
+            List<(string, string, string)> Hints = new List<(string, string, string)>();
             for (int i = 0; i < 5; i++) {
-                (string, string) LocationHint = LocationHints[TunicRandomizer.Randomizer.Next(LocationHints.Count)];
+                (string, string, string) LocationHint = LocationHints[random.Next(LocationHints.Count)];
                 Hints.Add(LocationHint);
                 LocationHints.Remove(LocationHint);
-
-                (string, string) ItemHint = ItemHints[TunicRandomizer.Randomizer.Next(ItemHints.Count)];
-                Hints.Add(ItemHint);
-                ItemHints.Remove(ItemHint);
-
-                if (i == 0 && SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-                {
-                    GenerateHeirHint();
-                    Hints.Add(HeirHint);
-                }
-                try {
-                    (string, string) BarrenHint = BarrenAndTreasureHints[TunicRandomizer.Randomizer.Next(BarrenAndTreasureHints.Count)];
-                    Hints.Add(BarrenHint);
-                    BarrenAndTreasureHints.Remove(BarrenHint);
-                } catch (Exception e) {
-                    int flip = TunicRandomizer.Randomizer.Next(2);
-                    if (flip == 0) {
-                        LocationHint = LocationHints[TunicRandomizer.Randomizer.Next(LocationHints.Count)];
-                        Hints.Add(LocationHint);
-                        LocationHints.Remove(LocationHint);
-                    } else {
-                        ItemHint = ItemHints[TunicRandomizer.Randomizer.Next(ItemHints.Count)];
-                        Hints.Add(ItemHint);
-                        ItemHints.Remove(ItemHint);
-                    }
+            }
+            for (int i = 0; i < 7; i++) {
+                if (ItemHints.Count > 0) {
+                    (string, string, string) ItemHint = ItemHints[random.Next(ItemHints.Count)];
+                    Hints.Add(ItemHint);
+                    ItemHints.Remove(ItemHint);
                 }
             }
-            foreach (string key in HintGhosts.Keys.ToList()) {
-                (string, string) Hint = Hints[TunicRandomizer.Randomizer.Next(Hints.Count)];
-                HintGhosts[key].Hint = Hint.Item1;
-                HintGhosts[key].TrunicHint = Hint.Item2;
+            for (int i = 0; i < 3; i++) {
+                if (i == 0 && SaveFile.GetInt(EntranceRando) == 1)
+                {
+                    GenerateHeirHint();
+                    Hints.Add((HeirHint, "", ""));
+                }
+                if (BarrenAndTreasureHints.Count > 0) {
+                    (string, string, string) BarrenHint = BarrenAndTreasureHints[random.Next(BarrenAndTreasureHints.Count)];
+                    Hints.Add(BarrenHint);
+                    BarrenAndTreasureHints.Remove(BarrenHint);
+                }
+            }
+
+            while (Hints.Count < 15) {
+                if (ItemHints.Count > 0) {
+                    (string, string, string) ItemHint = ItemHints[random.Next(ItemHints.Count)];
+                    Hints.Add(ItemHint);
+                    ItemHints.Remove(ItemHint);
+                } else if (LocationHints.Count > 0) {
+                    (string, string, string) LocationHint = LocationHints[random.Next(LocationHints.Count)];
+                    Hints.Add(LocationHint);
+                    LocationHints.Remove(LocationHint);
+                } else {
+                    break;
+                }
+            }
+            if (Hints.Count < 15) {
+                HintGhosts = HintGhosts.Take(Hints.Count).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+            foreach (HintGhost HintGhost in HintGhosts.Values) {
+                (string, string, string) Hint = Hints[random.Next(Hints.Count)];
+                HintGhost.Hint = Hint.Item1;
+                HintGhost.HintedItem = Hint.Item2;
+                HintGhost.OptionalCheckID = Hint.Item3;
                 Hints.Remove(Hint);
             }
         }
-
+        
         public static void GenerateLocationHints() {
             LocationHints.Clear();
             List<String> HintableLocations = HintableLocationIds.Keys.ToList();
-            if (SaveFile.GetInt("randomizer keys behind bosses") == 1) {
+            if(SaveFile.GetInt(KeysBehindBosses) == 1) {
                 // Remove boss hints if keys behind bosses is on
                 HintableLocations.Remove("Vault Key (Red) [Fortress Arena]");
                 HintableLocations.Remove("Hexagon Green [Library Arena]");
                 HintableLocations.Remove("Hexagon Blue [ziggurat2020_3]");
             }
-
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1)
-            {
-                // Remove dead end hints because they literally don't matter
+            if(SaveFile.GetInt(EntranceRando) == 1) {
+                // Remove dead ends since they don't matter
                 HintableLocations.Remove("1011 [Dusty]");
                 HintableLocations.Remove("final [Mountaintop]");
             }
-
             foreach (string Key in HintableLocations) {
-                string ItemName = Hints.SimplifiedItemNames[ItemPatches.ItemList[Key].Reward.Name];
-                string LocationSuffix = HintableLocationIds[Key][HintableLocationIds[Key].Length-1] == 'S' ? "R" : "iz";
-                string ItemPrefix = ItemName == "Money" ? "suhm" : Vowels.Contains(ItemName.ToUpper()[0]) ? "ahn" : "uh";
-                string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key]}\"\n{LocationSuffix} gRdi^ {ItemPrefix} \"{ItemName.ToUpper()}.\"";
-                string TrunicHint = $"bI #uh wA, I hurd #aht {Translations.Translate(HintableLocationIds[Key], false)}\n{LocationSuffix} gRdi^ {ItemPrefix} {Translations.Translate(ItemName, false)}.";
+                string Location = HintableLocationIds[Key];
+                string LocationSuffix = Location[Location.Length - 1] == 'S' ? "R" : "iz";
 
-                LocationHints.Add((Hint, TrunicHint));
+                if (SaveFlags.IsArchipelago()) {
+                    ArchipelagoItem Item = ItemLookup.ItemList[Key];
+                    string ItemPrefix = Item.ItemName.Contains("Money") ? "suhm" : Vowels.Contains(Item.ItemName.ToUpper()[0]) ? "ahn" : "uh";
+                    string PlayerName = Archipelago.instance.GetPlayerName(Item.Player);
+                    bool IsTunicItem = Archipelago.instance.IsTunicPlayer(Item.Player);
+                    string ItemToDisplay = IsTunicItem && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.ItemName)
+                        ? TextBuilderPatches.ItemNameToAbbreviation[Item.ItemName] : "[archipelago]";
+                    string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key].Replace(" ", "\" \"")}\" {LocationSuffix} gRdi^  {ItemToDisplay}  \"{PlayerName.ToUpper().Replace(" ", "\" \"")}'S {Item.ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"";
+                    if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                        Hint = $"bI #uh wA, I hurd #aht {Translations.Translate(HintableLocationIds[Key], false)} {LocationSuffix} gRdi^ \"{PlayerName.ToUpper().Replace(" ", "\" \"")}'S\" {(IsTunicItem ? Translations.Translate(ItemLookup.SimplifiedItemNames[ItemLookup.Items[Item.ItemName].ItemNameForInventory], false) + "." : $"\"{Item.ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"")}";
+                    }
+                    string ItemForHint = Archipelago.instance.IsTunicPlayer(Item.Player) ? Item.ItemName : "Archipelago Item";
+                    LocationHints.Add((WordWrapString(Hint), ItemForHint, Locations.LocationIdToDescription[Key]));
+                } else if (IsSinglePlayer()) {
+                    Check Check = Locations.RandomizedLocations[Key];
+                    string ItemName = ItemLookup.GetItemDataFromCheck(Check).Name;
+                    string ItemPrefix = ItemName == "Money" ? "suhm" : Vowels.Contains(ItemName.ToUpper()[0]) ? "ahn" : "uh";
+                    string ItemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName)
+                        ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
+                    string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key].Replace(" ", "\" \"")}\" {LocationSuffix} gRdi^ {ItemPrefix}  {ItemToDisplay}  \"{ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"";
+                    if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                        Hint = $"bI #uh wA, I hurd #aht {Translations.Translate(HintableLocationIds[Key], false)} {LocationSuffix} gRdi^ {ItemPrefix} {Translations.Translate(ItemLookup.SimplifiedItemNames[Check.Reward.Name], false)}.";
+                    }
+
+                    LocationHints.Add((WordWrapString(Hint), ItemName, Locations.LocationIdToDescription[Key]));
+                }
             }
         }
 
         public static void GenerateItemHints() {
             ItemHints.Clear();
+
+            string Hint = "";
+
             List<string> HintableItems = new List<string>(HintableItemNames);
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                HintableItems.Add("26");
+            List<string> HintableItemsSolo = new List<string>(HintableItemNamesSinglePlayer);
+            if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                HintableItems.Add("Pages 52-53 (Icebolt)");
+                HintableItemsSolo.Add("26");
             }
-            foreach (string Key in HintableItems) {
-                List<ItemData> Items = FindAllRandomizedItemsByName(Key);
-                foreach (ItemData Item in Items) {
-                    string ScenePrefix = Item.Location.SceneName == "Trinket Well" ? "%rOi^" : "aht #uh";
-                    string Scene = Hints.SimplifiedSceneNames[Item.Location.SceneName];
-                    string Hint = "";
-                    string TrunicHint = $"";
-                    if (Scene.Length > 15) {
-                        string[] SceneSplit = Scene.Split(' ');
-                        Hint = $"bI #uh wA, I saw A \"{Hints.SimplifiedItemNames[Item.Reward.Name].ToUpper()}\" #uh\nlahst tIm I wuhs {ScenePrefix} \"{String.Join(" ", SceneSplit.Take(SceneSplit.Length - 1)).ToUpper()}\"\n\"{SceneSplit[SceneSplit.Length-1].ToUpper()}.\"";
-                    } else {
-                        Hint = $"bI #uh wA, I saw A \"{Hints.SimplifiedItemNames[Item.Reward.Name].ToUpper()}\" #uh\nlahst tIm I wuhs {ScenePrefix} \"{Scene.ToUpper()}.\"";
+            for (int i = 0; i < HintableItems.Count; i++) {
+                string Item = HintableItems[i];
+                if (SaveFlags.IsArchipelago()) {
+                    List<ArchipelagoHint> ItemLocations = Locations.MajorItemLocations[Item];
+                    foreach(ArchipelagoHint HintLocation in ItemLocations) {
+                        if (HintLocation.Player == Archipelago.instance.GetPlayerSlot()) {
+                            string Scene = HintLocation.Location == "Your Pocket" ? HintLocation.Location : Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[HintLocation.Location]].Location.SceneName];
+                            string ScenePrefix = Scene == "Trinket Well" ? "%rOi^" : "aht #uh";
+                            string ItemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(HintLocation.Item) ? TextBuilderPatches.ItemNameToAbbreviation[HintLocation.Item] : "";
+                            Hint = $"bI #uh wA, I saw A  {ItemToDisplay}  \"{Item.ToUpper().Replace(" ", "\" \"")}\" #uh lahst tIm I wuhs {ScenePrefix} \"{Scene.ToUpper().Replace(" ", "\" \"")}.\"";
+                            if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                                Hint = $"bI #uh wA, I saw A {Translations.Translate(Item, false)} #uh lahst tIm I wuhs {ScenePrefix} {Translations.Translate(Scene, false)}.";
+                            }
+                            ItemHints.Add((WordWrapString(Hint), HintLocation.Item, ""));
+                        }
                     }
-                    TrunicHint = $"bI #uh wA, I saw A {Translations.Translate(Hints.SimplifiedItemNames[Item.Reward.Name], false)} #uh\nlahst tIm I wuhs {ScenePrefix} {Translations.Translate(Scene, false)}.";
-                    ItemHints.Add((Hint, TrunicHint));
+                } else if (SaveFlags.IsSinglePlayer()) {
+                    List<Check> Items = ItemRandomizer.FindAllRandomizedItemsByName(HintableItemsSolo[i]);
+                    foreach (Check Check in Items) {
+                        string ScenePrefix = Check.Location.SceneName == "Trinket Well" ? "%rOi^" : "aht #uh";
+                        string Scene = Locations.SimplifiedSceneNames[Check.Location.SceneName];
+                        string TrunicHint = $"";
+                        ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
+                        string ItemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[ItemData.Name] : "";
+
+                        Hint = $"bI #uh wA, I saw A  {ItemToDisplay}  \"{Item.ToUpper().Replace(" ", "\" \"")}\" #uh lahst tIm I wuhs {ScenePrefix} \"{Scene.ToUpper().Replace(" ", "\" \"")}.\"";
+                        if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                            Hint = $"bI #uh wA, I saw A {Translations.Translate(ItemLookup.SimplifiedItemNames[Check.Reward.Name], false)} #uh lahst tIm I wuhs {ScenePrefix} {Translations.Translate(Scene, false)}.";
+                        }
+                        ItemHints.Add((WordWrapString(Hint), ItemData.Name, ""));
+                    }
                 }
             }
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(AbilityShuffle) == 1) {
+                string prayerHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestPrayer)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh powur uhv \"PRAYER.\"";
+                string holyCrossHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestHolyCross)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh powur uhv #uh \"HOLY CROSS.\"";
+                string iceboltHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestIcebolt)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh #uh powur uhv #uh \"ICEBOLT.\"";
+                if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                    prayerHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestPrayer)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh powur uhv prAr.";
+                    holyCrossHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestHolyCross)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh powur uhv #uh hOlE kraws.";
+                    iceboltHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestIcebolt)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh #uh powur uhv #uh IsbOlt.";
+                }
+                ItemHints.Add((prayerHint, "", ""));
+                ItemHints.Add((holyCrossHint, "", ""));
+                ItemHints.Add((iceboltHint, "", ""));
+                HexQuestHintLookup.Add(prayerHint, "Prayer");
+                HexQuestHintLookup.Add(holyCrossHint, "Holy Cross");
+                HexQuestHintLookup.Add(iceboltHint, "Icebolt");
+            }
+        }
+
+        public static string WordWrapString(string Hint) {
+            string formattedHint = "";
+
+            int length = 40;
+            int spritelength = 0;
+            foreach (string split in Hint.Split(' ')) {
+                string split2 = split;
+                if (split.StartsWith($"\"") && !split.EndsWith($"\"")) {
+                    split2 += $"\"";
+                } else if (split.EndsWith($"\"") && !split.StartsWith($"\"")) {
+                    split2 = $"\"{split2}";
+                } else if(split.StartsWith("[") && split.EndsWith("]")) {
+                    spritelength += split.Length;
+                }
+                if ((formattedHint + split2).Length-spritelength < length) {
+                    formattedHint += split2 + " ";
+                } else {
+                    formattedHint += split2 + "\n";
+                    length += 40;
+                }
+            }
+
+            return formattedHint.Replace($"\" \"", $" ");
         }
 
         public static void GenerateBarrenAndMoneySceneHints() {
             BarrenAndTreasureHints.Clear();
-            foreach (string Key in Hints.SimplifiedSceneNames.Keys) {
+            foreach (string Key in Locations.SimplifiedSceneNames.Keys) { 
                 HashSet<string> ItemsInScene = new HashSet<string>();
-                string Scene = Hints.SimplifiedSceneNames[Key];
+                List<ArchipelagoItem> APItemsInScene = new List<ArchipelagoItem>();
+                string Scene = Locations.SimplifiedSceneNames[Key];
                 int SceneItemCount = 0;
                 int MoneyInScene = 0;
-                foreach (ItemData Item in ItemPatches.ItemList.Values.Where(item => item.Location.SceneName == Key).ToList()) {
-                    ItemsInScene.Add(Item.Reward.Name);
-                    if (Item.Reward.Name == "money") {
-                        MoneyInScene += Item.Reward.Amount;
+                if (SaveFlags.IsArchipelago()) {
+                    foreach (string ItemKey in ItemLookup.ItemList.Keys.Where(item => Locations.VanillaLocations[item].Location.SceneName == Key).ToList()) {
+                        ArchipelagoItem Item = ItemLookup.ItemList[ItemKey];
+                        ItemsInScene.Add(Item.ItemName);
+                        APItemsInScene.Add(Item);
+                        if (Item.Player == Archipelago.instance.GetPlayerSlot() && ItemLookup.Items[Item.ItemName].Type == ItemTypes.MONEY) {
+                            MoneyInScene += ItemLookup.Items[Item.ItemName].QuantityToGive;
+                        }
+                        SceneItemCount++;
                     }
-                    SceneItemCount++;
+                } else if (SaveFlags.IsSinglePlayer()) {
+                    foreach (Check Item in Locations.RandomizedLocations.Values.Where(item => item.Location.SceneName == Key).ToList()) {
+                        ItemsInScene.Add(Item.Reward.Name);
+                        if (Item.Reward.Name == "money") {
+                            MoneyInScene += Item.Reward.Amount;
+                        }
+                        SceneItemCount++;
+                    }
                 }
 
-                if (SceneItemCount == 0)
-                { continue; }
+                if (SceneItemCount == 0) { 
+                    continue; 
+                }
 
                 if (MoneyInScene >= 200 && SceneItemCount < 10) {
-                    string ScenePrefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
-                    string Hint = $"ahn EzE plAs too fInd A \"LOT OF MONEY\" iz {ScenePrefix}\n\"{Scene.ToUpper()}.\"";
-                    string TrunicHint = $"ahn EzE plAs too fInd A lawt uhv muhnE iz\n{ScenePrefix}\n{Translations.Translate(Scene, false)}.";
-                    BarrenAndTreasureHints.Add((Hint, TrunicHint));
+                    string ScenePrefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+                    string Hint = $"ahn EzE plAs too fInd A [realmoney] \"LOT OF MONEY\" iz {ScenePrefix}\n\"{Scene.ToUpper()}.\"";
+                    if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                        Hint = $"ahn EzE plAs too fInd A lawt uhv muhnE iz\n{ScenePrefix} {Translations.Translate(Scene, false)}.";
+                    }
+                    BarrenAndTreasureHints.Add((Hint, "", ""));
                 } else {
                     bool BarrenArea = true;
-                    foreach (string Item in ItemsInScene) {
-                        if (!BarrenItemNames.Contains(Item)) {
+                    foreach(ArchipelagoItem Item in APItemsInScene) {
+                        if (Item.Player != Archipelago.instance.GetPlayerSlot()) {
                             BarrenArea = false;
                             break;
                         }
-                        if (HintGhosts.Values.Where(HintGhost => HintGhost.SceneName == Key).ToList().Count > 0) {
+                        if(!BarrenItemNames.Contains(Item.ItemName)) {
                             BarrenArea = false;
                             break;
                         }
                     }
-                    if (BarrenArea) {
+                    foreach (string Item in ItemsInScene) { 
+                        if (!BarrenItemNamesSinglePlayer.Contains(Item)) {
+                            BarrenArea = false;
+                            break;
+                        }
+                    }
+                    if (HintGhosts.Where(HintGhost => HintGhost.Value.SceneName == Key).ToList().Count > 0) {
+                        BarrenArea = false;
+                        break;
+                    }
+                    if(BarrenArea) {
                         string Hint = "";
-                        string TrunicHint = "";
                         if (Scene.Length > 15) {
-                            string[] SceneSplit = Scene.ToUpper().Split(' ');
-                            Hint = $"if I wur yoo, I woud uhvoid \"{String.Join(" ", SceneSplit.Take(SceneSplit.Length - 1))}\"\n\"{SceneSplit[SceneSplit.Length-1]}.\" #aht plAs iz \"NOT IMPORTANT.\"";
+                            string[] SceneSplit = Scene.Split(' ');
+                            Hint = $"if I wur yoo, I woud uhvoid \"{String.Join(" ", SceneSplit.Take(SceneSplit.Length - 1)).ToUpper()}\"\n\"{SceneSplit[SceneSplit.Length - 1].ToUpper()}.\" #aht plAs iz \"NOT IMPORTANT.\"";
                         } else {
                             Hint = $"if I wur yoo, I woud uhvoid \"{Scene.ToUpper()}.\"\n#aht plAs iz \"NOT IMPORTANT.\"";
                         }
-                        TrunicHint = $"if I wur yoo, I woud uhvoid {Translations.Translate(Scene, false)}.\n#aht plAs iz nawt importahnt.";
-                        BarrenAndTreasureHints.Add((Hint, TrunicHint));
+                        if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                            Hint = $"if I wur yoo, I woud uhvoid {Translations.Translate(Scene, false)}.\n#aht plAs iz nawt importahnt.";
+                        }
+                        BarrenAndTreasureHints.Add((Hint, "", ""));
                     }
                 }
+
             }
         }
 
         public static void GenerateHeirHint()
         {
-            //Logger.LogInfo("heir hint creation started");
             string heirPortal = "error finding heir";
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
             {
                 if (portalCombo.Portal1.Scene == "Spirit Arena")
                 {
-                    //Logger.LogInfo("found the heir, they're at " + portalCombo.Portal2.Name);
                     heirPortal = portalCombo.Portal2.Name;
                     break;
                 }
                 if (portalCombo.Portal2.Scene == "Spirit Arena")
                 {
-                    //Logger.LogInfo("found the heir, they're at " + portalCombo.Portal1.Name);
                     heirPortal = portalCombo.Portal1.Name;
                     break;
                 }
             }
-            HeirHint = ($"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.",
-                        $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.");
+            HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now";
+        }
+
+        public static void CheckForServerHint(string npcName) {
+            foreach (HintGhost HintGhost in HintGhosts.Values) { 
+                if (HintGhost.Name == npcName && HintGhost.OptionalCheckID != "" && SaveFile.GetInt($"archipelago sent optional hint to server {HintGhost.OptionalCheckID}") == 0) {
+                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(HintGhost.OptionalCheckID));
+                    SaveFile.SetInt($"archipelago sent optional hint to server {HintGhost.OptionalCheckID}", 1);
+                }
+            }
         }
 
         public static void SpawnTorchHintGhost() {
-            GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
-            GameObject TorchFox = GameObject.Instantiate(GhostHints.GhostFox);
+            GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+            GameObject TorchFox = GameObject.Instantiate(GhostFox);
             TorchFox.transform.position = new Vector3(-12.3128f, 11.9833f, -145.3333f);
             TorchFox.transform.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
 
@@ -467,16 +670,16 @@ public class GhostHints {
 
         public static void SpawnLostGhostFox() {
             if (SaveFile.GetInt("randomizer sent lost fox home") == 0) {
-                GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
-                GameObject LostFox = GameObject.Instantiate(GhostHints.GhostFox);
+                GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                GameObject LostFox = GameObject.Instantiate(GhostFox);
                 LostFox.transform.position = new Vector3(-1.4098f, 0.0585f, 12.9491f);
                 LostFox.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
 
                 LanguageLine LostFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
-                if (Inventory.GetItemByName("Homeward Bone Statue").Quantity == 0) {
+                if (Inventory.GetItemByName("Dath Stone").Quantity == 0) {
                     LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nit louks lIk #is: [dath]";
                 } else {
-                    LostFoxScript.text = $"I lawst mI mahjik stOn [dath] ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
+                    LostFoxScript.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
                 }
                 LostFox.GetComponent<NPC>().script = LostFoxScript;
 
@@ -486,8 +689,8 @@ public class GhostHints {
 
         public static void SpawnRescuedGhostFox() {
             if (SaveFile.GetInt("randomizer sent lost fox home") == 1) {
-                GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
-                GameObject SavedFox = GameObject.Instantiate(GhostHints.GhostFox);
+                GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                GameObject SavedFox = GameObject.Instantiate(GhostFox);
                 SavedFox.transform.position = new Vector3(80.6991f, 15.9245f, 115.0217f);
                 SavedFox.transform.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
 
@@ -500,28 +703,27 @@ public class GhostHints {
         }
 
         public static void SpawnCathedralDoorGhost() {
-            GhostHints.GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.GAZE;
-            GameObject DoorHint = GameObject.Instantiate(GhostHints.GhostFox);
+            GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.GAZE;
+            GameObject DoorHint = GameObject.Instantiate(GhostFox);
             DoorHint.transform.position = new Vector3(82.5f, 14f, 143.7f);
             DoorHint.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
             LanguageLine DoorSecret = ScriptableObject.CreateInstance<LanguageLine>();
             DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
             DoorHint.GetComponent<NPC>().script = DoorSecret;
             DoorHint.SetActive(true);
-
         }
 
-        public static List<ItemData> FindAllRandomizedItemsByName(string ItemName) {
-            List<ItemData> Items = new List<ItemData>();
-            foreach (string Key in ItemPatches.ItemList.Keys) {
-                ItemData Item = ItemPatches.ItemList[Key];
-                if (Item.Reward.Name == ItemName) {
-                    Items.Add(Item);
+        /*        public static List<ItemData> FindAllRandomizedItemsByName(string ItemName) {
+                    List<ItemData> Items = new List<ItemData>();
+                    foreach (string Key in ItemRandomizer.ItemList.Keys) {
+                        ItemData Item = ItemRandomizer.ItemList[Key];
+                        if (Item.Reward.Name == ItemName) {
+                            Items.Add(Item);
+                        }
+                    }
+                    return Items;
                 }
-            }
-            return Items;
-        }
-
+        */
         public static void ResetGhostHints() {
             HintGhosts.Clear();
             LocationHints.Clear();

@@ -1,773 +1,3680 @@
-﻿using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+﻿using BepInEx.Logging;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using BepInEx.Logging;
+using UnityEngine.SceneManagement;
 
-namespace TunicRandomizer
-{
+namespace TunicRandomizer {
     public class TunicPortals {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
 
-        public class TunicPortal
-        {
-            public string SceneName; // the scene the portal is in
-            public string Destination; // the vanilla destination scene
-            public string DestinationTag; // the vanilla destination tag, aka ID
-            public string PortalName; // a human-readable name for the portal
-            public string GranularRegion; // a sub-region name, if there is one for that scene. For use in making sure everything can be accessed
-            public Dictionary<string, int> RequiredItems; // required items if there is only one item or one set of items required. A string like "scene, destination_tag" counts as an item.
-            public List<Dictionary<string, int>> RequiredItemsOr; // required items if there are multiple different possible requirements. A string like "scene, destination_tag" counts as an item.
-            public List<string> GivesAccess; // portals that you are given access to by this portal. ex: the dance fox portal to the lower east forest portal in guardhouse 1.
-            public Dictionary<string, int> EntryItems; // portals that require items to enter, but not exit from. ex: hero's graves, the yellow prayer portal pads, and the fountain holy cross door in overworld.
-            public bool DeadEnd; // portals that are dead ends, like stick house or the gauntlet lower entry.
-            public bool PrayerPortal; // portals that require prayer to enter. This is a more convenient version of GivesAccess for prayer portals.
-            public bool OneWay; // portals that are one-way, such as the back entrance to monastery and the forest belltower top portal
-            public bool IgnoreScene; // portals that cannot reach the center of the region, and as such do not give region access, like the rail between bottom of the well and furnace
-            public bool SpecialReqs; // portals that have weird rules, basically, where we'll be way more verbose in requireditems or requireditemsor
+        public class TunicPortal {
+            public string Name;
+            public string Destination;
 
-            public TunicPortal() { }
-
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion)
-            {
+            public TunicPortal(string name, string destination) {
+                Name = name;
                 Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
             }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                PrayerPortal = prayerPortal;
+        }
+        
+        public class RegionInfo {
+            public string Scene;
+            public bool DeadEnd;
+
+            public RegionInfo(string scene, bool deadEnd) {
+                Scene = scene;
                 DeadEnd = deadEnd;
-                OneWay = oneWay;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-            }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> entryItems, bool prayerPortal = false, bool deadEnd = false, bool oneWay = false, bool ignoreScene = false, bool specialReqs = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                EntryItems = entryItems;
-                PrayerPortal = prayerPortal;
-                DeadEnd = deadEnd;
-                OneWay = oneWay;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-            }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, bool prayerPortal = false, bool deadEnd = false, bool ignoreScene = false, bool specialReqs = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                RequiredItems = requiredItems;
-                PrayerPortal = prayerPortal;
-                DeadEnd = deadEnd;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-            }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, bool ignoreScene = false, bool oneWay = false, bool specialReqs = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                GivesAccess = givesAccess;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-                OneWay = oneWay;
-            }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                RequiredItems = requiredItems;
-            }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, List<string> givesAccess, bool ignoreScene = false, bool specialReqs = false, bool prayerPortal = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                RequiredItems = requiredItems;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-                GivesAccess = givesAccess;
-                PrayerPortal = prayerPortal;
-            }
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false, bool specialReqs = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                RequiredItemsOr = requiredItemsOr;
-                PrayerPortal = prayerPortal;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-            }
-
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, List<string> givesAccess, List<Dictionary<string, int>> requiredItemsOr, bool prayerPortal = false, bool ignoreScene = false, bool specialReqs = false)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                GivesAccess = givesAccess;
-                RequiredItemsOr = requiredItemsOr;
-                PrayerPortal = prayerPortal;
-                IgnoreScene = ignoreScene;
-                SpecialReqs = specialReqs;
-            }
-
-            public TunicPortal(string destination, string destinationTag, string portalName, string granularRegion, Dictionary<string, int> requiredItems, List<string> givesAccess)
-            {
-                Destination = destination;
-                DestinationTag = destinationTag;
-                PortalName = portalName;
-                GranularRegion = granularRegion;
-                RequiredItems = requiredItems;
-                GivesAccess = givesAccess;
             }
         }
 
-        // this is a big list of every portal in the game, along with their access requirements
-        // a portal without access requirements just means you can get to the center of the region from that portal and vice versa
-        public static Dictionary<string, List<TunicPortal>> PortalList = new Dictionary<string, List<TunicPortal>>
-        {
+        public static Dictionary<string, Dictionary<string, List<TunicPortal>>> RegionPortalsList = new Dictionary<string, Dictionary<string, List<TunicPortal>>> {
             {
                 "Overworld Redux",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Sword Cave", "", "Stick House Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Windmill", "", "Windmill Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Sewer", "entrance", "Well Ladder Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Sewer", "west_aqueduct", "Entrance to Well from Well Rail", granularRegion: "Overworld Well to Furnace Rail", ignoreScene: true, givesAccess: new List<string> { "Overworld Redux, Furnace_gyro_upper_north" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Furnace_gyro_upper_north", 1 } }),
-                    new TunicPortal("Overworld Interiors", "house", "Old House Door Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { {"Key (House)", 1} }), // make this match actual item name
-                    new TunicPortal("Overworld Interiors", "under_checkpoint", "Old House Waterfall Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Furnace", "gyro_upper_north", "Entrance to Furnace from Well Rail", granularRegion: "Overworld Well to Furnace Rail", ignoreScene: true, givesAccess: new List<string> { "Overworld Redux, Sewer_west_aqueduct" }, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Sewer_west_aqueduct", 1 } }),
-                    new TunicPortal("Furnace", "gyro_upper_east", "Entrance to Furnace under Windmill", granularRegion: "Overworld"),
-                    new TunicPortal("Furnace", "gyro_west", "Entrance to Furnace near West Garden", granularRegion: "Overworld West Garden Furnace Connector", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Archipelagos Redux_lower"}, requiredItems: new Dictionary<string, int> { { "Overworld Redux, Archipelagos Redux_lower", 1 } }),
-                    new TunicPortal("Furnace", "gyro_lower", "Entrance to Furnace from Beach", granularRegion: "Overworld"),
-                    new TunicPortal("Overworld Cave", "", "Caustic Light Cave Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Swamp Redux 2", "wall", "Swamp Upper Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
-                    new TunicPortal("Swamp Redux 2", "conduit", "Swamp Lower Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Ruins Passage", "east", "Ruined Hall Entrance Not-Door", granularRegion: "Overworld"),
-                    new TunicPortal("Ruins Passage", "west", "Ruined Hall Entrance Door", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Key", 2 } }), // and access to any overworld portal, but we start in overworld so no need to put it here
-                    new TunicPortal("Atoll Redux", "upper", "Atoll Upper Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Atoll Redux", "lower", "Atoll Lower Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("ShopSpecial", "", "Special Shop Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1} }),
-                    new TunicPortal("Maze Room", "", "Maze Cave Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Archipelagos Redux", "upper", "West Garden Entrance by Belltower", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Archipelagos Redux", "lower", "West Garden Entrance from Furnace", granularRegion: "Overworld West Garden Furnace Connector", ignoreScene: true, givesAccess: new List<string> {"Overworld Redux, Furnace_gyro_west"}, requiredItems: new Dictionary<string, int> {{"Overworld Redux, Furnace_gyro_west", 1}}),
-                    new TunicPortal("Archipelagos Redux", "lowest", "West Garden Laurels Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Temple", "main", "Temple Door Entrance", granularRegion: "Overworld", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Overworld Redux, Archipelagos Redux_upper", 1 }, { "Techbow", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Stick", 1 } }, new Dictionary<string, int> { { "Forest Belltower, Forest Boss Room_", 1 }, { "Hyperdash", 1 }, { "Techbow", 1 } } }),
-                    new TunicPortal("Temple", "rafters", "Temple Rafters Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Ruined Shop", "", "Ruined Shop Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("PatrolCave", "", "Patrol Cave Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Town Basement", "beach", "Hourglass Cave Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Changing Room", "", "Changing Room Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("CubeRoom", "", "Cube Cave Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Mountain", "", "Stairs from Overworld to Mountain", granularRegion: "Overworld"),
-                    new TunicPortal("Fortress Courtyard", "", "Overworld to Fortress", granularRegion: "Overworld"),
-                    new TunicPortal("Town_FiligreeRoom", "", "Fountain HC Room Entrance", granularRegion: "Overworld", entryItems: new Dictionary<string, int> { { "21", 1 } }), // this is entry items because when you exit from this portal, you end up in front of the door
-                    new TunicPortal("EastFiligreeCache", "", "Southeast HC Room Entrance", granularRegion: "Overworld", requiredItems: new Dictionary<string, int> { { "21", 1 } }), // this is required items because when you exit from this portal, you end up behind the door
-                    new TunicPortal("Darkwoods Tunnel", "", "Overworld to Quarry Connector", granularRegion: "Overworld"),
-                    new TunicPortal("Crypt Redux", "", "Dark Tomb Main Entrance", granularRegion: "Overworld"),
-                    new TunicPortal("Forest Belltower", "", "Overworld to Forest Belltower", granularRegion: "Overworld"),
-                    new TunicPortal("Transit", "teleporter_town", "Town to Far Shore", granularRegion: "Overworld", prayerPortal: true),
-                    new TunicPortal("Transit", "teleporter_starting island", "Spawn to Far Shore", granularRegion: "Overworld", prayerPortal: true),
-                    new TunicPortal("Waterfall", "", "Entrance to Secret Gathering Place", granularRegion: "Overworld"),
-
-                    // new TunicPortal("_", "", "Portal"), // ?
-                    // new TunicPortal("Forest Belltower_", "showfloordemo2022", "Portal (12)"), // ?
-                    // new TunicPortal("DEMO_altEnd_", "", "_Portal (Secret Demo End)"), // ?
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Overworld",
+                        new List<TunicPortal> {
+                            new TunicPortal("Stick House Entrance", "Sword Cave_"),
+                            new TunicPortal("Windmill Entrance", "Windmill_"),
+                            new TunicPortal("Well Ladder Entrance", "Sewer_entrance"),
+                            new TunicPortal("Old House Waterfall Entrance", "Overworld Interiors_under_checkpoint"),
+                            new TunicPortal("Entrance to Furnace under Windmill", "Furnace_gyro_upper_east"),
+                            new TunicPortal("Entrance to Furnace from Beach", "Furnace_gyro_lower"),
+                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave_"),
+                            new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2_conduit"),
+                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage_east"),
+                            new TunicPortal("Atoll Upper Entrance", "Atoll Redux_upper"),
+                            new TunicPortal("Atoll Lower Entrance", "Atoll Redux_lower"),
+                            new TunicPortal("Maze Cave Entrance", "Maze Room_"),
+                            new TunicPortal("Temple Rafters Entrance", "Temple_rafters"),
+                            new TunicPortal("Ruined Shop Entrance", "Ruined Shop_"),
+                            new TunicPortal("Patrol Cave Entrance", "PatrolCave_"),
+                            new TunicPortal("Hourglass Cave Entrance", "Town Basement_beach"),
+                            new TunicPortal("Changing Room Entrance", "Changing Room_"),
+                            new TunicPortal("Cube Cave Entrance", "CubeRoom_"),
+                            new TunicPortal("Stairs from Overworld to Mountain", "Mountain_"),
+                            new TunicPortal("Overworld to Fortress", "Fortress Courtyard_"),
+                            new TunicPortal("Overworld to Quarry Connector", "Darkwoods Tunnel_"),
+                            new TunicPortal("Dark Tomb Main Entrance", "Crypt Redux_"),
+                            new TunicPortal("Overworld to Forest Belltower", "Forest Belltower_"),
+                            new TunicPortal("Secret Gathering Place Entrance", "Waterfall_"),
+                        }
+                    },
+                    {
+                        "Overworld Well to Furnace Rail",
+                        new List<TunicPortal> {
+                            new TunicPortal("Entrance to Well from Well Rail", "Sewer_west_aqueduct"),
+                            new TunicPortal("Entrance to Furnace from Well Rail", "Furnace_gyro_upper_north"),
+                        }
+                    },
+                    {
+                        "Overworld Old House Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Old House Door Entrance", "Overworld Interiors_house"),
+                        }
+                    },
+                    {
+                        "Overworld to West Garden from Furnace",
+                        new List<TunicPortal> {
+                            new TunicPortal("Entrance to Furnace near West Garden", "Furnace_gyro_west"),
+                            new TunicPortal("West Garden Entrance from Furnace", "Archipelagos Redux_lower"),
+                        }
+                    },
+                    {
+                        "Overworld Swamp Upper Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp Upper Entrance", "Swamp Redux 2_wall"),
+                        }
+                    },
+                    {
+                        "Overworld Ruined Passage Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ruined Passage Door Entrance", "Ruins Passage_west"),
+                        }
+                    },
+                    {
+                        "Overworld Special Shop Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Special Shop Entrance", "ShopSpecial_"),
+                        }
+                    },
+                    {
+                        "Overworld Belltower",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Entrance near Belltower", "Archipelagos Redux_upper"),
+                        }
+                    },
+                    {
+                        "Overworld West Garden Laurels Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Laurels Entrance", "Archipelagos Redux_lowest"),
+                        }
+                    },
+                    {
+                        "Overworld Temple Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Temple Door Entrance", "Temple_main"),
+                        }
+                    },
+                    {
+                        "Overworld Fountain Cross Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fountain HC Door Entrance", "Town_FiligreeRoom_"),
+                        }
+                    },
+                    {
+                        "Overworld Southeast Cross Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Southeast HC Door Entrance", "EastFiligreeCache_"),
+                        }
+                    },
+                    {
+                        "Overworld Town Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Town to Far Shore", "Transit_teleporter_town"),
+                        }
+                    },
+                    {
+                        "Overworld Spawn Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Spawn to Far Shore", "Transit_teleporter_starting island"),
+                        }
+                    },
                 }
             },
             {
-                "Waterfall", // fairy cave
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Secret Gathering Place Exit", granularRegion: "Waterfall", deadEnd: true),
+                "Waterfall",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Secret Gathering Place",
+                        new List<TunicPortal> {
+                            new TunicPortal("Secret Gathering Place Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "Windmill",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Windmill Exit", granularRegion: "Windmill"),
-                    new TunicPortal("Shop", "", "Windmill Shop", granularRegion: "Windmill"),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Windmill",
+                        new List<TunicPortal> {
+                            new TunicPortal("Windmill Exit", "Overworld Redux_"),
+                            new TunicPortal("Windmill Shop", "Shop_"),
+                        }
+                    },
                 }
             },
             {
-                "Overworld Interiors", // House in town
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "house", "Old House Door Exit", granularRegion: "Old House Front"),
-                    new TunicPortal("g_elements", "", "Old House Teleport to Glyph Tower", granularRegion: "Old House Front"),
-                    new TunicPortal("Overworld Redux", "under_checkpoint", "Old House Waterfall Exit", granularRegion: "Old House Back", specialReqs: true, requiredItems: new Dictionary<string, int> { { "Overworld Interiors, Overworld Redux_house", 1 } }), // since you get access to the center of a region from either portal, only one of these two is actually needed
-
-                    // new TunicPortal("Archipelagos Redux_", "", "_ShowfloorDemo2022 Portal"), // unused and disabled
+                "Overworld Interiors",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Old House Front",
+                        new List<TunicPortal> {
+                            new TunicPortal("Old House Door Exit", "Overworld Redux_house"),
+                            new TunicPortal("Old House to Glyph Tower", "g_elements_"),
+                        }
+                    },
+                    {
+                        "Old House Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Old House Waterfall Exit", "Overworld Redux_under_checkpoint"),
+                        }
+                    },
                 }
             },
             {
-                "g_elements", // Relic tower
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Interiors", "", "Glyph Tower Exit", granularRegion: "g_elements", deadEnd: true),
+                "g_elements",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Relic Tower",
+                        new List<TunicPortal> {
+                            new TunicPortal("Glyph Tower Exit", "Overworld Interiors_"),
+                        }
+                    },
                 }
             },
             {
                 "Changing Room",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Changing Room Exit", granularRegion: "Changing Room", deadEnd: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Changing Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Changing Room Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Town_FiligreeRoom", // the one next to the fountain
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Fountain HC Room Exit", granularRegion: "Town_FiligreeRoom", deadEnd: true),
+                "Town_FiligreeRoom",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fountain Cross Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fountain HC Room Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "CubeRoom",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Cube Cave Exit", granularRegion: "CubeRoom", deadEnd: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Cube Cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Cube Cave Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "PatrolCave",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Guard Patrol Cave Exit", granularRegion: "PatrolCave", deadEnd: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Patrol Cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard Patrol Cave Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "Ruined Shop",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Ruined Shop Exit", granularRegion: "Ruined Shop", deadEnd: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Ruined Shop",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ruined Shop Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Furnace", // Under the west belltower
-                // I'm calling the "center" of this region the space accessible by the windmill and beach
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "gyro_upper_north", "Furnace to Well Rail", granularRegion: "Furnace", requiredItems: new Dictionary<string, int> { {"Hyperdash", 1} }),
-                    new TunicPortal("Crypt Redux", "", "Furnace to Dark Tomb", granularRegion: "Furnace", requiredItems: new Dictionary<string, int> { {"Hyperdash", 1} }, givesAccess: new List<string> {"Furnace, Overworld Redux_gyro_west"}),
-                    new TunicPortal("Overworld Redux", "gyro_west", "Furnace towards West Garden", granularRegion: "Furnace", requiredItems : new Dictionary<string, int> { {"Hyperdash", 1} }, givesAccess : new List<string> {"Furnace, Crypt Redux_"}),
-                    new TunicPortal("Overworld Redux", "gyro_lower", "Furnace to Beach", granularRegion: "Furnace"),
-                    new TunicPortal("Overworld Redux", "gyro_upper_east", "Furnace towards Windmill", granularRegion: "Furnace"),
+                "Furnace",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Furnace Fuse",
+                        new List<TunicPortal> {
+                            new TunicPortal("Furnace Exit towards Well", "Overworld Redux_gyro_upper_north"),
+                        }
+                    },
+                    {
+                        "Furnace Walking Path",
+                        new List<TunicPortal> {
+                            new TunicPortal("Furnace Exit to Dark Tomb", "Crypt Redux_"),
+                            new TunicPortal("Furnace Exit towards West Garden", "Overworld Redux_gyro_west"),
+                        }
+                    },
+                    {
+                        "Furnace Ladder Area",
+                        new List<TunicPortal> {
+                            new TunicPortal("Furnace Exit to Beach", "Overworld Redux_gyro_lower"),
+                            new TunicPortal("Furnace Exit under Windmill", "Overworld Redux_gyro_upper_east"),
+                        }
+                    },
                 }
             },
             {
-                "Sword Cave", // Stick house
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Stick House Exit", granularRegion: "Sword Cave", deadEnd: true),
+                "Sword Cave",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Stick House",
+                        new List<TunicPortal> {
+                            new TunicPortal("Stick House Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Ruins Passage", // That little hallway with the key door near the start in Overworld
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "east", "Ruined Hall Not-Door Exit", granularRegion: "Ruined Hall"),
-                    new TunicPortal("Overworld Redux", "west", "Ruined Hall Door Exit", granularRegion: "Ruined Hall"),
+                "Ruins Passage",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Ruined Passage",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ruined Passage Not-Door Exit", "Overworld Redux_east"),
+                            new TunicPortal("Ruined Passage Door Exit", "Overworld Redux_west"),
+                        }
+                    },
                 }
             },
             {
-                "EastFiligreeCache", // The holy cross room with the 3 chests near swamp entrance
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Southeast HC Room Exit", granularRegion: "EastFiligreeCache", deadEnd: true),
+                "EastFiligreeCache",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Southeast Cross Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Southeast HC Room Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Overworld Cave", // East beach, next to swamp entrance, rotating lights room
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Caustic Light Cave Exit", granularRegion: "Overworld Cave", deadEnd: true),
+                "Overworld Cave",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Caustic Light Cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Caustic Light Cave Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Maze Room", // Invisible maze
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Maze Cave Exit", granularRegion: "Maze Room", deadEnd: true),
+                "Maze Room",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Maze Cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Maze Cave Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Town Basement", // Hourglass cave
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "beach", "Hourglass Cave Exit", granularRegion: "Town Basement", deadEnd: true), // yes, it has a tag even though it doesn't need one
+                "Town Basement",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Hourglass Cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hourglass Cave Exit", "Overworld Redux_beach"),
+                        }
+                    },
                 }
             },
             {
-                "ShopSpecial", // Special shop, laurel across from that platform between east forest and fortress
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Special Shop Exit", granularRegion: "ShopSpecial", deadEnd: true),
+                "ShopSpecial",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Special Shop",
+                        new List<TunicPortal> {
+                            new TunicPortal("Special Shop Exit", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Temple", // Where you put the hexes
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "rafters", "Temple Rafters Exit", granularRegion: "Temple"),
-                    new TunicPortal("Overworld Redux", "main", "Temple Door Exit", granularRegion: "Temple"),
+                "Temple",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Sealed Temple Rafters",
+                        new List<TunicPortal> {
+                            new TunicPortal("Temple Rafters Exit", "Overworld Redux_rafters"),
+                        }
+                    },
+                    {
+                        "Sealed Temple",
+                        new List<TunicPortal> {
+                            new TunicPortal("Temple Door Exit", "Overworld Redux_main"),
+                        }
+                    },
                 }
             },
             {
-                "Sewer", // Bottom of the Well
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "entrance", "Well Ladder Exit", granularRegion: "Sewer"),
-                    new TunicPortal("Sewer_Boss", "", "Well to Well Boss", granularRegion: "Sewer"),
-                    new TunicPortal("Overworld Redux", "west_aqueduct", "Well Rail Exit", granularRegion: "Sewer"),
+                "Sewer",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Beneath the Well Front",
+                        new List<TunicPortal> {
+                            new TunicPortal("Well Ladder Exit", "Overworld Redux_entrance"),
+                        }
+                    },
+                    {
+                        "Beneath the Well Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Well to Well Boss", "Sewer_Boss_"),
+                            new TunicPortal("Well Exit towards Furnace", "Overworld Redux_west_aqueduct"),
+                        }
+                    },
                 }
             },
             {
-                "Sewer_Boss", // Boss room in the Bottom of the Well
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Sewer", "", "Well Boss to Well", granularRegion: "Sewer_Boss"),
-                    new TunicPortal("Crypt Redux", "", "Checkpoint to Dark Tomb", granularRegion: "Sewer_Boss", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sewer_Boss, Sewer_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
+                "Sewer_Boss",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Well Boss",
+                        new List<TunicPortal> {
+                            new TunicPortal("Well Boss to Well", "Sewer_"),
+                        }
+                    },
+                    {
+                        "Dark Tomb Checkpoint",
+                        new List<TunicPortal> {
+                            new TunicPortal("Checkpoint to Dark Tomb", "Crypt Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "Crypt Redux",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Dark Tomb to Overworld", granularRegion: "Crypt Redux"),
-                    new TunicPortal("Furnace", "", "Dark Tomb to Furnace", granularRegion: "Crypt Redux", requiredItems: new Dictionary<string, int> { {"Lantern", 1} }),
-                    new TunicPortal("Sewer_Boss", "", "Dark Tomb to Checkpoint", granularRegion: "Crypt Redux"),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Dark Tomb Entry Point",
+                        new List<TunicPortal> {
+                            new TunicPortal("Dark Tomb to Overworld", "Overworld Redux_"),
+                            new TunicPortal("Dark Tomb to Checkpoint", "Sewer_Boss_"),
+                        }
+                    },
+                    {
+                        "Dark Tomb Dark Exit",
+                        new List<TunicPortal> {
+                            new TunicPortal("Dark Tomb to Furnace", "Furnace_"),
+                        }
+                    },
                 }
             },
             {
-                "Archipelagos Redux", // West Garden
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "lower", "West Garden towards Dark Tomb", granularRegion: "West Garden"),
-                    new TunicPortal("archipelagos_house", "", "Magic Dagger House Entrance", granularRegion: "West Garden"),
-                    new TunicPortal("Overworld Redux", "upper", "West Garden after Boss", granularRegion: "West Garden", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Sword", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, {"Archipelagos Redux", 1 } } }),
-                    new TunicPortal("Shop", "", "West Garden Shop", granularRegion: "West Garden"), // there's two of these, one is unused and disabled
-                    new TunicPortal("Overworld Redux", "lowest", "West Garden Laurels Exit", granularRegion: "West Garden", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "West Garden Hero's Grave", granularRegion: "West Garden", prayerPortal: true), // Hero grave
-                    new TunicPortal("Transit", "teleporter_archipelagos_teleporter", "West Garden to Far Shore", granularRegion: "West Garden Portal", prayerPortal: true, deadEnd: true), // Portal to the thing behind dagger house
+                "Archipelagos Redux",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "West Garden",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Exit near Hero's Grave", "Overworld Redux_lower"),
+                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house_"),
+                            new TunicPortal("West Garden Shop", "Shop_"),
+                        }
+                    },
+                    {
+                        "West Garden after Boss",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Exit after Boss", "Overworld Redux_upper"),
+                        }
+                    },
+                    {
+                        "West Garden Laurels Exit",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Laurels Exit", "Overworld Redux_lowest"),
+                        }
+                    },
+                    {
+                        "West Garden Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Hero's Grave", "RelicVoid_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "West Garden Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden to Far Shore", "Transit_teleporter_archipelagos_teleporter"),
+                        }
+                    },
                 }
             },
             {
-                "archipelagos_house", // Magic Dagger house in West Garden
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Archipelagos Redux", "", "Magic Dagger House Exit", granularRegion: "Magic Dagger House", deadEnd: true),
+                "archipelagos_house",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Magic Dagger House",
+                        new List<TunicPortal> {
+                            new TunicPortal("Magic Dagger House Exit", "Archipelagos Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "Atoll Redux",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Frog Stairs", "eye", "Frog Eye Entrance", granularRegion: "Atoll"),
-                    new TunicPortal("Library Exterior", "", "Atoll to Library", granularRegion: "Atoll", prayerPortal: true),
-                    new TunicPortal("Overworld Redux", "upper", "Atoll Upper Exit", granularRegion: "Atoll"),
-                    new TunicPortal("Overworld Redux", "lower", "Atoll Lower Exit", granularRegion: "Atoll", requiredItems: new Dictionary<string, int> {{"Hyperdash", 1}}),
-                    new TunicPortal("Frog Stairs", "mouth", "Frog Mouth Entrance", granularRegion: "Atoll", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Wand", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 } } }),
-                    new TunicPortal("Shop", "", "Atoll Shop", granularRegion: "Atoll"),
-                    new TunicPortal("Transit", "teleporter_atoll", "Atoll to Far Shore", granularRegion: "Atoll", prayerPortal: true),
-                    // new TunicPortal("Forest Lake_", "teleporter", "Portal"), // Unused portal, same spot as library portal
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Ruined Atoll",
+                        new List<TunicPortal> {
+                            new TunicPortal("Atoll Upper Exit", "Overworld Redux_upper"),
+                            new TunicPortal("Atoll Shop", "Shop_"),
+                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs_eye"),
+                        }
+                    },
+                    {
+                        "Ruined Atoll Lower Entry Area",
+                        new List<TunicPortal> {
+                            new TunicPortal("Atoll Lower Exit", "Overworld Redux_lower"),
+                        }
+                    },
+                    {
+                        "Ruined Atoll Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Atoll to Far Shore", "Transit_teleporter_atoll"),
+                            new TunicPortal("Atoll Statue Teleporter", "Library Exterior_"),
+                        }
+                    },
+                    {
+                        "Ruined Atoll Frog Mouth",
+                        new List<TunicPortal> {
+                            new TunicPortal("Frog Stairs Mouth Entrance", "Frog Stairs_mouth"),
+                        }
+                    },
                 }
             },
             {
-                "Frog Stairs", // Entrance to frog's domain
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Atoll Redux", "mouth", "Frog Stairs Mouth Exit", granularRegion: "Frog Stairs"),
-                    new TunicPortal("frog cave main", "Exit", "Frog Stairs to Frog's Domain Orb Exit", granularRegion: "Frog Stairs"),
-                    new TunicPortal("Atoll Redux", "eye", "Frog Stairs Eye Exit", granularRegion: "Frog Stairs"),
-                    new TunicPortal("frog cave main", "Entrance", "Frog Stairs to Frog's Domain Ladder", granularRegion: "Frog Stairs"),
+                "Frog Stairs",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Frog's Domain Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Frog Stairs Eye Exit", "Atoll Redux_eye"),
+                            new TunicPortal("Frog Stairs Mouth Exit", "Atoll Redux_mouth"),
+                            new TunicPortal("Frog Stairs to Frog's Domain's Entrance", "frog cave main_Entrance"),
+                            new TunicPortal("Frog Stairs to Frog's Domain's Exit", "frog cave main_Exit"),
+                        }
+                    },
                 }
             },
             {
-                "frog cave main", // Frog's domain, yes it's lowercase
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Frog Stairs", "Exit", "Frog's Domain Orb Exit", granularRegion: "Frog's Domain Back", specialReqs: true, requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "frog cave main, Frog Stairs_Entrance", 1 } }),
-                    new TunicPortal("Frog Stairs", "Entrance", "Frog's Domain Ladder Exit", granularRegion: "Frog's Domain Front", ignoreScene: true, oneWay: true),
+                "frog cave main",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Frog's Domain",
+                        new List<TunicPortal> {
+                            new TunicPortal("Frog's Domain Ladder Exit", "Frog Stairs_Entrance"),
+                        }
+                    },
+                    {
+                        "Frog's Domain Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Frog's Domain Orb Exit", "Frog Stairs_Exit"),
+                        }
+                    },
                 }
             },
             {
                 "Library Exterior",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Library Hall", "", "Library Exterior Ladder", granularRegion: "Library Exterior", requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
-                    new TunicPortal("Atoll Redux", "", "Library Exterior Tree", granularRegion: "Library Exterior", prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Library Exterior Tree",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Exterior Tree", "Atoll Redux_"),
+                        }
+                    },
+                    {
+                        "Library Exterior Ladder",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Exterior Ladder", "Library Hall_"),
+                        }
+                    },
                 }
             },
             {
-                "Library Hall", // Entry area with hero grave
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Library Rotunda", "", "Library Hall to Rotunda", granularRegion: "Library Hall"),
-                    new TunicPortal("Library Exterior", "", "Library Hall Bookshelf Exit", granularRegion: "Library Hall"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Library Hero's Grave", granularRegion: "Library Hall", prayerPortal: true),
+                "Library Hall",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Library Hall",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Hall Bookshelf Exit", "Library Exterior_"),
+                            new TunicPortal("Library Hall to Rotunda", "Library Rotunda_"),
+                        }
+                    },
+                    {
+                        "Library Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Hero's Grave", "RelicVoid_teleporter_relic plinth"),
+                        }
+                    },
                 }
             },
             {
-                "Library Rotunda", // The circular room with the ladder
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Library Hall", "", "Library Rotunda Lower Exit", granularRegion: "Library Rotunda"),
-                    new TunicPortal("Library Lab", "", "Library Rotunda Upper Exit", granularRegion: "Library Rotunda"),
+                "Library Rotunda",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Library Rotunda",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Rotunda Lower Exit", "Library Hall_"),
+                            new TunicPortal("Library Rotunda Upper Exit", "Library Lab_"),
+                        }
+                    },
                 }
             },
             {
                 "Library Lab",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Library Arena", "", "Library Lab to Librarian Arena", granularRegion: "Library Lab", specialReqs: true, givesAccess: new List<string> {"Library Lab, Transit_teleporter_library teleporter"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
-                    new TunicPortal("Library Rotunda", "", "Library Lab to Rotunda", granularRegion: "Library Lab", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Library Lab, Transit_teleporter_library teleporter", 1 }, {"Hyperdash", 1 } }, new Dictionary<string, int> { { "Wand", 1} } }),
-                    new TunicPortal("Transit", "teleporter_library teleporter", "Library to Far Shore", granularRegion: "Library Lab", specialReqs: true, prayerPortal: true, givesAccess: new List<string> {"Library Lab, Library Arena_"}, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, { "Library Lab, Library Arena_", 1 }, { "Library Lab, Library Rotunda_", 1 } }, new Dictionary<string, int> { { "Wand", 1}, {"Library Lab, Library Rotunda_", 1 } } }),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Library Lab Lower",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Lab to Rotunda", "Library Rotunda_"),
+                        }
+                    },
+                    {
+                        "Library Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library to Far Shore", "Transit_teleporter_library teleporter"),
+                        }
+                    },
+                    {
+                        "Library Lab",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Lab to Librarian Arena", "Library Arena_"),
+                        }
+                    },
                 }
             },
             {
                 "Library Arena",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Library Lab", "", "Librarian Arena Exit", granularRegion: "Library Arena", deadEnd: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Library Arena",
+                        new List<TunicPortal> {
+                            new TunicPortal("Librarian Arena Exit", "Library Lab_"),
+                        }
+                    },
                 }
             },
             {
                 "East Forest Redux",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Sword Access", "lower", "Forest Grave Path Lower Entrance", granularRegion: "East Forest"),
-                    new TunicPortal("East Forest Redux Laddercave", "upper", "Forest Fox Dance Outside Doorway", granularRegion: "East Forest", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } } ),
-                    new TunicPortal("East Forest Redux Interior", "lower", "Forest Guard House 2 Lower Entrance", granularRegion: "East Forest"),
-                    new TunicPortal("East Forest Redux Laddercave", "gate", "Forest Guard House 1 Gate Entrance", granularRegion: "East Forest"),
-                    new TunicPortal("Sword Access", "upper", "Forest Grave Path Upper Entrance", granularRegion: "East Forest"),
-                    new TunicPortal("East Forest Redux Interior", "upper", "Forest Guard House 2 Upper Entrance", granularRegion: "East Forest"),
-                    new TunicPortal("East Forest Redux Laddercave", "lower", "Forest Guard House 1 Lower Entrance", granularRegion: "East Forest"),
-                    new TunicPortal("Forest Belltower", "", "Forest to Belltower", granularRegion: "East Forest"),
-                    new TunicPortal("Transit", "teleporter_forest teleporter", "Forest to Far Shore", granularRegion: "East Forest", prayerPortal: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest to Belltower", "Forest Belltower_"),
+                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave_lower"),
+                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave_gate"),
+                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior_lower"),
+                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior_upper"),
+                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access_lower"),
+                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access_upper"),
+                        }
+                    },
+                    {
+                        "East Forest Dance Fox Spot",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave_upper"),
+                        }
+                    },
+                    {
+                        "East Forest Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest to Far Shore", "Transit_teleporter_forest teleporter"),
+                        }
+                    },
                 }
             },
             {
-                "East Forest Redux Laddercave", // the place with the two ladders that leads to the boss room
-                new List<TunicPortal>
-                {
-                    new TunicPortal("East Forest Redux", "upper", "Guard House 1 Dance Exit", "Laddercave", specialReqs: true, givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_upper" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }), // making the upper ones the "center" for easier logic writing
-                    new TunicPortal("East Forest Redux", "lower", "Guard House 1 Lower Exit", "Laddercave", specialReqs: true, givesAccess: new List<string> { "East Forest Redux Laddercave, East Forest Redux_lower" }, requiredItems: new Dictionary<string, int> { { "East Forest Redux Laddercave, East Forest Redux_gate", 1 } }),
-                    new TunicPortal("East Forest Redux", "gate", "Guard House 1 Upper Forest Exit", "Laddercave"),
-                    new TunicPortal("Forest Boss Room", "", "Guard House 1 to Guard Captain Room", "Laddercave"),
+                "East Forest Redux Laddercave",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Guard House 1 West",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux_upper"),
+                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux_lower"),
+                        }
+                    },
+                    {
+                        "Guard House 1 East",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux_gate"),
+                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room_"),
+                        }
+                    },
                 }
             },
             {
-                "Sword Access", // East forest hero grave area
-                new List<TunicPortal>
-                {
-                    new TunicPortal("East Forest Redux", "upper", "Forest Grave Path Upper Exit", granularRegion: "Sword Access", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("East Forest Redux", "lower", "Forest Grave Path Lower Exit", granularRegion: "Sword Access"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Forest Hero's Grave", granularRegion: "Sword Access Back", specialReqs: true, prayerPortal: true, requiredItems: new Dictionary<string, int> { {"Sword Access, East Forest Redux_lower", 1 } }), // Can't open the gate from behind
-                    
-                    // new TunicPortal("Forest 1_", "lower", "Portal (1)"),
-                    // new TunicPortal("Forest 1_", "", "Portal"),
-                    // new TunicPortal("Forest 1_", "upper", "Portal (2)"),
+                "Sword Access",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Forest Grave Path Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux_upper"),
+                        }
+                    },
+                    {
+                        "Forest Grave Path Main",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux_lower"),
+                        }
+                    },
+                    {
+                        "Forest Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("East Forest Hero's Grave", "RelicVoid_teleporter_relic plinth"),
+                        }
+                    },
                 }
             },
             {
-                "East Forest Redux Interior", // Guardhouse 2
-                new List<TunicPortal>
-                {
-                    new TunicPortal("East Forest Redux", "lower", "Guard House 2 Lower Exit", "Guardhouse 2"),
-                    new TunicPortal("East Forest Redux", "upper", "Guard House 2 Upper Exit", "Guardhouse 2"),
+                "East Forest Redux Interior",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Guard House 2",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux_lower"),
+                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux_upper"),
+                        }
+                    },
                 }
             },
             {
                 "Forest Boss Room",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("East Forest Redux Laddercave", "", "Guard Captain Room Non-Gate Exit", "Forest Boss"), // entering it from behind puts you in the room, not behind the gate
-                    new TunicPortal("Forest Belltower", "", "Guard Captain Room Gate Exit", "Forest Boss"),
-
-                    // new TunicPortal("Archipelagos Redux_", "showfloordemo2022", "Portal (2)"),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Forest Boss Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave_"),
+                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower_"),
+                        }
+                    },
                 }
             },
             {
                 "Forest Belltower",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Courtyard", "", "Forest Belltower to Fortress", granularRegion: "Forest Belltower Main"),
-                    new TunicPortal("East Forest Redux", "", "Forest Belltower to Forest", granularRegion: "Forest Belltower Lower"),
-                    new TunicPortal("Overworld Redux", "", "Forest Belltower to Overworld", granularRegion: "Forest Belltower Main"),
-                    new TunicPortal("Forest Boss Room", "", "Forest Belltower to Guard Captain Room", granularRegion: "Forest Belltower Upper", ignoreScene: true, oneWay: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Forest Belltower Main",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard_"),
+                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux_"),
+                        }
+                    },
+                    {
+                        "Forest Belltower Lower",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux_"),
+                        }
+                    },
+                    {
+                        "Forest Belltower Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room_"),
+                        }
+                    },
                 }
             },
             {
-                "Fortress Courtyard", // Outside the fortress, the area connected to east forest and overworld. Center of the area is on the fortress-side of the bridge
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Reliquary", "Lower", "Fortress Grave Path Lower Entrance", granularRegion: "Fortress Courtyard"),
-                    new TunicPortal("Fortress Reliquary", "Upper", "Fortress Grave Path Upper Entrance", granularRegion: "Fortress Courtyard Upper", ignoreScene: true, oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress East_" }),
-                    new TunicPortal("Fortress Main", "Big Door", "Fortress Courtyard to Fortress Interior", granularRegion: "Fortress Courtyard"),
-                    new TunicPortal("Fortress East", "", "Fortress Courtyard to Fortress East", granularRegion: "Fortress Courtyard Upper", ignoreScene: true, oneWay: true, givesAccess: new List<string> { "Fortress Courtyard, Fortress Reliquary_Upper" }),
-                    new TunicPortal("Fortress Basement", "", "Fortress Courtyard to Beneath the Earth", granularRegion: "Fortress Courtyard", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Shop_", 1 } } }),
-                    new TunicPortal("Forest Belltower", "", "Fortress Courtyard to Forest Belltower", granularRegion: "Fortress Courtyard", requiredItems: new Dictionary<string, int>{ { "Hyperdash", 1 } }),
-                    new TunicPortal("Overworld Redux", "", "Fortress Courtyard to Overworld", granularRegion: "Fortress Courtyard", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1}, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress East_", 1} }, new Dictionary<string, int> { { "Wand", 1 }, { "Fortress Courtyard, Forest Belltower_", 1 } } }), // remember, required items is just what you need to get to the center of a region -- prayer only gets you to the shop and beneath the earth
-                    new TunicPortal("Shop", "", "Fortress Courtyard Shop", granularRegion: "Fortress Courtyard", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "Fortress Courtyard, Overworld Redux_", 1 } }, new Dictionary<string, int> { { "Hyperdash", 1 }, { "Fortress Courtyard", 1 } }, new Dictionary<string, int> { {"Fortress Courtyard, Fortress Basement_", 1 } } }),
-
-                    // new TunicPortal("Overworld Redux_", "", "Portal (4)"), // unused and disabled
+                "Fortress Courtyard",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Courtyard",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary_Lower"),
+                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main_Big Door"),
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary_Upper"),
+                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East_"),
+                        }
+                    },
+                    {
+                        "Fortress Exterior near cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement_"),
+                            new TunicPortal("Fortress Courtyard Shop", "Shop_"),
+                        }
+                    },
+                    {
+                        "Fortress Exterior from East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower_"),
+                        }
+                    },
+                    {
+                        "Fortress Exterior from Overworld",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "Fortress Basement", // Under the fortress
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Main", "", "Beneath the Earth to Fortress Interior", "Fortress Basement"),
-                    new TunicPortal("Fortress Courtyard", "", "Beneath the Earth to Fortress Courtyard", "Fortress Basement"),
+                "Fortress Basement",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Beneath the Vault Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main_"),
+                        }
+                    },
+                    {
+                        "Beneath the Vault Front",
+                        new List<TunicPortal> {
+                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard_"),
+                        }
+                    },
                 }
             },
             {
-                "Fortress Main", // Inside the fortress
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Courtyard", "Big Door", "Fortress Interior Main Exit", "Fortress Main"),
-                    new TunicPortal("Fortress Basement", "", "Fortress Interior to Beneath the Earth", "Fortress Main"),
-                    new TunicPortal("Fortress Arena", "", "Fortress Interior to Siege Engine Arena", "Fortress Main", requiredItems: new Dictionary<string, int> { { "12", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard, Fortress Reliquary_upper", 1 }, {"Fortress Main", 1 } }),
-                    new TunicPortal("Shop", "", "Fortress Interior Shop", "Fortress Main"),
-                    new TunicPortal("Fortress East", "upper", "Fortress Interior to East Fortress Upper", "Fortress Main"),
-                    new TunicPortal("Fortress East", "lower", "Fortress Interior to East Fortress Lower", "Fortress Main"),
+                "Fortress Main",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Eastern Vault Fortress",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard_Big Door"),
+                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement_"),
+                            new TunicPortal("Fortress Interior Shop", "Shop_"),
+                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East_upper"),
+                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East_lower"),
+                        }
+                    },
+                    {
+                        "Eastern Vault Fortress Gold Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena_"),
+                        }
+                    },
                 }
             },
             {
-                "Fortress East", // that tiny area with the couple mages up high, and the ladder in the lower right
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Main", "lower", "East Fortress to Interior Lower", granularRegion: "Fortress East Lower", specialReqs: true, requiredItems: new Dictionary<string, int> { { "Fortress East, Fortress Main_upper", 1} }),
-                    new TunicPortal("Fortress Courtyard", "", "East Fortress to Courtyard", granularRegion: "Fortress East"),
-                    new TunicPortal("Fortress Main", "upper", "East Fortress to Interior Upper", granularRegion: "Fortress East"),
+                "Fortress East",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress East Shortcut Lower",
+                        new List<TunicPortal> {
+                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main_lower"),
+                        }
+                    },
+                    {
+                        "Fortress East Shortcut Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard_"),
+                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main_upper"),
+                        }
+                    },
                 }
             },
             {
-                "Fortress Reliquary", // Where the grave is
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Courtyard", "Lower", "Fortress Grave Path Lower Exit", granularRegion: "Fortress Grave Path"),
-                    new TunicPortal("Dusty", "", "Fortress Grave Path Dusty Entrance", granularRegion: "Fortress Grave Path", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Fortress Courtyard", "Upper", "Fortress Grave Path Upper Exit", granularRegion: "Fortress Grave Path Upper", deadEnd: true),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Fortress Hero's Grave", granularRegion: "Fortress Grave Path", prayerPortal: true),
+                "Fortress Reliquary",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Grave Path",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard_Lower"),
+                            new TunicPortal("Fortress Hero's Grave", "RelicVoid_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "Fortress Grave Path Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard_Upper"),
+                        }
+                    },
+                    {
+                        "Fortress Grave Path Dusty Entrance",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Grave Path Dusty Entrance", "Dusty_"),
+                        }
+                    },
                 }
             },
             {
-                "Fortress Arena", // Where the boss is
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Main", "", "Siege Engine Arena to Fortress Interior", "Fortress Arena"),
-                    new TunicPortal("Transit", "teleporter_spidertank", "Fortress to Far Shore", "Fortress Arena", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Main", 1}, { "Fortress Courtyard", 1 } }),
-                    // new TunicPortal("Fortress Main_", "", "Portal"), // There's two of these, one is disabled
+                "Dusty",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Leaf Piles",
+                        new List<TunicPortal> {
+                            new TunicPortal("Dusty Exit", "Fortress Reliquary_"),
+                        }
+                    },
                 }
             },
             {
-                "Dusty", // broom
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Reliquary", "", "Dusty Exit", "Dusty", deadEnd: true),
+                "Fortress Arena",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Arena",
+                        new List<TunicPortal> {
+                            new TunicPortal("Siege Engine Arena to Fortress", "Fortress Main_"),
+                        }
+                    },
+                    {
+                        "Fortress Arena Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress to Far Shore", "Transit_teleporter_spidertank"),
+                        }
+                    },
                 }
             },
             {
                 "Mountain",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Mountaintop", "", "Stairs to Top of the Mountain", "Mountain", requiredItems: new Dictionary<string, int> { { "21", 1 } }),
-                    new TunicPortal("Quarry Redux", "", "Mountain to Quarry", "Mountain"),
-                    new TunicPortal("Overworld Redux", "", "Mountain to Overworld", "Mountain"),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Lower Mountain Stairs",
+                        new List<TunicPortal> {
+                            new TunicPortal("Stairs to Top of the Mountain", "Mountaintop_"),
+                        }
+                    },
+                    {
+                        "Lower Mountain",
+                        new List<TunicPortal> {
+                            new TunicPortal("Mountain to Quarry", "Quarry Redux_"),
+                            new TunicPortal("Mountain to Overworld", "Overworld Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "Mountaintop",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Mountain", "", "Top of the Mountain Exit", "Mountaintop", deadEnd: true),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Top of the Mountain",
+                        new List<TunicPortal> {
+                            new TunicPortal("Top of the Mountain Exit", "Mountain_"),
+                        }
+                    },
                 }
             },
             {
-                "Darkwoods Tunnel", // connector between overworld and quarry
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "", "Quarry Connector to Overworld", "Darkwoods"),
-                    new TunicPortal("Quarry Redux", "", "Quarry Connector to Quarry", "Darkwoods"),
+                "Darkwoods Tunnel",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Quarry Connector",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry Connector to Overworld", "Overworld Redux_"),
+                            new TunicPortal("Quarry Connector to Quarry", "Quarry Redux_"),
+                        }
+                    },
                 }
             },
             {
                 "Quarry Redux",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Darkwoods Tunnel", "", "Quarry to Overworld Exit", granularRegion: "Quarry"),
-                    new TunicPortal("Shop", "", "Quarry Shop", granularRegion: "Quarry"),
-                    new TunicPortal("Monastery", "front", "Quarry to Monastery Front", granularRegion: "Quarry"),
-                    new TunicPortal("Monastery", "back", "Quarry to Monastery Back", granularRegion: "Monastery Rope", ignoreScene: true, oneWay: true),
-                    new TunicPortal("Mountain", "", "Quarry to Mountain", granularRegion: "Quarry"),
-                    new TunicPortal("ziggurat2020_0", "", "Quarry Zig Entrance", granularRegion: "Quarry", requiredItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwoods Tunnel", 1 }, { "12", 1 } }),
-                    new TunicPortal("Transit", "teleporter_quarry teleporter", "Quarry to Far Shore", granularRegion: "Quarry", prayerPortal: true, entryItems: new Dictionary<string, int> { { "Wand", 1 }, { "Darkwoods Tunnel", 1 }, { "12", 1 } }),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Quarry Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry to Overworld Exit", "Darkwoods Tunnel_"),
+                            new TunicPortal("Quarry Shop", "Shop_"),
+                        }
+                    },
+                    {
+                        "Quarry Monastery Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry to Monastery Front", "Monastery_front"),
+                        }
+                    },
+                    {
+                        "Monastery Rope",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry to Monastery Back", "Monastery_back"),
+                        }
+                    },
+                    {
+                        "Quarry Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry to Mountain", "Mountain_"),
+                        }
+                    },
+                    {
+                        "Lower Quarry Zig Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry to Ziggurat", "ziggurat2020_0_"),
+                        }
+                    },
+                    {
+                        "Quarry Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Quarry to Far Shore", "Transit_teleporter_quarry teleporter"),
+                        }
+                    },
                 }
             },
             {
                 "Monastery",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Quarry Redux", "back", "Monastery Rear Exit", "Monastery"),
-                    new TunicPortal("Quarry Redux", "front", "Monastery Front Exit", "Monastery"),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Monastery Hero's Grave", "Monastery", prayerPortal: true),
-
-                    // new TunicPortal("Quarry_", "lower", "Portal (1)"), // Unused portal, disabled, and very high up
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Monastery Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Monastery Rear Exit", "Quarry Redux_back"),
+                        }
+                    },
+                    {
+                        "Monastery Front",
+                        new List<TunicPortal> {
+                            new TunicPortal("Monastery Front Exit", "Quarry Redux_front"),
+                        }
+                    },
+                    {
+                        "Monastery Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Monastery Hero's Grave", "RelicVoid_teleporter_relic plinth"),
+                        }
+                    },
                 }
             },
             {
-                "ziggurat2020_0", // Zig entrance hallway
-                new List<TunicPortal>
-                {
-                    new TunicPortal("ziggurat2020_1", "", "Zig Entry Hallway to Zig 1", "Zig 0"),
-                    new TunicPortal("Quarry Redux", "", "Zig Entry Hallway to Quarry", "Zig 0"),
+                "ziggurat2020_0",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Rooted Ziggurat Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Entry Hallway to Ziggurat Upper", "ziggurat2020_1_"),
+                            new TunicPortal("Ziggurat Entry Hallway to Quarry", "Quarry Redux_"),
+                        }
+                    },
                 }
             },
             {
-                "ziggurat2020_1", // Upper zig
-                new List<TunicPortal>
-                {
-                    // new TunicPortal("ziggurat2020_3", "zig2_skip", "Zig Skip"), // the elevator skip to lower zig, put a secret here later
-                    new TunicPortal("ziggurat2020_0", "", "Zig 1 to Zig Entry", granularRegion: "Zig 1 Top", ignoreScene: true, oneWay: true),
-                    new TunicPortal("ziggurat2020_2", "", "Zig 1 to Zig 2", granularRegion: "Zig 1 Bottom", ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_1, ziggurat2020_0_", 1}}),
+                "ziggurat2020_1",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Rooted Ziggurat Upper Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Upper to Ziggurat Entry Hallway", "ziggurat2020_0_"),
+                        }
+                    },
+                    {
+                        "Rooted Ziggurat Upper Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Upper to Ziggurat Tower", "ziggurat2020_2_"),
+                        }
+                    },
                 }
             },
             {
-                "ziggurat2020_2", // Zig intermediate elevator
-                new List<TunicPortal>
-                {
-                    new TunicPortal("ziggurat2020_1", "", "Zig 2 to Zig 1", granularRegion: "Zig 2 Top", ignoreScene: true, oneWay: true, givesAccess: new List<string> {"ziggurat2020_2, ziggurat2020_3_"}),
-                    new TunicPortal("ziggurat2020_3", "", "Zig 2 to Zig 3", granularRegion: "Zig 2 Bottom", ignoreScene: true, requiredItems: new Dictionary<string, int>{{"ziggurat2020_2, ziggurat2020_1_", 1}}),
+                "ziggurat2020_2",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Rooted Ziggurat Middle Top",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Tower to Ziggurat Upper", "ziggurat2020_1_"),
+                        }
+                    },
+                    {
+                        "Rooted Ziggurat Middle Bottom",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Tower to Ziggurat Lower", "ziggurat2020_3_"),
+                        }
+                    },
                 }
             },
             {
-                "ziggurat2020_3", // Lower zig, center is designated as before the prayer spot with the two cube minibosses
-                new List<TunicPortal>
-                {
-                    new TunicPortal("ziggurat2020_FTRoom", "", "Zig Portal Room Entrance", granularRegion: "Zig 3", specialReqs: true, prayerPortal: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { {"Hyperdash", 1 } }, new Dictionary<string, int> { { "12", 1 } } }), // Prayer portal room
-                    // new TunicPortal("ziggurat2020_1", "zig2_skip", "Zig Skip Exit"), // the elevator skip to lower zig
-                    new TunicPortal("ziggurat2020_2", "", "Zig 3 to Zig 2", granularRegion: "Zig 3"),
+                "ziggurat2020_3",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Rooted Ziggurat Lower Front",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Lower to Ziggurat Tower", "ziggurat2020_2_"),
+                        }
+                    },
+                    {
+                        "Rooted Ziggurat Portal Room Entrance",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Portal Room Entrance", "ziggurat2020_FTRoom_"),
+                        }
+                    },
                 }
             },
             {
-                "ziggurat2020_FTRoom", // The room with the prayer portal
-                new List<TunicPortal>
-                {
-                    new TunicPortal("ziggurat2020_3", "", "Zig Portal Room Exit", "Zig Portal Room", specialReqs: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "12", 1 }, { "ziggurat2020_3, ziggurat2020_FTRoom", 1 } }, new Dictionary<string, int> { { "12", 1 }, {"ziggurat2020_3, ziggurat2020_2_", 1 } } }),
-                    new TunicPortal("Transit", "teleporter_ziggurat teleporter", "Zig to Far Shore", "Zig Portal Room", prayerPortal: true),
+                "ziggurat2020_FTRoom",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Rooted Ziggurat Portal Room Exit",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Portal Room Exit", "ziggurat2020_3_"),
+                        }
+                    },
+                    {
+                        "Rooted Ziggurat Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat to Far Shore", "Transit_teleporter_ziggurat teleporter"),
+                        }
+                    },
                 }
             },
             {
                 "Swamp Redux 2",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Overworld Redux", "conduit", "Swamp Lower Exit", granularRegion: "Swamp Front"),
-                    new TunicPortal("Cathedral Redux", "main", "Swamp to Cathedral Main Entrance", granularRegion: "Swamp Front", requiredItems: new Dictionary<string, int> { { "12", 1 }, { "Hyperdash", 1 }, { "Overworld Redux, Swamp Redux 2_wall", 1 } } ),
-                    new TunicPortal("Cathedral Redux", "secret", "Swamp to Cathedral Secret Legend Room", granularRegion: "Swamp Front", entryItems: new Dictionary<string, int> { { "21", 1 } }),
-                    new TunicPortal("Cathedral Arena", "", "Swamp to Gauntlet", granularRegion: "Swamp Back", ignoreScene: true, requiredItemsOr: new List<Dictionary<string, int>> { new Dictionary<string, int> { { "Hyperdash", 1 }, {"Swamp Redux 2, Overworld Redux_wall", 1 } }, new Dictionary<string, int> { { "Swamp Redux 2, RelicVoid_teleporter_relic plinth", 1 } } }),
-                    new TunicPortal("Shop", "", "Swamp Shop", granularRegion: "Swamp Front"),
-                    new TunicPortal("Overworld Redux", "wall", "Swamp Upper Exit", granularRegion: "Swamp Back", ignoreScene: true, requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 }, { "Swamp Redux 2, Cathedral Arena_", 1 } }),
-                    new TunicPortal("RelicVoid", "teleporter_relic plinth", "Swamp Hero's Grave", granularRegion: "Swamp Back", ignoreScene: true, prayerPortal: true, givesAccess: new List<string> {"Swamp Redux 2, Cathedral Arena_"}, requiredItems: new Dictionary<string, int> { { "Swamp Redux 2, Cathedral Arena_", 1 } }),
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Swamp",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp Lower Exit", "Overworld Redux_conduit"),
+                            new TunicPortal("Swamp Shop", "Shop_"),
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Main Entrance",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp to Cathedral Main Entrance", "Cathedral Redux_main"),
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Treasure Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp to Cathedral Secret Legend Room Entrance", "Cathedral Redux_secret"),
+                        }
+                    },
+                    {
+                        "Back of Swamp",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp to Gauntlet", "Cathedral Arena_"),
+                        }
+                    },
+                    {
+                        "Back of Swamp Laurels Area",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp Upper Exit", "Overworld Redux_wall"),
+                        }
+                    },
+                    {
+                        "Swamp Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Swamp Hero's Grave", "RelicVoid_teleporter_relic plinth"),
+                        }
+                    },
                 }
             },
             {
                 "Cathedral Redux",
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Swamp Redux 2", "main", "Cathedral Main Exit", granularRegion: "Cathedral"),
-                    new TunicPortal("Cathedral Arena", "", "Cathedral Elevator", granularRegion: "Cathedral"),
-                    new TunicPortal("Swamp Redux 2", "secret", "Cathedral Secret Legend Room Exit", granularRegion: "Cathedral Secret Legend", ignoreScene: true, deadEnd: true), // only one chest, just use item access rules for it
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Cathedral",
+                        new List<TunicPortal> {
+                            new TunicPortal("Cathedral Main Exit", "Swamp Redux 2_main"),
+                            new TunicPortal("Cathedral Elevator", "Cathedral Arena_"),
+                        }
+                    },
+                    {
+                        "Cathedral Secret Legend Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Cathedral Secret Legend Room Exit", "Swamp Redux 2_secret"),
+                        }
+                    },
                 }
             },
             {
-                "Cathedral Arena", // Gauntlet
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Swamp Redux 2", "", "Gauntlet to Swamp", granularRegion: "Gauntlet Bottom", ignoreScene: true, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}, {"Hyperdash", 1}}),
-                    new TunicPortal("Cathedral Redux", "", "Gauntlet Elevator", granularRegion: "Gauntlet Top", specialReqs: true, givesAccess: new List<string> {"Cathedral Arena, Shop_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Shop_", 1}}),
-                    new TunicPortal("Shop", "", "Gauntlet Shop", granularRegion: "Gauntlet Top", specialReqs: true, givesAccess: new List<string> {"Cathedral Arena, Swamp Redux 2_"}, requiredItems: new Dictionary<string, int>{{"Cathedral Arena, Cathedral Redux_", 1}}), // we love gauntlet shop
-                }
-            },
-            //{
-            //    "Shop", // Every shop is just this region, adding them in later to avoid issues with the combo number
-            //    new List<TunicPortal>
-            //    {
-            //        new TunicPortal("_", "", "Shop Exit Portal"),
-            //    }
-            //},
-            {
-                "RelicVoid", // Hero relic area
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Fortress Reliquary", "teleporter_relic plinth", "Hero's Grave to Fortress", "RelicVoid", ignoreScene: true, deadEnd: true),
-                    new TunicPortal("Monastery", "teleporter_relic plinth", "Hero's Grave to Monastery", "RelicVoid", ignoreScene: true, deadEnd: true),
-                    new TunicPortal("Archipelagos Redux", "teleporter_relic plinth", "Hero's Grave to West Garden", "RelicVoid", ignoreScene: true, deadEnd: true),
-                    new TunicPortal("Sword Access", "teleporter_relic plinth", "Hero's Grave to Forest", "RelicVoid", ignoreScene: true, deadEnd: true),
-                    new TunicPortal("Library Hall", "teleporter_relic plinth", "Hero's Grave to Library", "RelicVoid", ignoreScene: true, deadEnd: true),
-                    new TunicPortal("Swamp Redux 2", "teleporter_relic plinth", "Hero's Grave to Swamp", "RelicVoid", ignoreScene: true, deadEnd: true),
+                "Cathedral Arena",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Cathedral Gauntlet Exit",
+                        new List<TunicPortal> {
+                            new TunicPortal("Gauntlet to Swamp", "Swamp Redux 2_"),
+                        }
+                    },
+                    {
+                        "Cathedral Gauntlet Checkpoint",
+                        new List<TunicPortal> {
+                            new TunicPortal("Gauntlet Elevator", "Cathedral Redux_"),
+                            new TunicPortal("Gauntlet Shop", "Shop_"),
+                        }
+                    },
                 }
             },
             {
-                "Transit", // Teleporter hub
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Archipelagos Redux", "teleporter_archipelagos_teleporter", "Far Shore to West Garden", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Archipelagos Redux, Overworld Redux_lower", 1} }),
-                    new TunicPortal("Library Lab", "teleporter_library teleporter", "Far Shore to Library", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Library Lab", 1} }),
-                    new TunicPortal("Quarry Redux", "teleporter_quarry teleporter", "Far Shore to Quarry", "Transit", entryItems: new Dictionary<string, int>{ { "12", 1 }, { "Quarry Redux", 1 }, {"Darkwoods Tunnel", 1 }, { "Wand", 1 } }),
-                    new TunicPortal("East Forest Redux", "teleporter_forest teleporter", "Far Shore to Forest", "Transit", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-                    new TunicPortal("Fortress Arena", "teleporter_spidertank", "Far Shore to Fortress", "Transit", entryItems: new Dictionary<string, int> { { "12", 1 }, { "Fortress Basement, Fortress Main_", 1 }, {"Fortress Courtyard, Overworld Redux_", 1}, { "Fortress Courtyard", 1 } }),
-                    new TunicPortal("Atoll Redux", "teleporter_atoll", "Far Shore to Atoll", "Transit"),
-                    new TunicPortal("ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", "Far Shore to Zig", "Transit"),
-                    new TunicPortal("Spirit Arena", "teleporter_spirit arena", "Far Shore to Heir Arena", "Transit"),
-                    new TunicPortal("Overworld Redux", "teleporter_town", "Far Shore to Town", "Transit"),
-                    new TunicPortal("Overworld Redux", "teleporter_starting island", "Far Shore to Spawn", "Transit", requiredItems: new Dictionary<string, int> { { "Hyperdash", 1 } }),
-
-                    // new TunicPortal("Transit_", "teleporter_", "Portal"), // Unused portal, far away and not enabled
+                "RelicVoid",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Hero Relic - Fortress",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Fortress", "Fortress Reliquary_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "Hero Relic - Quarry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Monastery", "Monastery_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "Hero Relic - West Garden",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to West Garden", "Archipelagos Redux_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "Hero Relic - East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to East Forest", "Sword Access_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "Hero Relic - Library",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Library", "Library Hall_teleporter_relic plinth"),
+                        }
+                    },
+                    {
+                        "Hero Relic - Swamp",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Swamp", "Swamp Redux 2_teleporter_relic plinth"),
+                        }
+                    },
                 }
             },
             {
-                "Spirit Arena", // Heir fight
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Transit", "teleporter_spirit arena", "Heir Arena Exit", "Heir Arena", deadEnd: true),
+                "Transit",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Far Shore to West Garden",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to West Garden", "Archipelagos Redux_teleporter_archipelagos_teleporter"),
+                        }
+                    },
+                    {
+                        "Far Shore to Library",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to Library", "Library Lab_teleporter_library teleporter"),
+                        }
+                    },
+                    {
+                        "Far Shore to Quarry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to Quarry", "Quarry Redux_teleporter_quarry teleporter"),
+                        }
+                    },
+                    {
+                        "Far Shore to East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to East Forest", "East Forest Redux_teleporter_forest teleporter"),
+                        }
+                    },
+                    {
+                        "Far Shore to Fortress",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to Fortress", "Fortress Arena_teleporter_spidertank"),
+                        }
+                    },
+                    {
+                        "Far Shore",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to Atoll", "Atoll Redux_teleporter_atoll"),
+                            new TunicPortal("Far Shore to Ziggurat", "ziggurat2020_FTRoom_teleporter_ziggurat teleporter"),
+                            new TunicPortal("Far Shore to Heir", "Spirit Arena_teleporter_spirit arena"),
+                            new TunicPortal("Far Shore to Town", "Overworld Redux_teleporter_town"),
+                        }
+                    },
+                    {
+                        "Far Shore to Spawn",
+                        new List<TunicPortal> {
+                            new TunicPortal("Far Shore to Spawn", "Overworld Redux_teleporter_starting island"),
+                        }
+                    },
                 }
             },
             {
-                "Purgatory", // Second save hallway
-                new List<TunicPortal>
-                {
-                    new TunicPortal("Purgatory", "bottom", "Purgatory Bottom Exit", "Purgatory"),
-                    new TunicPortal("Purgatory", "top", "Purgatory Top Exit", "Purgatory"),
+                "Spirit Arena",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Spirit Arena",
+                        new List<TunicPortal> {
+                            new TunicPortal("Heir Arena Exit", "Transit_teleporter_spirit arena"),
+                        }
+                    },
+                }
+            },
+            {
+                "Purgatory",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Purgatory",
+                        new List<TunicPortal> {
+                            new TunicPortal("Purgatory Bottom Exit", "Purgatory_bottom"),
+                            new TunicPortal("Purgatory Top Exit", "Purgatory_top"),
+                        }
+                    },
+                }
+            },
+            {
+                "Shop",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Shop",
+                        new List<TunicPortal> {
+                            new TunicPortal("Shop", "Previous Region_"),
+                        }
+                    },
                 }
             },
         };
 
-        public static void ShuffleList<T>(IList<T> list, int seed)
-        {
+        public static Dictionary<string, RegionInfo> RegionDict = new Dictionary<string, RegionInfo> {
+            {
+                "Overworld",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Belltower",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Swamp Upper Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Special Shop Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld West Garden Laurels Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld to West Garden from Furnace",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Well to Furnace Rail",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Ruined Passage Door",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Old House Door",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Southeast Cross Door",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Fountain Cross Door",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Temple Door",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Town Portal",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Spawn Portal",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Stick House",
+                new RegionInfo("Sword Cave", true)
+            },
+            {
+                "Windmill",
+                new RegionInfo("Windmill", false)
+            },
+            {
+                "Old House Back",
+                new RegionInfo("Overworld Interiors", false)
+            },
+            {
+                "Old House Front",
+                new RegionInfo("Overworld Interiors", false)
+            },
+            {
+                "Relic Tower",
+                new RegionInfo("g_elements", true)
+            },
+            {
+                "Furnace Fuse",
+                new RegionInfo("Furnace", false)
+            },
+            {
+                "Furnace Ladder Area",
+                new RegionInfo("Furnace", false)
+            },
+            {
+                "Furnace Walking Path",
+                new RegionInfo("Furnace", false)
+            },
+            {
+                "Secret Gathering Place",
+                new RegionInfo("Waterfall", true)
+            },
+            {
+                "Changing Room",
+                new RegionInfo("Changing Room", true)
+            },
+            {
+                "Patrol Cave",
+                new RegionInfo("PatrolCave", true)
+            },
+            {
+                "Ruined Shop",
+                new RegionInfo("Ruined Shop", true)
+            },
+            {
+                "Ruined Passage",
+                new RegionInfo("Ruins Passage", false)
+            },
+            {
+                "Special Shop",
+                new RegionInfo("ShopSpecial", true)
+            },
+            {
+                "Caustic Light Cave",
+                new RegionInfo("Overworld Cave", true)
+            },
+            {
+                "Maze Cave",
+                new RegionInfo("Maze Room", true)
+            },
+            {
+                "Cube Cave",
+                new RegionInfo("CubeRoom", true)
+            },
+            {
+                "Southeast Cross Room",
+                new RegionInfo("EastFiligreeCache", true)
+            },
+            {
+                "Fountain Cross Room",
+                new RegionInfo("Town_FiligreeRoom", true)
+            },
+            {
+                "Hourglass Cave",
+                new RegionInfo("Town Basement", true)
+            },
+            {
+                "Sealed Temple",
+                new RegionInfo("Temple", false)
+            },
+            {
+                "Sealed Temple Rafters",
+                new RegionInfo("Temple", false)
+            },
+            {
+                "Forest Belltower Upper",
+                new RegionInfo("Forest Belltower", false)
+            },
+            {
+                "Forest Belltower Main",
+                new RegionInfo("Forest Belltower", false)
+            },
+            {
+                "Forest Belltower Lower",
+                new RegionInfo("Forest Belltower", false)
+            },
+            {
+                "East Forest",
+                new RegionInfo("East Forest Redux", false)
+            },
+            {
+                "East Forest Dance Fox Spot",
+                new RegionInfo("East Forest Redux", false)
+            },
+            {
+                "East Forest Portal",
+                new RegionInfo("East Forest Redux", false)
+            },
+            {
+                "Guard House 1 East",
+                new RegionInfo("East Forest Redux Laddercave", false)
+            },
+            {
+                "Guard House 1 West",
+                new RegionInfo("East Forest Redux Laddercave", false)
+            },
+            {
+                "Guard House 2",
+                new RegionInfo("East Forest Redux Interior", false)
+            },
+            {
+                "Forest Boss Room",
+                new RegionInfo("Forest Boss Room", false)
+            },
+            {
+                "Forest Grave Path Main",
+                new RegionInfo("Sword Access", false)
+            },
+            {
+                "Forest Grave Path Upper",
+                new RegionInfo("Sword Access", false)
+            },
+            {
+                "Forest Grave Path by Grave",
+                new RegionInfo("Sword Access", false)
+            },
+            {
+                "Forest Hero's Grave",
+                new RegionInfo("Sword Access", false)
+            },
+            {
+                "Dark Tomb Entry Point",
+                new RegionInfo("Crypt Redux", false)
+            },
+            {
+                "Dark Tomb Main",
+                new RegionInfo("Crypt Redux", false)
+            },
+            {
+                "Dark Tomb Dark Exit",
+                new RegionInfo("Crypt Redux", false)
+            },
+            {
+                "Dark Tomb Checkpoint",
+                new RegionInfo("Sewer_Boss", false)
+            },
+            {
+                "Well Boss",
+                new RegionInfo("Sewer_Boss", false)
+            },
+            {
+                "Beneath the Well Front",
+                new RegionInfo("Sewer", false)
+            },
+            {
+                "Beneath the Well Main",
+                new RegionInfo("Sewer", false)
+            },
+            {
+                "Beneath the Well Back",
+                new RegionInfo("Sewer", false)
+            },
+            {
+                "West Garden",
+                new RegionInfo("Archipelagos Redux", false)
+            },
+            {
+                "West Garden Portal",
+                new RegionInfo("Archipelagos Redux", true)
+            },
+            {
+                "West Garden Portal Item",
+                new RegionInfo("Archipelagos Redux", true)
+            },
+            {
+                "West Garden Laurels Exit",
+                new RegionInfo("Archipelagos Redux", false)
+            },
+            {
+                "West Garden after Boss",
+                new RegionInfo("Archipelagos Redux", false)
+            },
+            {
+                "West Garden Hero's Grave",
+                new RegionInfo("Archipelagos Redux", false)
+            },
+            {
+                "Magic Dagger House",
+                new RegionInfo("archipelagos_house", true)
+            },
+            {
+                "Ruined Atoll",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
+                "Ruined Atoll Lower Entry Area",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
+                "Ruined Atoll Frog Mouth",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
+                "Ruined Atoll Portal",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
+                "Frog's Domain Entry",
+                new RegionInfo("Frog Stairs", false)
+            },
+            {
+                "Frog's Domain",
+                new RegionInfo("frog cave main", false)
+            },
+            {
+                "Frog's Domain Back",
+                new RegionInfo("frog cave main", false)
+            },
+            {
+                "Library Exterior Tree",
+                new RegionInfo("Library Exterior", false)
+            },
+            {
+                "Library Exterior Ladder",
+                new RegionInfo("Library Exterior", false)
+            },
+            {
+                "Library Hall",
+                new RegionInfo("Library Hall", false)
+            },
+            {
+                "Library Hero's Grave",
+                new RegionInfo("Library Hall", false)
+            },
+            {
+                "Library Rotunda",
+                new RegionInfo("Library Rotunda", false)
+            },
+            {
+                "Library Lab",
+                new RegionInfo("Library Lab", false)
+            },
+            {
+                "Library Lab Lower",
+                new RegionInfo("Library Lab", false)
+            },
+            {
+                "Library Portal",
+                new RegionInfo("Library Lab", false)
+            },
+            {
+                "Library Arena",
+                new RegionInfo("Library Arena", true)
+            },
+            {
+                "Fortress Exterior from East Forest",
+                new RegionInfo("Fortress Courtyard", false)
+            },
+            {
+                "Fortress Exterior from Overworld",
+                new RegionInfo("Fortress Courtyard", false)
+            },
+            {
+                "Fortress Exterior near cave",
+                new RegionInfo("Fortress Courtyard", false)
+            },
+            {
+                "Fortress Courtyard",
+                new RegionInfo("Fortress Courtyard", false)
+            },
+            {
+                "Fortress Courtyard Upper",
+                new RegionInfo("Fortress Courtyard", false)
+            },
+            {
+                "Beneath the Vault Front",
+                new RegionInfo("Fortress Basement", false)
+            },
+            {
+                "Beneath the Vault Back",
+                new RegionInfo("Fortress Basement", false)
+            },
+            {
+                "Eastern Vault Fortress",
+                new RegionInfo("Fortress Main", false)
+            },
+            {
+                "Eastern Vault Fortress Gold Door",
+                new RegionInfo("Fortress Main", false)
+            },
+            {
+                "Fortress East Shortcut Upper",
+                new RegionInfo("Fortress East", false)
+            },
+            {
+                "Fortress East Shortcut Lower",
+                new RegionInfo("Fortress East", false)
+            },
+            {
+                "Fortress Grave Path",
+                new RegionInfo("Fortress Reliquary", false)
+            },
+            {
+                "Fortress Grave Path Upper",
+                new RegionInfo("Fortress Reliquary", true)
+            },
+            {
+                "Fortress Grave Path Dusty Entrance",
+                new RegionInfo("Fortress Reliquary", false)
+            },
+            {
+                "Fortress Hero's Grave",
+                new RegionInfo("Fortress Reliquary", false)
+            },
+            {
+                "Fortress Leaf Piles",
+                new RegionInfo("Dusty", true)
+            },
+            {
+                "Fortress Arena",
+                new RegionInfo("Fortress Arena", false)
+            },
+            {
+                "Fortress Arena Portal",
+                new RegionInfo("Fortress Arena", false)
+            },
+            {
+                "Lower Mountain",
+                new RegionInfo("Mountain", false)
+            },
+            {
+                "Lower Mountain Stairs",
+                new RegionInfo("Mountain", false)
+            },
+            {
+                "Top of the Mountain",
+                new RegionInfo("Mountaintop", true)
+            },
+            {
+                "Quarry Connector",
+                new RegionInfo("Darkwoods Tunnel", false)
+            },
+            {
+                "Quarry Entry",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Quarry",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Quarry Portal",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Quarry Back",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Quarry Monastery Entry",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Monastery Front",
+                new RegionInfo("Monastery", false)
+            },
+            {
+                "Monastery Back",
+                new RegionInfo("Monastery", false)
+            },
+            {
+                "Monastery Hero's Grave",
+                new RegionInfo("Monastery", false)
+            },
+            {
+                "Monastery Rope",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Lower Quarry",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Lower Quarry Zig Door",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
+                "Rooted Ziggurat Entry",
+                new RegionInfo("ziggurat2020_0", false)
+            },
+            {
+                "Rooted Ziggurat Upper Entry",
+                new RegionInfo("ziggurat2020_1", false)
+            },
+            {
+                "Rooted Ziggurat Upper Front",
+                new RegionInfo("ziggurat2020_1", false)
+            },
+            {
+                "Rooted Ziggurat Upper Back",
+                new RegionInfo("ziggurat2020_1", false)
+            },
+            {
+                "Rooted Ziggurat Middle Top",
+                new RegionInfo("ziggurat2020_2", false)
+            },
+            {
+                "Rooted Ziggurat Middle Bottom",
+                new RegionInfo("ziggurat2020_2", false)
+            },
+            {
+                "Rooted Ziggurat Lower Front",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
+                "Rooted Ziggurat Lower Back",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
+                "Rooted Ziggurat Portal Room Entrance",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
+                "Rooted Ziggurat Portal",
+                new RegionInfo("ziggurat2020_FTRoom", false)
+            },
+            {
+                "Rooted Ziggurat Portal Room Exit",
+                new RegionInfo("ziggurat2020_FTRoom", false)
+            },
+            {
+                "Swamp",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Swamp to Cathedral Treasure Room",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Swamp to Cathedral Main Entrance",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Back of Swamp",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Swamp Hero's Grave",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Back of Swamp Laurels Area",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Cathedral",
+                new RegionInfo("Cathedral Redux", false)
+            },
+            {
+                "Cathedral Secret Legend Room",
+                new RegionInfo("Cathedral Redux", true)
+            },
+            {
+                "Cathedral Gauntlet Checkpoint",
+                new RegionInfo("Cathedral Arena", false)
+            },
+            {
+                "Cathedral Gauntlet",
+                new RegionInfo("Cathedral Arena", false)
+            },
+            {
+                "Cathedral Gauntlet Exit",
+                new RegionInfo("Cathedral Arena", false)
+            },
+            {
+                "Far Shore",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Far Shore to Spawn",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Far Shore to East Forest",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Far Shore to Quarry",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Far Shore to Fortress",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Far Shore to Library",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Far Shore to West Garden",
+                new RegionInfo("Transit", false)
+            },
+            {
+                "Hero Relic - Fortress",
+                new RegionInfo("RelicVoid", true)
+            },
+            {
+                "Hero Relic - Quarry",
+                new RegionInfo("RelicVoid", true)
+            },
+            {
+                "Hero Relic - West Garden",
+                new RegionInfo("RelicVoid", true)
+            },
+            {
+                "Hero Relic - East Forest",
+                new RegionInfo("RelicVoid", true)
+            },
+            {
+                "Hero Relic - Library",
+                new RegionInfo("RelicVoid", true)
+            },
+            {
+                "Hero Relic - Swamp",
+                new RegionInfo("RelicVoid", true)
+            },
+            {
+                "Purgatory",
+                new RegionInfo("Purgatory", false)
+            },
+            {
+                "Shop Entrance 1",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop Entrance 2",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop Entrance 3",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop Entrance 4",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop Entrance 5",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop Entrance 6",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Spirit Arena",
+                new RegionInfo("Spirit Arena", true)
+            },
+        };
+
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>> {
+            {
+                "Overworld",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld Belltower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Swamp Upper Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Special Shop Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld West Garden Laurels Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Southeast Cross Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "21",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Ruined Passage Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Key",
+                            },
+                            new List<string> {
+                                "Hyperdash", "nmg",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Temple Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                            },
+                            new List<string> {
+                                "Techbow", "Forest Belltower Upper", "nmg",
+                            },
+                            new List<string> {
+                                "Stick", "Forest Belltower Upper", "Overworld Belltower",
+                            },
+                            new List<string> {
+                                "Techbow", "Forest Belltower Upper", "Overworld Belltower",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Fountain Cross Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "21",
+                            },
+                            new List<string> {
+                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Town Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Spawn Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Well to Furnace Rail",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Old House Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Key (House)",
+                            },
+                            new List<string> {
+                                "Stundagger", "Wand", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Old House Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Old House Back",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Old House Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Old House Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Furnace Fuse",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Furnace Ladder Area",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Furnace Ladder Area",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Furnace Fuse",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Furnace Walking Path",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Furnace Walking Path",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Furnace Ladder Area",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Sealed Temple",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Sealed Temple Rafters",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Sealed Temple Rafters",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Sealed Temple",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest Dance Fox Spot",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "26", "nmg",
+                            },
+                        }
+                    },
+                    {
+                        "East Forest Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Belltower Upper",
+                new Dictionary<string, List<List<string>>> {
+                        {
+                        "Forest Belltower Main",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Belltower Main",
+                new Dictionary<string, List<List<string>>> {
+                        {
+                        "Forest Belltower Lower",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest Dance Fox Spot",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "26", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Guard House 1 East",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Guard House 1 West",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Grave Path Main",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Forest Grave Path Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Forest Grave Path by Grave",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Grave Path Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Forest Grave Path Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "26", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Grave Path by Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Forest Hero's Grave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
+                        "Forest Grave Path Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Hero's Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Forest Grave Path by Grave",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Well Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Well Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Stick", "Lantern"
+                            },
+                            new List<string> {
+                                "Techbow", "Lantern"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Well Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Well Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Stick"
+                            },
+                            new List<string> {
+                                "Techbow"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Well Main",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Well Front",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Beneath the Well Back",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Well Boss",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Dark Tomb Checkpoint",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Dark Tomb Checkpoint",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Well Boss",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Dark Tomb Entry Point",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Dark Tomb Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Lantern"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Dark Tomb Main",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Dark Tomb Dark Exit",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Dark Tomb Entry Point",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Dark Tomb Dark Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Dark Tomb Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Lantern"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden Laurels Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash"
+                            },
+                            new List<string> {
+                                "Ladder Storage"
+                            },
+                        }
+                    },
+                    {
+                        "West Garden after Boss",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Sword"
+                            },
+                            new List<string> {
+                                "Ladder Storage"
+                            },
+                        }
+                    },
+                    {
+                        "West Garden Hero's Grave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12"
+                            },
+                        }
+                    },
+                    {
+                        "West Garden Portal Item",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Wand", "Stundagger", "Techbow", "nmg"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden Laurels Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden after Boss",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden Portal Item",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Wand", "Stundagger", "Techbow", "nmg"
+                            },
+                        }
+                    },
+                    {
+                        "West Garden Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "12", "West Garden"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden Portal Item",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash"
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden Hero's Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Ruined Atoll",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Ruined Atoll Lower Entry Area",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Ruined Atoll Frog Mouth",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Ruined Atoll Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Ruined Atoll Lower Entry Area",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Ruined Atoll",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Ruined Atoll Frog Mouth",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Ruined Atoll",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Ruined Atoll Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Ruined Atoll",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Frog's Domain",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog's Domain Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Exterior Ladder",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Exterior Tree",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "12",
+                            },
+                            new List<string> {
+                                "Wand", "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Exterior Tree",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Exterior Ladder",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Hall",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Hero's Grave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Hero's Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Hall",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Library Lab Lower",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Lab",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Lab",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Lab Lower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Library Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Lab",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Exterior from East Forest",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Exterior from Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Exterior near cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Exterior from Overworld",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Exterior from East Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Exterior near cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Exterior near cave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Exterior from Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Courtyard",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Exterior from Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Courtyard Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Courtyard",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Vault Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Vault Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Lantern",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Vault Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Vault Front",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress East Shortcut Lower",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress East Shortcut Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress East Shortcut Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress East Shortcut Lower",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Eastern Vault Fortress",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Eastern Vault Fortress Gold Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Wand", "Stundagger", "nmg",
+                            },
+                            new List<string> {
+                                "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Fortress Courtyard Upper",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Eastern Vault Fortress Gold Door",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Eastern Vault Fortress",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Wand", "Stundagger", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Grave Path",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Hero's Grave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Grave Path Dusty Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Grave Path Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Grave Path",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Stundagger", "Techbow", "Wand", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Grave Path Dusty Entrance",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Grave Path",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Hero's Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Grave Path",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Arena",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Arena Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Eastern Vault Fortress",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Arena Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Arena",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Lower Mountain",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Lower Mountain Stairs",
+                        new List<List<string>> {
+                            new List<string> {
+                                "21",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Lower Mountain Stairs",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Lower Mountain",
+                        new List<List<string>> {
+                            new List<string> {
+                                "21",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Monastery Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Monastery Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "nmg",
+                            },
+                        }
+                    },
+                    {
+                        "Monastery Hero's Grave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Monastery Hero's Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Monastery Back",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Monastery Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Monastery Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Sword"
+                            },
+                            new List<string> {
+                                "Techbow"
+                            }
+                        }
+                    },
+                }
+            },
+            {
+                "Quarry Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Quarry Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Quarry Connector", "Wand"
+                            },
+                        }
+                    },
+                    {
+                        "Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Quarry Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Quarry Entry",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Quarry Monastery Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                        }
+                    },
+                    {
+                        "Quarry Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Monastery Rope",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Quarry Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                        }
+                    },
+                    {
+                        "Quarry Monastery Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Quarry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Lower Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Mask",
+                            },
+                        }
+                    },
+                    {
+                        "Quarry Entry",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Quarry Back",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Quarry Monastery Entry",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Lower Quarry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Lower Quarry Zig Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Quarry", "Quarry Connector", "Wand"
+                            }
+                        }
+                    },
+                }
+            },
+            {
+                "Monastery Rope",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Quarry Back",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Upper Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Upper Front",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Upper Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Upper Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Upper Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Upper Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Middle Top",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Middle Bottom",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Lower Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Lower Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Sword", "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Lower Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Lower Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Rooted Ziggurat Portal Room Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Portal Room Entrance",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Lower Back",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Portal Room Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Portal Room Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Rooted Ziggurat Lower Back",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Swamp",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp to Cathedral Main Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Hyperdash",
+                            },
+                            new List<string> {
+                                "Stundagger", "Wand", "nmg",
+                            },
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Treasure Room",
+                        new List<List<string>> {
+                            new List<string> {
+                                "21",
+                            },
+                        }
+                    },
+                    {
+                        "Back of Swamp",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Swamp to Cathedral Treasure Room Entrance",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Swamp to Cathedral Main Entrance",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Stundagger", "Wand", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Back of Swamp",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Back of Swamp Laurels Area",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Ladder Storage",
+                            },
+                        }
+                    },
+                    {
+                        "Swamp Hero's Grave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Back of Swamp Laurels Area",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Back of Swamp",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Swamp",
+                        new List<List<string>> {
+                            new List<string> {
+                                "26", "Wand", "Techbow", "Stundagger", "nmg",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Swamp Hero's Grave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Back of Swamp",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Cathedral Gauntlet Checkpoint",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Cathedral Gauntlet",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Cathedral Gauntlet",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Cathedral Gauntlet Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Cathedral Gauntlet Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Cathedral Gauntlet",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore to Spawn",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Far Shore to East Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Far Shore to Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Quarry Connector", "Quarry", "Wand"
+                            },
+                        }
+                    },
+                    {
+                        "Far Shore to Library",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Library Lab",
+                            },
+                        }
+                    },
+                    {
+                        "Far Shore to West Garden",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "West Garden",
+                            },
+                        }
+                    },
+                    {
+                        "Far Shore to Fortress",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Eastern Vault Fortress",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore to Spawn",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore to East Forest",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore to Quarry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore to Library",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore to West Garden",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Far Shore to Fortress",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Far Shore",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 1",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 2",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 3",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 4",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 5",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 6",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+        };
+
+        public static void ShuffleList<T>(IList<T> list, int seed) {
             var rng = new System.Random(seed);
             int n = list.Count;
 
-            while (n > 1)
-            {
+            while (n > 1) {
                 n--;
                 int k = rng.Next(n + 1);
                 T value = list[k];
@@ -776,444 +3683,431 @@ namespace TunicRandomizer
             }
         }
 
-        // function to see if we're placing a lock before its key, since doing that can possibly self-lock
-        public static bool LockBeforeKey(Portal checkPortal)
-        {
-            if (checkPortal.SceneDestinationTag == "Overworld Redux, Temple_main")
-            {
-                // check if the belltower upper has been placed yet, if not then reshuffle the two plus portals list (since this list is gonna be the bigger one)
-                int i = 0;
-                foreach (Portal portal in deadEndPortals)
-                {
-                    if (portal.SceneDestinationTag == "Forest Belltower, Forest Boss Room_")
-                    { 
-                        i++;
-                        break; 
-                    }
-                }
-                if (i == 1)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Fortress Main, Fortress Arena_")
-            {
-                // check if none of the portals that lead to the necessary fuses have been placed
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.SceneDestinationTag == "Fortress Courtyard, Fortress Reliquary_upper" 
-                        || portal.SceneDestinationTag == "Fortress Courtyard, Fortress East_")
-                    { i++; }
-                    if (portal.Scene == "Fortress Basement")
-                    { j++; }
-                    if (portal.Scene == "Fortress Main")
-                    { k++; }
-                }
-                if (i == 2 || j == 2 || k == 6)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Fortress Arena, Transit_teleporter_spidertank"
-                || checkPortal.SceneDestinationTag == "Transit, Fortress Arena_teleporter_spidertank")
-            {
-                // check if none of the portals that lead to the necessary fuses have been placed
-                int i = 0;
-                int j = 0;
-                int k = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.Scene == "Fortress Courtyard")
-                    { i++; }
-                    if (portal.Scene == "Fortress Basement")
-                    { j++; }
-                    if (portal.Scene == "Fortress Main")
-                    { k++; }
-                }
-                if (i == 8 || j == 2 || k == 6)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_main")
-            {
-                int i = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.SceneDestinationTag == "Swamp Redux 2, Overworld Redux_conduit" 
-                        || portal.SceneDestinationTag == "Swamp Redux 2, Shop_"
-                        || portal.SceneDestinationTag == "Swamp Redux 2, Cathedral Redux_secret")
-                    { i++; }
-                }
-                if (i == 3)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "ziggurat2020_FTRoom, ziggurat2020_3")
-            {
-                int i = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.Scene == "ziggurat2020_3")
-                    { i++; }
-                }
-                if (i == 2)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Quarry Redux, Transit_teleporter_quarry teleporter")
-            {
-                int i = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.Scene == "Darkwoods Tunnel")
-                    { i++; }
-                }
-                if (i == 2)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Transit, Quarry Redux_teleporter_quarry teleporter")
-            {
-                int i = 0;
-                int j = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.Scene == "Darkwoods Tunnel")
-                    { i++; }
-                    if (portal.Scene == "Quarry Redux") 
-                    { j++; }
-                }
-                if (i == 2 || j == 7)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Transit, Library Lab_teleporter_library teleporter")
-            {
-                int i = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.Scene == "Library Lab") 
-                    { i++; }
-                }
-                if (i == 3)
-                { return true; }
-            }
-            else if (checkPortal.SceneDestinationTag == "Transit, Archipelagos Redux_teleporter_archipelagos_teleporter")
-            {
-                int i = 0;
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.Scene == "Archipelagos Redux")
-                    { i++; }
-                }
-                if (i == 7)
-                { return true; }
-            }
-            return false;
-        }
 
-        // if we have some granular regions, we get another one. This is for one-way connections, basically
-        // so that we don't unnecessarily force the back of house to be connected to a non-dead-end, for example
-        public static List<string> AddDependentRegions(string region) {
-            List<string> regions = new List<string>();
-            // idk if we need to clear it
-            regions.Clear();
-            regions.Add(region);
-
-            if (region == "Old House Front") {
-                regions.Add("Old House Back");
-            }
-            else if (region == "Frog's Domain Front") {
-                regions.Add("Frog's Domain Back");
-            }
-            else if (region == "Sword Access") {
-                regions.Add("Sword Access Back");
-            }
-            else if (region == "Forest Belltower Upper") {
-                regions.Add("Forest Belltower Main");
-                regions.Add("Forest Belltower Lower");
-            }
-            else if (region == "Forest Beltower Main") {
-                regions.Add("Forest Belltower Lower");
-            }
-            else if (region == "Fortress Courtyard Upper") {
-                regions.Add("Fortress Courtyard");
-            }
-            else if (region == "Fortress East") {
-                regions.Add("Fortress East Lower");
-            }
-            else if (region == "Monastery Rope") {
-                regions.Add("Quarry");
-            }
-            else if (region == "Zig 1 Top") {
-                regions.Add("Zig 1 Bottom");
-            }
-            else if (region == "Zig 2 Top") {
-                regions.Add("Zig 2 Bottom");
-            }
-            else if (region == "Gauntlet Top") {
-                regions.Add("Gauntlet Bottom");
-            }
-    
-            return regions;
-        }
-        
         // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
         public static List<Portal> deadEndPortals = new List<Portal>();
         public static List<Portal> twoPlusPortals = new List<Portal>();
+
+        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
+            int inv_count = inventory.Count;
+            // for each origin region
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TraversalReqs) {
+                string origin = traversal_group.Key;
+                if (!inventory.ContainsKey(origin)) {
+                    continue;
+                }
+                //Logger.LogInfo("checking traversal for " + origin);
+                // for each destination in an origin's group
+                foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
+                    string destination = destination_group.Key;
+                    //Logger.LogInfo("checking traversal to " + destination);
+                    // if we can already reach this region, skip it
+                    if (inventory.ContainsKey(destination)) {
+                        //Logger.LogInfo("we already have it");
+                        continue;
+                    }
+                    // met is whether you meet any of the requirement lists for a destination
+                    bool met = false;
+                    if (destination_group.Value.Count == 0) {
+                        //Logger.LogInfo("no requirement groups, met is true");
+                        met = true;
+                    }
+                    // check through each list of requirements
+                    foreach (List<string> reqs in destination_group.Value) {
+                        if (reqs.Count == 0) {
+                            // if a group is empty, you can just walk there
+                            met = true;
+                            //Logger.LogInfo("group is empty, so met is true");
+                        } else {
+                            // check if we have the items in our inventory to traverse this path
+                            int met_count = 0;
+                            foreach (string req in reqs) {
+                                //Logger.LogInfo("req is " + req);
+                                if (inventory.ContainsKey(req)) {
+                                    met_count++;
+                                    //Logger.LogInfo("we met this requirement");
+                                }
+                            }
+                            // if you have all the requirements, you can traverse this path
+                            if (met_count == reqs.Count) {
+                                //Logger.LogInfo("met is true");
+                                met = true;
+                            }
+                        }
+                        // if we meet one list of requirements, we don't have to do the rest
+                        if (met == true) {
+                            break;
+                        }
+                    }
+                    if (met == true) {
+                        //Logger.LogInfo("adding " + destination + " to inventory");
+                        inventory.Add(destination, 1);
+                    } else {
+                        //Logger.LogInfo("did not add " + destination + ", we did not meet the requirements");
+                    }
+                }
+            }
+            // if we gained any regions, rerun this to get any new regions
+            if (inv_count != inventory.Count) {
+                UpdateReachableRegions(inventory);
+            }
+            return inventory;
+        }
+
+        public static List<string> UpdateReachableRegions(List<string> inventory) {
+            int inv_count = inventory.Count;
+            // for each origin region
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TraversalReqs) {
+                string origin = traversal_group.Key;
+                // for each destination in an origin's group
+                foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
+                    string destination = destination_group.Key;
+                    // if we don't have the origin region, skip it
+                    if (!inventory.Contains(origin)) {
+                        continue;
+                    }
+                    // if we can already reach this region, skip it
+                    if (inventory.Contains(destination)) {
+                        continue;
+                    }
+                    // met is whether you meet any of the requirement lists for a destination
+                    bool met = false;
+                    // check through each list of requirements
+                    foreach (List<string> reqs in destination_group.Value) {
+                        if (reqs.Count == 0) {
+                            // if a group is empty, you can just walk there
+                            met = true;
+                        } else {
+                            // check if we have the items in our inventory to traverse this path
+                            int met_count = 0;
+                            foreach (string req in reqs) {
+                                if (inventory.Contains(req)) {
+                                    met_count++;
+                                }
+                            }
+                            // if you have all the requirements, you can traverse this path
+                            if (met_count == reqs.Count) {
+                                met = true;
+                            }
+                        }
+                        // if we meet one list of requirements, we don't have to do the rest
+                        if (met == true) {
+                            break;
+                        }
+                    }
+                    if (met == true) {
+                        inventory.Add(destination);
+                    }
+                }
+            }
+            // if we gained any regions, rerun this to get any new regions
+            if (inv_count != inventory.Count) {
+                UpdateReachableRegions(inventory);
+            }
+            return inventory;
+        }
+
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
-        public static void RandomizePortals(int seed)
-        {
+        public static void RandomizePortals(int seed) {
             RandomizedPortals.Clear();
 
             // separate the portals into their respective lists
-            foreach (KeyValuePair<string, List<TunicPortal>> region_group in PortalList) {
-                string region_name = region_group.Key;
-                List<TunicPortal> region_portals = region_group.Value;
-                foreach (TunicPortal portal in region_portals)
-                {
-                    Portal newPortal = new Portal(destination: portal.Destination, tag: portal.DestinationTag, name: portal.PortalName, scene: region_name, region: portal.GranularRegion, requiredItems: portal.RequiredItems, requiredItemsOr: portal.RequiredItemsOr, entryItems: portal.EntryItems, givesAccess: portal.GivesAccess, deadEnd: portal.DeadEnd, prayerPortal: portal.PrayerPortal, oneWay: portal.OneWay, ignoreScene: portal.IgnoreScene, specialReqs: portal.SpecialReqs);
-                    if (newPortal.DeadEnd == true)
-                    { deadEndPortals.Add(newPortal); }
-                    else twoPlusPortals.Add(newPortal);
+            foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
+                string scene_name = scene_group.Key;
+                if (scene_name == "Shop") {
+                    continue;
+                }
+                foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
+                    string region_name = region_group.Key;
+                    List<TunicPortal> region_portals = region_group.Value;
+                    foreach (TunicPortal portal in region_portals) {
+                        Portal TunicPortal = new Portal(name: portal.Name, destination: portal.Destination, scene: scene_name, region: region_name);
+                        if (RegionDict[region_name].DeadEnd == true) {
+                            deadEndPortals.Add(TunicPortal);
+                        } else {
+                            twoPlusPortals.Add(TunicPortal);
+                        }
+                        // need to throw fairy cave into the twoPlus list if laurels is at 10 fairies
+                        if (TunicPortal.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
+                            deadEndPortals.Remove(TunicPortal);
+                            twoPlusPortals.Add(TunicPortal);
+                        }
+                    }
                 }
             }
-            if (SaveFile.GetInt("randomizer ER fixed shop") == 1)
-            {
-                foreach (Portal portal in twoPlusPortals)
-                {
-                    if (portal.SceneDestinationTag == "Overworld Redux, Windmill_")
-                    { 
+            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
+                foreach (Portal portal in twoPlusPortals) {
+                    if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
                         twoPlusPortals.Remove(portal);
                         break;
                     }
                 }
             }
 
-            // making a list of accessible regions that will be updated as we gain access to more regions
-            List<string> accessibleRegions = new List<string>();
-            accessibleRegions.Clear();
-
-            // just picking a static start region for now, can modify later if we want to do random start location
+            // modify later if we ever do random start location
             string start_region = "Overworld";
-            accessibleRegions.Add(start_region);
-            
-            int comboNumber = 0;
 
-            // This might be way too much shuffling -- was done to not favor connecting new regions to the first regions added to the list
+            Dictionary<string, int> MaxItems = new Dictionary<string, int> {
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Hyperdash", 1 }, { "Mask", 1 }, { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }
+            };
+
+            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
+            foreach (KeyValuePair<string, int> item in MaxItems) {
+                FullInventory.Add(item.Key, item.Value);
+            }
+            // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
+            if (SaveFile.GetInt("randomizer laurels location") == 3) {
+                FullInventory.Remove("Hyperdash");
+            }
+            FullInventory.Add(start_region, 1);
+            FullInventory = UpdateReachableRegions(FullInventory);
+
+            // get the total number of regions to get before doing dead ends
+            int total_nondeadend_count = 0;
+            foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
+                if (region.Value.DeadEnd == false) {
+                    total_nondeadend_count++;
+                }
+            }
+            // added fairy cave to the non-dead end regions, so it should increase the count here too
+            if (SaveFile.GetInt("randomizer laurels location") == 3) {
+                total_nondeadend_count++;
+            }
+
             // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
-            // todo: make it add regions to the list based on previously gotten regions
-            while (accessibleRegions.Count < 57)
-            {
+            int comboNumber = 0;
+            while (FullInventory.Count < total_nondeadend_count + MaxItems.Count) {
                 ShuffleList(twoPlusPortals, seed);
-                // later on, start by making the first several portals into shop portals
                 Portal portal1 = null;
                 Portal portal2 = null;
-                foreach (Portal portal in twoPlusPortals)
-                {
+                foreach (Portal portal in twoPlusPortals) {
                     // find a portal in a region we can't access yet
-                    if (LockBeforeKey(portal) == false && !accessibleRegions.Contains(portal.Region))
-                    {
+                    if (!FullInventory.ContainsKey(portal.Region)) {
                         portal1 = portal;
                     }
                 }
-                if (portal1 == null)
-                { Logger.LogInfo("something messed up in portal pairing for portal 1"); }
+                if (portal1 == null) {
+                    Logger.LogInfo("something messed up in portal pairing for portal 1");
+                }
                 twoPlusPortals.Remove(portal1);
                 ShuffleList(twoPlusPortals, seed);
-                foreach (Portal secondPortal in twoPlusPortals)
-                {
-                    if (LockBeforeKey(secondPortal) == false && accessibleRegions.Contains(secondPortal.Region))
-                    {
+                foreach (Portal secondPortal in twoPlusPortals) {
+                    if (FullInventory.ContainsKey(secondPortal.Region)) {
                         portal2 = secondPortal;
                         twoPlusPortals.Remove(secondPortal);
                         break;
                     }
                 }
-                if (portal2 == null)
-                { Logger.LogInfo("something messed up in portal pairing for portal 2"); }
+                if (portal2 == null) { 
+                    Logger.LogInfo("something messed up in portal pairing for portal 2");
+                }
                 // add the portal combo to the randomized portals list
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
-                foreach (string region in AddDependentRegions(portal1.Region)) {
-                    if (!accessibleRegions.Contains(region)) {
-                        accessibleRegions.Add(region);
-                    }
+
+                FullInventory.Add(portal1.Region, 1);
+                // if laurels is at fairy cave, add it when we connect fairy cave
+                if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
+                    FullInventory.Add("Hyperdash", 1);
                 }
+                FullInventory = UpdateReachableRegions(FullInventory);
                 comboNumber++;
             }
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
-            while (deadEndPortals.Count > 0)
-            {
-                if (LockBeforeKey(twoPlusPortals[0]) == true) 
-                { ShuffleList(twoPlusPortals, seed); }
-                else 
-                {
-                    comboNumber++;
-                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
-                    deadEndPortals.RemoveAt(0);
-                    twoPlusPortals.RemoveAt(0);
-                }
+            while (deadEndPortals.Count > 0) {
+                comboNumber++;
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                deadEndPortals.RemoveAt(0);
+                twoPlusPortals.RemoveAt(0);
+                
             }
-            List<string> shopRegionList = new List<string>();
+
+            // shops get added separately cause they're weird
+            List<string> shopSceneList = new List<string>();
             int shopCount = 6;
-            if (SaveFile.GetInt("randomizer ER fixed shop") == 1)
-            {
+            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
                 shopCount = 1;
-                Portal windmillPortal = new Portal(destination: "Windmill", tag: "", name: "Windmill Entrance", scene: "Overworld Redux");
-                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop");
+                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill_", scene: "Overworld Redux", region: "Overworld");
+                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", scene: "Shop", region: "Shop Entrance 2");
                 RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
-                shopRegionList.Add("Overworld Redux");
+                shopSceneList.Add("Overworld Redux");
             }
             int regionNumber = 0;
-            while (shopCount > 0)
-            {
+            while (shopCount > 0) {
                 // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(destination: "Previous Region", tag: "", name: "Shop portal", scene: "Shop", region: "Shop");
+                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", scene: "Shop", region: $"Shop Entrance {shopCount}");
                 // check that a shop has not already been added to this region, since two shops in the same region causes problems
-                if (!shopRegionList.Contains(twoPlusPortals[regionNumber].Scene))
-                {
+                if (!shopSceneList.Contains(twoPlusPortals[regionNumber].Scene)) {
                     comboNumber++;
-                    shopRegionList.Add(twoPlusPortals[regionNumber].Scene);
+                    shopSceneList.Add(twoPlusPortals[regionNumber].Scene);
+                    //Logger.LogInfo("adding scene " + twoPlusPortals[regionNumber].Scene + " to shop scene list");
                     RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[regionNumber], shopPortal));
                     twoPlusPortals.RemoveAt(regionNumber);
                     shopCount--;
-                }
-                else
-                {
+                } else {
                     regionNumber++;
                 }
-                if (regionNumber == twoPlusPortals.Count - 1)
-                {
+                if (regionNumber == twoPlusPortals.Count - 1) {
                     Logger.LogInfo("too many shops, not enough regions, add more shops");
                 }
             }
-
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
-            while (twoPlusPortals.Count > 1)
-            {
-                // I don't think the LockBeforeKey check can lead to an infinite loop?
-                if (LockBeforeKey(twoPlusPortals[0]) == true || LockBeforeKey(twoPlusPortals[1]) == true)
-                { ShuffleList(twoPlusPortals, seed); }
-                else
-                {
+            while (twoPlusPortals.Count > 1) {
                 comboNumber++;
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[0], twoPlusPortals[1]));
                 twoPlusPortals.RemoveAt(1); // I could do removeat0 twice, but I don't like how that looks
                 twoPlusPortals.RemoveAt(0);
-                }
             }
-            if (twoPlusPortals.Count == 1)
-            {
-                // if this triggers, increase or decrease shop count by 1
+            if (twoPlusPortals.Count == 1) {
+                // if this triggers, there's an odd number of portals total
                 Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
-
             // todo: figure out why the quarry portal isn't working right
             //Portal betaQuarryPortal = new Portal(destination: "Darkwoods", tag: "", name: "Beta Quarry", scene: "Quarry", region: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
             //Portal zigSkipPortal = new Portal(destination: "ziggurat2020_3", tag: "zig2_skip", name: "Zig Skip", scene: "ziggurat2020_1", region: "Zig 1", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
             //RandomizedPortals.Add("zigsecret", new PortalCombo(betaQuarryPortal, zigSkipPortal));
         }
 
-        // a function to apply the randomized portal list to portals during on scene loaded
-        public static void ModifyPortals(Scene loadingScene)
-        {
-            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
-            foreach (var portal in Portals)
-            {
+        // this is for using the info from Archipelago to pair up the portals
+        public static void CreatePortalPairs(Dictionary<string, string> APPortalStrings) {
+            RandomizedPortals.Clear();
+            List<Portal> portalsList = new List<Portal>();
+            int comboNumber = 0;
+
+            foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
+                string scene_name = scene_group.Key;
+                foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
+                    string region_name = region_group.Key;
+                    List<TunicPortal> region_portals = region_group.Value;
+                    foreach (TunicPortal portal in region_portals) {
+                        Portal TunicPortal = new Portal(name: portal.Name, destination: portal.Destination, scene: scene_name, region: region_name);
+                        portalsList.Add(TunicPortal);
+                    }
+                }
+            }
+
+            // make the PortalCombo dictionary
+            foreach (KeyValuePair<string, string> stringPair in APPortalStrings) {
+                string portal1SDT = stringPair.Key;
+                string portal2SDT = stringPair.Value;
+                Portal portal1 = null;
+                Portal portal2 = null;
+
+                foreach (Portal portal in portalsList) {
+                    if (portal1SDT == portal.SceneDestinationTag) {
+                        portal1 = portal;
+                    }
+                    if (portal2SDT == portal.SceneDestinationTag) {
+                        portal2 = portal;
+                    }
+                }
+                PortalCombo portalCombo = new PortalCombo(portal1, portal2);
+                RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
+                comboNumber++;
+            }
+        }
+
+        // a function to apply the randomized portal list to portals during onSceneLoaded
+        public static void ModifyPortals(Scene loadingScene) {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+            && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
+            foreach (var portal in Portals) {
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals)
-                {
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
-                    if (portal1.Scene == loadingScene.name && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
-                    {
-                        if (portal2.Scene == "Shop")
-                        {
+
+                    if (portal1.Scene == loadingScene.name && portal1.Destination == portal.FullID) {
+                        if (portal2.Scene == "Shop") {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = "";
                             portal.optionalIDToSpawnAt = "";
-                        }
-                        else
-                        {
+                            portal.name = portal2.Name;
+                        } else {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
+                            portal.name = portal2.Name;
                         }
-                        portal.name = portal1.Name;
                         break;
                     }
 
-
-                    if (portal2.Scene == loadingScene.name && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
-                    {
-                        if (portal1.Scene == "Shop")
-                        {
+                    if (portal2.Scene == loadingScene.name && portal2.Destination == portal.FullID) {
+                        if (portal1.Scene == "Shop") {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = "";
                             portal.optionalIDToSpawnAt = "";
-                        }
-                        else
-                        {
+                            portal.name = portal1.Name;
+                        } else {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
+                            portal.name = portal2.Name;
                         }
-                        portal.name = portal2.Name;
                         break;
                     }
                 }
             }
         }
+
         // this is for use in PlayerCharacterPatches. Will need to refactor later if we do random player spawn
-        public static void AltModifyPortals()
-        {
-            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>();
-            foreach (var portal in Portals)
-            {
+        public static void AltModifyPortals() {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+            && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
+            foreach (var portal in Portals) {
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals)
-                {
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
-
-                    if (portal1.Scene == "Overworld Redux" && portal1.Tag == portal.id && portal1.Destination == portal.destinationSceneName)
-                    {
-                        if (portal2.Scene == "Shop")
-                        {
+                    if (portal1.Scene == "Overworld Redux" && portal1.Destination == portal.FullID) {
+                        if (portal2.Scene == "Shop") {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = "";
                             portal.optionalIDToSpawnAt = "";
-                        }
-                        else
-                        {
+                        } else {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
-                        portal.name = portal1.Name;
                         break;
                     }
 
-
-                    if (portal2.Scene == "Overworld Redux" && portal2.Tag == portal.id && portal2.Destination == portal.destinationSceneName)
-                    {
-                        if (portal1.Scene == "Shop")
-                        {
+                    if (portal2.Scene == "Overworld Redux" && portal2.Destination == portal.FullID) {
+                        if (portal1.Scene == "Shop") {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = "";
                             portal.optionalIDToSpawnAt = "";
-                        }
-                        else
-                        {
+                        } else {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
                         }
-                        portal.name = portal2.Name;
                         break;
                     }
                 }
             }
         }
+
+        public static void MarkPortals() {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+            && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
+
+            foreach (var portal in Portals) {
+                if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
+                    foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals) {
+                        if (portal.name == portalCombo.Value.Portal1.Name || portal.name == portalCombo.Value.Portal2.Name) {
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

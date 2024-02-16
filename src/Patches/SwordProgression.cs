@@ -1,18 +1,16 @@
-﻿using System;
+﻿using BepInEx.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using BepInEx.Logging;
+using UnityEngine.SceneManagement;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class SwordProgression {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
-
         public static void UpgradeSword(int SwordLevel) {
-
-            SaveFile.SetInt("randomizer sword progression level", SwordLevel);
+            
+            SaveFile.SetInt(SwordProgressionLevel, SwordLevel);
 
             if (SwordLevel == 1) {
                 //fownd ahn Itehm!
@@ -37,10 +35,9 @@ namespace TunicRandomizer {
                 Inventory.buttonAssignedItems = items.ToArray();
             } else if (SwordLevel == 3) {
                 Inventory.GetItemByName("Librarian Sword").Quantity = 1;
+                Inventory.GetItemByName("Librarian Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ? ? ?    (<#ca7be4>lehvuhl 3<#FFFFFF>)" : $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Librarian Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
-                Inventory.GetItemByName("Librarian Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ? ? ?    (<#ca7be4>lehvuhl 3<#FFFFFF>)" : $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
-
                 TunicRandomizer.Tracker.ImportantItems["Level Up - Attack"] = Inventory.GetItemByName("Level Up - Attack").Quantity;
                 List<ButtonAssignableItem> items = Inventory.buttonAssignedItems.ToList();
                 for (int i = 0; i < items.Count; i++) {
@@ -52,10 +49,9 @@ namespace TunicRandomizer {
                 Inventory.buttonAssignedItems = items.ToArray();
             } else if (SwordLevel >= 4) {
                 Inventory.GetItemByName("Heir Sword").Quantity = 1;
+                Inventory.GetItemByName("Heir Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ! ! !    (<#5de7cf>lehvuhl 4<#FFFFFF>)" : $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Heir Sword"));
                 Inventory.GetItemByName("Level Up - Attack").Quantity += 1;
-                Inventory.GetItemByName("Heir Sword").collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"             ! ! !    (<#5de7cf>lehvuhl 4<#FFFFFF>)" : $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
-
                 TunicRandomizer.Tracker.ImportantItems["Level Up - Attack"] = Inventory.GetItemByName("Level Up - Attack").Quantity;
                 List<ButtonAssignableItem> items = Inventory.buttonAssignedItems.ToList();
                 for (int i = 0; i < items.Count; i++) {
@@ -117,8 +113,8 @@ namespace TunicRandomizer {
 
         public static void EnableThirdSwordFromExisting(GameObject SwordProxy) {
 
-            /*            string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
-                        GameObject SwordProxy = GameObject.Find(SwordPath);*/
+/*            string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
+            GameObject SwordProxy = GameObject.Find(SwordPath);*/
             if (SwordProxy != null) {
                 if (SwordProxy.GetComponent<MeshFilter>() != null && SwordProxy.GetComponent<MeshRenderer>() != null) {
                     GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());
@@ -144,32 +140,6 @@ namespace TunicRandomizer {
             } else {
                 Logger.LogError("Could not find sword object to replace with Sword Lvl 4!");
             }
-        }
-
-        public static void CreateSwordItems() {
-            Logger.LogInfo("creating sword items");
-            ButtonAssignableItem LibrarianSword = ScriptableObject.CreateInstance<ButtonAssignableItem>();
-            ButtonAssignableItem HeirSword = ScriptableObject.CreateInstance<ButtonAssignableItem>();
-            LibrarianSword.name = "Librarian Sword";
-            LibrarianSword.icon = ModelSwaps.FindSprite("Inventory items_koban_hp");
-            LibrarianSword.collectionMessage = new LanguageLine();
-            LibrarianSword.collectionMessage.text = $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
-            HeirSword.name = "Heir Sword";
-            HeirSword.icon = ModelSwaps.FindSprite("Inventory items_koban_sp");
-            HeirSword.collectionMessage = new LanguageLine();
-            HeirSword.collectionMessage.text = $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
-            LibrarianSword.controlAction = "";
-            HeirSword.controlAction = "";
-            LibrarianSword.suppressQuantity = true;
-            HeirSword.suppressQuantity = true;
-            for (int i = 0; i < Inventory.itemList.Count; i++) {
-                if (Inventory.itemList[i].name == "Sword") {
-                    Inventory.itemList.Insert(i + 1, LibrarianSword);
-                    Inventory.itemList.Insert(i + 2, HeirSword);
-                    break;
-                }
-            }
-            Logger.LogInfo("Done creating swords");
         }
 
         public static void CreateSwordItemBehaviours(PlayerCharacter instance) {
@@ -203,7 +173,25 @@ namespace TunicRandomizer {
 
         public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
 
+            // Disables hitting the west bell from long range for race purposes
+            if (__instance.GetComponent<TuningForkBell>() != null && __instance.name == "tuning fork" && SceneManager.GetActiveScene().name == "Overworld Redux" 
+                && hitType == HitType.TECHBOW && TunicRandomizer.Settings.RaceMode && TunicRandomizer.Settings.DisableDistantBellShots) { 
+                if (PlayerCharacter.instance.transform.position.x > __instance.transform.position.x + 5
+                    || PlayerCharacter.instance.transform.position.z > __instance.transform.position.z + 5) {
+                    return false;
+                }
+            }
+
+            // Allows lvl 4 sword to hit bells/switches, also tells AP data storage if bells were rung
             if ((__instance.GetComponent<TuningForkBell>() != null || __instance.GetComponent<PowerSwitch>() != null) && isPlayerCharacterMelee) {
+                if (__instance.name == "tuning fork" && IsArchipelago()) {
+                    if (SceneManager.GetActiveScene().name == "Forest Belltower") {
+                        Archipelago.instance.UpdateDataStorage("Rang East Bell", true);
+                    }
+                    if (SceneManager.GetActiveScene().name == "Overworld Redux") {
+                        Archipelago.instance.UpdateDataStorage("Rang West Bell", true);
+                    }
+                }
                 unblockable = false;
             }
 

@@ -13,7 +13,7 @@ namespace TunicRandomizer {
 
         public WaveSpell(IntPtr ptr) : base(ptr) { }
 
-        private void Awake() { 
+        private void Awake() {
             base.inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
             base.manaCost = 0;
             base.hpToGive = 0;
@@ -48,9 +48,9 @@ namespace TunicRandomizer {
             if (!OptionsGUIPatches.BonusOptionsUnlocked) {
                 AreaData AreaData = ScriptableObject.CreateInstance<AreaData>();
                 AreaData.topLine = ScriptableObject.CreateInstance<LanguageLine>();
-                AreaData.topLine.text = $"{Translations.Translate("BONUS CUSTOMIZATION Unlocked", true)}";
+                AreaData.topLine.text = TunicRandomizer.Settings.UseTrunicTranslations ? "bOnuhs kuhstuhmizA$uhn uhnlawkd" : $"\"BONUS CUSTOMIZATION UNLOCKED\"";
                 AreaData.bottomLine = ScriptableObject.CreateInstance<LanguageLine>();
-                AreaData.bottomLine.text = $"%ah^ks for plAi^! (prehs 3 too wAv!)";
+                AreaData.bottomLine.text = $"%ah^ks for plAi^! (prehs 3 too wAv)";
                 AreaLabel.ShowLabel(AreaData);
                 OptionsGUIPatches.BonusOptionsUnlocked = true;
             }
@@ -60,6 +60,11 @@ namespace TunicRandomizer {
             WaveSpell WaveSpell = __instance.TryCast<WaveSpell>();
             if (WaveSpell != null) {
                 WaveSpell.CheckInput(inputs, length);
+            }
+
+            EntranceSeekerSpell EntranceSeekerSpell = __instance.TryCast<EntranceSeekerSpell>();
+            if (EntranceSeekerSpell != null) {
+                EntranceSeekerSpell.CheckInput(inputs, length);
             }
         }
     }
