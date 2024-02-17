@@ -1,4 +1,4 @@
-# Tunic Randomizer Archipelago Client
+# Tunic Randomizer and Archipelago Client
 
 This randomizer features item, entrance, and enemy randomization, as well as a variety of additional settings and features to help customize the experience, such as hints, custom items, and custom fox colors!
 
