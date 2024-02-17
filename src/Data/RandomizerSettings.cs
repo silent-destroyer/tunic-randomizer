@@ -7,7 +7,20 @@ using System.Threading.Tasks;
 namespace TunicRandomizer {
 
     public class RandomizerSettings {
-        // Logic Settings
+
+        public ConnectionSettings ConnectionSettings { get; set; }
+
+        public enum RandomizerType {
+            SINGLEPLAYER,
+            ARCHIPELAGO
+        }
+
+        public RandomizerType Mode {
+            get;
+            set;
+        }
+
+        // Single Player Settings
         public GameModes GameMode {
             get;
             set;
@@ -33,14 +46,12 @@ namespace TunicRandomizer {
             set;
         }
 
-        public bool EntranceRandoEnabled
-        {
+        public bool EntranceRandoEnabled {
             get;
             set;
         }
 
-        public bool ERFixedShop
-        {
+        public bool ERFixedShop {
             get;
             set;
         }
@@ -55,7 +66,48 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool Lanternless {
+            get;
+            set;
+        }
+
+        public bool Maskless {
+            get;
+            set;
+        }
+
         public FixedLaurelsType FixedLaurelsOption {
+            get;
+            set;
+        }
+
+        public FoolTrapOption FoolTrapIntensity {
+            get;
+            set;
+        }
+
+        public bool MysterySeed {
+            get;
+            set;
+        }
+
+        // Archipelago Settings
+        public bool DeathLinkEnabled {
+            get;
+            set;
+        }
+
+        public bool CollectReflectsInWorld {
+            get;
+            set;
+        }
+
+        public bool SkipItemAnimations {
+            get;
+            set;
+        }
+
+        public bool SendHintsToServer {
             get;
             set;
         }
@@ -86,8 +138,18 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool CreateSpoilerLog {
+            get;
+            set;
+        }
+
         // Gameplay Settings
         public bool HeirAssistModeEnabled {
+            get;
+            set;
+        }
+
+        public bool ClearEarlyBushes {
             get;
             set;
         }
@@ -107,7 +169,17 @@ namespace TunicRandomizer {
             set;
         }
 
-        public FoolTrapOption FoolTrapIntensity {
+        public bool FasterUpgrades {
+            get;
+            set;
+        }
+
+        public bool MoreSkulls {
+            get;
+            set;
+        }
+
+        public bool ArachnophobiaMode {
             get;
             set;
         }
@@ -133,6 +205,36 @@ namespace TunicRandomizer {
             set;
         }
 
+        // Race Mode Settings
+        public bool RaceMode {
+            get;
+            set;
+        }
+
+        public bool DisableIceboltInHeirFight {
+            get;
+            set;
+        }
+
+        public bool DisableDistantBellShots {
+            get;
+            set;
+        }
+
+        public bool DisableIceGrappling {
+            get;
+            set;
+        }
+
+        public bool DisableLadderStorage {
+            get;
+            set;
+        }
+
+        public bool DisableUpgradeStealing {
+            get;
+            set;
+        }
 
         // Fox Settings
         public bool RandomFoxColorsEnabled {
@@ -150,37 +252,42 @@ namespace TunicRandomizer {
             set;
         }
 
-        public enum GameModes { 
+        public enum GameModes {
             RANDOMIZER,
             HEXAGONQUEST,
             VANILLA
         }
 
-        public enum FoolTrapOption { 
+        public enum FoolTrapOption {
             NONE,
             NORMAL,
             DOUBLE,
             ONSLAUGHT,
         }
 
-        public enum EnemyGenerationType { 
+        public enum EnemyGenerationType {
             RANDOM,
             SEEDED
         }
 
-        public enum EnemyRandomizationType { 
+        public enum EnemyRandomizationType {
             RANDOM,
             BALANCED
         }
 
         public enum FixedLaurelsType {
-            ANYWHERE,
+            RANDOM,
             SIXCOINS,
             TENCOINS,
             TENFAIRIES,
         }
 
         public RandomizerSettings() {
+
+            ConnectionSettings = new ConnectionSettings();
+            Mode = RandomizerType.SINGLEPLAYER;
+
+            // Single Player
             GameMode = GameModes.RANDOMIZER;
             KeysBehindBosses = false;
             SwordProgressionEnabled = true;
@@ -190,40 +297,65 @@ namespace TunicRandomizer {
             ERFixedShop = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
-            FixedLaurelsOption = FixedLaurelsType.ANYWHERE;
+            FixedLaurelsOption = FixedLaurelsType.RANDOM;
+            FoolTrapIntensity = FoolTrapOption.NORMAL;
+            Lanternless = false;
+            Maskless = false;
+            MysterySeed = false;
 
+            // Archipelago 
+            DeathLinkEnabled = false;
+            CollectReflectsInWorld = false;
+            SkipItemAnimations = false;
+            SendHintsToServer = false;
+
+            // Hints
             HeroPathHintsEnabled = true;
             GhostFoxHintsEnabled = true;
             ShowItemsEnabled = true;
             ChestsMatchContentsEnabled = true;
             UseTrunicTranslations = false;
+            CreateSpoilerLog = true;
 
+            // General
             HeirAssistModeEnabled = false;
+            ClearEarlyBushes = false;
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
             DisableChestInterruption = false;
-            FoolTrapIntensity = FoolTrapOption.NORMAL;
-            
+            FasterUpgrades = false;
+            MoreSkulls = false;
+            ArachnophobiaMode = false;
+
+            // Enemy Randomizer
             EnemyRandomizerEnabled = false;
-            EnemyDifficulty = EnemyRandomizationType.RANDOM;
-            EnemyGeneration = EnemyGenerationType.RANDOM;
+            EnemyDifficulty = EnemyRandomizationType.BALANCED;
+            EnemyGeneration = EnemyGenerationType.SEEDED;
             ExtraEnemiesEnabled = false;
 
+            // Race Settings
+            RaceMode = false;
+            DisableIceboltInHeirFight = false;
+            DisableDistantBellShots = false;
+            DisableIceGrappling = false;
+            DisableLadderStorage = false;
+            DisableUpgradeStealing = false;
+
+            // Fox Customization
             RandomFoxColorsEnabled = true;
             RealestAlwaysOn = false;
             UseCustomTexture = false;
         }
 
-        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled) { 
+        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled) {
             HeroPathHintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
         }
 
-        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool heirAssistEnaled, FoolTrapOption foolTrapIntensity) {
+        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool heirAssistEnaled) {
             HeroPathHintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
             HeirAssistModeEnabled = heirAssistEnaled;
-            FoolTrapIntensity = foolTrapIntensity;
         }
     }
 }

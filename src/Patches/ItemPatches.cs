@@ -1,130 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
-using UnityEngine.UI;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.GhostHints;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
+
     public class ItemPatches {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
 
-        public struct BonusUpgrade {
-            public string LevelUp;
-            public string CustomPickupMessage;
-
-            public BonusUpgrade(string levelUp, string customPickupMessage) {
-                LevelUp = levelUp;
-                CustomPickupMessage = customPickupMessage;
-            }
+        public enum ItemResult {
+            Success,
+            TemporaryFailure, // Can't accept right now, but can accept in the future
+            PermanentFailure // Can never accept it
         }
 
-        public static Dictionary<string, ItemData> ItemList = new Dictionary<string, ItemData>();
-        public static Dictionary<string, bool> ItemsPickedUp = new Dictionary<string, bool>();
-        public static Dictionary<string, Fairy> FairyLookup = new Dictionary<string, Fairy>() {
-            {"Overworld Redux-(64.5, 44.0, -40.0)", new Fairy("SV_Fairy_1_Overworld_Flowers_Upper_Opened", $"flowurz \"1\"")},
-            {"Overworld Redux-(-52.0, 2.0, -174.8)", new Fairy("SV_Fairy_2_Overworld_Flowers_Lower_Opened", $"flowurz \"2\"")},
-            {"Overworld Redux-(-132.0, 28.0, -55.5)", new Fairy("SV_Fairy_3_Overworld_Moss_Opened", $"maws")},
-            {"Overworld Cave-(-90.4, 515.0, -738.9)", new Fairy("SV_Fairy_4_Caustics_Opened", $"kawstik lIt")},
-            {"Waterfall-(-47.0, 45.0, 10.0)", new Fairy("SV_Fairy_5_Waterfall_Opened", $"\"SECRET GATHERING PLACE\"")},
-            {"Temple-(14.0, 0.1, 42.4)", new Fairy("SV_Fairy_6_Temple_Opened", $"\"SEALED TEMPLE\"")},
-            {"Quarry Redux-(0.7, 68.0, 84.7)", new Fairy("SV_Fairy_7_Quarry_Opened", $"\"THE QUARRY\"")},
-            {"East Forest Redux-(104.0, 16.0, 61.0)", new Fairy("SV_Fairy_8_Dancer_Opened", $"\"EAST FOREST\"")},
-            {"Library Hall-(133.3, 10.0, -43.2)", new Fairy("SV_Fairy_9_Library_Rug_Opened", $"\"THE GREAT LIBRARY\"")},
-            {"Town Basement-(-202.0, 28.0, 150.0)", new Fairy("SV_Fairy_10_3DPillar_Opened", $"mAz (kawluhm)")},
-            {"Overworld Redux-(90.4, 36.0, -122.1)", new Fairy("SV_Fairy_11_WeatherVane_Opened", $"vAn")},
-            {"Overworld Interiors-(-28.0, 27.0, -50.5)", new Fairy("SV_Fairy_12_House_Opened", $"hOs (hows)")},
-            {"PatrolCave-(74.0, 46.0, 24.0)", new Fairy("SV_Fairy_13_Patrol_Opened", $"puhtrOl")},
-            {"CubeRoom-(321.1, 3.0, 217.0)", new Fairy("SV_Fairy_14_Cube_Opened", $"kyoob")},
-            {"Maze Room-(1.0, 0.0, -1.0)", new Fairy("SV_Fairy_15_Maze_Opened", $"mAz (inviziboul)")},
-            {"Overworld Redux-(-83.0, 20.0, -117.5)", new Fairy("SV_Fairy_16_Fountain_Opened", $"fowntin")},
-            {"Archipelagos Redux-(-396.3, 1.4, 42.3)", new Fairy("SV_Fairy_17_GardenTree_Opened", $"\"WEST GARDEN\"")},
-            {"Archipelagos Redux-(-236.0, 8.0, 86.3)", new Fairy("SV_Fairy_18_GardenCourtyard_Opened", $"\"WEST GARDEN\"")},
-            {"Fortress Main-(-75.0, -1.0, 17.0)", new Fairy("SV_Fairy_19_FortressCandles_Opened", $"\"FORTRESS OF THE EASTERN VAULT\"")},
-            {"East Forest Redux-(164.0, -25.0, -56.0)", new Fairy("SV_Fairy_20_ForestMonolith_Opened", $"\"EAST FOREST\"")}
-        };
-        public static Dictionary<string, HeroRelic> HeroRelicLookup = new Dictionary<string, HeroRelic>() {
-            {"Relic - Hero Pendant SP", new HeroRelic("SV_RelicVoid_Got_Pendant_SP", "Upgrade Offering - Stamina SP - Feather", "Hero Relic - <#8ddc6e>SP", "Relic PIckup (1) (SP) [RelicVoid]", "Level Up - Stamina")},
-            {"Relic - Hero Crown", new HeroRelic("SV_RelicVoid_Got_Crown_DEF", "Upgrade Offering - DamageResist - Effigy", "Hero Relic - <#5de7cf>DEF", "Relic PIckup (2) (Crown) [RelicVoid]", "Level Up - DamageResist")},
-            {"Relic - Hero Pendant HP", new HeroRelic("SV_RelicVoid_Got_Pendant_HP", "Upgrade Offering - Health HP - Flower", "Hero Relic - <#f03c67>HP", "Relic PIckup (3) (HP) [RelicVoid]", "Level Up - Health")},
-            {"Relic - Hero Water", new HeroRelic("SV_RelicVoid_Got_Water_POT", "Upgrade Offering - PotionEfficiency Swig - Ash", "Hero Relic - <#ca7be4>POTION", "Relic PIckup (4) (water) [RelicVoid]", "Level Up - PotionEfficiency")},
-            {"Relic - Hero Pendant MP", new HeroRelic("SV_RelicVoid_Got_Pendant_MP", "Upgrade Offering - Magic MP - Mushroom", "Hero Relic - <#2a8fed>MP", "Relic PIckup (5) (MP) [RelicVoid]", "Level Up - Magic")},
-            {"Relic - Hero Sword", new HeroRelic("SV_RelicVoid_Got_Sword_ATT", "Upgrade Offering - Attack - Tooth", "Hero Relic - <#e99d4c>ATT", "Relic PIckup (6) Sword) [RelicVoid]", "Level Up - Attack")},
-        };
+        public static string SaveFileCollectedKey = "randomizer picked up ";
 
-        public static List<string> LevelUpItemNames = new List<string>() { "Level Up - Attack", "Level Up - DamageResist", "Level Up - PotionEfficiency", "Level Up - Health", "Level Up - Stamina", "Level Up - Magic" };
-
-        public static Dictionary<string, BonusUpgrade> BonusUpgrades = new Dictionary<string, BonusUpgrade>() {
-            { "GoldenTrophy_1", new BonusUpgrade("Level Up - Stamina", $"kawngrahJoulA$uhnz! \"(<#8ddc6e>+1 SP<#FFFFFF>)\"") },
-            { "GoldenTrophy_2", new BonusUpgrade("Level Up - DamageResist", $"kawngrahJoulA$uhnz! \"(<#5de7cf>+1 DEF<#FFFFFF>)\"") },
-            { "GoldenTrophy_3", new BonusUpgrade("Level Up - Magic", $"kawngrahJoulA$uhnz! \"(<#2a8fed>+1 MP<#FFFFFF>)\"") },
-            { "GoldenTrophy_4", new BonusUpgrade("Level Up - Magic", $"kawngrahJoulA$uhnz! \"(<#2a8fed>+1 MP<#FFFFFF>)\"") },
-            { "GoldenTrophy_5", new BonusUpgrade("Level Up - PotionEfficiency", $"kawngrahJoulA$uhnz! \"(<#ca7be4>+1 POTION<#FFFFFF>)\"") },
-            { "GoldenTrophy_6", new BonusUpgrade("Level Up - Stamina", $"kawngrahJoulA$uhnz! \"(<#8ddc6e>+1 SP<#FFFFFF>)\"") },
-            { "GoldenTrophy_7", new BonusUpgrade("Level Up - PotionEfficiency", $"kawngrahJoulA$uhnz! \"(<#ca7be4>+1 POTION<#FFFFFF>)\"") },
-            { "GoldenTrophy_8", new BonusUpgrade("Level Up - Stamina", $"kawngrahJoulA$uhnz! \"(<#8ddc6e>+1 SP<#FFFFFF>)\"") },
-            { "GoldenTrophy_9", new BonusUpgrade("Level Up - PotionEfficiency", $"kawngrahJoulA$uhnz! \"(<#ca7be4>+1 POTION<#FFFFFF>)\"") },
-            { "GoldenTrophy_10", new BonusUpgrade("Level Up - DamageResist", $"kawngrahJoulA$uhnz! \"(<#5de7cf>+1 DEF<#FFFFFF>)\"") },
-            { "GoldenTrophy_11", new BonusUpgrade("Level Up - Magic", $"kawngrahJoulA$uhnz! \"(<#2a8fed>+1 MP<#FFFFFF>)\"") },
-            { "GoldenTrophy_12", new BonusUpgrade("Level Up - Stamina", $"kawngrahJoulA$uhnz! \"(<#8ddc6e>+1 SP<#FFFFFF>)\"") },
-
-            { "Relic - Hero Sword", new BonusUpgrade("Level Up - Attack", $"Hero Relic - <#e99d4c>ATT") },
-            { "Relic - Hero Crown", new BonusUpgrade("Level Up - DamageResist", $"Hero Relic - <#5de7cf>DEF") },
-            { "Relic - Hero Water", new BonusUpgrade("Level Up - PotionEfficiency", $"Hero Relic - <#ca7be4>POTION") },
-            { "Relic - Hero Pendant HP", new BonusUpgrade("Level Up - Health", $"Hero Relic - <#f03c67>HP") },
-            { "Relic - Hero Pendant SP", new BonusUpgrade("Level Up - Stamina", $"Hero Relic - <#8ddc6e>SP") },
-            { "Relic - Hero Pendant MP", new BonusUpgrade("Level Up - Magic", $"Hero Relic - <#2a8fed>MP") },
-        };
-
-        public static Dictionary<string, List<int>> FillerItems = new Dictionary<string, List<int>>() {
-            { "Firecracker", new List<int>() { 2, 3, 4, 5, 6 } },
-            { "Firebomb", new List<int>() { 2, 3 } },
-            { "Ice Bomb", new List<int>() { 2, 3, 5 } },
-            { "Bait", new List<int>() { 1, 2 } },
-            { "Pepper", new List<int>() { 2 } },
-            { "Ivy", new List<int>() { 3 } },
-            { "Berry_HP", new List<int>() { 1, 2, 3 } },
-            { "Berry_MP", new List<int>() { 1, 2, 3 } },
-            { "money", new List<int>() { 20, 25, 30, 32, 40, 48, 50 } },
-        };
-
-        private static string GetChestRewardID(Chest Chest) {
+        public static string GetChestRewardID(Chest Chest) {
             return Chest.chestID == 0 ? $"{SceneLoaderPatches.SceneName}-{Chest.transform.position.ToString()} [{SceneLoaderPatches.SceneName}]" : $"{Chest.chestID} [{SceneLoaderPatches.SceneName}]";
         }
 
         public static bool Chest_IInteractionReceiver_Interact_PrefixPatch(Item i, Chest __instance) {
-            string RewardId = GetChestRewardID(__instance);
-            CheckFoolTrapSetting(RewardId);
+
             __instance.isFairy = false;
             return true;
         }
 
         public static void Chest_openSequence_MoveNext_PostfixPatch(Chest._openSequence_d__35 __instance, ref bool __result) {
-
-            string RewardId = GetChestRewardID(__instance.__4__this);
-            ItemData Item = ItemList[RewardId];
-
-            if (Item.Reward.Type != "MONEY") {
-                __instance._delay_5__2 = 1.35f;
-            }
-
+            __instance._delay_5__2 = 1.35f;
             if (!__result && !__instance.__4__this.interrupted) {
-            
+                string LocationId = GetChestRewardID(__instance.__4__this);
                 if (__instance.__4__this.chestID == 0) {
-                    string FairyId = $"{__instance.__4__this.gameObject.scene.name}-{__instance.__4__this.transform.position.ToString()}";
-                    SaveFile.SetInt(FairyLookup[FairyId].Flag, 1);
+                    string FairyId = $"{__instance.__4__this.gameObject.scene.name}-{__instance.__4__this.gameObject.transform.position.ToString()}";
+                    SaveFile.SetInt(ItemLookup.FairyLookup[FairyId].Flag, 1);
                     SaveFile.SetInt($"randomizer opened fairy chest {FairyId}", 1);
                 }
-                
-                if (!ItemsPickedUp[RewardId]) {
-                    if (Item.Reward.Type != "MONEY") {
-                        GiveReward(ItemList[RewardId]);
-                    }
-                    SetCollectedReward(RewardId);
+                Logger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
+                if (IsArchipelago()) {
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
+                } else if (IsSinglePlayer()) {
+                    GiveItem(Locations.RandomizedLocations[LocationId]);
                 }
-            
             }
 
         }
@@ -133,21 +57,13 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.DisableChestInterruption) {
                 return false;
             }
-            if (__instance.chestID == 5 || __instance.chestID == 0) {
-                return false;
-            }
+
             return true;
         }
 
         public static bool Chest_moneySprayQuantityFromDatabase_GetterPatch(Chest __instance, ref int __result) {
-            string RewardId = GetChestRewardID(__instance);
-            ItemData Item = ItemList[RewardId];
 
-            if (Item.Reward.Type == "MONEY") {
-                __result = Item.Reward.Amount;
-            } else {
-                __result = 0;
-            }
+            __result = 0;
 
             return false;
         }
@@ -167,43 +83,33 @@ namespace TunicRandomizer {
         }
 
         public static bool Chest_shouldShowAsOpen_GetterPatch(Chest __instance, ref bool __result) {
-            if (SceneManager.GetActiveScene().name == "Quarry") {
+            string ActiveScene = SceneManager.GetActiveScene().name;
+            if (ActiveScene == "Quarry") {
                 __result = false;
                 return false;
             }
-            if (__instance.chestID == 19) {
-                if (__instance.transform.position.ToString() == "(8.8, 0.0, 9.9)") {
-                    __result = SaveFile.GetInt("randomizer picked up 19 [Sword Cave]") == 1;
-                } else {
-                    __result = SaveFile.GetInt("randomizer picked up 19 [Forest Belltower]") == 1;
+
+            string ChestObjectId = __instance.chestID == 0 ? $"{__instance.gameObject.scene.name}-{__instance.transform.position.ToString()} [{ActiveScene}]" : $"{__instance.chestID} [{ActiveScene}]";
+            if (Locations.LocationIdToDescription.ContainsKey(ChestObjectId)) {
+                __result = SaveFile.GetInt($"randomizer picked up {ChestObjectId}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {ChestObjectId} was collected") == 1);
+                if (__result && __instance.GetComponentInParent<ToggleObjectBySpell>() != null && TunicRandomizer.Settings.CollectReflectsInWorld) {
+                    __instance.GetComponentInParent<ToggleObjectBySpell>().stateVar = StateVariable.GetStateVariableByName("true");
                 }
                 return false;
             }
-            if (__instance.chestID == 5) {
-                __result = SaveFile.GetInt("randomizer picked up 5 [Overworld Redux]") == 1;
-                return false;
-            }
-            string FairyId = $"{__instance.gameObject.scene.name}-{__instance.transform.position.ToString()}";
-            if (FairyLookup.ContainsKey(FairyId)) {
-                __result = SaveFile.GetInt($"randomizer opened fairy chest {FairyId}") == 1;
-                return false;
-            }
-
             return true;
         }
 
         public static bool ItemPickup_onGetIt_PrefixPatch(ItemPickup __instance) {
-
             if (__instance.itemToGive.Type == Item.ItemType.MONEY) {
                 return true;
-            } else {
-                string RewardId = $"{__instance.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
-                CheckFoolTrapSetting(RewardId);
+            }
 
-                ItemData Reward = ItemList[RewardId];
-                GiveReward(Reward);
-                SetCollectedReward(RewardId);
-
+            string LocationId = $"{__instance.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
+            if (IsArchipelago()) {
+                Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
+            } else if (IsSinglePlayer()) {
+                GiveItem(Locations.RandomizedLocations[LocationId]);
             }
 
             __instance.pickupStateVar.BoolValue = true;
@@ -211,12 +117,12 @@ namespace TunicRandomizer {
         }
 
         public static bool HeroRelicPickup_onGetIt_PrefixPatch(HeroRelicPickup __instance) {
-            string RewardId = $"{__instance.name} [{SceneLoaderPatches.SceneName}]";
-            CheckFoolTrapSetting(RewardId);
-            ItemData Reward = ItemList[RewardId];
-
-            GiveReward(Reward);
-            SetCollectedReward(RewardId);
+            string LocationId = $"{__instance.name} [{SceneLoaderPatches.SceneName}]";
+            if (IsArchipelago()) {
+                Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
+            } else if (IsSinglePlayer()) {
+                GiveItem(Locations.RandomizedLocations[LocationId]);
+            }
 
             __instance.pickupStateVar.BoolValue = true;
             __instance.destroyOrDisable();
@@ -224,12 +130,12 @@ namespace TunicRandomizer {
         }
 
         public static bool PagePickup_onGetIt_PrefixPatch(PagePickup __instance) {
-            string RewardId = $"{__instance.pageName} [{SceneLoaderPatches.SceneName}]";
-            CheckFoolTrapSetting(RewardId);
-            ItemData Reward = ItemList[RewardId];
-
-            GiveReward(Reward);
-            SetCollectedReward(RewardId);
+            string LocationId = $"{__instance.pageName} [{SceneLoaderPatches.SceneName}]";
+            if (IsArchipelago()) {
+                Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
+            } else if (IsSinglePlayer()) {
+                GiveItem(Locations.RandomizedLocations[LocationId]);
+            }
 
             SaveFile.SetInt($"unlocked page {PagePickup.LeafNameToLeafNumber(__instance.pageName)}", 1);
             SaveFile.SetInt($"randomizer picked up page {PagePickup.LeafNameToLeafNumber(__instance.pageName)}", 1);
@@ -237,19 +143,43 @@ namespace TunicRandomizer {
         }
 
         public static bool ShopItem_IInteractionReceiver_Interact_PrefixPatch(Item i, ShopItem __instance) {
-            string RewardId = $"{__instance.name} [Shop]";
-            if (ItemList.ContainsKey(RewardId)) {
-                ItemData Item = ItemList[RewardId];
+            string LocationId = $"{__instance.name} [Shop]";
+            if (Locations.LocationIdToDescription.ContainsKey(LocationId)) {
                 int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
-                __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?";
+                string itemToDisplay = "";
+                if (IsArchipelago()) {
+                    ArchipelagoItem ShopItem = ItemLookup.ItemList[LocationId];
+                    itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemName] : "[archipelago]";
+                    __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemName.ToUpper().Replace($" ", $"\" \"")}\"");
+                } else if (IsSinglePlayer()) {
+                    ItemData itemData = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[LocationId]);
+                    itemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[itemData.Name] : "";
+                    __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?";
+                    if (TunicRandomizer.Settings.ShowItemsEnabled) {
+                        __instance.confirmPurchaseFormattedLanguageLine.text += $"\n{itemToDisplay} \"{itemData.Name}\"";
+                    }
+                }
+
+                string CheckName = Locations.LocationIdToDescription[LocationId];
+                if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer && SaveFile.GetInt($"archipelago sent optional hint to server {CheckName}") == 0) {
+                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(CheckName));
+                    SaveFile.SetInt($"archipelago sent optional hint to server {CheckName}", 1);
+                }
             } else {
                 __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {__instance.price} [money]?";
             }
+
             return true;
         }
+
         public static bool ShopItem_buy_PrefixPatch(ShopItem __instance) {
-            string RewardId = $"{__instance.name} [Shop]";
-            if (!ItemList.ContainsKey(RewardId)) {
+            string LocationId = $"{__instance.name} [Shop]";
+            if (!Locations.LocationIdToDescription.ContainsKey(LocationId)) {
+                if (TunicRandomizer.Settings.SkipItemAnimations && __instance.itemToGive != null) {
+                    TunicRandomizer.Settings.SkipItemAnimations = false;
+                    ItemPresentation.PresentItem(__instance.itemToGive, __instance.quantityToGive);
+                    TunicRandomizer.Settings.SkipItemAnimations = true;
+                }
                 return true;
             }
             int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
@@ -257,15 +187,14 @@ namespace TunicRandomizer {
                 GenericMessage.ShowMessage($"nawt Enuhf [money]...");
             } else {
                 Inventory.GetItemByName("MoneySmall").Quantity -= Price;
-                CheckFoolTrapSetting(RewardId);
-                ItemData Reward = ItemList[RewardId];
-                if (Reward.Reward.Type == "MONEY") {
-                    Reward.Reward.Amount += Price;
+                if (IsArchipelago()) {
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
+                } else if (IsSinglePlayer()) {
+                    GiveItem(Locations.RandomizedLocations[LocationId]);
                 }
-                GiveReward(Reward);
-                SetCollectedReward(RewardId);
                 __instance.boughtStatevar.BoolValue = true;
             }
+            
             InShopPlayerMoneyDisplay.Show = false;
             return false;
         }
@@ -276,94 +205,292 @@ namespace TunicRandomizer {
         }
 
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
-            string RewardId = $"Well Reward ({StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue} Coins) [Trinket Well]";
-            if (ItemList.ContainsKey(RewardId)) {
-                CheckFoolTrapSetting(RewardId);
-                ItemData Reward = ItemList[RewardId];
-                GiveReward(Reward);
-                SetCollectedReward(RewardId);
+            string LocationId = $"Well Reward ({StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue} Coins) [Trinket Well]";
+            if (IsArchipelago() && Locations.LocationIdToDescription.ContainsKey(LocationId)) {
+                Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
+            } else if (IsSinglePlayer()) {
+                GiveItem(Locations.RandomizedLocations[LocationId]);
             }
             return false;
         }
 
-        public static bool FairyCollection_getFairyCount_PrefixPatch(FairyCollection __instance, ref int __result) {
-            __result = TunicRandomizer.Tracker.ImportantItems["Fairies"];
-            return false;
-        }
-
-        public static void UpgradeAltar_DoOfferingSequence_PostfixPatch(UpgradeAltar __instance) {
-            foreach (string LevelUp in ItemPatches.LevelUpItemNames) {
-                TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
+        public static ItemResult GiveItem(string ItemName, NetworkItem networkItem) {
+            if(ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || 
+                NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
+                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
+                return ItemResult.TemporaryFailure;
             }
-        }
+            
+            if (!ItemLookup.Items.ContainsKey(ItemName)) {
+                return ItemResult.PermanentFailure;
+            }
 
-        public static void GiveReward(ItemData ItemData) {
-            Reward Reward = ItemData.Reward;
-            if (Reward.Type == "INVENTORY") {
-                Item Item = Inventory.GetItemByName(Reward.Name);
-                Item.Quantity += Reward.Amount;
+            string NotificationTop = "";
+            string NotificationBottom = "";
+            bool DisplayMessageAnyway = false;
 
-                if (BonusUpgrades.ContainsKey(Reward.Name)) {
-                    Item.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                        Inventory.GetItemByName(BonusUpgrades[Reward.Name].LevelUp).Quantity += 1;
-                        Item.collectionMessage.text = Translations.TranslateDefaultNoQuotes(BonusUpgrades[Reward.Name].CustomPickupMessage);
-                    } else {
-                        Item.collectionMessage.text = $"kawngrahJoulA$uhnz!";
-                    }
-                }
-                if (Reward.Name == "Stick" || Reward.Name == "Sword") {
-                    Item.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Item.collectionMessage.text = $"fownd ahn Itehm!";
-                }
-                if (Reward.Name == "Key (House)") {
-                    Item.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
-                    Item.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"[key] too Old hows" : $"[key] too \"Old House\"";
-                }
+            ItemData Item = ItemLookup.Items[ItemName];
+            string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location);
+            
+            if (Item.Type == ItemTypes.MONEY) {
+                int AmountToGive = Item.QuantityToGive;
 
-                ItemPresentation.PresentItem(Item, Reward.Amount);
-            } else if (Reward.Type == "MONEY") {
-                Vector3 SpawnPosition;
-
-                if (ItemData.Location.SceneName == "Trinket Well") {
-                    SpawnPosition = GameObject.FindObjectOfType<TrinketWell>().transform.position;
-                    SpawnPosition.Set(SpawnPosition.x, SpawnPosition.y + 3.25f, SpawnPosition.z);
-                } else if (ItemData.Location.SceneName == "Shop") {
-                    SpawnPosition = PlayerCharacter.instance.transform.position;
-                } else {
-                    SpawnPosition = StringToVector3(ItemData.Location.Position);
-                }
-
-                CoinSpawner.SpawnCoins(Reward.Amount, SpawnPosition);
-            } else if (Reward.Type == "FAIRY") {
-                SaveFile.SetInt($"randomizer obtained fairy {Reward.Name}", 1);
-                Vector3 SpawnPosition;
-
-                if (ItemData.Location.SceneName == "Trinket Well") {
-                    SpawnPosition = GameObject.FindObjectOfType<TrinketWell>().transform.position;
-                    SpawnPosition.Set(SpawnPosition.x, SpawnPosition.y + 3.25f, SpawnPosition.z);
-                } else if (ItemData.Location.SceneName == "Shop") {
-                    SpawnPosition = PlayerCharacter.instance.transform.position;
-                } else {
-                    SpawnPosition = StringToVector3(ItemData.Location.Position);
-                }
-                GameObject.Instantiate(ModelSwaps.FairyAnimation, SpawnPosition, Quaternion.identity).SetActive(true);
-            } else if (Reward.Type == "PAGE") {
-                Dictionary<string, string> pagesForAbilities = new Dictionary<string, string>() {
-                    { "12", "randomizer prayer unlocked" },
-                    { "21", "randomizer holy cross unlocked" },
-                    { "26", "randomizer ice rod unlocked" },
+                Dictionary<string, int> OriginalShopPrices = new Dictionary<string, int>() {
+                    { "Shop - Potion 1", 300 },
+                    { "Shop - Potion 2", 1000 },
+                    { "Shop - Coin 1", 999 },
+                    { "Shop - Coin 2", 999 }
                 };
-                SaveFile.SetInt($"randomizer obtained page {Reward.Name}", 1);
-                PageDisplay.ShowPage(int.Parse(Reward.Name, CultureInfo.InvariantCulture));
-                if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                    if (Reward.Name == "12" || Reward.Name == "21" || Reward.Name == "26") {
-                        SaveFile.SetInt(pagesForAbilities[Reward.Name], 1);
-                        SaveFile.SetFloat($"{pagesForAbilities[Reward.Name]} time", SpeedrunData.inGameTime);
-                        PageDisplayPatches.ShowAbilityUnlock = true;
-                        PageDisplayPatches.AbilityUnlockPage = Reward.Name;
+                // If buying your own money item from the shop, increase amount rewarded
+                if (OriginalShopPrices.ContainsKey(LocationId) && (networkItem.Player == Archipelago.instance.GetPlayerSlot())) {
+                    AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[LocationId];
+                }
+
+                CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
+            }
+
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET) {
+                Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
+                InventoryItem.Quantity += Item.QuantityToGive;
+                if (Item.Name == "Stick" || Item.Name == "Sword") {
+                    InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    InventoryItem.collectionMessage.text = $"fownd ahn Itehm!";
+                }
+                if (Item.Name == "Dath Stone") {
+                    Inventory.GetItemByName("Torch").Quantity = 1;
+                }
+                ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
+                if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
+                    Inventory.GetItemByName("Flask Shard").Quantity -= 3;
+                    Inventory.GetItemByName("Flask Container").Quantity += 1;
+                }
+            }
+
+            if (Item.Type == ItemTypes.SWORDUPGRADE) {
+
+                if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
+                    int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                    SwordProgression.UpgradeSword(SwordLevel+1);
+                }
+                if (TunicRandomizer.Settings.ShowItemsEnabled) {
+                    ModelSwaps.SwapItemsInScene();
+                }
+            }
+
+            if (Item.Type == ItemTypes.FAIRY) {
+                foreach(string Fairy in ItemLookup.FairyLookup.Keys) { 
+                    if(SaveFile.GetInt($"randomizer obtained fairy {Fairy}") == 0) {
+                        SaveFile.SetInt($"randomizer obtained fairy {Fairy}", 1);
+                        break;
                     }
                 }
+                GameObject.Instantiate(ModelSwaps.FairyAnimation, PlayerCharacter.instance.transform.position, Quaternion.identity).SetActive(true);
+                NotificationBottom = $"\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\" fArEz fownd.";
+            }
+
+            if (Item.Type == ItemTypes.PAGE) {
+                SaveFile.SetInt($"randomizer obtained page {Item.ItemNameForInventory}", 1);
+                bool HasAllPages = true;
+                for (int i = 0; i < 28; i++) {
+                    if (SaveFile.GetInt($"randomizer obtained page {i}") == 0) {
+                        HasAllPages = false;
+                        break;
+                    }                    
+                }
+                if (!StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue && HasAllPages) {
+                    StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue = HasAllPages;
+                }
+                if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                    Dictionary<string, (string, string, string)> pagesForAbilities = new Dictionary<string, (string, string, string)>() {
+                        { "12", (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
+                        { "21", (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
+                        { "26", (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
+                    };
+                    if (pagesForAbilities.ContainsKey(Item.ItemNameForInventory)) {
+                        SaveFile.SetInt(pagesForAbilities[Item.ItemNameForInventory].Item1, 1);
+                        SaveFile.SetFloat(pagesForAbilities[Item.ItemNameForInventory].Item2, SpeedrunData.inGameTime);
+                        NotificationBottom = pagesForAbilities[Item.ItemNameForInventory].Item3;
+                        DisplayMessageAnyway = true;
+                        if (Item.ItemNameForInventory == "21") {
+                            ToggleHolyCrossObjects(true);
+                        }
+                        ItemStatsHUD.UpdateAbilitySection();
+                    }
+                }
+                if (!TunicRandomizer.Settings.SkipItemAnimations) {
+                    PageDisplay.ShowPage(int.Parse(Item.ItemNameForInventory, CultureInfo.InvariantCulture));
+                } else {
+                    SaveFile.SetInt("last page viewed", int.Parse(Item.ItemNameForInventory, CultureInfo.InvariantCulture));
+                }
+            }
+
+            if (Item.Type == ItemTypes.GOLDENTROPHY) {
+
+                Item GoldenTrophy = Inventory.GetItemByName(Item.ItemNameForInventory);
+                GoldenTrophy.Quantity += Item.QuantityToGive;
+                // Apply bonus upgrade text
+                if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
+                    GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
+                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                } else {
+                    GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
+                }
+
+                ItemPresentation.PresentItem(GoldenTrophy);
+                NotificationBottom = TunicRandomizer.Settings.BonusStatUpgradesEnabled ? Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true) : $"kawngrahJoulA$uhnz!";
+            }
+
+            if (Item.Type == ItemTypes.RELIC) {
+
+                Item RelicItem = Inventory.GetItemByName(Item.ItemNameForInventory);
+                RelicItem.Quantity += Item.QuantityToGive;
+                if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
+                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                }
+
+                // Apply custom pickup text
+                RelicItem.collectionMessage = new LanguageLine();
+                RelicItem.collectionMessage.text = Translations.Translate(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
+                
+                ItemPresentation.PresentItem(RelicItem);
+            }
+
+            if (Item.Type == ItemTypes.FOOLTRAP) {
+                (NotificationTop, NotificationBottom) = ApplyFoolEffect(networkItem.Player);
+                DisplayMessageAnyway = true;
+            }
+
+            if(Item.Type == ItemTypes.HEXAGONQUEST) {
+                Inventory.GetItemByName("Hexagon Gold").Quantity += 1;
+                int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
+
+                if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                    Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
+                        { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
+                        { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
+                        { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
+                    };
+                    if (hexesForAbilities.ContainsKey(GoldHexes)) {
+                        SaveFile.SetInt(hexesForAbilities[GoldHexes].Item1, 1);
+                        SaveFile.SetFloat(hexesForAbilities[GoldHexes].Item2, SpeedrunData.inGameTime);
+                        NotificationBottom = hexesForAbilities[GoldHexes].Item3;
+                        DisplayMessageAnyway = true;
+                        if (GoldHexes == SaveFile.GetInt(HexagonQuestHolyCross)) {
+                            ToggleHolyCrossObjects(true);
+                        }
+
+                        ItemStatsHUD.UpdateAbilitySection();
+                    }
+                }
+
+                ItemPresentation.PresentItem(Inventory.GetItemByName(Item.ItemNameForInventory));
+            }
+
+            if (ItemLookup.MajorItems.Contains(Item.Name)) {
+                if (Item.Type == ItemTypes.SWORDUPGRADE && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                    SaveFile.SetFloat($"randomizer Sword Progression {SaveFile.GetInt(SwordProgressionLevel)} time", SpeedrunData.inGameTime);
+                }
+                if (Item.Type == ItemTypes.PAGE) {
+                    SaveFile.SetFloat($"randomizer {Item.Name} 1 time", SpeedrunData.inGameTime);
+                } else {
+                    SaveFile.SetFloat($"randomizer {Item.Name} {(TunicRandomizer.Tracker.ImportantItems[Item.ItemNameForInventory] + 1)} time", SpeedrunData.inGameTime);
+                }
+            }
+
+            if (networkItem.Player != Archipelago.instance.GetPlayerSlot()) {
+                var sender = Archipelago.instance.GetPlayerName(networkItem.Player);
+                NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
+                NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
+                Notifications.Show(NotificationTop, NotificationBottom);
+            }
+
+            if (networkItem.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
+                NotificationTop = NotificationTop == "" ? $"yoo fownd  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
+                NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
+                Notifications.Show(NotificationTop, NotificationBottom);
+            }
+
+            string slotLoc = $"{networkItem.Player}, {Archipelago.instance.GetLocationName(networkItem.Location)}";
+            if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
+                SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
+            }
+            if (Hints.HeroGraveHints.Values.Where(hint => SaveFile.GetInt($"randomizer hint found {hint.PathHintId}") == 1).Count() == 6) {
+                StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue = true;
+            }
+            
+
+            TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
+
+            return ItemResult.Success;
+        }
+
+        public static void GiveItem(Check Check) {
+
+            string NotificationTop = "";
+            string NotificationBottom = "";
+            bool DisplayMessageAnyway = false;
+
+            ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
+
+            if (Item.Type == ItemTypes.MONEY) {
+                int AmountToGive = Check.Reward.Amount;
+
+                Dictionary<string, int> OriginalShopPrices = new Dictionary<string, int>() {
+                    { "Potion (First)", 300 },
+                    { "Potion (West Garden)", 1000 },
+                    { "Trinket Coin 1 (day)", 999 },
+                    { "Trinket Coin 2 (night)", 999 }
+                };
+                if (OriginalShopPrices.ContainsKey(Check.Location.LocationId)) {
+                    AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[Check.Location.LocationId];
+                }
+
+                CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
+            }
+
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET) {
+                Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
+                InventoryItem.Quantity += Check.Reward.Amount;
+                if (Item.Name == "Stick" || Item.Name == "Sword") {
+                    InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    InventoryItem.collectionMessage.text = $"fownd ahn Itehm!";
+                }
+                if (Item.Name == "Dath Stone") {
+                    Inventory.GetItemByName("Torch").Quantity = 1;
+                }
+                ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
+                if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
+                    Inventory.GetItemByName("Flask Shard").Quantity -= 3;
+                    Inventory.GetItemByName("Flask Container").Quantity += 1;
+                }
+            }
+
+            if (Item.Type == ItemTypes.SWORDUPGRADE) {
+
+                if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
+                    int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                    SwordProgression.UpgradeSword(SwordLevel + 1);
+                }
+                if (TunicRandomizer.Settings.ShowItemsEnabled) {
+                    ModelSwaps.SwapItemsInScene();
+                }
+            }
+
+            if (Item.Type == ItemTypes.FAIRY) {
+                foreach (string Fairy in ItemLookup.FairyLookup.Keys) {
+                    if (SaveFile.GetInt($"randomizer obtained fairy {Fairy}") == 0) {
+                        SaveFile.SetInt($"randomizer obtained fairy {Fairy}", 1);
+                        break;
+                    }
+                }
+                GameObject.Instantiate(ModelSwaps.FairyAnimation, PlayerCharacter.instance.transform.position, Quaternion.identity).SetActive(true);
+                NotificationBottom = $"\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\" fArEz fownd.";
+            }
+
+            if (Item.Type == ItemTypes.PAGE) {
+                SaveFile.SetInt($"randomizer obtained page {Item.ItemNameForInventory}", 1);
                 bool HasAllPages = true;
                 for (int i = 0; i < 28; i++) {
                     if (SaveFile.GetInt($"randomizer obtained page {i}") == 0) {
@@ -374,72 +501,148 @@ namespace TunicRandomizer {
                 if (!StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue && HasAllPages) {
                     StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue = HasAllPages;
                 }
-            } else if (Reward.Type == "RELIC") {
-                Item Relic = Inventory.GetItemByName(Reward.Name);
-                Relic.Quantity = 1;
-
-                Relic.collectionMessage = new LanguageLine();
-                Relic.CollectionMessage.text = Translations.Translate(BonusUpgrades[Reward.Name].CustomPickupMessage, true);
-                ItemPresentation.PresentItem(Relic);
-
-                if (SceneLoaderPatches.SceneName == "Overworld Interiors") {
-                    SceneLoaderPatches.ToggleOldHouseRelics();
-                }
-                if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                    Inventory.GetItemByName(BonusUpgrades[Reward.Name].LevelUp).Quantity += 1;
-                }
-                
-            } else if (Reward.Type == "FOOL") {
-                ApplyFoolEffect();
-            } else if (Reward.Type == "SPECIAL") {
-                if (Reward.Name == "Dath Stone") {
-                    ItemPresentation.PresentItem(Inventory.GetItemByName("Key Special"));
-                    Inventory.GetItemByName("Homeward Bone Statue").Quantity = 1;
-                    Inventory.GetItemByName("Torch").Quantity = 1;
-                } else if (Reward.Name == "Sword Progression") {
-                    TunicRandomizer.Tracker.ImportantItems["Sword Progression"]++;
-                    SaveFile.SetInt("randomizer sword progression level", TunicRandomizer.Tracker.ImportantItems["Sword Progression"]);
-                    SwordProgression.UpgradeSword(TunicRandomizer.Tracker.ImportantItems["Sword Progression"]);
-                    if (TunicRandomizer.Settings.ShowItemsEnabled) {
-                        ModelSwaps.SwapItemsInScene();
-                    }
-                } else if (Reward.Name == "Hexagon Gold") {
-                    TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]++;
-                    SaveFile.SetInt("randomizer inventory quantity Hexagon Gold", TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"]);
-                    int GoldHexes = SaveFile.GetInt("randomizer inventory quantity Hexagon Gold");
-
-                    if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
-                        SaveFile.SetInt("randomizer prayer unlocked", 1);
-                        SaveFile.SetFloat("randomizer prayer unlocked time", SpeedrunData.inGameTime);
-                        ShowNotification($"{Translations.Translate("PRAYER Unlocked", true)}", $"Jahnuhl yor wizduhm, rooin sEkur");
-                    }
-                    if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest holy cross requirement")) {
-                        SaveFile.SetInt("randomizer holy cross unlocked", 1);
-                        SaveFile.SetFloat("randomizer holy cross unlocked time", SpeedrunData.inGameTime);
-                        ShowNotification($"{Translations.Translate("HOLY CROSS Unlocked", true)}", $"sEk wuht iz rItfuhlE yorz");
-                        foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
-                            foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
-                                Spell.enabled = true;
-                            }
+                if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                    Dictionary<string, (string, string, string)> pagesForAbilities = new Dictionary<string, (string, string, string)>() {
+                        { "12", (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
+                        { "21", (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
+                        { "26", (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
+                    };
+                    if (pagesForAbilities.ContainsKey(Item.ItemNameForInventory)) {
+                        SaveFile.SetInt(pagesForAbilities[Item.ItemNameForInventory].Item1, 1);
+                        SaveFile.SetFloat(pagesForAbilities[Item.ItemNameForInventory].Item2, SpeedrunData.inGameTime);
+                        NotificationBottom = pagesForAbilities[Item.ItemNameForInventory].Item3;
+                        DisplayMessageAnyway = true;
+                        if (Item.ItemNameForInventory == "21") {
+                            ToggleHolyCrossObjects(true);
                         }
+                        ItemStatsHUD.UpdateAbilitySection();
                     }
-                    if (GoldHexes == SaveFile.GetInt("randomizer hexagon quest ice rod requirement")) {
-                        SaveFile.SetInt("randomizer ice rod unlocked", 1);
-                        SaveFile.SetFloat("randomizer ice rod unlocked time", SpeedrunData.inGameTime);
-                        ShowNotification($"{Translations.Translate("ICE ROD Unlocked", true)}", $"#A wOnt nO wuht hit #ehm");
-                    }
-                    ItemPresentation.PresentItem(Inventory.GetItemByName("Hexagon Blue"));
                 }
+                if (!TunicRandomizer.Settings.SkipItemAnimations) {
+                    PageDisplay.ShowPage(int.Parse(Item.ItemNameForInventory, CultureInfo.InvariantCulture));
+                } else {
+                    SaveFile.SetInt("last page viewed", int.Parse(Item.ItemNameForInventory, CultureInfo.InvariantCulture));
+                }
+            }
+            
+            if (Item.Type == ItemTypes.GOLDENTROPHY) {
+
+                Item GoldenTrophy = Inventory.GetItemByName(Item.ItemNameForInventory);
+                GoldenTrophy.Quantity += Check.Reward.Amount;
+                // Apply bonus upgrade text
+                if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
+                    GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
+                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                } else {
+                    GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+                    GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
+                }
+
+                ItemPresentation.PresentItem(GoldenTrophy);
+                NotificationBottom = TunicRandomizer.Settings.BonusStatUpgradesEnabled ? Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true) : $"kawngrahJoulA$uhnz!";
+            }
+
+            if (Item.Type == ItemTypes.RELIC) {
+
+                Item RelicItem = Inventory.GetItemByName(Item.ItemNameForInventory);
+                RelicItem.Quantity += Check.Reward.Amount;
+                if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
+                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                }
+
+                // Apply custom pickup text
+                RelicItem.collectionMessage = new LanguageLine();
+                RelicItem.collectionMessage.text = Translations.Translate(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
+
+                ItemPresentation.PresentItem(RelicItem);
+            }
+
+            if (Item.Type == ItemTypes.FOOLTRAP) {
+                (NotificationTop, NotificationBottom) = ApplyFoolEffect(-1);
+                DisplayMessageAnyway = true;
+            }
+
+            if (Item.Type == ItemTypes.HEXAGONQUEST) {
+                Inventory.GetItemByName("Hexagon Gold").Quantity += 1;
+                int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
+
+                if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                    Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
+                        { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
+                        { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
+                        { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
+                    };
+                    if (hexesForAbilities.ContainsKey(GoldHexes)) {
+                        SaveFile.SetInt(hexesForAbilities[GoldHexes].Item1, 1);
+                        SaveFile.SetFloat(hexesForAbilities[GoldHexes].Item2, SpeedrunData.inGameTime);
+                        NotificationBottom = hexesForAbilities[GoldHexes].Item3;
+                        DisplayMessageAnyway = true;
+                        if (GoldHexes == SaveFile.GetInt(HexagonQuestHolyCross)) {
+                            ToggleHolyCrossObjects(true);
+                        }
+
+                        ItemStatsHUD.UpdateAbilitySection();
+                    }
+                }
+
+                ItemPresentation.PresentItem(Inventory.GetItemByName(Item.ItemNameForInventory));
+            }
+
+            if (ItemLookup.MajorItems.Contains(Item.Name)) {
+                if (Item.Type == ItemTypes.SWORDUPGRADE && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                    SaveFile.SetFloat($"randomizer Sword Progression {SaveFile.GetInt(SwordProgressionLevel)} time", SpeedrunData.inGameTime);
+                } else if (Item.Type == ItemTypes.PAGE) {
+                    SaveFile.SetFloat($"randomizer {Item.Name} 1 time", SpeedrunData.inGameTime);
+                } else {
+                    SaveFile.SetFloat($"randomizer {Item.Name} {(TunicRandomizer.Tracker.ImportantItems[Item.ItemNameForInventory] + 1)} time", SpeedrunData.inGameTime);
+                }
+            }
+
+            if (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway) {
+                NotificationTop = NotificationTop == "" ? $"yoo fownd  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "")}  \"{Item.Name}!\"" : NotificationTop;
+                NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
+                Notifications.Show(NotificationTop, NotificationBottom);
+            }
+
+            string slotLoc = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+            if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
+                SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
+            }
+            if (Hints.HeroGraveHints.Values.Where(hint => SaveFile.GetInt($"randomizer hint found {hint.PathHintId}") == 1).Count() == 6) {
+                StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue = true;
+            }
+
+            TunicRandomizer.Tracker.SetCollectedItem(Item.Name, true);
+
+            string CheckId = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+            Logger.LogInfo("Picked up item " + CheckId + " (" + Item.Name + ")");
+
+            Locations.CheckedLocations[CheckId] = true;
+            SaveFile.SetInt($"randomizer picked up {CheckId}", 1);
+            GameObject FairyTarget = GameObject.Find($"fairy target {CheckId}");
+            if (FairyTarget != null) {
+                GameObject.Destroy(FairyTarget);
+            }
+            if (Locations.VanillaLocations.Keys.Where(key => Locations.VanillaLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0) {
+                FairyTargets.CreateLoadZoneTargets();
+            }
+
+            if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                ItemTracker.PopulateSpoilerLog();
             }
         }
 
-        private static void ApplyFoolEffect() {
+        private static (string, string) ApplyFoolEffect(int Player) {
             System.Random Random = new System.Random();
             int FoolType = PlayerCharacterPatches.StungByBee ? Random.Next(21, 100) : Random.Next(100);
+            string FoolMessageTop = $"";
+            string FoolMessageBottom = $"";
             if (FoolType < 35) {
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                ShowNotification($"yoo R A \"<#ffd700>FOOL<#ffffff>!!\"", $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"");
+                FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
+                FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
                 PlayerCharacterPatches.StungByBee = true;
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType >= 35 && FoolType < 50) {
@@ -447,96 +650,33 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.stamina = 0;
                 PlayerCharacter.instance.cachedFireController.FireAmount = 3f;
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                ShowNotification($"yoo R A \"<#FF3333>FOOL<#ffffff>!!\"", $"iz it hawt in hEr?");
+                FoolMessageTop = $"yoo R A \"<#FF3333>FOOL<#ffffff>!!\" [fooltrap]";
+                FoolMessageBottom = $"iz it hawt in hEr?";
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType >= 50) {
                 PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
                 PlayerCharacter.instance.AddFreezeTime(3f);
-                ShowNotification($"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\"", $"hahvi^ ahn Is tIm?");
-            }
-        }
-
-        private static void SetCollectedReward(string RewardId) {
-
-            SaveFile.SetInt("randomizer picked up " + RewardId, 1);
-            ItemsPickedUp[RewardId] = true;
-            ItemData ItemData = ItemList[RewardId];
-            Logger.LogInfo("Picked up item " + RewardId + " (" + ItemData.Reward.Name + " - " + ItemData.Reward.Amount + ")");
-
-            UpdateItemTracker(RewardId);
-            ItemTracker.SaveTrackerFile();
-            if (ItemRandomizer.CreateSpoilerLog) {
-                ItemRandomizer.PopulateSpoilerLog();
+                FoolMessageTop = $"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\" [fooltrap]";
+                FoolMessageBottom = $"hahvi^ ahn Is tIm?";
             }
 
-            // set this in the save file so that the candles can get turned on
-            if (RewardId == PlayerCharacterPatches.MailboxHintId) {
-                SaveFile.SetInt("randomizer got mailbox hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Overworld Redux") {
-                    GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
-                }
-            } else if (RewardId == PlayerCharacterPatches.ForestHintId) {
-                SaveFile.SetInt("randomizer got forest hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Sword Access") {
-                    GameObject.Find("_Setpieces/RelicPlinth (1)/cathedral_candleflame").SetActive(true);
-                }
-            } else if (RewardId == PlayerCharacterPatches.FortressHintId) {
-                SaveFile.SetInt("randomizer got fortress hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Fortress Reliquary") {
-                    GameObject.Find("RelicPlinth/cathedral_candleflame").SetActive(true);
-                }
-            } else if (RewardId == PlayerCharacterPatches.GardenHintId) {
-                SaveFile.SetInt("randomizer got garden hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Archipelagos Redux") {
-                    GameObject.Find("_Environment Prefabs/RelicPlinth/cathedral_candleflame").SetActive(true);
-                    GameObject.Find("_Environment Prefabs/RelicPlinth/Point Light").SetActive(true);
-                }
-            } else if (RewardId == PlayerCharacterPatches.SwampHintId) {
-                SaveFile.SetInt("randomizer got swamp hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Swamp Redux 2") {
-                    GameObject.Find("_Setpieces Etc/RelicPlinth/cathedral_candleflame").SetActive(true);
-                    GameObject.Find("_Setpieces Etc/RelicPlinth/Point Light").SetActive(true);
-                }
-            } else if (RewardId == PlayerCharacterPatches.LibraryHintId) {
-                SaveFile.SetInt("randomizer got library hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Library Hall") {
-                    GameObject.Find("_Special/RelicPlinth/cathedral_candleflame").SetActive(true);
-                    GameObject.Find("_Special/RelicPlinth/Point Light").SetActive(true);
-                }
-            } else if (RewardId == PlayerCharacterPatches.MonasteryHintId) {
-                SaveFile.SetInt("randomizer got monastery hint item", 1);
-                if (SceneLoaderPatches.SceneName == "Monastery") {
-                    GameObject.Find("Root/RelicPlinth (1)/cathedral_candleflame").SetActive(true);
-                    GameObject.Find("Root/RelicPlinth (1)/Point Light").SetActive(true);
-                }
+            if (Player == -1 && IsSinglePlayer()) {
+
+            } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
+                FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
             }
 
-            GameObject FairyTarget = ItemData.Location.SceneName == "Trinket Well" ? GameObject.Find($"fairy target trinket well"): GameObject.Find($"fairy target {ItemData.Location.Position}");
-            if (FairyTarget != null) {
-                GameObject.Destroy(FairyTarget);
-            }
-            if (ItemList.Keys.Where(ItemId => ItemList[ItemId].Location.SceneName == SceneLoaderPatches.SceneName && !ItemsPickedUp[ItemId]).ToList().Count == 0) {
-                FairyTargets.CreateLoadZoneTargets();
-            }
-            List<string> TimedItems = new List<string>() { "Hexagon Red", "Hexagon Green", "Hexagon Blue", "Hexagon Gold", "Wand", "Hyperdash", "Sword", "Sword Progression", "12", "21"};
-            string ItemName = ItemData.Reward.Name;
-            if (TimedItems.Contains(ItemName)) {
-                if (ItemData.Reward.Type == "PAGE") {
-                    SaveFile.SetFloat($"randomizer Page {ItemName} time", SpeedrunData.inGameTime);
-                } else {
-                    SaveFile.SetFloat($"randomizer {ItemName} {TunicRandomizer.Tracker.ImportantItems[ItemName]} time", SpeedrunData.inGameTime);
-                }
-            }
+            return (FoolMessageTop, FoolMessageBottom);
         }
 
         public static void CheckFoolTrapSetting(string RewardId) {
-            Reward Reward = ItemList[RewardId].Reward;
+            Reward Reward = Locations.RandomizedLocations[RewardId].Reward;
             if (Reward.Type == "MONEY") {
                 if ((TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NORMAL && Reward.Amount < 20)
                 || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.DOUBLE && Reward.Amount <= 20)
-                || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT && Reward.Amount <= 30)) { 
+                || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT && Reward.Amount <= 30)) {
                     Reward.Name = "Fool";
                     Reward.Type = "FOOL";
                     Reward.Amount = 1;
@@ -544,65 +684,76 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void UpdateItemTracker(string RewardId) {
-            Reward Reward = ItemList[RewardId].Reward;
-
-            if (TunicRandomizer.Tracker.ImportantItems.ContainsKey(Reward.Name) && Reward.Name != "Sword Progression" && Reward.Name != "Hexagon Gold") {
-                TunicRandomizer.Tracker.ImportantItems[Reward.Name]++;
-            }
-            if (Reward.Name.Contains("GoldenTrophy")) {
-                TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]++;
-
-                if (TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12) {
-                    Inventory.GetItemByName("Spear").Quantity = 1;
+        public static void ToggleHolyCrossObjects(bool isEnabled) {
+            foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>()) {
+                foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
+                    Spell.enabled = isEnabled;
                 }
-            }
-            if (Reward.Type == "PAGE") {
-                TunicRandomizer.Tracker.ImportantItems["Pages"]++;
-            }
-            if (Reward.Type == "FAIRY") {
-                TunicRandomizer.Tracker.ImportantItems["Fairies"]++;
-/*                if (TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20) {
-                    Inventory.GetItemByName("Crystal Ball").Quantity = 1;
-                }*/
-            }
-            if (Reward.Name.Contains("Trinket -") || Reward.Name == "Mask") {
-                TunicRandomizer.Tracker.ImportantItems["Trinket Cards"]++;
-            }
-            TunicRandomizer.Tracker.ItemsCollected.Add(ItemList[RewardId]);
-            foreach (string LevelUp in LevelUpItemNames) {
-                TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
             }
         }
 
         public static void PotionCombine_Show_PostFixPatch(PotionCombine __instance) {
-            TunicRandomizer.Tracker.ImportantItems["Flask Container"]++;
-            ItemTracker.SaveTrackerFile();
+            //TunicRandomizer.Tracker.ImportantItems["Flask Container"]++;
+            //ItemTracker.SaveTrackerFile();
         }
 
-        private static Vector3 StringToVector3(string Position) {
-            try {
-                Position = Position.Replace("(", "").Replace(")", "");
-                string[] coords = Position.Split(',');
-                Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
-                return vector;
-            } catch (Exception e) {
-                return PlayerCharacter.instance.transform.position;
+        public static void ButtonAssignableItem_CheckFreeItemSpell_PostfixPatch(ButtonAssignableItem __instance, ref string s) {
+            if (ItemLookup.BombCodes.ContainsKey(s) && StateVariable.GetStateVariableByName(ItemLookup.BombCodes[s]).BoolValue) {
+                if (SaveFile.GetInt($"randomizer used free bomb code {s}") == 0) {
+                    if (IsArchipelago()) {
+                        Archipelago.instance.UpdateDataStorage(ItemLookup.BombCodes[s], true);
+                    }
+                    SaveFile.SetInt($"randomizer used free bomb code {s}", 1);
+                    if (TunicRandomizer.Settings.SkipItemAnimations) { 
+                        switch(ItemLookup.BombCodes[s]) {
+                            case "Granted Firecracker":
+                                Notifications.Show($"[firecracker] \"Firecracker Granted!\"", $"mAd fruhm slorm, #uh poudi^ #aht gOz boom.");
+                                break;
+                            case "Granted Firebomb":
+                                Notifications.Show($"[firebomb] \"Fire Bomb Granted!\"", $"fIur fIur ehvurEwAr, ahnd ow ow ow ow ow.");
+                                break;
+                            case "Granted Icebomb":
+                                Notifications.Show($"[icebomb] \"Ice Bomb Granted!\"", $"uhnstAboul powdur mAd fruhm #uh fArE uhv #uh wehst gRdin.");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
         }
 
-        public static void ShowNotification(string topLine, string bottomLine) {
-            LanguageLine topLineObject = ScriptableObject.CreateInstance<LanguageLine>();
-            topLineObject.text = topLine;
+        public static bool UpgradeMenu___Buy_PrefixPatch(UpgradeMenu __instance) {
+            
+            if (TunicRandomizer.Settings.RaceMode && TunicRandomizer.Settings.DisableUpgradeStealing && UpgradeAltar.nearbyThings.Count == 0) {
+                UpgradeMenu.instance.__Exit();
+                return false;
+            }
 
-            LanguageLine bottomLineObject = ScriptableObject.CreateInstance<LanguageLine>();
-            bottomLineObject.text = bottomLine;
-
-            AreaData areaData = ScriptableObject.CreateInstance<AreaData>();
-            areaData.topLine = topLineObject;
-            areaData.bottomLine = bottomLineObject;
-
-            AreaLabel.ShowLabel(areaData);
+            return true;
         }
+
+        public static bool UpgradeAltar_DoOfferingSequence_PrefixPatch(UpgradeAltar __instance, OfferingItem offeringItemToOffer) {
+            
+            if (TunicRandomizer.Settings.FasterUpgrades) {
+                Notifications.Show($"{TextBuilderPatches.SpriteNameToAbbreviation[offeringItemToOffer.icon.name]} \"{offeringItemToOffer.statLabelLocKey}\" wehnt uhp fruhm {offeringItemToOffer.upgradeItemReceived.Quantity} [arrow_right] {offeringItemToOffer.upgradeItemReceived.Quantity+1}!", $"#E Ar ahksehpts yor awfuri^.");
+                UpgradeMenu.instance.__Exit();
+                return false;
+            }
+
+            return true;
+        }
+
+        public static void UpgradeAltar_DoOfferingSequence_PostfixPatch(UpgradeAltar __instance) {
+            foreach (string LevelUp in ItemLookup.LevelUpItems) {
+                TunicRandomizer.Tracker.ImportantItems[LevelUp] = Inventory.GetItemByName(LevelUp).Quantity;
+            }
+        }
+
+        public static bool FairyCollection_getFairyCount_PrefixPatch(FairyCollection __instance, ref int __result) {
+            __result = TunicRandomizer.Tracker.ImportantItems["Fairies"];
+            return false;
+        }
+
     }
 }

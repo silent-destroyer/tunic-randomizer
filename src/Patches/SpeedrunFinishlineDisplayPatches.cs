@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using TinyJson;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class SpeedrunFinishlineDisplayPatches {
@@ -38,13 +41,13 @@ namespace TunicRandomizer {
             {"Inventory items_money triangle", "Golden Item"},
             {"Inventory items_book", "Pages"}
         };
-        public static Dictionary<string, string> HeroRelicIcons = new Dictionary<string, string>() {
-            {"Inventory items_offering_tooth", "Relic - Hero Sword"},
-            {"Inventory items_offering_effigy", "Relic - Hero Crown"},
-            {"Inventory items_offering_ash", "Relic - Hero Water"},
-            {"Inventory items_offering_flower", "Relic - Hero Pendant HP"},
-            {"Inventory items_offering_feather", "Relic - Hero Pendant MP"},
-            {"Inventory items_offering_orb", "Relic - Hero Pendant SP"},
+        public static Dictionary<string, (string, string)> HeroRelicIcons = new Dictionary<string, (string, string)>() {
+            {"Inventory items_offering_tooth", ("Relic - Hero Sword", "Randomizer items_Hero Relic - ATT")},
+            {"Inventory items_offering_effigy", ("Relic - Hero Crown", "Randomizer items_Hero Relic - DEF")},
+            {"Inventory items_offering_ash", ("Relic - Hero Water", "Randomizer items_Hero Relic - POTION")},
+            {"Inventory items_offering_flower", ("Relic - Hero Pendant HP", "Randomizer items_Hero Relic - HP")},
+            {"Inventory items_offering_orb", ("Relic - Hero Pendant SP", "Randomizer items_Hero Relic - SP")},
+            {"Inventory items_offering_feather", ("Relic - Hero Pendant MP", "Randomizer items_Hero Relic - MP")},
         };
 
         public static Dictionary<string, string> StatsScreenSecret = new Dictionary<string, string>() {
@@ -62,7 +65,7 @@ namespace TunicRandomizer {
             { "Frog's Domain", "F<#eaa614>r<#ffffff>og's <#eaa614>D<#ffffff>omain" },
             { "Shop/Coin Wells", "Shop/Coin We<#eaa614>l<#ffffff>ls" },
             { "Bosses Defeated", "Bosses <#eaa614>D<#ffffff>efeate<#eaa614>d<#ffffff>" },
-            { "Bottom of the Well", "Bottom of the We<#eaa614>ll<#ffffff>" },
+            { "Beneath the Well", "Beneath the We<#eaa614>ll<#ffffff>" },
             { "Far Shore/Hero's Grave", "Far Sho<#eaa614>r<#ffffff>e/Hero's Grave" },
             { "Holy Cross Checks", "Ho<#eaa614>l<#ffffff>y Cross Checks" },
             { "Player Deaths", "P<#eaa614>l<#ffffff>ayer Deaths" },
@@ -72,13 +75,13 @@ namespace TunicRandomizer {
         public static GameObject CompletionRate;
         public static GameObject CompletionCanvas;
 
-        public static bool ShowSwordAfterDelay = false;
         public static bool ShowCompletionStatsAfterDelay = false;
         public static bool GameCompleted = false;
+
         public static bool SpeedrunFinishlineDisplay_showFinishline_PrefixPatch(SpeedrunFinishlineDisplay __instance) {
 
             SpeedrunReportItem DathStone = ScriptableObject.CreateInstance<SpeedrunReportItem>();
-            DathStone.icon = Inventory.GetItemByName("Homeward Bone Statue").icon;
+            DathStone.icon = Inventory.GetItemByName("Dath Stone").icon;
             SpeedrunReportItem GoldenItem = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             GoldenItem.icon = Inventory.GetItemByName("Spear").icon;
             SpeedrunReportItem Manual = ScriptableObject.CreateInstance<SpeedrunReportItem>();
@@ -153,16 +156,17 @@ namespace TunicRandomizer {
                 foreach (ItemIcon Icon in Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.transform.parent.name.Contains("Item Parade Group"))) {
                     string SpriteName = Icon.transform.GetChild(1).GetComponent<Image>().sprite.name;
                     // Change quantity text to gold if hero relic obtained
-                    if (HeroRelicIcons.ContainsKey(SpriteName) && Inventory.GetItemByName(HeroRelicIcons[SpriteName]).Quantity > 0) {
-                        Icon.transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().faceColor = new Color32(234, 166, 20, 255);
+                    if (HeroRelicIcons.ContainsKey(SpriteName) && Inventory.GetItemByName(HeroRelicIcons[SpriteName].Item1).Quantity > 0) {
+                        Icon.transform.GetChild(1).GetComponent<Image>().sprite = ModelSwaps.FindSprite(HeroRelicIcons[SpriteName].Item2);
                     }
                     // Change sword icon for custom swords
                     if (SpriteName == "Inventory items_sword") {
-                        if (SaveFile.GetInt("randomizer sword progression enabled") == 1) {
-                            int SwordLevel = SaveFile.GetInt("randomizer sword progression level");
-                            if (SwordLevel >= 3) {
-                                Icon.transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().faceColor = SwordLevel == 3 ? new Color32(255, 50, 150, 255) : new Color32(93, 231, 207, 255);
-                                ShowSwordAfterDelay = true;
+                        if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                            int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                            if (SwordLevel == 3) {
+                                Icon.transform.GetChild(1).GetComponent<Image>().sprite = Inventory.GetItemByName("Librarian Sword").icon;
+                            } else if(SwordLevel == 4) {
+                                Icon.transform.GetChild(1).GetComponent<Image>().sprite = Inventory.GetItemByName("Heir Sword").icon;
                             }
                         }
                     }
@@ -195,16 +199,25 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.position = new Vector3(0f, 0f, 300f);
             CompletionCanvas.SetActive(false);
 
-            int CheckCount = ItemPatches.ItemsPickedUp.Values.Where(Item => Item).ToList().Count;
-            float CheckPercentage = ((float)CheckCount / ItemPatches.ItemList.Count) * 100.0f;
+            int CheckCount = 0;
+            int ChecksCollectedByOthers = 0;
+            float CheckPercentage = 0;
+            string Color = "<#FFFFFF>";
+
+
+            CheckCount = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            ChecksCollectedByOthers = IsArchipelago() ? Locations.VanillaLocations.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
+            CheckPercentage = ((float)CheckCount / Locations.VanillaLocations.Count) * 100.0f;
+            Color = CheckCount == Locations.VanillaLocations.Count ? $"<#eaa614>" : "<#FFFFFF>";
+
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(-60f, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-            string Color = CheckCount == ItemPatches.ItemList.Count ? $"<#eaa614>" : "<#FFFFFF>";
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{ItemPatches.ItemList.Count} ({Math.Round(CheckPercentage, 2)}%)";
-            if ((int)CheckPercentage == 69) {
-                TotalCompletion.GetComponent<TextMeshPro>().text += " <size=40%>nice";
-            }
+
+            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{Locations.VanillaLocations.Count}" +
+                $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? "*" : "")} " +
+                $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}" +
+                $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? $"\n\t<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}";
 
             TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
             TotalCompletion.SetActive(true);
@@ -212,7 +225,7 @@ namespace TunicRandomizer {
                 new List<string>(){"Overworld", "West Garden", "Ruined Atoll", "Quarry/Mountain", "Swamp"},
                 new List<string>(){"East Forest", "Eastern Vault Fortress", "Library", "Rooted Ziggurat", "Cathedral"},
                 new List<string>(){"Dark Tomb", "Frog's Domain", "Shop/Coin Wells", "Bosses Defeated", "Time Found"},
-                new List<string>(){"Bottom of the Well", "Far Shore/Hero's Grave", "Holy Cross Checks", "Player Deaths"},
+                new List<string>(){"Beneath the Well", "Far Shore/Hero's Grave", "Holy Cross Checks", "Player Deaths"},
             };
             List<int> Spacings = new List<int>() { -300, -198, 370, 465 };
             if ((Screen.width == 1920 && Screen.height == 1080) || (Screen.width == 2560 && Screen.height == 1440)) {
@@ -235,6 +248,15 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.localScale = new Vector3(2, 2, 2);
             CompletionCanvas.transform.position = new Vector3(0, 0, 200);
 
+            if (!Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode)) {
+                GameObject TimeText = GameObject.Instantiate(SpeedrunFinishlineDisplay.instance.transform.GetChild(0).GetChild(0).GetChild(0).gameObject);
+                TimeText.transform.parent = CompletionCanvas.transform;
+                TimeText.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                TimeText.transform.position = new Vector3(0, 185f, 210f);
+                TimeText.GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+                TimeText.transform.GetChild(2).GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+            }
+
             ShowCompletionStatsAfterDelay = true;
         }
 
@@ -248,15 +270,15 @@ namespace TunicRandomizer {
             AreaCount.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
             AreaCount.SetActive(true);
             AreaCount.GetComponent<TextMeshPro>().text = $"";
-            
-            if(Hints.MainAreasToSubAreas.ContainsKey(Area)) {
+
+            if (Locations.MainAreasToSubAreas.ContainsKey(Area)) {
                 float TotalAreaTime = 0.0f;
                 int TotalAreaChecks = 0;
                 int AreaChecksFound = 0;
                 float Percentage = 0;
-                foreach (string SubArea in Hints.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += ItemPatches.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea).Count();
-                    AreaChecksFound += ItemPatches.ItemList.Values.Where(Item => Item.Location.SceneName == SubArea && ItemPatches.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]).Count();
+                foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
+                    TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
+                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }
                 if (TotalAreaChecks > 0) {
@@ -267,7 +289,10 @@ namespace TunicRandomizer {
                 AreaCount.GetComponent<TextMeshPro>().text = $"{(AreaChecksFound == TotalAreaChecks ? StatsScreenSecret[Area] : Area)}\n<size=80%>{TimeString}\n{Color}{AreaChecksFound} / {TotalAreaChecks} ({(int)Percentage}%)";
 
                 if (Area == "Swamp") {
-                    AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>(Press 1 to hide stats)";
+                    AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>Press 1 to hide stats.";
+                    if (IsArchipelago()) {
+                        AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.\nPress C to collect items.";
+                    }
                 }
                 if (Area == "Far Shore/Hero's Grave") {
                     AreaCount.GetComponent<TextMeshPro>().text = $"<size=90%>{AreaCount.GetComponent<TextMeshPro>().text}";
@@ -278,11 +303,11 @@ namespace TunicRandomizer {
                 int TotalChecks = 0;
                 int ChecksFound = 0;
                 float Percentage = 0;
-                foreach (ItemData Item in JSONParser.FromJson<List<ItemData>>(ItemListJson.ItemList)) {
-                    foreach (Dictionary<string, int> items in Item.Location.RequiredItems) {
-                        if (items.ContainsKey("21")) {
+                foreach (string Key in Locations.VanillaLocations.Keys) {
+                    foreach (Dictionary<string, int> requirements in Locations.VanillaLocations[Key].Location.RequiredItems) {
+                        if (requirements.ContainsKey("21")) {
                             TotalChecks++;
-                            if (ItemPatches.ItemsPickedUp[$"{Item.Location.LocationId} [{Item.Location.SceneName}]"]) {
+                            if (Locations.CheckedLocations[Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) {
                                 ChecksFound++;
                             }
                             continue;
@@ -296,7 +321,7 @@ namespace TunicRandomizer {
             }
 
             if (Area == "Player Deaths") {
-                AreaCount.GetComponent<TextMeshPro>().text = $"{StatsScreenSecret[Area]}\n{SaveFile.GetInt("randomizer death count")}";
+                AreaCount.GetComponent<TextMeshPro>().text = $"{StatsScreenSecret[Area]}\n{SaveFile.GetInt(PlayerDeathCount)}";
             }
 
             if (Area == "Bosses Defeated") {
@@ -315,56 +340,54 @@ namespace TunicRandomizer {
                 }
                 string Color = BossesDefeated == 5 ? $"<#eaa614>" : "<#FFFFFF>";
 
-                AreaCount.GetComponent<TextMeshPro>().text = $"{(BossesDefeated == 5 ? StatsScreenSecret[Area] : Area)}\n<size=80%>{Color}{BossesDefeated} / 5 ({(BossesDefeated*100)/5}%)\n<#FFFFFF>Enemies Defeated: {SaveFile.GetInt("randomizer enemies defeated")}";
+                AreaCount.GetComponent<TextMeshPro>().text = $"{(BossesDefeated == 5 ? StatsScreenSecret[Area] : Area)}\n<size=80%>{Color}{BossesDefeated} / 5 ({(BossesDefeated * 100) / 5}%)\n<#FFFFFF>Enemies Defeated: {SaveFile.GetInt(EnemiesDefeatedCount)}";
             }
 
             if (Area == "Time Found") {
                 string Text = $"<size=78%><#FFFFFF>";
                 List<float> HexTimes = new List<float>();
                 List<string> Times = new List<string>();
-                if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
-                    int HexGoal = SaveFile.GetInt("randomizer hexagon quest goal");
+                if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                    int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
                     int HalfGoal = HexGoal / 2;
-                    Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Gold 1 time"), true)}\t" +
-                            $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Hexagon Gold {HalfGoal} time"), true)}\n" +
-                            $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Hexagon Gold {HexGoal} time"), true)}\t";
+                    Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Gold Questagon 1 time"), true)}\t" +
+                            $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {HalfGoal} time"), true)}\n" +
+                            $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {SaveFile.GetInt(HexagonQuestGoal)} time"), true)}\t";
                 } else {
-                    Text += $"Red Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Red 1 time"), true)}\t" +
-                            $"Green Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Green 1 time"), true)}\n" +
-                            $"Blue Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Hexagon Blue 1 time"), true)}\t";
+                    Text += $"Red Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Red Questagon 1 time"), true)}\t" +
+                            $"Green Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Green Questagon 1 time"), true)}\n" +
+                            $"Blue Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Blue Questagon 1 time"), true)}\t";
                 }
                 System.Random random = new System.Random();
-                float SwordTime = SaveFile.GetInt("randomizer sword progression enabled") == 1 ? SaveFile.GetFloat("randomizer Sword Progression 2 time") : SaveFile.GetFloat("randomizer Sword 1 time");
-                float GrappleTime = SaveFile.GetFloat("randomizer Wand 1 time");
-                float HyperdashTime = SaveFile.GetFloat("randomizer Hyperdash 1 time");
+                float SwordTime = SaveFile.GetInt(SwordProgressionEnabled) == 1 ? SaveFile.GetFloat("randomizer Sword Progression 2 time") : SaveFile.GetFloat("randomizer Sword 1 time");
+                float GrappleTime = SaveFile.GetFloat("randomizer Magic Orb 1 time");
+                float HyperdashTime = SaveFile.GetFloat("randomizer Hero's Laurels 1 time");
                 Text += $"Sword:\t{FormatTime(SwordTime, true)}\n" +
-                        $"Grapple:\t{FormatTime(GrappleTime, true)}\t" +
+                        $"Magic Orb:\t{FormatTime(GrappleTime, true)}\t" +
                         $"Laurels:\t{FormatTime(HyperdashTime, true)}\n";
                 int Total = 6;
-                if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                    float PrayerTime = SaveFile.GetFloat("randomizer prayer unlocked time");
-                    float HolyCrossTime = SaveFile.GetFloat("randomizer holy cross unlocked time");
-                   
-
+                if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                    float PrayerTime = SaveFile.GetFloat(PrayerUnlockedTime);
+                    float HolyCrossTime = SaveFile.GetFloat(HolyCrossUnlockedTime);
                     Text += $"Prayer:\t{FormatTime(PrayerTime, true)}\t" +
                             $"Holy Cross:\t{FormatTime(HolyCrossTime, true)}";
                     Total = 8;
                 }
                 int NotFound = Regex.Matches(Text, "Not Found").Count;
-                Text = $"\t\t{(NotFound > 0 ? Area : StatsScreenSecret[Area])} <size=80%>{(NotFound == 0 ? $"<#eaa614>" : "<#FFFFFF>" )}({(Total-NotFound)} / {Total})\n" + Text;
+                Text = $"\t\t{(NotFound > 0 ? Area : StatsScreenSecret[Area])} <size=80%>{(NotFound == 0 ? $"<#eaa614>" : "<#FFFFFF>")}({(Total - NotFound)} / {Total})\n" + Text;
                 AreaCount.GetComponent<TextMeshPro>().text = Text;
             }
 
         }
 
-        public static string FormatTime(float Seconds, bool ItemTime) {
+        public static string FormatTime(float Seconds, bool ItemTime, bool isIgt = false) {
             if (Seconds == 0.0f && ItemTime) {
-                return "Not Found".PadRight(10); 
+                return "Not Found".PadRight(10);
             }
 
             TimeSpan TimeSpan = TimeSpan.FromSeconds(Seconds);
-            string TimeString = $"{TimeSpan.Hours.ToString().PadLeft(2, '0')}:{TimeSpan.Minutes.ToString().PadLeft(2, '0')}:{TimeSpan.Seconds.ToString().PadLeft(2, '0')}";
-            return TimeString.PadRight(10).Replace(":", "<size=100%>:<size=80%>");
+            string TimeString = $"{TimeSpan.Hours.ToString().PadLeft(2, '0')}:{TimeSpan.Minutes.ToString().PadLeft(2, '0')}:{TimeSpan.Seconds.ToString().PadLeft(2, '0')}{(isIgt ? $".{TimeSpan.Milliseconds.ToString().PadRight(3, '0')}" : "")}";
+            return isIgt ? TimeString : TimeString.PadRight(10).Replace(":", "<size=100%>:<size=80%>");
         }
 
         private static string GetOrdinalSuffix(int num) {
@@ -383,7 +406,16 @@ namespace TunicRandomizer {
             if (CompletionCanvas != null) {
                 GameObject.Destroy(CompletionCanvas);
             }
+
+
+            if (IsArchipelago()) {
+                Archipelago.instance.integration.sentCompletion = false;
+                Archipelago.instance.integration.sentCollect = false;
+                Archipelago.instance.integration.sentRelease = false;
+            }
+
             GameCompleted = false;
+            
             return true;
         }
 
@@ -391,7 +423,14 @@ namespace TunicRandomizer {
             if (CompletionCanvas != null) {
                 GameObject.Destroy(CompletionCanvas);
             }
+            if (IsArchipelago()) {
+                Archipelago.instance.integration.sentCompletion = false;
+                Archipelago.instance.integration.sentCollect = false;
+                Archipelago.instance.integration.sentRelease = false;
+            }
+
             GameCompleted = false;
+            
             return true;
         }
 
@@ -400,6 +439,6 @@ namespace TunicRandomizer {
             __instance.retryKey_plural = $"Missing {MissingPageCount} pages. Return to seek another path.";
             __instance.retryKey_single = $"Missing {MissingPageCount} page. Return to seek another path.";
         }
-
+    
     }
 }

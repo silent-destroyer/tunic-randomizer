@@ -69,7 +69,7 @@ namespace TunicRandomizer {
             {"Hexagon Blue", Vector3.one},
             {"Hexagon Red", Vector3.one},
             {"Hexagon Green", Vector3.one},
-            {"Dath Stone", new Vector3(0.5f, 0.5f, 0.5f)}
+            {"Dath Stone", new Vector3(1f, 1f, 1f)}
         };
         public static Dictionary<string, Vector3> ItemPickupScales = new Dictionary<string, Vector3>() {
             {"Firecracker", new Vector3(1.5f, 1.5f, 1.5f)},
@@ -126,7 +126,7 @@ namespace TunicRandomizer {
             {"Hexagon Blue", Vector3.one},
             {"Hexagon Red", Vector3.one},
             {"Hexagon Green", Vector3.one},
-            {"Dath Stone", new Vector3(0.5f, 0.5f, 0.5f)},
+            {"Dath Stone", new Vector3(1f, 1f, 1f)},
             {"Fairy", new Vector3(0.5f, 0.5f, 0.5f)}
         };
         public static Dictionary<string, Vector3> ItemPickupPositions = new Dictionary<string, Vector3>() {
@@ -214,12 +214,13 @@ namespace TunicRandomizer {
              { "Hexagon Green", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0.1012896f, 0f, -0.994857f), new Vector3(0.06982159f, 0.06982159f, 0.06982159f)) },
              { "Hexagon Blue", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, -0.6343775f, 0f, -0.7730234f), new Vector3(0.06982159f, 0.06982159f, 0.06982159f)) },
              { "Hexagon Gold", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0.5528554f, 0f, -0.8332772f), new Vector3(0.06982159f, 0.06982159f, 0.06982159f)) },
-             { "Dath Stone", new TransformData(new Vector3(-0.04f, 0.03f, -0.05f), new Quaternion(0.7071068f, 0f, 0f, 0.7071068f), new Vector3(0.05f, 0.05f, 0.05f)) },
+             { "Dath Stone", new TransformData(new Vector3(0, 0.02f, -0.04f), new Quaternion(-0.2593f, -0.6533f, -0.2551f, 0.664f), new Vector3(0.1f, 0.1f, 0.1f)) },
              { "money small", new TransformData(new Vector3(-0.02f, 0.03f, -0.05f), new Quaternion(-0.6792541f, 0.1965043f, -0.1965043f, -0.6792541f), new Vector3(0.1f, 0.1f, 0.1f)) },
              { "money medium", new TransformData(new Vector3(-0.02f, 0.03f, -0.05f), new Quaternion(-0.6792541f, 0.1965043f, -0.1965043f, -0.6792541f), new Vector3(0.1f, 0.1f, 0.1f)) },
              { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.05f, 0.05f, 0.05f)) },
              { "FAIRY", new TransformData(new Vector3(-0.03f, 0.01f, -0.07f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), new Vector3(0.05f, 0.05f, 0.05f)) },
              { "PAGE", new TransformData(new Vector3(-0.03f, 0.01f, -0.07f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.05f, 0.05f, 0.05f)) },
+             { "Other World", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.02f, 0.02f, 0.02f)) }
         };
 
         public static Dictionary<string, TransformData> Lantern = new Dictionary<string, TransformData>() {
@@ -282,12 +283,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0.4f, 0f), new Quaternion(0f, 0.8457476f, 0f, -0.5335833f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0.4f, 0f), new Quaternion(0f, 0.3796329f, 0f, 0.9251373f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0.4f, 0f), new Quaternion(0f, -0.9990942f, 0f, -0.04255315f), new Vector3(1f, 1f, 1f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.4829629f, 0.4829629f, -0.3705905f, 0.6294096f), new Vector3(0.7f, 0.7f, 0.7f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money small", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, 0.7071068f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money medium", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, 0.7071068f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0.05392667f, 0f, 0f, -0.9985449f), new Vector3(1f, 1f, 1f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0.1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 
         public static Dictionary<string, TransformData> Grapple = new Dictionary<string, TransformData>() {
@@ -351,12 +353,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.5582834f, 0f, 0.8296503f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.4364091f, 0f, 0.8997484f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3338036f, 0f, 0.9426427f), new Vector3(1f, 1f, 1f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, -1f, 0f), new Quaternion(0.7071068f, 0f, 0f, 0.7071068f), new Vector3(.75f, .75f, .75f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, -1f, -0.2f), new Quaternion(0, -0.7071f, -0.7071f, 0), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money small", new TransformData(new Vector3(0f, -0.6f, 0f), new Quaternion(0.5f, 0.5f, -0.5f, 0.5f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "money medium", new TransformData(new Vector3(0f, -0.6f, 0f), new Quaternion(0.5f, 0.5f, -0.5f, 0.5f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(-0.1f, -0.4f, 0f), new Quaternion(0f, 1f, 0f, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "PAGE", new TransformData(new Vector3(0f, -1.2f, 0.0f), new Quaternion(0f, 1f, 0f, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Other World", new TransformData(new Vector3(0.1f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 
         public static Dictionary<string, TransformData> Sword = new Dictionary<string, TransformData>() {
@@ -420,12 +423,83 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0f, 0.8834515f, 0f, 0.4685226f), new Vector3(0.5789194f, 0.5789191f, 0.5789192f)) },
             { "Hexagon Blue", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0f, 0.9794919f, 0f, -0.2014834f), new Vector3(0.5789194f, 0.5789191f, 0.5789192f)) },
             { "Hexagon Gold", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0f, -0.8368939f, 0f, 0.5473652f), new Vector3(0.5789194f, 0.5789191f, 0.5789192f)) },
-            { "Dath Stone", new TransformData(new Vector3(-0.1f, -0.6f, 0f), new Quaternion(0.2127514f, 0.6743418f, -0.2127514f, 0.6743418f), new Vector3(0.35f, 0.35f, 0.35f)) },
+            { "Dath Stone", new TransformData(new Vector3(-0.22f, -0.48f, 0), new Quaternion(-0.0923f, -0.7011f, -0.0923f, 0.7011f), new Vector3(0.7f, 0.7f, 0.7f)) },
             { "money small", new TransformData(new Vector3(-0.2f, -0.5f, 0f), new Quaternion(-0.03018048f, -0.003341845f, 0.1100053f, -0.9934671f), new Vector3(0.7236493f, 0.723649f, 0.723649f)) },
             { "money medium", new TransformData(new Vector3(-0.2f, -0.6f, 0f), new Quaternion(-0.02958954f, -0.006819955f, 0.2244933f, -0.9740025f), new Vector3(0.7236493f, 0.723649f, 0.723649f)) },
             { "money large", new TransformData(new Vector3(0.1f, 0.1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.3f, 0.3f, 0.3f)) },
             { "FAIRY", new TransformData(new Vector3(-0.2f, -0.8000001f, 0f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), new Vector3(0.3f, 0.3f, 0.3f)) },
             { "PAGE", new TransformData(new Vector3(-0.3f, -0.5999999f, 0f), new Quaternion(0f, -0.7160065f, 0f, -0.6980937f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Other World", new TransformData(new Vector3(-0.3f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.15f, 0.15f, 0.15f)) }
+        };
+
+        public static Dictionary<string, TransformData> Shop = new Dictionary<string, TransformData>() {
+            { "Firecracker", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Firebomb", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Ice Bomb", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "Flask Shard", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Flask Container", new TransformData(new Vector3(0f, 0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Berry_HP", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(3.1179f, 3.1179f, 3.1179f)) },
+            { "Berry_MP", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2.8983f, 2.8983f, 2.8983f)) },
+            { "Pepper", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.2f, 1.2f, 1.2f)) },
+            { "Ivy", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2.9662f, 2.9662f, 2.9662f)) },
+            { "Bait", new TransformData(new Vector3(0f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5763f, 0.5763f, 0.5763f)) },
+            { "Piggybank L1", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Trinket Coin", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Trinket Card", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Trinket Slot", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.4f, 0.4f, 0.4f)) },
+            { "Sword", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Sword Progression", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Sword Progression 0", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Sword Progression 1", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Sword Progression 2", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Sword Progression 3", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071f, 0f, 0f, -0.7071f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Stick", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Shield", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Stundagger", new TransformData(new Vector3(0f, 0.7f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.1f, 0.1f, 0.1f)) },
+            { "Techbow", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(1.2f, 1.2f, 1.2f)) },
+            { "Wand", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.15f, 0.15f, 0.15f)) },
+            { "Shotgun", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.2f, 1.2f, 1.2f)) },
+            { "SlowmoItem", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.3f, 0.3f, 0.3f)) },
+            { "Lantern", new TransformData(new Vector3(0f, 0.7f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Hyperdash", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "Upgrade Offering - Attack - Tooth", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Upgrade Offering - DamageResist - Effigy", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Upgrade Offering - Health HP - Flower", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Upgrade Offering - Magic MP - Mushroom", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Upgrade Offering - PotionEfficiency Swig - Ash", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Upgrade Offering - Stamina SP - Feather", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Relic - Hero Sword", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Relic - Hero Crown", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Relic - Hero Pendant HP", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Relic - Hero Pendant MP", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Relic - Hero Water", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "Relic - Hero Pendant SP", new TransformData(new Vector3(0f, 0.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
+            { "GoldenTrophy_1", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.4f, 0.4f, 0.4f)) },
+            { "GoldenTrophy_2", new TransformData(new Vector3(0f, -0.6f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "GoldenTrophy_3", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "GoldenTrophy_4", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "GoldenTrophy_5", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.8f, 0.8f, 0.8f)) },
+            { "GoldenTrophy_6", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "GoldenTrophy_7", new TransformData(new Vector3(0f, -0.1999969f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2f, 2f, 2f)) },
+            { "GoldenTrophy_8", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "GoldenTrophy_9", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.4f, 0.4f, 0.4f)) },
+            { "GoldenTrophy_10", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "GoldenTrophy_11", new TransformData(new Vector3(0f, 0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "GoldenTrophy_12", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
+            { "Key", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Key (House)", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Vault Key (Red)", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
+            { "Hexagon Red", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.7321103f, 0f, -0.6811862f), new Vector3(1f, 1f, 1f)) },
+            { "Hexagon Green", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3522491f, 0f, 0.9359064f), new Vector3(1f, 1f, 1f)) },
+            { "Hexagon Blue", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3307169f, 0f, 0.9437301f), new Vector3(1f, 1f, 1f)) },
+            { "Hexagon Gold", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.149963f, 0f, 0.9886916f), new Vector3(1f, 1f, 1f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "money small", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "money medium", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "money large", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
+            { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "PAGE", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.25f, 0.25f, 0.25f)) }
         };
 
         public static Dictionary<string, TransformData> Techbow = new Dictionary<string, TransformData>() {
@@ -489,12 +563,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3522491f, 0f, 0.9359064f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3307169f, 0f, 0.9437301f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.149963f, 0f, 0.9886916f), new Vector3(1f, 1f, 1f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "money small", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money medium", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money large", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) }
         };
 
         public static Dictionary<string, TransformData> Key = new Dictionary<string, TransformData>() {
@@ -558,14 +633,14 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 1f, 0f), new Quaternion(0f, -0.6241611f, 0f, -0.7812957f), new Vector3(1.499788f, 1.49979f, 1.499789f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 1f, 0f), new Quaternion(0f, 0.7231514f, 0f, -0.6906897f), new Vector3(1.499788f, 1.49979f, 1.499789f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 1f, 0f), new Quaternion(0f, -0.6139277f, 0f, -0.7893623f), new Vector3(1.499788f, 1.49979f, 1.499789f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071068f, 0f, 0f, 0.7071068f), new Vector3(0.7498941f, 0.7498951f, 0.7498944f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, -0.2f, 0f), new Quaternion(-0.5f, -0.5f, -0.5f, 0.5f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "money small", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(-0.5f, 0.5f, -0.5f, -0.5f), new Vector3(1.499788f, 1.49979f, 1.499789f)) },
             { "money medium", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(-0.5f, 0.5f, -0.5f, -0.5f), new Vector3(1.499788f, 1.49979f, 1.499789f)) },
             { "money large", new TransformData(new Vector3(0f, 0.3f, 0f), new Quaternion(0f, 0f, 0, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "FAIRY", new TransformData(new Vector3(-0.1f, -0.4f, 0f), new Quaternion(0f, 1f, 0f, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.6f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0.25f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
-
 
         public static Dictionary<string, TransformData> Shield = new Dictionary<string, TransformData>() {
             { "Firecracker", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
@@ -628,12 +703,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0f, 0.5f), new Quaternion(0f, 0.9788245f, 0f, -0.2047015f), new Vector3(0.5573857f, 0.5573855f, 0.5573855f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0f, 0.5f), new Quaternion(0f, 0.8643872f, 0f, -0.5028268f), new Vector3(0.5573857f, 0.5573855f, 0.5573855f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0f, 0.5f), new Quaternion(0f, 0.72763f, 0f, -0.6859699f), new Vector3(0.5573857f, 0.5573855f, 0.5573855f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2786928f, 0.2786928f, 0.2786928f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.7f, 0.7f, 0.7f)) },
             { "money small", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6967322f, 0.6967319f, 0.6967319f)) },
             { "money medium", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6967322f, 0.6967319f, 0.6967319f)) },
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0.3827f, 0f, 0f, 0.9239f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071f, 0f, 0f, 0.7071f), new Vector3(0.25f, 0.25f, 0.25f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.4f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5574f, 0.5574f, 0.5574f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0f, 0.2f), new Quaternion(0.0462f, -0.7471f, -0.661f, -0.0522f), new Vector3(0.15f, 0.15f, 0.15f)) }
         };
 
         public static Dictionary<string, TransformData> VaultKeyRed = new Dictionary<string, TransformData>() {
@@ -697,12 +773,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0.8f, 0f), new Quaternion(0f, -0.8278066f, 0f, -0.5610135f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0.8f, 0f), new Quaternion(0.2291767f, 0.7460843f, -0.5636788f, -0.270375f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0.8f, 0f), new Quaternion(-0.08929043f, -0.7888736f, 0.6018994f, 0.08615652f), new Vector3(1.5f, 1.5f, 1.5f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0.3f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.25f, 1.25f, 1.25f)) },
+            { "Dath Stone", new TransformData(new Vector3(-0.2f, 0.2f, 0.3f), new Quaternion(-0.683f, -0.183f, -0.183f, 0.683f), new Vector3(2, 2, 2)) },
             { "money small", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2f, 2f, 2f)) },
             { "money medium", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2f, 2f, 2f)) },
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(1f, 1f, 1f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.4f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Other World", new TransformData(new Vector3(0f, 1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) }
         };
 
         public static Dictionary<string, TransformData> HexagonRed = new Dictionary<string, TransformData>() {
@@ -766,12 +843,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3522491f, 0f, 0.9359064f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.3307169f, 0f, 0.9437301f), new Vector3(1f, 1f, 1f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.149963f, 0f, 0.9886916f), new Vector3(1f, 1f, 1f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "money small", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money medium", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.25f, 1.25f, 1.25f)) },
             { "money large", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.25f, 0.25f, 0.25f)) }
         };
 
         public static Dictionary<string, TransformData> HexagonGreen = new Dictionary<string, TransformData>() {
@@ -835,12 +913,13 @@ namespace TunicRandomizer {
             { "Hexagon Green", new TransformData(new Vector3(0f, 0.8f, 0f), new Quaternion(0f, -0.8278066f, 0f, -0.5610135f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "Hexagon Blue", new TransformData(new Vector3(0f, 0.8f, 0f), new Quaternion(0.2291767f, 0.7460843f, -0.5636788f, -0.270375f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "Hexagon Gold", new TransformData(new Vector3(0f, 0.8f, 0f), new Quaternion(-0.08929043f, -0.7888736f, 0.6018994f, 0.08615652f), new Vector3(1.5f, 1.5f, 1.5f)) },
-            { "Dath Stone", new TransformData(new Vector3(0f, 0.3f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.25f, 1.25f, 1.25f)) },
+            { "Dath Stone", new TransformData(new Vector3(0f, 0.3f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "money small", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2f, 2f, 2f)) },
             { "money medium", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(2f, 2f, 2f)) },
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(1f, 1f, 1f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.4f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 
         public static Dictionary<string, TransformData> HeroRelic = new Dictionary<string, TransformData>() {

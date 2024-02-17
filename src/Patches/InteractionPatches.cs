@@ -1,21 +1,52 @@
-﻿using UnityEngine;
-using static TunicRandomizer.GhostHints;
+﻿using BepInEx.Logging;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using static TunicRandomizer.Hints;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
+        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
 
-            if (__instance.gameObject.GetComponent<NPC>() != null && GhostHints.HintGhosts.ContainsKey(__instance.name)) {
-                HintGhost HintGhost = GhostHints.HintGhosts[__instance.name];
-                __instance.GetComponent<NPC>().script.text = TunicRandomizer.Settings.UseTrunicTranslations ? $"{HintGhost.TrunicDialogue}---{HintGhost.TrunicHint}" : $"{HintGhost.Dialogue}---{HintGhost.Hint}";
-            }
+            if (__instance.gameObject.GetComponent<NPC>() != null) {
+                if (SceneManager.GetActiveScene().name == "g_elements") {
+                    if (Inventory.GetItemByName("Dath Stone").Quantity == 0) {
+                        __instance.gameObject.GetComponent<NPC>().script.text = $"I lawst mI mahjik stOn ahnd kahnt gO hOm...---if yoo fInd it, kahn yoo bri^ it too mE?\nit louks lIk #is: [dath]";
+                    } else {
+                        __instance.gameObject.GetComponent<NPC>().script.text = $"I lawst mI mahjik stOn [dath] ahnd kahnt gO hOm...---... wAt, yoo fownd it! plEz, yooz it now!";
+                    }
+                }
 
+                if (GhostHints.HintGhosts.ContainsKey(__instance.name)) { 
+                    GhostHints.HintGhost hintGhost = GhostHints.HintGhosts[__instance.name];
+                    __instance.GetComponent<NPC>().script.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.TrunicDialogue : hintGhost.Dialogue)}---{hintGhost.Hint}";
+                }
+
+                if (GhostHints.HintGhosts.ContainsKey(__instance.name) && GhostHints.HexQuestHintLookup.ContainsKey(GhostHints.HintGhosts[__instance.name].Hint)) {
+                    SaveFile.SetInt($"randomizer hex quest read {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint]} hint", 1);
+                    ItemStatsHUD.UpdateAbilitySection();
+                }
+
+                if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
+                    GhostHints.CheckForServerHint(__instance.name);
+                }
+            }
             if (Hints.HintLocations.ContainsKey(InteractionLocation) && Hints.HintMessages.ContainsKey(Hints.HintLocations[InteractionLocation]) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 LanguageLine Hint = ScriptableObject.CreateInstance<LanguageLine>();
-                Hint.text = TunicRandomizer.Settings.UseTrunicTranslations ? Hints.TrunicHintMessages[Hints.HintLocations[InteractionLocation]] : Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
+                Hint.text = Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
+
                 GenericMessage.ShowMessage(Hint);
+                return false;
+            }
+            if (__instance.GetComponentInParent<HeroGraveToggle>() != null && TunicRandomizer.Settings.HeroPathHintsEnabled) {
+                bool showRelicHint = StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue;
+                HeroGraveHint hint = __instance.GetComponentInParent<HeroGraveToggle>().heroGravehint;
+
+                GenericMessage.ShowMessage(showRelicHint ? hint.RelicHint : hint.PathHint);
                 return false;
             }
             if (SceneLoaderPatches.SceneName == "Waterfall" && __instance.transform.position.ToString() == "(-47.4, 46.9, 3.0)" && TunicRandomizer.Tracker.ImportantItems["Fairies"] < 10) {
@@ -35,12 +66,20 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(-38.0, 29.0, -55.0)") {
                 PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key (House)"].GetComponent<MeshRenderer>().materials;
             }
-            if ((SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(21.0, 20.0, -122.0)") ||
+            if ((SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(21.0, 20.0, -122.0)") || 
                 (SceneLoaderPatches.SceneName == "Atoll Redux") && __instance.transform.position.ToString() == "(64.0, 4.0, 0.0)") {
                 PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key"].GetComponent<MeshRenderer>().materials;
             }
-            if (SaveFile.GetString("randomizer game mode") == "HEXAGONQUEST") {
-                if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && TunicRandomizer.Tracker.ImportantItems["Hexagon Gold"] < SaveFile.GetInt("randomizer hexagon quest goal")) {
+            if (SceneManager.GetActiveScene().name == "frog cave main" && __instance.transform.position.ToString() == "(20.5, 10.1, -32.1)" && !StateVariable.GetStateVariableByName("Granted Cape").BoolValue) {
+                GenericMessage.ShowMessage(
+                    $"[arrow_down] [arrow_left] [arrow_down] [arrow_right] [arrow_up]\n" +
+                    $"[arrow_left] [arrow_up] [arrow_right] [arrow_down] [arrow_left]\n" +
+                    $"[arrow_down] [arrow_right] [arrow_up] [arrow_left] [arrow_up]"
+                    );
+                return false;
+            }
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
                     GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
                     return false;
                 }
@@ -53,22 +92,16 @@ namespace TunicRandomizer {
             return true;
         }
 
-        public static bool BloodstainChest_IInteractionReceiver_Interact_PrefixPatch(Item i, BloodstainChest __instance) {
-            if (SceneLoaderPatches.SceneName == "Changing Room") {
-                CoinSpawner.SpawnCoins(20, __instance.transform.position);
-                __instance.doPushbackBlast();
-                return false;
-            }
-
-            return true;
-        }
-
         private static void ChangeDayNightHourglass() {
             PlayerCharacterPatches.TimeWhenLastChangedDayNight = Time.fixedTime;
             bool isNight = CycleController.IsNight;
             if (isNight) {
                 CycleController.AnimateSunrise();
             } else {
+                SaveFile.SetString("last campfire scene name", "Overworld Interiors");
+                SaveFile.SetString("last campfire id", "bed");
+                SaveFile.SetString("randomizer last campfire scene name for dath stone", "Overworld Interiors");
+                SaveFile.SetString("randomizer last campfire id for dath stone", "bed");
                 CycleController.AnimateSunset();
             }
             CycleController.IsNight = !isNight;
@@ -99,6 +132,43 @@ namespace TunicRandomizer {
             GlowEffect.SetActive(true);
             DayNightSwitch.transform.position = new Vector3(-26.3723f, 28.9452f, -46.1847f);
             DayNightSwitch.transform.localScale = new Vector3(0.85f, 0.85f, 0.85f);
+        }
+
+        public static bool BloodstainChest_IInteractionReceiver_Interact_PrefixPatch(Item i, BloodstainChest __instance) {
+            if (SceneLoaderPatches.SceneName == "Changing Room") {
+                CoinSpawner.SpawnCoins(20, __instance.transform.position);
+                __instance.doPushbackBlast();
+                return false;
+            }
+
+            return true;
+        }
+
+        public static void SpawnMoreSkulls() {
+            if (TunicRandomizer.Settings.MoreSkulls && SceneManager.GetActiveScene().name == "Swamp Redux 2") {
+                GameObject Skull = GameObject.Find("skull (gold) (0)");
+                if (Skull != null) {
+                    GameObject.Instantiate(Skull, new Vector3(69.3966f, 4.0462f, -64.6f), Quaternion.EulerRotation(new Vector3(0f, 230f, 0f)), Skull.transform.parent).name = "skull (gold) (4)";
+                    GameObject.Instantiate(Skull, new Vector3(37.6797f, 0.0178f, -90.9843f), Quaternion.EulerRotation(new Vector3(0f, 26f, 0f)), Skull.transform.parent).name = "skull (gold) (5)";
+                    GameObject.Instantiate(Skull, new Vector3(104f, -0.0654f, -79.2f), Quaternion.EulerRotation(new Vector3(0f, 324f, 0f)), Skull.transform.parent).name = "skull (gold) (6)";
+                    GameObject.Instantiate(Skull, new Vector3(31.6891f, -0.0654f, -70.3681f), Quaternion.EulerRotation(new Vector3(0f, 90f, 0f)), Skull.transform.parent).name = "skull (gold) (7)";
+                }
+            }
+        }
+
+        public static bool SpecialSwampTrigger_OnTriggerEnter_PrefixPatch(SpecialSwampTrigger __instance, Collider c) {
+
+            if (TunicRandomizer.Settings.MoreSkulls && c.GetComponent<SpecialSwampRB>() != null) {
+                __instance.list.Add(c.GetComponent<SpecialSwampRB>());
+                c.gameObject.SetActive(false);
+
+                if (__instance.list.Count == 8) {
+                    __instance.enableWhenSatisfied.BoolValue = true;
+                }
+                return false;
+            }
+
+            return true;
         }
     }
 }
