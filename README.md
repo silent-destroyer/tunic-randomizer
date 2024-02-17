@@ -65,6 +65,7 @@ For discussion around the Archipelago side of things, please visit the dedicated
     - The elevators in Ziggurat only go down.
     - The portal in the trophy room in the back of the Old House is active from the start.
     - The elevator in Cathedral is immediately accessible without activating the fuse. Activating the fuse does nothing.
+    - There is an [entrance tracker](https://scipiowright.gitlab.io/tunic-tracker/), created by ScipioWright.
 - Regarding Hints:
   - The Mailbox will give a "First Steps" hint, pointing you in the direction of a useful/progression item that can be reached from the start of the game.
   - The Hero's Graves in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
