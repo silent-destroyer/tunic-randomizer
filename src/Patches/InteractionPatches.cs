@@ -170,5 +170,12 @@ namespace TunicRandomizer {
 
             return true;
         }
+
+        public static bool Campfire_isUseableAccordingToConduitSystem_GetterPatch(Campfire __instance, ref bool __result) {
+
+            __result = true;
+
+            return false;
+        }
     }
 }

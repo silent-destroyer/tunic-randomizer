@@ -208,6 +208,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(UpgradeMenu), "__Buy"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "UpgradeMenu___Buy_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.PropertyGetter(typeof(Campfire), "isUseableAccordingToConduitSystem"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "Campfire_isUseableAccordingToConduitSystem_GetterPatch")));
+
         }
     }
 }
