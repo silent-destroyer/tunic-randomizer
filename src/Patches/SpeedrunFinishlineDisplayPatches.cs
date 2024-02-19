@@ -39,7 +39,8 @@ namespace TunicRandomizer {
             {"Inventory items_offering_orb", "Upgrade Offering - Magic MP - Mushroom"},
             {"Inventory items_dash stone", "Dath Stone"},
             {"Inventory items_money triangle", "Golden Item"},
-            {"Inventory items_book", "Pages"}
+            {"Inventory items_book", "Pages"},
+            {"Randomizer items_Gold Questagon", "Hexagon Gold"}
         };
         public static Dictionary<string, (string, string)> HeroRelicIcons = new Dictionary<string, (string, string)>() {
             {"Inventory items_offering_tooth", ("Relic - Hero Sword", "Randomizer items_Hero Relic - ATT")},
@@ -84,15 +85,19 @@ namespace TunicRandomizer {
             DathStone.icon = Inventory.GetItemByName("Dath Stone").icon;
             SpeedrunReportItem GoldenItem = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             GoldenItem.icon = Inventory.GetItemByName("Spear").icon;
-            SpeedrunReportItem Manual = ScriptableObject.CreateInstance<SpeedrunReportItem>();
-            Manual.icon = Inventory.GetItemByName("Book").icon;
+            SpeedrunReportItem ManualOrGoldHex = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                ManualOrGoldHex.icon = Inventory.GetItemByName("Hexagon Gold").icon;
+            } else {
+                ManualOrGoldHex.icon = Inventory.GetItemByName("Book").icon;
+            }
 
             SpeedrunFinishlineDisplay.instance.reportGroup_secrets = new SpeedrunReportItem[] {
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[0],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[1],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[2],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[3],
-                Manual,
+                ManualOrGoldHex,
                 DathStone,
                 GoldenItem
             };
