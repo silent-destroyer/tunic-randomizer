@@ -120,11 +120,11 @@ namespace TunicRandomizer {
             "Mask",
             "Key (House)",
             "Relic - Hero Sword",
-            "Relic - Hero Pendant MP",
+            "Relic - Hero Crown",
             "Relic - Hero Water",
             "Relic - Hero Pendant HP",
-            "Relic - Hero Crown",
             "Relic - Hero Pendant SP",
+            "Relic - Hero Pendant MP",
             "Dath Stone",
         };
 
@@ -473,8 +473,8 @@ namespace TunicRandomizer {
                 HintableItemsSolo.Add("26");
             }
             for (int i = 0; i < HintableItems.Count; i++) {
-                string Item = HintableItems[i];
                 if (SaveFlags.IsArchipelago()) {
+                    string Item = HintableItems[i];
                     List<ArchipelagoHint> ItemLocations = Locations.MajorItemLocations[Item];
                     foreach(ArchipelagoHint HintLocation in ItemLocations) {
                         if (HintLocation.Player == Archipelago.instance.GetPlayerSlot()) {
@@ -497,7 +497,7 @@ namespace TunicRandomizer {
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
                         string ItemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[ItemData.Name] : "";
 
-                        Hint = $"bI #uh wA, I saw A  {ItemToDisplay}  \"{Item.ToUpper().Replace(" ", "\" \"")}\" #uh lahst tIm I wuhs {ScenePrefix} \"{Scene.ToUpper().Replace(" ", "\" \"")}.\"";
+                        Hint = $"bI #uh wA, I saw A  {ItemToDisplay}  \"{ItemData.Name.ToUpper().Replace(" ", "\" \"")}\" #uh lahst tIm I wuhs {ScenePrefix} \"{Scene.ToUpper().Replace(" ", "\" \"")}.\"";
                         if (TunicRandomizer.Settings.UseTrunicTranslations) {
                             Hint = $"bI #uh wA, I saw A {Translations.Translate(ItemLookup.SimplifiedItemNames[Check.Reward.Name], false)} #uh lahst tIm I wuhs {ScenePrefix} {Translations.Translate(Scene, false)}.";
                         }

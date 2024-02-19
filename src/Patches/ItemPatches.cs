@@ -174,18 +174,18 @@ namespace TunicRandomizer {
 
         public static bool ShopItem_buy_PrefixPatch(ShopItem __instance) {
             string LocationId = $"{__instance.name} [Shop]";
-            if (!Locations.LocationIdToDescription.ContainsKey(LocationId)) {
-                if (TunicRandomizer.Settings.SkipItemAnimations && __instance.itemToGive != null) {
-                    TunicRandomizer.Settings.SkipItemAnimations = false;
-                    ItemPresentation.PresentItem(__instance.itemToGive, __instance.quantityToGive);
-                    TunicRandomizer.Settings.SkipItemAnimations = true;
-                }
-                return true;
-            }
+
             int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
             if (Inventory.GetItemByName("MoneySmall").Quantity < Price) {
                 GenericMessage.ShowMessage($"nawt Enuhf [money]...");
             } else {
+                if (!Locations.LocationIdToDescription.ContainsKey(LocationId)) {
+                    if (TunicRandomizer.Settings.SkipItemAnimations && __instance.itemToGive != null) {
+                        string itemName = ItemLookup.SimplifiedItemNames[__instance.itemToGive.name] + (__instance.quantityToGive > 1 ? "s" : "");
+                        Notifications.Show($"{TextBuilderPatches.ItemNameToAbbreviation[ItemLookup.SimplifiedItemNames[__instance.itemToGive.name]]} \"Bought {itemName}!\"", $"{ItemLookup.ShopkeeperLines[new System.Random().Next(ItemLookup.ShopkeeperLines.Count)]}");
+                    }
+                    return true;
+                }
                 Inventory.GetItemByName("MoneySmall").Quantity -= Price;
                 if (IsArchipelago()) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);

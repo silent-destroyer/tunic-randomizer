@@ -498,6 +498,14 @@ namespace TunicRandomizer {
             { "ldrurdrurdrul", "Granted Icebomb" },
         };
 
+        public static List<string> ShopkeeperLines = new List<string>() {
+            "nO rEfuhndz.",
+            "awl sAlz fInuhl.",
+            "tipi^ ehnkurijd.",
+            "#Ar mahsturwurks awl.",
+            "nO diskownts.",
+        };
+
         public static Dictionary<string, List<int>> FillerItems = new Dictionary<string, List<int>>() {
             { "Firecracker", new List<int>() { 2, 3, 4, 5, 6 } },
             { "Firebomb", new List<int>() { 2, 3 } },

@@ -184,13 +184,12 @@ namespace TunicRandomizer {
                     slotLocation = HexHint.Location == "Your Pocket" ? $"0, Server" : $"{HexHint.Player}, {HexHint.Location}";
                 } else if (IsSinglePlayer()) {
                     ItemData Hex = ItemLookup.Items[Hexagon];
-                    Check HexCheck = ItemRandomizer.FindRandomizedItemByName(Hex.ItemNameForInventory);
+                    Check HexCheck = Hex.Name == "Gold Questagon" ? ItemRandomizer.FindAllRandomizedItemsByName(Hex.ItemNameForInventory)[i] : ItemRandomizer.FindRandomizedItemByName(Hex.ItemNameForInventory);
                     Scene = Locations.SimplifiedSceneNames[HexCheck.Location.SceneName];
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                     Hint = $"#A sA {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                     slotLocation = $"{HexCheck.Location.LocationId} [{HexCheck.Location.SceneName}]";
                 }
-
 
                 if (HexagonHintArea == "Swamp Relic") {
                     HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Swamp Redux 2", "_Setpieces Etc/RelicPlinth/", false));
