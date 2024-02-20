@@ -210,6 +210,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Campfire), "isUseableAccordingToConduitSystem"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "Campfire_isUseableAccordingToConduitSystem_GetterPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(ConduitNode), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitNode_CheckConnectedToPower_PrefixPatch")));
+
         }
     }
 }

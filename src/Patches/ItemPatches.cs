@@ -175,7 +175,7 @@ namespace TunicRandomizer {
         public static bool ShopItem_buy_PrefixPatch(ShopItem __instance) {
             string LocationId = $"{__instance.name} [Shop]";
 
-            int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
+            int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled && Locations.LocationIdToDescription.ContainsKey(LocationId) ? 300 : __instance.price;
             if (Inventory.GetItemByName("MoneySmall").Quantity < Price) {
                 GenericMessage.ShowMessage($"nawt Enuhf [money]...");
             } else {

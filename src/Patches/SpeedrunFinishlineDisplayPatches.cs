@@ -47,8 +47,8 @@ namespace TunicRandomizer {
             {"Inventory items_offering_effigy", ("Relic - Hero Crown", "Randomizer items_Hero Relic - DEF")},
             {"Inventory items_offering_ash", ("Relic - Hero Water", "Randomizer items_Hero Relic - POTION")},
             {"Inventory items_offering_flower", ("Relic - Hero Pendant HP", "Randomizer items_Hero Relic - HP")},
-            {"Inventory items_offering_orb", ("Relic - Hero Pendant SP", "Randomizer items_Hero Relic - SP")},
-            {"Inventory items_offering_feather", ("Relic - Hero Pendant MP", "Randomizer items_Hero Relic - MP")},
+            {"Inventory items_offering_feather", ("Relic - Hero Pendant SP", "Randomizer items_Hero Relic - SP")},
+            {"Inventory items_offering_orb", ("Relic - Hero Pendant MP", "Randomizer items_Hero Relic - MP")},
         };
 
         public static Dictionary<string, string> StatsScreenSecret = new Dictionary<string, string>() {
