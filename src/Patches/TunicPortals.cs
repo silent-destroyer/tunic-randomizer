@@ -3290,7 +3290,7 @@ namespace TunicRandomizer {
                         "Rooted Ziggurat Lower Front",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash",
+                                "Hyperdash", "Sword", "12"
                             },
                             new List<string> {
                                 "Ladder Storage",
