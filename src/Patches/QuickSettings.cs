@@ -561,7 +561,7 @@ namespace TunicRandomizer {
 
         public static void CopyQuickSettings() {
             if (TunicRandomizer.Settings.MysterySeed) {
-                GUIUtility.systemCopyBuffer = $"{CustomSeed},mystery_seed";
+                GUIUtility.systemCopyBuffer = $"{CustomSeed},mystery_seed,{GetGeneralSettingsString()},{GetHintsString()},{GetEnemyRandoString()},{GetRaceSettingsString()}";
                 return;
             }
             List<string> Settings = new List<string>() { CustomSeed.ToString(), Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode).ToLower() };
@@ -596,41 +596,28 @@ namespace TunicRandomizer {
                 Settings.Add("maskless");
             }
 
+            // General Settings
+            Settings.Add(GetGeneralSettingsString());
+
+            // Hints
+            Settings.Add(GetHintsString());
+
             // Enemy Rando 
             if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
-                Settings.Add("enemy_randomizer");
-                if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                    Settings.Add("extra_enemies");
-                }
-                Settings.Add($"enemy_generation!{(int)TunicRandomizer.Settings.EnemyDifficulty}!{(int)TunicRandomizer.Settings.EnemyGeneration}!");
+                Settings.Add(GetEnemyRandoString());
             }
 
             // Race Settings
             if (TunicRandomizer.Settings.RaceMode) {
-                Settings.Add("race_mode");
-                if (TunicRandomizer.Settings.DisableIceboltInHeirFight) {
-                    Settings.Add("no_heir_icebolt");
-                }
-                if (TunicRandomizer.Settings.DisableDistantBellShots) {
-                    Settings.Add("no_distant_bell_shot");
-                }
-                if (TunicRandomizer.Settings.DisableIceGrappling) {
-                    Settings.Add("no_ice_grapple");
-                }
-                if (TunicRandomizer.Settings.DisableLadderStorage) {
-                    Settings.Add("no_ladder_storage");
-                }
-                if (TunicRandomizer.Settings.DisableUpgradeStealing) {
-                    Settings.Add("no_upgrade_stealing");
-                }
+                Settings.Add(GetRaceSettingsString());
             }
 
-            GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
+            GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray()).Replace("False", "0").Replace("True", "1");
         }
 
         public static void CopyQuickSettingsInGame() {
             if (SaveFile.GetInt("randomizer mystery seed") == 1) {
-                GUIUtility.systemCopyBuffer = $"{SaveFile.GetInt("seed")},mystery_seed";
+                GUIUtility.systemCopyBuffer = $"{SaveFile.GetInt("seed")},mystery_seed,{GetGeneralSettingsString()},{GetHintsString()},{GetEnemyRandoString()},{GetRaceSettingsString()}";
                 return;
             }
             List<string> Settings = new List<string>() { SaveFile.GetInt("seed").ToString(), SaveFile.GetString("randomizer game mode").ToLower() };
@@ -665,33 +652,20 @@ namespace TunicRandomizer {
                 Settings.Add("maskless");
             }
 
+            // General Settings
+            Settings.Add(GetGeneralSettingsString());
+
+            // Hints
+            Settings.Add(GetHintsString());
+
             // Enemy Rando 
             if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
-                Settings.Add("enemy_randomizer");
-                if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                    Settings.Add("extra_enemies");
-                }
-                Settings.Add($"enemy_generation!{(int)TunicRandomizer.Settings.EnemyDifficulty}!{(int)TunicRandomizer.Settings.EnemyGeneration}!");
+                Settings.Add(GetEnemyRandoString());
             }
 
             // Race Settings
             if (TunicRandomizer.Settings.RaceMode) {
-                Settings.Add("race_mode");
-                if (TunicRandomizer.Settings.DisableIceboltInHeirFight) {
-                    Settings.Add("no_heir_icebolt");
-                }
-                if (TunicRandomizer.Settings.DisableDistantBellShots) {
-                    Settings.Add("no_distant_bell_shot");
-                }
-                if (TunicRandomizer.Settings.DisableIceGrappling) {
-                    Settings.Add("no_ice_grapple");
-                }
-                if (TunicRandomizer.Settings.DisableLadderStorage) {
-                    Settings.Add("no_ladder_storage");
-                }
-                if (TunicRandomizer.Settings.DisableUpgradeStealing) {
-                    Settings.Add("no_upgrade_stealing");
-                }
+                Settings.Add(GetRaceSettingsString());
             }
 
             GUIUtility.systemCopyBuffer = string.Join(",", Settings.ToArray());
@@ -702,12 +676,56 @@ namespace TunicRandomizer {
             try {
                 string SettingsString = GUIUtility.systemCopyBuffer;
                 string[] SplitSettings = SettingsString.Split(',');
-                CustomSeed = int.Parse(SplitSettings[0], CultureInfo.InvariantCulture).ToString();
-                RandomizerSettings.GameModes NewGameMode;
-                if (SettingsString.Contains("mystery_seed")) {
-                    TunicRandomizer.Settings.MysterySeed = true;
+                CustomSeed = SplitSettings[0] == "" ? "" : int.Parse(SplitSettings[0], CultureInfo.InvariantCulture).ToString();
+
+                TunicRandomizer.Settings.EnemyRandomizerEnabled = SettingsString.Contains("enemy_randomizer");
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
+                    string enemyString = SplitSettings.Where(s => s.StartsWith("enemy_randomizer")).First().Split('_')[2];
+                    try {
+                        TunicRandomizer.Settings.ExtraEnemiesEnabled = enemyString[0] == '1';
+                        TunicRandomizer.Settings.BalancedEnemies = enemyString[0] == '1';
+                        TunicRandomizer.Settings.SeededEnemies = enemyString[0] == '1';
+
+                    } catch (Exception e) {
+                        TunicRandomizer.Settings.ExtraEnemiesEnabled = false;
+                        TunicRandomizer.Settings.BalancedEnemies = true;
+                        TunicRandomizer.Settings.SeededEnemies = true;
+                    }
+                }
+                TunicRandomizer.Settings.RaceMode = SettingsString.Contains("race_mode");
+                if (TunicRandomizer.Settings.RaceMode) {
+                    string raceString = SplitSettings.Where(s => s.StartsWith("race_mode")).First().Split('_')[2];
+                    TunicRandomizer.Settings.DisableIceboltInHeirFight = raceString[0] == '1';
+                    TunicRandomizer.Settings.DisableDistantBellShots = raceString[1] == '1';
+                    TunicRandomizer.Settings.DisableIceGrappling = raceString[2] == '1';
+                    TunicRandomizer.Settings.DisableLadderStorage = raceString[3] == '1';
+                    TunicRandomizer.Settings.DisableUpgradeStealing = raceString[4] == '1';
+                }
+
+                string hintString = SplitSettings.Where(s => s.StartsWith("hints")).First().Split('_')[1];
+                TunicRandomizer.Settings.HeroPathHintsEnabled = hintString[0] == '1';
+                TunicRandomizer.Settings.GhostFoxHintsEnabled = hintString[1] == '1';
+                TunicRandomizer.Settings.ShowItemsEnabled = hintString[2] == '1';
+                TunicRandomizer.Settings.ChestsMatchContentsEnabled = hintString[3] == '1';
+                TunicRandomizer.Settings.UseTrunicTranslations = hintString[4] == '1';
+                TunicRandomizer.Settings.CreateSpoilerLog = hintString[5] == '1';
+
+                string generalSettingsString = SplitSettings.Where(s => s.StartsWith("general_settings")).First().Split('_')[2];
+                TunicRandomizer.Settings.HeirAssistModeEnabled = generalSettingsString[0] == '1';
+                TunicRandomizer.Settings.ClearEarlyBushes = generalSettingsString[1] == '1';
+                TunicRandomizer.Settings.CheaperShopItemsEnabled = generalSettingsString[2] == '1';
+                TunicRandomizer.Settings.BonusStatUpgradesEnabled = generalSettingsString[3] == '1';
+                TunicRandomizer.Settings.DisableChestInterruption = generalSettingsString[4] == '1';
+                TunicRandomizer.Settings.SkipItemAnimations = generalSettingsString[5] == '1';
+                TunicRandomizer.Settings.FasterUpgrades = generalSettingsString[6] == '1';
+
+                TunicRandomizer.Settings.MysterySeed = SettingsString.Contains("mystery_seed");
+                if (TunicRandomizer.Settings.MysterySeed) {
+                    OptionsGUIPatches.SaveSettings();
                     return;
                 }
+
+                RandomizerSettings.GameModes NewGameMode;
                 if (Enum.TryParse<RandomizerSettings.GameModes>(SplitSettings[1].ToUpper(), true, out NewGameMode)) {
                     TunicRandomizer.Settings.GameMode = NewGameMode;
                 } else {
@@ -750,30 +768,6 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.Lanternless = SettingsString.Contains("lanternless");
                 TunicRandomizer.Settings.Maskless = SettingsString.Contains("maskless");
 
-                TunicRandomizer.Settings.EnemyRandomizerEnabled = SettingsString.Contains("enemy_randomizer");
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
-                    TunicRandomizer.Settings.EnemyRandomizerEnabled = true;
-                    TunicRandomizer.Settings.ExtraEnemiesEnabled = SettingsString.Contains("extra_enemies");
-                    if (SettingsString.Split('!').Count() > 1) {
-                        try {
-                            TunicRandomizer.Settings.EnemyDifficulty = (RandomizerSettings.EnemyRandomizationType)int.Parse(SettingsString.Split('!')[2]);
-                            TunicRandomizer.Settings.EnemyGeneration = (RandomizerSettings.EnemyGenerationType)int.Parse(SettingsString.Split('!')[1]); 
-
-                        } catch (Exception e) {
-                            TunicRandomizer.Settings.EnemyDifficulty = RandomizerSettings.EnemyRandomizationType.BALANCED;
-                            TunicRandomizer.Settings.EnemyGeneration = RandomizerSettings.EnemyGenerationType.SEEDED;
-                        }
-                    }
-                }
-                TunicRandomizer.Settings.RaceMode = SettingsString.Contains("race_mode");
-                if (TunicRandomizer.Settings.RaceMode) {
-                    TunicRandomizer.Settings.DisableIceboltInHeirFight = SettingsString.Contains("no_heir_icebolt");
-                    TunicRandomizer.Settings.DisableDistantBellShots = SettingsString.Contains("no_distant_bell_shot");
-                    TunicRandomizer.Settings.DisableIceGrappling = SettingsString.Contains("no_ice_grapple");
-                    TunicRandomizer.Settings.DisableLadderStorage = SettingsString.Contains("no_ladder_storage");
-                    TunicRandomizer.Settings.DisableUpgradeStealing = SettingsString.Contains("no_upgrade_stealing");
-                }
-
                 OptionsGUIPatches.SaveSettings();
             } catch (Exception e) {
                 Logger.LogError("Error parsing quick settings string!");
@@ -781,7 +775,43 @@ namespace TunicRandomizer {
 
         }
 
+        private static string GetGeneralSettingsString() {
+            return $"general_settings" +
+                $"_{TunicRandomizer.Settings.HeirAssistModeEnabled}" +
+                $"{TunicRandomizer.Settings.ClearEarlyBushes}" +
+                $"{TunicRandomizer.Settings.CheaperShopItemsEnabled}" +
+                $"{TunicRandomizer.Settings.BonusStatUpgradesEnabled}" +
+                $"{TunicRandomizer.Settings.DisableChestInterruption}" +
+                $"{TunicRandomizer.Settings.SkipItemAnimations}" +
+                $"{TunicRandomizer.Settings.FasterUpgrades}";
+        }
 
+        private static string GetRaceSettingsString() { 
+            return $"race_mode" +
+                $"_{TunicRandomizer.Settings.DisableIceboltInHeirFight}" +
+                $"{TunicRandomizer.Settings.DisableDistantBellShots}" +
+                $"{TunicRandomizer.Settings.DisableIceGrappling}" +
+                $"{TunicRandomizer.Settings.DisableLadderStorage}" +
+                $"{TunicRandomizer.Settings.DisableUpgradeStealing}";
+        }
+
+        private static string GetEnemyRandoString() {
+            return $"enemy_randomizer" +
+                $"_{TunicRandomizer.Settings.ExtraEnemiesEnabled}" +
+                $"{TunicRandomizer.Settings.BalancedEnemies}" +
+                $"{TunicRandomizer.Settings.SeededEnemies}";
+        }
+
+
+        private static string GetHintsString() {
+            return $"hints" +
+                $"_{TunicRandomizer.Settings.HeroPathHintsEnabled}" +
+                $"{TunicRandomizer.Settings.GhostFoxHintsEnabled}" +
+                $"{TunicRandomizer.Settings.ShowItemsEnabled}" +
+                $"{TunicRandomizer.Settings.ChestsMatchContentsEnabled}" +
+                $"{TunicRandomizer.Settings.UseTrunicTranslations}" +
+                $"{TunicRandomizer.Settings.CreateSpoilerLog}";
+        }
         public static bool TitleScreen___NewGame_PrefixPatch(TitleScreen __instance) {
             CloseAPSettingsWindow();
             return true;

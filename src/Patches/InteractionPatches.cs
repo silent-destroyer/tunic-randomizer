@@ -172,14 +172,18 @@ namespace TunicRandomizer {
         }
 
         public static bool Campfire_isUseableAccordingToConduitSystem_GetterPatch(Campfire __instance, ref bool __result) {
+            
+            if (TunicRandomizer.Settings.EnableAllCheckpoints) {
+                __result = true;
 
-            __result = true;
+                return false;
+            }
 
-            return false;
+            return true;
         }
 
         public static bool ConduitNode_CheckConnectedToPower_PrefixPatch(ConduitNode __instance, ref bool __result) {
-            if (__instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
+            if (TunicRandomizer.Settings.EnableAllCheckpoints && __instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
                 __result = true;
                 return false;
             }

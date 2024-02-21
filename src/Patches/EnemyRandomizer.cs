@@ -503,7 +503,7 @@ namespace TunicRandomizer {
             List<BombFlask> bombFlasks = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name != "Firecracker").ToList();
 
             System.Random Random;
-            if (TunicRandomizer.Settings.EnemyGeneration == RandomizerSettings.EnemyGenerationType.SEEDED) {
+            if (TunicRandomizer.Settings.SeededEnemies) {
                 Random = new System.Random(SaveFile.GetInt($"randomizer enemy seed {CurrentScene}"));
             } else {
                 Random = new System.Random();
@@ -607,9 +607,9 @@ namespace TunicRandomizer {
                     EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Bat" : "Bat void");
 
                     string NewEnemyName = "";
-                    if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.RANDOM) {
+                    if (!TunicRandomizer.Settings.BalancedEnemies) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
-                    } else if (TunicRandomizer.Settings.EnemyDifficulty == RandomizerSettings.EnemyRandomizationType.BALANCED) {
+                    } else {
                         List<string> EnemyTypes = null;
                         foreach (string Key in EnemyRankings.Keys.Reverse()) {
                             List<string> Rank = EnemyRankings[Key];
@@ -640,8 +640,6 @@ namespace TunicRandomizer {
                             EnemyTypes = EnemyTypes.Where(x => EnemyKeys.Contains(x)).ToList();
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                         }
-                    } else {
-                        NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     }
 
                     NewEnemy.transform.position = Enemy.transform.position;

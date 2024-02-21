@@ -115,6 +115,8 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Disable Chest Interruption", "Off", "On", TunicRandomizer.Settings.DisableChestInterruption ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestInterruption);
             OptionsGUI.addToggle("Skip Item Popups", "Off", "On", TunicRandomizer.Settings.SkipItemAnimations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSkipItemAnimations);
             OptionsGUI.addToggle("Skip Upgrade Animations", "Off", "On", TunicRandomizer.Settings.FasterUpgrades ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterUpgrades);
+            OptionsGUI.addToggle("Enable All Checkpoints", "Off", "On", TunicRandomizer.Settings.EnableAllCheckpoints ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAllCheckpoints);
+
         }
 
         public static void EnemyRandomizerSettings() {
@@ -124,9 +126,8 @@ namespace TunicRandomizer {
             OptionsGUI.setHeading("Enemy Randomization");
             OptionsGUI.addToggle("Enemy Randomizer", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
             OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
-            OptionsGUI.addMultiSelect("Enemy Difficulty", EnemyDifficulties, GetEnemyDifficulty(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerDifficulty).wrap = true;
-            OptionsGUI.addMultiSelect("Enemy Generation", EnemyGenerationTypes, GetEnemyGenerationType(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEnemyRandomizerGenerationType).wrap = true;
-
+            OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
+            OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
         }
 
         public static void CustomFoxSettingsPage() {
@@ -386,6 +387,11 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void ToggleAllCheckpoints(int index) {
+            TunicRandomizer.Settings.EnableAllCheckpoints = !TunicRandomizer.Settings.EnableAllCheckpoints;
+            SaveSettings();
+        }
+
         public static void ToggleMoreSkulls(int index) {
             TunicRandomizer.Settings.MoreSkulls = !TunicRandomizer.Settings.MoreSkulls;
             SaveSettings();
@@ -407,21 +413,13 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        public static int GetEnemyDifficulty() {
-            return (int)TunicRandomizer.Settings.EnemyDifficulty;
-        }
-
-        public static int GetEnemyGenerationType() {
-            return (int)TunicRandomizer.Settings.EnemyGeneration;
-        }
-
-        public static void ChangeEnemyRandomizerDifficulty(int index) {
-            TunicRandomizer.Settings.EnemyDifficulty = (RandomizerSettings.EnemyRandomizationType)index;
+        public static void ToggleBalancedEnemies(int index) {
+            TunicRandomizer.Settings.BalancedEnemies = !TunicRandomizer.Settings.BalancedEnemies;
             SaveSettings();
         }
 
-        public static void ChangeEnemyRandomizerGenerationType(int index) {
-            TunicRandomizer.Settings.EnemyGeneration = (RandomizerSettings.EnemyGenerationType)index;
+        public static void ToggleSeededEnemies(int index) {
+            TunicRandomizer.Settings.SeededEnemies = !TunicRandomizer.Settings.SeededEnemies;
             SaveSettings();
         }
 

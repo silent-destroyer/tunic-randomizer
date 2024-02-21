@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -154,6 +155,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool EnableAllCheckpoints {
+            get;
+            set;
+        }
+
         public bool CheaperShopItemsEnabled {
             get;
             set;
@@ -190,12 +196,12 @@ namespace TunicRandomizer {
             set;
         }
 
-        public EnemyRandomizationType EnemyDifficulty {
+        public bool BalancedEnemies {
             get;
             set;
         }
 
-        public EnemyGenerationType EnemyGeneration {
+        public bool SeededEnemies {
             get;
             set;
         }
@@ -265,16 +271,6 @@ namespace TunicRandomizer {
             ONSLAUGHT,
         }
 
-        public enum EnemyGenerationType {
-            RANDOM,
-            SEEDED
-        }
-
-        public enum EnemyRandomizationType {
-            RANDOM,
-            BALANCED
-        }
-
         public enum FixedLaurelsType {
             RANDOM,
             SIXCOINS,
@@ -320,6 +316,7 @@ namespace TunicRandomizer {
             // General
             HeirAssistModeEnabled = false;
             ClearEarlyBushes = false;
+            EnableAllCheckpoints = true;
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
             DisableChestInterruption = false;
@@ -329,8 +326,8 @@ namespace TunicRandomizer {
 
             // Enemy Randomizer
             EnemyRandomizerEnabled = false;
-            EnemyDifficulty = EnemyRandomizationType.BALANCED;
-            EnemyGeneration = EnemyGenerationType.SEEDED;
+            BalancedEnemies = true;
+            SeededEnemies = true;
             ExtraEnemiesEnabled = false;
 
             // Race Settings
@@ -356,6 +353,11 @@ namespace TunicRandomizer {
             HeroPathHintsEnabled = hintsEnabled;
             RandomFoxColorsEnabled = randomFoxColorsEnabled;
             HeirAssistModeEnabled = heirAssistEnaled;
+        }
+
+        public string GetSettingsString() {
+            string EncodedSettings = "";
+            return EncodedSettings;
         }
     }
 }
