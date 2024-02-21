@@ -46,7 +46,7 @@ namespace TunicRandomizer {
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
-            Cheats.FastForward = Input.GetKey(KeyCode.Backslash);
+            Cheats.FastForward = Input.GetKey(KeyCode.Backslash) && !TunicRandomizer.Settings.RaceMode;
 
             if (DiedToDeathLink) {
                 if (DeathLinkMessage != "") {
@@ -298,7 +298,7 @@ namespace TunicRandomizer {
                 Logger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
-            if (!SceneLoaderPatches.SpawnedGhosts) {
+            if (!SceneLoaderPatches.SpawnedGhosts && TunicRandomizer.Settings.GhostFoxHintsEnabled) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
 
