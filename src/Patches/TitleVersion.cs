@@ -47,7 +47,7 @@ namespace TunicRandomizer {
             VersionString.layer = 5;
             VersionString.transform.parent = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/").transform;
             VersionString.GetComponent<RectTransform>().sizeDelta = new Vector2(700f, 50f);
-            if (Screen.width <= 1280 && Screen.height <= 800) {
+            if ((float)Screen.width/Screen.height < 1.7f) {
                 VersionString.transform.localPosition = new Vector3(-122f, 240f, 0f);
             } else {
                 VersionString.transform.localPosition = new Vector3(-176f, 240f, 0f);
