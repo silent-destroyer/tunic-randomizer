@@ -488,7 +488,7 @@ namespace TunicRandomizer {
 
                 OptionsGUIPatches.SaveSettings();
             } catch (Exception e) {
-                TunicRandomizer.Logger.LogInfo("Invalid settings string format!");
+                TunicRandomizer.Logger.LogInfo("Error parsing settings string!");
             }
         }
 

@@ -302,25 +302,15 @@ namespace TunicRandomizer {
             GUI.skin.button.fontSize = 20;
             y += 40f;
             GUI.Label(new Rect(10f, y, 300f, 30f), $"Custom Seed: {(CustomSeed == "" ? "Not Set" : CustomSeed.ToString())}");
-            if (CustomSeed != "") {
-                bool ClearSeed = GUI.Button(new Rect(300f, y, 110f, 30f), "Clear");
-                if (ClearSeed) {
-                    CustomSeed = "";
-                }
-            }
             y += 40f;
             bool GenerateSeed = GUI.Button(new Rect(10f, y, 200f, 30f), "Generate Seed");
             if (GenerateSeed) {
                 CustomSeed = new System.Random().Next().ToString();
             }
 
-            bool PasteSeed = GUI.Button(new Rect(220f, y, 200f, 30f), "Paste Seed");
-            if (PasteSeed) {
-                try {
-                    CustomSeed = int.Parse(GUIUtility.systemCopyBuffer, CultureInfo.InvariantCulture).ToString();
-                } catch (System.Exception e) {
-                    Logger.LogError("Invalid custom seed pasted!");
-                }
+            bool ClearSeed = GUI.Button(new Rect(220f, y, 200f, 30f), "Clear Seed");
+            if (ClearSeed) {
+                CustomSeed = "";
             }
             y += 40f;
             bool CopySettings = GUI.Button(new Rect(10f, y, 200f, 30f), "Copy Seed + Settings");
