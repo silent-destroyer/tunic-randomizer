@@ -51,6 +51,8 @@ namespace TunicRandomizer {
             ModelSwaps.SwappedThisSceneAlready = false;
             SpawnedGhosts = false;
 
+            CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
+
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 ModelSwaps.CreateOtherWorldItemBlocks();

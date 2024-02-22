@@ -110,13 +110,12 @@ namespace TunicRandomizer {
             OptionsGUI.setHeading("General");
             OptionsGUI.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
             OptionsGUI.addToggle("Clear Early Bushes", "Off", "On", TunicRandomizer.Settings.ClearEarlyBushes ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleClearEarlyBushes);
+            OptionsGUI.addToggle("Enable All Checkpoints", "Off", "On", TunicRandomizer.Settings.EnableAllCheckpoints ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAllCheckpoints);
             OptionsGUI.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
             OptionsGUI.addToggle("Bonus Upgrades", "Off", "On", TunicRandomizer.Settings.BonusStatUpgradesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBonusStatUpgrades);
             OptionsGUI.addToggle("Disable Chest Interruption", "Off", "On", TunicRandomizer.Settings.DisableChestInterruption ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestInterruption);
             OptionsGUI.addToggle("Skip Item Popups", "Off", "On", TunicRandomizer.Settings.SkipItemAnimations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSkipItemAnimations);
             OptionsGUI.addToggle("Skip Upgrade Animations", "Off", "On", TunicRandomizer.Settings.FasterUpgrades ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterUpgrades);
-            OptionsGUI.addToggle("Enable All Checkpoints", "Off", "On", TunicRandomizer.Settings.EnableAllCheckpoints ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAllCheckpoints);
-
         }
 
         public static void EnemyRandomizerSettings() {
@@ -162,7 +161,7 @@ namespace TunicRandomizer {
         public static void OtherSettingsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Other");
-            OptionsGUI.addToggle("???", "Off", "On", CameraController.Flip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
+            OptionsGUI.addToggle("???", "Off", "On", TunicRandomizer.Settings.CameraFlip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
             OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
             OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
 
@@ -389,6 +388,9 @@ namespace TunicRandomizer {
 
         public static void ToggleAllCheckpoints(int index) {
             TunicRandomizer.Settings.EnableAllCheckpoints = !TunicRandomizer.Settings.EnableAllCheckpoints;
+            foreach(Campfire campfire in GameObject.FindObjectsOfType<Campfire>().Where(campfire => campfire.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
+                campfire.updateUnlockGraphics();
+            }
             SaveSettings();
         }
 
@@ -424,7 +426,9 @@ namespace TunicRandomizer {
         }
 
         public static void ToggleWeirdMode(int index) {
-            CameraController.Flip = !CameraController.Flip;
+            TunicRandomizer.Settings.CameraFlip = !TunicRandomizer.Settings.CameraFlip;
+            CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
+            SaveSettings();
         }
 
         public static void ToggleRandomFoxPalette(int index) {

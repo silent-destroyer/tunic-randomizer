@@ -66,7 +66,7 @@ namespace TunicRandomizer {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)QuickSettings.CopyQuickSettingsInGame, null);
+                    (Il2CppSystem.Action)RandomizerSettings.getSettings, null);
                 } else {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
@@ -76,7 +76,7 @@ namespace TunicRandomizer {
                     $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "<#ff0000>No" : "<#00ff00>Yes").PadLeft(21, '.')}\"\n" +
                     $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Entrance Randomizer..{(SaveFile.GetInt("randomizer entrance rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)QuickSettings.CopyQuickSettingsInGame, null);
+                    (Il2CppSystem.Action)RandomizerSettings.getSettings, null);
                 }
             }
 
