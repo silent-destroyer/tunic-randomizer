@@ -154,12 +154,10 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Randomly swaps out enemies with new ones when you load into a scene. You may even see some enemies you've never seen before!
 - Extra Enemies
   - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos.
-- Enemy Difficulty
-  - Random: No balancing is performed, and all new enemy spawns are chosen randomly from the full pool of enemies.
-  - Balanced: Enemies are replaced with an enemy of similar difficulty.
-- Enemy Generation
-  - Random: Enemies will change every time you leave and come back to an area.
-  - Seeded: Enemy spawns will remain consistent per area.
+- Balanced Enemies
+  - Enemies are randomized based on the difficulty of the original enemy being swapped out.
+- Seeded Enemies
+  - Enemy spawns will remain consistent everytime an area is reloaded.
 ### Fox Customization 🦊
 - Random Fox Colors
   - Fox colors will randomize on every load/scene transition.
