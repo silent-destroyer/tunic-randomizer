@@ -429,8 +429,8 @@ namespace TunicRandomizer {
                 string tunc = split[0];
                 string version = split[1];
                 QuickSettings.CustomSeed = split[2];
+
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(split[3]));
-                TunicRandomizer.Logger.LogInfo(decoded);
                 string[] decodedSplit = decoded.Split(':');
 
                 HexagonQuestGoal = int.Parse(decodedSplit[0]);
