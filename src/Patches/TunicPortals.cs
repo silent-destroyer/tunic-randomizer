@@ -493,6 +493,11 @@ namespace TunicRandomizer {
                         "Ruined Atoll Portal",
                         new List<TunicPortal> {
                             new TunicPortal("Atoll to Far Shore", "Transit_teleporter_atoll"),
+                        }
+                    },
+                    {
+                        "Ruined Atoll Statue",
+                        new List<TunicPortal> {
                             new TunicPortal("Atoll Statue Teleporter", "Library Exterior_"),
                         }
                     },
@@ -1550,6 +1555,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Atoll Redux", false)
             },
             {
+                "Ruined Atoll Statue",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
                 "Frog's Domain Entry",
                 new RegionInfo("Frog Stairs", false)
             },
@@ -2543,6 +2552,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Ruined Atoll Statue",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -2579,6 +2596,16 @@ namespace TunicRandomizer {
             },
             {
                 "Ruined Atoll Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Ruined Atoll",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Ruined Atoll Statue",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Ruined Atoll",
