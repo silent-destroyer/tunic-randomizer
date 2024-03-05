@@ -38,7 +38,6 @@ namespace TunicRandomizer {
         public static float CompletionTimer = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
         public static LadderEnd LastLadder = null;
-
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
 
             __instance.gameObject.AddComponent<WaveSpell>();
@@ -208,7 +207,6 @@ namespace TunicRandomizer {
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
-
             SceneLoaderPatches.TimeOfLastSceneTransition = SaveFile.GetFloat("playtime");
 
             // hide inventory prompt button so it doesn't overlap item messages
@@ -312,6 +310,14 @@ namespace TunicRandomizer {
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 TunicPortals.AltModifyPortals();
+            }
+
+            try {
+                if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
+                    LadderToggles.ToggleLadders();
+                }
+            } catch (Exception e) {
+                Logger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
@@ -502,6 +508,11 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.AltModifyPortals();
+                }
+                if (slotData.TryGetValue("ladder_rando", out var ladderRando)) {
+                    if (SaveFile.GetInt(LadderRandoEnabled) == 0 && ladderRando.ToString() == "1") {
+                        SaveFile.SetInt(LadderRandoEnabled, 1);
+                    }
                 }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {

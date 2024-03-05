@@ -172,6 +172,60 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupLadderPresentation() {
+
+            try {
+
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "cape").First().gameObject;
+
+                GameObject LadderPresentation = GameObject.Instantiate(PresentationBase);
+
+                LadderPresentation.transform.parent = PresentationBase.transform.parent;
+                LadderPresentation.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                LadderPresentation.transform.localPosition = new Vector3(-0.1f, -0.7f, 0f);
+                LadderPresentation.transform.localEulerAngles = new Vector3(20, 20, 0);
+                LadderPresentation.GetComponent<MeshFilter>().mesh = ModelSwaps.LadderGraphic.GetComponent<MeshFilter>().mesh;
+                LadderPresentation.GetComponent<MeshRenderer>().materials = ModelSwaps.LadderGraphic.GetComponent<MeshRenderer>().materials;
+                LadderPresentation.name = "ladder";
+                LadderPresentation.GetComponent<ItemPresentationGraphic>().items = ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.LADDER).Select(item => Inventory.GetItemByName(item.Name)).ToArray();
+                LadderPresentation.SetActive(false);
+
+                GameObject UC1 = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+                UC1.transform.parent = LadderPresentation.transform;
+                UC1.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                UC1.transform.localPosition = new Vector3(-3.1f, 4.3f, 0f);
+                UC1.transform.localEulerAngles = new Vector3(349.4676f, 312.0545f, 0f);
+                UC1.layer = LadderPresentation.layer;
+                GameObject.Destroy(UC1.GetComponent<UnderConstruction>());
+                GameObject.Destroy(UC1.GetComponent<InteractionTrigger>());
+                UC1.SetActive(true);
+
+                GameObject UC2 = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+                UC2.transform.parent = LadderPresentation.transform;
+                UC2.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                UC2.transform.localPosition = new Vector3(2.6f, 1.9f, 1.5f);
+                UC2.transform.localEulerAngles = Vector3.zero;
+                UC2.layer = LadderPresentation.layer;
+                GameObject.Destroy(UC2.GetComponent<UnderConstruction>());
+                GameObject.Destroy(UC2.GetComponent<InteractionTrigger>());
+                UC2.SetActive(true);
+
+                ModelSwaps.Items["Ladder"] = GameObject.Instantiate(LadderPresentation);
+                ModelSwaps.Items["Ladder"].SetActive(false);
+                GameObject.DontDestroyOnLoad(ModelSwaps.Items["Ladder"]);
+                for (int i = 0; i < ModelSwaps.Items["Ladder"].transform.childCount; i++) {
+                    GameObject.Destroy(ModelSwaps.Items["Ladder"].transform.GetChild(i).gameObject.GetComponent<SphereCollider>());
+                    GameObject.Destroy(ModelSwaps.Items["Ladder"].transform.GetChild(i).gameObject.GetComponent<BoxCollider>());
+                }
+                GameObject.Destroy(ModelSwaps.Items["Ladder"].GetComponent<ItemPresentationGraphic>());
+
+                RegisterNewItemPresentation(LadderPresentation.GetComponent<ItemPresentationGraphic>());
+
+            } catch (Exception e) {
+                Logger.LogError("Ladder presentation error: " + e.Message);
+            }
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);

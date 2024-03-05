@@ -30,6 +30,7 @@ namespace TunicRandomizer {
         public static ItemTracker Tracker;
 
         public override void Load() {
+            TunicLogger.SetLogger(Log);
             Logger = Log;
             Logger.LogInfo(PluginInfo.NAME+ " v" + PluginInfo.VERSION + " loaded!");
             
@@ -43,6 +44,8 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<VisibleByNotHavingItem>();
             ClassInjector.RegisterTypeInIl2Cpp<HeroGraveToggle>();
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();
+            ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
+            ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
 
             ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Il2CppSystem.Type[]

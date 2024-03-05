@@ -249,7 +249,7 @@ namespace TunicRandomizer {
                 CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET) {
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Item.QuantityToGive;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -450,7 +450,7 @@ namespace TunicRandomizer {
                 CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET) {
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Check.Reward.Amount;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {

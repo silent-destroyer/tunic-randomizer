@@ -129,6 +129,12 @@ namespace TunicRandomizer {
             }
             if (loadingScene.name == "Atoll Redux" && !EnemyRandomizer.Enemies.ContainsKey("plover")) {
                 EnemyRandomizer.InitializeEnemies("Atoll Redux");
+
+                ModelSwaps.LadderGraphic = GameObject.Instantiate(GameObject.Find("_INTERACTABLES/ladder_raisable ladder shortcut/ladder graphic/"));
+                ModelSwaps.LadderGraphic.SetActive(false);
+                GameObject.DontDestroyOnLoad(ModelSwaps.LadderGraphic);
+                ItemPresentationPatches.SetupLadderPresentation();
+
                 SceneLoader.LoadScene("Sewer");
                 return;
             }
@@ -170,9 +176,15 @@ namespace TunicRandomizer {
                 if (GhostHints.GhostFox == null) {
                     GhostHints.InitializeGhostFox();
                 }
+
                 ModelSwaps.InitializeItems();
+
                 TextBuilderPatches.SetupCustomGlyphSprites();
                 EnemyRandomizer.InitializeEnemies("Overworld Redux");
+
+                LadderToggles.CreateLadderItems();
+                ModelSwaps.CreateConstructionObject();
+
                 SceneLoader.LoadScene("Cathedral Arena");
                 return;
             }
@@ -413,6 +425,14 @@ namespace TunicRandomizer {
             } catch (Exception ex) {
                 Logger.LogError("An error occurred creating new fairy seeker spell targets:");
                 Logger.LogError(ex.Message + " " + ex.StackTrace);
+            }
+
+            try {
+                if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
+                    LadderToggles.ToggleLadders();
+                }
+            } catch (Exception e) {
+                Logger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {
