@@ -315,7 +315,7 @@ namespace TunicRandomizer {
                 }
 
                 if (TunicRandomizer.Settings.ClearEarlyBushes) {
-                    int[] bushesToClear = new int[] { 7, 2, 16, 47, 42 };
+                    int[] bushesToClear = new int[] { 7, 2, 16, 9, 23, 26, 47, 42, 58, 62, 64 };
                     foreach (int bush in bushesToClear) {
                         if (GameObject.Find($"_Bush and Grass/bush ({bush})/") != null) {
                             GameObject.Find($"_Bush and Grass/bush ({bush})/").SetActive(false);
