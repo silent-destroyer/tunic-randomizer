@@ -509,7 +509,7 @@ namespace TunicRandomizer {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.AltModifyPortals();
                 }
-                if (slotData.TryGetValue("ladder_rando", out var ladderRando)) {
+                if (slotData.TryGetValue("shuffle_ladders", out var ladderRando)) {
                     if (SaveFile.GetInt(LadderRandoEnabled) == 0 && ladderRando.ToString() == "1") {
                         SaveFile.SetInt(LadderRandoEnabled, 1);
                     }
