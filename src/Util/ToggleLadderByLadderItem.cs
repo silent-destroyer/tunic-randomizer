@@ -54,7 +54,7 @@ namespace TunicRandomizer {
                 GameObject.Destroy(gameObject);
             }
 
-            if (this.GetComponent<Ladder>() != null && !this.ladderInfo.IsStoneLadder) {
+            if (this.GetComponent<Ladder>() != null && !this.ladderInfo.IsStoneLadder && ladderItem.Quantity == 0) {
                 foreach (LadderEnd end in this.GetComponent<Ladder>().ladderEnds) {
                     if ((end.name.ToLower().Contains("bottom") && ladderInfo.IsExit) || end.name.ToLower().Contains("top") && ladderInfo.IsEntrance) {
                         if (end.gameObject.GetComponent<BoxCollider>() == null) {
