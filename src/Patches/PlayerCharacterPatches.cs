@@ -38,6 +38,7 @@ namespace TunicRandomizer {
         public static float CompletionTimer = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
         public static LadderEnd LastLadder = null;
+
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
 
             __instance.gameObject.AddComponent<WaveSpell>();
@@ -329,7 +330,11 @@ namespace TunicRandomizer {
             PaletteEditor.SetupFoxCape(__instance);
 
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
-                PaletteEditor.RandomizeFoxColors();
+                try {
+                    PaletteEditor.RandomizeFoxColors();
+                } catch(Exception e) {
+                    TunicLogger.LogInfo("Error randomizing fox colors!");
+                }
             }
 
             if (TunicRandomizer.Settings.UseCustomTexture) {

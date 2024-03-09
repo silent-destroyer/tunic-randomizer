@@ -70,6 +70,9 @@ namespace TunicRandomizer {
                 barrier.GetComponent<Signpost>().message = new LanguageLine();
                 barrier.GetComponent<Signpost>().message.text = $"<#FF0000>[death] uhndur kuhnstruhk$uhn <#FF0000>[death]\n\n\"{ladderItem.name.ToUpper()}\"";
                 barrier.SetActive(true);
+                if (ladderInfo.LargerColliders) {
+                    barrier.GetComponent<BoxCollider>().size = new Vector3(5f, 5f, 5f);
+                }
                 constructionItems.Add(barrier);
             }
 

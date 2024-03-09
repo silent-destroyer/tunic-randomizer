@@ -220,7 +220,11 @@ namespace TunicRandomizer {
             PlayerCharacterPatches.StungByBee = false;
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
-                PaletteEditor.RandomizeFoxColors();
+                try {
+                    PaletteEditor.RandomizeFoxColors();
+                } catch (Exception e) {
+                    TunicLogger.LogInfo("Error randomizing fox colors!");
+                }
             }
 
             if (PlayerCharacterPatches.IsTeleporting) {

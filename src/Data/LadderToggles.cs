@@ -21,11 +21,13 @@ namespace TunicRandomizer {
         public bool IsEntrance;
         public bool IsExit;
 
+        public bool LargerColliders;
+
         public string OptionalStateVar;
 
         public LadderInfo() { }
 
-        public LadderInfo(string ladder, List<TransformData> constructionPlacements, bool isStoneLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "") {
+        public LadderInfo(string ladder, List<TransformData> constructionPlacements, bool isStoneLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "", bool largerColliders = false) {
             LadderNameAndPosition = ladder;
             ConstructionPlacements = constructionPlacements;
             OptionalObjectsToDisable = new List<string>();
@@ -33,8 +35,9 @@ namespace TunicRandomizer {
             IsEntrance = isEntrance;
             IsExit = isExit;
             OptionalStateVar = optionalStateVar;
+            LargerColliders = largerColliders;
         }
-        public LadderInfo(string ladder, List<TransformData> constructionPlacements, List<string> optionalObjectsToDisable, bool isStoneLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "") {
+        public LadderInfo(string ladder, List<TransformData> constructionPlacements, List<string> optionalObjectsToDisable, bool isStoneLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "", bool largerColliders = false) {
             LadderNameAndPosition = ladder;
             ConstructionPlacements = constructionPlacements;
             OptionalObjectsToDisable = optionalObjectsToDisable;
@@ -42,6 +45,7 @@ namespace TunicRandomizer {
             IsEntrance = isEntrance;
             IsExit = isExit;
             OptionalStateVar = optionalStateVar;
+            LargerColliders = largerColliders;
         }
 
     }
@@ -151,9 +155,10 @@ namespace TunicRandomizer {
                             new LadderInfo(
                                 "Wooden Ladder (8 unit) (4) (day only) (67.5, 28.0, -126.0)",
                                 new List<TransformData>(){
-                                    new TransformData(new Vector3(68.27374f, 36.08334f, -126.0132f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
+                                    new TransformData(new Vector3(68.37374f, 36.08334f, -126.0132f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
                                     new TransformData(new Vector3(65.12504f, 28.08334f, -125.325f), new Quaternion(0f, 0.2191043f, 0f, -0.9757015f), Vector3.one),
-                                }
+                                },
+                                largerColliders: true
                             ),
                             // middle ladder next to chest
                             new LadderInfo(
@@ -161,7 +166,10 @@ namespace TunicRandomizer {
                                 new List<TransformData>(){
                                     new TransformData(new Vector3(63.70097f, 28.08334f, -128.5632f), new Quaternion(0f, -0.7047275f, 0f, 0.7094781f), Vector3.one),
                                     new TransformData(new Vector3(65.81023f, 20.08334f, -131.4398f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
-                                }
+                                    new TransformData(new Vector3(68.37518f, 30f, -136.1049f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
+                                    //new TransformData(new Vector3(68.35239f, 28.08334f, -139.5678f), new Quaternion(0f, -0.700497f, 0f, 0.7136553f), Vector3.one),
+                                },
+                                largerColliders: true
                             ),
                             // lowest ladder after bushes
                             new LadderInfo(
@@ -184,7 +192,8 @@ namespace TunicRandomizer {
                                     new TransformData(new Vector3(13.2333f, 44.08334f, -60.09396f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
                                 },
                                 new List<string>() {
-                                    "_Shortcuts Etc/Stone Switch/"
+                                    "_Shortcuts Etc/Stone Switch/",
+                                    "_Shortcuts Etc/stone ladder hidden/stone ladder hidden steps/"
                                 },
                                 true,
                                 optionalStateVar: "SV_postForestLadderToCheckpoint"
@@ -565,6 +574,14 @@ namespace TunicRandomizer {
                                 new List<TransformData>(){
                                     new TransformData(new Vector3(6.933334f, 16.99422f, -77.32423f), new Quaternion(0f, 0.7071041f, 0f, 0.7071094f), Vector3.one),
                                     new TransformData(new Vector3(4.934871f, 1.444999f, -77.42425f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
+                                }
+                            ),
+                            new LadderInfo(
+                                // ladder right side of power line
+                                "Wooden Ladder (12 unit) (2) (37.0, 3.0, -70.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(36.77802f, 16.07755f, -70.89441f), new Quaternion(0f, 1f, 0f, 4.247823E-06f), Vector3.one),
+                                    new TransformData(new Vector3(36.99999f, 3f, -68.35001f), new Quaternion(0f, 1f, 0f, 3.770986E-06f), Vector3.one),
                                 }
                             ),
                             new LadderInfo(

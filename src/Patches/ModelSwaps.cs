@@ -1195,7 +1195,7 @@ namespace TunicRandomizer {
             GameObject.Destroy(UnderConstruction.GetComponent<Signpost>());
             UnderConstruction.AddComponent<UnderConstruction>();
             UnderConstruction.GetComponent<InteractionTrigger>().Start();
-            UnderConstruction.GetComponent<SphereCollider>().radius = 2f;
+            UnderConstruction.GetComponent<SphereCollider>().radius = 2.5f;
             UnderConstruction.transform.localScale = Vector3.one;
             UnderConstruction.layer = 0;
             UnderConstruction.name = "under construction";
