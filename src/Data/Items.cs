@@ -283,26 +283,27 @@ namespace TunicRandomizer {
             { "Pages 54-55", new ItemData("Pages 54-55", "useful", "27", ItemTypes.PAGE, 1) },
 
             // Ladders
-            { "Overworld Town Ladders", new ItemData("Overworld Town Ladders", "progression", "Overworld Town Ladders", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in Overworld Town", new ItemData("Ladders in Overworld Town", "progression", "Ladders in Overworld Town", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders near Weathervane", new ItemData("Ladders near Weathervane", "progression", "Ladders near Weathervane", ItemTypes.LADDER, 1) }, // DONE
-            { "Overworld Shortcut Ladders", new ItemData("Overworld Shortcut Ladders", "progression", "Overworld Shortcut Ladders", ItemTypes.LADDER, 1) }, // DONE
-            { "Ladder Drop to East Forest", new ItemData("Ladder Drop to East Forest", "progression", "Ladder Drop to East Forest", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders near Overworld Checkpoint", new ItemData("Ladders near Overworld Checkpoint", "progression", "Ladders near Overworld Checkpoint", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladder to East Forest", new ItemData("Ladder to East Forest", "progression", "Ladder to East Forest", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders to Lower Forest", new ItemData("Ladders to Lower Forest", "progression", "Ladders to Lower Forest", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders near Patrol Cave", new ItemData("Ladders near Patrol Cave", "progression", "Ladders near Patrol Cave", ItemTypes.LADDER, 1) }, // DONE
-            { "Ladder to Well", new ItemData("Ladder to Well", "progression", "Ladder to Well", ItemTypes.LADDER, 1) }, // DONE
-            { "Well Back Ladder", new ItemData("Well Back Ladder", "progression", "Well Back Ladder", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in Well", new ItemData("Ladders in Well", "progression", "Ladders in Well", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders to West Bell", new ItemData("Ladders to West Bell", "progression", "Ladders to West Bell", ItemTypes.LADDER, 1) }, // DONE
             { "Ladder to Quarry", new ItemData("Ladder to Quarry", "progression", "Ladder to Quarry", ItemTypes.LADDER, 1) }, // DONE
-            { "Dark Tomb Ladder", new ItemData("Dark Tomb Ladder", "progression", "Dark Tomb Ladder", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladder in Dark Tomb", new ItemData("Ladder in Dark Tomb", "progression", "Ladder in Dark Tomb", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders near Dark Tomb", new ItemData("Ladders near Dark Tomb", "progression", "Ladders near Dark Tomb", ItemTypes.LADDER, 1) }, // DONE
             { "Ladder near Temple Rafters", new ItemData("Ladder near Temple Rafters", "progression", "Ladder near Temple Rafters", ItemTypes.LADDER, 1) }, // DONE
             { "Ladder to Swamp", new ItemData("Ladder to Swamp", "progression", "Ladder to Swamp", ItemTypes.LADDER, 1) }, // DONE
-            { "Swamp Ladders", new ItemData("Swamp Ladders", "progression", "Swamp Ladders", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in Swamp", new ItemData("Ladders in Swamp", "progression", "Ladders in Swamp", ItemTypes.LADDER, 1) }, // DONE
             { "Ladder to Ruined Atoll", new ItemData("Ladder to Ruined Atoll", "progression", "Ladder to Ruined Atoll", ItemTypes.LADDER, 1) }, // DONE
-            { "South Atoll Ladders", new ItemData("South Atoll Ladders", "progression", "South Atoll Ladders", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in South Atoll", new ItemData("Ladders in South Atoll", "progression", "Ladders in South Atoll", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders to Frog's Domain", new ItemData("Ladders to Frog's Domain", "progression", "Ladders to Frog's Domain", ItemTypes.LADDER, 1) }, // DONE
-            { "Hourglass Cave Ladders", new ItemData("Hourglass Cave Ladders", "progression", "Hourglass Cave Ladders", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in Hourglass Cave", new ItemData("Ladders in Hourglass Cave", "progression", "Ladders in Hourglass Cave", ItemTypes.LADDER, 1) }, // DONE
             { "Ladder to Beneath the Vault", new ItemData("Ladder to Beneath the Vault", "progression", "Ladder to Beneath the Vault", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in Lower Quarry", new ItemData("Ladders in Lower Quarry", "progression", "Ladders in Lower Quarry", ItemTypes.LADDER, 1) }, // DONE
+            { "Ladders in Library", new ItemData("Ladders in Library", "progression", "Ladders in Library", ItemTypes.LADDER, 1) }, // DONE
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {
@@ -513,26 +514,27 @@ namespace TunicRandomizer {
             {"25", "Pages 50-51"},
             {"26", "Pages 52-53 (Icebolt)"},
             {"27", "Pages 54-55"},
-            { "Overworld Town Ladders", "Overworld Town Ladders" },
+            { "Ladders in Overworld Town", "Ladders in Overworld Town" },
             { "Ladders near Weathervane", "Ladders near Weathervane" },
-            { "Overworld Shortcut Ladders", "Overworld Shortcut Ladders" },
-            { "Ladder Drop to East Forest", "Ladder Drop to East Forest" },
+            { "Ladders near Overworld Checkpoint", "Ladders near Overworld Checkpoint" },
+            { "Ladder to East Forest", "Ladder to East Forest" },
             { "Ladders to Lower Forest", "Ladders to Lower Forest" },
             { "Ladders near Patrol Cave", "Ladders near Patrol Cave" },
-            { "Ladder to Well", "Ladder to Well" },
-            { "Well Back Ladder", "Well Back Ladder" },
+            { "Ladders in Well", "Ladders in Well" },
             { "Ladders to West Bell", "Ladders to West Bell" },
             { "Ladder to Quarry", "Ladder to Quarry" },
-            { "Dark Tomb Ladder", "Dark Tomb Ladder" },
+            { "Ladder in Dark Tomb", "Ladder in Dark Tomb" },
             { "Ladders near Dark Tomb", "Ladders near Dark Tomb" },
             { "Ladder near Temple Rafters", "Ladder near Temple Rafters" },
             { "Ladder to Swamp", "Ladder to Swamp" },
-            { "Swamp Ladders", "Swamp Ladders" },
+            { "Ladders in Swamp", "Ladders in Swamp" },
             { "Ladder to Ruined Atoll", "Ladder to Ruined Atoll" },
-            { "South Atoll Ladders", "South Atoll Ladders" },
+            { "Ladders in South Atoll", "Ladders in South Atoll" },
             { "Ladders to Frog's Domain", "Ladders to Frog's Domain" },
-            { "Hourglass Cave Ladders", "Hourglass Cave Ladders" },
+            { "Ladders in Hourglass Cave", "Ladders in Hourglass Cave" },
             { "Ladder to Beneath the Vault", "Ladder to Beneath the Vault" },
+            { "Ladders in Lower Quarry", "Ladders in Lower Quarry" },
+            { "Ladders in Library", "Ladders in Library" },
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {

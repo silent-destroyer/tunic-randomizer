@@ -56,6 +56,7 @@ namespace TunicRandomizer {
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 ModelSwaps.CreateOtherWorldItemBlocks();
+                TunicLogger.LogInfo("Done loading resources!");
                 SceneLoader.LoadScene("TitleScreen");
                 return;
             }

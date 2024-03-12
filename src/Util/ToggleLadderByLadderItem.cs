@@ -30,7 +30,7 @@ namespace TunicRandomizer {
             }
 
             for (int i = 0; i < this.transform.childCount; i++) {
-                if (PlayerCharacter.instance.currentLadder == this.GetComponent<Ladder>()) {
+                if (PlayerCharacter.instance.currentLadder == this.GetComponent<Ladder>() && this.GetComponent<Ladder>() != null) {
                     continue;
                 }
                 this.transform.GetChild(i).gameObject.SetActive(ladderItem.Quantity > 0);
@@ -54,7 +54,7 @@ namespace TunicRandomizer {
                 GameObject.Destroy(gameObject);
             }
 
-            if (this.GetComponent<Ladder>() != null && !this.ladderInfo.IsStoneLadder && ladderItem.Quantity == 0) {
+            if (this.GetComponent<Ladder>() != null && !this.ladderInfo.IsSpecialLadder && ladderItem.Quantity == 0) {
                 foreach (LadderEnd end in this.GetComponent<Ladder>().ladderEnds) {
                     if ((end.name.ToLower().Contains("bottom") && ladderInfo.IsExit) || end.name.ToLower().Contains("top") && ladderInfo.IsEntrance) {
                         if (end.gameObject.GetComponent<BoxCollider>() == null) {

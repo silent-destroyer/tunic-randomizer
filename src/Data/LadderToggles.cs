@@ -16,7 +16,7 @@ namespace TunicRandomizer {
 
         public List<string> OptionalObjectsToDisable;
 
-        public bool IsStoneLadder;
+        public bool IsSpecialLadder;
 
         public bool IsEntrance;
         public bool IsExit;
@@ -27,21 +27,21 @@ namespace TunicRandomizer {
 
         public LadderInfo() { }
 
-        public LadderInfo(string ladder, List<TransformData> constructionPlacements, bool isStoneLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "", bool largerColliders = false) {
+        public LadderInfo(string ladder, List<TransformData> constructionPlacements, bool isSpecialLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "", bool largerColliders = false) {
             LadderNameAndPosition = ladder;
             ConstructionPlacements = constructionPlacements;
             OptionalObjectsToDisable = new List<string>();
-            IsStoneLadder = isStoneLadder;
+            IsSpecialLadder = isSpecialLadder;
             IsEntrance = isEntrance;
             IsExit = isExit;
             OptionalStateVar = optionalStateVar;
             LargerColliders = largerColliders;
         }
-        public LadderInfo(string ladder, List<TransformData> constructionPlacements, List<string> optionalObjectsToDisable, bool isStoneLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "", bool largerColliders = false) {
+        public LadderInfo(string ladder, List<TransformData> constructionPlacements, List<string> optionalObjectsToDisable, bool isSpecialLadder = false, bool isEntrance = false, bool isExit = false, string optionalStateVar = "", bool largerColliders = false) {
             LadderNameAndPosition = ladder;
             ConstructionPlacements = constructionPlacements;
             OptionalObjectsToDisable = optionalObjectsToDisable;
-            IsStoneLadder = isStoneLadder;
+            IsSpecialLadder = isSpecialLadder;
             IsEntrance = isEntrance;
             IsExit = isExit;
             OptionalStateVar = optionalStateVar;
@@ -63,7 +63,7 @@ namespace TunicRandomizer {
             SpecialItem Ladder = ScriptableObject.CreateInstance<SpecialItem>();
 
             Ladder.name = name;
-            Ladder.collectionMessage = new LanguageLine();
+            Ladder.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
             Ladder.collectionMessage.text = $"\"{LadderCollectionMessages[name]}\"";
             Ladder.controlAction = "";
 
@@ -71,26 +71,27 @@ namespace TunicRandomizer {
         }
 
         public static Dictionary<string, string> LadderCollectionMessages = new Dictionary<string, string>() {
-            { "Overworld Town Ladders", "Overworld Town Ladders" },
-            { "Ladders near Weathervane", "Ladders by Weathervane" },
-            { "Overworld Shortcut Ladders", "Overworld Shortcuts" },
-            { "Ladder Drop to East Forest", "Ladder to East Forest" },
+            { "Ladders in Overworld Town", "Overworld Town" },
+            { "Ladders near Weathervane", "Near Weathervane" },
+            { "Ladders near Overworld Checkpoint", "By Overworld Checkpoint" },
+            { "Ladder to East Forest", "To East Forest" },
             { "Ladders to Lower Forest", "To Lower East Forest" },
             { "Ladders near Patrol Cave", "Near Patrol Cave" },
-            { "Ladder to Well", "Ladder to Well" },
-            { "Well Back Ladder", "Back of Well Ladder" },
-            { "Ladders to West Bell", "Ladders to West Bell" },
-            { "Ladder to Quarry", "Ladder to Quarry" },
-            { "Dark Tomb Ladder", "Dark Tomb Ladder" },
-            { "Ladders near Dark Tomb", "Ladders near Dark Tomb" },
-            { "Ladder near Temple Rafters", "Ladders by Upper Temple" },
+            { "Ladders in Well", "Ladders in Well" },
+            { "Ladders to West Bell", "To West Bell" },
+            { "Ladder to Quarry", "To Quarry" },
+            { "Ladder in Dark Tomb", "In Dark Tomb" },
+            { "Ladders near Dark Tomb", "Near Dark Tomb" },
+            { "Ladder near Temple Rafters", "Near Temple Rafters" },
             { "Ladder to Swamp", "Ladder to Swamp" },
-            { "Swamp Ladders", "Swamp Ladders" },
+            { "Ladders in Swamp", "Ladders in Swamp" },
             { "Ladder to Ruined Atoll", "To Ruined Atoll" },
-            { "South Atoll Ladders", "South Atoll Ladders" },
-            { "Ladders to Frog's Domain", "To Frog's Domain" },
-            { "Hourglass Cave Ladders", "Hourglass Cave Tower" },
-            { "Ladder to Beneath the Vault", "To Beneath the Vault" },
+            { "Ladders in South Atoll", "South Atoll" },
+            { "Ladders to Frog's Domain", "Frog's Domain" },
+            { "Ladders in Hourglass Cave", "Hourglass Cave Tower" },
+            { "Ladder to Beneath the Vault", "Beneath the Vault" },
+            { "Ladders in Lower Quarry", "Lower Quarry" },
+            { "Ladders in Library", "Library Ladders" },
         };
 
         public static void ToggleLadders() {
@@ -106,7 +107,7 @@ namespace TunicRandomizer {
                     foreach(LadderInfo ladderInfo in LaddersUnderConstruction[scene][LadderItem]) {
                         GameObject Ladder = ladders.Where(ladder => $"{ladder.name} {ladder.transform.position.ToString()}" == ladderInfo.LadderNameAndPosition).DefaultIfEmpty(null).First().gameObject;
                         if (Ladder != null) {
-                            if (ladderInfo.IsStoneLadder && Ladder.transform.parent != null) {
+                            if (ladderInfo.IsSpecialLadder && Ladder.transform.parent != null) {
                                 Ladder = Ladder.transform.parent.gameObject;
                             }
 
@@ -123,7 +124,7 @@ namespace TunicRandomizer {
             {
                 "Overworld Redux", new Dictionary<string, List<LadderInfo>>() {
                     {
-                        "Overworld Town Ladders", new List<LadderInfo>() {
+                        "Ladders in Overworld Town", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Wooden Ladder (12 unit) (-45.0, 28.0, -44.0)",
                                 new List<TransformData>() {
@@ -182,7 +183,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Shortcut Ladders", new List<LadderInfo>() {
+                        "Ladders near Overworld Checkpoint", new List<LadderInfo>() {
                             // right ladder (closer to east forest)
                             new LadderInfo(
                                 "Ladder (12.5, 44.0, -60.0)",
@@ -309,7 +310,7 @@ namespace TunicRandomizer {
                         }
                     },
                     { 
-                        "Ladder to Well", new List<LadderInfo>() {
+                        "Ladders in Well", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Wooden Ladder (12 unit) (1) (-34.0, 28.0, 1.5)",
                                 new List<TransformData>(){
@@ -354,7 +355,7 @@ namespace TunicRandomizer {
             {
                 "Forest Belltower", new Dictionary<string, List<LadderInfo>>() {
                     {
-                        "Ladder Drop to East Forest", new List<LadderInfo>() {
+                        "Ladder to East Forest", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Wooden Ladder (12 unit) (508.0, 26.0, 65.0)",
                                 new List<TransformData>(){
@@ -454,7 +455,7 @@ namespace TunicRandomizer {
             {
                 "Crypt Redux", new Dictionary<string, List<LadderInfo>>() {
                     {
-                        "Dark Tomb Ladder", new List<LadderInfo>() {
+                        "Ladder in Dark Tomb", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Ladder (-77.6, 25.0, 76.0)",
                                 new List<TransformData>(){
@@ -470,7 +471,7 @@ namespace TunicRandomizer {
             {
                 "Town Basement", new Dictionary<string, List<LadderInfo>>() {
                     {
-                        "Hourglass Cave Ladders", new List<LadderInfo>() {
+                        "Ladders in Hourglass Cave", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Wooden Ladder (8 unit) (2) (-202.0, 3.0, 155.0)",
                                 new List<TransformData>(){
@@ -514,7 +515,7 @@ namespace TunicRandomizer {
             { 
                 "Sewer", new Dictionary<string, List<LadderInfo>>() {
                     {
-                        "Well Back Ladder", new List<LadderInfo>() {
+                        "Ladders in Well", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Wooden Ladder (8 unit) (320.0, 1.0, 82.0)",
                                 new List<TransformData>(){
@@ -522,10 +523,6 @@ namespace TunicRandomizer {
                                     new TransformData(new Vector3(319.0251f, 1.002909f, 81.77502f), new Quaternion(0f, 0.7071068f, 0f, 0.7071067f), Vector3.one),
                                 }
                             ),
-                        }
-                    },
-                    { 
-                        "Ladder to Well", new List<LadderInfo>() {
                             new LadderInfo(
                                 "Wooden Ladder (12 unit) (392.0, 15.0, 25.0)",
                                 new List<TransformData>(){
@@ -559,7 +556,7 @@ namespace TunicRandomizer {
                         }
                     },
                     { 
-                        "South Atoll Ladders", new List<LadderInfo>() {
+                        "Ladders in South Atoll", new List<LadderInfo>() {
                             new LadderInfo(
                                 // ladder left of gate
                                 "Wooden Ladder (8 unit) (-32.0, 4.9, -74.8)",
@@ -685,7 +682,7 @@ namespace TunicRandomizer {
             {
                 "Swamp Redux 2", new Dictionary<string, List<LadderInfo>>() {
                     {
-                        "Swamp Ladders", new List<LadderInfo>() {
+                        "Ladders in Swamp", new List<LadderInfo>() {
                             new LadderInfo(
                                 // shortcut ladder past night bridge
                                 "Ladder (13.9, 0.0, 42.5)",
@@ -717,6 +714,150 @@ namespace TunicRandomizer {
                     }
                 }
             },
+            { 
+                "Quarry Redux", new Dictionary<string, List<LadderInfo>>() {
+                    {
+                        "Ladders in Lower Quarry", new List<LadderInfo>() {
+                            new LadderInfo(
+                                "ladder (-91.3, -52.0, -89.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(-89.26022f, -44.06429f, -89.06386f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
+                                    new TransformData(new Vector3(-91.11002f, -52.89999f, -89f), new Quaternion(0f, 0.7071068f, 0f, 0.7071067f), Vector3.one),
+                                },
+                                isSpecialLadder: true
+/*                                optionalObjectsToDisable: new List<string>() {
+                                    "_Environment-Prefabs/quarry_ladder_8u/quarry_ladder_top graphic"
+                                }*/
+                            ),
+                            new LadderInfo(
+                                "ladder (-102.3, -61.0, -86.1)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(-100.1232f, -52.88604f, -86.125f), new Quaternion(0f, 0.7071068f, 0f, 0.7071067f), Vector3.one),
+                                    new TransformData(new Vector3(-102.3911f, -68.74783f, -86.45453f), new Quaternion(0f, 0.7071068f, 0f, 0.7071067f), Vector3.one),
+                                },
+                                isSpecialLadder: true
+/*                                optionalObjectsToDisable: new List<string>() {
+                                    "_Environment-Prefabs/quarry_ladder_8u (1)/quarry_ladder_top graphic"
+                                }*/
+                            ),
+                        }
+                    }
+                }
+            },
+            { 
+                "Library Exterior", new Dictionary<string, List<LadderInfo>>() {
+                    { 
+                        "Ladders in Library", new List<LadderInfo>() {
+                            new LadderInfo(
+                                "Wooden Ladder (12 unit) (22.0, 44.0, 6.3)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(22.95f, 44f, 6.250004f), new Quaternion(0f, 0.7071078f, 0f, -0.7071058f), Vector3.one),
+                                    new TransformData(new Vector3(21.0632f, 54.06445f, 6.249998f), new Quaternion(0f, 0.7071078f, 0f, -0.7071058f), Vector3.one),
+                                }
+                            ),
+                        }
+                    }
+                }
+            },
+            { 
+                "Library Hall", new Dictionary<string, List<LadderInfo>>() {
+                    { 
+                        "Ladders in Library", new List<LadderInfo>() {
+                            new LadderInfo(
+                                "ladder (161.3, 9.9, -70.4)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(162.6465f, 21.01357f, -70.46925f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
+                                    new TransformData(new Vector3(161.1601f, 9.959583f, -70.4287f), new Quaternion(0f, 0.7124169f, 0f, 0.7017565f), Vector3.one),
+                                },
+                                isSpecialLadder: true
+                            ),
+                            new LadderInfo(
+                                "Wooden Ladder (12 unit) to upper level (115.0, 26.3, 8.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(115f, 26.11068f, 6.95f), new Quaternion(0f, -3.861584E-06f, 0f, 1f), Vector3.one),
+                                },
+                                isExit: true
+                            ),
+                        }
+                    }
+                }
+            },
+            { 
+                "Library Rotunda", new Dictionary<string, List<LadderInfo>>() {
+                    { 
+                        "Ladders in Library", new List<LadderInfo>() {
+                            new LadderInfo(
+                                "Wooden Ladder (8 unit) (-30.1, -16.0, 33.1)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(-30.6415f, -7.829804f, 32.47433f), new Quaternion(0f, 0.9415439f, 0f, -0.3368903f), Vector3.one),
+                                },
+                                isEntrance: true
+                            ),
+                            new LadderInfo(
+                                "Wooden Ladder (12 unit) (-4.1, -5.6, 20.4)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(-2.881019f, -5.925f, 20.49752f), new Quaternion(0f, 0.7409512f, 0f, -0.6715589f), Vector3.one),
+                                },
+                                isExit: true
+                            ),
+                        }
+                    }
+                }
+            },
+            { 
+                "Library Lab", new Dictionary<string, List<LadderInfo>>() {
+                    {
+                        "Ladders in Library", new List<LadderInfo>() {
+                            new LadderInfo(
+                                "Wooden Ladder (8 unit) entrance (139.0, 79.0, -118.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(139.9368f, 87.08334f, -118f), new Quaternion(0f, 0.7071068f, 0f, 0.7071067f), Vector3.one),
+                                },
+                                isEntrance: true
+                            ),
+                            new LadderInfo(
+                                "Wooden Ladder (12 unit) (123.5, 95.0, -44.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(123.9998f, 107.1384f, -43.06321f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
+                                    new TransformData(new Vector3(123.5f, 95.04955f, -44.75001f), new Quaternion(0f, -3.861584E-06f, 0f, 1f), Vector3.one),
+                                }
+                            ),
+                            new LadderInfo(
+                                "Wooden Ladder (12 unit) (1) (147.5, 95.0, -50.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(147.5f, 99.08334f, -49.06321f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
+                                    new TransformData(new Vector3(147.5f, 95.04958f, -50.95f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
+                                }
+                            ),
+                            new LadderInfo(
+                                "Wooden Ladder (to arena) (155.0, 95.0, -59.0)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(154.05f, 95.04998f, -59.00001f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
+                                },
+                                isExit: true
+                            ),
+                        }
+                    }
+                }
+            },
+            { 
+                "Library Arena", new Dictionary<string, List<LadderInfo>>() {
+                    {
+                        "Ladders in Library", new List<LadderInfo>() {
+                            new LadderInfo(
+                                "ladders upper (-0.1, -5.0, -11.8)",
+                                new List<TransformData>(){
+                                    new TransformData(new Vector3(-0.06000001f, -0.9255302f, -10.0132f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
+                                    new TransformData(new Vector3(-4.428625E-05f, -5.926672f, -11.71998f), new Quaternion(0.1464072f, 0f, 0f, -0.9892244f), Vector3.one),
+                                },
+                                optionalObjectsToDisable: new List<string>() {
+                                    "_Environment (Tower Geo)/ladder graphics/"
+                                }
+                            ),
+                        }
+                    }
+                }
+            }
         };
     }
 }
