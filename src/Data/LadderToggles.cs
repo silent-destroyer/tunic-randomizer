@@ -118,6 +118,44 @@ namespace TunicRandomizer {
                     }
                 }
             }
+
+            if (scene == "Overworld Redux") {
+                SpawnLadderChecklist();
+            }
+        }
+
+        private static void SpawnLadderChecklist() {
+            GameObject sign = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+            sign.GetComponent<MeshFilter>().mesh = ModelSwaps.Signpost.GetComponent<MeshFilter>().mesh;
+            sign.GetComponent<MeshRenderer>().materials = ModelSwaps.Signpost.GetComponent<MeshRenderer>().materials;
+            sign.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+            sign.transform.position = new Vector3(-9.2078f, 44.0833f, -23.3063f);
+            sign.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+            sign.transform.localScale = Vector3.one * 1.5f;
+            sign.GetComponent<UnderConstruction>().isChecklistSign = true;
+            sign.SetActive(true);
+
+            GameObject construction = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+            construction.transform.position = new Vector3(-5.6409f, 44.0833f, -23.2322f);
+            construction.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+            construction.transform.localScale = Vector3.one;
+            construction.GetComponent<UnderConstruction>().isChecklistSign = true;
+            construction.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+            construction.SetActive(true);
+        }
+
+        public static string GetLadderChecklist() {
+            string ladders = "          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
+            int i = 0;
+            foreach(ItemData ladder in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.LADDER)) {
+                ladders += $"\"{LadderCollectionMessages[ladder.Name]}{new String('.', 24-LadderCollectionMessages[ladder.Name].Length)}{(Inventory.GetItemByName(ladder.Name).Quantity == 0 ? "......<#FF0000>N/A" : "<#00FF00>Available")}\"\n";
+                
+                i++;
+                if(i % 7 == 0 && i < 20) {
+                    ladders += "---          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
+                }
+            }
+            return ladders;
         }
 
         public static Dictionary<string, Dictionary<string, List<LadderInfo>>> LaddersUnderConstruction = new Dictionary<string, Dictionary<string, List<LadderInfo>>>() {

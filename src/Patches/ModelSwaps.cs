@@ -37,6 +37,7 @@ namespace TunicRandomizer {
 
         public static GameObject LadderGraphic;
         public static GameObject UnderConstruction;
+        public static GameObject Signpost;
 
         public static List<string> ShopItemIDs = new List<string>() {
             "Potion (First) [Shop]",
@@ -152,6 +153,12 @@ namespace TunicRandomizer {
             Items["Dath Stone"].SetActive(false);
             Items["Dath Stone"].name = "dath stone";
             GameObject.DontDestroyOnLoad(Items["Dath Stone"]);
+
+            Signpost = new GameObject("signpost");
+            Signpost.AddComponent<MeshFilter>().mesh = Resources.FindObjectsOfTypeAll<Mesh>().Where(mesh => mesh.name == "signpost pointing right").First();
+            Signpost.AddComponent<MeshRenderer>().material = FindMaterial("signpost");
+            Signpost.SetActive(false);
+            GameObject.DontDestroyOnLoad(Signpost);
 
             ItemPresentationPatches.SetupOldHouseKeyItemPresentation();
             Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
