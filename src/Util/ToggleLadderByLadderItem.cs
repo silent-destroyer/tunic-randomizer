@@ -12,6 +12,7 @@ namespace TunicRandomizer {
     public class ToggleLadderByLadderItem : MonoBehaviour {
         public List<GameObject> constructionItems = new List<GameObject>() { };
         public List<GameObject> optionalObjectsToDisable = new List<GameObject>() { };
+        public List<Collider> extraColliders = new List<Collider>();
         public Item ladderItem;
         public LadderInfo ladderInfo;
         public StateVariable stateVariable;
@@ -39,6 +40,11 @@ namespace TunicRandomizer {
             if (this.GetComponent<Renderer>() != null) {
                 this.GetComponent<Renderer>().enabled = ladderItem.Quantity > 0;
             }
+            foreach(Collider c in extraColliders) {
+                if (c != null) {
+                    c.enabled = ladderItem.Quantity == 0;
+                }
+            }
 
             if (stateVariable != null) {
                 stateVariable.BoolValue = ladderItem.Quantity > 0;
@@ -61,6 +67,7 @@ namespace TunicRandomizer {
                             end.gameObject.AddComponent<BoxCollider>();
                         }
                         end.gameObject.GetComponent<BoxCollider>().size = Vector3.one * 5f;
+                        extraColliders.Add(end.gameObject.GetComponent<BoxCollider>());
                     }
                 }
             }
