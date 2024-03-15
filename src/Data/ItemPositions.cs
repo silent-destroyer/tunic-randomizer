@@ -220,6 +220,7 @@ namespace TunicRandomizer {
              { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.05f, 0.05f, 0.05f)) },
              { "FAIRY", new TransformData(new Vector3(-0.03f, 0.01f, -0.07f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), new Vector3(0.05f, 0.05f, 0.05f)) },
              { "PAGE", new TransformData(new Vector3(-0.03f, 0.01f, -0.07f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.05f, 0.05f, 0.05f)) },
+             { "LADDER", new TransformData(new Vector3(-0.05f, 0.023f, -0.08f), new Quaternion(0.1534f, 0.6903f, 0.1594f, -0.6889f), new Vector3(0.025f, 0.025f, 0.025f)) },
              { "Other World", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.02f, 0.02f, 0.02f)) }
         };
 
@@ -289,6 +290,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(-0.1f, 0.3f, 0f), new Quaternion(0.05392667f, 0f, 0f, -0.9985449f), new Vector3(1f, 1f, 1f)) },
+            { "LADDER", new TransformData(new Vector3(-0.3f, 0.1f, 2.2f), new Quaternion(0.7071f, 0f, 0f, -0.7071f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Other World", new TransformData(new Vector3(0f, 0.1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 
@@ -359,6 +361,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(-0.1f, -0.4f, 0f), new Quaternion(0f, 1f, 0f, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "PAGE", new TransformData(new Vector3(0f, -1.2f, 0.0f), new Quaternion(0f, 1f, 0f, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "LADDER", new TransformData(new Vector3(0.1f, -1.3f, -0.5f), new Quaternion(0f, -0.9763f, -0.2164f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Other World", new TransformData(new Vector3(0.1f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 
@@ -429,6 +432,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0.1f, 0.1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.3f, 0.3f, 0.3f)) },
             { "FAIRY", new TransformData(new Vector3(-0.2f, -0.8000001f, 0f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), new Vector3(0.3f, 0.3f, 0.3f)) },
             { "PAGE", new TransformData(new Vector3(-0.3f, -0.5999999f, 0f), new Quaternion(0f, -0.7160065f, 0f, -0.6980937f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "LADDER", new TransformData(new Vector3(-0.45f, -0.9f, 0f), new Quaternion(-0.153f, -0.6903f, -0.153f, 0.6903f), new Vector3(0.2f, 0.2f, 0.2f)) },
             { "Other World", new TransformData(new Vector3(-0.3f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.15f, 0.15f, 0.15f)) }
         };
 
@@ -499,6 +503,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "LADDER", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.3f, 0.3f, 0.3f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.25f, 0.25f, 0.25f)) }
         };
 
@@ -569,6 +574,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "LADDER", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) }
         };
 
@@ -639,6 +645,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 0.3f, 0f), new Quaternion(0f, 0f, 0, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "FAIRY", new TransformData(new Vector3(-0.1f, -0.4f, 0f), new Quaternion(0f, 1f, 0f, 0f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.6f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "LADDER", new TransformData(new Vector3(0f, -0.3f, 3.15f), new Quaternion(0.7071f, 0f, 0f, -0.7071f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "Other World", new TransformData(new Vector3(0f, 0.25f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 
@@ -709,6 +716,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0.3827f, 0f, 0f, 0.9239f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0.7071f, 0f, 0f, 0.7071f), new Vector3(0.25f, 0.25f, 0.25f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.4f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5574f, 0.5574f, 0.5574f)) },
+            { "LADDER", new TransformData(new Vector3(0.211f, -1.0835f, 0.3654f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.3f, 0.3f, 0.3f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0.2f), new Quaternion(0.0462f, -0.7471f, -0.661f, -0.0522f), new Vector3(0.15f, 0.15f, 0.15f)) }
         };
 
@@ -779,6 +787,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(1f, 1f, 1f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.4f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "LADDER", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "Other World", new TransformData(new Vector3(0f, 1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) }
         };
 
@@ -849,6 +858,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.6f, 0.6f, 0.6f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
+            { "LADDER", new TransformData(new Vector3(0f, -2.2f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.25f, 0.25f, 0.25f)) }
         };
 
@@ -919,6 +929,7 @@ namespace TunicRandomizer {
             { "money large", new TransformData(new Vector3(0f, 1.490116E-08f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1f, 1f, 1f)) },
             { "FAIRY", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 0f), new Vector3(1f, 1f, 1f)) },
             { "PAGE", new TransformData(new Vector3(0f, 0f, 0.4f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "LADDER", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) }
         };
 

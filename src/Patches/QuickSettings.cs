@@ -195,6 +195,11 @@ namespace TunicRandomizer {
                     y += 40f;
                     GUI.Toggle(new Rect(10f, y, 195f, 30f), false, $"Entrance Randomizer");
                 }
+                if (slotData.ContainsKey("shuffle_ladders")) {
+                    GUI.Toggle(new Rect(220f, y, 195f, 30f), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
+                } else {
+                    GUI.Toggle(new Rect(220f, y, 195f, 30f), false, $"Shuffled Ladders");
+                }
             } else {
                 y += 40f;
                 GUI.Toggle(new Rect(10f, y, 180f, 30f), false, "Keys Behind Bosses");
@@ -207,6 +212,7 @@ namespace TunicRandomizer {
                 GUI.Toggle(new Rect(220f, y, 175f, 30f), false, "Fool Traps: Off");
                 y += 40f;
                 GUI.Toggle(new Rect(10f, y, 195f, 30f), false, $"Entrance Randomizer");
+                GUI.Toggle(new Rect(220f, y, 195f, 30f), false, $"Shuffled Ladders");
             }
             y += 40f;
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");

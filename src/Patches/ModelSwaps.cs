@@ -35,6 +35,10 @@ namespace TunicRandomizer {
         public static GameObject StarburstEffect;
         public static GameObject BlueFire;
 
+        public static GameObject LadderGraphic;
+        public static GameObject UnderConstruction;
+        public static GameObject Signpost;
+
         public static List<string> ShopItemIDs = new List<string>() {
             "Potion (First) [Shop]",
             "Potion (West Garden) [Shop]",
@@ -149,6 +153,12 @@ namespace TunicRandomizer {
             Items["Dath Stone"].SetActive(false);
             Items["Dath Stone"].name = "dath stone";
             GameObject.DontDestroyOnLoad(Items["Dath Stone"]);
+
+            Signpost = new GameObject("signpost");
+            Signpost.AddComponent<MeshFilter>().mesh = Resources.FindObjectsOfTypeAll<Mesh>().Where(mesh => mesh.name == "signpost pointing right").First();
+            Signpost.AddComponent<MeshRenderer>().material = FindMaterial("signpost");
+            Signpost.SetActive(false);
+            GameObject.DontDestroyOnLoad(Signpost);
 
             ItemPresentationPatches.SetupOldHouseKeyItemPresentation();
             Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
@@ -540,6 +550,11 @@ namespace TunicRandomizer {
                         }
                         if (ItemPickup.itemToGive.name == "Key" || ItemPickup.itemToGive.name == "Key (House)") {
                             NewItem.transform.parent.localRotation = SceneLoaderPatches.SceneName == "Overworld Redux" ? new Quaternion(0f, 0f, 0f, 0f) : new Quaternion(0f, 0.7071f, 0f, 0.7071f);
+                            if (ItemData != null && ItemData.Type == ItemTypes.LADDER) {
+                                NewItem.transform.GetChild(0).localEulerAngles = new Vector3(90, 0, 0);
+                                NewItem.transform.GetChild(1).localEulerAngles = new Vector3(90, 0, 0);
+                                NewItem.transform.GetChild(1).localPosition = new Vector3(2.6f, 1.9f, 0.7f);
+                            }
                         }
                         if (IsArchipelago() && ItemData == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
                             TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name]["Other World"];
@@ -560,8 +575,9 @@ namespace TunicRandomizer {
                                 int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                                 TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][$"Sword Progression {SwordLevel}"] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory];
                             } else {
-                                TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory];
+                                TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(ItemData.ItemNameForInventory) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Enum.GetName(typeof(ItemTypes), ItemData.Type)];
                             }
+
                         }
 
                     } else {
@@ -683,7 +699,6 @@ namespace TunicRandomizer {
                 } else if (IsSinglePlayer() && Check != null) {
                     Item = ItemLookup.GetItemDataFromCheck(Check);
                 }
-
                 if (Item.Type == ItemTypes.TRINKET) {
                     NewItem = GameObject.Instantiate(Items["Trinket Card"], Parent.transform.position, Parent.transform.rotation);
                     NewItem.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Cards[Item.ItemNameForInventory];
@@ -698,6 +713,8 @@ namespace TunicRandomizer {
                     NewItem = GameObject.Instantiate(Chests["Fairy"], Parent.transform.position, Parent.transform.rotation);
                 } else if (Item.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || APItem.Player == Archipelago.instance.GetPlayerSlot())) {
                     NewItem = SwordProgressionObject(Parent);
+                } else if (Item.Type == ItemTypes.LADDER) {
+                    NewItem = GameObject.Instantiate(Items["Ladder"], Parent.transform.position, Parent.transform.rotation);
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
@@ -1088,6 +1105,9 @@ namespace TunicRandomizer {
                     if (Item.Type == ItemTypes.FAIRY) {
                         NewItem.transform.localScale = Vector3.one;
                     }
+                    if (Item.Type == ItemTypes.LADDER) {
+                        NewItem.transform.localScale *= 2;
+                    }
                     if (NewItem.GetComponent<Rotate>() == null) {
                         NewItem.AddComponent<Rotate>().eulerAnglesPerSecond = (Item.ItemNameForInventory == "Relic - Hero Water" || Item.ItemNameForInventory == "Upgrade Offering - PotionEfficiency Swig - Ash" || Item.ItemNameForInventory == "Techbow") ? new Vector3(0f, 0f, 25f) : new Vector3(0f, 25f, 0f);
                         if (Item.ItemNameForInventory == "Sword Progression" && (SaveFile.GetInt(SwordProgressionLevel) == 0 || SaveFile.GetInt(SwordProgressionLevel) == 3)) {
@@ -1171,6 +1191,25 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void CreateConstructionObject() {
+            UnderConstruction = GameObject.Instantiate(GameObject.Find("_Signposts/Signpost/"));
+            UnderConstruction.transform.GetChild(1).localPosition /= 2;
+            GameObject.Destroy(UnderConstruction.transform.GetChild(2).gameObject);
+            GameObject.Destroy(UnderConstruction.transform.GetChild(0).gameObject);
+            UnderConstruction.AddComponent<MeshFilter>().mesh = Resources.FindObjectsOfTypeAll<Mesh>().Where(mesh => mesh.name == "under construction").First();
+            UnderConstruction.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("under construction");
+            UnderConstruction.AddComponent<BoxCollider>();
+            GameObject.Destroy(UnderConstruction.GetComponent<Signpost>());
+            UnderConstruction.AddComponent<UnderConstruction>();
+            UnderConstruction.GetComponent<InteractionTrigger>().Start();
+            UnderConstruction.GetComponent<SphereCollider>().radius = 2.5f;
+            UnderConstruction.transform.localScale = Vector3.one;
+            UnderConstruction.layer = 0;
+            UnderConstruction.name = "under construction";
+            UnderConstruction.SetActive(false);
+            GameObject.DontDestroyOnLoad(UnderConstruction);
+        }
+
         public static void LoadTextures() {
 
             Material ImageMaterial = FindMaterial("UI Add");
@@ -1208,6 +1247,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Torch Redux", CreateSprite(ImageData.TorchRedux, ImageMaterial, 160, 160, SpriteName: "Randomizer items_Torch redux"));
             CustomItemImages.Add("AbilityShuffle", CreateSprite(ImageData.Abilities, ImageMaterial, 200, 100, SpriteName: "Randomizer heading_Abilities"));
             CustomItemImages.Add("Dath Stone Texture", CreateSprite(ImageData.DathSteneTexture, ImageMaterial, 200, 100, SpriteName: "Randomizer dath stone texture"));
+            CustomItemImages.Add("Ladder", CreateSprite(ImageData.Ladder, ImageMaterial, 160, 160, SpriteName: "Randomizer items_ladder"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;

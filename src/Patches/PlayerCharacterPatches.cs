@@ -208,7 +208,6 @@ namespace TunicRandomizer {
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
-
             SceneLoaderPatches.TimeOfLastSceneTransition = SaveFile.GetFloat("playtime");
 
             // hide inventory prompt button so it doesn't overlap item messages
@@ -314,6 +313,14 @@ namespace TunicRandomizer {
                 TunicPortals.AltModifyPortals();
             }
 
+            try {
+                if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
+                    LadderToggles.ToggleLadders();
+                }
+            } catch (Exception e) {
+                Logger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
                 PaletteEditor.ToonFox.AddComponent<MeshRenderer>().material = __instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().material;
             }
@@ -323,7 +330,11 @@ namespace TunicRandomizer {
             PaletteEditor.SetupFoxCape(__instance);
 
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
-                PaletteEditor.RandomizeFoxColors();
+                try {
+                    PaletteEditor.RandomizeFoxColors();
+                } catch(Exception e) {
+                    TunicLogger.LogInfo("Error randomizing fox colors!");
+                }
             }
 
             if (TunicRandomizer.Settings.UseCustomTexture) {
@@ -503,6 +514,11 @@ namespace TunicRandomizer {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.AltModifyPortals();
                 }
+                if (slotData.TryGetValue("shuffle_ladders", out var ladderRando)) {
+                    if (SaveFile.GetInt(LadderRandoEnabled) == 0 && ladderRando.ToString() == "1") {
+                        SaveFile.SetInt(LadderRandoEnabled, 1);
+                    }
+                }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
@@ -510,6 +526,11 @@ namespace TunicRandomizer {
                         Logger.LogInfo("Starting new archipelago file with seed: " + Seed);
                     } else {
                         Logger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
+                    }
+                }
+                if (slotData.TryGetValue("logic_rules", out var logicRules)) {
+                    if (logicRules.ToString() == "2") {
+                        Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
                 SaveFile.SaveToDisk();

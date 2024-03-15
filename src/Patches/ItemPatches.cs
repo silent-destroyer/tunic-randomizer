@@ -249,7 +249,7 @@ namespace TunicRandomizer {
                 CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET) {
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Item.QuantityToGive;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -258,6 +258,10 @@ namespace TunicRandomizer {
                 }
                 if (Item.Name == "Dath Stone") {
                     Inventory.GetItemByName("Torch").Quantity = 1;
+                }
+                if (Item.Type == ItemTypes.LADDER) {
+                    InventoryItem.collectionMessage = new LanguageLine();
+                    InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -450,7 +454,7 @@ namespace TunicRandomizer {
                 CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET) {
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Check.Reward.Amount;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -459,6 +463,10 @@ namespace TunicRandomizer {
                 }
                 if (Item.Name == "Dath Stone") {
                     Inventory.GetItemByName("Torch").Quantity = 1;
+                }
+                if (Item.Type == ItemTypes.LADDER) {
+                    InventoryItem.collectionMessage = new LanguageLine();
+                    InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {

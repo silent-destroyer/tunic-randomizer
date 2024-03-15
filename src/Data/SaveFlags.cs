@@ -34,6 +34,7 @@ namespace TunicRandomizer {
         // Other Logic Flags
         public const string MasklessLogic = "randomizer maskless logic enabled";
         public const string LanternlessLogic = "randomizer lanternless logic enabled";
+        public const string LadderRandoEnabled = "randomizer ladder rando enabled";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";

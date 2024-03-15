@@ -90,6 +90,7 @@ namespace TunicRandomizer {
             { "[foreverfriend]", "Randomizer items_Forever Friend" },
             { "[fooltrap]", "Randomizer items_Fool Trap" },
             { "[archipelago]", "Randomizer items_Archipelago Item" },
+            { "[ladder]", "Randomizer items_ladder" },
         };
 
         public static Dictionary<string, string> SpriteNameToAbbreviation = new Dictionary<string, string>();
@@ -239,6 +240,28 @@ namespace TunicRandomizer {
             { "Pages 50-51", "[book]" },
             { "Pages 52-53 (Icebolt)", "[book]" },
             { "Pages 54-55", "[book]" },
+            // Ladders
+            { "Ladders in Overworld Town", "[ladder]" },
+            { "Ladders near Weathervane", "[ladder]" },
+            { "Ladders near Overworld Checkpoint", "[ladder]" },
+            { "Ladder to East Forest", "[ladder]" },
+            { "Ladders to Lower Forest", "[ladder]" },
+            { "Ladders near Patrol Cave", "[ladder]" },
+            { "Ladders in Well", "[ladder]" },
+            { "Ladders to West Bell", "[ladder]" },
+            { "Ladder to Quarry", "[ladder]" },
+            { "Ladder in Dark Tomb", "[ladder]" },
+            { "Ladders near Dark Tomb", "[ladder]" },
+            { "Ladder near Temple Rafters", "[ladder]" },
+            { "Ladder to Swamp", "[ladder]" },
+            { "Ladders in Swamp", "[ladder]" },
+            { "Ladder to Ruined Atoll", "[ladder]" },
+            { "Ladders in South Atoll", "[ladder]" },
+            { "Ladders to Frog's Domain", "[ladder]" },
+            { "Ladders in Hourglass Cave", "[ladder]" },
+            { "Ladder to Beneath the Vault", "[ladder]" },
+            { "Ladders in Lower Quarry", "[ladder]"},
+            { "Ladders in Library", "[ladder]"},
             // Non-Tunic Item
             { "Archipelago Item", "[archipelago]"}
         };
@@ -247,8 +270,6 @@ namespace TunicRandomizer {
             int index = 110;
             List<string> cartouches = Parser.cartouche.ToList();
             if (!cartouches.Contains("[torch]")) {
-                cartouches.AddRange(CustomSpriteIndices.Keys);
-                cartouches.Add("[filler]");
                 Parser.cartouche = cartouches.ToArray();
                 List<Sprite> sprites = SpriteBuilder.spriteResources.ToList();
                 foreach (string Icon in CustomSpriteIcons.Keys) {
@@ -257,6 +278,8 @@ namespace TunicRandomizer {
                     CustomSpriteIndices.Add(Icon, index++);
                 }
                 sprites.Add(Inventory.GetItemByName("Dath Stone").icon);
+                cartouches.AddRange(CustomSpriteIndices.Keys);
+                cartouches.Add("[filler]");
                 SpriteBuilder.spriteResources = sprites.ToArray();
             }
         }
