@@ -474,7 +474,6 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("start_with_sword", out var startWithSword)) {
                     if (SaveFile.GetInt("randomizer started with sword") == 0 && startWithSword.ToString() == "1") {
                         SaveFile.SetInt("randomizer started with sword", 1);
-                        Inventory.GetItemByName("Sword").Quantity += 1;
                     }
                 }
                 if (slotData.TryGetValue("ability_shuffling", out var abilityShuffling)) {
