@@ -528,6 +528,11 @@ namespace TunicRandomizer {
                         Logger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
                     }
                 }
+                if (slotData.TryGetValue("logic_rules", out var logicRules)) {
+                    if (logicRules.ToString() == "2") {
+                        Inventory.GetItemByName("Torch").Quantity = 1;
+                    }
+                }
                 SaveFile.SaveToDisk();
 
                 Locations.PopulateMajorItemLocations(slotData);
