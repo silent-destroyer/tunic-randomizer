@@ -38,7 +38,7 @@ namespace TunicRandomizer {
         public bool sentCompletion = false;
         public bool sentRelease = false;
         public bool sentCollect = false;
-        private int ItemIndex = 0;
+        public int ItemIndex = 0;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
