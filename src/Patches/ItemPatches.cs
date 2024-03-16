@@ -246,7 +246,12 @@ namespace TunicRandomizer {
                     AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[LocationId];
                 }
 
-                CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
+                if (TunicRandomizer.Settings.SkipItemAnimations) {
+                    MoneyGoUp.IncrementMoneyGoUp(AmountToGive);
+                    Inventory.GetItemByName("MoneySmall").Quantity += AmountToGive;
+                } else {
+                    CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
+                }
             }
 
             if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
@@ -451,7 +456,12 @@ namespace TunicRandomizer {
                     AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[Check.Location.LocationId];
                 }
 
-                CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
+                if (TunicRandomizer.Settings.SkipItemAnimations) {
+                    MoneyGoUp.IncrementMoneyGoUp(AmountToGive);
+                    Inventory.GetItemByName("MoneySmall").Quantity += AmountToGive;
+                } else {
+                    CoinSpawner.SpawnCoins(AmountToGive, PlayerCharacter.instance.transform.position);
+                }
             }
 
             if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
