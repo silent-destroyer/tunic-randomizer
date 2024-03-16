@@ -140,7 +140,7 @@ namespace TunicRandomizer {
         }
 
         public static bool BloodstainChest_IInteractionReceiver_Interact_PrefixPatch(Item i, BloodstainChest __instance) {
-            if (SceneLoaderPatches.SceneName == "Changing Room") {
+            if (SceneLoaderPatches.SceneName == "Changing Room" && !TunicRandomizer.Settings.RaceMode) {
                 CoinSpawner.SpawnCoins(20, __instance.transform.position);
                 __instance.doPushbackBlast();
                 return false;
