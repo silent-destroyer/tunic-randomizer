@@ -315,7 +315,7 @@ namespace TunicRandomizer {
                             if (Locations.CheckedLocations[Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) {
                                 ChecksFound++;
                             }
-                            continue;
+                            break;
                         }
                     }
                 }
