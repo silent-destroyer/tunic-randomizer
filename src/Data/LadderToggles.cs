@@ -148,7 +148,7 @@ namespace TunicRandomizer {
             string ladders = "          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
             int i = 0;
             foreach(ItemData ladder in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.LADDER)) {
-                ladders += $"\"{LadderCollectionMessages[ladder.Name]}{new String('.', 24-LadderCollectionMessages[ladder.Name].Length)}{(Inventory.GetItemByName(ladder.Name).Quantity == 0 ? "......<#FF0000>N/A" : "<#00FF00>Available")}\"\n";
+                ladders += $"\"{LadderCollectionMessages[ladder.Name]}{new String('.', 24-LadderCollectionMessages[ladder.Name].Length)}{(Inventory.GetItemByName(ladder.Name).Quantity == 0 ? "<#FF0000>Not Found" : "....<#00FF00>Found")}\"\n";
                 
                 i++;
                 if(i % 7 == 0 && i < 20) {
