@@ -62,6 +62,11 @@ TUNIC:
   # When enabled, the Lantern is marked as Useful instead of Progression.
   lanternless: 'false'
 
+  # Turns several ladders in the game into items that must be found before they can be climbed on.
+  # Adds more layers of progression to the game by blocking access to many areas early on.
+  # "Ladders were a mistake." —Andrew Shouldice
+  shuffle_ladders: 'false'
+
   accessibility:
     locations: 0
     items: 50
