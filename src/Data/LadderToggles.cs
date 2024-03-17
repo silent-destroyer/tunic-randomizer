@@ -484,6 +484,10 @@ namespace TunicRandomizer {
                                 new List<TransformData>(){
                                     new TransformData(new Vector3(-0.2499952f, -8f, -61.00268f), new Quaternion(0f, 0.7058433f, 0f, 0.7083681f), Vector3.one),
                                 },
+                                new List<string>() {
+                                    "Room -  Basement/Wooden Ladder (12 unit)",
+                                    "Room -  Basement/Wooden Ladder (12 unit) (1)"
+                                },
                                 isExit: true
                             ),
                         }
@@ -587,7 +591,6 @@ namespace TunicRandomizer {
                                 // ladder outside of frog eye
                                 "Wooden Ladder (12 unit) (6) (93.5, 5.5, 63.5)",
                                 new List<TransformData>(){
-                                    new TransformData(new Vector3(93.5f, 20.07756f, 62.56321f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), Vector3.one),
                                     new TransformData(new Vector3(93.85339f, 4.588062f, 64.3034f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
                                 }
                             ),
