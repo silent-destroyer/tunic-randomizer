@@ -39,6 +39,8 @@ namespace TunicRandomizer {
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
 
+        public static GameObject FishingRod;
+
         public static List<string> ShopItemIDs = new List<string>() {
             "Potion (First) [Shop]",
             "Potion (West Garden) [Shop]",
