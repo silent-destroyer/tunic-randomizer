@@ -1212,6 +1212,16 @@ namespace TunicRandomizer {
             GameObject.DontDestroyOnLoad(UnderConstruction);
         }
 
+        public static void InstantiateFishingRod() {
+            Logger.LogInfo("test message 1");
+            FishingRod = Resources.FindObjectsOfTypeAll<GameObject>().Where(FishingRod => FishingRod.name == "fishingpole").First();
+            Logger.LogInfo("test message 2");
+            GameObject.DontDestroyOnLoad(FishingRod);
+            Logger.LogInfo("test message 3");
+            FishingRod.SetActive(false);
+            Logger.LogInfo("test message 4");
+        }
+
         public static void LoadTextures() {
 
             Material ImageMaterial = FindMaterial("UI Add");

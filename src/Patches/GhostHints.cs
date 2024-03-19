@@ -34,6 +34,7 @@ namespace TunicRandomizer {
             public string HintedItem;
             public string OptionalCheckID;
             public string HexQuestAbilityHint;
+            public TransformData FishingRodPos;
 
             public HintGhost() { }
 
@@ -60,6 +61,32 @@ namespace TunicRandomizer {
                 Hint = "";
                 HintedItem = "";
                 OptionalCheckID = "";
+            }
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, TransformData fishingRodPos) {
+                Name = name;
+                SceneName = sceneName;
+                Position = position;
+                Rotation = rotation;
+                Dialogue = dialogue;
+                TrunicDialogue = dialogue;
+                AnimState = animState;
+                Hint = "";
+                HintedItem = "";
+                OptionalCheckID = "";
+                FishingRodPos = fishingRodPos;
+            }
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, TransformData fishingRodPos) {
+                Name = name;
+                SceneName = sceneName;
+                Position = position;
+                Rotation = rotation;
+                Dialogue = dialogue;
+                TrunicDialogue = trunicDialogue;
+                AnimState = animState;
+                Hint = "";
+                HintedItem = "";
+                OptionalCheckID = "";
+                FishingRodPos = fishingRodPos;
             }
         }
 
@@ -202,26 +229,26 @@ namespace TunicRandomizer {
             //    new HintGhost("Hint Ghost Overworld Interiors 2", "Overworld Interiors", new Vector3(-24.06613f, 27.39948f, -47.9316f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.TIRED, $"juhst fIv mor minits..."),
             //    new HintGhost("Hint Ghost Overworld Interiors 3", "Overworld Interiors", new Vector3(12.0368f, 21.1446f, -72.81052f), new Quaternion(0f, 0.8660254f, 0f, -0.5000001f), NPC.NPCAnimState.SIT, $"wuht R #Ez pehduhstuhlz for? doo yoo nO?") }
             //},
-            //{ "Overworld Above Ruins", new List<HintGhost>() {
-            //   new HintGhost("Hint Ghost Overworld Above Ruins 1", "Overworld Redux", new Vector3(28.53184f, 36.0833f, -108.3734f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.IDLE, $"I wuhz hIdi^ fruhm #uh \"SLIMES,\" buht yoo dOnt louk\nlIk wuhn uhv #ehm.", $"I wuhz hIdi^ fruhm #uh slImz, buht yoo dOnt louk\nlIk wuhn uhv #ehm."),
-            //   new HintGhost("Hint Ghost Overworld Above Ruins 2", "Overworld Redux", new Vector3(22.3667f, 27.9833f, -126.3728f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"wAr did I lEv #aht kE..."),
-            //   new HintGhost("Hint Ghost Overworld Above Ruins 3", "Overworld Redux", new Vector3(51.20462f, 28.00694f, -129.722f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.SIT, $"I %awt #aht Jehst wuhz ehmptE. how suhspi$is.") }
-            //},
-            //{ "Early Overworld Spawns", new List<HintGhost>() {
-            //   new HintGhost("Hint Ghost Early Overworld Spawns 1", "Overworld Redux", new Vector3(-9.441f, 43.9363f, -8.4385f), new Quaternion(0f, 0.7069f, 0f, -0.7069f), NPC.NPCAnimState.SIT, $"sEld forehvur? nO... #Ar muhst bE uhnuh#ur wA..."),
-            //   new HintGhost("Hint Ghost Early Overworld Spawns 2", "Overworld Redux", new Vector3(-34.0649f, 37.9833f, -59.2506f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.GAZE, $"sO mehnE roodli^z. Im stAi^ uhp hEr.") }
-            //},
-            //{ "Inside Temple", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Inside Temple 1", "Temple", new Vector3(7.067f, -0.224f, 59.9285f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.IDLE, $"yur naht uh \"RUIN SEEKER,\" R yoo? mAbE yoo $oud gO\nsuhmwAr ehls.", $"yur naht uh rooin sEkur, R yoo? mAbE yoo $oud gO suhmwAr ehls."),
-            //    new HintGhost("Hint Ghost Inside Temple 2", "Temple", new Vector3(0.9350182f, 4.076f, 133.7965f), new Quaternion(0f, 0.8660254f, 0f, 0.5f), NPC.NPCAnimState.GAZE_UP, $"yur guhnuh frE \"THE HEIR?\" iznt #aht... bahd?", $"yur guhnuh frE #uh Ar? iznt #aht... bahd?") }
-            //},
-            //{ "Ruined Shop", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Ruined Shop 1", "Ruined Shop", new Vector3(16.5333f, 8.983299f, -45.60382f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"hehlO. wuht iz yor nAm?---...tuhnk? wuht A strAnj nAm."),
-            //    new HintGhost("Hint Ghost Ruined Shop 2", "Ruined Shop", new Vector3(9.8111f, 8.0833f, -37.52119f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.IDLE, $"wehl, if yur nawt bIi^ ehnE%i^..." ) }
-            //},
-            //{ "West Filigree", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost West Filigree", "Town_FiligreeRoom", new Vector3(-79.4348f, 22.0379f, -59.8104f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.PRAY, $"wow, yoo hahv #uh powur uhv #uh \"Holy Cross!\"", $"wow, yoo hahv #uh powur uhv #uh hOlE kraws!") }
-            //},
+            { "Overworld Above Ruins", new List<HintGhost>() {
+               new HintGhost("Hint Ghost Overworld Above Ruins 1", "Overworld Redux", new Vector3(28.53184f, 36.0833f, -108.3734f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.IDLE, $"I wuhz hIdi^ fruhm #uh \"SLIMES,\" buht yoo dOnt louk\nlIk wuhn uhv #ehm.", $"I wuhz hIdi^ fruhm #uh slImz, buht yoo dOnt louk\nlIk wuhn uhv #ehm."),
+               new HintGhost("Hint Ghost Overworld Above Ruins 2", "Overworld Redux", new Vector3(22.3667f, 27.9833f, -126.3728f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"wAr did I lEv #aht kE..."),
+               new HintGhost("Hint Ghost Overworld Above Ruins 3", "Overworld Redux", new Vector3(51.20462f, 28.00694f, -129.722f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.SIT, $"I %awt #aht Jehst wuhz ehmptE. how suhspi$is.") }
+            },
+            { "Early Overworld Spawns", new List<HintGhost>() {
+               new HintGhost("Hint Ghost Early Overworld Spawns 1", "Overworld Redux", new Vector3(-9.441f, 43.9363f, -8.4385f), new Quaternion(0f, 0.7069f, 0f, -0.7069f), NPC.NPCAnimState.SIT, $"sEld forehvur? nO... #Ar muhst bE uhnuh#ur wA..."),
+               new HintGhost("Hint Ghost Early Overworld Spawns 2", "Overworld Redux", new Vector3(-34.0649f, 37.9833f, -59.2506f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.GAZE, $"sO mehnE roodli^z. Im stAi^ uhp hEr.") }
+            },
+            { "Inside Temple", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Inside Temple 1", "Temple", new Vector3(7.067f, -0.224f, 59.9285f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.IDLE, $"yur naht uh \"RUIN SEEKER,\" R yoo? mAbE yoo $oud gO\nsuhmwAr ehls.", $"yur naht uh rooin sEkur, R yoo? mAbE yoo $oud gO suhmwAr ehls."),
+                new HintGhost("Hint Ghost Inside Temple 2", "Temple", new Vector3(0.9350182f, 4.076f, 133.7965f), new Quaternion(0f, 0.8660254f, 0f, 0.5f), NPC.NPCAnimState.GAZE_UP, $"yur guhnuh frE \"THE HEIR?\" iznt #aht... bahd?", $"yur guhnuh frE #uh Ar? iznt #aht... bahd?") }
+            },
+            { "Ruined Shop", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Ruined Shop 1", "Ruined Shop", new Vector3(16.5333f, 8.983299f, -45.60382f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"hehlO. wuht iz yor nAm?---...tuhnk? wuht A strAnj nAm."),
+                new HintGhost("Hint Ghost Ruined Shop 2", "Ruined Shop", new Vector3(9.8111f, 8.0833f, -37.52119f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.IDLE, $"wehl, if yur nawt bIi^ ehnE%i^..." ) }
+            },
+            { "West Filigree", new List<HintGhost>() {
+                new HintGhost("Hint Ghost West Filigree", "Town_FiligreeRoom", new Vector3(-79.4348f, 22.0379f, -59.8104f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.PRAY, $"wow, yoo hahv #uh powur uhv #uh \"Holy Cross!\"", $"wow, yoo hahv #uh powur uhv #uh hOlE kraws!") }
+            },
             { "East Filigree", new List<HintGhost>() {
                 new HintGhost("Hint Ghost East Filigree", "EastFiligreeCache", new Vector3(14.3719f, 0.0167f, -8.8614f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"wAt, how did yoo Opehn #aht dOr?") }
             },
@@ -278,7 +305,7 @@ namespace TunicRandomizer {
             //    new HintGhost("Hint Ghost East Belltower Upper 3", "East Forest Redux Laddercave", new Vector3(159.0245f, 17.89421f, 78.52466f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.PRAY, $"#Arz uh baws uhhehd... buht hE hahz por vi&uhn.")}
             //},
             { "East Forest", new List<HintGhost>() {
-                new HintGhost("Hint Ghoest East Forest 1", "East Forest Redux", new Vector3(75.5f, 2.4f, 47.8f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"di^ daw^! doo yoo hahv wuht it tAks?"),
+                new HintGhost("Hint Ghoest East Forest 1", "East Forest Redux", new Vector3(75.5f, 2.4f, 47.8f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"di^ daw^! doo yoo hahv wuht it tAks?", new TransformData(new Vector3(75.5f, 2.4f, 47.8f), new Quaternion(0f, -1f, 0f, 0f), new Vector3(1f, 1f, 1f))),
             }
 
             },
@@ -287,31 +314,31 @@ namespace TunicRandomizer {
             //    new HintGhost("Hint Ghost Swamp 2", "Swamp Redux 2", new Vector3(-90.55162f, 3.0462f, 6.2667f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"suhm%i^ $oud bE hEr rIt? I dOnt rEmehmbur..." ),
             //    new HintGhost("Hint Ghost Swamp 3", "Swamp Redux 2", new Vector3(-100.5333f, 3.3462f, 25.0965f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"I %ink #is wuhz pRt uhv suhm%i^ ehls wuhns." ) }
             //},
-            //{ "Dark Tomb", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Dark Tomb 1","Crypt Redux", new Vector3(-75.8704f, 57.0833f, -56.2025f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.GAZE, $"dRk! its sO dRk!"),
-            //    new HintGhost("Hint Ghost Dark Tomb 2","Sewer_Boss", new Vector3(70.30289f, 9.4138f, -9.387097f), new Quaternion(0f, 0.7660444f, 0f, 0.6427876f), NPC.NPCAnimState.GAZE, $"wuht koud bE bahk #Ar?") }
-            //},
-            //{ "Fortress Courtyard", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Fortress Courtyard 1", "Fortress Courtyard", new Vector3(-50.54346f, 0.0417f, -36.46348f), new Quaternion(0f, 0.9659259f, 0f, -0.2588191f), NPC.NPCAnimState.GAZE, $"yoo gO furst. spIdurs giv mE #uh krEps..."),
-            //    new HintGhost("Hint Ghost Fortress Courtyard 2", "Fortress Courtyard", new Vector3(6.967727f, 0.0417f, -74.5881f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.IDLE, $"wehl wehl wehl... sawrE."),
-            //    new HintGhost("Hint Ghost Fortress Courtyard 3", "Fortress Courtyard", new Vector3(7.299674f, 9.0417f, -89.57533f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.FISHING, $"sO mehnE kahndlz! hahpE bur%dA!"),
-            //    new HintGhost("Hint Ghost Fortress Courtyard 4", "Fortress Courtyard", new Vector3(11.6453f, 4.0203f, -115.355f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"I woud nawt tuhJ #aht wuhn. hoo nOz wuht #Al doo wi%\n#uh powur?") }
-            //},
-            //{ "Mountain Door", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Mountain", "Mountain", new Vector3(54.7674f, 41.5568f, 4.4282f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.GAZE_UP, $"yoo kahn Opehn #is? uhmAzi^!") }
-            //},
-            //{ "Atoll Entrance", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Atoll Entrance 1", "Atoll Redux", new Vector3(-3.5443f, 1.0174f, 120.0543f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"burdsaw^ iz sO rElahksi^. twEt twEt twEt!"),
-            //    new HintGhost("Hint Ghost Atoll Entrance 2", "Atoll Redux", new Vector3(4.7f, 16.0776f, 101.9315f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"#Ez skwArz...wuht purpis doo #A surv?"),
-            //    new HintGhost("Hint Ghost Atoll Entrance 3", "Atoll Redux", new Vector3(0.4395638f, 16.0874f, 64.47866f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.GAZE, $"tIm hahz tAkin ahtOl awn #is plAs.") }
-            //},
-            //{ "Frog's Domain", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Frog's Domain 1", "frog cave main", new Vector3(19.7682f, 9.1943f, -23.3269f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"I wuhndur wAr #uh kwehstuhgawn iz?"),
-            //    new HintGhost("Hint Ghost Frog's Domain 2", "frog cave main", new Vector3(27.09619f, 9.2581f, -37.28336f), new Quaternion(0f, 0.5000001f, 0f, -0.8660254f), NPC.NPCAnimState.FISHING, $"$hhh. Im hIdi^ fruhm #uh frawgs.") }
-            //},
-            //{ "Purgatory", new List<HintGhost>() {
-            //    new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
-            //},
+            { "Dark Tomb", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Dark Tomb 1","Crypt Redux", new Vector3(-75.8704f, 57.0833f, -56.2025f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.GAZE, $"dRk! its sO dRk!"),
+                new HintGhost("Hint Ghost Dark Tomb 2","Sewer_Boss", new Vector3(70.30289f, 9.4138f, -9.387097f), new Quaternion(0f, 0.7660444f, 0f, 0.6427876f), NPC.NPCAnimState.GAZE, $"wuht koud bE bahk #Ar?") }
+            },
+            { "Fortress Courtyard", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Fortress Courtyard 1", "Fortress Courtyard", new Vector3(-50.54346f, 0.0417f, -36.46348f), new Quaternion(0f, 0.9659259f, 0f, -0.2588191f), NPC.NPCAnimState.GAZE, $"yoo gO furst. spIdurs giv mE #uh krEps..."),
+                new HintGhost("Hint Ghost Fortress Courtyard 2", "Fortress Courtyard", new Vector3(6.967727f, 0.0417f, -74.5881f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.IDLE, $"wehl wehl wehl... sawrE."),
+                new HintGhost("Hint Ghost Fortress Courtyard 3", "Fortress Courtyard", new Vector3(7.299674f, 9.0417f, -89.57533f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.FISHING, $"sO mehnE kahndlz! hahpE bur%dA!"),
+                new HintGhost("Hint Ghost Fortress Courtyard 4", "Fortress Courtyard", new Vector3(11.6453f, 4.0203f, -115.355f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"I woud nawt tuhJ #aht wuhn. hoo nOz wuht #Al doo wi%\n#uh powur?") }
+            },
+            { "Mountain Door", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Mountain", "Mountain", new Vector3(54.7674f, 41.5568f, 4.4282f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.GAZE_UP, $"yoo kahn Opehn #is? uhmAzi^!") }
+            },
+            { "Atoll Entrance", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Atoll Entrance 1", "Atoll Redux", new Vector3(-3.5443f, 1.0174f, 120.0543f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"burdsaw^ iz sO rElahksi^. twEt twEt twEt!"),
+                new HintGhost("Hint Ghost Atoll Entrance 2", "Atoll Redux", new Vector3(4.7f, 16.0776f, 101.9315f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"#Ez skwArz...wuht purpis doo #A surv?"),
+                new HintGhost("Hint Ghost Atoll Entrance 3", "Atoll Redux", new Vector3(0.4395638f, 16.0874f, 64.47866f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.GAZE, $"tIm hahz tAkin ahtOl awn #is plAs.") }
+            },
+            { "Frog's Domain", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Frog's Domain 1", "frog cave main", new Vector3(19.7682f, 9.1943f, -23.3269f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"I wuhndur wAr #uh kwehstuhgawn iz?"),
+                new HintGhost("Hint Ghost Frog's Domain 2", "frog cave main", new Vector3(27.09619f, 9.2581f, -37.28336f), new Quaternion(0f, 0.5000001f, 0f, -0.8660254f), NPC.NPCAnimState.FISHING, $"$hhh. Im hIdi^ fruhm #uh frawgs.") }
+            },
+            { "Purgatory", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
+            },
         };
 
         public static void InitializeGhostFox() {
@@ -339,6 +366,20 @@ namespace TunicRandomizer {
                     if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
                         NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
                     }
+
+                    Logger.LogInfo("test message a");
+                    
+                    if (HintGhost.FishingRodPos.rot != null) {
+                        Logger.LogInfo("test message b");
+                        Logger.LogInfo(HintGhost.Name);
+                        GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod);
+                        Logger.LogInfo("test message c");
+                        fishingRod.transform.position = HintGhost.FishingRodPos.pos;
+                        Logger.LogInfo("test message d");
+                        fishingRod.transform.rotation = HintGhost.FishingRodPos.rot;
+                        Logger.LogInfo("test message e");
+                    }
+                    Logger.LogInfo("test message f");
 
                     NewGhostFox.SetActive(true);
                 }
