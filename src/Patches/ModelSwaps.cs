@@ -1219,7 +1219,6 @@ namespace TunicRandomizer {
             GameObject.DontDestroyOnLoad(UnderConstruction);
         }
 
-
         public static void LoadTextures() {
 
             Material ImageMaterial = FindMaterial("UI Add");
