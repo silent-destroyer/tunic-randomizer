@@ -254,6 +254,13 @@ namespace TunicRandomizer {
             GameObject.DontDestroyOnLoad(StarburstEffect);
         }
 
+        public static void InstantiateFishingRod() {
+            FishingRod = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "fishingpole").ToList()[0]);
+            GameObject.Destroy(FishingRod.GetComponent<StatefulActive>());
+            FishingRod.SetActive(false);
+            GameObject.DontDestroyOnLoad(FishingRod);
+        }
+
         public static void InitializeSecondSword() {
             GameObject Temp = Resources.FindObjectsOfTypeAll<GameObject>().Where(Obj => Obj.name == "Sword").ToList()[0];
             SecondSword = new GameObject("second sword");
@@ -1212,15 +1219,6 @@ namespace TunicRandomizer {
             GameObject.DontDestroyOnLoad(UnderConstruction);
         }
 
-        public static void InstantiateFishingRod() {
-            Logger.LogInfo("test message 1");
-            FishingRod = Resources.FindObjectsOfTypeAll<GameObject>().Where(FishingRod => FishingRod.name == "fishingpole").First();
-            Logger.LogInfo("test message 2");
-            GameObject.DontDestroyOnLoad(FishingRod);
-            Logger.LogInfo("test message 3");
-            FishingRod.SetActive(false);
-            Logger.LogInfo("test message 4");
-        }
 
         public static void LoadTextures() {
 
