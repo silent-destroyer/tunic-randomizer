@@ -3850,7 +3850,7 @@ namespace TunicRandomizer {
                     string region_name = region_group.Key;
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal tunicPortal in region_portals) {
-                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, scene: scene_name, region: region_name);
+                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name);
                         if (RegionDict[region_name].DeadEnd == true) {
                             deadEndPortals.Add(portal);
                         } else {
@@ -3958,15 +3958,15 @@ namespace TunicRandomizer {
             int shopCount = 6;
             if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
                 shopCount = 1;
-                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill_", scene: "Overworld Redux", region: "Overworld");
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", scene: "Shop", region: "Shop Entrance 2");
+                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "_", scene: "Overworld Redux", region: "Overworld");
+                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 2");
                 RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
                 shopSceneList.Add("Overworld Redux");
             }
             int regionNumber = 0;
             while (shopCount > 0) {
                 // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", scene: "Shop", region: $"Shop Entrance {shopCount}");
+                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shopCount}");
                 // check that a shop has not already been added to this region, since two shops in the same region causes problems
                 if (!shopSceneList.Contains(twoPlusPortals[regionNumber].Scene)) {
                     comboNumber++;
@@ -4012,7 +4012,7 @@ namespace TunicRandomizer {
                     string region_name = region_group.Key;
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal tunicPortal in region_portals) {
-                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, scene: scene_name, region: region_name);
+                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name);
                         portalsList.Add(portal);
                     }
                 }
@@ -4050,7 +4050,7 @@ namespace TunicRandomizer {
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
 
-                    if (portal1.Scene == loadingScene.name && portal1.Destination == portal.FullID) {
+                    if (portal1.Scene == loadingScene.name && portal1.DestinationTag == portal.FullID) {
                         if (portal2.Scene == "Shop") {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = "";
@@ -4065,7 +4065,7 @@ namespace TunicRandomizer {
                         break;
                     }
 
-                    if (portal2.Scene == loadingScene.name && portal2.Destination == portal.FullID) {
+                    if (portal2.Scene == loadingScene.name && portal2.DestinationTag == portal.FullID) {
                         if (portal1.Scene == "Shop") {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = "";
@@ -4093,7 +4093,7 @@ namespace TunicRandomizer {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
-                    if (portal1.Scene == "Overworld Redux" && portal1.Destination == portal.FullID) {
+                    if (portal1.Scene == "Overworld Redux" && portal1.DestinationTag == portal.FullID) {
                         if (portal2.Scene == "Shop") {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = "";
@@ -4106,7 +4106,7 @@ namespace TunicRandomizer {
                         break;
                     }
 
-                    if (portal2.Scene == "Overworld Redux" && portal2.Destination == portal.FullID) {
+                    if (portal2.Scene == "Overworld Redux" && portal2.DestinationTag == portal.FullID) {
                         if (portal1.Scene == "Shop") {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = "";
