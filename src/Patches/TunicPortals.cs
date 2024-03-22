@@ -4127,7 +4127,11 @@ namespace TunicRandomizer {
             foreach (var portal in Portals) {
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
                     foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals) {
-                        if (portal.name == portalCombo.Value.Portal1.Name || portal.name == portalCombo.Value.Portal2.Name) {
+                        if (portal.name == portalCombo.Value.Portal1.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal2.Scene == SceneManager.GetActiveScene().name))) {
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                        }
+                        if (portal.name == portalCombo.Value.Portal2.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal1.Scene == SceneManager.GetActiveScene().name))) {
                             SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
                             SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
                         }
