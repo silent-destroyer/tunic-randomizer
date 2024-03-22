@@ -279,10 +279,10 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost East Forest Entrance 1", "Forest Belltower", new Vector3(500.9258f, 13.9394f, 63.79896f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.SIT, $"#uh lahdur brOk ahnd #Ar R ehnehmEz owtsId, buht #is stahJoo\nawfurz sAftE."),
                 new HintGhost("Hint Ghost East Forest Entrance 2", "East Forest Redux", new Vector3(75.5f, 4f, 52f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"plEz dOnt %rO koinz in #uh wehl, yool skAr uhwA\n#uh fi$.", true, new TransformData(new Vector3(75.5f, 5.1f, 51.7f), new Quaternion(0f, 0.7071f, 0f, 0.7071f), new Vector3(1f, 1f, 1f))) }
             },
-            { "East Belltower Upper", new List<HintGhost>() {
-                new HintGhost("Hint Ghost East Belltower Upper 1", "Forest Belltower", new Vector3(500.3264f, 62.012f, 107.5831f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"di^ daw^! doo yoo hahv wuht it tAks?"),
-                new HintGhost("Hint Ghost East Belltower Upper 2", "Forest Belltower", new Vector3(593.9467f, 14.0052f, 84.43121f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.IDLE, $"wow... yoo did it!"),
-                new HintGhost("Hint Ghost East Belltower Upper 3", "East Forest Redux Laddercave", new Vector3(159.0245f, 17.89421f, 78.52466f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.PRAY, $"#Arz uh baws uhhehd... buht hE hahz por vi&uhn.")}
+            { "East Forest Exit", new List<HintGhost>() {
+                new HintGhost("Hint Ghost East Forest Exit 1", "Forest Belltower", new Vector3(500.3264f, 62.012f, 107.5831f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"di^ daw^! doo yoo hahv wuht it tAks?"),
+                new HintGhost("Hint Ghost East Forest Exit 2", "Forest Belltower", new Vector3(593.9467f, 14.0052f, 84.43121f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.IDLE, $"wow... yoo did it!"),
+                new HintGhost("Hint Ghost East Forest Exit 3", "East Forest Redux Laddercave", new Vector3(159.0245f, 17.89421f, 78.52466f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.PRAY, $"#Arz uh baws uhhehd... buht hE hahz por vi&uhn.")}
             },
             { "Swamp", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Swamp 1", "Swamp Redux 2", new Vector3(-47f, 16.0463f, -31.3333f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.GAZE, $"I kahn sE mI hows fruhm hEr!" ),
