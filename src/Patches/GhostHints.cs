@@ -368,11 +368,9 @@ namespace TunicRandomizer {
                         NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
                     }
                     
-                    if (HintGhost.Fishing == true) {
-                        GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod);
+                    if (HintGhost.Fishing) {
+                        GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod, HintGhost.FishingRodPos.pos, HintGhost.FishingRodPos.rot);
                         fishingRod.SetActive(true);
-                        fishingRod.transform.position = HintGhost.FishingRodPos.pos;
-                        fishingRod.transform.rotation = HintGhost.FishingRodPos.rot;
                     }
 
                     NewGhostFox.SetActive(true);
