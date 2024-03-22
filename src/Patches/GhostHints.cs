@@ -275,16 +275,14 @@ namespace TunicRandomizer {
             { "Ice Dagger House", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Ice Dagger House", "archipelagos_house", new Vector3(-201.1842f, 3.1209f, 38.4875f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.PRAY, $"Is too mEt yoo!") }
             },
-            { "East Belltower Lower", new List<HintGhost>() {
-                new HintGhost("Hint Ghost East Belltower Lower", "Forest Belltower", new Vector3(500.9258f, 13.9394f, 63.79896f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.SIT, $"#uh lahdur brOk ahnd #Ar R ehnehmEz owtsId, buht #is stahJoo\nawfurz sAftE.") }
+            { "East Forest 1", new List<HintGhost>() {
+                new HintGhost("Hint Ghost East Belltower Lower", "Forest Belltower", new Vector3(500.9258f, 13.9394f, 63.79896f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.SIT, $"#uh lahdur brOk ahnd #Ar R ehnehmEz owtsId, buht #is stahJoo\nawfurz sAftE."),
+                new HintGhost("Hint Ghost East Forest 1", "East Forest Redux", new Vector3(75.5f, 4f, 52f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"plEz dOnt %rO koinz in #uh wehl, yool skAr uhwA\n#uh fi$.", true, new TransformData(new Vector3(75.5f, 5.1f, 51.7f), new Quaternion(0f, 0.7071f, 0f, 0.7071f), new Vector3(1f, 1f, 1f))) }
             },
-            { "East Belltower Upper", new List<HintGhost>() {
+            { "East Forest 2", new List<HintGhost>() {
                 new HintGhost("Hint Ghost East Belltower Upper 1", "Forest Belltower", new Vector3(500.3264f, 62.012f, 107.5831f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"di^ daw^! doo yoo hahv wuht it tAks?"),
                 new HintGhost("Hint Ghost East Belltower Upper 2", "Forest Belltower", new Vector3(593.9467f, 14.0052f, 84.43121f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.IDLE, $"wow... yoo did it!"),
                 new HintGhost("Hint Ghost East Belltower Upper 3", "East Forest Redux Laddercave", new Vector3(159.0245f, 17.89421f, 78.52466f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.PRAY, $"#Arz uh baws uhhehd... buht hE hahz por vi&uhn.")}
-            },
-            { "East Forest", new List<HintGhost>() {
-                new HintGhost("Hint Ghost East Forest 1", "East Forest Redux", new Vector3(75.5f, 4f, 52f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"plEz dOnt %rO koinz in #uh wehl, yool skAr uhwA\n#uh fi$.", true, new TransformData(new Vector3(75.5f, 5.1f, 51.7f), new Quaternion(0f, 0.7071f, 0f, 0.7071f), new Vector3(1f, 1f, 1f))) }
             },
             { "Swamp", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Swamp 1", "Swamp Redux 2", new Vector3(-47f, 16.0463f, -31.3333f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.GAZE, $"I kahn sE mI hows fruhm hEr!" ),
