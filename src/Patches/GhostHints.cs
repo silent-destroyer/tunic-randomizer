@@ -34,12 +34,12 @@ namespace TunicRandomizer {
             public string HintedItem;
             public string OptionalCheckID;
             public string HexQuestAbilityHint;
-            public bool Fishing;
+            public bool FishingPole;
             public TransformData FishingRodPos;
 
             public HintGhost() { }
 
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData()) {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -50,34 +50,10 @@ namespace TunicRandomizer {
                 Hint = "";
                 HintedItem = "";
                 OptionalCheckID = "";
-            }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue) {
-                Name = name;
-                SceneName = sceneName;
-                Position = position;
-                Rotation = rotation;
-                Dialogue = dialogue;
-                TrunicDialogue = trunicDialogue;
-                AnimState = animState;
-                Hint = "";
-                HintedItem = "";
-                OptionalCheckID = "";
-            }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishing, TransformData fishingRodPos) {
-                Name = name;
-                SceneName = sceneName;
-                Position = position;
-                Rotation = rotation;
-                Dialogue = dialogue;
-                TrunicDialogue = dialogue;
-                AnimState = animState;
-                Hint = "";
-                HintedItem = "";
-                OptionalCheckID = "";
-                Fishing = fishing;
+                FishingPole = fishingPole;
                 FishingRodPos = fishingRodPos;
             }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishing, TransformData fishingRodPos) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData()) {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -88,7 +64,7 @@ namespace TunicRandomizer {
                 Hint = "";
                 HintedItem = "";
                 OptionalCheckID = "";
-                Fishing = fishing;
+                FishingPole = fishingPole;
                 FishingRodPos = fishingRodPos;
             }
         }
@@ -368,7 +344,7 @@ namespace TunicRandomizer {
                         NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
                     }
                     
-                    if (HintGhost.Fishing) {
+                    if (HintGhost.FishingPole) {
                         GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod, HintGhost.FishingRodPos.pos, HintGhost.FishingRodPos.rot);
                         fishingRod.SetActive(true);
                     }
