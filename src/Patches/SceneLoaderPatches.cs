@@ -142,6 +142,7 @@ namespace TunicRandomizer {
             if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
                 ModelSwaps.SetupGlowEffect();
                 EnemyRandomizer.InitializeEnemies("Archipelagos Redux");
+                ModelSwaps.InstantiateFishingRod();
                 SceneLoader.LoadScene("Atoll Redux");
                 return;
             }

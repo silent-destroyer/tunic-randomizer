@@ -39,6 +39,8 @@ namespace TunicRandomizer {
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
 
+        public static GameObject FishingRod;
+
         public static List<string> ShopItemIDs = new List<string>() {
             "Potion (First) [Shop]",
             "Potion (West Garden) [Shop]",
@@ -250,6 +252,13 @@ namespace TunicRandomizer {
             StarburstEffect = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<ParticleSystem>().Where(ps => ps.name == "PS: starburst" && ps.transform.parent.name == "zzz_trash").FirstOrDefault().gameObject);
             StarburstEffect.SetActive(false);
             GameObject.DontDestroyOnLoad(StarburstEffect);
+        }
+
+        public static void InstantiateFishingRod() {
+            FishingRod = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "fishingpole").ToList()[0]);
+            GameObject.Destroy(FishingRod.GetComponent<StatefulActive>());
+            FishingRod.SetActive(false);
+            GameObject.DontDestroyOnLoad(FishingRod);
         }
 
         public static void InitializeSecondSword() {
