@@ -1909,6 +1909,14 @@ namespace TunicRandomizer {
                 new RegionInfo("Shop", true)
             },
             {
+                "Shop Entrance 7",
+                new RegionInfo("Shop", true)
+            },
+            {
+                "Shop Entrance 8",
+                new RegionInfo("Shop", true)
+            },
+            {
                 "Shop",
                 new RegionInfo("Shop", true)
             },
@@ -3697,6 +3705,26 @@ namespace TunicRandomizer {
                     },
                 }
             },
+            {
+                "Shop Entrance 7",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Shop Entrance 8",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Shop",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
         };
 
         public static void ShuffleList<T>(IList<T> list, int seed) {
@@ -3836,6 +3864,51 @@ namespace TunicRandomizer {
             return inventory;
         }
 
+        public static Dictionary<Portal, Portal> VanillaPortals() {
+            RandomizedPortals.Clear();
+            Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
+            List<Portal> portalList = new List<Portal>();
+            int shop_num = 1;
+
+            foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
+                string scene_name = scene_group.Key;
+                if (scene_name == "Shop") {
+                    continue;
+                }
+                foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
+                    string region_name = region_group.Key;
+                    List<TunicPortal> region_portals = region_group.Value;
+                    foreach (TunicPortal tunicPortal in region_portals) {
+                        portalList.Add(new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name));
+                    }
+                }
+            }
+            while (portalList.Count > 0) {
+                Portal portal1 = portalList[0];
+                Portal portal2 = new Portal("placeholder", "placeholder", "placeholder", "placeholder", "placeholder");  // I <3 csharp
+                string portal2_sdt = portal1.DestinationSceneTag;
+                if (portal2_sdt.StartsWith("Shop,")) {
+                    portal2 = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}");
+                }
+                else if (portal2_sdt == "Purgatory, Purgatory_bottom") {
+                    portal2_sdt = "Purgatory, Purgatory_top";
+                }
+
+                foreach (Portal portal in portalList) {
+                    if (portal.SceneDestinationTag == portal2_sdt) {
+                        portal2 = portal;
+                        break;
+                    }
+                }
+                portalPairs[portal1] = portal2;
+                portalList.Remove(portal1);
+                if (!portal2_sdt.StartsWith("Shop,")) {
+                    portalList.Remove(portal2);
+                }
+            }
+            return portalPairs;
+        }
+
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static void RandomizePortals(int seed) {
             RandomizedPortals.Clear();
@@ -3950,7 +4023,6 @@ namespace TunicRandomizer {
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
                 deadEndPortals.RemoveAt(0);
                 twoPlusPortals.RemoveAt(0);
-                
             }
 
             // shops get added separately cause they're weird
