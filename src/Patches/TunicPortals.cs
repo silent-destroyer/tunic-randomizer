@@ -3811,19 +3811,17 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        public static List<string> UpdateReachableRegions(List<string> inventory) {
+        public static List<string> FirstStepsUpdateReachableRegions(List<string> inventory) {
             int inv_count = inventory.Count;
-            // for each origin region
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TraversalReqs) {
-                string origin = traversal_group.Key;
-                // for each destination in an origin's group
+            // add all regions in Overworld that you can currently reach to the inventory
+            // this could just not be a foreach, but it'll need to be one when ladders gets merged in
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
+                string origin_region = traversal_group.Key;
+                if (!inventory.Contains(origin_region)) {
+                    continue;
+                }
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    // if we don't have the origin region, skip it
-                    if (!inventory.Contains(origin)) {
-                        continue;
-                    }
-                    // if we can already reach this region, skip it
                     if (inventory.Contains(destination)) {
                         continue;
                     }
@@ -3859,7 +3857,7 @@ namespace TunicRandomizer {
             }
             // if we gained any regions, rerun this to get any new regions
             if (inv_count != inventory.Count) {
-                UpdateReachableRegions(inventory);
+                FirstStepsUpdateReachableRegions(inventory);
             }
             return inventory;
         }
