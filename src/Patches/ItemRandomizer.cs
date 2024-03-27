@@ -276,6 +276,7 @@ namespace TunicRandomizer {
             // if we're in ER, sphere zero is also the regions we can get to with our starting inventory
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 List<string> sphere_zero_list = GetERSphereOne();
+                SphereZero.Clear();
                 foreach (string sphere_zero_item in sphere_zero_list) {
                     if (!SphereZero.ContainsKey(sphere_zero_item)) {
                         SphereZero.Add(sphere_zero_item, 1);
