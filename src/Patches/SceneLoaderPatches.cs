@@ -15,6 +15,7 @@ namespace TunicRandomizer {
         public static int SceneId;
         public static float TimeOfLastSceneTransition = 0.0f;
         public static bool SpawnedGhosts = false;
+        public static bool InitialLoadDone = false;
 
         public static GameObject SpiritArenaTeleporterPrefab;
 
@@ -291,6 +292,7 @@ namespace TunicRandomizer {
             } else if (SceneName == "Forest Belltower") {
                 SaveFile.SetInt("chest open 19", 0);
             } else if (SceneName == "TitleScreen") {
+                InitialLoadDone = true;
                 TitleVersion.Initialize();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                     Archipelago.instance.Connect();
@@ -312,6 +314,8 @@ namespace TunicRandomizer {
                 GameObject.Find("_Signposts/Signpost (3)/").GetComponent<Signpost>().message.text = $"#is wA too \"West Garden\"\n<#33FF33>[death] bEwAr uhv tArE [death]";
                 GameObject.Find("_Environment Special/Door (1)/door/key twist").GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key (House)"].GetComponent<MeshRenderer>().materials;
                 GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").AddComponent<MailboxFlag>();
+
+                GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>().dayOrNight = StateVariable.GetStateVariableByName("Is Night").BoolValue ? DayNightBridge.DayNight.NIGHT : DayNightBridge.DayNight.DAY;
 
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 || (SaveFile.GetInt("seed") == 0 && 
                     ((TunicRandomizer.Settings.EntranceRandoEnabled && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER) || 

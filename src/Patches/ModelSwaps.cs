@@ -492,6 +492,9 @@ namespace TunicRandomizer {
                     if (ItemPickup != null && ItemPickup.itemToGive != null) {
                         string ItemId = $"{ItemPickup.itemToGive.name} [{Scene}]";
                         if (SaveFile.GetInt($"randomizer {ItemId} was collected") == 1) {
+                            if (ItemPickup.gameObject.scene.name == "Sword Access") {
+                                GameObject.Find("_Setpieces/RelicPlinth (1)/").transform.GetChild(5).gameObject.SetActive(true);
+                            }
                             GameObject.Destroy(ItemPickup.gameObject);
                         }
                     }

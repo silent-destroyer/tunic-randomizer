@@ -126,7 +126,11 @@ namespace TunicRandomizer {
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
             if (__instance.item.name == "Torch") {
-                __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Overworld\"?";
+                if (StateVariable.GetStateVariableByName("Is Night").BoolValue) {
+                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Old House\"?";
+                } else {
+                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Overworld\"?";
+                }
             } else {
                 if (SceneLoaderPatches.SceneName == "g_elements") {
                     __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"???\"";
@@ -147,8 +151,13 @@ namespace TunicRandomizer {
         public static bool BoneItemBehavior_confirmBoneUseCallback_PrefixPatch(BoneItemBehaviour __instance) {
 
             if (__instance.item.name == "Torch") {
-                SaveFile.SetString("last campfire scene name", "Overworld Redux");
-                SaveFile.SetString("last campfire id", "checkpoint");
+                if (StateVariable.GetStateVariableByName("Is Night").BoolValue) {
+                    SaveFile.SetString("last campfire scene name", "Overworld Interiors");
+                    SaveFile.SetString("last campfire id", "bed");
+                } else {
+                    SaveFile.SetString("last campfire scene name", "Overworld Redux");
+                    SaveFile.SetString("last campfire id", "checkpoint");
+                }
             } else {
                 if (SceneLoaderPatches.SceneName == "g_elements") {
                     SaveFile.SetString("last campfire scene name", "Posterity");
