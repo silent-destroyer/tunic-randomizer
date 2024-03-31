@@ -1058,7 +1058,7 @@ namespace TunicRandomizer {
                     {
                         "Zig Skip Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1_zig2_skip"),
+                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1", "_zig2_skip"),
                         }
                     },
                 }
@@ -3897,6 +3897,9 @@ namespace TunicRandomizer {
                 }
                 foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
                     string region_name = region_group.Key;
+                    if (region_name == "Zig Skip Exit") {
+                        continue;
+                    }
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal tunicPortal in region_portals) {
                         portalList.Add(new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name));
