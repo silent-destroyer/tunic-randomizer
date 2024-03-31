@@ -1053,6 +1053,12 @@ namespace TunicRandomizer {
                             new TunicPortal("Ziggurat Portal Room Entrance", "ziggurat2020_FTRoom_"),
                         }
                     },
+                    {
+                        "Zig Skip Exit",
+                        new List<TunicPortal> {
+                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1_zig2_skip"),
+                        }
+                    },
                 }
             },
             {
@@ -1768,6 +1774,10 @@ namespace TunicRandomizer {
             },
             {
                 "Rooted Ziggurat Lower Back",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
+                "Zig Skip Exit",
                 new RegionInfo("ziggurat2020_3", false)
             },
             {
@@ -3335,6 +3345,16 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Zig Skip Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Lower Front",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
                 "Rooted Ziggurat Portal Room Entrance",
                 new Dictionary<string, List<List<string>>> {
                     {
@@ -3845,7 +3865,11 @@ namespace TunicRandomizer {
                     continue;
                 }
                 foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
+                    // if fixed shop is off, don't add zig skip exit to the portal list
                     string region_name = region_group.Key;
+                    if (region_name == "Zig Skip Exit" && SaveFile.GetInt("randomizer ER fixed shop") != 1) {
+                        continue;
+                    }
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal portal in region_portals) {
                         Portal TunicPortal = new Portal(name: portal.Name, destination: portal.Destination, scene: scene_name, region: region_name);
@@ -3892,6 +3916,10 @@ namespace TunicRandomizer {
             // get the total number of regions to get before doing dead ends
             int total_nondeadend_count = 0;
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
+                // if fixed shop is off, don't add the zig skip exit region to the nondeadend count
+                if (region.Key == "Zig Skip Exit" && SaveFile.GetInt("randomizer ER fixed shop") != 1) {
+                    continue;
+                }
                 if (region.Value.DeadEnd == false) {
                     total_nondeadend_count++;
                 }
@@ -3901,7 +3929,6 @@ namespace TunicRandomizer {
                 total_nondeadend_count++;
             }
 
-            // create a portal combo for every region in the threePlusRegions list, so that every region can now be accessed (ignoring rules for now)
             int comboNumber = 0;
             while (FullInventory.Count < total_nondeadend_count + MaxItems.Count) {
                 ShuffleList(twoPlusPortals, seed);
@@ -3955,7 +3982,7 @@ namespace TunicRandomizer {
             List<string> shopSceneList = new List<string>();
             int shopCount = 6;
             if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
-                shopCount = 1;
+                shopCount = 0;
                 Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill_", scene: "Overworld Redux", region: "Overworld");
                 Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", scene: "Shop", region: "Shop Entrance 2");
                 RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
