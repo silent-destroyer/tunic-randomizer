@@ -273,11 +273,13 @@ namespace TunicRandomizer {
 
             SphereZero = FullInventory;
 
+            // if we're in ER, sphere zero is also the regions we can get to with our starting inventory
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 List<string> sphere_zero_list = GetERSphereOne();
+                SphereZero.Clear();
                 foreach (string sphere_zero_item in sphere_zero_list) {
                     if (!SphereZero.ContainsKey(sphere_zero_item)) {
-                    SphereZero.Add(sphere_zero_item, 1);
+                        SphereZero.Add(sphere_zero_item, 1);
                     }
                 }
             }
@@ -433,10 +435,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
                 CombinedInventory.Add("12");
                 CombinedInventory.Add("21");
-                CombinedInventory.Add("Overworld Fountain Cross Door");
-                CombinedInventory.Add("Overworld Southeast Cross Door");
-                CombinedInventory.Add("Overworld Town Portal");
-                CombinedInventory.Add("Overworld Spawn Portal");
             }
             // add these too if you're ignoring them in logic
             if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
@@ -445,7 +443,8 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
                 CombinedInventory.Add("Lantern");
             }
-
+            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
+            
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
                 if (CombinedInventory.Contains(portalCombo.Portal1.Region)) {
@@ -462,7 +461,7 @@ namespace TunicRandomizer {
                     CombinedInventory.Add(portal.Region);
                 }
             }
-            CombinedInventory = TunicPortals.UpdateReachableRegions(CombinedInventory);
+            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
             return CombinedInventory;
         }
     }

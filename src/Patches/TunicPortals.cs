@@ -3831,19 +3831,17 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        public static List<string> UpdateReachableRegions(List<string> inventory) {
+        public static List<string> FirstStepsUpdateReachableRegions(List<string> inventory) {
             int inv_count = inventory.Count;
-            // for each origin region
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TraversalReqs) {
-                string origin = traversal_group.Key;
-                // for each destination in an origin's group
+            // add all regions in Overworld that you can currently reach to the inventory
+            // this could just not be a foreach, but it'll need to be one when ladders gets merged in
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
+                string origin_region = traversal_group.Key;
+                if (!inventory.Contains(origin_region)) {
+                    continue;
+                }
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    // if we don't have the origin region, skip it
-                    if (!inventory.Contains(origin)) {
-                        continue;
-                    }
-                    // if we can already reach this region, skip it
                     if (inventory.Contains(destination)) {
                         continue;
                     }
@@ -3879,7 +3877,7 @@ namespace TunicRandomizer {
             }
             // if we gained any regions, rerun this to get any new regions
             if (inv_count != inventory.Count) {
-                UpdateReachableRegions(inventory);
+                FirstStepsUpdateReachableRegions(inventory);
             }
             return inventory;
         }
@@ -4142,7 +4140,7 @@ namespace TunicRandomizer {
         }
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
-        public static void ModifyPortals(Scene loadingScene) {
+        public static void ModifyPortals(string scene_name) {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
             foreach (var portal in Portals) {
@@ -4152,71 +4150,32 @@ namespace TunicRandomizer {
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
 
-                    if (portal1.Scene == loadingScene.name && portal1.DestinationTag == portal.FullID) {
+                    if (portal1.Scene == scene_name && portal1.DestinationTag == portal.FullID) {
                         if (portal2.Scene == "Shop") {
                             portal.destinationSceneName = portal2.Scene;
-                            portal.id = "";
-                            portal.optionalIDToSpawnAt = "";
-                            portal.name = portal2.Name;
-                        } else {
-                            portal.destinationSceneName = portal2.Scene;
-                            portal.id = comboTag;
-                            portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
-                            portal.name = portal2.Name;
-                        }
-                        break;
-                    }
-
-                    if (portal2.Scene == loadingScene.name && portal2.DestinationTag == portal.FullID) {
-                        if (portal1.Scene == "Shop") {
-                            portal.destinationSceneName = portal1.Scene;
                             portal.id = "";
                             portal.optionalIDToSpawnAt = "";
                             portal.name = portal1.Name;
                         } else {
-                            portal.destinationSceneName = portal1.Scene;
-                            portal.id = comboTag + comboTag + comboTag + comboTag;
-                            portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
-                            portal.name = portal2.Name;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        // this is for use in PlayerCharacterPatches. Will need to refactor later if we do random player spawn
-        public static void AltModifyPortals() {
-            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
-            && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
-            foreach (var portal in Portals) {
-                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
-                    string comboTag = portalCombo.Key;
-                    Portal portal1 = portalCombo.Value.Portal1;
-                    Portal portal2 = portalCombo.Value.Portal2;
-                    if (portal1.Scene == "Overworld Redux" && portal1.DestinationTag == portal.FullID) {
-                        if (portal2.Scene == "Shop") {
-                            portal.destinationSceneName = portal2.Scene;
-                            portal.id = "";
-                            portal.optionalIDToSpawnAt = "";
-                        } else {
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
+                            portal.name = portal1.Name;
                         }
                         break;
                     }
 
-                    if (portal2.Scene == "Overworld Redux" && portal2.DestinationTag == portal.FullID) {
+                    if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
                         if (portal1.Scene == "Shop") {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = "";
                             portal.optionalIDToSpawnAt = "";
+                            portal.name = portal2.Name;
                         } else {
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
+                            portal.name = portal2.Name;
                         }
                         break;
                     }

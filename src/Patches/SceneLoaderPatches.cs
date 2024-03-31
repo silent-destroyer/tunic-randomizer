@@ -402,7 +402,7 @@ namespace TunicRandomizer {
                 } else if (IsSinglePlayer()) {
                     TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 }
-                TunicPortals.ModifyPortals(loadingScene);
+                TunicPortals.ModifyPortals(loadingScene.name);
                 TunicPortals.MarkPortals();
             }
 
