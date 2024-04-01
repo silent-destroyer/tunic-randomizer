@@ -110,7 +110,7 @@ namespace TunicRandomizer {
             Items["GoldenTrophy_10"] = ItemRoot.transform.GetChild(42).gameObject;
             Items["GoldenTrophy_11"] = ItemRoot.transform.GetChild(43).gameObject;
             Items["GoldenTrophy_12"] = ItemRoot.transform.GetChild(44).gameObject;
-
+            SecretMayor.MrMayor = Items["GoldenTrophy_1"];
             Items["Key"] = ItemRoot.transform.GetChild(4).gameObject;
             Items["Vault Key (Red)"] = ItemRoot.transform.GetChild(23).gameObject;
 
@@ -1260,6 +1260,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("AbilityShuffle", CreateSprite(ImageData.Abilities, ImageMaterial, 200, 100, SpriteName: "Randomizer heading_Abilities"));
             CustomItemImages.Add("Dath Stone Texture", CreateSprite(ImageData.DathSteneTexture, ImageMaterial, 200, 100, SpriteName: "Randomizer dath stone texture"));
             CustomItemImages.Add("Ladder", CreateSprite(ImageData.Ladder, ImageMaterial, 160, 160, SpriteName: "Randomizer items_ladder"));
+            CustomItemImages.Add("Secret Mayor", CreateSprite(ImageData.SecretMayor, ImageMaterial, 1400, 675, SpriteName: "Randomizer secret_mayor"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;

@@ -299,7 +299,7 @@ namespace TunicRandomizer {
                 }
             } else if (SceneName == "Temple") {
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                    foreach (GameObject Questagon in Resources.FindObjectsOfTypeAll<GameObject>().Where(Obj => Obj.name == "questagon")) {
+                    foreach (GameObject Questagon in Resources.FindObjectsOfTypeAll<GameObject>().Where(Obj => Obj.name == "questagon" && Obj.scene.name == loadingScene.name)) {
                         Questagon.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
                         Questagon.GetComponent<MeshRenderer>().receiveShadows = false;
                     }
@@ -382,6 +382,9 @@ namespace TunicRandomizer {
             } else if (SceneName == "Cathedral Redux") {
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
+                }
+                if (GameObject.FindObjectOfType<ToggleObjectBySpell>() != null) {
+                    GameObject.FindObjectOfType<ToggleObjectBySpell>().minDistance = 36;
                 }
             } else if (SceneName == "Maze Room") {
                 foreach (Chest chest in Resources.FindObjectsOfTypeAll<Chest>().Where(chest => chest.name == "Chest: Fairy")) {

@@ -19,6 +19,7 @@ namespace TunicRandomizer {
         public static bool DevBuild = true;
         public static bool UpdateAvailable = false;
         public static string UpdateVersion = "";
+        public static GameObject Logo;
         public static void Initialize() {
             UpdateVersion = PluginInfo.VERSION;
             try {
@@ -55,10 +56,13 @@ namespace TunicRandomizer {
             VersionString.transform.localScale = Vector3.one;
             GameObject.DontDestroyOnLoad(VersionString);
             System.Random Random = new System.Random();
-
+            Logo = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Image");
             if (Random.Next(100) < 10) {
-                GameObject Title = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Image");
-                Title.GetComponent<Image>().sprite = ModelSwaps.TuncTitleImage.GetComponent<Image>().sprite;
+                Logo.GetComponent<Image>().sprite = ModelSwaps.TuncTitleImage.GetComponent<Image>().sprite;
+            }
+
+            if (SecretMayor.shouldBeActive) {
+                Logo.GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer secret_mayor");
             }
         }
 

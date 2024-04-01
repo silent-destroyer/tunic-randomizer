@@ -32,8 +32,8 @@ namespace TunicRandomizer {
         public override void Load() {
             TunicLogger.SetLogger(Log);
             Logger = Log;
-            Logger.LogInfo(PluginInfo.NAME+ " v" + PluginInfo.VERSION + " loaded!");
-            
+            TunicLogger.LogInfo(PluginInfo.NAME + " v" + PluginInfo.VERSION + " loaded!");
+
             Application.runInBackground = true;
 
             Tracker = new ItemTracker();
@@ -214,6 +214,8 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Campfire), "isUseableAccordingToConduitSystem"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "Campfire_isUseableAccordingToConduitSystem_GetterPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(ConduitNode), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitNode_CheckConnectedToPower_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(SecretMayor), "SceneLoader_OnSceneLoaded_SecretMayorPatch")));
 
         }
     }
