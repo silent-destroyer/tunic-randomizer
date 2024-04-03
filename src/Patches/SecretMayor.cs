@@ -164,6 +164,8 @@ namespace TunicRandomizer {
                 if (scene == "Spirit Arena") {
                     GameObject foxgod = Resources.FindObjectsOfTypeAll<Foxgod>().Where(god => god.gameObject.scene == loadingScene).First().gameObject;
                     foxgod.GetComponent<BossAnnounceOnAggro>().bossTitleTopLine.text = $"\"Mr Mayor\"";
+                    foxgod.GetComponent<BossAnnounceOnAggro>().bossTitleBottomLine = ScriptableObject.CreateInstance<LanguageLine>();
+                    foxgod.GetComponent<BossAnnounceOnAggro>().bossTitleBottomLine.text = $"tehlur uhv forJuhnz, rEkowntur uhv storEz, awfurur uhv snahks";
                     foxgod.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
                     foxgod.transform.GetChild(1).gameObject.SetActive(false);
                     GameObject mayorgod = GameObject.Instantiate(MrMayor, foxgod.transform.GetChild(0));

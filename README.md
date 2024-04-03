@@ -6,7 +6,7 @@ This mod contains both the standalone, single-player randomizer and the Archipel
 
 For questions, feedback, bug reports, or other discussion related to the randomizer, please visit the dedicated randomizer channel in the [Tunic Speedrunning Discord](https://discord.gg/HXkztJgQWj)! 
 
-For discussion around the Archipelago side of things, please visit the dedicated Tunic thread in the [Archipelago Discord](https://discord.gg/8Z65BR2).
+For discussion around the Archipelago side of things, please visit the dedicated Tunic channel in the [Archipelago Discord](https://discord.gg/8Z65BR2).
 
 ## Installation
 - Must use a compatible PC version of TUNIC on the latest update. The mod has been tested on Steam and PC Game Pass versions, but should realistically work on any PC version (including Steam Deck).
@@ -29,20 +29,16 @@ For discussion around the Archipelago side of things, please visit the dedicated
 - Click New Game and have fun!
 
 ## Generating a Multiworld with Archipelago
-- In order to setup a multiworld you must first install the latest release of [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases/latest).
-  - When running the Archipelago Setup exe, you'll at least want to install the Generator and Text Client, but can install any other components you may need as well for other games.
-- After installing, run `Archipelago Launcher` and click on `Browse Files`.
-  - This will open the local file directory for your Archipelago installation.
-- In the .zip you downloaded from the release page, there should be two files called `tunic.apworld` and `tunic.yaml`.
-- Place `tunic.yaml` from the Tunic Randomizer release inside of the `Players` folder.
-  - `tunic.yaml` needs to be configured before you can generate a game. Open the file in a text editor and fill in your player name and choose the settings you want.
-  - You will also need to get the .yaml files for everyone who is joining your multiworld and place them inside of the `Players` folder as well.
-- Place `tunic.apworld` from the Tunic Randomizer release inside of `lib/worlds`.
-- Once all of the .yaml fies have been configured and placed into `Players`, click `Generate` in the Archipelago Launcher.
-- A .zip file will be created in the `output` folder containing the information for your multiworld. In order to host your game, go to [https://archipelago.gg/uploads](https://archipelago.gg/uploads) and upload the .zip file, then click `Create New Room`. Once the room is generated, write down/copy the port number that is displayed for the port.
-- Launch the game and select `Archipelago` on the Title Screen, then click `Edit AP Config` and fill in your connection details. Alternatively, you can click `Open Settings File` to edit the file with the connection settings directly.
+- Head to the [TUNIC Options Page](https://archipelago.gg/games/TUNIC/player-options) on the Archipelago website.
+- Select your desired settings and enter a player name, then click `Export Options`. This will download a yaml file, which contains the information you selected on the page.
+  - If playing solo, you can simply click `Generate Game` instead and skip the next two steps.
+  - If playing with multiple people, you will need to send your yaml file to the person creating the game, or have everyone send you theirs if you are the one creating the game.
+- Once you have every player's yaml file, compress them into a zip file and upload it (here)[https://archipelago.gg/generate].
+- Click `Create New Room`, and you will see something like `/connect archipelago.gg:38281`. Archipelago.gg is the host and the last 5 numbers here are the port number, which you will need for the next step.
+- Launch the game and select `Archipelago` on the Title Screen, then click `Edit AP Config` and fill in your connection details. Player name must match what you entered in the first step, and hostname/port should match the info from the previous step.
 - All that's left is to press Connect, and if it says `Connected`, simply start a New Game and have fun!
-- For more information, see the official [Archipelago Setup Guide](https://archipelago.gg/tutorial/Archipelago/setup/en).
+- For more information, see the official [Archipelago Setup Guide](https://archipelago.gg/tutorial/TUNIC/setup/en).
+- Note: These steps are for playing with games that are supported on the website. For beta/wip games, you will need to run the Archipelago software on your machine to generate the game instead by using (this guide)[https://archipelago.gg/tutorial/Archipelago/setup/en].
 
 ## Helpful Tips
 - Regarding Logic:
