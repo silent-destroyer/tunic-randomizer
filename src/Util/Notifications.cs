@@ -1,6 +1,4 @@
-﻿using BepInEx.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +7,6 @@ using UnityEngine;
 
 namespace TunicRandomizer {
     public class Notifications {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static void Show(string topLine, string bottomLine) {
             topLine = topLine.Replace("{", "");
