@@ -410,6 +410,13 @@ namespace TunicRandomizer {
 
             if (networkItem.Player != Archipelago.instance.GetPlayerSlot()) {
                 var sender = Archipelago.instance.GetPlayerName(networkItem.Player);
+                if (sender.Contains("{")) {
+                    Logger.LogInfo("replacing {");
+                    sender = sender.Replace("{", "");
+                }
+                if (sender.Contains("}")) {
+                    sender = sender.Replace("}", "");
+                }
                 NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
