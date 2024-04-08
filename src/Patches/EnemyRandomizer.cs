@@ -21,6 +21,8 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> EnemiesInCurrentScene = new Dictionary<string, string>() { };
 
+        public static GameObject CrabExplosionReceiver = new GameObject();
+
         public static List<string> SpecificExcludedEnemies = new List<string>() {
             "Overworld Redux (-175.1, 1.0, -76.3)",
             "frog cave main (118.5, 29.9, -52.6)",
@@ -444,6 +446,10 @@ namespace TunicRandomizer {
                     Enemies["Crabbo"].GetComponent<HitReceiver>().blockEnabled = true;
                     Enemies["Crabbo"].GetComponent<Crabbo>().attackDistance = 5f;
                     Enemies["Crabbo"].GetComponent<Crabbo>().averageAttackCooldown = 1.25f;
+                    Logger.LogInfo("test message 1");
+                    Crabbo.transform.GetChild(3).gameObject.transform.parent = Enemies["Crabbo"].transform;
+                    Enemies["Crabbo"].GetComponentsInChildren<HitReceiver>().Where(expl => expl.id == "crab_belly").ToList()[0].id = "crabbit";
+                    Logger.LogInfo("test message 2");
                     Enemies["Crabbo"].SetActive(false);
                     GameObject.DontDestroyOnLoad(Enemies["Crabbo"]);
                 }
