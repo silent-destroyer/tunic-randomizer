@@ -668,8 +668,8 @@ namespace TunicRandomizer {
                     if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                         GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
                     }
-                    if (SceneLoaderPatches.SceneName != "Atoll Redux" && (NewEnemy.name == "Crabbo" || NewEnemy.name == "Crabbit")) {
-                        // modify the ai nav component to be 0 instead of that long number
+                    if (SceneLoaderPatches.SceneName != "Atoll Redux" && (NewEnemy.name.Contains("Crabbo") || NewEnemy.name.Contains("Crabbit"))) {
+                        NewEnemy.transform.GetComponent<UnityEngine.AI.NavMeshAgent>().agentTypeID = 0;
                     }
                     if (SceneLoaderPatches.SceneName == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         NewEnemy.AddComponent<BossAnnounceOnAggro>();
