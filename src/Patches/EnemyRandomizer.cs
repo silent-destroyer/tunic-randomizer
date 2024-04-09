@@ -21,8 +21,6 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> EnemiesInCurrentScene = new Dictionary<string, string>() { };
 
-        public static GameObject CrabExplosionReceiver = new GameObject();
-
         public static List<string> SpecificExcludedEnemies = new List<string>() {
             "Overworld Redux (-175.1, 1.0, -76.3)",
             "frog cave main (118.5, 29.9, -52.6)",
@@ -107,6 +105,8 @@ namespace TunicRandomizer {
                     "Crow",
                     "Crabbit with Shell",
                     "Spinnerbot Baby",
+                    "Crabbo (1)",
+                    "Crabbit"
                 }
             },
             {
@@ -399,6 +399,7 @@ namespace TunicRandomizer {
                 { "Spinnerbot (3)", "Spinnerbot Corrupted" },
                 { "Bat_librarian add", "Bat void" },
                 { "Skuladot redux_librarian add", "Skuladot redux void" },
+                { "Crabbo (1)", "Crabbo" }
             };
             foreach (string LocationEnemy in LocationEnemies[SceneName]) {
                 string EnemyName = LocationEnemy;
@@ -428,31 +429,31 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].GetComponent<Centipede>().attackDistance = 5f;
                     Enemies[EnemyName].GetComponent<Centipede>().monsterAggroDistance = 20f;
                 }
-                if (EnemyName == "Crabbit with Shell") {
-                    Enemies["Crabbit"] = GameObject.Instantiate(Enemies[EnemyName]);
-                    Enemies["Crabbit"].name = "Crabbit Prefab";
-                    GameObject.Destroy(Enemies["Crabbit"].transform.GetChild(4).gameObject);
-                    Enemies["Crabbit"].SetActive(false);
-                    GameObject.DontDestroyOnLoad(Enemies["Crabbit"]);
+                //if (EnemyName == "Crabbit with Shell") {
+                //    Enemies["Crabbit"] = GameObject.Instantiate(Enemies[EnemyName]);
+                //    Enemies["Crabbit"].name = "Crabbit Prefab";
+                //    GameObject.Destroy(Enemies["Crabbit"].transform.GetChild(4).gameObject);
+                //    Enemies["Crabbit"].SetActive(false);
+                //    GameObject.DontDestroyOnLoad(Enemies["Crabbit"]);
 
-                    GameObject Crabbo = Resources.FindObjectsOfTypeAll<Crabbo>().Where(crab => crab.name == "Crabbo (1)").First().gameObject;
+                //    GameObject Crabbo = Resources.FindObjectsOfTypeAll<Crabbo>().Where(crab => crab.name == "Crabbo (1)").First().gameObject;
 
-                    Enemies["Crabbo"] = GameObject.Instantiate(Enemies[EnemyName]);
-                    Enemies["Crabbo"].name = "Crabbo Prefab";
-                    GameObject.Destroy(Enemies["Crabbo"].transform.GetChild(4).gameObject);
-                    Enemies["Crabbo"].transform.localScale = Vector3.one;
-                    Enemies["Crabbo"].transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Crabbo.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials;
-                    Enemies["Crabbo"].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = Crabbo.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials;
-                    Enemies["Crabbo"].GetComponent<HitReceiver>().blockEnabled = true;
-                    Enemies["Crabbo"].GetComponent<Crabbo>().attackDistance = 5f;
-                    Enemies["Crabbo"].GetComponent<Crabbo>().averageAttackCooldown = 1.25f;
-                    Logger.LogInfo("test message 1");
-                    Crabbo.transform.GetChild(3).gameObject.transform.parent = Enemies["Crabbo"].transform;
-                    Enemies["Crabbo"].GetComponentsInChildren<HitReceiver>().Where(expl => expl.id == "crab_belly").ToList()[0].id = "crabbit";
-                    Logger.LogInfo("test message 2");
-                    Enemies["Crabbo"].SetActive(false);
-                    GameObject.DontDestroyOnLoad(Enemies["Crabbo"]);
-                }
+                //    Enemies["Crabbo"] = GameObject.Instantiate(Enemies[EnemyName]);
+                //    Enemies["Crabbo"].name = "Crabbo Prefab";
+                //    GameObject.Destroy(Enemies["Crabbo"].transform.GetChild(4).gameObject);
+                //    Enemies["Crabbo"].transform.localScale = Vector3.one;
+                //    Enemies["Crabbo"].transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Crabbo.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials;
+                //    Enemies["Crabbo"].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = Crabbo.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials;
+                //    Enemies["Crabbo"].GetComponent<HitReceiver>().blockEnabled = true;
+                //    Enemies["Crabbo"].GetComponent<Crabbo>().attackDistance = 5f;
+                //    Enemies["Crabbo"].GetComponent<Crabbo>().averageAttackCooldown = 1.25f;
+                //    Logger.LogInfo("test message 1");
+                //    Crabbo.transform.GetChild(3).gameObject.transform.parent = Enemies["Crabbo"].transform;
+                //    Enemies["Crabbo"].GetComponentsInChildren<HitReceiver>().Where(expl => expl.id == "crab_belly").ToList()[0].id = "crabbit";
+                //    Logger.LogInfo("test message 2");
+                //    Enemies["Crabbo"].SetActive(false);
+                //    GameObject.DontDestroyOnLoad(Enemies["Crabbo"]);
+                //}
 
                 if (EnemyName == "Bat void") {
                     Enemies[EnemyName].GetComponent<Bat>().monsterAggroDistance = 4;
@@ -666,6 +667,9 @@ namespace TunicRandomizer {
                     }
                     if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                         GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
+                    }
+                    if (SceneLoaderPatches.SceneName == "Atoll Redux" && (NewEnemy.name == "Crabbo" || NewEnemy.name == "Crabbit")) {
+                        // modify the ai nav component to be 0 instead of that long number
                     }
                     if (SceneLoaderPatches.SceneName == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         NewEnemy.AddComponent<BossAnnounceOnAggro>();
