@@ -7,6 +7,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using UnhollowerBaseLib;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -105,6 +106,8 @@ namespace TunicRandomizer {
                     "Crow",
                     "Crabbit with Shell",
                     "Spinnerbot Baby",
+                    "Crabbo (1)",
+                    "Crabbit"
                 }
             },
             {
@@ -397,6 +400,7 @@ namespace TunicRandomizer {
                 { "Spinnerbot (3)", "Spinnerbot Corrupted" },
                 { "Bat_librarian add", "Bat void" },
                 { "Skuladot redux_librarian add", "Skuladot redux void" },
+                { "Crabbo (1)", "Crabbo" }
             };
             foreach (string LocationEnemy in LocationEnemies[SceneName]) {
                 string EnemyName = LocationEnemy;
@@ -426,32 +430,9 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].GetComponent<Centipede>().attackDistance = 5f;
                     Enemies[EnemyName].GetComponent<Centipede>().monsterAggroDistance = 20f;
                 }
-                if (EnemyName == "Crabbit with Shell") {
-                    Enemies["Crabbit"] = GameObject.Instantiate(Enemies[EnemyName]);
-                    Enemies["Crabbit"].name = "Crabbit Prefab";
-                    GameObject.Destroy(Enemies["Crabbit"].transform.GetChild(4).gameObject);
-                    Enemies["Crabbit"].SetActive(false);
-                    GameObject.DontDestroyOnLoad(Enemies["Crabbit"]);
-
-                    GameObject Crabbo = Resources.FindObjectsOfTypeAll<Crabbo>().Where(crab => crab.name == "Crabbo (1)").First().gameObject;
-
-                    Enemies["Crabbo"] = GameObject.Instantiate(Enemies[EnemyName]);
-                    Enemies["Crabbo"].name = "Crabbo Prefab";
-                    GameObject.Destroy(Enemies["Crabbo"].transform.GetChild(4).gameObject);
-                    Enemies["Crabbo"].transform.localScale = Vector3.one;
-                    Enemies["Crabbo"].transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = Crabbo.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials;
-                    Enemies["Crabbo"].transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = Crabbo.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials;
-                    Enemies["Crabbo"].GetComponent<HitReceiver>().blockEnabled = true;
-                    Enemies["Crabbo"].GetComponent<Crabbo>().attackDistance = 5f;
-                    Enemies["Crabbo"].GetComponent<Crabbo>().averageAttackCooldown = 1.25f;
-                    Enemies["Crabbo"].SetActive(false);
-                    GameObject.DontDestroyOnLoad(Enemies["Crabbo"]);
-                }
-
                 if (EnemyName == "Bat void") {
                     Enemies[EnemyName].GetComponent<Bat>().monsterAggroDistance = 4;
                 }
-
                 if (EnemyName == "Skuladot redux_ghost") {
                     Enemies[EnemyName].GetComponent<Monster>().dropValue = Enemies["Skuladot redux"].GetComponent<Monster>().dropValue;
                 }
@@ -660,6 +641,9 @@ namespace TunicRandomizer {
                     }
                     if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                         GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
+                    }
+                    if (SceneLoaderPatches.SceneName != "Atoll Redux" && NewEnemy.GetComponent<Crabbo>() != null) {
+                        NewEnemy.transform.GetComponent<NavMeshAgent>().agentTypeID = 0;
                     }
                     if (SceneLoaderPatches.SceneName == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         NewEnemy.AddComponent<BossAnnounceOnAggro>();
