@@ -7,6 +7,7 @@ using UnityEngine;
 using BepInEx.Logging;
 using UnhollowerBaseLib;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -642,7 +643,7 @@ namespace TunicRandomizer {
                         GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
                     }
                     if (SceneLoaderPatches.SceneName != "Atoll Redux" && (NewEnemy.name.Contains("Crabbo") || NewEnemy.name.Contains("Crabbit"))) {
-                        NewEnemy.transform.GetComponent<UnityEngine.AI.NavMeshAgent>().agentTypeID = 0;
+                        NewEnemy.transform.GetComponent<NavMeshAgent>().agentTypeID = 0;
                     }
                     if (SceneLoaderPatches.SceneName == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         NewEnemy.AddComponent<BossAnnounceOnAggro>();
