@@ -703,15 +703,6 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<Monster>().defaultStartingMaxHP._value = 30;
                     }
 
-                    if (NewEnemy.name.Contains("Crabbo") && NewEnemy.GetComponent<Crabbo>() != null) {
-                        if (NewEnemy.GetComponent<Monster>().animatorSpeedMultiplier != null) {
-                            NewEnemy.GetComponent<Monster>().animatorSpeedMultiplier.Value = 1f;
-                        }
-                        if (NewEnemy.GetComponent<Monster>().defaultStartingMaxHP != null) {
-                            NewEnemy.GetComponent<Monster>().defaultStartingMaxHP.Value = 50f;
-                        }
-                    }
-
                     if (NewEnemy.GetComponent<Administrator>() != null && NewEnemy.name.ToLower().Contains("servant")) {
                         NewEnemy.GetComponent<BoxCollider>().extents /= 2;
                     }
