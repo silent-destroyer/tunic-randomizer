@@ -2248,6 +2248,19 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Guard House 1 West",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Guard House 1 East",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Forest Grave Path Main",
                 new Dictionary<string, List<List<string>>> {
                     {
