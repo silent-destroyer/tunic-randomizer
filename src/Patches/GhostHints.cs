@@ -300,7 +300,8 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Fortress Courtyard 4", "Fortress Courtyard", new Vector3(11.6453f, 4.0203f, -115.355f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"I woud nawt tuhJ #aht wuhn. hoo nOz wuht #Al doo wi%\n#uh powur?") }
             },
             { "Mountain Door", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Mountain", "Mountain", new Vector3(54.7674f, 41.5568f, 4.4282f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.GAZE_UP, $"yoo kahn Opehn #is? uhmAzi^!") }
+                new HintGhost("Hint Ghost Mountain 1", "Mountain", new Vector3(54.7674f, 41.5568f, 4.4282f), new Quaternion(0f, 0.3826835f, 0f, -0.9238795f), NPC.NPCAnimState.GAZE_UP, $"yoo kahn Opehn #is? uhmAzi^!"),
+                new HintGhost("Hint Ghost Mountain 2", "Mountain", new Vector3(-26.9810f, 1.5000f, -73.0729f), new Quaternion(-0.0165454f, -0.995784f, 0.07595f, 0.0486970f), NPC.NPCAnimState.FISHING, $"kOld? wI woud I bE kOld? its kOzE. yor #uh wuhn wi%\nnO pahnts.") }
             },
             { "Atoll Entrance", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Atoll Entrance 1", "Atoll Redux", new Vector3(-3.5443f, 1.0174f, 120.0543f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"burdsaw^ iz sO rElahksi^. twEt twEt twEt!"),
