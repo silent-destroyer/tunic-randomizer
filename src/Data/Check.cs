@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,10 @@ namespace TunicRandomizer {
                 foreach (string item in req.Keys) {
                     //Logger.LogInfo(item);
                     if (!inventory.ContainsKey(item)) {
+                        if (ItemRandomizer.testBool) {
+                            TunicRandomizer.Logger.LogInfo("LocationID is " + this.LocationId);
+                            TunicRandomizer.Logger.LogInfo("inventory does not contain " + item);
+                        }
                         break;
                     } else if (inventory[item] >= req[item]) {
                         met += 1;
@@ -56,6 +61,9 @@ namespace TunicRandomizer {
                 }
             }
             //if no requirements are met, the location isn't reachable
+            if (ItemRandomizer.testBool) {
+                TunicRandomizer.Logger.LogInfo("No requirements met for " + this.LocationId + ", returning false");
+            }
             return false;
         }
     }

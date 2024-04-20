@@ -14,6 +14,11 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
+        // set this to true to test location access
+        public static bool testLocations = false;
+        // leave this one alone
+        public static bool testBool = false;
+
         public static void PopulateSphereZero() {
             SphereZero.Clear();
             if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
@@ -29,6 +34,9 @@ namespace TunicRandomizer {
         public static void RandomizeAndPlaceItems() {
             Logger.LogInfo("randomize and place items starting");
 
+            if (testLocations) {
+                testBool = true;
+            }
             System.Random random = new System.Random(SaveFile.GetInt("seed"));
             Locations.RandomizedLocations.Clear();
             Locations.CheckedLocations.Clear();
@@ -97,7 +105,7 @@ namespace TunicRandomizer {
                         Hexagons.Add(Item);
                     } else if (Item.Reward.Name == "Hexagon Red") {
                         Item.Reward.Name = "Vault Key (Red)";
-                        InitialRewards.Add(Item.Reward);
+                        ProgressionRewards.Add(Item.Reward);
                         InitialLocations.Add(Item.Location);
                     }
                 } else if ((SaveFile.GetInt("randomizer laurels location") == 1 && Item.Location.LocationId == "Well Reward (6 Coins)")
@@ -204,6 +212,7 @@ namespace TunicRandomizer {
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => random.Next())) {
+                FullInventory.Clear();
 
                 // pick an item
                 string itemName = ItemLookup.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
@@ -227,16 +236,33 @@ namespace TunicRandomizer {
                     UnplacedInventory.Remove("Hyperdash");
                 }
 
+                foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
+                    FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
+                }
+
+                if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                    FullInventory.Add("Lantern", 1);
+                }
+                if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
+                    FullInventory.Add("Mask", 1);
+                }
+
                 // door rando time
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
 
                     FullInventory.Clear();
                     FullInventory.Add("Overworld", 1);
-                    foreach (KeyValuePair<string, int> placedItem in UnplacedInventory) {
-                        FullInventory.Add(placedItem.Key, placedItem.Value);
+                    foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
+                        FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                     }
-
+                    if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                        FullInventory.Add("Lantern", 1);
+                    }
+                    if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
+                        FullInventory.Add("Mask", 1);
+                    }
+                    
                     // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
                     while (true) {
                         int start_num = FullInventory.Count;
@@ -251,14 +277,67 @@ namespace TunicRandomizer {
                     }
                 }
 
+                if (testBool) {
+                    Logger.LogInfo("test starts here");
+                    Dictionary<string, int> testUnplacedInventory = new Dictionary<string, int>();
+                    Dictionary<string, int> testFullInventory = new Dictionary<string, int>();
+                    foreach (KeyValuePair<string, int> kvp in UnplacedInventory) {
+                        testUnplacedInventory.Add(kvp.Key, kvp.Value);
+                    }
+                    if (testUnplacedInventory.ContainsKey(itemName)) {
+                        testUnplacedInventory[itemName] += 1;
+                    } else {
+                        testUnplacedInventory.Add(itemName, 1);
+                    }
+
+                    if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                        testUnplacedInventory.Add("Lantern", 1);
+                    }
+                    if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
+                        testUnplacedInventory.Add("Mask", 1);
+                    }
+
+                    foreach (KeyValuePair<string, int> testUnplacedItem in testUnplacedInventory) {
+                        testFullInventory.Add(testUnplacedItem.Key, testUnplacedItem.Value);
+                    }
+
+                    if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                        // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+
+                        testFullInventory.Clear();
+                        testFullInventory.Add("Overworld", 1);
+                        foreach (KeyValuePair<string, int> unplacedItem in testUnplacedInventory) {
+                            testFullInventory.Add(unplacedItem.Key, unplacedItem.Value);
+                        }
+
+                        // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
+                        while (true) {
+                            int start_num = testFullInventory.Count;
+                            testFullInventory = TunicPortals.UpdateReachableRegions(testFullInventory);
+                            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                                testFullInventory = portalCombo.AddComboRegions(testFullInventory);
+                            }
+                            int end_num = testFullInventory.Count;
+                            if (start_num == end_num) {
+                                break;
+                            }
+                        }
+                    }
+
+                    Logger.LogInfo("testing location accessibility now");
+                    foreach (Location loc in InitialLocations) {
+                        if (!loc.reachable(testFullInventory)) {
+                            Logger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
+                        }
+                    }
+                    Logger.LogInfo("test ends here");
+                    testBool = false;
+                }
+
                 // pick a location
                 int l;
                 l = random.Next(InitialLocations.Count);
 
-                //foreach (Location loc in InitialLocations)
-                //{ if (!loc.reachable(CombinedInventory)) { Logger.LogInfo("location " + loc.SceneName + " " + loc.LocationId + " is not reachable"); } }
-                //Logger.LogInfo(InitialLocations[l].SceneName + " " + InitialLocations[l].LocationId);
-                // if location isn't reachable with current inventory excluding the item to be placed, pick a new location
                 while (!InitialLocations[l].reachable(FullInventory)) {
                     l = random.Next(InitialLocations.Count);
                 }
