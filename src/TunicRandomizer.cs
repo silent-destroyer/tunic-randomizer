@@ -217,6 +217,10 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(SecretMayor), "SceneLoader_OnSceneLoaded_SecretMayorPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(ConduitData), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitData_CheckConnectedToPower_PrefixPatch")));
+            
+            Harmony.Patch(AccessTools.Method(typeof(ConduitData), "IsFuseClosedByID"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitData_IsFuseClosedByID_PrefixPatch")));
+
         }
     }
 }
