@@ -53,7 +53,7 @@ namespace TunicRandomizer {
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
-
+            
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 ModelSwaps.CreateOtherWorldItemBlocks();
@@ -483,6 +483,21 @@ namespace TunicRandomizer {
             }
 
             ItemTracker.SaveTrackerFile();
+
+            // change how far you pick up coins from based on sword upgrade level
+            if (SaveFile.GetInt(SwordProgressionLevel) >= 3) {
+                float coinDist = 5f;
+                if (SaveFile.GetInt(SwordProgressionLevel) == 3) {
+                    coinDist = 6f;
+                } else if (SaveFile.GetInt(SwordProgressionLevel) == 4) {
+                    coinDist = 6.5f;
+                }
+                List<ItemPickup> coins = Resources.FindObjectsOfTypeAll<ItemPickup>().Where(coin => coin.gameObject.scene.name == "DontDestroyOnLoad").ToList();
+                foreach (ItemPickup coin in coins) {
+                    coin.minimumAttractDistance = coinDist;
+                }
+            }
+
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
