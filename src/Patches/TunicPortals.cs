@@ -2248,6 +2248,19 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Guard House 1 West",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Guard House 1 East",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Forest Grave Path Main",
                 new Dictionary<string, List<List<string>>> {
                     {
@@ -4014,12 +4027,14 @@ namespace TunicRandomizer {
                     // find a portal in a region we can't access yet
                     if (!FullInventory.ContainsKey(portal.Region)) {
                         portal1 = portal;
+                        twoPlusPortals.Remove(portal1);
+                        break;
                     }
                 }
                 if (portal1 == null) {
                     Logger.LogInfo("something messed up in portal pairing for portal 1");
                 }
-                twoPlusPortals.Remove(portal1);
+
                 ShuffleList(twoPlusPortals, seed);
                 foreach (Portal secondPortal in twoPlusPortals) {
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
@@ -4031,6 +4046,7 @@ namespace TunicRandomizer {
                 if (portal2 == null) { 
                     Logger.LogInfo("something messed up in portal pairing for portal 2");
                 }
+
                 // add the portal combo to the randomized portals list
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
 
