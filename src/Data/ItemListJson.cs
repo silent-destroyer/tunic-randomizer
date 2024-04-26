@@ -7,10 +7,10 @@
                     ""LocationId"": ""999"",
                     ""Position"": ""(0.0, 0.0, 0.0)"",
                     ""RequiredItems"": [
-                        {""Hyperdash"": 1, ""Sword"": 1}
+                        {""Hyperdash"": 1, ""Sword"": 1, ""Techbow"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Cathedral Gauntlet"": 1, ""Sword"": 1}
+                        {""Cathedral Gauntlet"": 1, ""Sword"": 1, ""Techbow"": 1}
                     ],
                     ""SceneId"": 61,
                     ""SceneName"": ""Cathedral Arena""
@@ -25,7 +25,9 @@
                 ""Location"": {
                     ""LocationId"": ""Lantern"",
                     ""Position"": ""(-135.2, 34.1, -43.2)"",
-                    ""RequiredItems"": [],
+                    ""RequiredItems"": [
+                        {""Stick"": 1}
+                    ],
                     ""RequiredItemsDoors"": [
                         {""Furnace Fuse"": 1}
                     ],
