@@ -63,7 +63,7 @@ namespace TunicRandomizer {
         }
 
         public string GetPlayerName(int Slot) {
-            return integration.session.Players.GetPlayerName(Slot);
+            return integration.session.Players.GetPlayerName(Slot).Replace("{", "").Replace("}", "");
         }
 
         public string GetPlayerGame(int Slot) {
