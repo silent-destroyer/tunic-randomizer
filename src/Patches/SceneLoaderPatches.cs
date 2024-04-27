@@ -53,7 +53,7 @@ namespace TunicRandomizer {
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
-            
+
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 ModelSwaps.CreateOtherWorldItemBlocks();
@@ -483,7 +483,6 @@ namespace TunicRandomizer {
             }
 
             ItemTracker.SaveTrackerFile();
-
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
