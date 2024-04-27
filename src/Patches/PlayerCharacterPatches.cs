@@ -352,6 +352,11 @@ namespace TunicRandomizer {
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
+            // make it so you can pick up money from further away
+            List<ItemPickup> coins = Resources.FindObjectsOfTypeAll<ItemPickup>().Where(coin => coin.gameObject.scene.name == "DontDestroyOnLoad").ToList();
+            foreach (ItemPickup coin in coins) {
+                coin.minimumAttractDistance = 6.5f;
+            }
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
