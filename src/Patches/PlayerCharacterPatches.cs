@@ -352,7 +352,6 @@ namespace TunicRandomizer {
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
-
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
