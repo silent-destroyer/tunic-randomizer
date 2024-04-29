@@ -178,8 +178,7 @@ namespace TunicRandomizer {
 
             int seed = SaveFile.GetInt("seed");
             Dictionary<string, List<string>> SpoilerLog = new Dictionary<string, List<string>>();
-            foreach (string Key in Locations.SceneNamesForSpoilerLog.Keys)
-            {
+            foreach (string Key in Locations.SceneNamesForSpoilerLog.Keys) {
                 SpoilerLog[Key] = new List<string>();
             }
 
@@ -202,7 +201,8 @@ namespace TunicRandomizer {
             }
             List<string> SpoilerLogLines = new List<string>() {
                 "Seed: " + seed,
-                "Lines that start with 'x' instead of '-' represent items that have been collected\n",
+                "Seed Paste: " + TunicRandomizer.Settings.GetSettingsString(),
+                "\nLines that start with 'x' instead of '-' represent items that have been collected\n",
             };
             if (IsArchipelago()) {
                 SpoilerLogLines.Add("Major Items");

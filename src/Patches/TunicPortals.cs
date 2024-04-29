@@ -3813,6 +3813,19 @@ namespace TunicRandomizer {
                             int met_count = 0;
                             foreach (string req in reqs) {
                                 //Logger.LogInfo("req is " + req);
+                                // if sword progression is on, check for this too
+                                if (req == "Sword") {
+                                    if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) {
+                                        met_count++;
+                                    }
+                                }
+
+                                if (req == "Stick") {
+                                    if (inventory.ContainsKey("Sword Progression")) {
+                                        met_count++;
+                                    }
+                                }
+
                                 if (inventory.ContainsKey(req)) {
                                     met_count++;
                                     //Logger.LogInfo("we met this requirement");
