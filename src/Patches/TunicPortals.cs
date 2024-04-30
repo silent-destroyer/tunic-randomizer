@@ -9,15 +9,34 @@ namespace TunicRandomizer {
         private static ManualLogSource Logger = TunicRandomizer.Logger;
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
 
+        // the direction you move while entering the portal
+        public enum PDir {
+            NORTH,
+            SOUTH,
+            EAST,
+            WEST,
+            FLOOR,
+            LADDER_UP,
+            LADDER_DOWN
+        }
+
         public class TunicPortal {
             public string Name;
             public string Destination;
             public string Tag;
+            public int Direction;
 
             public TunicPortal(string name, string destination, string tag) {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
+            }
+
+            public TunicPortal(string name, string destination, string tag, PDir direction) {
+                Name = name;
+                Destination = destination;
+                Tag = tag;
+                Direction = (int) direction;
             }
         }
         
@@ -38,11 +57,11 @@ namespace TunicRandomizer {
                     {
                         "Overworld",
                         new List<TunicPortal> {
-                            new TunicPortal("Stick House Entrance", "Sword Cave", "_"),
-                            new TunicPortal("Windmill Entrance", "Windmill", "_"),
-                            new TunicPortal("Well Ladder Entrance", "Sewer", "_entrance"),
-                            new TunicPortal("Old House Waterfall Entrance", "Overworld Interiors", "_under_checkpoint"),
-                            new TunicPortal("Entrance to Furnace under Windmill", "Furnace", "_gyro_upper_east"),
+                            new TunicPortal("Stick House Entrance", "Sword Cave", "_", PDir.NORTH),
+                            new TunicPortal("Windmill Entrance", "Windmill", "_", PDir.NORTH),
+                            new TunicPortal("Well Ladder Entrance", "Sewer", "_entrance", PDir.LADDER_DOWN),
+                            new TunicPortal("Old House Waterfall Entrance", "Overworld Interiors", "_under_checkpoint", PDir.EAST),
+                            new TunicPortal("Entrance to Furnace under Windmill", "Furnace", "_gyro_upper_east", PDir.WEST),
                             new TunicPortal("Entrance to Furnace from Beach", "Furnace", "_gyro_lower"),
                             new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "_"),
                             new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2", "_conduit"),
