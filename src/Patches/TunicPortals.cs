@@ -648,19 +648,19 @@ namespace TunicRandomizer {
                     {
                         "East Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest to Belltower", "Forest Belltower", "_"),
-                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "_lower"),
-                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "_gate"),
-                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "_lower"),
-                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "_upper"),
-                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "_lower"),
-                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "_upper"),
+                            new TunicPortal("Forest to Belltower", "Forest Belltower", "_", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "_lower", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "_gate", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "_lower", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "_upper", PDir.EAST),
+                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "_lower", PDir.EAST),
+                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "_upper", PDir.EAST),
                         }
                     },
                     {
                         "East Forest Dance Fox Spot",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave", "_upper"),
+                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave", "_upper", PDir.EAST),
                         }
                     },
                     {
@@ -677,15 +677,15 @@ namespace TunicRandomizer {
                     {
                         "Guard House 1 West",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux", "_upper"),
-                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux", "_lower"),
+                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux", "_upper", PDir.WEST),
+                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux", "_lower", PDir.SOUTH),
                         }
                     },
                     {
                         "Guard House 1 East",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux", "_gate"),
-                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room", "_"),
+                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux", "_gate", PDir.SOUTH),
+                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room", "_", PDir.NORTH),
                         }
                     },
                 }
@@ -696,13 +696,13 @@ namespace TunicRandomizer {
                     {
                         "Forest Grave Path Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux", "_upper"),
+                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux", "_upper", PDir.WEST),
                         }
                     },
                     {
                         "Forest Grave Path Main",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux", "_lower"),
+                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux", "_lower", PDir.WEST),
                         }
                     },
                     {
@@ -719,8 +719,8 @@ namespace TunicRandomizer {
                     {
                         "Guard House 2",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "_lower"),
-                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "_upper"),
+                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "_lower", PDir.SOUTH),
+                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "_upper", PDir.WEST),
                         }
                     },
                 }
@@ -731,8 +731,8 @@ namespace TunicRandomizer {
                     {
                         "Forest Boss Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave", "_"),
-                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower", "_"),
+                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave", "_", PDir.SOUTH),
+                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower", "_", PDir.NORTH),
                         }
                     },
                 }
@@ -743,20 +743,20 @@ namespace TunicRandomizer {
                     {
                         "Forest Belltower Main",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "_"),
-                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "_"),
+                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "_", PDir.NORTH),
+                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "_", PDir.WEST),
                         }
                     },
                     {
                         "Forest Belltower Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "_"),
+                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "_", PDir.SOUTH),
                         }
                     },
                     {
                         "Forest Belltower Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "_"),
+                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "_", PDir.SOUTH),
                         }
                     },
                 }
@@ -767,34 +767,34 @@ namespace TunicRandomizer {
                     {
                         "Fortress Courtyard",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary", "_Lower"),
-                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main", "_Big Door"),
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary", "_Lower", PDir.EAST),
+                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main", "_Big Door", PDir.NORTH),
                         }
                     },
                     {
                         "Fortress Courtyard Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary", "_Upper"),
-                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East", "_"),
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary", "_Upper", PDir.EAST),
+                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East", "_", PDir.NORTH),
                         }
                     },
                     {
                         "Fortress Exterior near cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "_"),
-                            new TunicPortal("Fortress Courtyard Shop", "Shop", "_"),
+                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "_", PDir.LADDER_DOWN),
+                            new TunicPortal("Fortress Courtyard Shop", "Shop", "_", PDir.NORTH),
                         }
                     },
                     {
                         "Fortress Exterior from East Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower", "_"),
+                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower", "_", PDir.SOUTH),
                         }
                     },
                     {
                         "Fortress Exterior from Overworld",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux", "_"),
+                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux", "_", PDir.WEST),
                         }
                     },
                 }
@@ -805,13 +805,13 @@ namespace TunicRandomizer {
                     {
                         "Beneath the Vault Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main", "_"),
+                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main", "_", PDir.EAST),
                         }
                     },
                     {
                         "Beneath the Vault Front",
                         new List<TunicPortal> {
-                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "_"),
+                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "_", PDir.LADDER_UP),
                         }
                     },
                 }
