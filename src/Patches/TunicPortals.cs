@@ -501,7 +501,7 @@ namespace TunicRandomizer {
                         new List<TunicPortal> {
                             new TunicPortal("Atoll Upper Exit", "Overworld Redux", "_upper", PDir.NORTH),
                             new TunicPortal("Atoll Shop", "Shop", "_", PDir.NORTH),
-                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs", "_eye", PDir.NORTH),  // camera rotates, connects to a north
+                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs", "_eye", PDir.SOUTH),  // camera rotates to appear north
                         }
                     },
                     {
@@ -573,7 +573,7 @@ namespace TunicRandomizer {
                     {
                         "Library Exterior Ladder",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Exterior Ladder", "Library Hall", "_", PDir.NORTH),  // camera rotates, connects to an east
+                            new TunicPortal("Library Exterior Ladder", "Library Hall", "_", PDir.WEST),  // camera rotates to appear north
                         }
                     },
                 }
@@ -919,7 +919,7 @@ namespace TunicRandomizer {
                     {
                         "Lower Mountain",
                         new List<TunicPortal> {
-                            new TunicPortal("Mountain to Quarry", "Quarry Redux", "_", PDir.EAST),  // north, then camera rotates
+                            new TunicPortal("Mountain to Quarry", "Quarry Redux", "_", PDir.NORTH),  // camera rotates to look west
                             new TunicPortal("Mountain to Overworld", "Overworld Redux", "_", PDir.SOUTH),
                         }
                     },
