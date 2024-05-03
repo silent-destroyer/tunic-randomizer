@@ -822,17 +822,17 @@ namespace TunicRandomizer {
                     {
                         "Eastern Vault Fortress",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard", "_Big Door"),
-                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement", "_"),
-                            new TunicPortal("Fortress Interior Shop", "Shop", "_"),
-                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East", "_upper"),
-                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East", "_lower"),
+                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard", "_Big Door", PDir.SOUTH),
+                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement", "_", PDir.WEST),
+                            new TunicPortal("Fortress Interior Shop", "Shop", "_", PDir.NORTH),
+                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East", "_upper", PDir.EAST),
+                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East", "_lower", PDir.EAST),
                         }
                     },
                     {
                         "Eastern Vault Fortress Gold Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena", "_"),
+                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena", "_", PDir.NORTH),
                         }
                     },
                 }
@@ -843,14 +843,14 @@ namespace TunicRandomizer {
                     {
                         "Fortress East Shortcut Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main", "_lower"),
+                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main", "_lower", PDir.WEST),
                         }
                     },
                     {
                         "Fortress East Shortcut Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "_"),
-                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "_upper"),
+                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "_", PDir.WEST),
+                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "_upper", PDir.SOUTH),
                         }
                     },
                 }
@@ -861,14 +861,14 @@ namespace TunicRandomizer {
                     {
                         "Fortress Grave Path",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "_Lower"),
+                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "_Lower", PDir.WEST),
                             new TunicPortal("Fortress Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Fortress Grave Path Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard", "_Upper"),
+                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard", "_Upper", PDir.WEST),
                         }
                     },
                     {
