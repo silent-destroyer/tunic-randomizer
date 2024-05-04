@@ -4823,6 +4823,33 @@ namespace TunicRandomizer {
                                     if (inventory.ContainsKey("Sword Progression")) {
                                         met_count++;
                                     }
+                                } else if (req == "12" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
+                                    foreach (KeyValuePair<string, int> item in inventory) {
+                                        if (item.Key == "Hexagon Gold") {
+                                            if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest prayer requirement")) {
+                                                met_count++;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                } else if (req == "21" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
+                                    foreach (KeyValuePair<string, int> item in inventory) {
+                                        if (item.Key == "Hexagon Gold") {
+                                            if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest holy cross requirement")) {
+                                                met_count++;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                } else if (req == "26" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
+                                    foreach (KeyValuePair<string, int> item in inventory) {
+                                        if (item.Key == "Hexagon Gold") {
+                                            if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest icebolt requirement")) {
+                                                met_count++;
+                                            }
+                                            break;
+                                        }
+                                    }
                                 } else if (inventory.ContainsKey(req)) {
                                     met_count++;
                                     //Logger.LogInfo("met_count is " + met_count);
@@ -5000,7 +5027,8 @@ namespace TunicRandomizer {
             string start_region = "Overworld";
 
             Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Hyperdash", 1 }, { "Mask", 1 }, { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
 
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
