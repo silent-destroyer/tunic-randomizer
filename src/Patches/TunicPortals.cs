@@ -1295,7 +1295,27 @@ namespace TunicRandomizer {
                 new RegionInfo("Overworld Redux", false)
             },
             {
+                "Overworld Belltower at Bell",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
                 "Overworld Swamp Upper Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Swamp Lower Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "After Ruined Passage",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Above Ruined Passage",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "East Overworld",
                 new RegionInfo("Overworld Redux", false)
             },
             {
@@ -1303,13 +1323,61 @@ namespace TunicRandomizer {
                 new RegionInfo("Overworld Redux", false)
             },
             {
+                "Upper Overworld",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld above Quarry Entrance",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld after Temple Rafters",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Quarry Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld after Envoy",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld at Patrol Cave",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld above Patrol Cave",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
                 "Overworld West Garden Laurels Entry",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld to West Garden Upper",
                 new RegionInfo("Overworld Redux", false)
             },
             {
                 "Overworld to West Garden from Furnace",
                 new RegionInfo("Overworld Redux", false)
             },
+            {
+                "Overworld Well Ladder",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Beach",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld Tunnel Turret",
+                new RegionInfo("Overworld Redux", false)
+            },
+            {
+                "Overworld to Atoll Upper",
+                new RegionInfo("Overworld Redux", false)
+            }, 
             {
                 "Overworld Well to Furnace Rail",
                 new RegionInfo("Overworld Redux", false)
@@ -1423,6 +1491,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Town Basement", true)
             },
             {
+                "Hourglass Cave Tower",
+                new RegionInfo("Town Basement", true)
+            },
+            {
                 "Sealed Temple",
                 new RegionInfo("Temple", false)
             },
@@ -1455,6 +1527,10 @@ namespace TunicRandomizer {
                 new RegionInfo("East Forest Redux", false)
             },
             {
+                "Lower Forest",
+                new RegionInfo("Town Basement", true)
+            },
+            {
                 "Guard House 1 East",
                 new RegionInfo("East Forest Redux Laddercave", false)
             },
@@ -1463,7 +1539,11 @@ namespace TunicRandomizer {
                 new RegionInfo("East Forest Redux Laddercave", false)
             },
             {
-                "Guard House 2",
+                "Guard House 2 Upper",
+                new RegionInfo("East Forest Redux Interior", false)
+            },
+            {
+                "Guard House 2 Lower",
                 new RegionInfo("East Forest Redux Interior", false)
             },
             {
@@ -1491,6 +1571,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Crypt Redux", false)
             },
             {
+                "Dark Tomb Upper",
+                new RegionInfo("East Forest Redux Interior", false)
+            },
+            {
                 "Dark Tomb Main",
                 new RegionInfo("Crypt Redux", false)
             },
@@ -1505,6 +1589,10 @@ namespace TunicRandomizer {
             {
                 "Well Boss",
                 new RegionInfo("Sewer_Boss", false)
+            },
+            {
+                "Beneath the Well Ladder Exit",
+                new RegionInfo("Sewer", false)
             },
             {
                 "Beneath the Well Front",
@@ -1555,6 +1643,14 @@ namespace TunicRandomizer {
                 new RegionInfo("Atoll Redux", false)
             },
             {
+                "Ruined Atoll Ladder Tops",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
+                "Ruined Atoll Frog Eye",
+                new RegionInfo("Atoll Redux", false)
+            },
+            {
                 "Ruined Atoll Frog Mouth",
                 new RegionInfo("Atoll Redux", false)
             },
@@ -1567,8 +1663,24 @@ namespace TunicRandomizer {
                 new RegionInfo("Atoll Redux", false)
             },
             {
-                "Frog's Domain Entry",
+                "Frog Stairs Eye Exit",
                 new RegionInfo("Frog Stairs", false)
+            },
+            {
+                "Frog Stairs Upper",
+                new RegionInfo("Frog Stairs", false)
+            },
+            {
+                "Frog Stairs Lower",
+                new RegionInfo("Frog Stairs", false)
+            },
+            {
+                "Frog Stairs to Frog's Domain",
+                new RegionInfo("Frog Stairs", false)
+            },
+            {
+                "Frog's Domain Entry",
+                new RegionInfo("frog cave main", false)
             },
             {
                 "Frog's Domain",
@@ -1587,6 +1699,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Library Exterior", false)
             },
             {
+                "Library Hall Bookshelf",
+                new RegionInfo("Library Hall", false)
+            },
+            {
                 "Library Hall",
                 new RegionInfo("Library Hall", false)
             },
@@ -1595,7 +1711,19 @@ namespace TunicRandomizer {
                 new RegionInfo("Library Hall", false)
             },
             {
+                "Library Hall to Rotunda",
+                new RegionInfo("Library Hall", false)
+            },
+            {
+                "Library Rotunda to Hall",
+                new RegionInfo("Library Rotunda", false)
+            },
+            {
                 "Library Rotunda",
+                new RegionInfo("Library Rotunda", false)
+            },
+            {
+                "Library Rotunda to Lab",
                 new RegionInfo("Library Rotunda", false)
             },
             {
@@ -1609,6 +1737,10 @@ namespace TunicRandomizer {
             {
                 "Library Portal",
                 new RegionInfo("Library Lab", false)
+            },
+            {
+                "Library Lab to Librarian",
+                new RegionInfo("Library Arena", true)
             },
             {
                 "Library Arena",
@@ -1627,12 +1759,20 @@ namespace TunicRandomizer {
                 new RegionInfo("Fortress Courtyard", false)
             },
             {
+                "Beneath the Vault Entry",
+                new RegionInfo("Fortress Courtyard", false)
+            },
+            {
                 "Fortress Courtyard",
                 new RegionInfo("Fortress Courtyard", false)
             },
             {
                 "Fortress Courtyard Upper",
                 new RegionInfo("Fortress Courtyard", false)
+            },
+            {
+                "Beneath the Vault Ladder Exit",
+                new RegionInfo("Fortress Basement", false)
             },
             {
                 "Beneath the Vault Front",
@@ -1743,6 +1883,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Quarry Redux", false)
             },
             {
+                "Even Lower Quarry",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
                 "Lower Quarry Zig Door",
                 new RegionInfo("Quarry Redux", false)
             },
@@ -1795,7 +1939,15 @@ namespace TunicRandomizer {
                 new RegionInfo("ziggurat2020_FTRoom", false)
             },
             {
-                "Swamp",
+                "Swamp Front",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Swamp Mid",
+                new RegionInfo("Swamp Redux 2", false)
+            },
+            {
+                "Swamp Ledge under Cathedral Door",
                 new RegionInfo("Swamp Redux 2", false)
             },
             {
@@ -1941,13 +2093,32 @@ namespace TunicRandomizer {
                 "Overworld",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Overworld Belltower",
+                        "Overworld Beach",
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "Ladder Storage",
+                                "Wand",
+                            },
+                            new List<string> {
+                                "Ladders in Overworld Town",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld to Atoll Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Belltower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
                             },
                         }
                     },
@@ -1957,8 +2128,13 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                        }
+                    },
+                    {
+                        "Overworld Swamp Lower Entry",
+                        new List<List<string>> {
                             new List<string> {
-                                "Ladder Storage",
+                                "Ladder to Swamp",
                             },
                         }
                     },
@@ -1968,19 +2144,89 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                        }
+                    },
+                    {
+                        "Overworld Well Ladder",
+                        new List<List<string>> {
                             new List<string> {
-                                "Ladder Storage",
+                                "Ladders in Well",
                             },
                         }
                     },
                     {
-                        "Overworld West Garden Laurels Entry",
+                        "Overworld Ruined Passage Door",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Key",
+                            },
+                        }
+                    },
+                    {
+                        "After Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                        }
+                    },
+                    {
+                        "Above Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld above Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld above Quarry Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Dark Tomb",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld after Envoy",
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "Ladder Storage",
+                                "Wand",
+                            },
+                            new List<string> {  // todo: make this work
+                                "Heir Sword",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Tunnel Turret",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
                             },
                         }
                     },
@@ -1993,30 +2239,13 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Ruined Passage Door",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Key",
-                            },
-                            new List<string> {
-                                "Hyperdash", "nmg",
-                            },
-                        }
-                    },
-                    {
                         "Overworld Temple Door",
                         new List<List<string>> {
                             new List<string> {
-                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                                "Stick", "Forest Belltower Upper", "Overworld Belltower at Bell",
                             },
                             new List<string> {
-                                "Techbow", "Forest Belltower Upper", "nmg",
-                            },
-                            new List<string> {
-                                "Stick", "Forest Belltower Upper", "Overworld Belltower",
-                            },
-                            new List<string> {
-                                "Techbow", "Forest Belltower Upper", "Overworld Belltower",
+                                "Techbow", "Forest Belltower Upper", "Overworld Belltower at Bell",
                             },
                         }
                     },
@@ -2048,21 +2277,311 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Well to Furnace Rail",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladder Storage",
-                            },
-                        }
-                    },
-                    {
                         "Overworld Old House Door",
                         new List<List<string>> {
                             new List<string> {
                                 "Key (House)",
                             },
+                        }
+                    },
+                }
+            },
+            {
+                "East Overworld",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Above Ruined Passage",
+                        new List<List<string>> {
                             new List<string> {
-                                "Stundagger", "Wand", "nmg",
+                                "Ladders near Weathervane",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld at Patrol Cave",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Overworld above Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Special Shop Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Special Shop Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Belltower",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld Belltower at Bell",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to West Bell",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Overworld to West Garden Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to West Bell",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld to West Garden Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld Belltower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to West Bell",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Swamp Upper Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Swamp Lower Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Swamp",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Beach",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                            new List<string> {
+                                "Ladders in Overworld Town",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld West Garden Laurels Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld to Atoll Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Ruined Atoll",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Tunnel Turret",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Overworld Town",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld West Garden Laurels Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld Beach",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld to Atoll Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Beach",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Ruined Atoll",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Tunnel Turret",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Beach",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Overworld Town",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Well Ladder",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Well",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld at Patrol Cave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld above Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Patrol Cave",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld above Patrol Cave",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint",
+                            },
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint",
+                            },
+                        }
+                    },
+                    {
+                        "Upper Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Patrol Cave",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld at Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Patrol Cave",
                             },
                         }
                     },
