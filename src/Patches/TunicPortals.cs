@@ -3274,14 +3274,6 @@ namespace TunicRandomizer {
                 "West Garden Portal Item",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "West Garden",
-                        new List<List<string>> {
-                            new List<string> {
-                                "26", "Wand", "Stundagger", "Techbow", "nmg"
-                            },
-                        }
-                    },
-                    {
                         "West Garden Portal",
                         new List<List<string>> {
                             new List<string> {
@@ -3323,8 +3315,13 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                        }
+                    },
+                    {
+                        "Ruined Atoll Ladder Tops",
+                        new List<List<string>> {
                             new List<string> {
-                                "Ladder Storage",
+                                "Ladders in South Atoll",
                             },
                         }
                     },
@@ -3337,8 +3334,13 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Wand",
                             },
+                        }
+                    },
+                    {
+                        "Ruined Atoll Frog Eye",
+                        new List<List<string>> {
                             new List<string> {
-                                "Ladder Storage",
+                                "Ladders to Frog's Domain",
                             },
                         }
                     },
@@ -3354,7 +3356,7 @@ namespace TunicRandomizer {
                         "Ruined Atoll Statue",
                         new List<List<string>> {
                             new List<string> {
-                                "12",
+                                "12", "Ladders in South Atoll"
                             },
                         }
                     },
@@ -3412,9 +3414,100 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
+            {
+                "Frog Stairs Eye Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog Stairs Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Frog Stairs Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog Stairs Eye Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                    {
+                        "Frog Stairs Lower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Frog Stairs Lower",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog Stairs Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                    {
+                        "Frog Stairs to Frog's Domain",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Frog Stairs to Frog's Domain",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog Stairs Lower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                }
+            },
+
+            {
+                "Frog's Domain Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog's Domain",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                }
+            },
             {
                 "Frog's Domain",
                 new Dictionary<string, List<List<string>>> {
+                    {
+                        "Frog's Domain Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
                     {
                         "Frog's Domain Back",
                         new List<List<string>> {
@@ -3432,7 +3525,7 @@ namespace TunicRandomizer {
                         "Library Exterior Tree",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "12",
+                                "Hyperdash", "12", "Ladders in Library",
                             },
                             new List<string> {
                                 "Wand", "12",
@@ -3448,10 +3541,23 @@ namespace TunicRandomizer {
                         "Library Exterior Ladder",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash",
+                                "Hyperdash", "Ladders in Library",
                             },
                             new List<string> {
-                                "Wand",
+                                "Wand", "Ladders in Library",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Hall Bookshelf",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Hall",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
                             },
                         }
                     },
@@ -3461,10 +3567,26 @@ namespace TunicRandomizer {
                 "Library Hall",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "Library Hall Bookshelf",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
+                    {
                         "Library Hero's Grave",
                         new List<List<string>> {
                             new List<string> {
                                 "12",
+                            },
+                        }
+                    },
+                    {
+                        "Library Hall to Rotunda",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
                             },
                         }
                     },
@@ -3481,16 +3603,76 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Library Hall to Rotunda",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Hall",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Rotunda to Hall",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Rotunda",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Rotunda",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Rotunda to Hall",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
+                    {
+                        "Library Rotunda to Lab",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Rotunda to Lab",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Rotunda",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Library Lab Lower",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Library Lab",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash",
+                                "Hyperdash", "Ladders in Library",
                             },
                             new List<string> {
-                                "Wand",
+                                "Wand", "Ladders in Library",
                             },
                         }
                     },
@@ -3503,7 +3685,7 @@ namespace TunicRandomizer {
                         "Library Lab Lower",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash",
+                                "Hyperdash", "Ladders in Library",
                             },
                         }
                     },
@@ -3515,6 +3697,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Library Lab to Librarian",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -3523,6 +3713,19 @@ namespace TunicRandomizer {
                     {
                         "Library Lab",
                         new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Library Lab to Librarian",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Lab",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
                         }
                     },
                 }
