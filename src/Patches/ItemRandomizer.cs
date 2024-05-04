@@ -23,6 +23,12 @@ namespace TunicRandomizer {
         // essentially fake items for the purpose of logic
         public static List<string> PrecollectedItems = new List<string>();
 
+        public static List<string> LadderItems = new List<string> { "Ladders near Weathervane", "Ladders near Overworld Checkpoint",
+            "Ladders near Patrol Cave", "Ladder near Temple Rafters", "Ladders near Dark Tomb", "Ladder to Quarry", "Ladders to West Bell",
+            "Ladders in Overworld Town", "Ladder to Ruined Atoll", "Ladder to Swamp", "Ladders in Well", "Ladder in Dark Tomb",
+            "Ladder to East Forest", "Ladders to Lower Forest", "Ladder to Beneath the Vault", "Ladders in Hourglass Cave",
+            "Ladders in South Atoll", "Ladders to Frog's Domain", "Ladders in Library", "Ladders in Lower Quarry", "Ladders in Swamp" };
+
         public static void PopulateSphereZero() {
             SphereZero.Clear();
             if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
@@ -74,17 +80,10 @@ namespace TunicRandomizer {
             Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
 
-
-            List<string> ladderItems = new List<string> { "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladders near Patrol Cave",
-                "Ladder near Temple Rafters", "Ladders near Dark Tomb", "Ladder to Quarry", "Ladders to West Bell", "Ladders in Overworld Town",
-                "Ladder to Ruined Atoll", "Ladder to Swamp", "Ladders in Well", "Ladder in Dark Tomb", "Ladder to East Forest",
-                "Ladders to Lower Forest", "Ladder to Beneath the Vault", "Ladders in Hourglass Cave", "Ladders in South Atoll",
-                "Ladders to Frog's Domain", "Ladders in Library", "Ladders in Lower Quarry", "Ladders in Swamp" };
-
             PrecollectedItems.Clear();
 
             // change this later to only add them if the ladder shuffle option is off
-            PrecollectedItems.AddRange(ladderItems);
+            PrecollectedItems.AddRange(LadderItems);
 
             if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
                 PrecollectedItems.Add("Mask");
@@ -486,7 +485,7 @@ namespace TunicRandomizer {
         }
 
         // add a key if it doesn't exist, otherwise increment the value by 1
-        private static Dictionary<string, int> AddListToDict(Dictionary<string, int> dictionary, List<string> list) {
+        public static Dictionary<string, int> AddListToDict(Dictionary<string, int> dictionary, List<string> list) {
             foreach (string item in list) {
                 dictionary.TryGetValue(item, out var count);
                 dictionary[item] = count + 1;

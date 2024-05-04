@@ -5040,6 +5040,7 @@ namespace TunicRandomizer {
                 FullInventory.Remove("Hyperdash");
             }
             FullInventory.Add(start_region, 1);
+            FullInventory = ItemRandomizer.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
             FullInventory = UpdateReachableRegions(FullInventory);
 
             // get the total number of regions to get before doing dead ends
