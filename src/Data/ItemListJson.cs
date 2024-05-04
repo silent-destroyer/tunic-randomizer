@@ -222,7 +222,7 @@
                     ""Position"": ""(26.0, 28.0, -116.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Above Ruined Passage"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -296,7 +296,7 @@
                     ""Position"": ""(79.3, 2.5, -173.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Swamp Lower Entry"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -368,7 +368,7 @@
                     ""Position"": ""(96.5, 28.0, -137.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""East Overworld"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -387,7 +387,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1, ""21"": 1}
+                        {""East Overworld"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -404,7 +404,7 @@
                     ""Position"": ""(54.0, 48.8, -90.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""East Overworld"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -629,7 +629,7 @@
                     ""Position"": ""(162.2, 0.1, -8.5)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Guard House 2"": 1}
+                        {""Guard House 2 Upper"": 1}
                     ],
                     ""SceneId"": 54,
                     ""SceneName"": ""East Forest Redux Interior""
@@ -646,7 +646,7 @@
                     ""Position"": ""(193.9, -32.0, -23.8)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Guard House 2"": 1}
+                        {""Guard House 2 Lower"": 1}
                     ],
                     ""SceneId"": 54,
                     ""SceneName"": ""East Forest Redux Interior""
@@ -663,7 +663,7 @@
                     ""Position"": ""(91.0, -26.0, -58.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""East Forest"": 1}
+                        {""Lower Forest"": 1}
                     ],
                     ""SceneId"": 53,
                     ""SceneName"": ""East Forest Redux""
@@ -680,7 +680,7 @@
                     ""Position"": ""(88.0, -30.5, -59.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""East Forest"": 1}
+                        {""Lower Forest"": 1}
                     ],
                     ""SceneId"": 53,
                     ""SceneName"": ""East Forest Redux""
@@ -699,7 +699,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""East Forest"": 1, ""21"": 1}
+                        {""Lower Forest"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 53,
                     ""SceneName"": ""East Forest Redux""
@@ -718,7 +718,7 @@
                         {""Wand"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Wand"": 1, ""East Forest"": 1}
+                        {""Wand"": 1, ""Lower Forest"": 1}
                     ],
                     ""SceneId"": 53,
                     ""SceneName"": ""East Forest Redux""
@@ -737,7 +737,7 @@
                         {""Wand"": 1, ""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Wand"": 1, ""Hyperdash"": 1, ""East Forest"": 1}
+                        {""Wand"": 1, ""Hyperdash"": 1, ""Lower Forest"": 1}
                     ],
                     ""SceneId"": 53,
                     ""SceneName"": ""East Forest Redux""
@@ -911,7 +911,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1, ""21"": 1}
+                        {""East Overworld"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -964,7 +964,7 @@
                     ""Position"": ""(67.0, 66.0, 22.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Upper Overworld"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -981,7 +981,7 @@
                     ""Position"": ""(-95.0, 73.0, 46.2)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Upper Overworld"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1000,7 +1000,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1, ""21"": 1}
+                        {""Upper Overworld"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1017,7 +1017,7 @@
                     ""Position"": ""(-111.7, 66.0, 38.2)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld above Quarry Entrance"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1390,7 +1390,7 @@
                     ""Position"": ""(-33.3, 0.3, -169.8)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1409,7 +1409,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1, ""21"": 1}
+                        {""Overworld Beach"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1428,7 +1428,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1, ""21"": 1}
+                        {""Overworld Beach"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1445,7 +1445,7 @@
                     ""Position"": ""(-83.2, 4.0, -177.1)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1481,7 +1481,7 @@
                         {""21"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Hourglass Cave"": 1, ""21"": 1}
+                        {""Hourglass Cave Tower"": 1, ""21"": 1}
                     ],
                     ""SceneId"": 7,
                     ""SceneName"": ""Town Basement""
@@ -1498,7 +1498,7 @@
                     ""Position"": ""(-130.0, 12.0, -119.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Tunnel Turret"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1515,7 +1515,7 @@
                     ""Position"": ""(65.0, 22.0, -138.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""After Ruined Passage"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1532,7 +1532,7 @@
                     ""Position"": ""(-161.0, 1.0, -72.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1552,8 +1552,8 @@
                         {""Wand"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Hyperdash"": 1, ""Overworld"": 1},
-                        {""Wand"": 1, ""Overworld"": 1}
+                        {""Hyperdash"": 1, ""Overworld Beach"": 1},
+                        {""Wand"": 1, ""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1570,7 +1570,7 @@
                     ""Position"": ""(-3.0, 1.5, -152.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1678,7 +1678,7 @@
                     ""Position"": ""(15.5, 1.0, -147.5)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -1731,7 +1731,7 @@
                     ""Position"": ""(-7.0, 16.9, -72.3)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Ruined Atoll"": 1}
+                        {""Ruined Atoll Ladder Tops"": 1}
                     ],
                     ""SceneId"": 32,
                     ""SceneName"": ""Atoll Redux""
@@ -1748,7 +1748,7 @@
                     ""Position"": ""(38.0, 16.0, -72.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Ruined Atoll"": 1}
+                        {""Ruined Atoll Ladder Tops"": 1}
                     ],
                     ""SceneId"": 32,
                     ""SceneName"": ""Atoll Redux""
@@ -1782,7 +1782,7 @@
                     ""Position"": ""(71.8, 13.0, -44.3)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Ruined Atoll"": 1}
+                        {""Ruined Atoll Ladder Tops"": 1}
                     ],
                     ""SceneId"": 32,
                     ""SceneName"": ""Atoll Redux""
@@ -2789,7 +2789,7 @@
                     ""Position"": ""(-138.2, 28.0, 10.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Overworld"": 1}
+                        {""Overworld after Envoy"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -2808,7 +2808,7 @@
                         {""Lantern"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Lantern"": 1, ""Dark Tomb Main"": 1}
+                        {""Lantern"": 1, ""Dark Tomb Upper"": 1}
                     ],
                     ""SceneId"": 64,
                     ""SceneName"": ""Crypt Redux""
@@ -3376,7 +3376,7 @@
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Hyperdash"": 1, ""Overworld"": 1}
+                        {""Hyperdash"": 1, ""Overworld Beach"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -3477,7 +3477,7 @@
                         {""Wand"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Wand"": 1, ""Overworld"": 1}
+                        {""Wand"": 1, ""Overworld above Patrol Cave"": 1}
                     ],
                     ""SceneId"": 25,
                     ""SceneName"": ""Overworld Redux""
@@ -4240,7 +4240,7 @@
                         {""Mask"": 1, ""Techbow"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Mask"": 1, ""Lower Quarry"": 1}
+                        {""Mask"": 1, ""Even Lower Quarry"": 1}
                     ],
                     ""SceneId"": 60,
                     ""SceneName"": ""Quarry Redux""
@@ -4260,7 +4260,7 @@
                         {""Mask"": 1, ""Techbow"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Mask"": 1, ""Lower Quarry"": 1}
+                        {""Mask"": 1, ""Even Lower Quarry"": 1}
                     ],
                     ""SceneId"": 60,
                     ""SceneName"": ""Quarry Redux""
@@ -4280,7 +4280,7 @@
                         {""Mask"": 1, ""Techbow"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Mask"": 1, ""Lower Quarry"": 1}
+                        {""Mask"": 1, ""Even Lower Quarry"": 1}
                     ],
                     ""SceneId"": 60,
                     ""SceneName"": ""Quarry Redux""
@@ -4794,7 +4794,7 @@
                     ""Position"": ""(-47.7, -1.5, -33.3)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4811,7 +4811,7 @@
                     ""Position"": ""(-41.6, -0.6, 55.4)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4828,7 +4828,7 @@
                     ""Position"": ""(14.5, 0.0, -73.5)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4845,7 +4845,7 @@
                     ""Position"": ""(39.2, -0.1, -85.3)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4862,7 +4862,7 @@
                     ""Position"": ""(83.7, 0.0, -73.8)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4879,7 +4879,7 @@
                     ""Position"": ""(166.0, 0.0, -82.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4896,7 +4896,7 @@
                     ""Position"": ""(147.0, 5.8, -33.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4913,7 +4913,7 @@
                     ""Position"": ""(100.0, 4.0, -70.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4930,7 +4930,7 @@
                     ""Position"": ""(38.0, 12.8, -29.8)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4949,7 +4949,7 @@
                         {""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Hyperdash"": 1, ""Swamp"": 1}
+                        {""Hyperdash"": 1, ""Swamp Front"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4968,7 +4968,7 @@
                         {""Sword"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Front"": 1, ""Sword"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -4985,7 +4985,7 @@
                     ""Position"": ""(102.0, 6.0, -40.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5002,7 +5002,7 @@
                     ""Position"": ""(47.0, -1.0, 42.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5019,7 +5019,7 @@
                     ""Position"": ""(85.0, 0.0, 85.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5036,7 +5036,7 @@
                     ""Position"": ""(145.0, 4.0, 23.3)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5053,7 +5053,7 @@
                     ""Position"": ""(160.5, 4.0, -63.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5070,7 +5070,7 @@
                     ""Position"": ""(153.0, 16.0, -55.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5087,7 +5087,7 @@
                     ""Position"": ""(184.8, 15.0, 51.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5104,7 +5104,7 @@
                     ""Position"": ""(160.5, 12.0, 22.0)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Mid"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
@@ -5140,7 +5140,7 @@
                     ""Position"": ""(75.0, 14.0, 172.6)"",
                     ""RequiredItems"": [],
                     ""RequiredItemsDoors"": [
-                        {""Swamp"": 1}
+                        {""Swamp Ledge under Cathedral Door"": 1}
                     ],
                     ""SceneId"": 59,
                     ""SceneName"": ""Swamp Redux 2""
