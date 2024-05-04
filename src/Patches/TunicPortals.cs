@@ -790,7 +790,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Beneath the Vault Front",
+                        "Beneath the Vault Ladder Exit",
                         new List<TunicPortal> {
                             new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "_"),
                         }
@@ -1775,7 +1775,7 @@ namespace TunicRandomizer {
                 new RegionInfo("Fortress Basement", false)
             },
             {
-                "Beneath the Vault Front",
+                "Beneath the Vault Main",
                 new RegionInfo("Fortress Basement", false)
             },
             {
@@ -3742,33 +3742,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Wand",
                             },
-                            new List<string> {
-                                "Ladder Storage",
-                            },
-                        }
-                    },
-                    {
-                        "Fortress Courtyard Upper",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladder Storage",
-                            },
-                        }
-                    },
-                    {
-                        "Fortress Exterior near cave",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladder Storage",
-                            },
-                        }
-                    },
-                    {
-                        "Fortress Courtyard",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladder Storage",
-                            },
                         }
                     },
                 }
@@ -3793,9 +3766,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
-                            new List<string> {
-                                "Ladder Storage",
-                            },
                         }
                     },
                     {
@@ -3803,12 +3773,6 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
-                            },
-                            new List<string> {
-                                "26", "Techbow", "Wand", "Stundagger", "nmg",
-                            },
-                            new List<string> {
-                                "Ladder Storage",
                             },
                         }
                     },
@@ -3823,24 +3787,26 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
-                            new List<string> {
-                                "Ladder Storage",
-                            },
                         }
                     },
                     {
-                        "Fortress Courtyard",
+                        "Beneath the Vault Entry",
                         new List<List<string>> {
                             new List<string> {
-                                "Ladder Storage",
+                                "Ladder to Beneath the Vault",
                             },
                         }
                     },
+                }
+            },
+            {
+                "Beneath the Vault Entry",
+                new Dictionary<string, List<List<string>>> {
                     {
-                        "Fortress Courtyard Upper",
+                        "Fortress Exterior near cave",
                         new List<List<string>> {
                             new List<string> {
-                                "Ladder Storage",
+                                "Ladder to Beneath the Vault",
                             },
                         }
                     },
@@ -3849,14 +3815,6 @@ namespace TunicRandomizer {
             {
                 "Fortress Courtyard",
                 new Dictionary<string, List<List<string>>> {
-                    {
-                        "Fortress Courtyard Upper",
-                        new List<List<string>> {
-                            new List<string> {
-                                "26", "Techbow", "Wand", "Stundagger", "nmg",
-                            },
-                        }
-                    },
                     {
                         "Fortress Exterior from Overworld",
                         new List<List<string>> {
@@ -3878,14 +3836,32 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Beneath the Vault Front",
+                "Beneath the Vault Ladder Exit",
                 new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Vault Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Lantern", "Ladder to Beneath the Vault",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Vault Main",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Vault Ladder Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Beneath the Vault",
+                            },
+                        }
+                    },
                     {
                         "Beneath the Vault Back",
                         new List<List<string>> {
-                            new List<string> {
-                                "Lantern",
-                            },
                         }
                     },
                 }
@@ -3894,20 +3870,18 @@ namespace TunicRandomizer {
                 "Beneath the Vault Back",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Beneath the Vault Front",
-                        new List<List<string>> {
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress East Shortcut Lower",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Fortress East Shortcut Upper",
+                        "Beneath the Vault Main",
                         new List<List<string>> {
                             new List<string> {
-                                "26", "Techbow", "Wand", "Stundagger", "nmg",
+                                "Lantern",
+                            },
+                        }
+                    },
+                    {
+                        "Beneath the Vault Ladder Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Beneath the Vault",
                             },
                         }
                     },

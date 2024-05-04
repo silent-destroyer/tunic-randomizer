@@ -3571,7 +3571,7 @@
                         {""Lantern"": 1, ""Hyperdash"": 1}
                     ],
                     ""RequiredItemsDoors"": [
-                        {""Lantern"": 1, ""Beneath the Vault Front"": 1}
+                        {""Beneath the Vault Main"": 1}
                     ],
                     ""SceneId"": 14,
                     ""SceneName"": ""Fortress Basement""
