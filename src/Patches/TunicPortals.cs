@@ -40,28 +40,70 @@ namespace TunicRandomizer {
                         new List<TunicPortal> {
                             new TunicPortal("Stick House Entrance", "Sword Cave", "_"),
                             new TunicPortal("Windmill Entrance", "Windmill", "_"),
-                            new TunicPortal("Well Ladder Entrance", "Sewer", "_entrance"),
                             new TunicPortal("Old House Waterfall Entrance", "Overworld Interiors", "_under_checkpoint"),
                             new TunicPortal("Entrance to Furnace under Windmill", "Furnace", "_gyro_upper_east"),
-                            new TunicPortal("Entrance to Furnace from Beach", "Furnace", "_gyro_lower"),
-                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "_"),
-                            new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2", "_conduit"),
-                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "_east"),
-                            new TunicPortal("Atoll Upper Entrance", "Atoll Redux", "_upper"),
-                            new TunicPortal("Atoll Lower Entrance", "Atoll Redux", "_lower"),
-                            new TunicPortal("Maze Cave Entrance", "Maze Room", "_"),
-                            new TunicPortal("Temple Rafters Entrance", "Temple", "_rafters"),
                             new TunicPortal("Ruined Shop Entrance", "Ruined Shop", "_"),
-                            new TunicPortal("Patrol Cave Entrance", "PatrolCave", "_"),
-                            new TunicPortal("Hourglass Cave Entrance", "Town Basement", "_beach"),
                             new TunicPortal("Changing Room Entrance", "Changing Room", "_"),
                             new TunicPortal("Cube Cave Entrance", "CubeRoom", "_"),
-                            new TunicPortal("Stairs from Overworld to Mountain", "Mountain", "_"),
-                            new TunicPortal("Overworld to Fortress", "Fortress Courtyard", "_"),
-                            new TunicPortal("Overworld to Quarry Connector", "Darkwoods Tunnel", "_"),
                             new TunicPortal("Dark Tomb Main Entrance", "Crypt Redux", "_"),
-                            new TunicPortal("Overworld to Forest Belltower", "Forest Belltower", "_"),
                             new TunicPortal("Secret Gathering Place Entrance", "Waterfall", "_"),
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<TunicPortal> {
+                            new TunicPortal("Overworld to Forest Belltower", "Forest Belltower", "_"),
+                            new TunicPortal("Overworld to Fortress", "Fortress Courtyard", "_"),
+                        }
+                    },
+                    {
+                        "Overworld at Patrol Cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Patrol Cave Entrance", "PatrolCave", "_"),
+                        }
+                    },
+                    {
+                        "Upper Overworld",
+                        new List<TunicPortal> {
+                            new TunicPortal("Stairs from Overworld to Mountain", "Mountain", "_"),
+                        }
+                    },
+                    {
+                        "Overworld after Temple Rafters",
+                        new List<TunicPortal> {
+                            new TunicPortal("Temple Rafters Entrance", "Temple", "_rafters"),
+                        }
+                    },
+                    {
+                        "Overworld Quarry Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Overworld to Quarry Connector", "Darkwoods Tunnel", "_"),
+                        }
+                    },
+                    {
+                        "Overworld Beach",
+                        new List<TunicPortal> {
+                            new TunicPortal("Atoll Lower Entrance", "Atoll Redux", "_lower"),
+                            new TunicPortal("Hourglass Cave Entrance", "Town Basement", "_beach"),
+                            new TunicPortal("Maze Cave Entrance", "Maze Room", "_"),
+                        }
+                    },
+                    {
+                        "Overworld Tunnel Turret",
+                        new List<TunicPortal> {
+                            new TunicPortal("Entrance to Furnace from Beach", "Furnace", "_gyro_lower"),
+                        }
+                    },
+                    {
+                        "Overworld to Atoll Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Atoll Upper Entrance", "Atoll Redux", "_upper"),
+                        }
+                    },
+                    {
+                        "Overworld Well Ladder",
+                        new List<TunicPortal> {
+                            new TunicPortal("Well Ladder Entrance", "Sewer", "_entrance"),
                         }
                     },
                     {
@@ -78,10 +120,23 @@ namespace TunicRandomizer {
                         }
                     },
                     {
+                        "Overworld to West Garden Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden Entrance near Belltower", "Archipelagos Redux", "_upper"),
+                        }
+                    },
+                    {
                         "Overworld to West Garden from Furnace",
                         new List<TunicPortal> {
                             new TunicPortal("Entrance to Furnace near West Garden", "Furnace", "_gyro_west"),
                             new TunicPortal("West Garden Entrance from Furnace", "Archipelagos Redux", "_lower"),
+                        }
+                    },
+                    {
+                        "Overworld Swamp Lower Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "_"),
+                            new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2", "_conduit"),
                         }
                     },
                     {
@@ -97,15 +152,15 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Special Shop Entry",
+                        "After Ruined Passage",
                         new List<TunicPortal> {
-                            new TunicPortal("Special Shop Entrance", "ShopSpecial", "_"),
+                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "_east"),
                         }
                     },
                     {
-                        "Overworld Belltower",
+                        "Overworld Special Shop Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Entrance near Belltower", "Archipelagos Redux", "_upper"),
+                            new TunicPortal("Special Shop Entrance", "ShopSpecial", "_"),
                         }
                     },
                     {
@@ -377,7 +432,7 @@ namespace TunicRandomizer {
                 "Sewer",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Beneath the Well Front",
+                        "Beneath the Well Ladder Exit",
                         new List<TunicPortal> {
                             new TunicPortal("Well Ladder Exit", "Overworld Redux", "_entrance"),
                         }
@@ -482,7 +537,6 @@ namespace TunicRandomizer {
                         new List<TunicPortal> {
                             new TunicPortal("Atoll Upper Exit", "Overworld Redux", "_upper"),
                             new TunicPortal("Atoll Shop", "Shop", "_"),
-                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs", "_eye"),
                         }
                     },
                     {
@@ -504,6 +558,12 @@ namespace TunicRandomizer {
                         }
                     },
                     {
+                        "Ruined Atoll Frog Eye",
+                        new List<TunicPortal> {
+                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs", "_eye"),
+                        }
+                    },
+                    {
                         "Ruined Atoll Frog Mouth",
                         new List<TunicPortal> {
                             new TunicPortal("Frog Stairs Mouth Entrance", "Frog Stairs", "_mouth"),
@@ -515,12 +575,27 @@ namespace TunicRandomizer {
                 "Frog Stairs",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Frog's Domain Entry",
+                        "Frog Stairs Eye Exit",
                         new List<TunicPortal> {
                             new TunicPortal("Frog Stairs Eye Exit", "Atoll Redux", "_eye"),
+                        }
+                    },
+                    {
+                        "Frog Stairs Upper",
+                        new List<TunicPortal> {
                             new TunicPortal("Frog Stairs Mouth Exit", "Atoll Redux", "_mouth"),
-                            new TunicPortal("Frog Stairs to Frog's Domain's Entrance", "frog cave main", "_Entrance"),
+                        }
+                    },
+                    {
+                        "Frog Stairs Lower",
+                        new List<TunicPortal> {
                             new TunicPortal("Frog Stairs to Frog's Domain's Exit", "frog cave main", "_Exit"),
+                        }
+                    },
+                    {
+                        "Frog Stairs to Frog's Domain",
+                        new List<TunicPortal> {
+                            new TunicPortal("Frog Stairs to Frog's Domain's Entrance", "frog cave main", "_Entrance"),
                         }
                     },
                 }
@@ -529,7 +604,7 @@ namespace TunicRandomizer {
                 "frog cave main",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Frog's Domain",
+                        "Frog's Domain Entry",
                         new List<TunicPortal> {
                             new TunicPortal("Frog's Domain Ladder Exit", "Frog Stairs", "_Entrance"),
                         }
@@ -563,10 +638,9 @@ namespace TunicRandomizer {
                 "Library Hall",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Library Hall",
+                        "Library Hall Bookshelf",
                         new List<TunicPortal> {
                             new TunicPortal("Library Hall Bookshelf Exit", "Library Exterior", "_"),
-                            new TunicPortal("Library Hall to Rotunda", "Library Rotunda", "_"),
                         }
                     },
                     {
@@ -575,15 +649,26 @@ namespace TunicRandomizer {
                             new TunicPortal("Library Hero's Grave", "RelicVoid", "_teleporter_relic plinth"),
                         }
                     },
+                    {
+                        "Library Hall to Rotunda",
+                        new List<TunicPortal> {
+                            new TunicPortal("Library Hall to Rotunda", "Library Rotunda", "_"),
+                        }
+                    },
                 }
             },
             {
                 "Library Rotunda",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Library Rotunda",
+                        "Library Rotunda to Hall",
                         new List<TunicPortal> {
                             new TunicPortal("Library Rotunda Lower Exit", "Library Hall", "_"),
+                        }
+                    },
+                    {
+                        "Library Rotunda to Lab",
+                        new List<TunicPortal> {
                             new TunicPortal("Library Rotunda Upper Exit", "Library Lab", "_"),
                         }
                     },
@@ -605,7 +690,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Library Lab",
+                        "Library Lab to Librarian",
                         new List<TunicPortal> {
                             new TunicPortal("Library Lab to Librarian Arena", "Library Arena", "_"),
                         }
@@ -632,7 +717,6 @@ namespace TunicRandomizer {
                             new TunicPortal("Forest to Belltower", "Forest Belltower", "_"),
                             new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "_lower"),
                             new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "_gate"),
-                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "_lower"),
                             new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "_upper"),
                             new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "_lower"),
                             new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "_upper"),
@@ -648,6 +732,12 @@ namespace TunicRandomizer {
                         "East Forest Portal",
                         new List<TunicPortal> {
                             new TunicPortal("Forest to Far Shore", "Transit", "_teleporter_forest teleporter"),
+                        }
+                    },
+                    {
+                        "Lower Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "_lower"),
                         }
                     },
                 }
@@ -698,10 +788,15 @@ namespace TunicRandomizer {
                 "East Forest Redux Interior",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Guard House 2",
+                        "Guard House 2 Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "_upper"),
+                        }
+                    },
+                    {
+                        "Guard House 2 Lower",
                         new List<TunicPortal> {
                             new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "_lower"),
-                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "_upper"),
                         }
                     },
                 }
@@ -762,8 +857,13 @@ namespace TunicRandomizer {
                     {
                         "Fortress Exterior near cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "_"),
                             new TunicPortal("Fortress Courtyard Shop", "Shop", "_"),
+                        }
+                    },
+                    {
+                        "Beneath the Vault Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "_"),
                         }
                     },
                     {
@@ -1084,7 +1184,7 @@ namespace TunicRandomizer {
                 "Swamp Redux 2",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Swamp",
+                        "Swamp Front",
                         new List<TunicPortal> {
                             new TunicPortal("Swamp Lower Exit", "Overworld Redux", "_conduit"),
                             new TunicPortal("Swamp Shop", "Shop", "_"),
