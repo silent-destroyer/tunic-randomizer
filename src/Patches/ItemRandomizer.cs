@@ -115,20 +115,6 @@ namespace TunicRandomizer {
             }
             Shuffle(InitialItems, random);
             foreach (Check Item in InitialItems) {
-                
-                //if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1 || SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                //    if (Item.Location.RequiredItems.Count > 0 && Item.Location.RequiredItems.Where(dict => dict.ContainsKey("Mask") || dict.ContainsKey("Lantern")).Count() > 0) {
-                //        for (int i = 0; i < Item.Location.RequiredItems.Count; i++) {
-                //            if (Item.Location.RequiredItems[i].ContainsKey("Mask") && SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                //                Item.Location.RequiredItems[i].Remove("Mask");
-                //            }
-                //            if (Item.Location.RequiredItems[i].ContainsKey("Lantern") && SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                //                Item.Location.RequiredItems[i].Remove("Lantern");
-                //            }
-                //        }
-                //    }
-                //}
-
                 if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
                     if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
                         Hexagons.Add(Item);

@@ -1628,7 +1628,7 @@ namespace TunicRandomizer {
             },
             {
                 "Lower Forest",
-                new RegionInfo("Town Basement", true)
+                new RegionInfo("East Forest Redux", false)
             },
             {
                 "Guard House 1 East",
@@ -1840,7 +1840,7 @@ namespace TunicRandomizer {
             },
             {
                 "Library Lab to Librarian",
-                new RegionInfo("Library Arena", true)
+                new RegionInfo("Library Arena", false)
             },
             {
                 "Library Arena",
@@ -3310,9 +3310,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash"
                             },
-                            new List<string> {
-                                "Ladder Storage"
-                            },
                         }
                     },
                     {
@@ -3321,9 +3318,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Sword"
                             },
-                            new List<string> {
-                                "Ladder Storage"
-                            },
                         }
                     },
                     {
@@ -3331,14 +3325,6 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "12"
-                            },
-                        }
-                    },
-                    {
-                        "West Garden Portal Item",
-                        new List<List<string>> {
-                            new List<string> {
-                                "26", "Wand", "Stundagger", "Techbow", "nmg"
                             },
                         }
                     },
@@ -5060,7 +5046,7 @@ namespace TunicRandomizer {
             }
 
             int comboNumber = 0;
-            while (FullInventory.Count < total_nondeadend_count + MaxItems.Count) {
+            while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
                 ShuffleList(twoPlusPortals, seed);
                 Portal portal1 = null;
                 Portal portal2 = null;

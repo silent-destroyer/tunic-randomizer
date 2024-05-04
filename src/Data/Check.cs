@@ -49,6 +49,10 @@ namespace TunicRandomizer {
                         if (ItemRandomizer.testBool) {
                             TunicRandomizer.Logger.LogInfo("LocationID is " + this.LocationId);
                             TunicRandomizer.Logger.LogInfo("inventory does not contain " + item);
+                            TunicRandomizer.Logger.LogInfo("full inventory is ");
+                            foreach (string thing in inventory.Keys) {
+                                TunicRandomizer.Logger.LogInfo(thing);
+                            }
                         }
                         break;
                     } else if (inventory[item] >= req[item]) {
