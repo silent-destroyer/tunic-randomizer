@@ -2852,24 +2852,13 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "East Forest",
+                "Hourglass Cave",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "East Forest Dance Fox Spot",
+                        "Hourglass Cave Tower",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash",
-                            },
-                            new List<string> {
-                                "26", "nmg",
-                            },
-                        }
-                    },
-                    {
-                        "East Forest Portal",
-                        new List<List<string>> {
-                            new List<string> {
-                                "12",
+                                "Ladders in Hourglass Cave",
                             },
                         }
                     },
@@ -2891,6 +2880,41 @@ namespace TunicRandomizer {
                         {
                         "Forest Belltower Lower",
                         new List<List<string>> {
+                            new List<string> {
+                                "Ladder to East Forest",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest Dance Fox Spot",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "East Forest Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
+                        "Lower Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Lower Forest",
+                            },
+                            new List<string> {
+                                "26", "Wand", "Techbow", "Stundagger"
+                            },
                         }
                     },
                 }
@@ -2904,9 +2928,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
-                            new List<string> {
-                                "26", "nmg",
-                            },
                         }
                     },
                 }
@@ -2917,6 +2938,19 @@ namespace TunicRandomizer {
                     {
                         "East Forest",
                         new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Lower Forest",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Lower Forest",
+                            },
                         }
                     },
                 }
@@ -2939,6 +2973,32 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Guard House 2 Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Guard House 2 Lower",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Lower Forest",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Guard House 2 Lower",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Guard House 2 Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Lower Forest",
                             },
                         }
                     },
@@ -2971,9 +3031,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
-                            new List<string> {
-                                "26", "nmg",
-                            },
                         }
                     },
                 }
@@ -2986,14 +3043,6 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "12",
-                            },
-                        }
-                    },
-                    {
-                        "Forest Grave Path Main",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash", "nmg",
                             },
                         }
                     },
@@ -3010,8 +3059,29 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Beneath the Well Ladder Exit",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Well Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Well",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Beneath the Well Front",
                 new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Well Ladder Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Well",
+                            },
+                        }
+                    },
                     {
                         "Beneath the Well Main",
                         new List<List<string>> {
@@ -3020,22 +3090,6 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "Techbow", "Lantern"
-                            },
-                        }
-                    },
-                }
-            },
-            {
-                "Beneath the Well Back",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Beneath the Well Main",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Stick"
-                            },
-                            new List<string> {
-                                "Techbow"
                             },
                         }
                     },
@@ -3052,6 +3106,25 @@ namespace TunicRandomizer {
                     {
                         "Beneath the Well Back",
                         new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Well",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Well Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Well Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Stick", "Ladders in Well"
+                            },
+                            new List<string> {
+                                "Techbow", "Ladders in Well"
+                            },
                         }
                     },
                 }
@@ -3067,26 +3140,31 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Dark Tomb Checkpoint",
+                "Dark Tomb Entry Point",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Well Boss",
+                        "Dark Tomb Upper",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "nmg",
+                                "Lantern"
                             },
                         }
                     },
                 }
             },
             {
-                "Dark Tomb Entry Point",
+                "Dark Tomb Upper",
                 new Dictionary<string, List<List<string>>> {
+                    {
+                        "Dark Tomb Entry Point",
+                        new List<List<string>> {
+                        }
+                    },
                     {
                         "Dark Tomb Main",
                         new List<List<string>> {
                             new List<string> {
-                                "Lantern"
+                                "Ladder in Dark Tomb"
                             },
                         }
                     },
@@ -3101,8 +3179,11 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Dark Tomb Entry Point",
+                        "Dark Tomb Upper",
                         new List<List<string>> {
+                            new List<string> {
+                                "Ladder in Dark Tomb"
+                            },
                         }
                     },
                 }
