@@ -4480,19 +4480,6 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Swamp to Cathedral Main Entrance",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Swamp",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Stundagger", "Wand", "nmg",
-                            },
-                        }
-                    },
-                }
-            },
-            {
                 "Back of Swamp",
                 new Dictionary<string, List<List<string>>> {
                     {
@@ -4816,6 +4803,7 @@ namespace TunicRandomizer {
                         met = true;
                     }
                     // check through each list of requirements
+                    int met_count = 0;
                     foreach (List<string> reqs in destination_group.Value) {
                         if (reqs.Count == 0) {
                             // if a group is empty, you can just walk there
@@ -4823,7 +4811,7 @@ namespace TunicRandomizer {
                             //Logger.LogInfo("group is empty, so met is true");
                         } else {
                             // check if we have the items in our inventory to traverse this path
-                            int met_count = 0;
+                            met_count = 0;
                             foreach (string req in reqs) {
                                 //Logger.LogInfo("req is " + req);
                                 // if sword progression is on, check for this too
@@ -4831,16 +4819,14 @@ namespace TunicRandomizer {
                                     if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) {
                                         met_count++;
                                     }
-                                }
-
-                                if (req == "Stick") {
+                                } else if (req == "Stick") {
                                     if (inventory.ContainsKey("Sword Progression")) {
                                         met_count++;
                                     }
-                                }
-
-                                if (inventory.ContainsKey(req)) {
+                                } else if (inventory.ContainsKey(req)) {
                                     met_count++;
+                                    //Logger.LogInfo("met_count is " + met_count);
+                                    //Logger.LogInfo("reqs.count is " + reqs.Count);
                                     //Logger.LogInfo("we met this requirement");
                                 }
                             }
