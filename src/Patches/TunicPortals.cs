@@ -2588,6 +2588,171 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Upper Overworld",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld above Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Patrol Cave",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld above Quarry Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                    {
+                        "Overworld after Temple Rafters",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder near Temple Rafters",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld after Temple Rafters",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Upper Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder near Temple Rafters",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld above Quarry Entrance",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Dark Tomb",
+                            },
+                        }
+                    },
+                    {
+                        "Upper Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld Quarry Entry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld after Envoy",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Quarry",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Overworld after Envoy",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                            new List<string> {
+                                "Heir Sword",  // implement this
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Quarry Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Quarry",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "After Ruined Passage",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                        }
+                    },
+                    {
+                        "Above Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Above Ruined Passage",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "After Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Weathervane",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Old House Front",
                 new Dictionary<string, List<List<string>>> {
                     {
