@@ -16,7 +16,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
         // set this to true to test location access
-        public static bool testLocations = false;
+        public static bool testLocations = true;
         // leave this one alone
         public static bool testBool = false;
         
@@ -38,6 +38,12 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer started with sword") == 1) {
                 SphereZero.Add("Sword", 1);
+            }
+            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                SphereZero.Add("Lantern", 1);
+            }
+            if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
+                SphereZero.Add("Mask", 1);
             }
         }
 
