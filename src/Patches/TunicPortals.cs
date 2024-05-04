@@ -3904,23 +3904,7 @@ namespace TunicRandomizer {
                         "Eastern Vault Fortress Gold Door",
                         new List<List<string>> {
                             new List<string> {
-                                "Wand", "Stundagger", "nmg",
-                            },
-                            new List<string> {
                                 "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Fortress Courtyard Upper",
-                            },
-                        }
-                    },
-                }
-            },
-            {
-                "Eastern Vault Fortress Gold Door",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Eastern Vault Fortress",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Wand", "Stundagger", "nmg",
                             },
                         }
                     },
@@ -3942,19 +3926,6 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
-                            },
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress Grave Path Upper",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Fortress Grave Path",
-                        new List<List<string>> {
-                            new List<string> {
-                                "26", "Stundagger", "Techbow", "Wand", "nmg",
                             },
                         }
                     },
@@ -4036,14 +4007,6 @@ namespace TunicRandomizer {
                 "Monastery Back",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Monastery Front",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash", "nmg",
-                            },
-                        }
-                    },
-                    {
                         "Monastery Hero's Grave",
                         new List<List<string>> {
                             new List<string> {
@@ -4069,12 +4032,6 @@ namespace TunicRandomizer {
                     {
                         "Monastery Back",
                         new List<List<string>> {
-                            new List<string> {
-                                "Sword"
-                            },
-                            new List<string> {
-                                "Techbow"
-                            }
                         }
                     },
                 }
@@ -4135,14 +4092,6 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {
-                        "Monastery Rope",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladder Storage",
-                            },
-                        }
-                    },
                 }
             },
             {
@@ -4199,6 +4148,19 @@ namespace TunicRandomizer {
             },
             {
                 "Lower Quarry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Even Lower Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Lower Quarry"
+                            }
+                        }
+                    },
+                }
+            },
+            {
+                "Even Lower Quarry",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Lower Quarry Zig Door",
@@ -4294,9 +4256,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash", "Sword", "12"
                             },
-                            new List<string> {
-                                "Ladder Storage",
-                            },
                         }
                     },
                     {
@@ -4356,16 +4315,61 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Swamp",
+                "Swamp Front",
                 new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp Mid",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Swamp",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Swamp Mid",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Swamp",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
                     {
                         "Swamp to Cathedral Main Entrance",
                         new List<List<string>> {
                             new List<string> {
                                 "12", "Hyperdash",
                             },
+                        }
+                    },
+                    {
+                        "Swamp Ledge under Cathedral Door",
+                        new List<List<string>> {
                             new List<string> {
-                                "Stundagger", "Wand", "nmg",
+                                "Ladders in Swamp",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Swamp Ledge under Cathedral Door",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp Mid",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Swamp",
                             },
                         }
                     },
@@ -4377,21 +4381,13 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {
-                        "Back of Swamp",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladder Storage",
-                            },
-                        }
-                    },
                 }
             },
             {
-                "Swamp to Cathedral Treasure Room Entrance",
+                "Swamp to Cathedral Treasure Room",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Swamp",
+                        "Swamp Ledge under Cathedral Door",
                         new List<List<string>> {
                         }
                     },
@@ -4419,9 +4415,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
-                            new List<string> {
-                                "Ladder Storage",
-                            },
                         }
                     },
                     {
@@ -4442,14 +4435,6 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
-                            },
-                        }
-                    },
-                    {
-                        "Swamp",
-                        new List<List<string>> {
-                            new List<string> {
-                                "26", "Wand", "Techbow", "Stundagger", "nmg",
                             },
                         }
                     },
