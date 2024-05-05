@@ -173,7 +173,6 @@ namespace TunicRandomizer {
                     {
                         "After Ruined Passage",
                         new List<TunicPortal> {
-                            new TunicPortal("Special Shop Entrance", "ShopSpecial", "_", PDir.EAST),
                             new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "_east", PDir.WEST),
                         }
                     },
@@ -251,7 +250,7 @@ namespace TunicRandomizer {
                         "Old House Front",
                         new List<TunicPortal> {
                             new TunicPortal("Old House Door Exit", "Overworld Redux", "_house", PDir.WEST),
-                            new TunicPortal("Old House to Glyph Tower", "g_elements", "_", PDir.FLOOR),
+                            new TunicPortal("Old House to Glyph Tower", "g_elements", "_", PDir.SOUTH),  // weird case, going off of the connecting
                         }
                     },
                     {
