@@ -22,6 +22,8 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> EnemiesInCurrentScene = new Dictionary<string, string>() { };
 
+        public static GameObject LibrarianPools;
+
         public static List<string> SpecificExcludedEnemies = new List<string>() {
             "Overworld Redux (-175.1, 1.0, -76.3)",
             "frog cave main (118.5, 29.9, -52.6)",
@@ -96,7 +98,8 @@ namespace TunicRandomizer {
                     "crocodoo",
                     "Fairyprobe Archipelagos (2)",
                     "Fairyprobe Archipelagos (Dmg)",
-                    "tunic knight void"
+                    "tunic knight void",
+                    "tech knight boss"
                 }
             },
             {
@@ -126,6 +129,12 @@ namespace TunicRandomizer {
                     "Spider Big",
                     "Wizard_Sword",
                     "Wizard_Candleabra",
+                }
+            },
+            { 
+                "Fortress Arena",
+                new List<string>() {
+                    "Spidertank"
                 }
             },
             {
@@ -184,6 +193,7 @@ namespace TunicRandomizer {
                 "ziggurat2020_3",
                 new List<string>() {
                     "Centipede from egg (Varient)",
+                    "Scavenger Boss"
                 }
             },
             {
@@ -215,7 +225,8 @@ namespace TunicRandomizer {
                 "Library Arena",
                 new List<string> () {
                     "Bat_librarian add",
-                    "Skuladot redux_librarian add"
+                    "Skuladot redux_librarian add",
+                    "Librarian"
                 }
             },
             {
@@ -308,6 +319,10 @@ namespace TunicRandomizer {
                     "tunic knight void",
                     "Voidtouched",
                     "Shadowreaper",
+                    "Librarian",
+                    "Spidertank",
+                    "Scavenger Boss",
+                    "tech knight boss"
                 }
             }
         };
@@ -380,6 +395,10 @@ namespace TunicRandomizer {
             { "Skuladot redux_ghost", $"\"Rudeling...?\"" },
             { "Skuladot redux_shield_ghost", $"\"Rudeling...?\" ($Eld)" },
             { "Skuladot redux Big_ghost", $"\"Guard Captain...?\"" },
+            { "Librarian", $"\"Librarian\"" },
+            { "Spidertank", $"\"Spidertank\"" },
+            { "Scavenger Boss", $"\"Boss Scavenger\"" },
+            { "tech knight boss", $"\"Garden Knight\"" },
         };
 
         public static void CreateAreaSeeds() {
@@ -414,6 +433,11 @@ namespace TunicRandomizer {
                 }
                 GameObject.DontDestroyOnLoad(Enemies[EnemyName]);
                 Enemies[EnemyName].SetActive(false);
+
+                if (Enemies[EnemyName].GetComponent<BossAnnounceOnAggro>() != null) {
+                    GameObject.Destroy(Enemies[EnemyName].GetComponent<BossAnnounceOnAggro>());
+                    Enemies[EnemyName].GetComponent<ZTarget>().hideHPBar = false;
+                }
 
                 Enemies[EnemyName].transform.position = new Vector3(-30000f, -30000f, -30000f);
                 if (EnemyName == "Blob") {
@@ -454,7 +478,16 @@ namespace TunicRandomizer {
                 if (EnemyName == "Wizard_Support") {
                     Enemies["Wizard_Support_Ghost"].GetComponent<Monster>().dropValue = Enemies["Wizard_Support"].GetComponent<Monster>().dropValue;
                 }
-
+                if (EnemyName == "Scavenger Boss") {
+                    Enemies["Scavenger Boss"].GetComponent<ScavengerBoss>().eggTossChance = 0.25f;
+                }
+                if(EnemyName == "Librarian") {
+                    LibrarianPools = GameObject.Instantiate(GameObject.Find("_Pools/"));
+                    GameObject.DontDestroyOnLoad(LibrarianPools);
+                    Enemies[EnemyName].GetComponent<Librarian>().horizontalSlashPrefab_pool = LibrarianPools.transform.GetChild(0).GetComponent<PooledFX>();
+                    Enemies[EnemyName].GetComponent<Librarian>().verticalSlashPrefab_pool = LibrarianPools.transform.GetChild(1).GetComponent<PooledFX>();
+                    Enemies[EnemyName].GetComponent<Librarian>().orbPrefab_pool = LibrarianPools.transform.GetChild(3).GetComponent<PooledFX>();
+                }
                 Enemies[EnemyName].name = EnemyName + " Prefab";
             }
             if (SceneName == "Archipelagos Redux") {
@@ -705,6 +738,17 @@ namespace TunicRandomizer {
 
                     if (NewEnemy.GetComponent<Administrator>() != null && NewEnemy.name.ToLower().Contains("servant")) {
                         NewEnemy.GetComponent<BoxCollider>().extents /= 2;
+                    }
+
+                    if (NewEnemy.GetComponent<Spidertank>() != null) {
+                        NewEnemy.transform.localScale = Vector3.one * 0.33f;
+                    }
+
+                    if (NewEnemy.GetComponent<Librarian>() != null) {
+                        NewEnemy.GetComponent<Librarian>().orbitCentre = PlayerCharacter.Transform;
+                        NewEnemy.GetComponent<Librarian>().fightCameraZone = new GameObject();
+                        NewEnemy.GetComponent<Librarian>().escapeLadderGameObject = new GameObject();
+                        NewEnemy.GetComponent<Librarian>().killbox = new GameObject();
                     }
 
                     NewEnemy.name += $" {i}";

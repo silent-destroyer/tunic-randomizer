@@ -111,12 +111,17 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Quarry Redux");
                 return;
             }
+            if (loadingScene.name == "Fortress Arena" && !EnemyRandomizer.Enemies.ContainsKey("Spidertank")) {
+                EnemyRandomizer.InitializeEnemies("Fortress Arena");
+                SceneLoader.LoadScene("Crypt");
+                return;
+            }
             if (loadingScene.name == "Fortress Basement" && !EnemyRandomizer.Enemies.ContainsKey("Spider Small")) {
                 EnemyRandomizer.InitializeEnemies("Fortress Basement");
                 ModelSwaps.BlueFire = GameObject.Instantiate(GameObject.Find("Room - Big Room/Fortress wall lamp small unlit (1)/Fire/lamp fire"));
                 ModelSwaps.BlueFire.SetActive(false);
                 GameObject.DontDestroyOnLoad(ModelSwaps.BlueFire);
-                SceneLoader.LoadScene("Crypt");
+                SceneLoader.LoadScene("Fortress Arena");
                 return;
             }
             if (loadingScene.name == "frog cave main" && !EnemyRandomizer.Enemies.ContainsKey("Frog Small")) {
