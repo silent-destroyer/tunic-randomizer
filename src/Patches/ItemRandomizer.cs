@@ -23,11 +23,7 @@ namespace TunicRandomizer {
         // essentially fake items for the purpose of logic
         public static List<string> PrecollectedItems = new List<string>();
 
-        public static List<string> LadderItems = new List<string> { "Ladders near Weathervane", "Ladders near Overworld Checkpoint",
-            "Ladders near Patrol Cave", "Ladder near Temple Rafters", "Ladders near Dark Tomb", "Ladder to Quarry", "Ladders to West Bell",
-            "Ladders in Overworld Town", "Ladder to Ruined Atoll", "Ladder to Swamp", "Ladders in Well", "Ladder in Dark Tomb",
-            "Ladder to East Forest", "Ladders to Lower Forest", "Ladder to Beneath the Vault", "Ladders in Hourglass Cave",
-            "Ladders in South Atoll", "Ladders to Frog's Domain", "Ladders in Library", "Ladders in Lower Quarry", "Ladders in Swamp" };
+        public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
 
         public static void PopulateSphereZero() {
             SphereZero.Clear();
