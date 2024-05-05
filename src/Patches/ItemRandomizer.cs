@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 using UnityEngine.InputSystem.Utilities;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
@@ -18,6 +19,11 @@ namespace TunicRandomizer {
         public static bool testLocations = false;
         // leave this one alone
         public static bool testBool = false;
+        
+        // essentially fake items for the purpose of logic
+        public static List<string> PrecollectedItems = new List<string>();
+
+        public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
 
         public static void PopulateSphereZero() {
             SphereZero.Clear();
@@ -28,6 +34,12 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt("randomizer started with sword") == 1) {
                 SphereZero.Add("Sword", 1);
+            }
+            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                SphereZero.Add("Lantern", 1);
+            }
+            if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
+                SphereZero.Add("Mask", 1);
             }
         }
 
@@ -51,6 +63,8 @@ namespace TunicRandomizer {
                     ProgressionNames.Add("26"); // Icebolt
                 }
             }
+
+            // these stop being progression if they aren't required in logic
             if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
                 ProgressionNames.Remove("Lantern");
             }
@@ -67,6 +81,23 @@ namespace TunicRandomizer {
             Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
             Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
+
+            PrecollectedItems.Clear();
+
+            // change this later to only add them if the ladder shuffle option is off
+            PrecollectedItems.AddRange(LadderItems);
+
+            if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
+                PrecollectedItems.Add("Mask");
+            }
+            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                PrecollectedItems.Add("Lantern");
+            }
+            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
+                PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
+            }
+
+
             int GoldHexagonsAdded = 0;
             int HexagonsToAdd = (int)Math.Round((100f + SaveFile.GetInt("randomizer hexagon quest extras")) / 100f * SaveFile.GetInt("randomizer hexagon quest goal"));
             if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt("randomizer shuffled abilities") == 1) {
@@ -83,20 +114,6 @@ namespace TunicRandomizer {
             }
             Shuffle(InitialItems, random);
             foreach (Check Item in InitialItems) {
-
-                if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1 || SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                    if (Item.Location.RequiredItems.Count > 0 && Item.Location.RequiredItems.Where(dict => dict.ContainsKey("Mask") || dict.ContainsKey("Lantern")).Count() > 0) {
-                        for (int i = 0; i < Item.Location.RequiredItems.Count; i++) {
-                            if (Item.Location.RequiredItems[i].ContainsKey("Mask") && SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                                Item.Location.RequiredItems[i].Remove("Mask");
-                            }
-                            if (Item.Location.RequiredItems[i].ContainsKey("Lantern") && SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                                Item.Location.RequiredItems[i].Remove("Lantern");
-                            }
-                        }
-                    }
-                }
-
                 if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
                     if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
                         Hexagons.Add(Item);
@@ -134,6 +151,8 @@ namespace TunicRandomizer {
                             Item.Reward.Amount = 1;
                             GoldHexagonsAdded++;
                         }
+
+                        // todo: rewrite this to not modify the itemlistjson, and instead remove abilities as hexes get placed
                         if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                             if (Item.Location.RequiredItems.Count > 0) {
                                 for (int i = 0; i < Item.Location.RequiredItems.Count; i++) {
@@ -204,7 +223,7 @@ namespace TunicRandomizer {
                 UnplacedInventory.Add("Hyperdash", 1);
             }
 
-            // make a scene inventory, so we can keep the item inventory separated. Add overworld to start (change later if we do start rando)
+            // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
             TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
             int fairyCount = 0;
@@ -240,12 +259,7 @@ namespace TunicRandomizer {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
 
-                if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                    FullInventory.Add("Lantern", 1);
-                }
-                if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                    FullInventory.Add("Mask", 1);
-                }
+                FullInventory = AddListToDict(FullInventory, PrecollectedItems);
 
                 // door rando time
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
@@ -256,14 +270,9 @@ namespace TunicRandomizer {
                     foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
                         FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                     }
-                    if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                        FullInventory.Add("Lantern", 1);
-                    }
-                    if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                        FullInventory.Add("Mask", 1);
-                    }
+                    FullInventory = AddListToDict(FullInventory, PrecollectedItems);
                     
-                    // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
+                    // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
                     while (true) {
                         int start_num = FullInventory.Count;
                         FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
@@ -277,6 +286,7 @@ namespace TunicRandomizer {
                     }
                 }
 
+                // change the testLocations bool to true to have it to test whether all locations can be reached
                 if (testBool) {
                     Logger.LogInfo("test starts here");
                     Dictionary<string, int> testUnplacedInventory = new Dictionary<string, int>();
@@ -290,16 +300,11 @@ namespace TunicRandomizer {
                         testUnplacedInventory.Add(itemName, 1);
                     }
 
-                    if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                        testUnplacedInventory.Add("Lantern", 1);
-                    }
-                    if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                        testUnplacedInventory.Add("Mask", 1);
-                    }
-
                     foreach (KeyValuePair<string, int> testUnplacedItem in testUnplacedInventory) {
                         testFullInventory.Add(testUnplacedItem.Key, testUnplacedItem.Value);
                     }
+
+                    testFullInventory = AddListToDict(testFullInventory, PrecollectedItems);
 
                     if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                         // this should keep looping until every portal either doesn't give a reward, or has already given its reward
@@ -309,6 +314,7 @@ namespace TunicRandomizer {
                         foreach (KeyValuePair<string, int> unplacedItem in testUnplacedInventory) {
                             testFullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                         }
+                        testFullInventory = AddListToDict(testFullInventory, PrecollectedItems);
 
                         // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
                         while (true) {
@@ -469,6 +475,15 @@ namespace TunicRandomizer {
             }
         }
 
+        // add a key if it doesn't exist, otherwise increment the value by 1
+        public static Dictionary<string, int> AddListToDict(Dictionary<string, int> dictionary, List<string> list) {
+            foreach (string item in list) {
+                dictionary.TryGetValue(item, out var count);
+                dictionary[item] = count + 1;
+            }
+            return dictionary;
+        }
+
         public static Check FindRandomizedItemByName(string Name) {
             foreach (Check Check in Locations.RandomizedLocations.Values) {
                 if (Check.Reward.Name == Name) {
@@ -515,13 +530,9 @@ namespace TunicRandomizer {
                 CombinedInventory.Add("12");
                 CombinedInventory.Add("21");
             }
-            // add these too if you're ignoring them in logic
-            if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                CombinedInventory.Add("Mask");
-            }
-            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                CombinedInventory.Add("Lantern");
-            }
+
+            CombinedInventory.AddRange(PrecollectedItems);
+
             CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
             
             // find which portals you can reach from spawn without additional progression
