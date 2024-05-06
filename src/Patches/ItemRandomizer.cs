@@ -545,7 +545,7 @@ namespace TunicRandomizer {
 
             PrecollectedItems.ForEach(item => CombinedInventory.Add(item, 1));
 
-            CombinedInventory = SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory) : TunicPortals.UpdateReachableRegions(CombinedInventory);
+            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
             
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
@@ -563,7 +563,7 @@ namespace TunicRandomizer {
                     CombinedInventory.Add(portal.Region, 1);
                 }
             }
-            CombinedInventory = SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory) : TunicPortals.UpdateReachableRegions(CombinedInventory);
+            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
             return CombinedInventory.Keys.ToList();
         }
     }

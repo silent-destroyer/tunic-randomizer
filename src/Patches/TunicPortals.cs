@@ -4963,6 +4963,7 @@ namespace TunicRandomizer {
                 string portal2_sdt = portal1.DestinationSceneTag;
                 if (portal2_sdt.StartsWith("Shop,")) {
                     portal2 = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}");
+                    shop_num++;
                 }
                 else if (portal2_sdt == "Purgatory, Purgatory_bottom") {
                     portal2_sdt = "Purgatory, Purgatory_top";
