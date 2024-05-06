@@ -537,8 +537,8 @@ namespace TunicRandomizer {
                 DisableLadderStorage, DisableUpgradeStealing, };
         }
 
-        public static void getSettings() {
-            TunicRandomizer.Settings.GetSettingsString();
+        public static void copySettings() {
+            GUIUtility.systemCopyBuffer = TunicRandomizer.Settings.GetSettingsString();
         }
     }
 }
