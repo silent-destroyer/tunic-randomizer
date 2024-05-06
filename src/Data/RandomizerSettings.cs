@@ -426,7 +426,6 @@ namespace TunicRandomizer {
                 QuickSettings.CustomSeed = seed;
             }
             string SettingsString = $"tunc:{PluginInfo.VERSION}:{seed}:{EncodedSettings}";
-            GUIUtility.systemCopyBuffer = SettingsString;
             return SettingsString;
         }
 
@@ -548,8 +547,8 @@ namespace TunicRandomizer {
                 DisableLadderStorage, DisableUpgradeStealing, };
         }
 
-        public static void getSettings() {
-            TunicRandomizer.Settings.GetSettingsString();
+        public static void copySettings() {
+            GUIUtility.systemCopyBuffer = TunicRandomizer.Settings.GetSettingsString();
         }
     }
 }
