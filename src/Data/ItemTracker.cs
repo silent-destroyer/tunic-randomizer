@@ -234,10 +234,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
-                    TunicLogger.LogInfo("looking up ladder item: ");
                     foreach(string LadderItem in ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name)) {
-
-                        TunicLogger.LogInfo("looking up ladder item: " + LadderItem);
                         Check Check = ItemRandomizer.FindRandomizedItemByName(LadderItem);
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
                         string Key = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";

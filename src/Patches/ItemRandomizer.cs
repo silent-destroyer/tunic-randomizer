@@ -43,13 +43,17 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void RandomizeAndPlaceItems() {
+        public static void RandomizeAndPlaceItems(Random random = null) {
             Logger.LogInfo("randomize and place items starting");
 
             if (testLocations) {
                 testBool = true;
             }
-            System.Random random = new System.Random(SaveFile.GetInt("seed"));
+
+            if (random == null) {
+                random = new Random(SaveFile.GetInt("seed"));
+            }
+
             Locations.RandomizedLocations.Clear();
             Locations.CheckedLocations.Clear();
 
@@ -357,8 +361,17 @@ namespace TunicRandomizer {
                 int l;
                 l = random.Next(InitialLocations.Count);
 
+                int counter = 0;
                 while (!InitialLocations[l].reachable(FullInventory)) {
                     l = random.Next(InitialLocations.Count);
+                    counter++;
+                    // If it fails to place an item, start over with the current seed progress
+                    // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
+                    if (counter >= InitialLocations.Count) {
+                        PopulateSphereZero();
+                        RandomizeAndPlaceItems(random);
+                        return;
+                    }
                 }
 
                 // prepare matched list of progression items and locations
