@@ -79,14 +79,6 @@ namespace TunicRandomizer {
                     (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) {
-                for(int i = 0; i < 100; i++) {
-                    SaveFile.SetInt("seed", new System.Random().Next());
-                    ItemRandomizer.PopulateSphereZero();
-                    ItemRandomizer.RandomizeAndPlaceItems();
-                    Hints.PopulateHints();
-                }
-            }
 
             if (Input.GetKeyDown(KeyCode.R) && IsArchipelago()) {
                 Archipelago.instance.Release();
