@@ -321,7 +321,7 @@ namespace TunicRandomizer {
             y += 40f;
             bool CopySettings = GUI.Button(new Rect(10f, y, 200f, 30f), "Copy Seed + Settings");
             if (CopySettings) {
-                TunicRandomizer.Settings.GetSettingsString();
+                GUIUtility.systemCopyBuffer = TunicRandomizer.Settings.GetSettingsString();
             }
             bool PasteSettings = GUI.Button(new Rect(220f, y, 200f, 30f), "Paste Seed + Settings");
             if (PasteSettings) {
