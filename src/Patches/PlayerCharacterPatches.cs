@@ -79,6 +79,14 @@ namespace TunicRandomizer {
                     (Il2CppSystem.Action)RandomizerSettings.getSettings, null);
                 }
             }
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+                for(int i = 0; i < 100; i++) {
+                    SaveFile.SetInt("seed", new System.Random().Next());
+                    ItemRandomizer.PopulateSphereZero();
+                    ItemRandomizer.RandomizeAndPlaceItems();
+                    Hints.PopulateHints();
+                }
+            }
 
             if (Input.GetKeyDown(KeyCode.R) && IsArchipelago()) {
                 Archipelago.instance.Release();
@@ -415,6 +423,9 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
                     }
+                    if (TunicRandomizer.Settings.ShuffleLadders) {
+                        SaveFile.SetInt(LadderRandoEnabled, 1);
+                    }
                 }
 
                 foreach (string Scene in Locations.AllScenes) {
@@ -616,6 +627,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(2) == 1) {
                 SaveFile.SetInt("randomizer shuffled abilities", 1);
+            }
+            if (random.Next(2) == 1) {
+                SaveFile.SetInt(LadderRandoEnabled, 1);
             }
         }
 

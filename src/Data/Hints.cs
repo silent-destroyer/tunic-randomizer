@@ -358,7 +358,7 @@ namespace TunicRandomizer {
                 }
             }
             if (HintItem == null) {
-                HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEker.\nyoo hahv uh difikuhlt rOd uhhehd. \"GOOD LUCK\".";
+                HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEkur.\nyoo hahv uh difikuhlt rOd uhhehd. \"GOOD LUCK\"!";
                 //TrunicHint = HintMessage;
             } else {
                 Scene = Locations.SimplifiedSceneNames[HintItem.Location.SceneName];
@@ -371,6 +371,7 @@ namespace TunicRandomizer {
 
             }
             HintMessages.Add("Mailbox", HintMessage);
+            TunicLogger.LogInfo(HintMessage);
             return HintItem == null ? (false, false, false, false) : (HintItem.Reward.Name == "Techbow", HintItem.Reward.Name == "Wand", HintItem.Reward.Name == "12", HintItem.Reward.Name == "21");
         }
 

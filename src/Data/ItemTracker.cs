@@ -233,6 +233,18 @@ namespace TunicRandomizer {
                         SpoilerLogLines.Add(Spoiler);
                     }
                 }
+                if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                    TunicLogger.LogInfo("looking up ladder item: ");
+                    foreach(string LadderItem in ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name)) {
+
+                        TunicLogger.LogInfo("looking up ladder item: " + LadderItem);
+                        Check Check = ItemRandomizer.FindRandomizedItemByName(LadderItem);
+                        ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
+                        string Key = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+                        string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
+                        SpoilerLogLines.Add(Spoiler);
+                    }
+                }
             }
 
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(AbilityShuffle) == 1) {

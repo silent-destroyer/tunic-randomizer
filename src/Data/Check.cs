@@ -16,11 +16,8 @@ namespace TunicRandomizer {
 
         public bool reachable(Dictionary<string, int> inventory) {
             List<Dictionary<string, int>> itemsRequired;
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                itemsRequired = this.RequiredItemsDoors;
-            } else {
-                itemsRequired = this.RequiredItems;
-            }
+            
+            itemsRequired = this.RequiredItemsDoors;
 
             //if there are no requirements, the location is reachable
             if (itemsRequired.Count == 0) {

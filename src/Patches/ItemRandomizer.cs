@@ -54,6 +54,7 @@ namespace TunicRandomizer {
             Locations.CheckedLocations.Clear();
 
             List<string> ProgressionNames = new List<string>{ "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
+            List<string> Ladders = new List<string>(LadderItems);
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1) {
                     ProgressionNames.Add("Hexagon Gold");
@@ -84,8 +85,9 @@ namespace TunicRandomizer {
 
             PrecollectedItems.Clear();
 
-            // change this later to only add them if the ladder shuffle option is off
-            PrecollectedItems.AddRange(LadderItems);
+            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 0) {
+                PrecollectedItems.AddRange(LadderItems);
+            }
 
             if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
                 PrecollectedItems.Add("Mask");
@@ -200,6 +202,12 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1 && ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && Ladders.Count > 0) {
+                        Item.Reward.Name = Ladders[random.Next(Ladders.Count)];
+                        Item.Reward.Amount = 1;
+                        Item.Reward.Type = "INVENTORY";
+                        Ladders.Remove(Item.Reward.Name);
+                    }
                     if (ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) {
                         ProgressionRewards.Add(Item.Reward);
                     } else {
@@ -225,7 +233,12 @@ namespace TunicRandomizer {
 
             // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
-            TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+            if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
+                TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+            } else {
+                TunicPortals.VanillaPortals();
+            }
+            
             int fairyCount = 0;
             bool laurelsPlaced = false;
 
@@ -262,7 +275,7 @@ namespace TunicRandomizer {
                 FullInventory = AddListToDict(FullInventory, PrecollectedItems);
 
                 // door rando time
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                //if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                     // this should keep looping until every portal either doesn't give a reward, or has already given its reward
 
                     FullInventory.Clear();
@@ -284,7 +297,7 @@ namespace TunicRandomizer {
                             break;
                         }
                     }
-                }
+                //}
 
                 // change the testLocations bool to true to have it to test whether all locations can be reached
                 if (testBool) {
@@ -358,7 +371,6 @@ namespace TunicRandomizer {
 
             SphereZero = FullInventory;
 
-            // if we're in ER, sphere zero is also the regions we can get to with our starting inventory
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 List<string> sphere_zero_list = GetERSphereOne();
                 SphereZero.Clear();
@@ -520,39 +532,39 @@ namespace TunicRandomizer {
         // In ER, we want sphere 1 to be in Overworld or adjacent to Overworld
         public static List<string> GetERSphereOne() {
             List<Portal> PortalInventory = new List<Portal>();
-            List<string> CombinedInventory = new List<string> { "Overworld" };
+            Dictionary<string, int> CombinedInventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
             // add starting sword and abilities as applicable
             if (SaveFile.GetInt("randomizer started with sword") == 1) {
-                CombinedInventory.Add("Sword");
+                CombinedInventory.Add("Sword", 1);
             }
             if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
-                CombinedInventory.Add("12");
-                CombinedInventory.Add("21");
+                CombinedInventory.Add("12", 1);
+                CombinedInventory.Add("21", 1);
             }
 
-            CombinedInventory.AddRange(PrecollectedItems);
+            PrecollectedItems.ForEach(item => CombinedInventory.Add(item, 1));
 
-            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
+            CombinedInventory = SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory) : TunicPortals.UpdateReachableRegions(CombinedInventory);
             
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                if (CombinedInventory.Contains(portalCombo.Portal1.Region)) {
+                if (CombinedInventory.ContainsKey(portalCombo.Portal1.Region)) {
                     PortalInventory.Add(portalCombo.Portal2);
                 }
-                if (CombinedInventory.Contains(portalCombo.Portal2.Region)) {
+                if (CombinedInventory.ContainsKey(portalCombo.Portal2.Region)) {
                     PortalInventory.Add(portalCombo.Portal1);
                 }
             }
 
             // add the regions you can reach as your first steps to the inventory
             foreach (Portal portal in PortalInventory) {
-                if (!CombinedInventory.Contains(portal.Region)) {
-                    CombinedInventory.Add(portal.Region);
+                if (!CombinedInventory.ContainsKey(portal.Region)) {
+                    CombinedInventory.Add(portal.Region, 1);
                 }
             }
-            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
-            return CombinedInventory;
+            CombinedInventory = SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory) : TunicPortals.UpdateReachableRegions(CombinedInventory);
+            return CombinedInventory.Keys.ToList();
         }
     }
 }
