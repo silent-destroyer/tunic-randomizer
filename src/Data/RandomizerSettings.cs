@@ -418,7 +418,6 @@ namespace TunicRandomizer {
                 QuickSettings.CustomSeed = seed;
             }
             string SettingsString = $"tunc:{PluginInfo.VERSION}:{seed}:{EncodedSettings}";
-            GUIUtility.systemCopyBuffer = SettingsString;
             return SettingsString;
         }
 
