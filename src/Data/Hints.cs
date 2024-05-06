@@ -371,7 +371,6 @@ namespace TunicRandomizer {
 
             }
             HintMessages.Add("Mailbox", HintMessage);
-            TunicLogger.LogInfo(HintMessage);
             return HintItem == null ? (false, false, false, false) : (HintItem.Reward.Name == "Techbow", HintItem.Reward.Name == "Wand", HintItem.Reward.Name == "12", HintItem.Reward.Name == "21");
         }
 
