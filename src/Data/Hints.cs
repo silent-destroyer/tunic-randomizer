@@ -308,6 +308,9 @@ namespace TunicRandomizer {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
             }
+            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladders in Well", "Ladder to Swamp" });
+            }
             List<Check> mailboxHintables = new List<Check>();
             foreach (string Item in MailboxItems) {
                 mailboxHintables.AddRange(ItemRandomizer.FindAllRandomizedItemsByName(Item));
