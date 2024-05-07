@@ -25,21 +25,19 @@ namespace TunicRandomizer {
 
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
 
-        public static void PopulateSphereZero() {
-            SphereZero.Clear();
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
-                SphereZero.Add("12", 1);
-                SphereZero.Add("21", 1);
-                SphereZero.Add("26", 1);
-            }
-            if (SaveFile.GetInt("randomizer started with sword") == 1) {
-                SphereZero.Add("Sword", 1);
-            }
-            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                SphereZero.Add("Lantern", 1);
+        public static void PopulatePrecollected() {
+            PrecollectedItems.Clear();
+            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 0) {
+                PrecollectedItems.AddRange(LadderItems);
             }
             if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                SphereZero.Add("Mask", 1);
+                PrecollectedItems.Add("Mask");
+            }
+            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
+                PrecollectedItems.Add("Lantern");
+            }
+            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
+                PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
             }
         }
 
@@ -57,6 +55,7 @@ namespace TunicRandomizer {
             Locations.RandomizedLocations.Clear();
             Locations.CheckedLocations.Clear();
 
+            PopulatePrecollected();
             List<string> ProgressionNames = new List<string>{ "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             List<string> Ladders = new List<string>(LadderItems);
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
@@ -76,6 +75,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
                 ProgressionNames.Remove("Mask");
             }
+            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                ProgressionNames.AddRange(LadderItems);
+            }
 
             List<Check> InitialItems = JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList);
             List<Reward> InitialRewards = new List<Reward>();
@@ -83,26 +85,8 @@ namespace TunicRandomizer {
             List<Check> Hexagons = new List<Check>();
             Check Laurels = new Check();
             List<Reward> ProgressionRewards = new List<Reward>();
-            Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>(SphereZero);
-            Dictionary<string, int> SphereZeroInventory = new Dictionary<string, int>(SphereZero);
+            Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>();
             Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
-
-            PrecollectedItems.Clear();
-
-            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 0) {
-                PrecollectedItems.AddRange(LadderItems);
-            }
-
-            if (SaveFile.GetInt(SaveFlags.MasklessLogic) == 1) {
-                PrecollectedItems.Add("Mask");
-            }
-            if (SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1) {
-                PrecollectedItems.Add("Lantern");
-            }
-            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
-                PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
-            }
-
 
             int GoldHexagonsAdded = 0;
             int HexagonsToAdd = (int)Math.Round((100f + SaveFile.GetInt("randomizer hexagon quest extras")) / 100f * SaveFile.GetInt("randomizer hexagon quest goal"));
@@ -248,8 +232,6 @@ namespace TunicRandomizer {
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => random.Next())) {
-                FullInventory.Clear();
-
                 // pick an item
                 string itemName = ItemLookup.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 // remove item from inventory for reachability checks
@@ -272,36 +254,25 @@ namespace TunicRandomizer {
                     UnplacedInventory.Remove("Hyperdash");
                 }
 
+                FullInventory.Clear();
+                FullInventory.Add("Overworld", 1);
                 foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
-
                 FullInventory = AddListToDict(FullInventory, PrecollectedItems);
-
-                // door rando time
-                //if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                    // this should keep looping until every portal either doesn't give a reward, or has already given its reward
-
-                    FullInventory.Clear();
-                    FullInventory.Add("Overworld", 1);
-                    foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
-                        FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
-                    }
-                    FullInventory = AddListToDict(FullInventory, PrecollectedItems);
                     
-                    // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
-                    while (true) {
-                        int start_num = FullInventory.Count;
-                        FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
-                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                            FullInventory = portalCombo.AddComboRegions(FullInventory);
-                        }
-                        int end_num = FullInventory.Count;
-                        if (start_num == end_num) {
-                            break;
-                        }
+                // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
+                while (true) {
+                    int start_num = FullInventory.Count;
+                    FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
+                    foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                        FullInventory = portalCombo.AddComboRegions(FullInventory);
                     }
-                //}
+                    int end_num = FullInventory.Count;
+                    if (start_num == end_num) {
+                        break;
+                    }
+                }
 
                 // change the testLocations bool to true to have it to test whether all locations can be reached
                 if (testBool) {
@@ -368,7 +339,7 @@ namespace TunicRandomizer {
                     // If it fails to place an item, start over with the current seed progress
                     // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
                     if (counter >= InitialLocations.Count) {
-                        PopulateSphereZero();
+                        PopulatePrecollected();
                         RandomizeAndPlaceItems(random);
                         return;
                     }
@@ -387,11 +358,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 List<string> sphere_zero_list = GetERSphereOne();
                 SphereZero.Clear();
-                foreach (string sphere_zero_item in sphere_zero_list) {
-                    if (!SphereZero.ContainsKey(sphere_zero_item)) {
-                        SphereZero.Add(sphere_zero_item, 1);
-                    }
-                }
+                SphereZero = AddListToDict(SphereZero, sphere_zero_list);
             }
 
             // shuffle remaining rewards and locations
@@ -547,16 +514,7 @@ namespace TunicRandomizer {
             List<Portal> PortalInventory = new List<Portal>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
-            // add starting sword and abilities as applicable
-            if (SaveFile.GetInt("randomizer started with sword") == 1) {
-                CombinedInventory.Add("Sword", 1);
-            }
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 0) {
-                CombinedInventory.Add("12", 1);
-                CombinedInventory.Add("21", 1);
-            }
-
-            PrecollectedItems.ForEach(item => CombinedInventory.Add(item, 1));
+            CombinedInventory = AddListToDict(CombinedInventory, PrecollectedItems);
 
             CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
             

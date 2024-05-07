@@ -383,6 +383,8 @@ namespace TunicRandomizer {
             Dictionary<string, ArchipelagoItem> SphereOnePlayer = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
+            ItemRandomizer.PopulatePrecollected();
+            // todo: make this instead look at start inventory, which always has a location ID of -2
             List<string> ERSphereOneItemsAndAreas = ItemRandomizer.GetERSphereOne();
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];
