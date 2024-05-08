@@ -39,6 +39,7 @@ namespace TunicRandomizer {
         public bool sentRelease = false;
         public bool sentCollect = false;
         public int ItemIndex = 0;
+        public Dictionary<string, int> startInventoryItems;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -126,6 +127,14 @@ namespace TunicRandomizer {
                 }
 
                 SetupDataStorage();
+
+                // start inventory items have a location ID of -2, add them to a dict so we can use them for first steps
+                foreach (NetworkItem item in session.Items.AllItemsReceived) {
+                    if (item.Location == -2) {
+                        string itemName = session.Items.GetItemName(item.Item);
+                        ItemRandomizer.AddStringToDict(startInventoryItems, itemName);
+                    }
+                }
 
             } else {
                 LoginFailure loginFailure = (LoginFailure)LoginResult;

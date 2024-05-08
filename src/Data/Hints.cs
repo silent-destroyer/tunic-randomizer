@@ -12,6 +12,8 @@ using UnityEngine;
 using Archipelago.MultiClient.Net.Models;
 using Il2CppSystem;
 using UnityEngine.InputSystem;
+using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.Helpers;
 
 namespace TunicRandomizer {
     public class Hints {
@@ -388,52 +390,42 @@ namespace TunicRandomizer {
             Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
             ItemRandomizer.PopulatePrecollected();
             // todo: make this instead look at start inventory, which always has a location ID of -2
-            List<string> ERSphereOneItemsAndAreas = ItemRandomizer.GetERSphereOne();
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne();
+            } else {
+                ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne();
+            }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];
-                // In ER, we need to check more info, since every item has a required item count
-                if (SaveFile.GetInt(EntranceRando) == 1) {
-                    if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
-                        var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0].Keys;
-                        foreach (string req in requirements) {
-                            int checkCount = 0;
-                            if (ERSphereOneItemsAndAreas.Contains(req)) {
-                                checkCount++;
-                            } else {
-                                continue;
-                            }
-                            if (checkCount == requirements.Count) {
-                                if (item.Player == Archipelago.instance.GetPlayerSlot()) {
-                                    SphereOnePlayer.Add(itemkey, item);
-                                } else {
-                                    SphereOneOthersTunic.Add(itemkey, item);
-                                }
-                            }
-                        }
-                    } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement) {
-                        var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0].Keys;
-                        foreach (string req in requirements) {
-                            int checkCount = 0;
-                            if (ERSphereOneItemsAndAreas.Contains(req)) {
-                                checkCount++;
-                            } else {
-                                continue;
-                            }
-                            if (checkCount == requirements.Count) { 
-                                SphereOneOthers.Add(itemkey, item); 
-                            }
-                        }
-                    }
-                } else {
-                    if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName) && Locations.VanillaLocations[itemkey].Location.RequiredItems.Count == 0) {
-                        if (item.Player == Archipelago.instance.GetPlayerSlot()) {
-                            SphereOnePlayer.Add(itemkey, item);
+                if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
+                    var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0];
+                    foreach (KeyValuePair<string, int> req in requirements) {
+                        int checkCount = 0;
+                        if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
+                            checkCount++;
                         } else {
-                            SphereOneOthersTunic.Add(itemkey, item);
+                            continue;
+                        }
+                        if (checkCount == requirements.Count) {
+                            if (item.Player == Archipelago.instance.GetPlayerSlot()) {
+                                SphereOnePlayer.Add(itemkey, item);
+                            } else {
+                                SphereOneOthersTunic.Add(itemkey, item);
+                            }
                         }
                     }
-                    if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement && Locations.VanillaLocations[itemkey].Location.RequiredItems.Count == 0) {
-                        SphereOneOthers.Add(itemkey, item);
+                } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement) {
+                    var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0];
+                    foreach (KeyValuePair<string, int> req in requirements) {
+                        int checkCount = 0;
+                        if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
+                            checkCount++;
+                        } else {
+                            continue;
+                        }
+                        if (checkCount == requirements.Count) { 
+                            SphereOneOthers.Add(itemkey, item); 
+                        }
                     }
                 }
             }

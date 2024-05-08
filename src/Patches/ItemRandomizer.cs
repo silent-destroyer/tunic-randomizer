@@ -356,9 +356,8 @@ namespace TunicRandomizer {
             SphereZero = FullInventory;
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                List<string> sphere_zero_list = GetERSphereOne();
                 SphereZero.Clear();
-                SphereZero = AddListToDict(SphereZero, sphere_zero_list);
+                SphereZero = AddDictToDict(SphereZero, GetERSphereOne());
             }
 
             // shuffle remaining rewards and locations
@@ -476,6 +475,20 @@ namespace TunicRandomizer {
             return dictionary;
         }
 
+        public static Dictionary<string, int> AddStringToDict(Dictionary<string, int> dictionary, string item) {
+            dictionary.TryGetValue(item, out var count);
+            dictionary[item] = count + 1;
+            return dictionary;
+        }
+
+        public static Dictionary<string, int> AddDictToDict(Dictionary<string, int> dictionary1, Dictionary<string, int> dictionary2) {
+            foreach (KeyValuePair<string, int> pair in dictionary2) {
+                dictionary1.TryGetValue(pair.Key, out var count);
+                dictionary1[pair.Key] = count + pair.Value;
+            }
+            return dictionary1;
+        }
+
         public static Check FindRandomizedItemByName(string Name) {
             foreach (Check Check in Locations.RandomizedLocations.Values) {
                 if (Check.Reward.Name == Name) {
@@ -509,8 +522,28 @@ namespace TunicRandomizer {
             return results;
         }
 
+        // in non-ER, we want the actual sphere 1
+        public static Dictionary<string, int> GetSphereOne() {
+            Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
+
+            Inventory = AddListToDict(Inventory, PrecollectedItems);
+
+            while (true) {
+                int start_num = Inventory.Count;
+                Inventory = TunicPortals.UpdateReachableRegions(Inventory);
+                foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                    Inventory = portalCombo.AddComboRegions(Inventory);
+                }
+                int end_num = Inventory.Count;
+                if (start_num == end_num) {
+                    break;
+                }
+            }
+            return Inventory;
+        }
+
         // In ER, we want sphere 1 to be in Overworld or adjacent to Overworld
-        public static List<string> GetERSphereOne() {
+        public static Dictionary<string, int> GetERSphereOne() {
             List<Portal> PortalInventory = new List<Portal>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
@@ -535,7 +568,7 @@ namespace TunicRandomizer {
                 }
             }
             CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
-            return CombinedInventory.Keys.ToList();
+            return CombinedInventory;
         }
     }
 }
