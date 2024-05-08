@@ -311,8 +311,9 @@ namespace TunicRandomizer {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
             }
+            // if in single player with ladder shuffle, these ladders are probably the most useful for getting you out of sphere 1. Well ladder isn't included because of the weapon requirement for Well
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
-                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladders in Well", "Ladder to Swamp" });
+                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
             }
             List<Check> mailboxHintables = new List<Check>();
             foreach (string Item in MailboxItems) {
@@ -390,8 +391,8 @@ namespace TunicRandomizer {
             Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
             ItemRandomizer.PopulatePrecollected();
+            // StartInventoryItems is populated with your start inventory items, which are items with a location ID of -2
             Dictionary<string, int> StartingInventory = ItemRandomizer.AddListToDict(StartInventoryItems, ItemRandomizer.PrecollectedItems);
-            // todo: make this instead look at start inventory, which always has a location ID of -2
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartingInventory);
             } else {
