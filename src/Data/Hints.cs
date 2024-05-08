@@ -311,8 +311,9 @@ namespace TunicRandomizer {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
             }
+            // if in single player with ladder shuffle, these ladders are probably the most useful for getting you out of sphere 1. Well ladder isn't included because of the weapon requirement for Well
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
-                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladders in Well", "Ladder to Swamp" });
+                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
             }
             List<Check> mailboxHintables = new List<Check>();
             foreach (string Item in MailboxItems) {
