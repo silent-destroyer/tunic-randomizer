@@ -61,6 +61,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, HeroGraveHint> HeroGraveHints = new Dictionary<string, HeroGraveHint>();
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
+        public static Dictionary<string, int> StartInventoryItems = new Dictionary<string, int>();
 
         public static void PopulateHints() {
             HintMessages.Clear();
@@ -389,11 +390,12 @@ namespace TunicRandomizer {
             Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
             ItemRandomizer.PopulatePrecollected();
+            Dictionary<string, int> StartingInventory = ItemRandomizer.AddListToDict(StartInventoryItems, ItemRandomizer.PrecollectedItems);
             // todo: make this instead look at start inventory, which always has a location ID of -2
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne();
+                ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartingInventory);
             } else {
-                ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne();
+                ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartingInventory);
             }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];

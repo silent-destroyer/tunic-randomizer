@@ -39,7 +39,6 @@ namespace TunicRandomizer {
         public bool sentRelease = false;
         public bool sentCollect = false;
         public int ItemIndex = 0;
-        public Dictionary<string, int> startInventoryItems;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -132,7 +131,30 @@ namespace TunicRandomizer {
                 foreach (NetworkItem item in session.Items.AllItemsReceived) {
                     if (item.Location == -2) {
                         string itemName = session.Items.GetItemName(item.Item);
-                        ItemRandomizer.AddStringToDict(startInventoryItems, itemName);
+                        if (itemName == "Magic Wand") {
+                            itemName = "Techbow";
+                        } else if (itemName == "Magic Dagger") {
+                            itemName = "Stundagger";
+                        } else if (itemName == "Magic Orb") {
+                            itemName = "Wand";
+                        } else if (itemName == "Hero's Laurels") {
+                            itemName = "Hyperdash";
+                        } else if (itemName == "Old House Key") {
+                            itemName = "Key (House)";
+                        } else if (itemName == "Fortress Vault Key") {
+                            itemName = "Vault Key (Red)";
+                        } else if (itemName == "Scavenger Mask") {
+                            itemName = "Mask";
+                        } else if (itemName == "Golden Coin") {
+                            itemName = "Trinket Coin";
+                        } else if (itemName == "Pages 24-25 (Prayer)") {
+                            itemName = "12";
+                        } else if (itemName == "Pages 42-43 (Holy Cross)") {
+                            itemName = "21";
+                        } else if (itemName == "Pages 52-53 (Icebolt)") {
+                            itemName = "26";
+                        }
+                        ItemRandomizer.AddStringToDict(Hints.StartInventoryItems, itemName);
                     }
                 }
 

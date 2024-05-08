@@ -523,10 +523,14 @@ namespace TunicRandomizer {
         }
 
         // in non-ER, we want the actual sphere 1
-        public static Dictionary<string, int> GetSphereOne() {
+        public static Dictionary<string, int> GetSphereOne(Dictionary<string, int> startInventory = null) {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
-            Inventory = AddListToDict(Inventory, PrecollectedItems);
+            if (startInventory == null) {
+                Inventory = AddListToDict(Inventory, PrecollectedItems);
+            } else {
+                Inventory = startInventory;
+            }
 
             while (true) {
                 int start_num = Inventory.Count;
@@ -543,12 +547,16 @@ namespace TunicRandomizer {
         }
 
         // In ER, we want sphere 1 to be in Overworld or adjacent to Overworld
-        public static Dictionary<string, int> GetERSphereOne() {
+        public static Dictionary<string, int> GetERSphereOne(Dictionary<string, int> startInventory = null) {
             List<Portal> PortalInventory = new List<Portal>();
             Dictionary<string, int> CombinedInventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
-            CombinedInventory = AddListToDict(CombinedInventory, PrecollectedItems);
-
+            if (startInventory == null) {
+                CombinedInventory = AddListToDict(CombinedInventory, PrecollectedItems);
+            } else {
+                CombinedInventory = startInventory;
+            }
+            
             CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
             
             // find which portals you can reach from spawn without additional progression
