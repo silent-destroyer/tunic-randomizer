@@ -529,7 +529,7 @@ namespace TunicRandomizer {
             if (startInventory == null) {
                 Inventory = AddListToDict(Inventory, PrecollectedItems);
             } else {
-                Inventory = startInventory;
+                Inventory = AddDictToDict(Inventory, startInventory);
             }
 
             while (true) {
@@ -549,34 +549,34 @@ namespace TunicRandomizer {
         // In ER, we want sphere 1 to be in Overworld or adjacent to Overworld
         public static Dictionary<string, int> GetERSphereOne(Dictionary<string, int> startInventory = null) {
             List<Portal> PortalInventory = new List<Portal>();
-            Dictionary<string, int> CombinedInventory = new Dictionary<string, int>() { { "Overworld", 1 } };
+            Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
             if (startInventory == null) {
-                CombinedInventory = AddListToDict(CombinedInventory, PrecollectedItems);
+                Inventory = AddListToDict(Inventory, PrecollectedItems);
             } else {
-                CombinedInventory = startInventory;
+                Inventory = AddDictToDict(Inventory, startInventory);
             }
             
-            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
+            Inventory = TunicPortals.FirstStepsUpdateReachableRegions(Inventory);
             
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                if (CombinedInventory.ContainsKey(portalCombo.Portal1.Region)) {
+                if (Inventory.ContainsKey(portalCombo.Portal1.Region)) {
                     PortalInventory.Add(portalCombo.Portal2);
                 }
-                if (CombinedInventory.ContainsKey(portalCombo.Portal2.Region)) {
+                if (Inventory.ContainsKey(portalCombo.Portal2.Region)) {
                     PortalInventory.Add(portalCombo.Portal1);
                 }
             }
 
             // add the regions you can reach as your first steps to the inventory
             foreach (Portal portal in PortalInventory) {
-                if (!CombinedInventory.ContainsKey(portal.Region)) {
-                    CombinedInventory.Add(portal.Region, 1);
+                if (!Inventory.ContainsKey(portal.Region)) {
+                    Inventory.Add(portal.Region, 1);
                 }
             }
-            CombinedInventory = TunicPortals.FirstStepsUpdateReachableRegions(CombinedInventory);
-            return CombinedInventory;
+            Inventory = TunicPortals.FirstStepsUpdateReachableRegions(Inventory);
+            return Inventory;
         }
     }
 }
