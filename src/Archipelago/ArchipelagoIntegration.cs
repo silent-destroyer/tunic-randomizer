@@ -132,9 +132,9 @@ namespace TunicRandomizer {
                     if (item.Location == -2) {
                         string itemName = session.Items.GetItemName(item.Item);
                         if (ItemLookup.Items.ContainsKey(itemName)) {
-                            itemName = ItemLookup.Items[itemName].ItemNameForInventory;
+                                                   ItemRandomizer.AddStringToDict(Hints.StartInventoryItems, 
+ItemLookup.Items[itemName].ItemNameForInventory);
                         }
-                        ItemRandomizer.AddStringToDict(Hints.StartInventoryItems, itemName);
                     }
                 }
 
