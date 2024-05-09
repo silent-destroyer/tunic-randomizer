@@ -61,6 +61,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, HeroGraveHint> HeroGraveHints = new Dictionary<string, HeroGraveHint>();
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
+        // StartInventoryItems are the items in your Archipelago start inventory
         public static Dictionary<string, int> StartInventoryItems = new Dictionary<string, int>();
 
         public static void PopulateHints() {
