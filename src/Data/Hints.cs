@@ -393,11 +393,11 @@ namespace TunicRandomizer {
             ItemRandomizer.PopulatePrecollected();
             TunicPortals.VanillaPortals();
             // StartInventoryItems is populated with your start inventory items, which are items with a location ID of -2
-            Dictionary<string, int> StartingInventory = ItemRandomizer.AddListToDict(StartInventoryItems, ItemRandomizer.PrecollectedItems);
+            Dictionary<string, int> StartInventoryAndPrecollected = ItemRandomizer.AddListToDict(StartInventoryItems, ItemRandomizer.PrecollectedItems);
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartingInventory);
+                ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartInventoryAndPrecollected);
             } else {
-                ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartingInventory);
+                ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartInventoryAndPrecollected);
             }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];

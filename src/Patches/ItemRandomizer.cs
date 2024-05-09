@@ -259,7 +259,7 @@ namespace TunicRandomizer {
                 foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
-                FullInventory = AddListToDict(FullInventory, PrecollectedItems);
+                AddListToDict(FullInventory, PrecollectedItems);
                     
                 // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
                 while (true) {
@@ -292,7 +292,7 @@ namespace TunicRandomizer {
                         testFullInventory.Add(testUnplacedItem.Key, testUnplacedItem.Value);
                     }
 
-                    testFullInventory = AddListToDict(testFullInventory, PrecollectedItems);
+                    AddListToDict(testFullInventory, PrecollectedItems);
 
                     if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                         // this should keep looping until every portal either doesn't give a reward, or has already given its reward
@@ -302,7 +302,7 @@ namespace TunicRandomizer {
                         foreach (KeyValuePair<string, int> unplacedItem in testUnplacedInventory) {
                             testFullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                         }
-                        testFullInventory = AddListToDict(testFullInventory, PrecollectedItems);
+                        AddListToDict(testFullInventory, PrecollectedItems);
 
                         // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
                         while (true) {
@@ -357,7 +357,7 @@ namespace TunicRandomizer {
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 SphereZero.Clear();
-                SphereZero = AddDictToDict(SphereZero, GetERSphereOne());
+                AddDictToDict(SphereZero, GetERSphereOne());
             }
 
             // shuffle remaining rewards and locations
@@ -527,9 +527,9 @@ namespace TunicRandomizer {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
             if (startInventory == null) {
-                Inventory = AddListToDict(Inventory, PrecollectedItems);
+                AddListToDict(Inventory, PrecollectedItems);
             } else {
-                Inventory = AddDictToDict(Inventory, startInventory);
+                AddDictToDict(Inventory, startInventory);
             }
 
             while (true) {
@@ -552,9 +552,9 @@ namespace TunicRandomizer {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
             if (startInventory == null) {
-                Inventory = AddListToDict(Inventory, PrecollectedItems);
+                AddListToDict(Inventory, PrecollectedItems);
             } else {
-                Inventory = AddDictToDict(Inventory, startInventory);
+                AddDictToDict(Inventory, startInventory);
             }
             
             Inventory = TunicPortals.FirstStepsUpdateReachableRegions(Inventory);
