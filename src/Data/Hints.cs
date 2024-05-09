@@ -399,10 +399,6 @@ namespace TunicRandomizer {
             } else {
                 ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartingInventory);
             }
-            Logger.LogInfo("test message 2");
-            foreach (string item in ItemRandomizer.SphereZero.Keys) {
-                Logger.LogInfo(item);
-            }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];
                 if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
