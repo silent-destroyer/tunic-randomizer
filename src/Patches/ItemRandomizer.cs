@@ -144,47 +144,25 @@ namespace TunicRandomizer {
 
                         // todo: rewrite this to not modify the itemlistjson, and instead remove abilities as hexes get placed
                         if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
-                            if (Item.Location.RequiredItems.Count > 0) {
-                                for (int i = 0; i < Item.Location.RequiredItems.Count; i++) {
-                                    if (Item.Location.RequiredItems[i].ContainsKey("12") && Item.Location.RequiredItems[i].ContainsKey("21")) {
+                            if (Item.Location.Requirements.Count > 0) {
+                                for (int i = 0; i < Item.Location.Requirements.Count; i++) {
+                                    if (Item.Location.Requirements[i].ContainsKey("12") && Item.Location.Requirements[i].ContainsKey("21")) {
                                         int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
-                                        Item.Location.RequiredItems[i].Remove("12");
-                                        Item.Location.RequiredItems[i].Remove("21");
-                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", amt);
+                                        Item.Location.Requirements[i].Remove("12");
+                                        Item.Location.Requirements[i].Remove("21");
+                                        Item.Location.Requirements[i].Add("Hexagon Gold", amt);
                                     }
-                                    if (Item.Location.RequiredItems[i].ContainsKey("12")) {
-                                        Item.Location.RequiredItems[i].Remove("12");
-                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
+                                    if (Item.Location.Requirements[i].ContainsKey("12")) {
+                                        Item.Location.Requirements[i].Remove("12");
+                                        Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
                                     }
-                                    if (Item.Location.RequiredItems[i].ContainsKey("21")) {
-                                        Item.Location.RequiredItems[i].Remove("21");
-                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
+                                    if (Item.Location.Requirements[i].ContainsKey("21")) {
+                                        Item.Location.Requirements[i].Remove("21");
+                                        Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
                                     }
-                                    if (Item.Location.RequiredItems[i].ContainsKey("26")) {
-                                        Item.Location.RequiredItems[i].Remove("26");
-                                        Item.Location.RequiredItems[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest icebolt requirement"));
-                                    }
-                                }
-                            }
-                            if (Item.Location.RequiredItemsDoors.Count > 0) {
-                                for (int i = 0; i < Item.Location.RequiredItemsDoors.Count; i++) {
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12") && Item.Location.RequiredItemsDoors[i].ContainsKey("21")) {
-                                        int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
-                                        Item.Location.RequiredItemsDoors[i].Remove("12");
-                                        Item.Location.RequiredItemsDoors[i].Remove("21");
-                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", amt);
-                                    }
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("12")) {
-                                        Item.Location.RequiredItemsDoors[i].Remove("12");
-                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
-                                    }
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("21")) {
-                                        Item.Location.RequiredItemsDoors[i].Remove("21");
-                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
-                                    }
-                                    if (Item.Location.RequiredItemsDoors[i].ContainsKey("26")) {
-                                        Item.Location.RequiredItemsDoors[i].Remove("26");
-                                        Item.Location.RequiredItemsDoors[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest icebolt requirement"));
+                                    if (Item.Location.Requirements[i].ContainsKey("26")) {
+                                        Item.Location.Requirements[i].Remove("26");
+                                        Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest icebolt requirement"));
                                     }
                                 }
                             }

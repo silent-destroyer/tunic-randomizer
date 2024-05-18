@@ -61,8 +61,6 @@ namespace TunicRandomizer {
         public static Dictionary<string, HeroGraveHint> HeroGraveHints = new Dictionary<string, HeroGraveHint>();
 
         public static Dictionary<string, string> HintMessages = new Dictionary<string, string>();
-        // StartInventoryItems are the items in your Archipelago start inventory
-        public static Dictionary<string, int> StartInventoryItems = new Dictionary<string, int>();
 
         public static void PopulateHints() {
             HintMessages.Clear();
@@ -355,12 +353,6 @@ namespace TunicRandomizer {
                                 HintItem = itemData;
                             }
                         }
-                    } else if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && mailboxHintables[n].Location.RequiredItemsDoors.Count == 1 && mailboxHintables[n].Location.RequiredItemsDoors[0].ContainsKey("Mask")
-                        || mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
-                        Check itemData = ItemRandomizer.FindRandomizedItemByName("Mask");
-                        if (itemData.Location.reachable(ItemRandomizer.SphereZero)) {
-                            HintItem = itemData;
-                        }
                     }
                     n++;
                 }
@@ -394,7 +386,7 @@ namespace TunicRandomizer {
             ItemRandomizer.PopulatePrecollected();
             TunicPortals.VanillaPortals();
             // StartInventoryItems is populated with your start inventory items, which are items with a location ID of -2
-            Dictionary<string, int> StartInventoryAndPrecollected = ItemRandomizer.AddListToDict(StartInventoryItems, ItemRandomizer.PrecollectedItems);
+            Dictionary<string, int> StartInventoryAndPrecollected = ItemRandomizer.AddListToDict(Archipelago.instance.integration.GetStartInventory(), ItemRandomizer.PrecollectedItems);
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartInventoryAndPrecollected);
             } else {
@@ -403,7 +395,7 @@ namespace TunicRandomizer {
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];
                 if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
-                    var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0];
+                    var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
                         int checkCount = 0;
                         if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
@@ -420,7 +412,7 @@ namespace TunicRandomizer {
                         }
                     }
                 } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement) {
-                    var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0];
+                    var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
                         int checkCount = 0;
                         if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
