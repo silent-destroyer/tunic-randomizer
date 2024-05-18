@@ -267,13 +267,16 @@ namespace TunicRandomizer {
                 OptionsGUIPatches.SaveSettings();
             }
 
-            GUI.skin.toggle.fontSize = 20;
+            GUI.skin.button.fontSize = 20;
             y += 40f;
             GUI.Label(new Rect(10f, y, 200f, 30f), "Logic Settings");
-            TunicRandomizer.Settings.MysterySeed = GUI.Toggle(new Rect(240f, y+5, 200f, 30f), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
             y += 45f; 
             if (TunicRandomizer.Settings.MysterySeed) {
                 GUI.Label(new Rect(10f, y, 400f, 30f), "Mystery Seed Enabled!");
+                bool DisableMysterySeed = GUI.Button(new Rect(260f, y+2.5f, 160f, 30f), "Disable");
+                if (DisableMysterySeed) {
+                    TunicRandomizer.Settings.MysterySeed = false;
+                }
                 GUI.skin.label.fontSize = 20;
                 y += 40f;
                 GUI.Label(new Rect(10f, y, 400f, 30f), "Settings will be chosen randomly on New Game.");
@@ -290,11 +293,11 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.KeysBehindBosses = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
                 TunicRandomizer.Settings.ShuffleAbilities  = GUI.Toggle(new Rect(240f, y, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
                 y += 40f;
-                TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
-                TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(new Rect(240f, y, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
-
+                TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer"); 
+                TunicRandomizer.Settings.ShuffleLadders = GUI.Toggle(new Rect(240f, y, 200f, 30f), TunicRandomizer.Settings.ShuffleLadders, "Shuffle Ladders");
                 y += 40f;
-                TunicRandomizer.Settings.ShuffleLadders = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.ShuffleLadders, "Shuffle Ladders");
+                TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(new Rect(10f, y, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
+                TunicRandomizer.Settings.MysterySeed = GUI.Toggle(new Rect(240f, y, 200f, 30f), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
                 y += 40f;
                 GUI.skin.button.fontSize = 20;
                 bool ShowAdvancedOptions = GUI.Button(new Rect(10f, y, 410f, 30f), $"{(ShowAdvancedSinglePlayerOptions ? "Hide" : "Show")} Advanced Options");
@@ -307,7 +310,6 @@ namespace TunicRandomizer {
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
             TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
-            GUI.skin.button.fontSize = 20;
             y += 40f;
             GUI.Label(new Rect(10f, y, 300f, 30f), $"Custom Seed: {(CustomSeed == "" ? "Not Set" : CustomSeed.ToString())}");
             y += 40f;
