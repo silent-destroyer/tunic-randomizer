@@ -431,7 +431,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker = new ItemTracker();
             TunicRandomizer.Tracker.Seed = seed;
             Logger.LogInfo("Loading single player seed: " + seed);
-            ItemRandomizer.PopulateSphereZero();
+            ItemRandomizer.PopulatePrecollected();
             ItemRandomizer.RandomizeAndPlaceItems();
         }
 

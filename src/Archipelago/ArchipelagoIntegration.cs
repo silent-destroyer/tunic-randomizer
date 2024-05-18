@@ -127,6 +127,16 @@ namespace TunicRandomizer {
 
                 SetupDataStorage();
 
+                // start inventory items have a location ID of -2, add them to a dict so we can use them for first steps
+                foreach (NetworkItem item in session.Items.AllItemsReceived) {
+                    if (item.Location == -2) {
+                        string itemName = session.Items.GetItemName(item.Item);
+                        if (ItemLookup.Items.ContainsKey(itemName)) {
+                            ItemRandomizer.AddStringToDict(Hints.StartInventoryItems, ItemLookup.Items[itemName].ItemNameForInventory);
+                        }
+                    }
+                }
+
             } else {
                 LoginFailure loginFailure = (LoginFailure)LoginResult;
                 Logger.LogInfo("Error connecting to Archipelago:");
