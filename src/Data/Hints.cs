@@ -12,6 +12,8 @@ using UnityEngine;
 using Archipelago.MultiClient.Net.Models;
 using Il2CppSystem;
 using UnityEngine.InputSystem;
+using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.Helpers;
 
 namespace TunicRandomizer {
     public class Hints {
@@ -308,6 +310,10 @@ namespace TunicRandomizer {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
             }
+            // if in single player with ladder shuffle, these ladders are probably the most useful for getting you out of sphere 1. Well ladder isn't included because of the weapon requirement for Well
+            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
+            }
             List<Check> mailboxHintables = new List<Check>();
             foreach (string Item in MailboxItems) {
                 mailboxHintables.AddRange(ItemRandomizer.FindAllRandomizedItemsByName(Item));
@@ -347,18 +353,12 @@ namespace TunicRandomizer {
                                 HintItem = itemData;
                             }
                         }
-                    } else if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && mailboxHintables[n].Location.RequiredItemsDoors.Count == 1 && mailboxHintables[n].Location.RequiredItemsDoors[0].ContainsKey("Mask")
-                        || mailboxHintables[n].Location.RequiredItems.Count == 1 && mailboxHintables[n].Location.RequiredItems[0].ContainsKey("Mask")) {
-                        Check itemData = ItemRandomizer.FindRandomizedItemByName("Mask");
-                        if (itemData.Location.reachable(ItemRandomizer.SphereZero)) {
-                            HintItem = itemData;
-                        }
                     }
                     n++;
                 }
             }
             if (HintItem == null) {
-                HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEker.\nyoo hahv uh difikuhlt rOd uhhehd. \"GOOD LUCK\".";
+                HintMessage = "nO lehjehnd forsaw yor uhrIvuhl, rooin sEkur.\nyoo hahv uh difikuhlt rOd uhhehd. \"GOOD LUCK\"!";
                 //TrunicHint = HintMessage;
             } else {
                 Scene = Locations.SimplifiedSceneNames[HintItem.Location.SceneName];
@@ -380,55 +380,52 @@ namespace TunicRandomizer {
             string Hint = "";
             int Player = Archipelago.instance.GetPlayerSlot();
             List<string> MailboxItems = new List<string>() { "Stick", "Sword", "Sword Upgrade", "Magic Dagger", "Magic Wand", "Magic Orb", "Lantern", "Gun", "Scavenger Mask", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)" };
+            if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
+            }
             Dictionary<string, ArchipelagoItem> SphereOnePlayer = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
-            List<string> ERSphereOneItemsAndAreas = ItemRandomizer.GetERSphereOne();
+            ItemRandomizer.PopulatePrecollected();
+            TunicPortals.VanillaPortals();
+            // StartInventoryItems is populated with your start inventory items, which are items with a location ID of -2
+            Dictionary<string, int> StartInventoryAndPrecollected = ItemRandomizer.AddListToDict(Archipelago.instance.integration.GetStartInventory(), ItemRandomizer.PrecollectedItems);
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartInventoryAndPrecollected);
+            } else {
+                ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartInventoryAndPrecollected);
+            }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ArchipelagoItem item = ItemLookup.ItemList[itemkey];
-                // In ER, we need to check more info, since every item has a required item count
-                if (SaveFile.GetInt(EntranceRando) == 1) {
-                    if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
-                        var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0].Keys;
-                        foreach (string req in requirements) {
-                            int checkCount = 0;
-                            if (ERSphereOneItemsAndAreas.Contains(req)) {
-                                checkCount++;
-                            } else {
-                                continue;
-                            }
-                            if (checkCount == requirements.Count) {
-                                if (item.Player == Archipelago.instance.GetPlayerSlot()) {
-                                    SphereOnePlayer.Add(itemkey, item);
-                                } else {
-                                    SphereOneOthersTunic.Add(itemkey, item);
-                                }
-                            }
-                        }
-                    } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement) {
-                        var requirements = Locations.VanillaLocations[itemkey].Location.RequiredItemsDoors[0].Keys;
-                        foreach (string req in requirements) {
-                            int checkCount = 0;
-                            if (ERSphereOneItemsAndAreas.Contains(req)) {
-                                checkCount++;
-                            } else {
-                                continue;
-                            }
-                            if (checkCount == requirements.Count) { 
-                                SphereOneOthers.Add(itemkey, item); 
-                            }
-                        }
-                    }
-                } else {
-                    if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName) && Locations.VanillaLocations[itemkey].Location.RequiredItems.Count == 0) {
-                        if (item.Player == Archipelago.instance.GetPlayerSlot()) {
-                            SphereOnePlayer.Add(itemkey, item);
+                if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
+                    var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
+                    foreach (KeyValuePair<string, int> req in requirements) {
+                        int checkCount = 0;
+                        if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
+                            checkCount++;
                         } else {
-                            SphereOneOthersTunic.Add(itemkey, item);
+                            continue;
+                        }
+                        if (checkCount == requirements.Count) {
+                            if (item.Player == Archipelago.instance.GetPlayerSlot()) {
+                                SphereOnePlayer.Add(itemkey, item);
+                            } else {
+                                SphereOneOthersTunic.Add(itemkey, item);
+                            }
                         }
                     }
-                    if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement && Locations.VanillaLocations[itemkey].Location.RequiredItems.Count == 0) {
-                        SphereOneOthers.Add(itemkey, item);
+                } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement) {
+                    var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
+                    foreach (KeyValuePair<string, int> req in requirements) {
+                        int checkCount = 0;
+                        if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
+                            checkCount++;
+                        } else {
+                            continue;
+                        }
+                        if (checkCount == requirements.Count) { 
+                            SphereOneOthers.Add(itemkey, item); 
+                        }
                     }
                 }
             }

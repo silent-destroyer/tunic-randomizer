@@ -64,6 +64,7 @@ For discussion around the Archipelago side of things, please visit the dedicated
     - There is an [entrance tracker](https://scipiowright.gitlab.io/tunic-tracker/), created by ScipioWright.
 - Regarding Hints:
   - The Mailbox will give a "First Steps" hint, pointing you in the direction of a useful/progression item that can be reached from the start of the game.
+    - If playing with ladder shuffle, this hint will still let you know where a useful item is, but it may require you to find some ladders first to get to it and thus won't always be immediately available.
   - The Hero's Graves in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
   - The Hero's Graves in East Forest, West Garden, and the Eastern Vault Fortress hint towards a major progression item, such as the Magic Orb, Lantern, Magic Wand, Magic Dagger, and/or the Prayer/Holy Cross pages if abilities are shuffled.
   - The statue in the Sealed Temple will always hint the general location of the Hero's Laurels.
@@ -92,6 +93,9 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Locks the ability to use Prayer, most Holy Cross codes*, and the Icebolt combo technique until the respective manual page for each ability is found.
   - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and the Icebolt technique is unlocked by Page 53. If playing Hexagon Quest, abilities are unlocked when reaching 25%, 50%, and 75% of the required amount of Gold Hexagons.
   - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
+- Shuffle Ladders
+  - Turns several ladders in the game into items that must be found before they can be climbed on, blocking off several paths early on and adding more layers of progression.
+  - "Ladders were a mistake." —Andrew Shouldice
 - Entrance Randomizer
   - Shuffles all the connections between doors, teleporters, portals, and more. Where will the fox end up?
 - Entrance Randomizer: Fewer Shop Entrances

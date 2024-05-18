@@ -309,7 +309,7 @@ namespace TunicRandomizer {
                 int ChecksFound = 0;
                 float Percentage = 0;
                 foreach (string Key in Locations.VanillaLocations.Keys) {
-                    foreach (Dictionary<string, int> requirements in Locations.VanillaLocations[Key].Location.RequiredItems) {
+                    foreach (Dictionary<string, int> requirements in Locations.VanillaLocations[Key].Location.Requirements) {
                         if (requirements.ContainsKey("21")) {
                             TotalChecks++;
                             if (Locations.CheckedLocations[Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) {

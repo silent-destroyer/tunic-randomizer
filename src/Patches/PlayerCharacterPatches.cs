@@ -415,6 +415,9 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
                     }
+                    if (TunicRandomizer.Settings.ShuffleLadders) {
+                        SaveFile.SetInt(LadderRandoEnabled, 1);
+                    }
                 }
 
                 foreach (string Scene in Locations.AllScenes) {
@@ -428,7 +431,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker = new ItemTracker();
             TunicRandomizer.Tracker.Seed = seed;
             Logger.LogInfo("Loading single player seed: " + seed);
-            ItemRandomizer.PopulateSphereZero();
+            ItemRandomizer.PopulatePrecollected();
             ItemRandomizer.RandomizeAndPlaceItems();
         }
 
@@ -616,6 +619,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(2) == 1) {
                 SaveFile.SetInt("randomizer shuffled abilities", 1);
+            }
+            if (random.Next(2) == 1) {
+                SaveFile.SetInt(LadderRandoEnabled, 1);
             }
         }
 

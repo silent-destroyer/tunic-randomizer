@@ -4902,18 +4902,18 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        public static List<string> FirstStepsUpdateReachableRegions(List<string> inventory) {
+        public static Dictionary<string, int> FirstStepsUpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // add all regions in Overworld that you can currently reach to the inventory
             // this could just not be a foreach, but it'll need to be one when ladders gets merged in
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
                 string origin_region = traversal_group.Key;
-                if (!inventory.Contains(origin_region)) {
+                if (!inventory.ContainsKey(origin_region)) {
                     continue;
                 }
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    if (inventory.Contains(destination)) {
+                    if (inventory.ContainsKey(destination)) {
                         continue;
                     }
                     // met is whether you meet any of the requirement lists for a destination
@@ -4927,7 +4927,7 @@ namespace TunicRandomizer {
                             // check if we have the items in our inventory to traverse this path
                             int met_count = 0;
                             foreach (string req in reqs) {
-                                if (inventory.Contains(req)) {
+                                if (inventory.ContainsKey(req)) {
                                     met_count++;
                                 }
                             }
@@ -4942,7 +4942,7 @@ namespace TunicRandomizer {
                         }
                     }
                     if (met == true) {
-                        inventory.Add(destination);
+                        inventory.Add(destination, 1);
                     }
                 }
             }
@@ -4975,12 +4975,14 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            int count = 0;
             while (portalList.Count > 0) {
                 Portal portal1 = portalList[0];
                 Portal portal2 = new Portal("placeholder", "placeholder", "placeholder", "placeholder", "placeholder");  // I <3 csharp
                 string portal2_sdt = portal1.DestinationSceneTag;
                 if (portal2_sdt.StartsWith("Shop,")) {
                     portal2 = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}");
+                    shop_num++;
                 }
                 else if (portal2_sdt == "Purgatory, Purgatory_bottom") {
                     portal2_sdt = "Purgatory, Purgatory_top";
@@ -4997,6 +4999,8 @@ namespace TunicRandomizer {
                 if (!portal2_sdt.StartsWith("Shop,")) {
                     portalList.Remove(portal2);
                 }
+                RandomizedPortals.Add(count.ToString(), new PortalCombo(portal1, portal2));
+                count++;
             }
             return portalPairs;
         }

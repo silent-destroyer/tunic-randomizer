@@ -9,18 +9,14 @@ namespace TunicRandomizer {
     public struct Location {
         public string LocationId;
         public string Position;
-        public List<Dictionary<string, int>> RequiredItems;
-        public List<Dictionary<string, int>> RequiredItemsDoors;
+        public List<Dictionary<string, int>> Requirements;
         public int SceneId;
         public string SceneName;
 
         public bool reachable(Dictionary<string, int> inventory) {
             List<Dictionary<string, int>> itemsRequired;
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                itemsRequired = this.RequiredItemsDoors;
-            } else {
-                itemsRequired = this.RequiredItems;
-            }
+            
+            itemsRequired = this.Requirements;
 
             //if there are no requirements, the location is reachable
             if (itemsRequired.Count == 0) {
