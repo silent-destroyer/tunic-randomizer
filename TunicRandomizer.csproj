@@ -210,6 +210,7 @@
     <Compile Include="src\Patches\WaveSpell.cs" />
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
+    <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />

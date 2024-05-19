@@ -140,11 +140,16 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Sewer");
                 return;
             }
+            if (loadingScene.name == "DPADTesting" && DDRSpell.DPADPool == null) {
+                DDRSpell.CopyDPADTester();
+                SceneLoader.LoadScene("Atoll Redux");
+                return;
+            }
             if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
                 ModelSwaps.SetupGlowEffect();
                 EnemyRandomizer.InitializeEnemies("Archipelagos Redux");
                 ModelSwaps.InstantiateFishingRod();
-                SceneLoader.LoadScene("Atoll Redux");
+                SceneLoader.LoadScene("DPADTesting");
                 return;
             }
             if (loadingScene.name == "Transit" && !ModelSwaps.Items.ContainsKey("Relic - Hero Sword")) {
@@ -481,7 +486,9 @@ namespace TunicRandomizer {
             if (IsArchipelago()) {
                 Archipelago.instance.integration.UpdateDataStorageOnLoad();
             }
-
+            if (GameObject.FindObjectOfType<DDRSpell>() != null) {
+                GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
+            }
             ItemTracker.SaveTrackerFile();
         }
 

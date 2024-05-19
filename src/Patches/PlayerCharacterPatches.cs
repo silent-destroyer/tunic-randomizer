@@ -43,6 +43,8 @@ namespace TunicRandomizer {
 
             __instance.gameObject.AddComponent<WaveSpell>();
             __instance.gameObject.AddComponent<EntranceSeekerSpell>();
+            __instance.gameObject.AddComponent<DDRSpell>();
+            DDRSpell.SetupDPADTester(__instance);
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {

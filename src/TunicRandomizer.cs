@@ -41,6 +41,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<Archipelago>();
             ClassInjector.RegisterTypeInIl2Cpp<WaveSpell>();
             ClassInjector.RegisterTypeInIl2Cpp<EntranceSeekerSpell>();
+            ClassInjector.RegisterTypeInIl2Cpp<DDRSpell>();
             ClassInjector.RegisterTypeInIl2Cpp<VisibleByNotHavingItem>();
             ClassInjector.RegisterTypeInIl2Cpp<HeroGraveToggle>();
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();

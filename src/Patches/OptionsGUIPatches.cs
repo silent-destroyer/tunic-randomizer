@@ -166,6 +166,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("???", "Off", "On", TunicRandomizer.Settings.CameraFlip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
             OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
             OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
+            OptionsGUI.addToggle("Holy Cross Visualizer", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }
@@ -410,6 +411,11 @@ namespace TunicRandomizer {
 
         public static void ToggleArachnophobiaMode(int index) {
             TunicRandomizer.Settings.ArachnophobiaMode = !TunicRandomizer.Settings.ArachnophobiaMode;
+            SaveSettings();
+        }
+
+        public static void ToggleHolyCrossViewer(int index) {
+            TunicRandomizer.Settings.HolyCrossVisualizer = !TunicRandomizer.Settings.HolyCrossVisualizer;
             SaveSettings();
         }
 

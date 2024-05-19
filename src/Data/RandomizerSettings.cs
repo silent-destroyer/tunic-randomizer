@@ -172,6 +172,7 @@ namespace TunicRandomizer {
         private const int CAMERA_FLIP = 256;
         private const int MORE_SKULLS = 512;
         private const int ARACHNOPHOBIA_MODE = 1024;
+        private const int HOLY_CROSS_VIEWER = 2048;
         public bool HeirAssistModeEnabled {
             get;
             set;
@@ -212,7 +213,7 @@ namespace TunicRandomizer {
             set;
         }
 
-
+        // Other settings
         public bool CameraFlip {
             get;
             set;
@@ -224,6 +225,11 @@ namespace TunicRandomizer {
         }
 
         public bool ArachnophobiaMode {
+            get;
+            set;
+        }
+
+        public bool HolyCrossVisualizer {
             get;
             set;
         }
@@ -375,6 +381,7 @@ namespace TunicRandomizer {
             CameraFlip = false;
             MoreSkulls = false;
             ArachnophobiaMode = false;
+            HolyCrossVisualizer = false;
 
             // Enemy Randomizer
             EnemyRandomizerEnabled = false;
@@ -471,6 +478,7 @@ namespace TunicRandomizer {
                 CameraFlip = eval(general, CAMERA_FLIP);
                 MoreSkulls = eval(general, MORE_SKULLS);
                 ArachnophobiaMode = eval(general, ARACHNOPHOBIA_MODE);
+                HolyCrossVisualizer = eval(general, HOLY_CROSS_VIEWER);
 
                 int hints = int.Parse(decodedSplit[6]);
                 HeroPathHintsEnabled = eval(hints, PATH_OF_HERO);
@@ -530,7 +538,7 @@ namespace TunicRandomizer {
 
         public bool[] generalSettings() {
             return new bool[] { HeirAssistModeEnabled, ClearEarlyBushes, EnableAllCheckpoints, CheaperShopItemsEnabled, 
-                BonusStatUpgradesEnabled, DisableChestInterruption, SkipItemAnimations, FasterUpgrades, CameraFlip, MoreSkulls, ArachnophobiaMode, };
+                BonusStatUpgradesEnabled, DisableChestInterruption, SkipItemAnimations, FasterUpgrades, CameraFlip, MoreSkulls, ArachnophobiaMode, HolyCrossVisualizer };
         }
 
         public bool[] hintSettings() {
