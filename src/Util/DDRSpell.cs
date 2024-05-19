@@ -112,7 +112,6 @@ namespace TunicRandomizer {
                 float num = 1000000f;
                 closestSpellStrings.Clear();
                 foreach (ToggleObjectBySpell toggleObjectBySpell in spellToggles) {
-                    TunicLogger.LogInfo(toggleObjectBySpell.targetSpell);
                     float sqrMagnitude = (toggleObjectBySpell.gameObject.transform.position - gameObject.transform.position).sqrMagnitude;
                     float spellDistance = new Vector3(toggleObjectBySpell.minDistance, toggleObjectBySpell.minDistance, toggleObjectBySpell.minDistance).sqrMagnitude / 2f;
                     if (toggleObjectBySpell.targetSpell != null && sqrMagnitude < num && sqrMagnitude < spellDistance && toggleObjectBySpell.stateVar != null && !toggleObjectBySpell.stateVar.BoolValue) {
