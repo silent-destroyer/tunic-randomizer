@@ -544,10 +544,12 @@ namespace TunicRandomizer {
                             Enemy.transform.position = new Vector3(x, 0, z);
                         }
                     }
-                    if (CurrentScene == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
-                        EnemyKeys.Remove("Hedgehog Trap");
-                        EnemyKeys.Remove("administrator_servant");
-                        EnemyKeys.Remove("Shadowreaper");
+                    if (CurrentScene == "ziggurat2020_1") {
+                        if (Enemy.GetComponent<Administrator>() != null) {
+                            EnemyKeys.Remove("Hedgehog Trap");
+                            EnemyKeys.Remove("administrator_servant");
+                            EnemyKeys.Remove("Shadowreaper");
+                        }
                     }
                     if (CurrentScene == "Forest Boss Room" && Enemy.GetComponent<BossAnnounceOnAggro>() != null) {
                         EnemyKeys.Remove("administrator_servant");
@@ -718,6 +720,14 @@ namespace TunicRandomizer {
                     i++;
                     if (DefeatedEnemyTracker.ContainsKey(CurrentScene) && DefeatedEnemyTracker[CurrentScene].Contains(Enemy.transform.position.ToString())) {
                         GameObject.Destroy(NewEnemy);
+                    }
+                    if (CurrentScene == "ziggurat2020_1" && NewEnemy != null) {
+                        // Move fairies in bounds so replaced enemies don't fall out of the map
+                        if (Enemy.GetComponent<Probe>() != null && Enemy.name.Contains("(wave 1)")) {
+                            float x = 91f - (float)(Random.NextDouble() * 15f);
+                            float z = 31f - (float)(Random.NextDouble() * 15f);
+                            NewEnemy.transform.position = new Vector3(x, 138, z);
+                        }
                     }
                     GameObject.Destroy(Enemy.gameObject);
                 } catch (Exception ex) {
