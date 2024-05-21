@@ -11,8 +11,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class ModelSwaps {
-        public static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static Dictionary<string, Sprite> Cards = new Dictionary<string, Sprite>();
         public static Dictionary<string, GameObject> Items = new Dictionary<string, GameObject>();
         public static Dictionary<string, GameObject> Chests = new Dictionary<string, GameObject>();
@@ -1184,7 +1183,7 @@ namespace TunicRandomizer {
                 items.Add(Pepper.GetComponent<ShopItem>());
                 ShopManager.cachedShopItems = items.ToArray();
             } catch (Exception e) {
-                Logger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
+                TunicLogger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
             }
         }
 

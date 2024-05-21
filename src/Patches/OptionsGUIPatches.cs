@@ -16,8 +16,6 @@ using UnityEngine.SceneManagement;
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
 
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
         public static bool BonusOptionsUnlocked = false;
 
         public static bool OptionsGUI_page_root_PrefixPatch(OptionsGUI __instance) {

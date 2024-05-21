@@ -7,7 +7,6 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class CustomItemBehaviors {
-        public static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static bool CanTakeGoldenHit = false;
         public static bool CanSwingGoldenSword = false;

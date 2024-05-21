@@ -14,8 +14,6 @@ namespace TunicRandomizer {
 
     public class EnemyRandomizer {
 
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
 
         public static Dictionary<string, List<string>> DefeatedEnemyTracker = new Dictionary<string, List<string>>();
@@ -731,11 +729,11 @@ namespace TunicRandomizer {
                     }
                     GameObject.Destroy(Enemy.gameObject);
                 } catch (Exception ex) {
-                    Logger.LogInfo("An error occurred spawning a new randomized enemy");
+                    TunicLogger.LogInfo("An error occurred spawning a new randomized enemy");
                     if (NewEnemy != null) {
                         GameObject.Destroy(NewEnemy);
-                        Logger.LogError("An error occurred spawning the following randomized enemy: " + NewEnemy.name);
-                        Logger.LogError(ex.Message + " " + ex.StackTrace);
+                        TunicLogger.LogError("An error occurred spawning the following randomized enemy: " + NewEnemy.name);
+                        TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
                     }
                 }
             }

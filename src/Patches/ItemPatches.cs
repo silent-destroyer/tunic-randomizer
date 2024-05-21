@@ -14,8 +14,7 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
 
     public class ItemPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public enum ItemResult {
             Success,
             TemporaryFailure, // Can't accept right now, but can accept in the future
@@ -43,7 +42,7 @@ namespace TunicRandomizer {
                     SaveFile.SetInt(ItemLookup.FairyLookup[FairyId].Flag, 1);
                     SaveFile.SetInt($"randomizer opened fairy chest {FairyId}", 1);
                 }
-                Logger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
+                TunicLogger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
                 if (IsArchipelago()) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
                 } else if (IsSinglePlayer()) {
@@ -634,7 +633,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker.SetCollectedItem(Item.Name, true);
 
             string CheckId = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
-            Logger.LogInfo("Picked up item " + CheckId + " (" + Item.Name + ")");
+            TunicLogger.LogInfo("Picked up item " + CheckId + " (" + Item.Name + ")");
 
             Locations.CheckedLocations[CheckId] = true;
             SaveFile.SetInt($"randomizer picked up {CheckId}", 1);

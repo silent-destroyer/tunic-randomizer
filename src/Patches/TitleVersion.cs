@@ -32,7 +32,7 @@ namespace TunicRandomizer {
                 UpdateAvailable = Releases[0]["tag_name"].ToString() != PluginInfo.VERSION && !DevBuild;
                 UpdateVersion = Releases[0]["tag_name"].ToString();
             } catch (Exception e) {
-                TunicRandomizer.Logger.LogInfo(e.Message);
+                TunicLogger.LogInfo(e.Message);
             }
             TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
             Material FontMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(Material => Material.name == "Latin Rounded - Quantity Outline").ToList()[0];

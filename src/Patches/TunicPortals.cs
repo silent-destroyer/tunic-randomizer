@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class TunicPortals {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
+        
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
 
         // the direction you move while entering the portal
@@ -4805,20 +4805,20 @@ namespace TunicRandomizer {
                 if (!inventory.ContainsKey(origin)) {
                     continue;
                 }
-                //Logger.LogInfo("checking traversal for " + origin);
+                //TunicLogger.LogInfo("checking traversal for " + origin);
                 // for each destination in an origin's group
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    //Logger.LogInfo("checking traversal to " + destination);
+                    //TunicLogger.LogInfo("checking traversal to " + destination);
                     // if we can already reach this region, skip it
                     if (inventory.ContainsKey(destination)) {
-                        //Logger.LogInfo("we already have it");
+                        //TunicLogger.LogInfo("we already have it");
                         continue;
                     }
                     // met is whether you meet any of the requirement lists for a destination
                     bool met = false;
                     if (destination_group.Value.Count == 0) {
-                        //Logger.LogInfo("no requirement groups, met is true");
+                        //TunicLogger.LogInfo("no requirement groups, met is true");
                         met = true;
                     }
                     // check through each list of requirements
@@ -4827,12 +4827,12 @@ namespace TunicRandomizer {
                         if (reqs.Count == 0) {
                             // if a group is empty, you can just walk there
                             met = true;
-                            //Logger.LogInfo("group is empty, so met is true");
+                            //TunicLogger.LogInfo("group is empty, so met is true");
                         } else {
                             // check if we have the items in our inventory to traverse this path
                             met_count = 0;
                             foreach (string req in reqs) {
-                                //Logger.LogInfo("req is " + req);
+                                //TunicLogger.LogInfo("req is " + req);
                                 // if sword progression is on, check for this too
                                 if (req == "Sword") {
                                     if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) {
@@ -4871,14 +4871,14 @@ namespace TunicRandomizer {
                                     }
                                 } else if (inventory.ContainsKey(req)) {
                                     met_count++;
-                                    //Logger.LogInfo("met_count is " + met_count);
-                                    //Logger.LogInfo("reqs.count is " + reqs.Count);
-                                    //Logger.LogInfo("we met this requirement");
+                                    //TunicLogger.LogInfo("met_count is " + met_count);
+                                    //TunicLogger.LogInfo("reqs.count is " + reqs.Count);
+                                    //TunicLogger.LogInfo("we met this requirement");
                                 }
                             }
                             // if you have all the requirements, you can traverse this path
                             if (met_count == reqs.Count) {
-                                //Logger.LogInfo("met is true");
+                                //TunicLogger.LogInfo("met is true");
                                 met = true;
                             }
                         }
@@ -4888,10 +4888,10 @@ namespace TunicRandomizer {
                         }
                     }
                     if (met == true) {
-                        //Logger.LogInfo("adding " + destination + " to inventory");
+                        //TunicLogger.LogInfo("adding " + destination + " to inventory");
                         inventory.Add(destination, 1);
                     } else {
-                        //Logger.LogInfo("did not add " + destination + ", we did not meet the requirements");
+                        //TunicLogger.LogInfo("did not add " + destination + ", we did not meet the requirements");
                     }
                 }
             }
@@ -5096,7 +5096,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (portal1 == null) {
-                    Logger.LogInfo("something messed up in portal pairing for portal 1");
+                    TunicLogger.LogInfo("something messed up in portal pairing for portal 1");
                 }
 
                 ShuffleList(twoPlusPortals, seed);
@@ -5108,7 +5108,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (portal2 == null) { 
-                    Logger.LogInfo("something messed up in portal pairing for portal 2");
+                    TunicLogger.LogInfo("something messed up in portal pairing for portal 2");
                 }
 
                 // add the portal combo to the randomized portals list
@@ -5151,7 +5151,7 @@ namespace TunicRandomizer {
                 if (!shopSceneList.Contains(twoPlusPortals[regionNumber].Scene)) {
                     comboNumber++;
                     shopSceneList.Add(twoPlusPortals[regionNumber].Scene);
-                    //Logger.LogInfo("adding scene " + twoPlusPortals[regionNumber].Scene + " to shop scene list");
+                    //TunicLogger.LogInfo("adding scene " + twoPlusPortals[regionNumber].Scene + " to shop scene list");
                     RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[regionNumber], shopPortal));
                     twoPlusPortals.RemoveAt(regionNumber);
                     shopCount--;
@@ -5159,7 +5159,7 @@ namespace TunicRandomizer {
                     regionNumber++;
                 }
                 if (regionNumber == twoPlusPortals.Count - 1) {
-                    Logger.LogInfo("too many shops, not enough regions, add more shops");
+                    TunicLogger.LogInfo("too many shops, not enough regions, add more shops");
                 }
             }
             // now we have every region accessible
@@ -5172,7 +5172,7 @@ namespace TunicRandomizer {
             }
             if (twoPlusPortals.Count == 1) {
                 // if this triggers, there's an odd number of portals total
-                Logger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
+                TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
             // todo: figure out why the quarry portal isn't working right
             //Portal betaQuarryPortal = new Portal(destination: "Darkwoods", tag: "", name: "Beta Quarry", scene: "Quarry", region: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);

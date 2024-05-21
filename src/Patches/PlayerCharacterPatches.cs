@@ -19,8 +19,6 @@ using Newtonsoft.Json.Linq;
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
 
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
@@ -110,7 +108,7 @@ namespace TunicRandomizer {
                     SwordProgression.CreateSwordItemBehaviours(__instance);
                     LoadSwords = false;
                 } catch (Exception ex) {
-                    Logger.LogError("Error applying upgraded sword!");
+                    TunicLogger.LogError("Error applying upgraded sword!");
                 }
             }
             if (WearHat && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat") != null)) {
@@ -295,8 +293,8 @@ namespace TunicRandomizer {
                 FairyTargets.CreateEntranceTargets();
                 FairyTargets.FindFairyTargets();
             } catch (Exception ex) {
-                Logger.LogError("An error occurred creating new fairy seeker spell targets:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
+                TunicLogger.LogError("An error occurred creating new fairy seeker spell targets:");
+                TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (!SceneLoaderPatches.SpawnedGhosts && TunicRandomizer.Settings.GhostFoxHintsEnabled) {
@@ -320,7 +318,7 @@ namespace TunicRandomizer {
                     LadderToggles.ToggleLadders();
                 }
             } catch (Exception e) {
-                Logger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+                TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
@@ -361,7 +359,7 @@ namespace TunicRandomizer {
 
             if (seed == 0) {
                 seed = QuickSettings.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettings.CustomSeed);
-                Logger.LogInfo($"Starting new single player file with seed: " + seed);
+                TunicLogger.LogInfo($"Starting new single player file with seed: " + seed);
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
 
@@ -432,13 +430,14 @@ namespace TunicRandomizer {
             }
             TunicRandomizer.Tracker = new ItemTracker();
             TunicRandomizer.Tracker.Seed = seed;
-            Logger.LogInfo("Loading single player seed: " + seed);
+            TunicLogger.LogInfo("Loading single player seed: " + seed);
             ItemRandomizer.PopulatePrecollected();
             ItemRandomizer.RandomizeAndPlaceItems();
         }
 
         private static void PlayerCharacter_Start_ArchipelagoSetup() {
             if (!Archipelago.instance.integration.connected) {
+                TunicLogger.LogInfo("player start connecting to ap");
                 Archipelago.instance.Connect();
             } else {
                 if (TunicRandomizer.Settings.DeathLinkEnabled) {
@@ -498,13 +497,13 @@ namespace TunicRandomizer {
                 }
                 if (slotData.TryGetValue("sword_progression", out var swordProgression)) {
                     if (SaveFile.GetInt(SwordProgressionEnabled) == 0 && swordProgression.ToString() == "1") {
-                        Logger.LogInfo("sword progression enabled");
+                        TunicLogger.LogInfo("sword progression enabled");
                         SaveFile.SetInt(SwordProgressionEnabled, 1);
                     }
                 }
                 if (slotData.TryGetValue("keys_behind_bosses", out var keysBehindBosses)) {
                     if (SaveFile.GetInt(KeysBehindBosses) == 0 && keysBehindBosses.ToString() == "1") {
-                        Logger.LogInfo("keys behind bosses enabled");
+                        TunicLogger.LogInfo("keys behind bosses enabled");
                         SaveFile.SetInt(KeysBehindBosses, 1);
                     }
                 }
@@ -527,9 +526,9 @@ namespace TunicRandomizer {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
                         EnemyRandomizer.CreateAreaSeeds();
-                        Logger.LogInfo("Starting new archipelago file with seed: " + Seed);
+                        TunicLogger.LogInfo("Starting new archipelago file with seed: " + Seed);
                     } else {
-                        Logger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
+                        TunicLogger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
                     }
                 }
                 if (slotData.TryGetValue("logic_rules", out var logicRules)) {
@@ -551,7 +550,7 @@ namespace TunicRandomizer {
                 }
                 if (LocationIDs.Contains(-1L)) {
                     Notifications.Show($"\"An error has occurred!\"", $"\"Connected slot is incompatible with this client version.\"");
-                    Logger.LogInfo("Error: Connected slot is incompatible with this client version.");
+                    TunicLogger.LogInfo("Error: Connected slot is incompatible with this client version.");
                     Archipelago.instance.Disconnect();
                 } else {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(LocationIDs.ToArray()).ContinueWith(locationInfoPacket => {
@@ -560,8 +559,8 @@ namespace TunicRandomizer {
                             string ItemName = Archipelago.instance.integration.session.Items.GetItemName(Location.Item) == null ? "UNKNOWN ITEM" : Archipelago.instance.integration.session.Items.GetItemName(Location.Item);
                             ItemLookup.ItemList.Add(LocationId, new ArchipelagoItem(ItemName, Location.Player, Location.Flags));
                         }
-                    }).Wait();
-                    Logger.LogInfo("Successfully scouted locations for item placements");
+                    }).Wait(TimeSpan.FromSeconds(5.0f));
+                    TunicLogger.LogInfo("Successfully scouted locations for item placements");
 
                     Archipelago.instance.integration.UpdateDataStorageOnLoad();
                 }

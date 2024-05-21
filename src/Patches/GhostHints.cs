@@ -72,7 +72,7 @@ namespace TunicRandomizer {
             }
         }
 
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
+        
 
         public static GameObject GhostFox;
 
@@ -326,7 +326,7 @@ namespace TunicRandomizer {
                 GameObject.DontDestroyOnLoad(GhostFox);
                 GhostFox.SetActive(false);
             } catch (Exception e) {
-                Logger.LogInfo("Error initalizing ghost foxes for hints!");
+                TunicLogger.LogInfo("Error initalizing ghost foxes for hints!");
             }
         }
 

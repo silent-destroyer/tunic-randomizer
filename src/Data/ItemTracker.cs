@@ -9,8 +9,7 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
 
     public class ItemTracker {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public struct SceneInfo {
             public int SceneId;
             public string SceneName;
@@ -277,7 +276,7 @@ namespace TunicRandomizer {
                 File.Delete(TunicRandomizer.SpoilerLogPath);
                 File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
             }
-            Logger.LogInfo("Wrote spoiler log to " + TunicRandomizer.SpoilerLogPath);
+            TunicLogger.LogInfo("Wrote spoiler log to " + TunicRandomizer.SpoilerLogPath);
         }
 
         private static List<string> GetMysterySeedSettingsForSpoilerLog() {

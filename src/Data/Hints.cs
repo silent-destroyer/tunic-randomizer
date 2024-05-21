@@ -17,7 +17,6 @@ using Archipelago.MultiClient.Net.Helpers;
 
 namespace TunicRandomizer {
     public class Hints {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static Dictionary<string, string> HintLocations = new Dictionary<string, string>() {
             {"Overworld Redux (-7.0, 12.0, -136.4)", "Mailbox"},

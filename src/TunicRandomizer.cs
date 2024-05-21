@@ -22,7 +22,6 @@ namespace TunicRandomizer {
     [BepInPlugin(PluginInfo.GUID, PluginInfo.NAME, PluginInfo.VERSION)]
     public class TunicRandomizer : BasePlugin {
 
-        public static ManualLogSource Logger;
         public static RandomizerSettings Settings = new RandomizerSettings();
         public static string SettingsPath = Application.persistentDataPath + "/Randomizer/Settings.json";
         public static string ItemTrackerPath = Application.persistentDataPath + "/Randomizer/ItemTracker.json";
@@ -31,7 +30,6 @@ namespace TunicRandomizer {
 
         public override void Load() {
             TunicLogger.SetLogger(Log);
-            Logger = Log;
             TunicLogger.LogInfo(PluginInfo.NAME + " v" + PluginInfo.VERSION + " loaded!");
 
             Application.runInBackground = true;

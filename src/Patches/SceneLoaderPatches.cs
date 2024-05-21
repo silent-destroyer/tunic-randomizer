@@ -9,8 +9,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class SceneLoaderPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static string SceneName;
         public static int SceneId;
         public static float TimeOfLastSceneTransition = 0.0f;
@@ -214,14 +213,14 @@ namespace TunicRandomizer {
                 Camera.main.transform.parent.gameObject.AddComponent<CycleController>();
             }
 
-            Logger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
+            TunicLogger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
             SceneName = loadingScene.name;
             SceneId = loadingScene.buildIndex;
 
             if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue &&
                 StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(DiedToHeir) != 1 && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
                 PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
-                Logger.LogInfo("Resetting time of day to daytime!"); 
+                TunicLogger.LogInfo("Resetting time of day to daytime!"); 
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
             }
 
@@ -427,8 +426,8 @@ namespace TunicRandomizer {
                     ModelSwaps.SwapItemsInScene();
                 }
             } catch (Exception ex) {
-                Logger.LogError("An error occurred swapping item models in this scene:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
+                TunicLogger.LogError("An error occurred swapping item models in this scene:");
+                TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HolyCrossUnlocked) == 0) {
@@ -441,8 +440,8 @@ namespace TunicRandomizer {
                     FairyTargets.FindFairyTargets();
                 }
             } catch (Exception ex) {
-                Logger.LogError("An error occurred creating new fairy seeker spell targets:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
+                TunicLogger.LogError("An error occurred creating new fairy seeker spell targets:");
+                TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             try {
@@ -450,7 +449,7 @@ namespace TunicRandomizer {
                     LadderToggles.ToggleLadders();
                 }
             } catch (Exception e) {
-                Logger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+                TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {
@@ -458,8 +457,8 @@ namespace TunicRandomizer {
                     PaletteEditor.LoadCustomTexture();
                 }
             } catch (Exception ex) {
-                Logger.LogError("An error occurred applying custom texture:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
+                TunicLogger.LogError("An error occurred applying custom texture:");
+                TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (TunicRandomizer.Settings.RealestAlwaysOn) {
@@ -479,8 +478,8 @@ namespace TunicRandomizer {
                     SpawnedGhosts = true;
                 }
             } catch (Exception ex) {
-                Logger.LogError("An error occurred spawning hint ghost foxes:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
+                TunicLogger.LogError("An error occurred spawning hint ghost foxes:");
+                TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (IsArchipelago()) {

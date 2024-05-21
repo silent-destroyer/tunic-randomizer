@@ -13,8 +13,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class SpeedrunFinishlineDisplayPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static Dictionary<string, string> ReportGroupItems = new Dictionary<string, string>(){
             {"Inventory items_stick", "Stick"},
             {"Inventory items_sword", "Sword"},

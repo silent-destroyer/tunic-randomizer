@@ -10,8 +10,6 @@ using UnityEngine.SceneManagement;
 namespace TunicRandomizer {
     public class QuickSettings : MonoBehaviour {
 
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
         public static string CustomSeed = "";
         public static Font OdinRounded;
         public static List<string> FoolChoices = new List<string>() { "Off", "Normal", "Double", "<size=19>Onslaught</size>" };
@@ -160,7 +158,7 @@ namespace TunicRandomizer {
                 try {
                     System.Diagnostics.Process.Start(TunicRandomizer.SettingsPath);
                 } catch (Exception e) {
-                    Logger.LogError(e);
+                    TunicLogger.LogError(e.Message);
                 }
             }
             bool OpenAPSettings = GUI.Button(new Rect(220f, y, 200f, 30f), ShowAPSettingsWindow ? "Close AP Config" : "Edit AP Config");
@@ -498,7 +496,7 @@ namespace TunicRandomizer {
                     editingPort = false;
                     OptionsGUIPatches.SaveSettings();
                 } catch (Exception e) {
-                    Logger.LogError("invalid input pasted for port number!");
+                    TunicLogger.LogError("invalid input pasted for port number!");
                 }
             }
             bool ClearPort = GUI.Button(new Rect(190f, 300f, 75f, 30f), "Clear");
@@ -571,14 +569,19 @@ namespace TunicRandomizer {
             CloseAPSettingsWindow();
             SaveFile.LoadFromFile(filename);
             if (SaveFile.GetInt("archipelago") == 0 && SaveFile.GetInt("randomizer") == 0) {
-                Logger.LogInfo("Non-Randomizer file selected!");
+                TunicLogger.LogInfo("Non-Randomizer file selected!");
                 GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Non-Randomizer file selected.\"\n\"Returning to menu.\"");
                 return false;
             }
             if (SaveFile.GetString("archipelago player name") != "") {
                 if (SaveFile.GetString("archipelago player name") != TunicRandomizer.Settings.ConnectionSettings.Player || (Archipelago.instance.integration.connected && int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed"))) {
-                    Logger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
+                    TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
                     GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
+                    return false;
+                }
+                Archipelago.instance.Connect();
+                if (!Archipelago.instance.integration.connected) {
+                    GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago.\"\n\"Returning to menu.\"");
                     return false;
                 }
             }

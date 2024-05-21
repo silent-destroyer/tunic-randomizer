@@ -7,7 +7,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class SwordProgression {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
+        
         public static void UpgradeSword(int SwordLevel) {
             
             SaveFile.SetInt(SwordProgressionLevel, SwordLevel);
@@ -107,7 +107,7 @@ namespace TunicRandomizer {
                 Sword.transform.localRotation = Quaternion.identity;
                 Sword.transform.localPosition = Vector3.zero;
             } else {
-                Logger.LogError("Could not find sword object to replace with Sword Lvl 3!");
+                TunicLogger.LogError("Could not find sword object to replace with Sword Lvl 3!");
             }
         }
 
@@ -138,7 +138,7 @@ namespace TunicRandomizer {
                 Sword.transform.localRotation = new Quaternion(0.7071f, 0f, 0f, -0.7071f);
                 Sword.transform.localPosition = Vector3.zero;
             } else {
-                Logger.LogError("Could not find sword object to replace with Sword Lvl 4!");
+                TunicLogger.LogError("Could not find sword object to replace with Sword Lvl 4!");
             }
         }
 

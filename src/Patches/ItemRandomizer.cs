@@ -11,8 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace TunicRandomizer {
     public class ItemRandomizer {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
         // set this to true to test location access
@@ -42,7 +41,7 @@ namespace TunicRandomizer {
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
-            Logger.LogInfo("randomize and place items starting");
+            TunicLogger.LogInfo("randomize and place items starting");
 
             if (testLocations) {
                 testBool = true;
@@ -254,7 +253,7 @@ namespace TunicRandomizer {
 
                 // change the testLocations bool to true to have it to test whether all locations can be reached
                 if (testBool) {
-                    Logger.LogInfo("test starts here");
+                    TunicLogger.LogInfo("test starts here");
                     Dictionary<string, int> testUnplacedInventory = new Dictionary<string, int>();
                     Dictionary<string, int> testFullInventory = new Dictionary<string, int>();
                     foreach (KeyValuePair<string, int> kvp in UnplacedInventory) {
@@ -296,13 +295,13 @@ namespace TunicRandomizer {
                         }
                     }
 
-                    Logger.LogInfo("testing location accessibility now");
+                    TunicLogger.LogInfo("testing location accessibility now");
                     foreach (Location loc in InitialLocations) {
                         if (!loc.reachable(testFullInventory)) {
-                            Logger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
+                            TunicLogger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
                         }
                     }
-                    Logger.LogInfo("test ends here");
+                    TunicLogger.LogInfo("test ends here");
                     testBool = false;
                 }
 

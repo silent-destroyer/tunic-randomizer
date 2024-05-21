@@ -7,8 +7,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
 
