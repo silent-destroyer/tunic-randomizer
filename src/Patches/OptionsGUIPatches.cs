@@ -127,6 +127,26 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
             OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
+            OptionsGUI.addToggle("Exclude Enemies", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
+            addPageButton("Excluded Enemy List", ExcludedEnemiesPage);
+        }
+
+        public static void ExcludedEnemiesPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            Dictionary<string, Action<int>> toggles = new Dictionary<string, Action<int>>();
+            foreach(string enemy in EnemyRandomizer.ProperEnemyNames.Keys) {
+                toggles.Add(enemy, (int index) => {
+                    TunicRandomizer.Settings.ExcludedEnemyList[enemy] = !TunicRandomizer.Settings.ExcludedEnemyList[enemy];
+                    SaveSettings();
+                });
+            }
+            foreach (string enemy in EnemyRandomizer.ProperEnemyNames.Keys) {
+                OptionsGUI.addToggle(enemy, "Off", "On", TunicRandomizer.Settings.ExcludedEnemyList[enemy] ? 0 : 1, (OptionsGUIMultiSelect.MultiSelectAction)toggles[enemy]);
+            }
+        }
+
+        public static void ExcludeEnemy(int index) {
+            SaveSettings();
         }
 
         public static void CustomFoxSettingsPage() {
@@ -438,6 +458,12 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void ToggleExcludeEnemies(int index) {
+            TunicRandomizer.Settings.ExcludeEnemies = !TunicRandomizer.Settings.ExcludeEnemies;
+            SaveSettings();
+        }
+
+        // Other
         public static void ToggleWeirdMode(int index) {
             TunicRandomizer.Settings.CameraFlip = !TunicRandomizer.Settings.CameraFlip;
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;

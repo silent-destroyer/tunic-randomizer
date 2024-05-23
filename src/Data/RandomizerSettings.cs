@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -239,6 +240,7 @@ namespace TunicRandomizer {
         private const int EXTRA_ENEMIES = 2;
         private const int BALANCED_ENEMIES = 4;
         private const int SEEDED_ENEMIES = 8;
+        private const int EXCLUDE_ENEMIES = 16;
         public bool EnemyRandomizerEnabled {
             get;
             set;
@@ -255,6 +257,16 @@ namespace TunicRandomizer {
         }
 
         public bool SeededEnemies {
+            get;
+            set;
+        }
+
+        public bool ExcludeEnemies {
+            get;
+            set;
+        }
+
+        public Dictionary<string, bool> ExcludedEnemyList {
             get;
             set;
         }
@@ -388,6 +400,11 @@ namespace TunicRandomizer {
             BalancedEnemies = true;
             SeededEnemies = true;
             ExtraEnemiesEnabled = false;
+            ExcludeEnemies = false;
+            ExcludedEnemyList = new Dictionary<string, bool>();
+            foreach(string enemy in EnemyRandomizer.ProperEnemyNames.Keys) {
+                ExcludedEnemyList.Add(enemy, false);
+            }
 
             // Race Settings
             RaceMode = false;
@@ -493,6 +510,7 @@ namespace TunicRandomizer {
                 ExtraEnemiesEnabled = eval(enemies, EXTRA_ENEMIES);
                 BalancedEnemies = eval(enemies, BALANCED_ENEMIES);
                 SeededEnemies = eval(enemies, SEEDED_ENEMIES);
+                ExcludeEnemies = eval(enemies, EXCLUDE_ENEMIES);
 
                 int race = int.Parse(decodedSplit[8]);
                 RaceMode = eval(race, RACE_MODE);
