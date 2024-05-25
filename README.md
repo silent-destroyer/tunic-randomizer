@@ -158,6 +158,9 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Enemies are randomized based on the difficulty of the original enemy being swapped out.
 - Seeded Enemies
   - Enemy spawns will remain consistent everytime an area is reloaded.
+- Enemy Toggles
+  - Allows you to customize the enemy randomizer experience by choosing which enemies you want to appear.
+  - Turn on the `Use Enemy Toggles` option and then use the Enemy Toggle List to make your choices.
 ### Fox Customization 🦊
 - Random Fox Colors
   - Fox colors will randomize on every load/scene transition.
