@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using static TunicRandomizer.SaveFlags;
 using static TunicRandomizer.RandomizerSettings;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
@@ -127,26 +128,36 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
             OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
-            OptionsGUI.addToggle("Exclude Enemies", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
-            addPageButton("Excluded Enemy List", ExcludedEnemiesPage);
+            OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
+            addPageButton("Enemy Toggle List", ExcludedEnemiesPage);
         }
 
         public static void ExcludedEnemiesPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.addButton("Toggle All Enemies ON", (Action)(() => {
+                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => { 
+                    button.SelectIndex(1);
+                    TunicRandomizer.Settings.EnemyToggles[button.leftAlignedText.text] = true;
+                });
+                SaveSettings();
+            })); 
+            OptionsGUI.addButton("Toggle All Enemies OFF", (Action)(() => {
+                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
+                    button.SelectIndex(0);
+                    TunicRandomizer.Settings.EnemyToggles[button.leftAlignedText.text] = false;
+                });
+                SaveSettings();
+            }));
             Dictionary<string, Action<int>> toggles = new Dictionary<string, Action<int>>();
-            foreach(string enemy in EnemyRandomizer.ProperEnemyNames.Keys) {
+            foreach(string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
                 toggles.Add(enemy, (int index) => {
-                    TunicRandomizer.Settings.ExcludedEnemyList[enemy] = !TunicRandomizer.Settings.ExcludedEnemyList[enemy];
+                    TunicRandomizer.Settings.EnemyToggles[enemy] = !TunicRandomizer.Settings.EnemyToggles[enemy];
                     SaveSettings();
                 });
             }
-            foreach (string enemy in EnemyRandomizer.ProperEnemyNames.Keys) {
-                OptionsGUI.addToggle(enemy, "Off", "On", TunicRandomizer.Settings.ExcludedEnemyList[enemy] ? 0 : 1, (OptionsGUIMultiSelect.MultiSelectAction)toggles[enemy]);
+            foreach (string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
+                OptionsGUI.addToggle(enemy, "Off", "On", TunicRandomizer.Settings.EnemyToggles[enemy] ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)toggles[enemy]);
             }
-        }
-
-        public static void ExcludeEnemy(int index) {
-            SaveSettings();
         }
 
         public static void CustomFoxSettingsPage() {

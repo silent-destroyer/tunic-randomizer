@@ -266,7 +266,7 @@ namespace TunicRandomizer {
             set;
         }
 
-        public Dictionary<string, bool> ExcludedEnemyList {
+        public Dictionary<string, bool> EnemyToggles {
             get;
             set;
         }
@@ -401,9 +401,9 @@ namespace TunicRandomizer {
             SeededEnemies = true;
             ExtraEnemiesEnabled = false;
             ExcludeEnemies = false;
-            ExcludedEnemyList = new Dictionary<string, bool>();
-            foreach(string enemy in EnemyRandomizer.ProperEnemyNames.Keys) {
-                ExcludedEnemyList.Add(enemy, false);
+            EnemyToggles = new Dictionary<string, bool>();
+            foreach(string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
+                EnemyToggles.Add(enemy, true);
             }
 
             // Race Settings
