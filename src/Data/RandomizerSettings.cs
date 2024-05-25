@@ -441,7 +441,8 @@ namespace TunicRandomizer {
                 $":{Convert.ToInt32(sToB(generalSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(hintSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(enemySettings()), 2)}" +
-                $":{Convert.ToInt32(sToB(raceSettings()), 2)}"));
+                $":{Convert.ToInt32(sToB(raceSettings()), 2)}" +
+                $":{ConvertEnemyToggles()}"));
             string seed;
             if (SceneManager.GetActiveScene().name != "TitleScreen") {
                 seed = SaveFile.GetInt("seed").ToString();
@@ -519,10 +520,14 @@ namespace TunicRandomizer {
                 DisableIceGrappling = eval(race, ICE_GRAPPLING);
                 DisableLadderStorage = eval(race, LADDER_STORAGE);
                 DisableUpgradeStealing = eval(race, UPGRADE_STEALING);
+               
+                if (decodedSplit.Length >= 10) {
+                    ParseEnemyToggles(decodedSplit[9]);
+                }
 
                 OptionsGUIPatches.SaveSettings();
             } catch (Exception e) {
-                TunicLogger.LogInfo("Error parsing settings string!");
+                TunicLogger.LogInfo("Error parsing settings string!" + e.Message + " " + e.Source + " " + e.StackTrace);
             }
         }
 
@@ -565,7 +570,30 @@ namespace TunicRandomizer {
         }
 
         public bool[] enemySettings() {
-            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies };
+            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, ExcludeEnemies };
+        }
+
+        private string ConvertEnemyToggles() {
+            string bools = sToB(EnemyToggles.Values.ToArray());
+            string ret = "";
+            for (int i = 0; i < bools.Length; i += 64) {
+                ret += Convert.ToInt64(bools.Substring(i, i + 64 > bools.Length ? bools.Length - i : 64), 2) + ";";
+            }
+            return ret.TrimEnd(';');
+        }
+
+        private void ParseEnemyToggles(string Toggles) {
+            string enemyFlags = "";
+            foreach (string x in Toggles.Split(';')) {
+                enemyFlags += Convert.ToString(Int64.Parse(x), 2).PadLeft(enemyFlags.Length + 64 > EnemyToggles.Count ? EnemyToggles.Count - 64 : 64, '0');
+            }
+            enemyFlags = new string(enemyFlags.ToCharArray().Reverse().ToArray());
+
+            List<string> enemyNames = EnemyToggles.Keys.ToList();
+
+            for (int i = 0; i < enemyFlags.Length; i++) {
+                EnemyToggles[enemyNames[i]] = enemyFlags[i] == '1';
+            }
         }
 
         public bool[] raceSettings() {
