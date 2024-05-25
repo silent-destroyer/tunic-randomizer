@@ -209,10 +209,8 @@ namespace TunicRandomizer {
             SaveFile.SetInt($"randomizer hint found 0, Server", 1);
 
             // make the in-game signs tell you what area they're pointing to
-            if (SaveFile.GetInt(EntranceRando) == 1)
-            {
-                foreach (PortalCombo Portal in TunicPortals.RandomizedPortals.Values)
-                {
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                foreach (PortalCombo Portal in TunicPortals.RandomizedPortals.Values) {
                     if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
                     { HintMessages.Add("East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[Portal.Portal2.Scene])} [arrow_right]"); }
                     if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
