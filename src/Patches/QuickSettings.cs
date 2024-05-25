@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class QuickSettings : MonoBehaviour {
@@ -49,17 +50,33 @@ namespace TunicRandomizer {
                     GUI.Window(105, new Rect(460f, 150f, 405f, 485f), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
                 }
                 GameObject.Find("elderfox_sword graphic").GetComponent<Renderer>().enabled = !ShowAdvancedSinglePlayerOptions && !ShowAPSettingsWindow;
+                if(TitleVersion.TitleButtons != null) {
+                    foreach(Button button in TitleVersion.TitleButtons.GetComponentsInChildren<Button>()) {
+                        button.enabled = !ShowAPSettingsWindow;
+                    }
+                }
             }
         }
 
         private void Update() {
             if (TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO && ShowAPSettingsWindow && SceneManager.GetActiveScene().name == "TitleScreen") {
                 if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Return) && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Backspace)) {
-
                     if (editingPort && Input.inputString != "" && int.TryParse(Input.inputString, out int num)) {
                         stringToEdit += Input.inputString;
                     } else if (!editingPort && Input.inputString != "") {
                         stringToEdit += Input.inputString;
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (!editingPlayer && !editingHostname && !editingPort && !editingHostname) {
+                        CloseAPSettingsWindow();
+                    } else {
+                        editingPlayer = false;
+                        editingHostname = false;
+                        editingPort = false;
+                        editingPassword = false;
+                        stringToEdit = "";
+                        OptionsGUIPatches.SaveSettings();
                     }
                 }
                 if (Input.GetKeyDown(KeyCode.Backspace)) {

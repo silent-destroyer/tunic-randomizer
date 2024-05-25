@@ -75,15 +75,15 @@ namespace TunicRandomizer {
 
         public void TryConnect() {
             
-            if (connected) {
+            if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)) {
                 return;
             }
+
+            TryDisconnect();
 
             RandomizerSettings settings = JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(TunicRandomizer.SettingsPath));
             TunicRandomizer.Settings.ConnectionSettings = settings.ConnectionSettings;
             LoginResult LoginResult;
-
-            TryDisconnect();
 
             if (session == null) {
                 try {
@@ -138,6 +138,7 @@ namespace TunicRandomizer {
                 foreach (ConnectionRefusedError Error in loginFailure.ErrorCodes) {
                     TunicLogger.LogInfo(Error.ToString());
                 }
+                TryDisconnect();
             }
         }
 
@@ -297,7 +298,7 @@ namespace TunicRandomizer {
 
                 session.Locations.ScoutLocationsAsync(location)
                 .ContinueWith(locationInfoPacket =>
-                    outgoingItems.Enqueue(locationInfoPacket.Result.Locations[0])).Wait(TimeSpan.FromSeconds(5.0f));
+                    outgoingItems.Enqueue(locationInfoPacket.Result.Locations[0]));
 
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationId);
