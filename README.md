@@ -100,6 +100,9 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Shuffles all the connections between doors, teleporters, portals, and more. Where will the fox end up?
 - Entrance Randomizer: Fewer Shop Entrances
   - Reduces the amount of possible shops that can be found, and places a guaranteed shop entrance at the Overworld Windmill entrance.
+- Fool Traps
+  - Enables fool traps, which replace low-value money rewards when enabled and apply damage/other negative effects to the player. Turning the setting up increases the amount of traps in the item pool.
+  - For Single Player seeds, this option can be changed mid-run by changing the value and reloading the save file. For Archipelago games, this is a yaml option and cannot be changed after the game starts.
 - Hero Laurels Location
   - Place the Laurels at a predetermined location, currently the options are the 6 coin reward, 10 coin reward, or 10 fairy reward.
 - Lanternless Logic
@@ -129,6 +132,10 @@ With the exception of the Logic settings (which are determined in your Archipela
 ### General
 - Easier Heir Fight
   - Attacks deal additional damage to The Heir based on the total number of checks found.
+- Clear Early Bushes
+  - Removes a number of bushes from the Overworld when enabled, allowing free access to the East and West sides of the map.
+- Enable All Checkpoints
+  - Allows all checkpoints (save statues) to be used regardless of if they are powered or not.
 - Cheaper Shop Items
   - Reduces the cost of the four randomized Shop items to 300 bits each.
 - Bonus Upgrades
@@ -140,15 +147,6 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Turns off the item/page popups when receiving items.
 - Skip Upgrade Animations
   - Skips the animation that plays when upgrading stats.
-- Fool Traps
-  - Enables fool traps, which replace low-value money rewards when enabled and apply damage/other negative effects to the player. Turning the setting up increases the amount of traps in the item pool.
-  - For Single Player seeds, this option can be changed mid-run by changing the value and reloading the save file. For Archipelago games, this is a yaml option and cannot be changed after the game starts.
-- ???
-  - !esirprus a rof no nruT
-- More Skulls
-  - Does exactly what it says on the tin.
-- Arachnophobia Mode
-  - Turns the spiders and another mulit-legged enemy into...something else.
 ### Enemy Randomization 
 - Enemy Randomizer
   - Randomly swaps out enemies with new ones when you load into a scene. You may even see some enemies you've never seen before!
@@ -183,6 +181,15 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Prevents the Ladder Storage glitch from being used.
 - Disable Upgrade Stealing
   - Prevents the Upgrade Stealing glitch from being used.
+### Other Settings
+- ???
+  - !esirprus a rof no nruT
+- More Skulls
+  - Does exactly what it says on the tin.
+- Arachnophobia Mode
+  - Turns the spiders and another mulit-legged enemy into...something else.
+- Holy Cross Visualizer
+  - It's like DDR but in Tunic.
   
 ## Credits
 - Glace and RisingStar111 for helping research how to mod this game, and Jabberrock for creating an initial Archipelago integration.
