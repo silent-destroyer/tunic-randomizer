@@ -129,7 +129,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
             OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
-            addPageButton("Enemy Toggle List", ExcludedEnemiesPage);
+            addPageButton("Configure Enemy Toggles", ExcludedEnemiesPage);
         }
 
         public static void ExcludedEnemiesPage() {
