@@ -669,16 +669,6 @@ namespace TunicRandomizer {
                     if (DoNotPlaceTurretHere.Contains($"{CurrentScene} {Enemy.name}")) {
                         EnemyKeys.Remove("Turret");
                     }
-                    // Make alternate variants of certain enemies slightly less common
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Small" : "Frog Small_Ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Spear" : "Frog Spear_Ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Fairyprobe Archipelagos" : "Fairyprobe Archipelagos (Ghost)");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "bomezome_easy" : "bomezome_easy_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Wizard_Support" : "Wizard_Support_Ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.50 ? "Skuladot redux void" : "Skuladot redux_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux_shield" : "Skuladot redux_shield_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux Big" : "Skuladot redux Big_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Bat" : "Bat void");
 
                     if (TunicRandomizer.Settings.ExcludeEnemies) {
                         foreach(KeyValuePair<string, string> enemyToggle in EnemyToggleOptionNames) {
@@ -686,6 +676,17 @@ namespace TunicRandomizer {
                                 EnemyKeys.Remove(enemyToggle.Key);
                             }
                         }
+                    } else {
+                        // Make alternate variants of certain enemies slightly less common
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Small" : "Frog Small_Ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Spear" : "Frog Spear_Ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Fairyprobe Archipelagos" : "Fairyprobe Archipelagos (Ghost)");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "bomezome_easy" : "bomezome_easy_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Wizard_Support" : "Wizard_Support_Ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.50 ? "Skuladot redux void" : "Skuladot redux_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux_shield" : "Skuladot redux_shield_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux Big" : "Skuladot redux Big_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Bat" : "Bat void");
                     }
                     if (EnemyKeys.Count == 0) {
                         GameObject.Destroy(Enemy.gameObject);
@@ -723,6 +724,10 @@ namespace TunicRandomizer {
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                         } else {
                             EnemyTypes = EnemyTypes.Where(x => EnemyKeys.Contains(x)).ToList();
+                            if (EnemyTypes.Count == 0) {
+                                GameObject.Destroy(Enemy.gameObject);
+                                continue;
+                            }
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                         }
                     }
