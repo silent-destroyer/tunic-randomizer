@@ -380,6 +380,75 @@ namespace TunicRandomizer {
             { "Skuladot redux Big_ghost", $"\"Guard Captain...?\"" },
         };
 
+        public static Dictionary<string, string> EnemyToggleOptionNames = new Dictionary<string, string>() {
+            { "Blob", $"Blob" },
+            { "BlobBig", $"Big Blob" },
+            { "BlobBigger", $"Bigger Blob" },
+            { "Hedgehog", $"Hedgehog" },
+            { "HedgehogBig", $"Big Hedgehog" },
+            { "Skuladot redux", $"Rudeling" },
+            { "Skuladot redux_ghost", $"Rudeling (Ghost)" },
+            { "Skuladot redux void", $"Rudeling (Void)" },
+            { "Skuladot redux_shield", $"Rudeling w/ Shield" },
+            { "Skuladot redux_shield_ghost", $"Rudeling w/ Shield (Ghost)" },
+            { "Skuladot redux Big", $"Guard Captain" },
+            { "Skuladot redux Big_ghost", $"Guard Captain (Ghost)" },
+            { "Honourguard", $"Envoy" },
+            { "beefboy", $"Beefboy" },
+            { "Bat", $"Phrend" },
+            { "Bat void", $"Phrend (Void)" },
+            { "Spider Small", $"Spyrite" },
+            { "Spider Big", $"Sappharach" },
+            { "Spinnerbot Baby", $"Baby Slorm" },
+            { "Spinnerbot Corrupted", $"Slorm" },
+            { "Turret", $"Autobolt (Turret)" },
+            { "Hedgehog Trap", $"Laser Trap" },
+            { "sewertentacle", $"Tentacle" },
+            { "Fairyprobe Archipelagos (Dmg)", $"Fairy" },
+            { "Fairyprobe Archipelagos (Ghost)", $"Fairy (Ghost)" },
+            { "Fairyprobe Archipelagos", $"Fairy (Ice)" },
+            { "crocodoo", $"Chompignom (Terry)" },
+            { "crocodoo Voidtouched", $"Chompignom (Void)" },
+            { "plover", $"Plover (Bluebirds)" },
+            { "Crabbit", $"Crabbit" },
+            { "Crabbit with Shell", $"Crabbit w/ Cube Shell" },
+            { "Crabbo", $"Crabbo" },
+            { "Crow", $"Husher" },
+            { "Crow Voidtouched", $"Husher (Void)" },
+            { "Frog", $"Frog" },
+            { "Frog Small", $"Frog (Small)" },
+            { "Frog Small_Ghost", $"Frog (Small Ghost)" },
+            { "Frog Spear", $"Frog w/ Shield & Spear" },
+            { "Frog Spear_Ghost", $"Frog w/ Shield & Spear (Ghost)" },
+            { "administrator_servant", $"Administrator (Coffee Table)" },
+            { "Wizard_Sword", $"Custodian" },
+            { "Wizard_Candleabra", $"Custodian w/ Candelabra" },
+            { "Wizard_Support", $"Custodian (Support)" },
+            { "Wizard_Support_Ghost", $"Custodian (Support Ghost)" },
+            { "Scavenger", $"Scavenger (Sniper)" },
+            { "Scavenger_miner", $"Scavenger (Miner)" },
+            { "Scavenger_support", $"Scavenger (Support)" },
+            { "Scavenger_stunner", $"Scavenger (Ice Sniper)" },
+            { "voidling redux", $"Voidling Spider" },
+            { "administrator", $"Administrator" },
+            { "bomezome_easy", $"Fleemer" },
+            { "bomezome_easy_ghost", $"Fleemer (Ghost)" },
+            { "bomezome_easy_ghost (tweaked)", $"Fleemer (Big Ghost)" },
+            { "bomezome_fencer", $"Fleemer (Fencer)" },
+            { "bomezome big", $"Giant Fleemer" },
+            { "Ghostfox_monster", $"Lost Echo" },
+            { "Gunslinger", $"Gunslinger" },
+            { "Fox enemy zombie", $"Fox Zombie" },
+            { "Fox enemy", $"Fox Zombie (Strong)" },
+            { "tunic knight void", $"Garden Knight (Ghost)" },
+            { "Voidtouched", $"Voidtouched" },
+            { "Ghost Knight", $"Ghost Knight (Devworld)" },
+            { "Phage", $"Phage/Beta Slorm (Devworld)" },
+            { "woodcutter", $"Woodcutter" },
+            { "Centipede", $"Centipede" },
+            { "tech knight ghost", $"Garden Knight (Void)" },
+            { "Shadowreaper", $"Shadowreaper" },
+        };
         public static void CreateAreaSeeds() {
             System.Random Random = new System.Random(SaveFile.GetInt("seed"));
             foreach (String Scene in Locations.AllScenes) {
@@ -576,17 +645,29 @@ namespace TunicRandomizer {
                     if (DoNotPlaceTurretHere.Contains($"{CurrentScene} {Enemy.name}")) {
                         EnemyKeys.Remove("Turret");
                     }
-                    // Make alternate variants of certain enemies slightly less common
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Small" : "Frog Small_Ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Spear" : "Frog Spear_Ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Fairyprobe Archipelagos" : "Fairyprobe Archipelagos (Ghost)");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "bomezome_easy" : "bomezome_easy_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Wizard_Support" : "Wizard_Support_Ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.50 ? "Skuladot redux void" : "Skuladot redux_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux_shield" : "Skuladot redux_shield_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux Big" : "Skuladot redux Big_ghost");
-                    EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Bat" : "Bat void");
 
+                    if (TunicRandomizer.Settings.ExcludeEnemies) {
+                        foreach(KeyValuePair<string, string> enemyToggle in EnemyToggleOptionNames) {
+                            if (!TunicRandomizer.Settings.EnemyToggles[enemyToggle.Value] && EnemyKeys.Contains(enemyToggle.Key)) {
+                                EnemyKeys.Remove(enemyToggle.Key);
+                            }
+                        }
+                    } else {
+                        // Make alternate variants of certain enemies slightly less common
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Small" : "Frog Small_Ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Spear" : "Frog Spear_Ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Fairyprobe Archipelagos" : "Fairyprobe Archipelagos (Ghost)");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "bomezome_easy" : "bomezome_easy_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Wizard_Support" : "Wizard_Support_Ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.50 ? "Skuladot redux void" : "Skuladot redux_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux_shield" : "Skuladot redux_shield_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux Big" : "Skuladot redux Big_ghost");
+                        EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Bat" : "Bat void");
+                    }
+                    if (EnemyKeys.Count == 0) {
+                        GameObject.Destroy(Enemy.gameObject);
+                        continue;
+                    }
                     string NewEnemyName = "";
                     if (!TunicRandomizer.Settings.BalancedEnemies) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
@@ -619,6 +700,10 @@ namespace TunicRandomizer {
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                         } else {
                             EnemyTypes = EnemyTypes.Where(x => EnemyKeys.Contains(x)).ToList();
+                            if (EnemyTypes.Count == 0) {
+                                GameObject.Destroy(Enemy.gameObject);
+                                continue;
+                            }
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyTypes[Random.Next(EnemyTypes.Count)]]);
                         }
                     }
