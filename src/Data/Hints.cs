@@ -313,6 +313,10 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
                 MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
             }
+            if (SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 0 && SaveFile.GetInt("randomizer started with sword") == 1) {
+                MailboxItems.Remove("Sword");
+                MailboxItems.Remove("Stick");
+            }
             List<Check> mailboxHintables = new List<Check>();
             foreach (string Item in MailboxItems) {
                 mailboxHintables.AddRange(ItemRandomizer.FindAllRandomizedItemsByName(Item));
@@ -381,6 +385,10 @@ namespace TunicRandomizer {
             List<string> MailboxItems = new List<string>() { "Stick", "Sword", "Sword Upgrade", "Magic Dagger", "Magic Wand", "Magic Orb", "Lantern", "Gun", "Scavenger Mask", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)" };
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
                 MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
+            }
+            if (SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 0 && SaveFile.GetInt("randomizer started with sword") == 1) {
+                MailboxItems.Remove("Sword");
+                MailboxItems.Remove("Stick");
             }
             Dictionary<string, ArchipelagoItem> SphereOnePlayer = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
