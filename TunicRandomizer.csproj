@@ -187,6 +187,7 @@
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
+    <Compile Include="src\Patches\HexagonQuestCutscene.cs" />
     <Compile Include="src\Patches\InteractionPatches.cs" />
     <Compile Include="src\Patches\ItemPresentationPatches.cs" />
     <Compile Include="src\Patches\ItemRandomizer.cs" />

@@ -200,6 +200,10 @@ namespace TunicRandomizer {
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().UseSpecialGhostMat = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().UseSpecialGhostMat;
             }
 
+            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<HexagonQuestCutscene>() == null) {
+                new GameObject("hex quest cutscene").gameObject.AddComponent<HexagonQuestCutscene>();
+            }
+
             foreach (string Key in EnemyRandomizer.Enemies.Keys.ToList()) {
                 EnemyRandomizer.Enemies[Key].SetActive(false);
                 EnemyRandomizer.Enemies[Key].transform.position = new Vector3(-30000f, -30000f, -30000f);
