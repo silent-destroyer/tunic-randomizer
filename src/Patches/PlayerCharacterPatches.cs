@@ -73,8 +73,8 @@ namespace TunicRandomizer {
                     $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "<#ff0000>No" : "<#00ff00>Yes").PadLeft(21, '.')}\"\n" +
                     $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Shuffled Ladders.....{(SaveFile.GetInt("randomizer ladder rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Entrance Randomizer..{(SaveFile.GetInt("randomizer entrance rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
                     (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 }

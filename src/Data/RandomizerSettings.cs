@@ -550,7 +550,7 @@ namespace TunicRandomizer {
             } else {
                 return new bool[] { 
                     SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1, SaveFile.GetInt(SaveFlags.KeysBehindBosses) == 1,
-                    SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 1, SaveFile.GetInt("randomizer started with sword") == 1,
+                    SaveFile.GetInt("randomizer started with sword") == 1, SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1, SaveFile.GetInt(SaveFlags.EntranceRando) == 1,
                     SaveFile.GetInt("randomizer ER fixed shop") == 1, SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1,
                     SaveFile.GetInt(SaveFlags.MasklessLogic) == 1, SaveFile.GetInt("randomizer mystery seed") == 1, 

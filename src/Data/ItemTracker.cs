@@ -199,8 +199,7 @@ namespace TunicRandomizer {
                 }
             }
             List<string> SpoilerLogLines = new List<string>() {
-                "Seed: " + seed,
-                "Seed Paste: " + TunicRandomizer.Settings.GetSettingsString(),
+                IsSinglePlayer() ? $"Seed + Settings: {TunicRandomizer.Settings.GetSettingsString()}" : $"Seed: {seed}",
                 "\nLines that start with 'x' instead of '-' represent items that have been collected\n",
             };
             if (IsArchipelago()) {
@@ -290,6 +289,7 @@ namespace TunicRandomizer {
                 $"\t- Keys Behind Bosses: {SaveFile.GetInt(KeysBehindBosses) == 1}",
                 $"\t- Start with Sword: {SaveFile.GetInt("randomizer started with sword") == 1}",
                 $"\t- Shuffled Abilities: {SaveFile.GetInt(AbilityShuffle) == 1}",
+                $"\t- Shuffled Ladders: {SaveFile.GetInt(LadderRandoEnabled) == 1}",
                 $"\t- Entrance Randomizer: {SaveFile.GetInt(EntranceRando) == 1}",
                 SaveFile.GetInt(EntranceRando) == 1 ? $"\t- Entrance Randomizer (Fewer Shops): {SaveFile.GetInt("randomizer ER fixed shop") == 1}" : "",
                 $"\t- Maskless Logic: {SaveFile.GetInt(MasklessLogic) == 1}",

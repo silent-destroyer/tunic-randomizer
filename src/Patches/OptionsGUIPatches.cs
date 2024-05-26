@@ -67,7 +67,6 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Lanternless Logic", "Off", "On", TunicRandomizer.Settings.Lanternless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLanternless);
                 OptionsGUI.addToggle("Maskless Logic", "Off", "On", TunicRandomizer.Settings.Maskless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMaskless);
                 OptionsGUI.addToggle("Mystery Seed", "Off", "On", TunicRandomizer.Settings.MysterySeed ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMysterySeed);
-
             } else {
                 if (SaveFile.GetInt("randomizer mystery seed") == 1) {
                     OptionsGUI.addButton("Mystery Seed", "<#00ff00>On", null);
@@ -91,6 +90,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Maskless Logic", SaveFile.GetInt(MasklessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
+                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
             }
         }
 
