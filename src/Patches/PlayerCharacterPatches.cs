@@ -530,6 +530,8 @@ namespace TunicRandomizer {
                     } else {
                         TunicLogger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
                     }
+                    TunicRandomizer.Tracker = new ItemTracker();
+                    TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
                 }
                 if (slotData.TryGetValue("logic_rules", out var logicRules)) {
                     if (logicRules.ToString() == "2") {
