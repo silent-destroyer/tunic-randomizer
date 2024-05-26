@@ -129,24 +129,34 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
             OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
-            addPageButton("Configure Enemy Toggles", ExcludedEnemiesPage);
+            addPageButton("Configure Enemy Toggles", EnemyTogglesPage);
         }
 
-        public static void ExcludedEnemiesPage() {
+        public static void EnemyTogglesPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.addButton("Toggle All Enemies ON", (Action)(() => {
-                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => { 
-                    button.SelectIndex(1);
-                    TunicRandomizer.Settings.EnemyToggles[button.leftAlignedText.text] = true;
+
+            Action<int, bool> toggleAllEnemies = (int index, bool toggle) => {
+                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
+                    button.SelectIndex(index);
+                    TunicRandomizer.Settings.EnemyToggles[button.leftAlignedText.text] = toggle;
                 });
                 SaveSettings();
+            };
+
+            OptionsGUI.addButton("Toggle All Enemies ON", (Action)(() => {
+                toggleAllEnemies(1, true);
             })); 
             OptionsGUI.addButton("Toggle All Enemies OFF", (Action)(() => {
+                toggleAllEnemies(0, false);
+            }));
+
+            OptionsGUI.addButton("Randomize All", (Action)(() => {
+                System.Random random = new System.Random();
                 GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
-                    button.SelectIndex(0);
-                    TunicRandomizer.Settings.EnemyToggles[button.leftAlignedText.text] = false;
-                });
-                SaveSettings();
+                    int selection = random.Next(2);
+                    button.SelectIndex(selection);
+                    TunicRandomizer.Settings.EnemyToggles[button.leftAlignedText.text] = selection == 1;
+                }); SaveSettings();
             }));
             Dictionary<string, Action<int>> toggles = new Dictionary<string, Action<int>>();
             foreach(string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
