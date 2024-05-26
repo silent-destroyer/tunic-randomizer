@@ -112,18 +112,24 @@ namespace TunicRandomizer {
                 float num = 1000000f;
                 closestSpellStrings.Clear();
                 foreach (ToggleObjectBySpell toggleObjectBySpell in spellToggles) {
-                    float sqrMagnitude = (toggleObjectBySpell.gameObject.transform.position - gameObject.transform.position).sqrMagnitude;
-                    float spellDistance = new Vector3(toggleObjectBySpell.minDistance, toggleObjectBySpell.minDistance, toggleObjectBySpell.minDistance).sqrMagnitude / 2f;
-                    if (toggleObjectBySpell.targetSpell != null && sqrMagnitude < num && sqrMagnitude < spellDistance && toggleObjectBySpell.stateVar != null && !toggleObjectBySpell.stateVar.BoolValue) {
-                        num = sqrMagnitude;
-                        closestSpellStrings.Add(toggleObjectBySpell.targetSpell);
-                        if (toggleObjectBySpell.acceptLRMirror) {
-                            closestSpellStrings.Add(mirrorString(toggleObjectBySpell.targetSpell));
-                        }
-                        if (toggleObjectBySpell.gameObject.scene.name == "Library Hall") {
-                            closestSpellStrings.Add(toggleObjectBySpell.GetComponents<ToggleObjectBySpell>()[0].targetSpell);
-                            closestSpellStrings.Add(mirrorString(toggleObjectBySpell.GetComponents<ToggleObjectBySpell>()[0].targetSpell));
-                            break;
+                    if (toggleObjectBySpell != null) {
+                        
+                        float sqrMagnitude = (toggleObjectBySpell.gameObject.transform.position - this.gameObject.transform.position).sqrMagnitude;
+                        float spellDistance = new Vector3(toggleObjectBySpell.minDistance, toggleObjectBySpell.minDistance, toggleObjectBySpell.minDistance).sqrMagnitude / 2f;
+                        
+                        if (toggleObjectBySpell.targetSpell != null && sqrMagnitude < num && sqrMagnitude < spellDistance && toggleObjectBySpell.stateVar != null && !toggleObjectBySpell.stateVar.BoolValue) {
+                            num = sqrMagnitude;
+
+                            closestSpellStrings.Add(toggleObjectBySpell.targetSpell);
+                            if (toggleObjectBySpell.acceptLRMirror) {
+                                closestSpellStrings.Add(mirrorString(toggleObjectBySpell.targetSpell));
+                            }
+
+                            if (toggleObjectBySpell.gameObject.scene.name == "Library Hall") {
+                                closestSpellStrings.Add(toggleObjectBySpell.GetComponents<ToggleObjectBySpell>()[0].targetSpell);
+                                closestSpellStrings.Add(mirrorString(toggleObjectBySpell.GetComponents<ToggleObjectBySpell>()[0].targetSpell));
+                                break;
+                            }
                         }
                     }
                 }
