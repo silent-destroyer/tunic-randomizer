@@ -518,7 +518,7 @@ namespace TunicRandomizer {
                         if (TunicRandomizer.Settings.UseTrunicTranslations) {
                             Hint = $"bI #uh wA, I saw A {Translations.Translate(ItemLookup.SimplifiedItemNames[Check.Reward.Name], false)} #uh lahst tIm I wuhs {ScenePrefix} {Translations.Translate(Scene, false)}.";
                         }
-                        ItemHints.Add((WordWrapString(Hint), ItemData.Name, "", Check.Location.LocationId));
+                        ItemHints.Add((WordWrapString(Hint), ItemData.Name, "", $"{Check.Location.LocationId} [{Check.Location.SceneName}]"));
                     }
                 }
             }

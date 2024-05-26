@@ -149,10 +149,16 @@ namespace TunicRandomizer {
                 if (IsArchipelago()) {
                     ArchipelagoItem ShopItem = ItemLookup.ItemList[LocationId];
                     itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemName] : "[archipelago]";
+                    if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                        itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;
+                    }
                     __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemName.ToUpper().Replace($" ", $"\" \"")}\"");
                 } else if (IsSinglePlayer()) {
                     ItemData itemData = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[LocationId]);
                     itemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[itemData.Name] : "";
+                    if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                        itemToDisplay = TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1);
+                    }
                     __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?";
                     if (TunicRandomizer.Settings.ShowItemsEnabled) {
                         __instance.confirmPurchaseFormattedLanguageLine.text += $"\n{itemToDisplay} \"{itemData.Name}\"";
@@ -229,6 +235,7 @@ namespace TunicRandomizer {
             bool DisplayMessageAnyway = false;
 
             ItemData Item = ItemLookup.Items[ItemName];
+            string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
             string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location);
             
             if (Item.Type == ItemTypes.MONEY) {
@@ -278,7 +285,8 @@ namespace TunicRandomizer {
 
                 if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
-                    SwordProgression.UpgradeSword(SwordLevel+1);
+                    SwordProgression.UpgradeSword(SwordLevel + 1);
+                    itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
                 }
                 if (TunicRandomizer.Settings.ShowItemsEnabled) {
                     ModelSwaps.SwapItemsInScene();
@@ -409,13 +417,13 @@ namespace TunicRandomizer {
 
             if (networkItem.Player != Archipelago.instance.GetPlayerSlot()) {
                 var sender = Archipelago.instance.GetPlayerName(networkItem.Player);
-                NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
+                NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
             if (networkItem.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
-                NotificationTop = NotificationTop == "" ? $"yoo fownd  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
+                NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
@@ -441,7 +449,7 @@ namespace TunicRandomizer {
             bool DisplayMessageAnyway = false;
 
             ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
-
+            string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "";
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Check.Reward.Amount;
 
@@ -489,6 +497,7 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                     SwordProgression.UpgradeSword(SwordLevel + 1);
+                    itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
                 }
                 if (TunicRandomizer.Settings.ShowItemsEnabled) {
                     ModelSwaps.SwapItemsInScene();
@@ -617,7 +626,7 @@ namespace TunicRandomizer {
             }
 
             if (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway) {
-                NotificationTop = NotificationTop == "" ? $"yoo fownd  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "")}  \"{Item.Name}!\"" : NotificationTop;
+                NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{Item.Name}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }

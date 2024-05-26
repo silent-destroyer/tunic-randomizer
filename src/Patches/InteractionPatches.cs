@@ -28,6 +28,15 @@ namespace TunicRandomizer {
                             __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" it \"ALREADY?\" goud wurk!";
                         }
                     }
+                    if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                        if (IsSinglePlayer()) {
+                            __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                        } else if(IsArchipelago()) {
+                            if (hintGhost.CheckId == "Your Pocket" || ItemLookup.ItemList[hintGhost.CheckId].Player == Archipelago.instance.GetPlayerSlot()) {
+                                __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", hintGhost.CheckId == "Your Pocket" || Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                            }
+                        }
+                    }
                 }
 
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name) && GhostHints.HexQuestHintLookup.ContainsKey(GhostHints.HintGhosts[__instance.name].Hint)) {
