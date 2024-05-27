@@ -589,33 +589,57 @@ namespace TunicRandomizer {
         }
 
         public static void FileManagementGUI_rePopulateList_PostfixPatch(FileManagementGUI __instance) {
+            Sprite ArchipelagoSprite = ModelSwaps.CustomItemImages["Archipelago Item"].GetComponent<Image>().sprite;
+            string[] fileNameList = SaveFile.GetRootSaveFileNameList();
             foreach (FileManagementGUIButton button in GameObject.FindObjectsOfType<FileManagementGUIButton>()) {
-                SaveFile.LoadFromPath(SaveFile.GetRootSaveFileNameList()[button.index]);
+                SaveFile.LoadFromPath(fileNameList[button.index]);
                 if ((SaveFile.GetInt("archipelago") != 0 || SaveFile.GetInt("randomizer") != 0) && !button.isSpecial) {
                     // Display special icon and "randomized" text to indicate randomizer file
                     button.specialBadge.gameObject.active = true;
-                    button.specialBadge.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-                    button.specialBadge.transform.localPosition = new Vector3(-75f, -27f, 0f);
-                    
-                    if (SaveFile.GetInt(HexagonQuestEnabled) == 1) { 
-                        button.ngpBadge.gameObject.SetActive(true);
-                        button.ngpBadge.sprite = Inventory.GetItemByName("Hexagon Gold").icon;
+
+                    if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                        button.manpageTMP.transform.parent.GetComponent<Image>().sprite = Inventory.GetItemByName("Hexagon Gold").icon;
+                        button.manpageTMP.text = $"{SaveFile.GetInt(GoldHexagonQuantity)}/{SaveFile.GetInt(HexagonQuestGoal)}";
+                    } else {
+                        // Display randomized page count instead of "vanilla" pages picked up
+                        int Pages = 0;
+                        for (int i = 0; i < 28; i++) {
+                            if (SaveFile.GetInt($"randomizer obtained page {i}") == 1) {
+                                Pages++;
+                            }
+                        }
+                        button.manpageTMP.text = Pages.ToString();
                     }
-                    button.playtimeString.enableAutoSizing = false;
-                    if (SaveFile.GetInt("archipelago") != 0) {
-                        button.playtimeString.text += $" <size=65%>archipelago";
-                        button.filenameTMP.text += $" <size=65%>({SaveFile.GetString("archipelago player name")})";
-                    } else if (SaveFile.GetInt("randomizer") != 0) {
-                        button.playtimeString.text += $" <size=70%>randomized";
-                    }
-                    // Display randomized page count instead of "vanilla" pages picked up
-                    int Pages = 0;
-                    for (int i = 0; i < 28; i++) {
-                        if (SaveFile.GetInt($"randomizer obtained page {i}") == 1) {
-                            Pages++;
+                    List<ItemPresentationGraphic> itemPgs = button.itemPresentationGraphics.ToList();
+                    GameObject dathStone = GameObject.Instantiate(itemPgs[0].gameObject);
+                    dathStone.transform.parent = button.transform.GetChild(3);
+                    dathStone.transform.localPosition = Vector3.zero;
+                    dathStone.transform.localScale = Vector3.one * 1.15f;
+                    dathStone.GetComponent<Image>().sprite = Inventory.GetItemByName("Dath Stone").icon;
+                    dathStone.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Dath Stone") };
+                    itemPgs.Add(dathStone.GetComponent<ItemPresentationGraphic>());
+                    button.itemPresentationGraphics = itemPgs.ToArray();
+                    dathStone.SetActive(Inventory.GetItemByName("Dath Stone").Quantity > 0);
+
+                    if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                        if (SaveFile.GetInt(SwordProgressionLevel) == 3) {
+                            button.itemPresentationGraphics[0].GetComponent<Image>().sprite = Inventory.GetItemByName("Librarian Sword").icon;
+                            button.itemPresentationGraphics[0].items = new Item[] { Inventory.GetItemByName("Librarian Sword") };
+                        }
+                        if (SaveFile.GetInt(SwordProgressionLevel) == 3) {
+                            button.itemPresentationGraphics[0].GetComponent<Image>().sprite = Inventory.GetItemByName("Heir Sword").icon;
+                            button.itemPresentationGraphics[0].items = new Item[] { Inventory.GetItemByName("Heir Sword") };
                         }
                     }
-                    button.manpageTMP.text = Pages.ToString();
+
+                    button.playtimeString.enableAutoSizing = false;
+                    if (SaveFile.GetInt("archipelago") != 0) {
+                        button.playtimeString.text += $" <size=55%>archipelago";
+                        button.filenameTMP.text += $" <size=65%>({SaveFile.GetString("archipelago player name")})";
+                        button.specialBadge.sprite = ArchipelagoSprite;
+                    } else if (SaveFile.GetInt("randomizer") != 0) {
+                        button.playtimeString.text += $" <size=60%>randomized";
+                    }
                 }
             }
         }
