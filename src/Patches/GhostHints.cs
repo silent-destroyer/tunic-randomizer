@@ -660,7 +660,7 @@ namespace TunicRandomizer {
                     break;
                 }
             }
-            HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now";
+            HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.";
         }
 
         public static void CheckForServerHint(string npcName) {
