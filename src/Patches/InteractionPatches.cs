@@ -27,13 +27,13 @@ namespace TunicRandomizer {
                         if (hintGhost.CheckId == "Your Pocket" || SaveFile.GetInt("randomizer picked up " + hintGhost.CheckId) == 1) {
                             __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" it \"ALREADY?\" goud wurk!";
                         }
-                    }
-                    if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
-                        if (IsSinglePlayer()) {
-                            __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
-                        } else if(IsArchipelago()) {
-                            if (hintGhost.CheckId == "Your Pocket" || ItemLookup.ItemList[hintGhost.CheckId].Player == Archipelago.instance.GetPlayerSlot()) {
-                                __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", hintGhost.CheckId == "Your Pocket" || Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                        if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                            if (IsSinglePlayer()) {
+                                __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                            } else if(IsArchipelago()) {
+                                if (hintGhost.CheckId == "Your Pocket" || ItemLookup.ItemList[hintGhost.CheckId].Player == Archipelago.instance.GetPlayerSlot()) {
+                                    __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", hintGhost.CheckId == "Your Pocket" || Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                                }
                             }
                         }
                     }
@@ -42,6 +42,9 @@ namespace TunicRandomizer {
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name) && GhostHints.HexQuestHintLookup.ContainsKey(GhostHints.HintGhosts[__instance.name].Hint)) {
                     SaveFile.SetInt($"randomizer hex quest read {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint]} hint", 1);
                     ItemStatsHUD.UpdateAbilitySection();
+                    if (Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt($"randomizer hexagon quest {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint].ToLower()} requirement")) {
+                        __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" Enuhf \"ALREADY?\" goud wurk!";
+                    }
                 }
 
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
