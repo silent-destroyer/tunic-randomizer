@@ -453,5 +453,9 @@ namespace TunicRandomizer {
             }
             return startInventory;
         }
+
+        public void ShowNotConnectedError() {
+            Notifications.Show($"[archipelago] \"ERROR: Lost connection to Archipelago!\"", $"\"Unable to send or receive items. Re-connect and try again.\"");
+        }
     }
 }

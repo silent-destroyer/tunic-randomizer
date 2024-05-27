@@ -106,6 +106,12 @@ namespace TunicRandomizer {
                     return false;
                 }
             }
+            if (__instance.GetComponent<Pickup>() != null || __instance.GetComponent<ShopItem>() != null) {
+                if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                    Archipelago.instance.integration.ShowNotConnectedError();
+                    return false;
+                }
+            }
 
             return true;
         }

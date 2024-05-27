@@ -28,7 +28,10 @@ namespace TunicRandomizer {
         }
 
         public static bool Chest_IInteractionReceiver_Interact_PrefixPatch(Item i, Chest __instance) {
-
+            if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                Archipelago.instance.integration.ShowNotConnectedError();
+                return false;
+            }
             __instance.isFairy = false;
             return true;
         }

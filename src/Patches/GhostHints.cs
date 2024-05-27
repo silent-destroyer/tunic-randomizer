@@ -449,7 +449,7 @@ namespace TunicRandomizer {
                 string Location = HintableLocationIds[Key];
                 string LocationSuffix = Location[Location.Length - 1] == 'S' ? "R" : "iz";
 
-                if (SaveFlags.IsArchipelago()) {
+                if (IsArchipelago()) {
                     ArchipelagoItem Item = ItemLookup.ItemList[Key];
                     string ItemPrefix = Item.ItemName.Contains("Money") ? "suhm" : Vowels.Contains(Item.ItemName.ToUpper()[0]) ? "ahn" : "uh";
                     string PlayerName = Archipelago.instance.GetPlayerName(Item.Player);
@@ -490,7 +490,7 @@ namespace TunicRandomizer {
                 HintableItemsSolo.Add("26");
             }
             for (int i = 0; i < HintableItems.Count; i++) {
-                if (SaveFlags.IsArchipelago()) {
+                if (IsArchipelago()) {
                     string Item = HintableItems[i];
                     List<ArchipelagoHint> ItemLocations = Locations.MajorItemLocations[Item];
                     foreach(ArchipelagoHint HintLocation in ItemLocations) {
@@ -573,7 +573,7 @@ namespace TunicRandomizer {
                 string Scene = Locations.SimplifiedSceneNames[Key];
                 int SceneItemCount = 0;
                 int MoneyInScene = 0;
-                if (SaveFlags.IsArchipelago()) {
+                if (IsArchipelago()) {
                     foreach (string ItemKey in ItemLookup.ItemList.Keys.Where(item => Locations.VanillaLocations[item].Location.SceneName == Key).ToList()) {
                         ArchipelagoItem Item = ItemLookup.ItemList[ItemKey];
                         ItemsInScene.Add(Item.ItemName);

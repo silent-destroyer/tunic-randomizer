@@ -86,5 +86,9 @@ namespace TunicRandomizer {
             return integration.session.Locations.GetLocationIdFromName("TUNIC", name);
         }
 
+        public bool IsConnected() {
+            return integration != null ? integration.connected : false;
+        }
+
     }
 }
