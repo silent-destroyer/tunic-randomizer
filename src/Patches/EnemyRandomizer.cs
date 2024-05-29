@@ -440,13 +440,13 @@ namespace TunicRandomizer {
             { "Gunslinger", $"Gunslinger" },
             { "Fox enemy zombie", $"Fox Zombie" },
             { "Fox enemy", $"Fox Zombie (Strong)" },
-            { "tunic knight void", $"Garden Knight (Ghost)" },
+            { "tech knight ghost", $"Garden Knight (Ghost)" },
             { "Voidtouched", $"Voidtouched" },
             { "Ghost Knight", $"Ghost Knight (Devworld)" },
             { "Phage", $"Phage/Beta Slorm (Devworld)" },
             { "woodcutter", $"Woodcutter" },
             { "Centipede", $"Centipede" },
-            { "tech knight ghost", $"Garden Knight (Void)" },
+            { "tunic knight void", $"Garden Knight (Void)" },
             { "Shadowreaper", $"Shadowreaper" },
         };
         public static void CreateAreaSeeds() {

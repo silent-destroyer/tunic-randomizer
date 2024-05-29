@@ -131,16 +131,12 @@ namespace TunicRandomizer {
                         if (toggleObjectBySpell.targetSpell != null && sqrMagnitude < num && sqrMagnitude < spellDistance && toggleObjectBySpell.stateVar != null && !toggleObjectBySpell.stateVar.BoolValue) {
                             num = sqrMagnitude;
 
-                            closestSpellStrings.Add(toggleObjectBySpell.targetSpell);
-                            if (toggleObjectBySpell.acceptLRMirror) {
-                                closestSpellStrings.Add(mirrorString(toggleObjectBySpell.targetSpell));
-                            }
-
-                            if (toggleObjectBySpell.gameObject.scene.name == "Library Hall") {
-                                closestSpellStrings.Add(toggleObjectBySpell.GetComponents<ToggleObjectBySpell>()[0].targetSpell);
-                                closestSpellStrings.Add(mirrorString(toggleObjectBySpell.GetComponents<ToggleObjectBySpell>()[0].targetSpell));
-                                break;
-                            }
+                            toggleObjectBySpell.GetComponents<ToggleObjectBySpell>().ToList().ForEach(toggleObject => {
+                                closestSpellStrings.Add(toggleObject.targetSpell);
+                                if (toggleObject.acceptLRMirror) {
+                                    closestSpellStrings.Add(mirrorString(toggleObject.targetSpell));
+                                }
+                            });
                         }
                     }
                 }
