@@ -11,6 +11,7 @@ namespace TunicRandomizer {
         public static GameObject DPADPool;
 
         public ToggleObjectBySpell[] spellToggles;
+        public List<GameObject> Arrows;
 
         List<string> closestSpellStrings = new List<string>();
 
@@ -68,8 +69,9 @@ namespace TunicRandomizer {
                 arrow.GetComponent<SpriteRenderer>().color = new Color(1f, .25f, .25f, 1f);
             } else {
                 arrow.GetComponent<SpriteRenderer>().color = new Color(0.2729f, 0.7925f, 0.4009f, 1);
-            }
+            }            
             arrow.SetActive(true);
+            Arrows.Add(arrow);
         }
 
         private void Awake() {
@@ -80,11 +82,13 @@ namespace TunicRandomizer {
             dpadToChar.Add(DPAD.LEFT, "l");
             dpadToChar.Add(DPAD.RIGHT, "r");
             dpadToChar.Add(DPAD.NONE, "");
+            Arrows = new List<GameObject>();
         }
 
         public override bool CheckInput(Il2CppStructArray<DPAD> inputs, int length) {
             if (TunicRandomizer.Settings.HolyCrossVisualizer) {
                 bool incorrect = false;
+                bool completedSpell = false;
                 if (closestSpellStrings.Count != 0) {
                     if (length > closestSpellStrings[0].Length) {
                         incorrect = true;
@@ -97,9 +101,16 @@ namespace TunicRandomizer {
                             }
                             return false;
                         });
+                        if (!incorrect && length == closestSpellStrings[0].Length) {
+                            SpawnArrow(inputs[length - 1], incorrect);
+                            CompletedSpellEffect();
+                            completedSpell = true;
+                        }
                     }
                 }
-                SpawnArrow(inputs[length-1], incorrect);
+                if (!completedSpell) {
+                    SpawnArrow(inputs[length-1], incorrect);
+                }
             }
             return false;
         }
@@ -133,11 +144,18 @@ namespace TunicRandomizer {
                         }
                     }
                 }
+                Arrows = Arrows.Where(arrow => arrow.active).ToList();
             }
         }
 
         private string mirrorString(string input) {
             return new string(input.Select(x => x == 'l' ? 'r' : (x == 'r' ? 'l' : x)).ToArray());
+        }
+
+        public void CompletedSpellEffect(bool iceBoltSpell = false) {
+            Arrows.ForEach(arrow => {
+                arrow.GetComponent<SpriteRenderer>().color = iceBoltSpell ? Color.cyan : new Color(0.917f, 0.65f, .08f);
+            });
         }
     }
 }

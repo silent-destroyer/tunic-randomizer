@@ -748,7 +748,12 @@ namespace TunicRandomizer {
                                 break;
                         }
                     }
+                    PlayerCharacter.instance.GetComponent<DDRSpell>().CompletedSpellEffect();
                 }
+            }
+            ButtonAssignableItem cape = Inventory.GetItemByName("Cape").TryCast<ButtonAssignableItem>();
+            if (!cape.freeItemCountStateVar.BoolValue && s == cape.spellStringForFreeItem) {
+                PlayerCharacter.instance.GetComponent<DDRSpell>().CompletedSpellEffect();
             }
         }
 

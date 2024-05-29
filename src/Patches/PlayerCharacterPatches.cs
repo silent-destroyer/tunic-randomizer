@@ -356,6 +356,9 @@ namespace TunicRandomizer {
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
+            List<MagicSpell> spells = __instance.spells.ToList();
+            spells.Reverse();
+            __instance.spells = spells.ToArray();
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
