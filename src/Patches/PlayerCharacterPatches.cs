@@ -535,7 +535,7 @@ namespace TunicRandomizer {
                         EnemyRandomizer.CreateAreaSeeds();
                         TunicLogger.LogInfo("Starting new archipelago file with seed: " + Seed);
                     } else {
-                        TunicLogger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
+                        TunicLogger.LogInfo("Loading archipelago seed: " + SaveFile.GetInt("seed"));
                     }
                     TunicRandomizer.Tracker = new ItemTracker();
                     TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
