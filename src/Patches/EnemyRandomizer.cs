@@ -705,6 +705,13 @@ namespace TunicRandomizer {
                         if (EnemyTypes == null) {
                             NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                         } else {
+                            if (EnemyTypes.Where(x => EnemyKeys.Contains(x)).Count() == 0) {
+                                if (EnemyTypes == EnemyRankings["Intense"]) {
+                                    EnemyTypes = EnemyRankings["Strong"].Where(x => EnemyKeys.Contains(x)).Count() > 0 ? EnemyRankings["Strong"] : EnemyRankings["Average"];
+                                } else if (EnemyTypes == EnemyRankings["Strong"]) {
+                                    EnemyTypes = EnemyRankings["Average"];
+                                }
+                            }
                             EnemyTypes = EnemyTypes.Where(x => EnemyKeys.Contains(x)).ToList();
                             if (EnemyTypes.Count == 0) {
                                 GameObject.Destroy(Enemy.gameObject);
