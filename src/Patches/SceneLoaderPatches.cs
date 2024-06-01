@@ -320,6 +320,14 @@ namespace TunicRandomizer {
                 GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").AddComponent<MailboxFlag>();
 
                 GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>().dayOrNight = StateVariable.GetStateVariableByName("Is Night").BoolValue ? DayNightBridge.DayNight.NIGHT : DayNightBridge.DayNight.DAY;
+                
+                if (SaveFile.GetInt("seed") != 0 && (SaveFile.GetInt(LadderRandoEnabled) == 0 || Inventory.GetItemByName("Ladder to Swamp").Quantity == 1)) {
+                    for(int i = 0; i < 3; i++) {
+                        GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.AddComponent<ToggleObjectByFuse>().fuseId = 1096;
+                        GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.GetComponent<ToggleObjectByFuse>().stateWhenClosed = i != 0;
+                        GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
 
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 || (SaveFile.GetInt("seed") == 0 && 
                     ((TunicRandomizer.Settings.EntranceRandoEnabled && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER) || 
@@ -360,6 +368,11 @@ namespace TunicRandomizer {
                     }
 
                 }
+
+                GameObject SignpostHint = GameObject.Instantiate(ModelSwaps.Signpost, new Vector3(-3.6754f, -1.175f, -74.2004f), new Quaternion(0, 0.8206f, 0, -0.5715f));
+                SignpostHint.transform.localScale = Vector3.one * 1.5f;
+                SignpostHint.AddComponent<BoxCollider>();
+                SignpostHint.SetActive(true);
 
                 if (TunicRandomizer.Settings.MoreSkulls) {
                     InteractionPatches.SpawnMoreSkulls();

@@ -46,6 +46,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
             ClassInjector.RegisterTypeInIl2Cpp<HexagonQuestCutscene>();
+            ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
 
             ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Il2CppSystem.Type[]
