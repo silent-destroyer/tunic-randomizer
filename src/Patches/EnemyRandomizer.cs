@@ -585,8 +585,14 @@ namespace TunicRandomizer {
             if (CurrentScene == "frog cave main") {
                 Monsters.Add(GameObject.Find("Wizard_Support"));
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Monastery") {
-                Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
+            if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                if (CurrentScene == "Monastery") {
+                    Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
+                } else if(CurrentScene == "ziggurat2020_3") {
+                    foreach(ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == CurrentScene)) {
+                        bossScav.eggTossChance = 0.2f;
+                    }
+                }
             }
 
             Monsters = Monsters.Where(Monster => Monster.gameObject.scene.name == CurrentScene).ToList();
