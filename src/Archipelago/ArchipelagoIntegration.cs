@@ -20,6 +20,7 @@ using System.Runtime.InteropServices.ComTypes;
 using Archipelago.MultiClient.Net.Helpers;
 using static TunicRandomizer.SaveFlags;
 using Archipelago.MultiClient.Net.Exceptions;
+using static TunicRandomizer.TunicPortals;
 
 namespace TunicRandomizer {
     public class ArchipelagoIntegration {
@@ -391,6 +392,16 @@ namespace TunicRandomizer {
                 session.DataStorage[Scope.Slot, "Granted Firebomb"].Initialize(false);
                 session.DataStorage[Scope.Slot, "Granted Icebomb"].Initialize(false);
 
+/*                if (slotData.ContainsKey("entrance_rando") && slotData["entrance_rando"].ToString() == "1") {
+                    foreach(KeyValuePair<string, Dictionary<string, List<TunicPortal>>> portalDict in RegionPortalsList.Where(dict => dict.Key != "Shop")) {
+                        foreach(KeyValuePair<string, List<TunicPortal>> portals in portalDict.Value) {
+                            foreach(TunicPortal portal in portals.Value) {
+                                TunicLogger.LogInfo("initializing datastorage value for portal: " + portalDict.Key + ", " + portal.Destination + portal.Tag);
+                                session.DataStorage[Scope.Slot, $"{portalDict.Key}, {portal.Destination}{portal.Tag}"].Initialize(false);
+                            }
+                        }
+                    }
+                }*/
             }
         }
 
@@ -436,6 +447,20 @@ namespace TunicRandomizer {
             UpdateDataStorage("Granted Firecracker", StateVariable.GetStateVariableByName("Granted Firecracker").BoolValue, false);
             UpdateDataStorage("Granted Firebomb", StateVariable.GetStateVariableByName("Granted Firebomb").BoolValue, false);
             UpdateDataStorage("Granted Icebomb", StateVariable.GetStateVariableByName("Granted Icebomb").BoolValue, false);
+
+/*            if (SaveFile.GetInt(EntranceRando) == 1) {
+                foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> portalDict in RegionPortalsList) {
+                    foreach (KeyValuePair<string, List<TunicPortal>> portals in portalDict.Value) {
+                        foreach (TunicPortal portal in portals.Value) {
+                            if (SaveFile.GetInt("randomizer entered portal " + portal.Name) == 1) {
+                                UpdateDataStorage($"{portalDict.Key}, {portal.Destination}{portal.Tag}", SaveFile.GetInt("randomizer entered portal " + portal.Name) == 1, true);
+                            } else {
+                                UpdateDataStorage($"{portalDict.Key}, {portal.Destination}{portal.Tag}", SaveFile.GetInt("randomizer entered portal " + portal.Name) == 1, false);
+                            }
+                        }
+                    }
+                }
+            }*/
         }
 
         public Dictionary<string, int> GetStartInventory() {
