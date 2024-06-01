@@ -5222,7 +5222,7 @@ namespace TunicRandomizer {
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name) {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
-            && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
+            && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
@@ -5265,7 +5265,7 @@ namespace TunicRandomizer {
 
         public static void MarkPortals() {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
-            && !portal.FullID.Contains("heirfasttravel") && !portal.id.Contains("heirfasttravel"));
+            && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
 
             foreach (var portal in Portals) {
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {

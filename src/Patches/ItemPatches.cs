@@ -86,8 +86,8 @@ namespace TunicRandomizer {
 
         public static bool Chest_shouldShowAsOpen_GetterPatch(Chest __instance, ref bool __result) {
             string ActiveScene = SceneManager.GetActiveScene().name;
-            if (ActiveScene == "Quarry") {
-                __result = false;
+            if (ActiveScene == "Quarry" || ActiveScene == "Crypt") {
+                __result = true;
                 return false;
             }
 

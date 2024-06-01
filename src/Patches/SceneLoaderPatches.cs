@@ -17,6 +17,7 @@ namespace TunicRandomizer {
         public static bool InitialLoadDone = false;
 
         public static GameObject SpiritArenaTeleporterPrefab;
+        public static GameObject GlyphTowerTeleporterPrefab;
 
         public static bool SceneLoader_OnSceneLoaded_PrefixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             // ladder storage fix
@@ -60,9 +61,16 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("TitleScreen");
                 return;
             }
+            if (loadingScene.name == "Overworld Interiors" && GlyphTowerTeleporterPrefab == null) {
+                GlyphTowerTeleporterPrefab = GameObject.Instantiate(GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject);
+                GlyphTowerTeleporterPrefab.SetActive(false);
+                GameObject.DontDestroyOnLoad(GlyphTowerTeleporterPrefab);
+                SceneLoader.LoadScene("Posterity");
+                return;
+            }
             if (loadingScene.name == "Library Hall" && !EnemyRandomizer.Enemies.ContainsKey("administrator_servant")) {
                 EnemyRandomizer.InitializeEnemies("Library Hall");
-                SceneLoader.LoadScene("Posterity");
+                SceneLoader.LoadScene("Overworld Interiors");
                 return;
             }
             if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
@@ -409,6 +417,10 @@ namespace TunicRandomizer {
                 }
             } else if(SceneName == "frog cave main") { 
                 SetupFrogDomainSecret();
+            } else if (SceneName == "Sewer_Boss") {
+                SetupCryptSecret();
+            } else if (SceneName == "Crypt") {
+                SetupOldCryptStuff();
             } else if(SceneName == "Sword Access") {
                 GameObject Bush = GameObject.Find("_Grass/bush (70)");
                 if (Bush != null) {
@@ -507,7 +519,7 @@ namespace TunicRandomizer {
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
             GameObject gameObject = GameObject.Instantiate<GameObject>(SpiritArenaTeleporterPrefab, position, SpiritArenaTeleporterPrefab.transform.rotation);
             ScenePortal scenePortal = gameObject.transform.GetComponentInChildren<ScenePortal>();
-            scenePortal.id = "heirfasttravel_spawnid";
+            scenePortal.id = "customfasttravel_spawnid";
             scenePortal.destinationSceneName = SceneName;
             if (SceneManager.GetActiveScene().name == "Spirit Arena") {
                 scenePortal.spawnTransform = GameObject.Find("Teleporter").transform.GetChild(0).GetChild(0).GetChild(0);
@@ -549,6 +561,45 @@ namespace TunicRandomizer {
                 CapeSecret.transform.GetChild(0).localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 CapeSecret.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Cape");
                 CapeSecret.SetActive(true);
+            }
+        }
+
+        public static void SetupCryptSecret() {
+            GameObject portal = GameObject.Instantiate(GlyphTowerTeleporterPrefab);
+            portal.transform.position = new Vector3(100.3333f, 9.3138f, -10.201f);
+            portal.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+            portal.transform.localScale = Vector3.one;
+            portal.GetComponentInChildren<ScenePortal>().id = "customfasttravel_spawnid";
+            portal.GetComponentInChildren<ScenePortal>().destinationSceneName = "Crypt";
+            portal.SetActive(true);
+
+            GameObject spawn = new GameObject("crypt spawn");
+            spawn.AddComponent<PlayerCharacterSpawn>();
+            spawn.GetComponent<PlayerCharacterSpawn>().id = "Crypt_";
+            spawn.transform.position = GameObject.FindObjectOfType<Campfire>().transform.position;
+            spawn.SetActive(true);
+        }
+
+        public static void SetupOldCryptStuff() {
+            foreach (ScenePortal portal in GameObject.FindObjectsOfType<ScenePortal>().Where(portal => portal.destinationSceneName != "Overworld Redux")) {
+                portal.destinationSceneName = "Sewer_Boss";
+            }
+            foreach (Spiketrap trap in Resources.FindObjectsOfTypeAll<Spiketrap>()) {
+                trap.gameObject.SetActive(true);
+            }
+            foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(monster => monster.gameObject.scene.name == "Crypt")) {
+                monster.gameObject.SetActive(true);
+            }
+            GameObject spawn = new GameObject("crypt spawn");
+            spawn.AddComponent<PlayerCharacterSpawn>();
+            spawn.GetComponent<PlayerCharacterSpawn>().id = "Sewer_Boss_customfasttravel_spawnid";
+            spawn.transform.position = new Vector3(-79.3f, 57f, -30.8f);
+            spawn.SetActive(true); 
+            GameObject.Instantiate(ModelSwaps.UnderConstruction, new Vector3(-79.3f, 57f, -35.8f), new Quaternion(0, 0, 0, 0)).SetActive(true);
+            GameObject.Instantiate(ModelSwaps.UnderConstruction, new Vector3(-72.0534f, 57, -15.2989f), new Quaternion(0, 0.7071f, 0, 0.7071f)).SetActive(true);
+            foreach (UnderConstruction sign in GameObject.FindObjectsOfType<UnderConstruction>()) {
+                sign.message = ScriptableObject.CreateInstance<LanguageLine>();
+                sign.message.text = "\"???\"";
             }
         }
 
