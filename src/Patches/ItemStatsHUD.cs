@@ -14,7 +14,6 @@ using BepInEx;
 
 namespace TunicRandomizer {
     public class ItemStatsHUD {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static bool Loaded = false;
         public static GameObject Title;
@@ -406,7 +405,7 @@ namespace TunicRandomizer {
             try {
                 Initialize();
             } catch (Exception e) {
-                Logger.LogError(e + " " + e.Message);
+                TunicLogger.LogError(e + " " + e.Message);
             }
             GameObject Equipment = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/Body/Section 5 Equipment/GROUP: Equipment/");
             Update();

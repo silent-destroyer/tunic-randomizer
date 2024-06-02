@@ -13,8 +13,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class SpeedrunFinishlineDisplayPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static Dictionary<string, string> ReportGroupItems = new Dictionary<string, string>(){
             {"Inventory items_stick", "Stick"},
             {"Inventory items_sword", "Sword"},
@@ -309,13 +308,11 @@ namespace TunicRandomizer {
                 int ChecksFound = 0;
                 float Percentage = 0;
                 foreach (string Key in Locations.VanillaLocations.Keys) {
-                    foreach (Dictionary<string, int> requirements in Locations.VanillaLocations[Key].Location.RequiredItems) {
-                        if (requirements.ContainsKey("21")) {
-                            TotalChecks++;
-                            if (Locations.CheckedLocations[Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) {
-                                ChecksFound++;
-                            }
-                            break;
+                    Check check = Locations.VanillaLocations[Key];
+                    if (check.Location.Requirements.Any(req => req.ContainsKey("21")) || new List<string>() { "Mountaintop", "Town_FiligreeRoom", "EastFiligreeCache" }.Contains(check.Location.SceneName)) {
+                        TotalChecks++;
+                        if (Locations.CheckedLocations[Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) {
+                            ChecksFound++;
                         }
                     }
                 }

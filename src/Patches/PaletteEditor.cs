@@ -12,8 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class PaletteEditor : MonoBehaviour {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static int SelectedIndex = 0;
         public static Color SelectedColor;
         public static bool ApplyColor = true;
@@ -203,7 +202,7 @@ namespace TunicRandomizer {
             }
 
             File.WriteAllBytes(TexturePath, ImageConversion.EncodeToPNG(PlayerPalette.runtimePalette));
-            Logger.LogInfo("Saved Custom Texture to " + TexturePath);
+            TunicLogger.LogInfo("Saved Custom Texture to " + TexturePath);
         }
 
         public static void LoadCustomTexture() {
@@ -314,7 +313,7 @@ namespace TunicRandomizer {
                     TheRealest.GetComponent<MeshRenderer>().material.color = GlassesColor;
                 }
             } catch (Exception e) {
-                Logger.LogInfo("Error changing Sunglasses Color!" + e.Message);
+                TunicLogger.LogInfo("Error changing Sunglasses Color!" + e.Message);
             }
         }
 
@@ -329,7 +328,7 @@ namespace TunicRandomizer {
                     ModelSwaps.Items["Cape"].GetComponent<MeshRenderer>().material.color = CapeColor;
                 }
             } catch (Exception e) {
-                Logger.LogInfo("Error changing Cape Color!" + e.Message);
+                TunicLogger.LogInfo("Error changing Cape Color!" + e.Message);
             }
         }
 

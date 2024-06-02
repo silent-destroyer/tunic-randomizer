@@ -19,8 +19,6 @@ using Newtonsoft.Json.Linq;
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {
 
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
@@ -43,6 +41,8 @@ namespace TunicRandomizer {
 
             __instance.gameObject.AddComponent<WaveSpell>();
             __instance.gameObject.AddComponent<EntranceSeekerSpell>();
+            __instance.gameObject.AddComponent<DDRSpell>();
+            DDRSpell.SetupDPADTester(__instance);
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
@@ -66,17 +66,17 @@ namespace TunicRandomizer {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)RandomizerSettings.getSettings, null);
+                    (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 } else {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
                     $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Started With Sword...{(SaveFile.GetInt("randomizer started with sword") == 0 ? "<#ff0000>No" : "<#00ff00>Yes").PadLeft(21, '.')}\"\n" +
                     $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Shuffled Ladders.....{(SaveFile.GetInt("randomizer ladder rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
                     $"\"Entrance Randomizer..{(SaveFile.GetInt("randomizer entrance rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)RandomizerSettings.getSettings, null);
+                    (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 }
             }
 
@@ -108,7 +108,7 @@ namespace TunicRandomizer {
                     SwordProgression.CreateSwordItemBehaviours(__instance);
                     LoadSwords = false;
                 } catch (Exception ex) {
-                    Logger.LogError("Error applying upgraded sword!");
+                    TunicLogger.LogError("Error applying upgraded sword!");
                 }
             }
             if (WearHat && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat") != null)) {
@@ -198,6 +198,10 @@ namespace TunicRandomizer {
 
             if (PaletteEditor.FoxCape != null) {
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().UseSpecialGhostMat = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().UseSpecialGhostMat;
+            }
+
+            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<HexagonQuestCutscene>() == null) {
+                new GameObject("hex quest cutscene").gameObject.AddComponent<HexagonQuestCutscene>();
             }
 
             foreach (string Key in EnemyRandomizer.Enemies.Keys.ToList()) {
@@ -293,8 +297,8 @@ namespace TunicRandomizer {
                 FairyTargets.CreateEntranceTargets();
                 FairyTargets.FindFairyTargets();
             } catch (Exception ex) {
-                Logger.LogError("An error occurred creating new fairy seeker spell targets:");
-                Logger.LogError(ex.Message + " " + ex.StackTrace);
+                TunicLogger.LogError("An error occurred creating new fairy seeker spell targets:");
+                TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
             if (!SceneLoaderPatches.SpawnedGhosts && TunicRandomizer.Settings.GhostFoxHintsEnabled) {
@@ -318,7 +322,7 @@ namespace TunicRandomizer {
                     LadderToggles.ToggleLadders();
                 }
             } catch (Exception e) {
-                Logger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+                TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
@@ -352,6 +356,9 @@ namespace TunicRandomizer {
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
+            List<MagicSpell> spells = __instance.spells.ToList();
+            spells.Reverse();
+            __instance.spells = spells.ToArray();
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
@@ -359,7 +366,7 @@ namespace TunicRandomizer {
 
             if (seed == 0) {
                 seed = QuickSettings.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettings.CustomSeed);
-                Logger.LogInfo($"Starting new single player file with seed: " + seed);
+                TunicLogger.LogInfo($"Starting new single player file with seed: " + seed);
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
 
@@ -415,6 +422,9 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
                     }
+                    if (TunicRandomizer.Settings.ShuffleLadders) {
+                        SaveFile.SetInt(LadderRandoEnabled, 1);
+                    }
                 }
 
                 foreach (string Scene in Locations.AllScenes) {
@@ -427,13 +437,14 @@ namespace TunicRandomizer {
             }
             TunicRandomizer.Tracker = new ItemTracker();
             TunicRandomizer.Tracker.Seed = seed;
-            Logger.LogInfo("Loading single player seed: " + seed);
-            ItemRandomizer.PopulateSphereZero();
+            TunicLogger.LogInfo("Loading single player seed: " + TunicRandomizer.Settings.GetSettingsString());
+            ItemRandomizer.PopulatePrecollected();
             ItemRandomizer.RandomizeAndPlaceItems();
         }
 
         private static void PlayerCharacter_Start_ArchipelagoSetup() {
             if (!Archipelago.instance.integration.connected) {
+                TunicLogger.LogInfo("player start connecting to ap");
                 Archipelago.instance.Connect();
             } else {
                 if (TunicRandomizer.Settings.DeathLinkEnabled) {
@@ -493,13 +504,13 @@ namespace TunicRandomizer {
                 }
                 if (slotData.TryGetValue("sword_progression", out var swordProgression)) {
                     if (SaveFile.GetInt(SwordProgressionEnabled) == 0 && swordProgression.ToString() == "1") {
-                        Logger.LogInfo("sword progression enabled");
+                        TunicLogger.LogInfo("sword progression enabled");
                         SaveFile.SetInt(SwordProgressionEnabled, 1);
                     }
                 }
                 if (slotData.TryGetValue("keys_behind_bosses", out var keysBehindBosses)) {
                     if (SaveFile.GetInt(KeysBehindBosses) == 0 && keysBehindBosses.ToString() == "1") {
-                        Logger.LogInfo("keys behind bosses enabled");
+                        TunicLogger.LogInfo("keys behind bosses enabled");
                         SaveFile.SetInt(KeysBehindBosses, 1);
                     }
                 }
@@ -522,10 +533,12 @@ namespace TunicRandomizer {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
                         EnemyRandomizer.CreateAreaSeeds();
-                        Logger.LogInfo("Starting new archipelago file with seed: " + Seed);
+                        TunicLogger.LogInfo("Starting new archipelago file with seed: " + Seed);
                     } else {
-                        Logger.LogInfo("Loading seed: " + SaveFile.GetInt("seed"));
+                        TunicLogger.LogInfo("Loading archipelago seed: " + SaveFile.GetInt("seed"));
                     }
+                    TunicRandomizer.Tracker = new ItemTracker();
+                    TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
                 }
                 if (slotData.TryGetValue("logic_rules", out var logicRules)) {
                     if (logicRules.ToString() == "2") {
@@ -546,7 +559,7 @@ namespace TunicRandomizer {
                 }
                 if (LocationIDs.Contains(-1L)) {
                     Notifications.Show($"\"An error has occurred!\"", $"\"Connected slot is incompatible with this client version.\"");
-                    Logger.LogInfo("Error: Connected slot is incompatible with this client version.");
+                    TunicLogger.LogInfo("Error: Connected slot is incompatible with this client version.");
                     Archipelago.instance.Disconnect();
                 } else {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(LocationIDs.ToArray()).ContinueWith(locationInfoPacket => {
@@ -555,8 +568,8 @@ namespace TunicRandomizer {
                             string ItemName = Archipelago.instance.integration.session.Items.GetItemName(Location.Item) == null ? "UNKNOWN ITEM" : Archipelago.instance.integration.session.Items.GetItemName(Location.Item);
                             ItemLookup.ItemList.Add(LocationId, new ArchipelagoItem(ItemName, Location.Player, Location.Flags));
                         }
-                    }).Wait();
-                    Logger.LogInfo("Successfully scouted locations for item placements");
+                    }).Wait(TimeSpan.FromSeconds(5.0f));
+                    TunicLogger.LogInfo("Successfully scouted locations for item placements");
 
                     Archipelago.instance.integration.UpdateDataStorageOnLoad();
                 }
@@ -616,6 +629,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(2) == 1) {
                 SaveFile.SetInt("randomizer shuffled abilities", 1);
+            }
+            if (random.Next(2) == 1) {
+                SaveFile.SetInt(LadderRandoEnabled, 1);
             }
         }
 

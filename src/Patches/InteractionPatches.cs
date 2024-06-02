@@ -7,8 +7,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
 
@@ -24,11 +23,28 @@ namespace TunicRandomizer {
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name)) { 
                     GhostHints.HintGhost hintGhost = GhostHints.HintGhosts[__instance.name];
                     __instance.GetComponent<NPC>().script.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.TrunicDialogue : hintGhost.Dialogue)}---{hintGhost.Hint}";
+                    if (hintGhost.CheckId != "") {
+                        if (hintGhost.CheckId == "Your Pocket" || SaveFile.GetInt("randomizer picked up " + hintGhost.CheckId) == 1) {
+                            __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" it \"ALREADY?\" goud wurk!";
+                        }
+                        if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                            if (IsSinglePlayer()) {
+                                __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                            } else if(IsArchipelago()) {
+                                if (hintGhost.CheckId == "Your Pocket" || ItemLookup.ItemList[hintGhost.CheckId].Player == Archipelago.instance.GetPlayerSlot()) {
+                                    __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", hintGhost.CheckId == "Your Pocket" || Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name) && GhostHints.HexQuestHintLookup.ContainsKey(GhostHints.HintGhosts[__instance.name].Hint)) {
                     SaveFile.SetInt($"randomizer hex quest read {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint]} hint", 1);
                     ItemStatsHUD.UpdateAbilitySection();
+                    if (Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt($"randomizer hexagon quest {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint].ToLower()} requirement")) {
+                        __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" Enuhf \"ALREADY?\" goud wurk!";
+                    }
                 }
 
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
@@ -44,6 +60,11 @@ namespace TunicRandomizer {
             }
             if (__instance.GetComponent<UnderConstruction>() != null && __instance.GetComponent<UnderConstruction>().isChecklistSign) {
                 __instance.GetComponent<Signpost>().message.text = LadderToggles.GetLadderChecklist();
+                NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
+                return false;
+            }
+            if (__instance.GetComponent<UnderConstruction>() != null && __instance.name.Contains("chalkboard")) {
+                __instance.GetComponent<Signpost>().message.text = ItemTracker.GetItemCountsByRegion();
                 NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
                 return false;
             }
@@ -90,6 +111,12 @@ namespace TunicRandomizer {
                 }
                 if (__instance.transform.position.ToString() == "(2.0, 46.0, 0.0)" && SceneLoaderPatches.SceneName == "Overworld Redux" && !(StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue)) {
                     GenericMessage.ShowMessage($"\"Sealed Forever.\"");
+                    return false;
+                }
+            }
+            if (__instance.GetComponent<Pickup>() != null || __instance.GetComponent<ShopItem>() != null) {
+                if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                    Archipelago.instance.integration.ShowNotConnectedError();
                     return false;
                 }
             }

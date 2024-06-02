@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace TunicRandomizer {
     public class PortalCombo {
-        //private static ManualLogSource Logger = TunicRandomizer.Logger;
         public Portal Portal1 { get; set; }
 
         public Portal Portal2 { get; set; }

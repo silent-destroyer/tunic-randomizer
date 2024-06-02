@@ -187,6 +187,7 @@
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
+    <Compile Include="src\Patches\HexagonQuestCutscene.cs" />
     <Compile Include="src\Patches\InteractionPatches.cs" />
     <Compile Include="src\Patches\ItemPresentationPatches.cs" />
     <Compile Include="src\Patches\ItemRandomizer.cs" />
@@ -210,10 +211,12 @@
     <Compile Include="src\Patches\WaveSpell.cs" />
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
+    <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />
     <Compile Include="src\Util\ToggleLadderByLadderItem.cs" />
+    <Compile Include="src\Util\ToggleObjectByFuse.cs" />
     <Compile Include="src\Util\TunicLogger.cs" />
     <Compile Include="src\Util\UnderConstruction.cs" />
     <Compile Include="src\Util\VisibleByNotHavingItem.cs" />

@@ -14,8 +14,7 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
 
     public class ItemPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public enum ItemResult {
             Success,
             TemporaryFailure, // Can't accept right now, but can accept in the future
@@ -29,7 +28,10 @@ namespace TunicRandomizer {
         }
 
         public static bool Chest_IInteractionReceiver_Interact_PrefixPatch(Item i, Chest __instance) {
-
+            if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                Archipelago.instance.integration.ShowNotConnectedError();
+                return false;
+            }
             __instance.isFairy = false;
             return true;
         }
@@ -43,7 +45,7 @@ namespace TunicRandomizer {
                     SaveFile.SetInt(ItemLookup.FairyLookup[FairyId].Flag, 1);
                     SaveFile.SetInt($"randomizer opened fairy chest {FairyId}", 1);
                 }
-                Logger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
+                TunicLogger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
                 if (IsArchipelago()) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
                 } else if (IsSinglePlayer()) {
@@ -84,8 +86,8 @@ namespace TunicRandomizer {
 
         public static bool Chest_shouldShowAsOpen_GetterPatch(Chest __instance, ref bool __result) {
             string ActiveScene = SceneManager.GetActiveScene().name;
-            if (ActiveScene == "Quarry") {
-                __result = false;
+            if (ActiveScene == "Quarry" || ActiveScene == "Crypt") {
+                __result = true;
                 return false;
             }
 
@@ -150,10 +152,16 @@ namespace TunicRandomizer {
                 if (IsArchipelago()) {
                     ArchipelagoItem ShopItem = ItemLookup.ItemList[LocationId];
                     itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemName] : "[archipelago]";
+                    if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                        itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;
+                    }
                     __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemName.ToUpper().Replace($" ", $"\" \"")}\"");
                 } else if (IsSinglePlayer()) {
                     ItemData itemData = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[LocationId]);
                     itemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[itemData.Name] : "";
+                    if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                        itemToDisplay = TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1);
+                    }
                     __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?";
                     if (TunicRandomizer.Settings.ShowItemsEnabled) {
                         __instance.confirmPurchaseFormattedLanguageLine.text += $"\n{itemToDisplay} \"{itemData.Name}\"";
@@ -230,6 +238,7 @@ namespace TunicRandomizer {
             bool DisplayMessageAnyway = false;
 
             ItemData Item = ItemLookup.Items[ItemName];
+            string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
             string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location);
             
             if (Item.Type == ItemTypes.MONEY) {
@@ -279,7 +288,8 @@ namespace TunicRandomizer {
 
                 if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
-                    SwordProgression.UpgradeSword(SwordLevel+1);
+                    SwordProgression.UpgradeSword(SwordLevel + 1);
+                    itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
                 }
                 if (TunicRandomizer.Settings.ShowItemsEnabled) {
                     ModelSwaps.SwapItemsInScene();
@@ -410,13 +420,13 @@ namespace TunicRandomizer {
 
             if (networkItem.Player != Archipelago.instance.GetPlayerSlot()) {
                 var sender = Archipelago.instance.GetPlayerName(networkItem.Player);
-                NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
+                NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
             if (networkItem.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
-                NotificationTop = NotificationTop == "" ? $"yoo fownd  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "")}  \"{ItemName}!\"" : NotificationTop;
+                NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
@@ -442,7 +452,7 @@ namespace TunicRandomizer {
             bool DisplayMessageAnyway = false;
 
             ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
-
+            string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "";
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Check.Reward.Amount;
 
@@ -490,6 +500,7 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                     SwordProgression.UpgradeSword(SwordLevel + 1);
+                    itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
                 }
                 if (TunicRandomizer.Settings.ShowItemsEnabled) {
                     ModelSwaps.SwapItemsInScene();
@@ -618,7 +629,7 @@ namespace TunicRandomizer {
             }
 
             if (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway) {
-                NotificationTop = NotificationTop == "" ? $"yoo fownd  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "")}  \"{Item.Name}!\"" : NotificationTop;
+                NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{Item.Name}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
@@ -634,7 +645,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker.SetCollectedItem(Item.Name, true);
 
             string CheckId = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
-            Logger.LogInfo("Picked up item " + CheckId + " (" + Item.Name + ")");
+            TunicLogger.LogInfo("Picked up item " + CheckId + " (" + Item.Name + ")");
 
             Locations.CheckedLocations[CheckId] = true;
             SaveFile.SetInt($"randomizer picked up {CheckId}", 1);
@@ -737,7 +748,12 @@ namespace TunicRandomizer {
                                 break;
                         }
                     }
+                    PlayerCharacter.instance.GetComponent<DDRSpell>().CompletedSpellEffect();
                 }
+            }
+            ButtonAssignableItem cape = Inventory.GetItemByName("Cape").TryCast<ButtonAssignableItem>();
+            if (!cape.freeItemCountStateVar.BoolValue && s == cape.spellStringForFreeItem) {
+                PlayerCharacter.instance.GetComponent<DDRSpell>().CompletedSpellEffect();
             }
         }
 

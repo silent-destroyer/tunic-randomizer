@@ -22,7 +22,6 @@ namespace TunicRandomizer {
     [BepInPlugin(PluginInfo.GUID, PluginInfo.NAME, PluginInfo.VERSION)]
     public class TunicRandomizer : BasePlugin {
 
-        public static ManualLogSource Logger;
         public static RandomizerSettings Settings = new RandomizerSettings();
         public static string SettingsPath = Application.persistentDataPath + "/Randomizer/Settings.json";
         public static string ItemTrackerPath = Application.persistentDataPath + "/Randomizer/ItemTracker.json";
@@ -31,7 +30,6 @@ namespace TunicRandomizer {
 
         public override void Load() {
             TunicLogger.SetLogger(Log);
-            Logger = Log;
             TunicLogger.LogInfo(PluginInfo.NAME + " v" + PluginInfo.VERSION + " loaded!");
 
             Application.runInBackground = true;
@@ -41,11 +39,14 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<Archipelago>();
             ClassInjector.RegisterTypeInIl2Cpp<WaveSpell>();
             ClassInjector.RegisterTypeInIl2Cpp<EntranceSeekerSpell>();
+            ClassInjector.RegisterTypeInIl2Cpp<DDRSpell>();
             ClassInjector.RegisterTypeInIl2Cpp<VisibleByNotHavingItem>();
             ClassInjector.RegisterTypeInIl2Cpp<HeroGraveToggle>();
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
+            ClassInjector.RegisterTypeInIl2Cpp<HexagonQuestCutscene>();
+            ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
 
             ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Il2CppSystem.Type[]

@@ -6,11 +6,10 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class QuickSettings : MonoBehaviour {
-
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static string CustomSeed = "";
         public static Font OdinRounded;
@@ -32,7 +31,7 @@ namespace TunicRandomizer {
                 Cursor.visible = true;
                 switch (TunicRandomizer.Settings.Mode) {
                     case RandomizerSettings.RandomizerType.SINGLEPLAYER:
-                        GUI.Window(101, new Rect(20f, 150f, 430f, TunicRandomizer.Settings.MysterySeed ? 430f : 510f), new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
+                        GUI.Window(101, new Rect(20f, 150f, 430f, TunicRandomizer.Settings.MysterySeed ? 430f : 550f), new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
                         ShowAPSettingsWindow = false;
                         editingPlayer = false;
                         editingHostname = false;
@@ -51,17 +50,33 @@ namespace TunicRandomizer {
                     GUI.Window(105, new Rect(460f, 150f, 405f, 485f), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
                 }
                 GameObject.Find("elderfox_sword graphic").GetComponent<Renderer>().enabled = !ShowAdvancedSinglePlayerOptions && !ShowAPSettingsWindow;
+                if(TitleVersion.TitleButtons != null) {
+                    foreach(Button button in TitleVersion.TitleButtons.GetComponentsInChildren<Button>()) {
+                        button.enabled = !ShowAPSettingsWindow;
+                    }
+                }
             }
         }
 
         private void Update() {
             if (TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO && ShowAPSettingsWindow && SceneManager.GetActiveScene().name == "TitleScreen") {
                 if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Return) && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Backspace)) {
-
                     if (editingPort && Input.inputString != "" && int.TryParse(Input.inputString, out int num)) {
                         stringToEdit += Input.inputString;
                     } else if (!editingPort && Input.inputString != "") {
                         stringToEdit += Input.inputString;
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (!editingPlayer && !editingHostname && !editingPort && !editingHostname) {
+                        CloseAPSettingsWindow();
+                    } else {
+                        editingPlayer = false;
+                        editingHostname = false;
+                        editingPort = false;
+                        editingPassword = false;
+                        stringToEdit = "";
+                        OptionsGUIPatches.SaveSettings();
                     }
                 }
                 if (Input.GetKeyDown(KeyCode.Backspace)) {
@@ -160,7 +175,7 @@ namespace TunicRandomizer {
                 try {
                     System.Diagnostics.Process.Start(TunicRandomizer.SettingsPath);
                 } catch (Exception e) {
-                    Logger.LogError(e);
+                    TunicLogger.LogError(e.Message);
                 }
             }
             bool OpenAPSettings = GUI.Button(new Rect(220f, y, 200f, 30f), ShowAPSettingsWindow ? "Close AP Config" : "Edit AP Config");
@@ -267,13 +282,16 @@ namespace TunicRandomizer {
                 OptionsGUIPatches.SaveSettings();
             }
 
-            GUI.skin.toggle.fontSize = 20;
+            GUI.skin.button.fontSize = 20;
             y += 40f;
             GUI.Label(new Rect(10f, y, 200f, 30f), "Logic Settings");
-            TunicRandomizer.Settings.MysterySeed = GUI.Toggle(new Rect(240f, y+5, 200f, 30f), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
             y += 45f; 
             if (TunicRandomizer.Settings.MysterySeed) {
                 GUI.Label(new Rect(10f, y, 400f, 30f), "Mystery Seed Enabled!");
+                bool DisableMysterySeed = GUI.Button(new Rect(260f, y+2.5f, 160f, 30f), "Disable");
+                if (DisableMysterySeed) {
+                    TunicRandomizer.Settings.MysterySeed = false;
+                }
                 GUI.skin.label.fontSize = 20;
                 y += 40f;
                 GUI.Label(new Rect(10f, y, 400f, 30f), "Settings will be chosen randomly on New Game.");
@@ -290,9 +308,11 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.KeysBehindBosses = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.KeysBehindBosses, "Keys Behind Bosses");
                 TunicRandomizer.Settings.ShuffleAbilities  = GUI.Toggle(new Rect(240f, y, 175f, 30f), TunicRandomizer.Settings.ShuffleAbilities, "Shuffle Abilities");
                 y += 40f;
-                TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
-                TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(new Rect(240f, y, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
-
+                TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer"); 
+                TunicRandomizer.Settings.ShuffleLadders = GUI.Toggle(new Rect(240f, y, 200f, 30f), TunicRandomizer.Settings.ShuffleLadders, "Shuffle Ladders");
+                y += 40f;
+                TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(new Rect(10f, y, 175f, 30f), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
+                TunicRandomizer.Settings.MysterySeed = GUI.Toggle(new Rect(240f, y, 200f, 30f), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
                 y += 40f;
                 GUI.skin.button.fontSize = 20;
                 bool ShowAdvancedOptions = GUI.Button(new Rect(10f, y, 410f, 30f), $"{(ShowAdvancedSinglePlayerOptions ? "Hide" : "Show")} Advanced Options");
@@ -305,7 +325,6 @@ namespace TunicRandomizer {
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
             TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
-            GUI.skin.button.fontSize = 20;
             y += 40f;
             GUI.Label(new Rect(10f, y, 300f, 30f), $"Custom Seed: {(CustomSeed == "" ? "Not Set" : CustomSeed.ToString())}");
             y += 40f;
@@ -321,7 +340,7 @@ namespace TunicRandomizer {
             y += 40f;
             bool CopySettings = GUI.Button(new Rect(10f, y, 200f, 30f), "Copy Seed + Settings");
             if (CopySettings) {
-                TunicRandomizer.Settings.GetSettingsString();
+                GUIUtility.systemCopyBuffer = TunicRandomizer.Settings.GetSettingsString();
             }
             bool PasteSettings = GUI.Button(new Rect(220f, y, 200f, 30f), "Paste Seed + Settings");
             if (PasteSettings) {
@@ -494,7 +513,7 @@ namespace TunicRandomizer {
                     editingPort = false;
                     OptionsGUIPatches.SaveSettings();
                 } catch (Exception e) {
-                    Logger.LogError("invalid input pasted for port number!");
+                    TunicLogger.LogError("invalid input pasted for port number!");
                 }
             }
             bool ClearPort = GUI.Button(new Rect(190f, 300f, 75f, 30f), "Clear");
@@ -567,14 +586,19 @@ namespace TunicRandomizer {
             CloseAPSettingsWindow();
             SaveFile.LoadFromFile(filename);
             if (SaveFile.GetInt("archipelago") == 0 && SaveFile.GetInt("randomizer") == 0) {
-                Logger.LogInfo("Non-Randomizer file selected!");
+                TunicLogger.LogInfo("Non-Randomizer file selected!");
                 GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Non-Randomizer file selected.\"\n\"Returning to menu.\"");
                 return false;
             }
             if (SaveFile.GetString("archipelago player name") != "") {
                 if (SaveFile.GetString("archipelago player name") != TunicRandomizer.Settings.ConnectionSettings.Player || (Archipelago.instance.integration.connected && int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed"))) {
-                    Logger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
+                    TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
                     GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
+                    return false;
+                }
+                Archipelago.instance.Connect();
+                if (!Archipelago.instance.integration.connected) {
+                    GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago.\"\n\"Returning to menu.\"");
                     return false;
                 }
             }

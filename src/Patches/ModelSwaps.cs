@@ -11,8 +11,7 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class ModelSwaps {
-        public static ManualLogSource Logger = TunicRandomizer.Logger;
-
+        
         public static Dictionary<string, Sprite> Cards = new Dictionary<string, Sprite>();
         public static Dictionary<string, GameObject> Items = new Dictionary<string, GameObject>();
         public static Dictionary<string, GameObject> Chests = new Dictionary<string, GameObject>();
@@ -38,6 +37,7 @@ namespace TunicRandomizer {
         public static GameObject LadderGraphic;
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
+        public static GameObject Chalkboard;
 
         public static GameObject FishingRod;
 
@@ -168,6 +168,12 @@ namespace TunicRandomizer {
             ItemPresentationPatches.SetupHexagonQuestItemPresentation();
             ItemPresentationPatches.SetupCapePresentation();
             InitializeExtras();
+
+            // make it so you can pick up money from further away
+            List<ItemPickup> coins = Resources.FindObjectsOfTypeAll<ItemPickup>().Where(coin => coin.gameObject.scene.name == "DontDestroyOnLoad").ToList();
+            foreach (ItemPickup coin in coins) {
+                coin.minimumAttractDistance = 6.5f;
+            }
         }
 
         public static void CreateOtherWorldItemBlocks() {
@@ -1178,7 +1184,7 @@ namespace TunicRandomizer {
                 items.Add(Pepper.GetComponent<ShopItem>());
                 ShopManager.cachedShopItems = items.ToArray();
             } catch (Exception e) {
-                Logger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
+                TunicLogger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
             }
         }
 
@@ -1220,6 +1226,31 @@ namespace TunicRandomizer {
             UnderConstruction.name = "under construction";
             UnderConstruction.SetActive(false);
             GameObject.DontDestroyOnLoad(UnderConstruction);
+        }
+
+        public static void CreateChalkboard() {
+            Chalkboard = GameObject.Instantiate(UnderConstruction);
+            Chalkboard.name = "chalkboard";
+            Chalkboard.GetComponent<MeshFilter>().mesh = MeshData.CreateMesh(MeshData.Chalkboard);
+            Chalkboard.GetComponent<MeshRenderer>().materials = GameObject.Find("chalkboard (3)").GetComponent<MeshRenderer>().materials;
+            Chalkboard.GetComponent<BoxCollider>().size = new Vector3(8, 4, 3);
+            Chalkboard.GetComponent<BoxCollider>().center = Vector3.zero;
+            Chalkboard.GetComponent<SphereCollider>().center = Vector3.zero;
+            Chalkboard.GetComponent<SphereCollider>().radius = 4;
+            Chalkboard.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+            Chalkboard.transform.GetChild(0).localPosition = new Vector3(0, -3, 0);
+            Chalkboard.transform.localScale *= 0.75f;
+
+            GameObject diagram = new GameObject("diagram");
+            diagram.transform.parent = Chalkboard.transform;
+            diagram.transform.localPosition = new Vector3(0.1067f, -0.126f, -0.2497f);
+            diagram.transform.localEulerAngles = Vector3.zero;
+            diagram.transform.localScale = Vector3.one;
+            Sprite sprite = Sprite.CreateSprite(FindSprite("science diagrams_0").texture, new Rect(512, 341, 512, 341), new Vector2(0.5f, 0.5f), 100, 0, SpriteMeshType.FullRect, Vector4.zero, false);
+            diagram.AddComponent<SpriteRenderer>().sprite = sprite;
+            diagram.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+            Chalkboard.SetActive(false);
+            GameObject.DontDestroyOnLoad(Chalkboard);
         }
 
         public static void LoadTextures() {

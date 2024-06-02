@@ -2,7 +2,6 @@
 
 namespace TunicRandomizer {
     public class Portal {
-        //private static ManualLogSource Logger = TunicRandomizer.Logger;
         public string Name { get; set; }
         public string Destination { get; set; }
         public string Tag { get; set; }

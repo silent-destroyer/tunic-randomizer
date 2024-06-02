@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace TunicRandomizer {
     public class ItemPresentationPatches {
-        private static ManualLogSource Logger = TunicRandomizer.Logger;
 
         public static bool DathStonePresentationAlreadyCreated = false;
 
@@ -35,7 +34,7 @@ namespace TunicRandomizer {
 
                 ModelSwaps.Items["Hexagon Gold"] = GoldHexagon.transform.GetChild(0).gameObject;
             } catch (Exception e) {
-                Logger.LogError("Setup Hexagon Quest: " + e.Message);
+                TunicLogger.LogError("Setup Hexagon Quest: " + e.Message);
             }
         }
 
@@ -55,7 +54,7 @@ namespace TunicRandomizer {
  
                 RegisterNewItemPresentation(housekey.GetComponent<ItemPresentationGraphic>());
             } catch (Exception e) {
-                Logger.LogError("Setup Old House Key Item Presentation: " + e.Message);
+                TunicLogger.LogError("Setup Old House Key Item Presentation: " + e.Message);
             }
         }
 
@@ -89,7 +88,7 @@ namespace TunicRandomizer {
                 RegisterNewItemPresentation(HeirSword.GetComponent<ItemPresentationGraphic>());
 
             } catch (Exception e) {
-                Logger.LogError("Setup Custom Sword Item Presentation: " + e.Message);
+                TunicLogger.LogError("Setup Custom Sword Item Presentation: " + e.Message);
             }
         }
 
@@ -136,7 +135,7 @@ namespace TunicRandomizer {
                 GameObject.DontDestroyOnLoad(DathStone);
                 DathStone.SetActive(false);
             } catch (Exception e) {
-                Logger.LogError("Setup dath stone presentation error: " + e.Message);
+                TunicLogger.LogError("Setup dath stone presentation error: " + e.Message);
             }
         }
 
@@ -148,7 +147,7 @@ namespace TunicRandomizer {
                     DathStone.transform.GetChild(i).gameObject.SetActive(SaveFile.GetInt("randomizer entrance rando enabled") == 0);
                 }
             } catch (Exception e) {
-                Logger.LogError("Switch dath stone presentation error: " + e.Message);
+                TunicLogger.LogError("Switch dath stone presentation error: " + e.Message);
             }
         }
 
@@ -168,7 +167,7 @@ namespace TunicRandomizer {
 
                 RegisterNewItemPresentation(CapePresentation.GetComponent<ItemPresentationGraphic>());
             } catch (Exception e) {
-                Logger.LogError("Cape presentation error: " + e.Message);
+                TunicLogger.LogError("Cape presentation error: " + e.Message);
             }
         }
 
@@ -222,7 +221,7 @@ namespace TunicRandomizer {
                 RegisterNewItemPresentation(LadderPresentation.GetComponent<ItemPresentationGraphic>());
 
             } catch (Exception e) {
-                Logger.LogError("Ladder presentation error: " + e.Message);
+                TunicLogger.LogError("Ladder presentation error: " + e.Message);
             }
         }
 

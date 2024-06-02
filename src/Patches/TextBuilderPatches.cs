@@ -305,29 +305,7 @@ namespace TunicRandomizer {
                         backing.transform.localPosition = renderer.transform.localPosition;
                         backing.transform.localScale = renderer.transform.localScale * 0.9f;
                         backing.layer = renderer.gameObject.layer;
-                    } else if (renderer.sprite.name == "Inventory items_sword") {
-                        if (SaveFile.GetInt("randomizer sword progression enabled") == 1) {
-                            switch (NPCDialogue.instance.isActiveAndEnabled ? SaveFile.GetInt("randomizer sword progression level")+1 : SaveFile.GetInt("randomizer sword progression level")) {
-                                case 1:
-                                    renderer.sprite = Inventory.GetItemByName("Stick").icon;
-                                    break;
-                                case 2:
-                                    renderer.sprite = Inventory.GetItemByName("Sword").icon;
-                                    break;
-                                case 3:
-                                    renderer.sprite = Inventory.GetItemByName("Librarian Sword").icon;
-                                    break;
-                                case 4:
-                                case 5:
-                                    renderer.sprite = Inventory.GetItemByName("Heir Sword").icon;
-                                    break;
-                                default:
-                                    renderer.sprite = Inventory.GetItemByName("Sword").icon;
-                                    break;
-                            }
-                        }
-                    } 
-                    else if (renderer.sprite.name == "game gui_money_icon") {
+                    } else if (renderer.sprite.name == "game gui_money_icon") {
                         renderer.transform.localScale *= 1.25f;
                     } else if (renderer.sprite.name == "Randomizer items_Fool Trap") {
                         renderer.transform.localEulerAngles = new Vector3(0f, 0f, 180f);
@@ -336,6 +314,22 @@ namespace TunicRandomizer {
 
                     renderer.transform.localScale *= 0.85f;
                 }
+            }
+        }
+
+        public static string GetSwordIconName(int level) {
+            switch(level) {
+                case 1:
+                    return "[stick]";
+                case 2:
+                    return "[realsword]";
+                case 3:
+                    return "[librariansword]";
+                case 4:
+                case 5:
+                    return "[heirsword]";
+                default:
+                    return "[realsword]";
             }
         }
     }
