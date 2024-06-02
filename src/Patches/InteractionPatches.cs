@@ -63,6 +63,11 @@ namespace TunicRandomizer {
                 NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
                 return false;
             }
+            if (__instance.GetComponent<UnderConstruction>() != null && __instance.name.Contains("chalkboard")) {
+                __instance.GetComponent<Signpost>().message.text = ItemTracker.GetItemCountsByRegion();
+                NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
+                return false;
+            }
             if (__instance.GetComponentInParent<HeroGraveToggle>() != null && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 bool showRelicHint = StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue;
                 HeroGraveHint hint = __instance.GetComponentInParent<HeroGraveToggle>().heroGravehint;

@@ -68,9 +68,14 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Posterity");
                 return;
             }
+            if (loadingScene.name == "Library Lab" && ModelSwaps.Chalkboard == null) {
+                ModelSwaps.CreateChalkboard();
+                SceneLoader.LoadScene("Overworld Interiors");
+                return;
+            }
             if (loadingScene.name == "Library Hall" && !EnemyRandomizer.Enemies.ContainsKey("administrator_servant")) {
                 EnemyRandomizer.InitializeEnemies("Library Hall");
-                SceneLoader.LoadScene("Overworld Interiors");
+                SceneLoader.LoadScene("Library Lab");
                 return;
             }
             if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
@@ -322,6 +327,8 @@ namespace TunicRandomizer {
                     HintStatueGlow.transform.position = new Vector3(13f, 0f, 49f);
                     HintStatueGlow.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Hyperdash");
                 }
+
+                GameObject.Instantiate(ModelSwaps.Chalkboard, new Vector3(23.0934f, 7.2261f, 65.0646f), new Quaternion(0, 0.701f, 0, 0.701f)).SetActive(true);
             } else if (SceneName == "Overworld Redux") {
                 GameObject.Find("_Signposts/Signpost (3)/").GetComponent<Signpost>().message.text = $"#is wA too \"West Garden\"\n<#33FF33>[death] bEwAr uhv tArE [death]";
                 GameObject.Find("_Environment Special/Door (1)/door/key twist").GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key (House)"].GetComponent<MeshRenderer>().materials;

@@ -37,6 +37,7 @@ namespace TunicRandomizer {
         public static GameObject LadderGraphic;
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
+        public static GameObject Chalkboard;
 
         public static GameObject FishingRod;
 
@@ -1225,6 +1226,31 @@ namespace TunicRandomizer {
             UnderConstruction.name = "under construction";
             UnderConstruction.SetActive(false);
             GameObject.DontDestroyOnLoad(UnderConstruction);
+        }
+
+        public static void CreateChalkboard() {
+            Chalkboard = GameObject.Instantiate(UnderConstruction);
+            Chalkboard.name = "chalkboard";
+            Chalkboard.GetComponent<MeshFilter>().mesh = MeshData.CreateMesh(MeshData.Chalkboard);
+            Chalkboard.GetComponent<MeshRenderer>().materials = GameObject.Find("chalkboard (3)").GetComponent<MeshRenderer>().materials;
+            Chalkboard.GetComponent<BoxCollider>().size = new Vector3(8, 4, 3);
+            Chalkboard.GetComponent<BoxCollider>().center = Vector3.zero;
+            Chalkboard.GetComponent<SphereCollider>().center = Vector3.zero;
+            Chalkboard.GetComponent<SphereCollider>().radius = 4;
+            Chalkboard.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+            Chalkboard.transform.GetChild(0).localPosition = new Vector3(0, -3, 0);
+            Chalkboard.transform.localScale *= 0.75f;
+
+            GameObject diagram = new GameObject("diagram");
+            diagram.transform.parent = Chalkboard.transform;
+            diagram.transform.localPosition = new Vector3(0.1067f, -0.126f, -0.2497f);
+            diagram.transform.localEulerAngles = Vector3.zero;
+            diagram.transform.localScale = Vector3.one;
+            Sprite sprite = Sprite.CreateSprite(FindSprite("science diagrams_0").texture, new Rect(512, 341, 512, 341), new Vector2(0.5f, 0.5f), 100, 0, SpriteMeshType.FullRect, Vector4.zero, false);
+            diagram.AddComponent<SpriteRenderer>().sprite = sprite;
+            diagram.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+            Chalkboard.SetActive(false);
+            GameObject.DontDestroyOnLoad(Chalkboard);
         }
 
         public static void LoadTextures() {

@@ -299,5 +299,39 @@ namespace TunicRandomizer {
             MysterySettings.RemoveAll(x => x == "");
             return MysterySettings;
         }
+
+        public static string GetItemCountsByRegion() {
+            string title = $"\"- - - - - \"  rahnduhmIzur prawgrehs\"  - - - - -\"\n";
+            string displayText = title;
+            int TotalAreaChecks = 0;
+            int AreaChecksFound = 0;
+            foreach(string Area in Locations.MainAreasToSubAreas.Keys) {
+                TotalAreaChecks = 0;
+                AreaChecksFound = 0;
+                foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
+                    TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
+                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                }
+                displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(26, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(7, '.')}\"\n";
+                if (Area == "Rooted Ziggurat") {
+                    displayText += "---" + title;
+                }
+            }
+            int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            int TotalChecks = Locations.VanillaLocations.Count;
+            displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(26, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(7, '.')}\"";
+            if (TotalChecksFound == TotalChecks) {
+                displayText += "---\"<#eaa614>- - - - - -  302/302  - - - - - -\"\n\n    ";
+                int i = 0;
+                foreach(string s in WaveSpell.CustomInputs.Select(input => $"[arrow_{input.ToString().ToLower()}]")) {
+                    displayText += $"  <#eaa614>{s}  ";
+                    i++;
+                    if (i % 6 == 0 && i != 30) {
+                        displayText += "\n    ";
+                    }
+                }
+            }
+            return displayText;
+        }
     }
 }
