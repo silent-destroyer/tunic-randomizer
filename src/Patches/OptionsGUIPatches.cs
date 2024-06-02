@@ -175,7 +175,7 @@ namespace TunicRandomizer {
             OptionsGUI.setHeading("Fox Customization");
             OptionsGUI.addToggle("Random Fox Colors", "Off", "On", TunicRandomizer.Settings.RandomFoxColorsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleRandomFoxPalette);
             OptionsGUI.addToggle("Keepin' It Real", "Off", "On", TunicRandomizer.Settings.RealestAlwaysOn ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSunglasses);
-            OptionsGUI.addToggle("Show Fox Color Editor", "Off", "On", PaletteEditor.EditorOpen ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePaletteEditor);
+            OptionsGUI.addButton("Open Fox Color Editor", (Action)(() => { PaletteEditor.EditorOpen = true; CameraController.DerekZoom = 0.35f; GUIMode.ClearStack(); GUIMode.PushGameMode(); }));
             OptionsGUI.addToggle("Use Custom Texture", "Off", "On", TunicRandomizer.Settings.UseCustomTexture ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCustomTexture);
             if (BonusOptionsUnlocked && SceneLoaderPatches.SceneName != "TitleScreen") {
                 OptionsGUI.addToggle("<#FFA500>BONUS: Cel Shaded Fox", "Off", "On", PaletteEditor.CelShadingEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCelShading);
@@ -503,11 +503,6 @@ namespace TunicRandomizer {
                 }
             }
             SaveSettings();
-        }
-
-        public static void TogglePaletteEditor(int index) {
-            PaletteEditor.EditorOpen = !PaletteEditor.EditorOpen;
-            CameraController.DerekZoom = PaletteEditor.EditorOpen ? 0.35f : 1f;
         }
 
         public static void ToggleCustomTexture(int index) {
