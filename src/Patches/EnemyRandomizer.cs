@@ -1123,15 +1123,18 @@ namespace TunicRandomizer {
                 int EnemiesDefeated = SaveFile.GetInt(EnemiesDefeatedCount);
                 SaveFile.SetInt(EnemiesDefeatedCount, EnemiesDefeated + 1);
 
-                string SceneName = SceneLoaderPatches.SceneName;
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && SceneName != "Cathedral Arena") {
-                    if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
-                        DefeatedEnemyTracker.Add(SceneName, new List<string>());
-                    }
-                    if (EnemiesInCurrentScene.ContainsKey(__instance.__4__this.name)) {
-                        DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[__instance.__4__this.name]);
-                    }
+                RecordDefeatedEnemy(__instance.__4__this);
+            }
+        }
 
+        public static void RecordDefeatedEnemy(Monster monster) {
+            string SceneName = SceneLoaderPatches.SceneName;
+            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && SceneName != "Cathedral Arena") {
+                if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
+                    DefeatedEnemyTracker.Add(SceneName, new List<string>());
+                }
+                if (EnemiesInCurrentScene.ContainsKey(monster.name)) {
+                    DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[monster.name]);
                 }
             }
         }
@@ -1172,20 +1175,55 @@ namespace TunicRandomizer {
             }
         }
 
-        public static bool Librarian_monster_onDie_PrefixPatch(Librarian __instance) {
-            if (__instance.GetComponent<BossAnnounceOnAggro>() == null) {
-                CoinSpawner.SpawnCoins(256, __instance.transform.position);
-                GameObject.Destroy(__instance.gameObject);
+        public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
+
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 return false;
             }
-            return true;
-        }
+            if (__instance.name == "_Fox(Clone)") {
+                if (CustomItemBehaviors.CanTakeGoldenHit) {
+                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
+                    PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxCape.GetComponent<MeshRenderer>().materials;
 
-        public static bool Spidertank_monster_onDie_PrefixPatch(Spidertank __instance) {
-            if (__instance.GetComponent<BossAnnounceOnAggro>() == null) {
-                CoinSpawner.SpawnCoins(256, __instance.transform.position);
-                GameObject.Destroy(__instance.gameObject);
-                return false;
+                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                    CustomItemBehaviors.CanTakeGoldenHit = false;
+                    return false;
+                }
+            } else {
+                if (__instance.GetComponent<BossEnemy>() != null) {
+                    if (__instance.hp - damagePoints <= 0) {
+                        CoinSpawner.SpawnCoins(256, __instance.transform.position);
+                        GameObject.Destroy(__instance.gameObject);
+                        RecordDefeatedEnemy(__instance);
+                        return false;
+                    }
+                }
+                if (__instance.GetComponent<Foxgod>() != null) {
+                    if (TunicRandomizer.Settings.HeirAssistModeEnabled) {
+                        __instance.hp -= PlayerCharacterPatches.HeirAssistModeDamageValue;
+                    }
+                    if (__instance.hp == __instance.maxhp) {
+                        __instance.Flinch(true);
+                        return true;
+                    }
+                }
+                if (CustomItemBehaviors.CanSwingGoldenSword) {
+                    __instance.hp -= 30;
+                    GameObject Hand = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R");
+                    if (Hand != null) {
+                        Hand.transform.GetChild(1).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Sword"].GetComponent<MeshRenderer>().materials;
+                        if (Hand.transform.childCount >= 12) {
+                            Hand.transform.GetChild(12).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.SecondSword.GetComponent<MeshRenderer>().materials;
+                            Hand.transform.GetChild(13).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.ThirdSword.GetComponent<MeshRenderer>().materials;
+                        }
+                    }
+                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                    CustomItemBehaviors.CanSwingGoldenSword = false;
+                }
             }
             return true;
         }
