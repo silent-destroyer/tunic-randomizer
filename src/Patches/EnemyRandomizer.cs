@@ -947,7 +947,8 @@ namespace TunicRandomizer {
                     }
 
                     if (NewEnemy.GetComponent<Spidertank>() != null) {
-                        NewEnemy.transform.localScale = Vector3.one * 0.33f;
+                        NewEnemy.transform.localScale = Vector3.one * 0.35f;
+                        NewEnemy.transform.GetChild(1).GetChild(0).GetChild(4).GetChild(15).gameObject.SetActive(false);
                     }
 
                     if (NewEnemy.GetComponent<BossEnemy>() != null) {
