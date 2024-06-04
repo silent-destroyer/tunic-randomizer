@@ -156,6 +156,9 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Enemies are randomized based on the difficulty of the original enemy being swapped out.
 - Seeded Enemies
   - Enemy spawns will remain consistent everytime an area is reloaded.
+- Limit Boss Spawns
+  - Limits the number of boss-type enemies that can spawn in the enemy randomizer.
+  - Turn off at own risk! Too many bosses can lag the game in certain areas.
 - Enemy Toggles
   - Allows you to customize the enemy randomizer experience by choosing which enemies you want to appear.
   - Turn on the `Use Enemy Toggles` option and then use the Enemy Toggle List to make your choices.

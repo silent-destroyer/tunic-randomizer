@@ -647,9 +647,9 @@ namespace TunicRandomizer {
             }
         }
 
-        public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance) {
+        public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
 
-            if (__instance.name == "Foxgod" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 return false;
             }
             if (__instance.name == "_Fox(Clone)") {
@@ -666,8 +666,21 @@ namespace TunicRandomizer {
                     return false;
                 }
             } else {
-                if (__instance.name == "Foxgod" && TunicRandomizer.Settings.HeirAssistModeEnabled) {
-                    __instance.hp -= HeirAssistModeDamageValue;
+                if (__instance.GetComponent<Foxgod>() != null) {
+                    if (TunicRandomizer.Settings.HeirAssistModeEnabled) {
+                        __instance.hp -= HeirAssistModeDamageValue;
+                    }
+                    if (__instance.GetComponent<BossEnemy>() != null) {
+                        if (__instance.hp - damagePoints <= 0) {
+                            CoinSpawner.SpawnCoins(256, __instance.transform.position);
+                            GameObject.Destroy(__instance.gameObject);
+                            return false;
+                        }
+                        if (__instance.hp == __instance.maxhp) {
+                            __instance.Flinch(true);
+                            return true;
+                        }
+                    }
                 }
                 if (CustomItemBehaviors.CanSwingGoldenSword) {
                     __instance.hp -= 30;

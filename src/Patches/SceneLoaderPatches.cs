@@ -44,6 +44,8 @@ namespace TunicRandomizer {
                 }
             }
 
+            EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
+
             return true;
         }
 
@@ -182,6 +184,7 @@ namespace TunicRandomizer {
                 SpiritArenaTeleporterPrefab.transform.position = new Vector3(-30000f, -30000f, -30000f);
                 SpiritArenaTeleporterPrefab.SetActive(false);
                 ModelSwaps.SetupStarburstEffect();
+                EnemyRandomizer.InitializeEnemies("Spirit Arena");
                 SceneLoader.LoadScene("Transit");
                 return;
             }
@@ -439,6 +442,8 @@ namespace TunicRandomizer {
                     Bush.SetActive(false);
                 }
             }
+
+            EnemyRandomizer.CheckBossState();
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 if (IsArchipelago()) {

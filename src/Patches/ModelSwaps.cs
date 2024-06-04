@@ -921,71 +921,73 @@ namespace TunicRandomizer {
 
         public static void SwapSiegeEngineCrown() {
             GameObject VaultKey = GameObject.Find("Spidertank/Spidertank_skeleton/root/thorax/vault key graphic");
+            if (VaultKey != null) {
+                ArchipelagoItem ApItem = null;
+                Check Check = null;
+                ItemData VaultKeyItem = null;
 
-            ArchipelagoItem ApItem = null;
-            Check Check = null;
-            ItemData VaultKeyItem = null;
-
-            string ItemId = "Vault Key (Red) [Fortress Arena]";
-            if (IsArchipelago() && (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {ItemId} was collected") == 1)) {
-                GameObject.Destroy(VaultKey);
-                return;
-            }
-            if (VaultKey != null && (ItemLookup.ItemList.ContainsKey(ItemId) || Locations.RandomizedLocations.ContainsKey(ItemId))) {
-                if (IsArchipelago()) {
-                    ApItem = ItemLookup.ItemList[ItemId];
-                    if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                        VaultKeyItem = ItemLookup.Items[ApItem.ItemName];
+                string ItemId = "Vault Key (Red) [Fortress Arena]";
+                if (IsArchipelago() && (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {ItemId} was collected") == 1)) {
+                    GameObject.Destroy(VaultKey);
+                    return;
+                }
+                if (VaultKey != null && (ItemLookup.ItemList.ContainsKey(ItemId) || Locations.RandomizedLocations.ContainsKey(ItemId))) {
+                    if (IsArchipelago()) {
+                        ApItem = ItemLookup.ItemList[ItemId];
+                        if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
+                            VaultKeyItem = ItemLookup.Items[ApItem.ItemName];
+                            if (VaultKeyItem.ItemNameForInventory == "Vault Key (Red)") {
+                                return;
+                            }
+                        }
+                    }
+                    if (IsSinglePlayer()) {
+                        Check = Locations.RandomizedLocations[ItemId];
+                        VaultKeyItem = ItemLookup.GetItemDataFromCheck(Check);
                         if (VaultKeyItem.ItemNameForInventory == "Vault Key (Red)") {
                             return;
                         }
                     }
-                }
-                if (IsSinglePlayer()) {
-                    Check = Locations.RandomizedLocations[ItemId];
-                    VaultKeyItem = ItemLookup.GetItemDataFromCheck(Check);
-                    if (VaultKeyItem.ItemNameForInventory == "Vault Key (Red)") {
-                        return;
+                    if (VaultKey.GetComponent<MeshFilter>() != null) {
+                        GameObject.Destroy(VaultKey.GetComponent<MeshRenderer>());
+                        GameObject.Destroy(VaultKey.GetComponent<MeshFilter>());
                     }
-                }
-                if (VaultKey.GetComponent<MeshFilter>() != null) {
-                    GameObject.Destroy(VaultKey.GetComponent<MeshRenderer>());
-                    GameObject.Destroy(VaultKey.GetComponent<MeshFilter>());
-                }
 
-                for (int i = 0; i < VaultKey.transform.childCount; i++) {
-                    VaultKey.transform.GetChild(i).gameObject.SetActive(false);
-                }
+                    for (int i = 0; i < VaultKey.transform.childCount; i++) {
+                        VaultKey.transform.GetChild(i).gameObject.SetActive(false);
+                    }
 
-                GameObject NewItem = SetupItemBase(VaultKey.transform, ApItem, Check);
+                    GameObject NewItem = SetupItemBase(VaultKey.transform, ApItem, Check);
 
-                TransformData TransformData;
-                if (IsArchipelago() && VaultKeyItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
-                    TransformData = ItemPositions.VaultKeyRed["Other World"];
-                } else {
-                    if (VaultKeyItem.Type == ItemTypes.TRINKET) {
-                        TransformData = ItemPositions.VaultKeyRed["Trinket Card"];
-                    } else if (VaultKeyItem.Type == ItemTypes.MONEY || VaultKeyItem.Type == ItemTypes.FOOLTRAP) {
-                        if (VaultKeyItem.QuantityToGive < 30) {
-                            TransformData = ItemPositions.VaultKeyRed["money small"];
-                        } else if (VaultKeyItem.QuantityToGive >= 30 && VaultKeyItem.QuantityToGive < 100) {
-                            TransformData = ItemPositions.VaultKeyRed["money medium"];
-                        } else {
-                            TransformData = ItemPositions.VaultKeyRed["money large"];
-                        }
-                    } else if (VaultKeyItem.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || ApItem.Player == Archipelago.instance.GetPlayerSlot())) {
-                        int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
-                        TransformData = ItemPositions.VaultKeyRed.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.VaultKeyRed[$"Sword Progression {SwordLevel}"] : ItemPositions.VaultKeyRed[VaultKeyItem.ItemNameForInventory];
+                    TransformData TransformData;
+                    if (IsArchipelago() && VaultKeyItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                        TransformData = ItemPositions.VaultKeyRed["Other World"];
                     } else {
-                        TransformData = ItemPositions.VaultKeyRed.ContainsKey(VaultKeyItem.ItemNameForInventory) ? ItemPositions.VaultKeyRed[VaultKeyItem.ItemNameForInventory] : ItemPositions.VaultKeyRed[Enum.GetName(typeof(ItemTypes), VaultKeyItem.Type)];
+                        if (VaultKeyItem.Type == ItemTypes.TRINKET) {
+                            TransformData = ItemPositions.VaultKeyRed["Trinket Card"];
+                        } else if (VaultKeyItem.Type == ItemTypes.MONEY || VaultKeyItem.Type == ItemTypes.FOOLTRAP) {
+                            if (VaultKeyItem.QuantityToGive < 30) {
+                                TransformData = ItemPositions.VaultKeyRed["money small"];
+                            } else if (VaultKeyItem.QuantityToGive >= 30 && VaultKeyItem.QuantityToGive < 100) {
+                                TransformData = ItemPositions.VaultKeyRed["money medium"];
+                            } else {
+                                TransformData = ItemPositions.VaultKeyRed["money large"];
+                            }
+                        } else if (VaultKeyItem.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || ApItem.Player == Archipelago.instance.GetPlayerSlot())) {
+                            int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                            TransformData = ItemPositions.VaultKeyRed.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.VaultKeyRed[$"Sword Progression {SwordLevel}"] : ItemPositions.VaultKeyRed[VaultKeyItem.ItemNameForInventory];
+                        } else {
+                            TransformData = ItemPositions.VaultKeyRed.ContainsKey(VaultKeyItem.ItemNameForInventory) ? ItemPositions.VaultKeyRed[VaultKeyItem.ItemNameForInventory] : ItemPositions.VaultKeyRed[Enum.GetName(typeof(ItemTypes), VaultKeyItem.Type)];
+                        }
                     }
-                }
 
-                NewItem.transform.localPosition = TransformData.pos;
-                NewItem.transform.localRotation = TransformData.rot;
-                NewItem.transform.localScale = TransformData.scale;
-                NewItem.SetActive(true);
+                    NewItem.transform.localPosition = TransformData.pos;
+                    NewItem.transform.localRotation = TransformData.rot;
+                    NewItem.transform.localScale = TransformData.scale;
+                    NewItem.SetActive(true);
+                }
             }
+
 
         }
 
