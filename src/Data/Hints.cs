@@ -397,7 +397,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartInventoryAndPrecollected);
             } else {
-                TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
                 ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartInventoryAndPrecollected);
             }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
