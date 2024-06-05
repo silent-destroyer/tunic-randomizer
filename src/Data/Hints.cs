@@ -211,10 +211,6 @@ namespace TunicRandomizer {
             // make the in-game signs tell you what area they're pointing to
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 foreach (PortalCombo Portal in TunicPortals.RandomizedPortals.Values) {
-                    TunicLogger.LogInfo("test message 1");
-                    TunicLogger.LogInfo(Portal.Portal1.SceneDestinationTag);
-                    TunicLogger.LogInfo(Portal.Portal2.SceneDestinationTag);
-                    TunicLogger.LogInfo("test message 2");
                     if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
                     { HintMessages.Add("East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[Portal.Portal2.Scene])} [arrow_right]"); }
                     if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
