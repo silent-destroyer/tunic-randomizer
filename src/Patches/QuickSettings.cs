@@ -182,6 +182,7 @@ namespace TunicRandomizer {
             if (OpenAPSettings) {
                 if (ShowAPSettingsWindow) {
                     CloseAPSettingsWindow();
+                    Archipelago.instance.Disconnect();
                     Archipelago.instance.Connect();
                 } else {
                     ShowAPSettingsWindow = true;
@@ -559,6 +560,7 @@ namespace TunicRandomizer {
             bool Close = GUI.Button(new Rect(10f, 450f, 165f, 30f), "Close");
             if (Close) {
                 CloseAPSettingsWindow();
+                Archipelago.instance.Disconnect();
                 Archipelago.instance.Connect();
             }
 
