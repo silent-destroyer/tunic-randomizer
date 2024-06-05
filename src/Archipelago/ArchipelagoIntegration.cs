@@ -172,7 +172,13 @@ namespace TunicRandomizer {
         private IEnumerator<bool> CheckItemsReceived() {
             while (connected) {
                 if (session.Items.AllItemsReceived.Count > ItemIndex) {
-                    NetworkItem Item = session.Items.AllItemsReceived[ItemIndex];
+                    ItemInfo ItemInfo = session.Items.AllItemsReceived[ItemIndex];
+                    NetworkItem Item = new NetworkItem {
+                        Item = ItemInfo.ItemId,
+                        Location = ItemInfo.LocationId,
+                        Player = ItemInfo.Player.Slot,
+                        Flags = ItemInfo.Flags
+                    };
                     string ItemReceivedName = session.Items.GetItemName(Item.Item);
                     TunicLogger.LogInfo("Placing item " + ItemReceivedName + " with index " + ItemIndex + " in queue.");
                     incomingItems.Enqueue((Item, ItemIndex));
@@ -298,8 +304,18 @@ namespace TunicRandomizer {
                 }
 
                 session.Locations.ScoutLocationsAsync(location)
-                .ContinueWith(locationInfoPacket =>
-                    outgoingItems.Enqueue(locationInfoPacket.Result.Locations[0]));
+                .ContinueWith(locationInfoPacket => {
+                    foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
+                        NetworkItem item = new NetworkItem {
+                            Item = ItemInfo.ItemId,
+                            Location = ItemInfo.LocationId,
+                            Player = ItemInfo.Player.Slot,
+                            Flags = ItemInfo.Flags
+                        };
+                        outgoingItems.Enqueue(item);
+                    }
+
+                });
 
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationId);
@@ -467,9 +483,9 @@ namespace TunicRandomizer {
             Dictionary<string, int> startInventory = new Dictionary<string, int>();
             if (connected && session != null) {
                 // start inventory items have a location ID of -2, add them to a dict so we can use them for first steps
-                foreach (NetworkItem item in session.Items.AllItemsReceived) {
-                    if (item.Location == -2) {
-                        string itemName = session.Items.GetItemName(item.Item);
+                foreach (ItemInfo item in session.Items.AllItemsReceived) {
+                    if (item.LocationId == -2) {
+                        string itemName = item.ItemName;
                         if (ItemLookup.Items.ContainsKey(itemName)) {
                             ItemRandomizer.AddStringToDict(startInventory, ItemLookup.Items[itemName].ItemNameForInventory);
                         }
