@@ -327,16 +327,9 @@ namespace TunicRandomizer {
             }
 
             if (Area == "Bosses Defeated") {
-                List<string> BossStateVars = new List<string>() {
-                    "SV_Forest Boss Room_Skuladot redux Big",
-                    "SV_Archipelagos Redux TUNIC Knight is Dead",
-                    "SV_Fortress Arena_Spidertank Is Dead",
-                    "Librarian Dead Forever",
-                    "SV_ScavengerBossesDead"
-                };
                 int BossesDefeated = 0;
-                foreach (string BossState in BossStateVars) {
-                    if (StateVariable.GetStateVariableByName(BossState).BoolValue) {
+                foreach (string BossState in EnemyRandomizer.CustomBossFlags) {
+                    if (SaveFile.GetInt(BossState) == 1) {
                         BossesDefeated++;
                     }
                 }

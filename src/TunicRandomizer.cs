@@ -5,17 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using BepInEx;
-using BepInEx.Logging;
-using Il2CppSystem;
 using BepInEx.IL2CPP;
 using UnityEngine;
 using HarmonyLib;
-using Archipelago;
 using Newtonsoft.Json;
 using UnhollowerRuntimeLib;
-using Newtonsoft.Json.Bson;
-using UnityEngine.InputSystem.Utilities;
-using UnityEngine.SceneManagement;
+
 
 namespace TunicRandomizer {
 
@@ -47,6 +42,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
             ClassInjector.RegisterTypeInIl2Cpp<HexagonQuestCutscene>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
+            ClassInjector.RegisterTypeInIl2Cpp<BossEnemy>();
 
             ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Il2CppSystem.Type[]
@@ -88,7 +84,7 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(PlayerCharacter._Die_d__481), "MoveNext"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Die_MoveNext_PostfixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
 
             // Scene Loader
             Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PostfixPatch")));
@@ -157,7 +153,9 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(TunicKnightVoid), "onFlinch"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "TunicKnightVoid_onFlinch_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(Monster._Die_d__77), "MoveNext"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_Die_MoveNext_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_Die_MoveNext_PostfixPatch")));
-            
+
+            Harmony.Patch(AccessTools.Method(typeof(Librarian), "BehaviourUpdate"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Librarian_BehaviourUpdate_PostfixPatch")));
+
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));
 

@@ -12,6 +12,8 @@ using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
 
+    public class BossEnemy : MonoBehaviour { }
+
     public class EnemyRandomizer {
 
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
@@ -19,6 +21,15 @@ namespace TunicRandomizer {
         public static Dictionary<string, List<string>> DefeatedEnemyTracker = new Dictionary<string, List<string>>();
 
         public static Dictionary<string, string> EnemiesInCurrentScene = new Dictionary<string, string>() { };
+
+        public static GameObject LibrarianPools;
+
+        public static List<GameObject> LibrarianOrbs;
+
+        // Heir
+        public static GameObject FoxgodBossfightRoot;
+
+        public static List<List<GameObject>> FoxgodPools;
 
         public static List<string> SpecificExcludedEnemies = new List<string>() {
             "Overworld Redux (-175.1, 1.0, -76.3)",
@@ -49,6 +60,7 @@ namespace TunicRandomizer {
             "East Forest Redux Skuladot redux (5)",
             "East Forest Redux Skuladot redux (6)",
         };
+
         public static List<string> DoNotPlaceTurretHere = new List<string>() {
             "Cathedral Redux Fox enemy zombie (13)",
             "Fortress Basement Spider Small (3)",
@@ -60,6 +72,30 @@ namespace TunicRandomizer {
             "East Forest Redux Skuladot redux (6)",
             "East Forest Redux Spider Small (8)",
             "Overworld Redux Honourguard",
+        };
+
+        public static List<string> BossStateVars = new List<string>() {
+            "SV_Forest Boss Room_Skuladot redux Big",
+            "SV_Archipelagos Redux TUNIC Knight is Dead",
+            "SV_Fortress Arena_Spidertank Is Dead",
+            "Librarian Dead Forever",
+            "SV_ScavengerBossesDead"
+        };
+
+        public static List<string> CustomBossFlags = new List<string>() {
+            "randomizer defeated forest boss",
+            "randomizer defeated garden knight",
+            "randomizer defeated siege engine",
+            "randomizer defeated librarian",
+            "randomizer defeated boss scavenger"
+        };
+
+        public static Dictionary<string, string> BossFlavorText = new Dictionary<string, string>() {
+            { "tech knight boss", "uh slEpi^ gRdEin, wuhn uhv mehnE" },
+            { "Spidertank", "#uh lahst fuh^k$uhni^ wor muh$En" },
+            { "Librarian", "#uh %Evi^ skawlur hoo sEks #uh kraws buht duhz nawt uhndurstahnd" },
+            { "Scavenger Boss", "#uh kwEn uhv #Oz hoo pik #uh bOnz uhv #is lahnd" },
+            { "Foxgod", "" },
         };
 
         public static Dictionary<string, List<string>> LocationEnemies = new Dictionary<string, List<string>>() {
@@ -94,7 +130,8 @@ namespace TunicRandomizer {
                     "crocodoo",
                     "Fairyprobe Archipelagos (2)",
                     "Fairyprobe Archipelagos (Dmg)",
-                    "tunic knight void"
+                    "tunic knight void",
+                    "tech knight boss"
                 }
             },
             {
@@ -124,6 +161,12 @@ namespace TunicRandomizer {
                     "Spider Big",
                     "Wizard_Sword",
                     "Wizard_Candleabra",
+                }
+            },
+            { 
+                "Fortress Arena",
+                new List<string>() {
+                    "Spidertank"
                 }
             },
             {
@@ -182,6 +225,7 @@ namespace TunicRandomizer {
                 "ziggurat2020_3",
                 new List<string>() {
                     "Centipede from egg (Varient)",
+                    "Scavenger Boss"
                 }
             },
             {
@@ -213,7 +257,8 @@ namespace TunicRandomizer {
                 "Library Arena",
                 new List<string> () {
                     "Bat_librarian add",
-                    "Skuladot redux_librarian add"
+                    "Skuladot redux_librarian add",
+                    "Librarian"
                 }
             },
             {
@@ -221,6 +266,12 @@ namespace TunicRandomizer {
                 new List<string> () {
                     "Phage",
                     "Ghost Knight"
+                }
+            },
+            {
+                "Spirit Arena",
+                new List<string> () {
+                    "Foxgod"
                 }
             }
         };
@@ -307,6 +358,16 @@ namespace TunicRandomizer {
                     "Voidtouched",
                     "Shadowreaper",
                 }
+            },
+            { 
+                "Bosses",
+                new List<string>() {
+                    "tech knight boss",
+                    "Spidertank",
+                    "Librarian",
+                    "Scavenger Boss",
+                    "Foxgod"
+                }
             }
         };
 
@@ -378,6 +439,11 @@ namespace TunicRandomizer {
             { "Skuladot redux_ghost", $"\"Rudeling...?\"" },
             { "Skuladot redux_shield_ghost", $"\"Rudeling...?\" ($Eld)" },
             { "Skuladot redux Big_ghost", $"\"Guard Captain...?\"" },
+            { "Librarian", $"\"Librarian\"" },
+            { "Spidertank", $"\"Siege Engine\"" },
+            { "Scavenger Boss", $"\"Boss Scavenger\"" },
+            { "tech knight boss", $"\"Garden Knight\"" },
+            { "Foxgod", $"\"The Heir\"" },
         };
 
         public static Dictionary<string, string> EnemyToggleOptionNames = new Dictionary<string, string>() {
@@ -409,6 +475,7 @@ namespace TunicRandomizer {
             { "Fairyprobe Archipelagos", $"Fairy (Ice)" },
             { "crocodoo", $"Chompignom (Terry)" },
             { "crocodoo Voidtouched", $"Chompignom (Void)" },
+            { "tech knight boss", $"Garden Knight" },
             { "plover", $"Plover (Bluebirds)" },
             { "Crabbit", $"Crabbit" },
             { "Crabbit with Shell", $"Crabbit w/ Cube Shell" },
@@ -421,16 +488,19 @@ namespace TunicRandomizer {
             { "Frog Spear", $"Frog w/ Shield & Spear" },
             { "Frog Spear_Ghost", $"Frog w/ Shield & Spear (Ghost)" },
             { "administrator_servant", $"Administrator (Coffee Table)" },
+            { "Librarian", $"Librarian" },
             { "Wizard_Sword", $"Custodian" },
             { "Wizard_Candleabra", $"Custodian w/ Candelabra" },
             { "Wizard_Support", $"Custodian (Support)" },
             { "Wizard_Support_Ghost", $"Custodian (Support Ghost)" },
+            { "Spidertank", $"Siege Engine" },
             { "Scavenger", $"Scavenger (Sniper)" },
             { "Scavenger_miner", $"Scavenger (Miner)" },
             { "Scavenger_support", $"Scavenger (Support)" },
             { "Scavenger_stunner", $"Scavenger (Ice Sniper)" },
             { "voidling redux", $"Voidling Spider" },
             { "administrator", $"Administrator" },
+            { "Scavenger Boss", $"Boss Scavenger" },
             { "bomezome_easy", $"Fleemer" },
             { "bomezome_easy_ghost", $"Fleemer (Ghost)" },
             { "bomezome_easy_ghost (tweaked)", $"Fleemer (Big Ghost)" },
@@ -442,6 +512,7 @@ namespace TunicRandomizer {
             { "Fox enemy", $"Fox Zombie (Strong)" },
             { "tech knight ghost", $"Garden Knight (Ghost)" },
             { "Voidtouched", $"Voidtouched" },
+            { "Foxgod", $"The Heir" },
             { "Ghost Knight", $"Ghost Knight (Devworld)" },
             { "Phage", $"Phage/Beta Slorm (Devworld)" },
             { "woodcutter", $"Woodcutter" },
@@ -449,6 +520,7 @@ namespace TunicRandomizer {
             { "tunic knight void", $"Garden Knight (Void)" },
             { "Shadowreaper", $"Shadowreaper" },
         };
+
         public static void CreateAreaSeeds() {
             System.Random Random = new System.Random(SaveFile.GetInt("seed"));
             foreach (String Scene in Locations.AllScenes) {
@@ -481,6 +553,12 @@ namespace TunicRandomizer {
                 }
                 GameObject.DontDestroyOnLoad(Enemies[EnemyName]);
                 Enemies[EnemyName].SetActive(false);
+
+                if (Enemies[EnemyName].GetComponent<BossAnnounceOnAggro>() != null) {
+                    GameObject.Destroy(Enemies[EnemyName].GetComponent<BossAnnounceOnAggro>());
+                    Enemies[EnemyName].GetComponent<ZTarget>().hideHPBar = false;
+                    Enemies[EnemyName].AddComponent<BossEnemy>();
+                }
 
                 Enemies[EnemyName].transform.position = new Vector3(-30000f, -30000f, -30000f);
                 if (EnemyName == "Blob") {
@@ -521,7 +599,43 @@ namespace TunicRandomizer {
                 if (EnemyName == "Wizard_Support") {
                     Enemies["Wizard_Support_Ghost"].GetComponent<Monster>().dropValue = Enemies["Wizard_Support"].GetComponent<Monster>().dropValue;
                 }
+                if (EnemyName == "Scavenger Boss") {
+                    Enemies["Scavenger Boss"].GetComponent<ScavengerBoss>().eggTossChance = 0.25f;
+                }
+                if(EnemyName == "Librarian") {
+                    LibrarianPools = GameObject.Instantiate(GameObject.Find("_Pools/"));
+                    LibrarianOrbs = new List<GameObject>();
 
+                    foreach(GameObject orb in LibrarianPools.transform.GetChild(3).GetComponent<PooledFX>().pool) {
+                        GameObject orbclone = GameObject.Instantiate(orb);
+                        LibrarianOrbs.Add(orbclone);
+                        GameObject.DontDestroyOnLoad(orbclone);
+                        orbclone.SetActive(false);
+                    }
+
+                    GameObject.DontDestroyOnLoad(LibrarianPools);
+                    Enemies[EnemyName].GetComponent<Librarian>().horizontalSlashPrefab_pool = LibrarianPools.transform.GetChild(0).GetComponent<PooledFX>();
+                    Enemies[EnemyName].GetComponent<Librarian>().verticalSlashPrefab_pool = LibrarianPools.transform.GetChild(1).GetComponent<PooledFX>();
+                    Enemies[EnemyName].GetComponent<Librarian>().orbPrefab_pool = LibrarianPools.transform.GetChild(3).GetComponent<PooledFX>();
+                }
+                if (EnemyName == "Foxgod") {
+                    FoxgodBossfightRoot = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "_BOSSFIGHT ROOT").First());
+                    FoxgodBossfightRoot.SetActive(false);
+                    GameObject.Destroy(FoxgodBossfightRoot.transform.GetChild(2).gameObject);
+                    Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "_BOSSFIGHT ROOT").First().SetActive(true);
+                    FoxgodPools = new List<List<GameObject>>();
+                    for(int i = 0; i < FoxgodBossfightRoot.transform.GetChild(0).childCount; i++) {
+                        List<GameObject> pool = new List<GameObject>();
+                        for(int j = 0; j < 64; j++) {
+                            GameObject fxClone = GameObject.Instantiate(FoxgodBossfightRoot.transform.GetChild(0).GetChild(i).GetChild(0).gameObject);
+                            fxClone.SetActive(false);
+                            pool.Add(fxClone);
+                            GameObject.DontDestroyOnLoad(fxClone);
+                        }
+                        FoxgodPools.Add(pool);
+                    }
+                    GameObject.DontDestroyOnLoad(FoxgodBossfightRoot);
+                }
                 Enemies[EnemyName].name = EnemyName + " Prefab";
             }
             if (SceneName == "Archipelagos Redux") {
@@ -549,6 +663,10 @@ namespace TunicRandomizer {
             string CurrentScene = SceneManager.GetActiveScene().name;
 
             List<BombFlask> bombFlasks = Resources.FindObjectsOfTypeAll<BombFlask>().Where(bomb => bomb.name != "Firecracker").ToList();
+
+            List<bool> bossStateVars = BossStateVars.Select(x => StateVariable.GetStateVariableByName(x).BoolValue).ToList();
+            BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
+            List<int> bossesSpawned = new List<int>() { 0, 0, 0, 0, 0 };
 
             System.Random Random;
             if (TunicRandomizer.Settings.SeededEnemies) {
@@ -670,6 +788,16 @@ namespace TunicRandomizer {
                         EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Skuladot redux Big" : "Skuladot redux Big_ghost");
                         EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Bat" : "Bat void");
                     }
+
+                    // Limit boss spawns to one of each type max
+                    if (TunicRandomizer.Settings.LimitBossSpawns) {
+                        EnemyRankings["Bosses"].ForEach(x => {
+                            if (bossesSpawned[EnemyRankings["Bosses"].IndexOf(x)] > 0) {
+                                EnemyKeys.Remove(x);
+                            }
+                        });
+                    }
+
                     if (EnemyKeys.Count == 0) {
                         GameObject.Destroy(Enemy.gameObject);
                         continue;
@@ -759,8 +887,10 @@ namespace TunicRandomizer {
                                     BottomLine.text = $"A straw^ ehnuhmE";
                                 } else if (EnemyRankings["Intense"].Contains(Key)) {
                                     BottomLine.text = $"A formiduhbl fO";
+                                } else if (EnemyRankings["Bosses"].Contains(Key)) {
+                                    BottomLine.text = BossFlavorText[Key];
                                 } else {
-                                    BottomLine.text = $"A formiduhbl fO";
+                                    BottomLine.text = $"A straw^ ehnuhmE";
                                 }
                             }
                         }
@@ -805,6 +935,49 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<BoxCollider>().extents /= 2;
                     }
 
+                    if (NewEnemy.GetComponent<Librarian>() != null) {
+                        NewEnemy.GetComponent<Librarian>().orbitCentre = PlayerCharacter.Instanced ? PlayerCharacter.instance.transform : NewEnemy.transform;
+                        NewEnemy.GetComponent<Librarian>().fightCameraZone = new GameObject();
+                        NewEnemy.GetComponent<Librarian>().escapeLadderGameObject = new GameObject();
+                        NewEnemy.GetComponent<Librarian>().killbox = new GameObject();
+                        NewEnemy.GetComponent<Librarian>().orbitDistance = 5;
+                        NewEnemy.GetComponent<Librarian>().orbitAltitude = 5;
+                        NewEnemy.GetComponent<Librarian>().addSpawnTransforms = new Transform[] { PlayerCharacter.Instanced ? PlayerCharacter.instance.transform : NewEnemy.transform };
+                        NewEnemy.GetComponent<Librarian>().orbPrefab_pool.pool = LibrarianOrbs.ToArray();
+                    }
+
+                    if (NewEnemy.GetComponent<Spidertank>() != null) {
+                        NewEnemy.transform.localScale = Vector3.one * 0.35f;
+                        NewEnemy.transform.GetChild(1).GetChild(0).GetChild(4).GetChild(15).gameObject.SetActive(false);
+                    }
+
+                    if (NewEnemy.GetComponent<BossEnemy>() != null) {
+                        if (NewEnemy.GetComponent<Monster>().defaultStartingMaxHP != null) {
+                            NewEnemy.GetComponent<Monster>().defaultStartingMaxHP._value = 300;
+                        }
+                        EnemyRankings["Bosses"].ForEach(x => {
+                            if (NewEnemy.name.Contains(x)) {
+                                bossesSpawned[EnemyRankings["Bosses"].IndexOf(x)]++;
+                            }
+                        });
+                    }
+
+                    if (NewEnemy.GetComponent<Foxgod>() != null) {
+                        NewEnemy.GetComponent<Foxgod>().impactFX_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(0).GetComponent<PooledFX>();
+                        NewEnemy.GetComponent<Foxgod>().impactFX_pool.pool = FoxgodPools[0].ToArray();
+                        NewEnemy.GetComponent<Foxgod>().shockwave_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(1).GetComponent<PooledFX>();
+                        NewEnemy.GetComponent<Foxgod>().shockwave_pool.pool = FoxgodPools[1].ToArray();
+                        NewEnemy.GetComponent<Foxgod>().bullet_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(2).GetComponent<PooledFX>();
+                        NewEnemy.GetComponent<Foxgod>().bullet_pool.pool = FoxgodPools[2].ToArray();
+                        NewEnemy.GetComponent<Foxgod>().summonFX_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(3).GetComponent<PooledFX>();
+                        NewEnemy.GetComponent<Foxgod>().summonFX_pool.pool = FoxgodPools[3].ToArray();
+                        NewEnemy.GetComponent<Foxgod>().rainPreview_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(4).GetComponent<PooledFX>();
+                        NewEnemy.GetComponent<Foxgod>().rainPreview_pool.pool = FoxgodPools[4].ToArray();
+                        NewEnemy.GetComponent<Foxgod>().voidhole_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(5).GetComponent<PooledFX>();
+                        NewEnemy.GetComponent<Foxgod>().voidhole_pool.pool = FoxgodPools[5].ToArray();
+                        NewEnemy.GetComponent<Foxgod>().monsterAggroed = true;
+                    }
+
                     NewEnemy.name += $" {i}";
                     EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
 
@@ -834,7 +1007,10 @@ namespace TunicRandomizer {
                         TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
                     }
                 }
+            
+                BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = bossStateVars[BossStateVars.IndexOf(s)]);
             }
+
             try {
                 foreach (string Key in Enemies.Keys) {
                     if (Enemies[Key] != null) {
@@ -910,28 +1086,28 @@ namespace TunicRandomizer {
         }
 
         public static bool Monster_Die_MoveNext_PrefixPatch(Monster._Die_d__77 __instance, ref bool __result) {
-            if (__instance.__4__this.GetComponent<BossAnnounceOnAggro>() != null && IsArchipelago()) {
+            if (__instance.__4__this.GetComponent<BossAnnounceOnAggro>() != null) {
                 if (SceneManager.GetActiveScene().name == "Forest Boss Room") {
+                    SaveFile.SetInt("randomizer defeated forest boss", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Guard Captain", true);
                 }
                 if (__instance.__4__this.GetComponent<Knightbot>() != null) {
+                    SaveFile.SetInt("randomizer defeated garden knight", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Garden Knight", true);
                 }
                 if (__instance.__4__this.GetComponent<Spidertank>() != null) {
+                    SaveFile.SetInt("randomizer defeated siege engine", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Siege Engine", true);
                 }
                 if (__instance.__4__this.GetComponent<Librarian>() != null) {
+                    SaveFile.SetInt("randomizer defeated librarian", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Librarian", true);
                 }
                 if (__instance.__4__this.GetComponent<ScavengerBoss>() != null) {
+                    SaveFile.SetInt("randomizer defeated boss scavenger", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Boss Scavenger", true);
                 }
             }
-
-            if (SceneLoaderPatches.SceneName == "Forest Boss Room" && __instance.__4__this.GetComponent<BossAnnounceOnAggro>() != null) {
-                StateVariable.GetStateVariableByName("SV_Forest Boss Room_Skuladot redux Big").BoolValue = true;
-            }
-
 
             if (__instance.__4__this.GetComponent<TunicKnightVoid>() != null) {
                 CoinSpawner.SpawnCoins(50, __instance.__4__this.transform.position);
@@ -948,15 +1124,18 @@ namespace TunicRandomizer {
                 int EnemiesDefeated = SaveFile.GetInt(EnemiesDefeatedCount);
                 SaveFile.SetInt(EnemiesDefeatedCount, EnemiesDefeated + 1);
 
-                string SceneName = SceneLoaderPatches.SceneName;
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && SceneName != "Cathedral Arena") {
-                    if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
-                        DefeatedEnemyTracker.Add(SceneName, new List<string>());
-                    }
-                    if (EnemiesInCurrentScene.ContainsKey(__instance.__4__this.name)) {
-                        DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[__instance.__4__this.name]);
-                    }
+                RecordDefeatedEnemy(__instance.__4__this);
+            }
+        }
 
+        public static void RecordDefeatedEnemy(Monster monster) {
+            string SceneName = SceneLoaderPatches.SceneName;
+            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && SceneName != "Cathedral Arena") {
+                if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
+                    DefeatedEnemyTracker.Add(SceneName, new List<string>());
+                }
+                if (EnemiesInCurrentScene.ContainsKey(monster.name)) {
+                    DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[monster.name]);
                 }
             }
         }
@@ -983,5 +1162,89 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void Librarian_BehaviourUpdate_PostfixPatch(Librarian __instance) {
+            if (__instance.IsAggroed) {
+                if (__instance.GetComponent<BossAnnounceOnAggro>() == null) {
+                    if (PlayerCharacter.Instanced) {
+                        Vector3 temp = __instance.transform.position;
+                        temp.y = PlayerCharacter.Instanced ? PlayerCharacter.instance.lastPosition.y : temp.y;
+                        __instance.transform.position = temp;
+                        __instance.orbitCentre = PlayerCharacter.instance.transform;
+                        __instance.orbSpawnPoint = PlayerCharacter.instance.transform;
+                    }
+                }
+            }
+        }
+
+        public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
+
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                return false;
+            }
+            if (__instance.name == "_Fox(Clone)") {
+                if (CustomItemBehaviors.CanTakeGoldenHit) {
+                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
+                    PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxCape.GetComponent<MeshRenderer>().materials;
+
+                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                    CustomItemBehaviors.CanTakeGoldenHit = false;
+                    return false;
+                }
+            } else {
+                if (__instance.GetComponent<BossEnemy>() != null) {
+                    if (__instance.hp - damagePoints <= 0) {
+                        CoinSpawner.SpawnCoins(256, __instance.transform.position);
+                        GameObject.Destroy(__instance.gameObject);
+                        RecordDefeatedEnemy(__instance);
+                        return false;
+                    }
+                }
+                if (__instance.GetComponent<Foxgod>() != null) {
+                    if (TunicRandomizer.Settings.HeirAssistModeEnabled) {
+                        __instance.hp -= PlayerCharacterPatches.HeirAssistModeDamageValue;
+                    }
+                    if (__instance.hp == __instance.maxhp) {
+                        __instance.Flinch(true);
+                        return true;
+                    }
+                }
+                if (CustomItemBehaviors.CanSwingGoldenSword) {
+                    __instance.hp -= 30;
+                    GameObject Hand = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R");
+                    if (Hand != null) {
+                        Hand.transform.GetChild(1).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Sword"].GetComponent<MeshRenderer>().materials;
+                        if (Hand.transform.childCount >= 12) {
+                            Hand.transform.GetChild(12).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.SecondSword.GetComponent<MeshRenderer>().materials;
+                            Hand.transform.GetChild(13).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.ThirdSword.GetComponent<MeshRenderer>().materials;
+                        }
+                    }
+                    SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                    CustomItemBehaviors.CanSwingGoldenSword = false;
+                }
+            }
+            return true;
+        }
+
+        public static void CheckBossState() {
+            if (GameObject.FindObjectOfType<BossAnnounceOnAggro>() != null) {
+                GameObject boss = GameObject.FindObjectOfType<BossAnnounceOnAggro>().gameObject;
+                if (boss.GetComponent<Knightbot>() != null && SaveFile.GetInt(CustomBossFlags[1]) == 1) {
+                    GameObject.Destroy(boss);
+                }
+                if (boss.GetComponent<Spidertank>() != null && SaveFile.GetInt(CustomBossFlags[2]) == 1) {
+                    GameObject.Destroy(boss);
+                }
+                if (boss.GetComponent<Librarian>() != null && SaveFile.GetInt(CustomBossFlags[3]) == 1) {
+                    GameObject.Destroy(boss);
+                }
+                if (boss.GetComponent<ScavengerBoss>() != null && SaveFile.GetInt(CustomBossFlags[4]) == 1) {
+                    GameObject.Destroy(boss);
+                }
+            }
+        }
     }
 }

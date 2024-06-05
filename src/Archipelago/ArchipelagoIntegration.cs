@@ -431,11 +431,11 @@ namespace TunicRandomizer {
             }
 
             // Boss Info
-            UpdateDataStorage("Defeated Guard Captain", StateVariable.GetStateVariableByName("SV_Forest Boss Room_Skuladot redux Big").BoolValue, false);
-            UpdateDataStorage("Defeated Garden Knight", StateVariable.GetStateVariableByName("SV_Archipelagos Redux TUNIC Knight is Dead").BoolValue, false);
-            UpdateDataStorage("Defeated Siege Engine", StateVariable.GetStateVariableByName("SV_Fortress Arena_Spidertank Is Dead").BoolValue, false);
-            UpdateDataStorage("Defeated Librarian", StateVariable.GetStateVariableByName("Librarian Dead Forever").BoolValue, false);
-            UpdateDataStorage("Defeated Boss Scavenger", StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue, false);
+            UpdateDataStorage("Defeated Guard Captain", SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1, false);
+            UpdateDataStorage("Defeated Garden Knight", SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1, false);
+            UpdateDataStorage("Defeated Siege Engine", SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1, false);
+            UpdateDataStorage("Defeated Librarian", SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1, false);
+            UpdateDataStorage("Defeated Boss Scavenger", SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1, false);
             UpdateDataStorage("Cleared Cathedral Gauntlet", StateVariable.GetStateVariableByName("SV_Cathedral Arena Mockup_Waves Done").BoolValue, false);
             UpdateDataStorage("Reached an Ending", SpeedrunData.gameComplete != 0, false);
 

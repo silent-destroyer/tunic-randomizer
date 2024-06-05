@@ -128,6 +128,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
             OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
+            OptionsGUI.addToggle("Limit Boss Spawns", "Off", "On", TunicRandomizer.Settings.LimitBossSpawns ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.LimitBossSpawns = !TunicRandomizer.Settings.LimitBossSpawns; SaveSettings(); }));
             OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
             addPageButton("Configure Enemy Toggles", EnemyTogglesPage);
         }

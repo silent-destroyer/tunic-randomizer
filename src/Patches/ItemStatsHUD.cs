@@ -439,25 +439,25 @@ namespace TunicRandomizer {
                 } else {
                     __instance.hexagonImages[2].enabled = false;
                 }
-                if (StateVariable.GetStateVariableByName("SV_Forest Boss Room_Skuladot redux Big").BoolValue) {
+                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1) {
                     GuardCaptain.GetComponent<Image>().color = new Color(.627f, .125f, .941f);
                 }
                 if (StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue) {
                     Ding.GetComponent<Image>().color = new Color(1f, 0.84f, 0f);
                 }
-                if (StateVariable.GetStateVariableByName("SV_Archipelagos Redux TUNIC Knight is Dead").BoolValue) {
+                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1) {
                     GardenKnight.GetComponent<Image>().color = Color.cyan;
                 }
                 if (StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue) {
                     Dong.GetComponent<Image>().color = new Color(1f, 0.84f, 0f);
                 }
-                if (StateVariable.GetStateVariableByName("SV_Fortress Arena_Spidertank Is Dead").BoolValue) {
+                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1) {
                     SiegeEngine.GetComponent<Image>().color = new Color(1f, 0f, 0f, 0.75f);
                 }
-                if (StateVariable.GetStateVariableByName("Librarian Dead Forever").BoolValue) {
+                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1) {
                     Librarian.GetComponent<Image>().color = new Color(0f, 1f, 0f, 0.75f);
                 }
-                if (StateVariable.GetStateVariableByName("SV_ScavengerBossesDead").BoolValue) {
+                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1) {
                     BossScavenger.GetComponent<Image>().color = new Color(0f, 0f, 1f, 1f);
                 }
 

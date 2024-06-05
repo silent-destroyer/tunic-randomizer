@@ -241,6 +241,7 @@ namespace TunicRandomizer {
         private const int BALANCED_ENEMIES = 4;
         private const int SEEDED_ENEMIES = 8;
         private const int EXCLUDE_ENEMIES = 16;
+        private const int LIMIT_BOSS_SPAWNS = 32;
         public bool EnemyRandomizerEnabled {
             get;
             set;
@@ -257,6 +258,11 @@ namespace TunicRandomizer {
         }
 
         public bool SeededEnemies {
+            get;
+            set;
+        }
+
+        public bool LimitBossSpawns {
             get;
             set;
         }
@@ -400,6 +406,7 @@ namespace TunicRandomizer {
             BalancedEnemies = true;
             SeededEnemies = true;
             ExtraEnemiesEnabled = false;
+            LimitBossSpawns = true;
             ExcludeEnemies = false;
             EnemyToggles = new Dictionary<string, bool>();
             foreach(string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
@@ -418,17 +425,6 @@ namespace TunicRandomizer {
             RandomFoxColorsEnabled = true;
             RealestAlwaysOn = false;
             UseCustomTexture = false;
-        }
-
-        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled) {
-            HeroPathHintsEnabled = hintsEnabled;
-            RandomFoxColorsEnabled = randomFoxColorsEnabled;
-        }
-
-        public RandomizerSettings(bool hintsEnabled, bool randomFoxColorsEnabled, bool heirAssistEnaled) {
-            HeroPathHintsEnabled = hintsEnabled;
-            RandomFoxColorsEnabled = randomFoxColorsEnabled;
-            HeirAssistModeEnabled = heirAssistEnaled;
         }
 
         public string GetSettingsString() {
@@ -512,6 +508,7 @@ namespace TunicRandomizer {
                 BalancedEnemies = eval(enemies, BALANCED_ENEMIES);
                 SeededEnemies = eval(enemies, SEEDED_ENEMIES);
                 ExcludeEnemies = eval(enemies, EXCLUDE_ENEMIES);
+                LimitBossSpawns = eval(enemies, LIMIT_BOSS_SPAWNS);
 
                 int race = int.Parse(decodedSplit[8]);
                 RaceMode = eval(race, RACE_MODE);
@@ -570,7 +567,7 @@ namespace TunicRandomizer {
         }
 
         public bool[] enemySettings() {
-            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, ExcludeEnemies };
+            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, ExcludeEnemies, LimitBossSpawns };
         }
 
         private string ConvertEnemyToggles() {
