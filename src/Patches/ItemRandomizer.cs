@@ -196,13 +196,14 @@ namespace TunicRandomizer {
                 UnplacedInventory.Add("Hyperdash", 1);
             }
 
-            // full inventory is to separate out "fake" items from real ones
-            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
             if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
                 TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
             } else {
                 TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
             }
+
+            // full inventory is to separate out "fake" items from real ones
+            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
             
             int fairyCount = 0;
             bool laurelsPlaced = false;
@@ -222,6 +223,8 @@ namespace TunicRandomizer {
                 if (itemName == "Fairy") {
                     fairyCount++;
                 }
+
+                // todo: put this in the item collection while loop
                 if (SaveFile.GetInt("randomizer laurels location") != 0 && !laurelsPlaced && (
                     (SaveFile.GetInt("randomizer laurels location") == 1 && UnplacedInventory["Trinket Coin"] == 10)
                     || (SaveFile.GetInt("randomizer laurels location") == 2 && UnplacedInventory["Trinket Coin"] == 6)
@@ -237,7 +240,8 @@ namespace TunicRandomizer {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
                 AddListToDict(FullInventory, PrecollectedItems);
-                    
+
+                // todo: wrap this in a bigger while loop that takes a count of the current full inventory before the region while loop, then grabs all items it can reach after and then compares
                 // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
                 while (true) {
                     int start_num = FullInventory.Count;
