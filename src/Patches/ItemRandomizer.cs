@@ -201,7 +201,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
                 TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
             } else {
-                TunicPortals.VanillaPortals();
+                TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
             }
             
             int fairyCount = 0;
@@ -502,7 +502,7 @@ namespace TunicRandomizer {
         // in non-ER, we want the actual sphere 1
         public static Dictionary<string, int> GetSphereOne(Dictionary<string, int> startInventory = null) {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
-
+            Dictionary<string, PortalCombo> vanillaPortals = TunicPortals.VanillaPortals();
             if (startInventory == null) {
                 AddListToDict(Inventory, PrecollectedItems);
             } else {
@@ -512,7 +512,7 @@ namespace TunicRandomizer {
             while (true) {
                 int start_num = Inventory.Count;
                 Inventory = TunicPortals.UpdateReachableRegions(Inventory);
-                foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                foreach (PortalCombo portalCombo in vanillaPortals.Values) {
                     Inventory = portalCombo.AddComboRegions(Inventory);
                 }
                 int end_num = Inventory.Count;

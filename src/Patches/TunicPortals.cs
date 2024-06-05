@@ -4953,8 +4953,8 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        public static Dictionary<Portal, Portal> VanillaPortals() {
-            RandomizedPortals.Clear();
+        public static Dictionary<string, PortalCombo> VanillaPortals() {
+            Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
             List<Portal> portalList = new List<Portal>();
             int shop_num = 1;
@@ -4999,10 +4999,10 @@ namespace TunicRandomizer {
                 if (!portal2_sdt.StartsWith("Shop,")) {
                     portalList.Remove(portal2);
                 }
-                RandomizedPortals.Add(count.ToString(), new PortalCombo(portal1, portal2));
+                portalCombos.Add(count.ToString(), new PortalCombo(portal1, portal2));
                 count++;
             }
-            return portalPairs;
+            return portalCombos;
         }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
