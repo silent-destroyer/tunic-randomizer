@@ -211,6 +211,10 @@ namespace TunicRandomizer {
             // make the in-game signs tell you what area they're pointing to
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 foreach (PortalCombo Portal in TunicPortals.RandomizedPortals.Values) {
+                    TunicLogger.LogInfo("test message 1");
+                    TunicLogger.LogInfo(Portal.Portal1.SceneDestinationTag);
+                    TunicLogger.LogInfo(Portal.Portal2.SceneDestinationTag);
+                    TunicLogger.LogInfo("test message 2");
                     if (Portal.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
                     { HintMessages.Add("East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[Portal.Portal2.Scene])} [arrow_right]"); }
                     if (Portal.Portal2.SceneDestinationTag == "Overworld Redux, Forest Belltower_")
@@ -392,12 +396,12 @@ namespace TunicRandomizer {
             Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
             Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
             ItemRandomizer.PopulatePrecollected();
-            TunicPortals.VanillaPortals();
             // StartInventoryItems is populated with your start inventory items, which are items with a location ID of -2
             Dictionary<string, int> StartInventoryAndPrecollected = ItemRandomizer.AddListToDict(Archipelago.instance.integration.GetStartInventory(), ItemRandomizer.PrecollectedItems);
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 ItemRandomizer.SphereZero = ItemRandomizer.GetERSphereOne(StartInventoryAndPrecollected);
             } else {
+                TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
                 ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartInventoryAndPrecollected);
             }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
