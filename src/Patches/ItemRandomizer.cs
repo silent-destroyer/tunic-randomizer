@@ -191,10 +191,6 @@ namespace TunicRandomizer {
                     UnplacedInventory.Add(itemName, 1);
                 }
             }
-            // if laurels location is on, manually add laurels to the unplaced inventory
-            if (!UnplacedInventory.ContainsKey("Hyperdash")) {
-                UnplacedInventory.Add("Hyperdash", 1);
-            }
 
             if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
                 TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
@@ -204,9 +200,6 @@ namespace TunicRandomizer {
 
             // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
-            
-            int fairyCount = 0;
-            bool laurelsPlaced = false;
 
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => random.Next())) {
@@ -220,20 +213,6 @@ namespace TunicRandomizer {
                     UnplacedInventory.Remove(itemName);
                 }
 
-                if (itemName == "Fairy") {
-                    fairyCount++;
-                }
-
-                // todo: put this in the item collection while loop
-                if (SaveFile.GetInt("randomizer laurels location") != 0 && !laurelsPlaced && (
-                    (SaveFile.GetInt("randomizer laurels location") == 1 && UnplacedInventory["Trinket Coin"] == 10)
-                    || (SaveFile.GetInt("randomizer laurels location") == 2 && UnplacedInventory["Trinket Coin"] == 6)
-                    || (SaveFile.GetInt("randomizer laurels location") == 3 && fairyCount == 11))) {
-                    // laurels will no longer be accessible, remove it from the pool
-                    laurelsPlaced = true;
-                    UnplacedInventory.Remove("Hyperdash");
-                }
-
                 FullInventory.Clear();
                 FullInventory.Add("Overworld", 1);
                 foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
@@ -241,16 +220,39 @@ namespace TunicRandomizer {
                 }
                 AddListToDict(FullInventory, PrecollectedItems);
 
-                // todo: wrap this in a bigger while loop that takes a count of the current full inventory before the region while loop, then grabs all items it can reach after and then compares
-                // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
+                // fill method: reverse fill and anything you can get with your remaining inventory is assumed to be in your inventory for the purpose of placing the next item
                 while (true) {
-                    int start_num = FullInventory.Count;
-                    FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
-                    foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                        FullInventory = portalCombo.AddComboRegions(FullInventory);
+                    int start_count = FullInventory.Count;
+
+                    // do some shenanigans to decide whether you have laurels accessible
+                    if (!FullInventory.ContainsKey("Hyperdash") && (SaveFile.GetInt("randomizer laurels location") == 1 && FullInventory["Trinket Coin"] >= 6)
+                        || (SaveFile.GetInt("randomizer laurels location") == 2 && FullInventory["Trinket Coin"] >= 10)
+                        || (SaveFile.GetInt("randomizer laurels location") == 3 && FullInventory.ContainsKey("Fairy") && FullInventory["Fairy"] >= 10 && FullInventory.ContainsKey("Secret Gathering Place"))) {
+                        // laurels location is on, and you have the required items to access it
+                        FullInventory.Add("Hyperdash", 1);
                     }
-                    int end_num = FullInventory.Count;
-                    if (start_num == end_num) {
+
+                    // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
+                    while (true) {
+                        int start_num = FullInventory.Count;
+                        FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
+                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                            FullInventory = portalCombo.AddComboRegions(FullInventory);
+                        }
+                        if (start_num == FullInventory.Count) {
+                            break;
+                        }
+                    }
+
+                    foreach (Check placedLocation in ProgressionLocations.Values) {
+                        if (placedLocation.Location.reachable(FullInventory)) {
+                            string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
+                            AddStringToDict(FullInventory, item_name);
+                        }
+                    }
+
+                    // if these two are equal, then we've gotten everything we have access to
+                    if (start_count == FullInventory.Count) {
                         break;
                     }
                 }
