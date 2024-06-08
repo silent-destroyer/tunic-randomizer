@@ -265,8 +265,8 @@ namespace TunicRandomizer {
                     continue;
                 }
 
-                var itemName = session.Items.GetItemName(networkItem.Item);
-                var location = session.Locations.GetLocationNameFromId(networkItem.Location, Archipelago.instance.GetPlayerGame(networkItem.Player));
+                var itemName = session.Items.GetItemName(networkItem.Item, Archipelago.instance.GetPlayerGame(networkItem.Player));
+                var location = session.Locations.GetLocationNameFromId(networkItem.Location, "TUNIC");
                 var receiver = session.Players.GetPlayerName(networkItem.Player);
 
                 TunicLogger.LogInfo("Sent " + itemName + " at " + location + " for " + receiver);
