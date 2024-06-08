@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using Archipelago.MultiClient.Net.Helpers;
+using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
 using System;
 using System.Collections.Generic;
@@ -222,7 +223,7 @@ namespace TunicRandomizer {
             return false;
         }
 
-        public static ItemResult GiveItem(string ItemName, NetworkItem networkItem) {
+        public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
             if(ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || 
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
                 GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
@@ -239,7 +240,7 @@ namespace TunicRandomizer {
 
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
-            string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location, Archipelago.instance.GetPlayerGame(networkItem.Player));
+            string LocationId = itemInfo.LocationName;
             
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Item.QuantityToGive;
@@ -251,7 +252,7 @@ namespace TunicRandomizer {
                     { "Shop - Coin 2", 999 }
                 };
                 // If buying your own money item from the shop, increase amount rewarded
-                if (OriginalShopPrices.ContainsKey(LocationId) && (networkItem.Player == Archipelago.instance.GetPlayerSlot())) {
+                if (OriginalShopPrices.ContainsKey(LocationId) && (itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
                     AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[LocationId];
                 }
 
@@ -377,7 +378,7 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.FOOLTRAP) {
-                (NotificationTop, NotificationBottom) = ApplyFoolEffect(networkItem.Player);
+                (NotificationTop, NotificationBottom) = ApplyFoolEffect(itemInfo.Player);
                 DisplayMessageAnyway = true;
             }
 
@@ -418,20 +419,20 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (networkItem.Player != Archipelago.instance.GetPlayerSlot()) {
-                var sender = Archipelago.instance.GetPlayerName(networkItem.Player);
+            if (itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
+                var sender = itemInfo.Player.Name;
                 NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            if (networkItem.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
                 NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            string slotLoc = $"{networkItem.Player}, {Archipelago.instance.GetLocationName(networkItem.Location, Archipelago.instance.GetPlayerGame(networkItem.Player))}";
+            string slotLoc = $"{itemInfo.Player}, {itemInfo.LocationName}";
             if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
                 SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
             }

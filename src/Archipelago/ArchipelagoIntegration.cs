@@ -33,8 +33,8 @@ namespace TunicRandomizer {
         private IEnumerator<bool> incomingItemHandler;
         private IEnumerator<bool> outgoingItemHandler;
         private IEnumerator<bool> checkItemsReceived;
-        private ConcurrentQueue<(NetworkItem NetworkItem, int index)> incomingItems;
-        private ConcurrentQueue<NetworkItem> outgoingItems;
+        private ConcurrentQueue<(ItemInfo ItemInfo, int index)> incomingItems;
+        private ConcurrentQueue<ItemInfo> outgoingItems;
         private DeathLinkService deathLinkService;
         public Dictionary<string, object> slotData;
         public bool sentCompletion = false;
@@ -96,8 +96,8 @@ namespace TunicRandomizer {
             incomingItemHandler = IncomingItemHandler();
             outgoingItemHandler = OutgoingItemHandler();
             checkItemsReceived = CheckItemsReceived();
-            incomingItems = new ConcurrentQueue<(NetworkItem NetworkItem, int index)>();
-            outgoingItems = new ConcurrentQueue<NetworkItem>();
+            incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int index)>();
+            outgoingItems = new ConcurrentQueue<ItemInfo>();
 
             TunicRandomizer.Tracker = new ItemTracker();
 
@@ -155,8 +155,8 @@ namespace TunicRandomizer {
                 incomingItemHandler = null;
                 outgoingItemHandler = null;
                 checkItemsReceived = null;
-                incomingItems = new ConcurrentQueue<(NetworkItem NetworkItem, int ItemIndex)>();
-                outgoingItems = new ConcurrentQueue<NetworkItem>();
+                incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
+                outgoingItems = new ConcurrentQueue<ItemInfo>();
                 deathLinkService = null;
                 slotData = null;
                 ItemIndex = 0;
@@ -173,15 +173,8 @@ namespace TunicRandomizer {
             while (connected) {
                 if (session.Items.AllItemsReceived.Count > ItemIndex) {
                     ItemInfo ItemInfo = session.Items.AllItemsReceived[ItemIndex];
-                    NetworkItem Item = new NetworkItem {
-                        Item = ItemInfo.ItemId,
-                        Location = ItemInfo.LocationId,
-                        Player = ItemInfo.Player.Slot,
-                        Flags = ItemInfo.Flags
-                    };
-                    string ItemReceivedName = session.Items.GetItemName(Item.Item, ItemInfo.ItemGame);
-                    TunicLogger.LogInfo("Placing item " + ItemReceivedName + " with index " + ItemIndex + " in queue.");
-                    incomingItems.Enqueue((Item, ItemIndex));
+                    TunicLogger.LogInfo("Placing item " + ItemInfo.ItemName + " with index " + ItemIndex + " in queue.");
+                    incomingItems.Enqueue((ItemInfo, ItemIndex));
                     ItemIndex++;
                     yield return true;
                 } else {
@@ -199,9 +192,9 @@ namespace TunicRandomizer {
                     continue;
                 }
 
-                var networkItem = pendingItem.NetworkItem;
-                var itemName = session.Items.GetItemName(networkItem.Item);
-                var itemDisplayName = itemName + " (" + networkItem.Item + ") at index " + pendingItem.index;
+                var itemInfo = pendingItem.ItemInfo;
+                var itemName = itemInfo.ItemName;
+                var itemDisplayName = itemName + " (" + itemInfo.ItemId + ") at index " + pendingItem.index;
 
                 if (SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 1) {
                     incomingItems.TryDequeue(out _);
@@ -216,10 +209,10 @@ namespace TunicRandomizer {
                     yield return true;
                 }
 
-                var handleResult = ItemPatches.GiveItem(itemName, networkItem);
+                var handleResult = ItemPatches.GiveItem(itemName, itemInfo);
                 switch (handleResult) {
                     case ItemPatches.ItemResult.Success:
-                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + session.Players.GetPlayerName(networkItem.Player));
+                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + session.Players.GetPlayerName(itemInfo.Player) + " at " + itemInfo.LocationName);
 
                         incomingItems.TryDequeue(out _);
                         SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
@@ -237,7 +230,7 @@ namespace TunicRandomizer {
 
                         // Pause before processing next item
                         DateTime postInteractionStart = DateTime.Now;
-                        while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(3.5)) {
+                        while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
                             yield return true;
                         }
 
@@ -260,35 +253,35 @@ namespace TunicRandomizer {
 
         private IEnumerator<bool> OutgoingItemHandler() {
             while (connected) {
-                if (!outgoingItems.TryDequeue(out var networkItem)) {
+                if (!outgoingItems.TryDequeue(out var itemInfo)) {
                     yield return true;
                     continue;
                 }
 
-                var itemName = session.Items.GetItemName(networkItem.Item, Archipelago.instance.GetPlayerGame(networkItem.Player));
-                var location = session.Locations.GetLocationNameFromId(networkItem.Location, "TUNIC");
-                var receiver = session.Players.GetPlayerName(networkItem.Player);
+                var itemName = itemInfo.ItemName;
+                var location = itemInfo.LocationName;
+                var receiver = itemInfo.Player.Name;
 
-                TunicLogger.LogInfo("Sent " + itemName + " at " + location + " for " + receiver);
+                TunicLogger.LogInfo("Sent " + itemName + " at " + location + " to " + receiver);
 
-                if (networkItem.Player != session.ConnectionInfo.Slot) {
+                if (itemInfo.Player != session.ConnectionInfo.Slot) {
                     SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players")+1);
-                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(networkItem.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
+                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                 }
                 
                 yield return true;
             }
         }
 
-        public void ActivateCheck(string LocationId) {
+        public void ActivateCheck(string LocationName) {
             var sceneName = SceneManager.GetActiveScene().name;
-            if (LocationId != null) {
-                TunicLogger.LogInfo("Checked location " + LocationId);
-                var location = session.Locations.GetLocationIdFromName(session.ConnectionInfo.Game, LocationId);
+            if (LocationName != null) {
+                TunicLogger.LogInfo("Checked location " + LocationName);
+                var location = session.Locations.GetLocationIdFromName(session.ConnectionInfo.Game, LocationName);
 
                 session.Locations.CompleteLocationChecks(location);
 
-                string GameObjectId = Locations.LocationDescriptionToId[LocationId];
+                string GameObjectId = Locations.LocationDescriptionToId[LocationName];
                 SaveFile.SetInt(ItemCollectedKey + GameObjectId, 1);
 
                 Locations.CheckedLocations[GameObjectId] = true;
@@ -306,33 +299,24 @@ namespace TunicRandomizer {
                 session.Locations.ScoutLocationsAsync(location)
                 .ContinueWith(locationInfoPacket => {
                     foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                        NetworkItem item = new NetworkItem {
-                            Item = ItemInfo.ItemId,
-                            Location = ItemInfo.LocationId,
-                            Player = ItemInfo.Player.Slot,
-                            Flags = ItemInfo.Flags
-                        };
-                        outgoingItems.Enqueue(item);
+                        outgoingItems.Enqueue(ItemInfo);
                     }
-
                 });
 
             } else {
-                TunicLogger.LogWarning("Failed to get unique name for check " + LocationId);
-                Notifications.Show($"\"Unknown Check: {LocationId}\"", $"\"Please file a bug!\"");
+                TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
+                Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
             }
         }
 
-        public void SendCompletion() { 
-            StatusUpdatePacket statusUpdatePacket = new StatusUpdatePacket();
-            statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
-            session.Socket.SendPacket(statusUpdatePacket);
+        public void SendCompletion() {
+            session.SetGoalAchieved();
             UpdateDataStorage("Reached an Ending", true);
         }
 
         public void Release() {
             if (connected && sentCompletion && !sentRelease) {
-                session.Socket.SendPacket(new SayPacket() { Text = "!release" });
+                session.Say("!release");
                 sentRelease = true;
                 TunicLogger.LogInfo("Released remaining checks.");
             }
@@ -340,7 +324,7 @@ namespace TunicRandomizer {
 
         public void Collect() {
             if (connected && sentCompletion && !sentCollect) {
-                session.Socket.SendPacket(new SayPacket() { Text = "!collect" });
+                session.Say("!collect");
                 sentCollect = true;
                 TunicLogger.LogInfo("Collected remaining items.");
             }
