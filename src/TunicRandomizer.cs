@@ -155,6 +155,8 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(Monster._Die_d__77), "MoveNext"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_Die_MoveNext_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_Die_MoveNext_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(Librarian), "BehaviourUpdate"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Librarian_BehaviourUpdate_PostfixPatch")));
+            
+            Harmony.Patch(AccessTools.Method(typeof(Foxgod), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Foxgod_OnTouchKillbox_PrefixPatch")));
 
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));

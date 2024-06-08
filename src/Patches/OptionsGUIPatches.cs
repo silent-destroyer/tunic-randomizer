@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using UnityEngine;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
-using BepInEx.Logging;
 using Newtonsoft.Json;
 using static TunicRandomizer.SaveFlags;
-using static TunicRandomizer.RandomizerSettings;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -129,7 +125,8 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
             OptionsGUI.addToggle("Limit Boss Spawns", "Off", "On", TunicRandomizer.Settings.LimitBossSpawns ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.LimitBossSpawns = !TunicRandomizer.Settings.LimitBossSpawns; SaveSettings(); }));
-            OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.ExcludeEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
+            OptionsGUI.addToggle("Oops! All [Enemy]", "Off", "On", TunicRandomizer.Settings.OopsAllEnemy ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.OopsAllEnemy = !TunicRandomizer.Settings.OopsAllEnemy; SaveSettings(); }));
+            OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.UseEnemyToggles ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
             addPageButton("Configure Enemy Toggles", EnemyTogglesPage);
         }
 
@@ -481,7 +478,7 @@ namespace TunicRandomizer {
         }
 
         public static void ToggleExcludeEnemies(int index) {
-            TunicRandomizer.Settings.ExcludeEnemies = !TunicRandomizer.Settings.ExcludeEnemies;
+            TunicRandomizer.Settings.UseEnemyToggles = !TunicRandomizer.Settings.UseEnemyToggles;
             SaveSettings();
         }
 

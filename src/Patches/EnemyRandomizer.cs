@@ -674,6 +674,23 @@ namespace TunicRandomizer {
             } else {
                 Random = new System.Random();
             }
+            
+            // Oops all enemy: pick a single enemy for the entire scene
+            List<string> OopsAllEnemies = Enemies.Keys.ToList();
+            if (TunicRandomizer.Settings.OopsAllEnemy) {
+                if (TunicRandomizer.Settings.UseEnemyToggles) {
+                    OopsAllEnemies = OopsAllEnemies.Where(enemy => TunicRandomizer.Settings.EnemyToggles[EnemyToggleOptionNames[enemy]]).ToList();
+                } else if (TunicRandomizer.Settings.BalancedEnemies) {
+                    OopsAllEnemies = OopsAllEnemies.Except(EnemyRankings["Intense"]).ToList();
+                }
+                EnemyRankings["Bosses"].ForEach(boss => {
+                    OopsAllEnemies.Remove(boss);
+                });
+                if (OopsAllEnemies.Count > 0) {
+                    OopsAllEnemies = new List<string>() { OopsAllEnemies[Random.Next(OopsAllEnemies.Count)] };
+                }
+            }
+
             List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab")).ToList();
             if (CurrentScene == "Archipelagos Redux") {
                 Monsters = Monsters.Where(Monster => Monster.transform.parent.parent == null || Monster.transform.parent.parent.name != "_Environment Prefabs").ToList();
@@ -722,7 +739,7 @@ namespace TunicRandomizer {
                     continue;
                 }
                 try {
-                    List<string> EnemyKeys = Enemies.Keys.ToList();
+                    List<string> EnemyKeys = TunicRandomizer.Settings.OopsAllEnemy ? new List<string>(OopsAllEnemies) : Enemies.Keys.ToList();
                     if (CurrentScene == "Cathedral Arena") {
                         EnemyKeys.Remove("administrator_servant");
                         EnemyKeys.Remove("Hedgehog Trap");
@@ -770,13 +787,13 @@ namespace TunicRandomizer {
                         EnemyKeys.Remove("Turret");
                     }
 
-                    if (TunicRandomizer.Settings.ExcludeEnemies) {
+                    if (TunicRandomizer.Settings.UseEnemyToggles) {
                         foreach(KeyValuePair<string, string> enemyToggle in EnemyToggleOptionNames) {
                             if (!TunicRandomizer.Settings.EnemyToggles[enemyToggle.Value] && EnemyKeys.Contains(enemyToggle.Key)) {
                                 EnemyKeys.Remove(enemyToggle.Key);
                             }
                         }
-                    } else {
+                    } else if (!TunicRandomizer.Settings.OopsAllEnemy) {
                         // Make alternate variants of certain enemies slightly less common
                         EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Small" : "Frog Small_Ghost");
                         EnemyKeys.Remove(Random.NextDouble() < 0.25 ? "Frog Spear" : "Frog Spear_Ghost");
@@ -797,13 +814,12 @@ namespace TunicRandomizer {
                             }
                         });
                     }
-
                     if (EnemyKeys.Count == 0) {
                         GameObject.Destroy(Enemy.gameObject);
                         continue;
                     }
-                    string NewEnemyName = "";
-                    if (!TunicRandomizer.Settings.BalancedEnemies) {
+
+                    if (!TunicRandomizer.Settings.BalancedEnemies || TunicRandomizer.Settings.OopsAllEnemy) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else {
                         List<string> EnemyTypes = null;
@@ -1176,6 +1192,15 @@ namespace TunicRandomizer {
             }
         }
 
+        public static bool Foxgod_OnTouchKillbox_PrefixPatch(Foxgod __instance) {
+            GameObject.Destroy(__instance.gameObject);
+            if (PlayerCharacter.Instanced) {
+                PlayerCharacter.instance.cutsceneHidden = false;
+                GUIMode.PushGameMode();
+            }
+            return false;
+        }
+
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
 
             if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
@@ -1200,6 +1225,9 @@ namespace TunicRandomizer {
                         CoinSpawner.SpawnCoins(256, __instance.transform.position);
                         GameObject.Destroy(__instance.gameObject);
                         RecordDefeatedEnemy(__instance);
+                        if (GameObject.FindObjectOfType<PlayMusicOnLoad>() != null) {
+                            MusicManager.PlayNewTrackIfDifferent(GameObject.FindObjectOfType<PlayMusicOnLoad>().track);
+                        }
                         return false;
                     }
                 }

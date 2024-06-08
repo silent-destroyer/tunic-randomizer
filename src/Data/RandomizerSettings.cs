@@ -242,6 +242,7 @@ namespace TunicRandomizer {
         private const int SEEDED_ENEMIES = 8;
         private const int EXCLUDE_ENEMIES = 16;
         private const int LIMIT_BOSS_SPAWNS = 32;
+        private const int OOPS_ALL_ENEMY = 64;
         public bool EnemyRandomizerEnabled {
             get;
             set;
@@ -267,7 +268,12 @@ namespace TunicRandomizer {
             set;
         }
 
-        public bool ExcludeEnemies {
+        public bool OopsAllEnemy {
+            get;
+            set;
+        }
+
+        public bool UseEnemyToggles {
             get;
             set;
         }
@@ -407,7 +413,8 @@ namespace TunicRandomizer {
             SeededEnemies = true;
             ExtraEnemiesEnabled = false;
             LimitBossSpawns = true;
-            ExcludeEnemies = false;
+            UseEnemyToggles = false;
+            OopsAllEnemy = false;
             EnemyToggles = new Dictionary<string, bool>();
             foreach(string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
                 EnemyToggles.Add(enemy, true);
@@ -507,8 +514,9 @@ namespace TunicRandomizer {
                 ExtraEnemiesEnabled = eval(enemies, EXTRA_ENEMIES);
                 BalancedEnemies = eval(enemies, BALANCED_ENEMIES);
                 SeededEnemies = eval(enemies, SEEDED_ENEMIES);
-                ExcludeEnemies = eval(enemies, EXCLUDE_ENEMIES);
+                UseEnemyToggles = eval(enemies, EXCLUDE_ENEMIES);
                 LimitBossSpawns = eval(enemies, LIMIT_BOSS_SPAWNS);
+                OopsAllEnemy = eval(enemies, OOPS_ALL_ENEMY);
 
                 int race = int.Parse(decodedSplit[8]);
                 RaceMode = eval(race, RACE_MODE);
@@ -567,7 +575,7 @@ namespace TunicRandomizer {
         }
 
         public bool[] enemySettings() {
-            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, ExcludeEnemies, LimitBossSpawns };
+            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, UseEnemyToggles, LimitBossSpawns, OopsAllEnemy };
         }
 
         private string ConvertEnemyToggles() {
