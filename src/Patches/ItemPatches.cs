@@ -170,7 +170,7 @@ namespace TunicRandomizer {
 
                 string CheckName = Locations.LocationIdToDescription[LocationId];
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer && SaveFile.GetInt($"archipelago sent optional hint to server {CheckName}") == 0) {
-                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(CheckName));
+                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(CheckName, "TUNIC"));
                     SaveFile.SetInt($"archipelago sent optional hint to server {CheckName}", 1);
                 }
             } else {
@@ -239,7 +239,7 @@ namespace TunicRandomizer {
 
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
-            string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location);
+            string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location, Archipelago.instance.GetPlayerGame(networkItem.Player));
             
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Item.QuantityToGive;
@@ -431,7 +431,7 @@ namespace TunicRandomizer {
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            string slotLoc = $"{networkItem.Player}, {Archipelago.instance.GetLocationName(networkItem.Location)}";
+            string slotLoc = $"{networkItem.Player}, {Archipelago.instance.GetLocationName(networkItem.Location, Archipelago.instance.GetPlayerGame(networkItem.Player))}";
             if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
                 SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
             }

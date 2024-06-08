@@ -179,7 +179,7 @@ namespace TunicRandomizer {
                         Player = ItemInfo.Player.Slot,
                         Flags = ItemInfo.Flags
                     };
-                    string ItemReceivedName = session.Items.GetItemName(Item.Item);
+                    string ItemReceivedName = session.Items.GetItemName(Item.Item, ItemInfo.ItemGame);
                     TunicLogger.LogInfo("Placing item " + ItemReceivedName + " with index " + ItemIndex + " in queue.");
                     incomingItems.Enqueue((Item, ItemIndex));
                     ItemIndex++;
@@ -266,7 +266,7 @@ namespace TunicRandomizer {
                 }
 
                 var itemName = session.Items.GetItemName(networkItem.Item);
-                var location = session.Locations.GetLocationNameFromId(networkItem.Location);
+                var location = session.Locations.GetLocationNameFromId(networkItem.Location, Archipelago.instance.GetPlayerGame(networkItem.Player));
                 var receiver = session.Players.GetPlayerName(networkItem.Player);
 
                 TunicLogger.LogInfo("Sent " + itemName + " at " + location + " for " + receiver);

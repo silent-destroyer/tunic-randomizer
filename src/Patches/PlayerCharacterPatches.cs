@@ -570,8 +570,8 @@ namespace TunicRandomizer {
                                 Player = ItemInfo.Player.Slot,
                                 Flags = ItemInfo.Flags
                             };
-                            string LocationId = Locations.LocationDescriptionToId[Archipelago.instance.integration.session.Locations.GetLocationNameFromId(Location.Location)];
-                            string ItemName = Archipelago.instance.integration.session.Items.GetItemName(Location.Item) == null ? "UNKNOWN ITEM" : Archipelago.instance.integration.session.Items.GetItemName(Location.Item);
+                            string LocationId = Locations.LocationDescriptionToId[Archipelago.instance.integration.session.Locations.GetLocationNameFromId(Location.Location, Archipelago.instance.GetPlayerGame(Location.Player))];
+                            string ItemName = Archipelago.instance.integration.session.Items.GetItemName(Location.Item, Archipelago.instance.GetPlayerGame(Location.Player)) == null ? "UNKNOWN ITEM" : Archipelago.instance.integration.session.Items.GetItemName(Location.Item, Archipelago.instance.GetPlayerGame(Location.Player));
                             ItemLookup.ItemList.Add(LocationId, new ArchipelagoItem(ItemName, Location.Player, Location.Flags));
                         }
                     }).Wait(TimeSpan.FromSeconds(5.0f));

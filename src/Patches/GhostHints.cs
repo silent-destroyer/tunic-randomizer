@@ -666,7 +666,7 @@ namespace TunicRandomizer {
         public static void CheckForServerHint(string npcName) {
             foreach (HintGhost HintGhost in HintGhosts.Values) { 
                 if (HintGhost.Name == npcName && HintGhost.ServerHintId != "" && SaveFile.GetInt($"archipelago sent optional hint to server {HintGhost.ServerHintId}") == 0) {
-                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(HintGhost.ServerHintId));
+                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(HintGhost.ServerHintId, "TUNIC"));
                     SaveFile.SetInt($"archipelago sent optional hint to server {HintGhost.ServerHintId}", 1);
                 }
             }
