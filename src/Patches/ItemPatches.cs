@@ -439,7 +439,6 @@ namespace TunicRandomizer {
             if (Hints.HeroGraveHints.Values.Where(hint => SaveFile.GetInt($"randomizer hint found {hint.PathHintId}") == 1).Count() == 6) {
                 StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue = true;
             }
-            
 
             TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
 

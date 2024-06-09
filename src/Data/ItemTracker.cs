@@ -82,9 +82,11 @@ namespace TunicRandomizer {
             foreach (string Key in ImportantItems.Keys.ToList()) {
                 ImportantItems[Key] = 0;
             }
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
+            }
             ImportantItems["Trinket Slot"] = 1;
             ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
-
             ItemsCollected = new List<ItemData>();
         }
 
@@ -94,11 +96,16 @@ namespace TunicRandomizer {
         }
 
         public void ResetTracker() {
-            Seed = 0;
+            Seed = SaveFile.GetInt("seed");
             foreach (string Key in ImportantItems.Keys.ToList()) {
                 ImportantItems[Key] = 0;
             }
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
+            }
             ImportantItems["Trinket Slot"] = 1;
+            ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
+            ItemsCollected = new List<ItemData>();
         }
 
         public void SetCollectedItem(string ItemName, bool WriteToDisk) {
@@ -162,6 +169,17 @@ namespace TunicRandomizer {
 
             ItemsCollected.Add(Item);
             if (WriteToDisk) {
+                SaveTrackerFile();
+            }
+        }
+
+        public void PopulateTrackerForAP() {
+            if (IsArchipelago()) {
+                for (int i = 0; i < Archipelago.instance.integration.session.Items.AllItemsReceived.Count; i++) {
+                    if (SaveFile.GetInt($"randomizer processed item index {i}") == 1) {
+                        SetCollectedItem(Archipelago.instance.integration.session.Items.AllItemsReceived[i].ItemName, false);
+                    }
+                }
                 SaveTrackerFile();
             }
         }

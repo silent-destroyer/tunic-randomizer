@@ -461,7 +461,7 @@ namespace TunicRandomizer {
 
                 Dictionary<string, object> slotData = Archipelago.instance.GetPlayerSlotData();
                 if (SaveFile.GetString("archipelago player name") == "") {
-                    SaveFile.SetString("archipelago player name", TunicRandomizer.Settings.ConnectionSettings.Player);
+                    SaveFile.SetString("archipelago player name", Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()));
                 }
 
                 if (slotData.TryGetValue("hexagon_quest", out var hexagonQuest)) {
@@ -539,6 +539,7 @@ namespace TunicRandomizer {
                     }
                     TunicRandomizer.Tracker = new ItemTracker();
                     TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
+                    TunicRandomizer.Tracker.PopulateTrackerForAP();
                 }
                 if (slotData.TryGetValue("logic_rules", out var logicRules)) {
                     if (logicRules.ToString() == "2") {

@@ -99,8 +99,6 @@ namespace TunicRandomizer {
             incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int index)>();
             outgoingItems = new ConcurrentQueue<ItemInfo>();
 
-            TunicRandomizer.Tracker = new ItemTracker();
-
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
             } catch (Exception e) {
@@ -198,7 +196,6 @@ namespace TunicRandomizer {
 
                 if (SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 1) {
                     incomingItems.TryDequeue(out _);
-                    TunicRandomizer.Tracker.SetCollectedItem(itemName, false);
                     TunicLogger.LogInfo("Skipping item " + itemName + " at index " + pendingItem.index + " as it has already been processed.");
                     yield return true;
                     continue;
