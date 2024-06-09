@@ -184,9 +184,9 @@ namespace TunicRandomizer {
 
             if (IsArchipelago()) {
                 foreach (string Key in ItemLookup.ItemList.Keys) {
-                    ArchipelagoItem Item = ItemLookup.ItemList[Key];
+                    ItemInfo Item = ItemLookup.ItemList[Key];
 
-                    string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Archipelago.instance.GetPlayerName(Item.Player)})";
+                    string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Item.Player.Name})";
 
                     SpoilerLog[Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
                 }

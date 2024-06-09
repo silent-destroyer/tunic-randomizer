@@ -151,7 +151,7 @@ namespace TunicRandomizer {
                 int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
                 string itemToDisplay = "";
                 if (IsArchipelago()) {
-                    ArchipelagoItem ShopItem = ItemLookup.ItemList[LocationId];
+                    ItemInfo ShopItem = ItemLookup.ItemList[LocationId];
                     itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemName] : "[archipelago]";
                     if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
                         itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;

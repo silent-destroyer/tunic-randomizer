@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Archipelago.MultiClient.Net.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using BepInEx.Logging;
 using static TunicRandomizer.SaveFlags;
-using static TunicRandomizer.GhostHints;
 
 namespace TunicRandomizer {
 
@@ -450,17 +449,16 @@ namespace TunicRandomizer {
                 string LocationSuffix = Location[Location.Length - 1] == 'S' ? "R" : "iz";
 
                 if (IsArchipelago()) {
-                    ArchipelagoItem Item = ItemLookup.ItemList[Key];
-                    string ItemPrefix = Item.ItemName.Contains("Money") ? "suhm" : Vowels.Contains(Item.ItemName.ToUpper()[0]) ? "ahn" : "uh";
-                    string PlayerName = Archipelago.instance.GetPlayerName(Item.Player);
-                    bool IsTunicItem = Archipelago.instance.IsTunicPlayer(Item.Player);
-                    string ItemToDisplay = IsTunicItem && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.ItemName)
-                        ? TextBuilderPatches.ItemNameToAbbreviation[Item.ItemName] : "[archipelago]";
-                    string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key].Replace(" ", "\" \"")}\" {LocationSuffix} gRdi^  {ItemToDisplay}  \"{PlayerName.ToUpper().Replace(" ", "\" \"")}'S {Item.ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"";
+                    ItemInfo ItemInfo = ItemLookup.ItemList[Key];
+                    string PlayerName = ItemInfo.Player.Name;
+                    bool IsTunicItem = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
+                    string ItemToDisplay = IsTunicItem && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemInfo.ItemName)
+                        ? TextBuilderPatches.ItemNameToAbbreviation[ItemInfo.ItemName] : "[archipelago]";
+                    string Hint = $"bI #uh wA, I hurd #aht \"{HintableLocationIds[Key].Replace(" ", "\" \"")}\" {LocationSuffix} gRdi^  {ItemToDisplay}  \"{PlayerName.ToUpper().Replace(" ", "\" \"")}'S {ItemInfo.ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"";
                     if (TunicRandomizer.Settings.UseTrunicTranslations) {
-                        Hint = $"bI #uh wA, I hurd #aht {Translations.Translate(HintableLocationIds[Key], false)} {LocationSuffix} gRdi^ \"{PlayerName.ToUpper().Replace(" ", "\" \"")}'S\" {(IsTunicItem ? Translations.Translate(ItemLookup.SimplifiedItemNames[ItemLookup.Items[Item.ItemName].ItemNameForInventory], false) + "." : $"\"{Item.ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"")}";
+                        Hint = $"bI #uh wA, I hurd #aht {Translations.Translate(HintableLocationIds[Key], false)} {LocationSuffix} gRdi^ \"{PlayerName.ToUpper().Replace(" ", "\" \"")}'S\" {(IsTunicItem ? Translations.Translate(ItemLookup.SimplifiedItemNames[ItemLookup.Items[ItemInfo.ItemName].ItemNameForInventory], false) + "." : $"\"{ItemInfo.ItemName.ToUpper().Replace(" ", "\" \"").Replace("_", "\" \"")}.\"")}";
                     }
-                    string ItemForHint = Archipelago.instance.IsTunicPlayer(Item.Player) ? Item.ItemName : "Archipelago Item";
+                    string ItemForHint = Archipelago.instance.IsTunicPlayer(ItemInfo.Player) ? ItemInfo.ItemName : "Archipelago Item";
                     LocationHints.Add((WordWrapString(Hint), ItemForHint, Locations.LocationIdToDescription[Key], Key));
                 } else if (IsSinglePlayer()) {
                     Check Check = Locations.RandomizedLocations[Key];
@@ -569,17 +567,17 @@ namespace TunicRandomizer {
             BarrenAndTreasureHints.Clear();
             foreach (string Key in Locations.SimplifiedSceneNames.Keys) { 
                 HashSet<string> ItemsInScene = new HashSet<string>();
-                List<ArchipelagoItem> APItemsInScene = new List<ArchipelagoItem>();
+                List<ItemInfo> APItemsInScene = new List<ItemInfo>();
                 string Scene = Locations.SimplifiedSceneNames[Key];
                 int SceneItemCount = 0;
                 int MoneyInScene = 0;
                 if (IsArchipelago()) {
                     foreach (string ItemKey in ItemLookup.ItemList.Keys.Where(item => Locations.VanillaLocations[item].Location.SceneName == Key).ToList()) {
-                        ArchipelagoItem Item = ItemLookup.ItemList[ItemKey];
-                        ItemsInScene.Add(Item.ItemName);
-                        APItemsInScene.Add(Item);
-                        if (Item.Player == Archipelago.instance.GetPlayerSlot() && ItemLookup.Items[Item.ItemName].Type == ItemTypes.MONEY) {
-                            MoneyInScene += ItemLookup.Items[Item.ItemName].QuantityToGive;
+                        ItemInfo ItemInfo = ItemLookup.ItemList[ItemKey];
+                        ItemsInScene.Add(ItemInfo.ItemName);
+                        APItemsInScene.Add(ItemInfo);
+                        if (ItemInfo.Player == Archipelago.instance.GetPlayerSlot() && ItemLookup.Items[ItemInfo.ItemName].Type == ItemTypes.MONEY) {
+                            MoneyInScene += ItemLookup.Items[ItemInfo.ItemName].QuantityToGive;
                         }
                         SceneItemCount++;
                     }
@@ -606,12 +604,12 @@ namespace TunicRandomizer {
                     BarrenAndTreasureHints.Add((Hint, "", "", ""));
                 } else {
                     bool BarrenArea = true;
-                    foreach(ArchipelagoItem Item in APItemsInScene) {
-                        if (Item.Player != Archipelago.instance.GetPlayerSlot()) {
+                    foreach(ItemInfo ItemInfo in APItemsInScene) {
+                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
                             BarrenArea = false;
                             break;
                         }
-                        if(!BarrenItemNames.Contains(Item.ItemName)) {
+                        if(!BarrenItemNames.Contains(ItemInfo.ItemName)) {
                             BarrenArea = false;
                             break;
                         }
@@ -733,9 +731,9 @@ namespace TunicRandomizer {
         /*        public static List<ItemData> FindAllRandomizedItemsByName(string ItemName) {
                     List<ItemData> Items = new List<ItemData>();
                     foreach (string Key in ItemRandomizer.ItemList.Keys) {
-                        ItemData Item = ItemRandomizer.ItemList[Key];
-                        if (Item.Reward.Name == ItemName) {
-                            Items.Add(Item);
+                        ItemData ItemInfo = ItemRandomizer.ItemList[Key];
+                        if (ItemInfo.Reward.Name == ItemName) {
+                            Items.Add(ItemInfo);
                         }
                     }
                     return Items;

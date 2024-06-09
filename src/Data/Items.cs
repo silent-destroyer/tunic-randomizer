@@ -1,4 +1,5 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
 using System;
 using System.Collections.Generic;
@@ -56,31 +57,6 @@ namespace TunicRandomizer {
         }
     }
 
-    public class ArchipelagoItem {
-
-        public string ItemName {
-            get;
-            set;
-        }
-
-        public int Player {
-            get;
-            set;
-        }
-
-        public ItemFlags Classification {
-            get;
-            set;
-        }
-
-        public ArchipelagoItem(string itemName, int player, ItemFlags classification) {
-            ItemName = itemName;
-            Player = player;
-            Classification = classification;
-        }
-
-    }
-
     public class ItemData {
 
         public string Name {
@@ -131,7 +107,7 @@ namespace TunicRandomizer {
 
     public class ItemLookup {
 
-        public static Dictionary<string, ArchipelagoItem> ItemList = new Dictionary<string, ArchipelagoItem>() { };
+        public static Dictionary<string, ItemInfo> ItemList = new Dictionary<string, ItemInfo>() { };
 
         public static Dictionary<string, ItemData> Items = new Dictionary<string, ItemData>() {
             // Consumables

@@ -564,15 +564,7 @@ namespace TunicRandomizer {
                 } else {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(LocationIDs.ToArray()).ContinueWith(locationInfoPacket => {
                         foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                            NetworkItem Location = new NetworkItem {
-                                Item = ItemInfo.ItemId,
-                                Location = ItemInfo.LocationId,
-                                Player = ItemInfo.Player.Slot,
-                                Flags = ItemInfo.Flags
-                            };
-                            string LocationId = Locations.LocationDescriptionToId[Archipelago.instance.integration.session.Locations.GetLocationNameFromId(Location.Location, "TUNIC")];
-                            string ItemName = Archipelago.instance.integration.session.Items.GetItemName(Location.Item, Archipelago.instance.GetPlayerGame(Location.Player)) == null ? "UNKNOWN ITEM" : Archipelago.instance.integration.session.Items.GetItemName(Location.Item, Archipelago.instance.GetPlayerGame(Location.Player));
-                            ItemLookup.ItemList.Add(LocationId, new ArchipelagoItem(ItemName, Location.Player, Location.Flags));
+                            ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationName], ItemInfo);
                         }
                     }).Wait(TimeSpan.FromSeconds(5.0f));
                     TunicLogger.LogInfo("Successfully scouted locations for item placements");
