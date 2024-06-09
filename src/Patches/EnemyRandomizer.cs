@@ -720,6 +720,9 @@ namespace TunicRandomizer {
             if (CurrentScene == "frog cave main") {
                 Monsters.Add(GameObject.Find("Wizard_Support"));
             }
+            if (CurrentScene == "Cathedral Arena") {
+                Monster.ClearRuntimeDeadMonsters();
+            }
             if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                 if (CurrentScene == "Monastery") {
                     Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
@@ -991,7 +994,6 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<Foxgod>().rainPreview_pool.pool = FoxgodPools[4].ToArray();
                         NewEnemy.GetComponent<Foxgod>().voidhole_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(5).GetComponent<PooledFX>();
                         NewEnemy.GetComponent<Foxgod>().voidhole_pool.pool = FoxgodPools[5].ToArray();
-                        NewEnemy.GetComponent<Foxgod>().monsterAggroed = true;
                     }
 
                     NewEnemy.name += $" {i}";
@@ -1000,6 +1002,7 @@ namespace TunicRandomizer {
                     // Give every enemy a unique ID to fix enemies despawning (and more importantly, fixes cathedral)
                     if (NewEnemy.GetComponent<RuntimeStableID>() != null) {
                         NewEnemy.GetComponent<RuntimeStableID>().intraSceneID = Resources.FindObjectsOfTypeAll<RuntimeStableID>().OrderBy(id => id.intraSceneID).Last().intraSceneID + 1;
+                        
                     }
 
                     i++;
