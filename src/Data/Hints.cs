@@ -388,9 +388,9 @@ namespace TunicRandomizer {
                 MailboxItems.Remove("Sword");
                 MailboxItems.Remove("Stick");
             }
-            Dictionary<string, ArchipelagoItem> SphereOnePlayer = new Dictionary<string, ArchipelagoItem>();
-            Dictionary<string, ArchipelagoItem> SphereOneOthersTunic = new Dictionary<string, ArchipelagoItem>();
-            Dictionary<string, ArchipelagoItem> SphereOneOthers = new Dictionary<string, ArchipelagoItem>();
+            Dictionary<string, ItemInfo> SphereOnePlayer = new Dictionary<string, ItemInfo>();
+            Dictionary<string, ItemInfo> SphereOneOthersTunic = new Dictionary<string, ItemInfo>();
+            Dictionary<string, ItemInfo> SphereOneOthers = new Dictionary<string, ItemInfo>();
             ItemRandomizer.PopulatePrecollected();
             // StartInventoryItems is populated with your start inventory items, which are items with a location ID of -2
             Dictionary<string, int> StartInventoryAndPrecollected = ItemRandomizer.AddListToDict(Archipelago.instance.integration.GetStartInventory(), ItemRandomizer.PrecollectedItems);
@@ -400,7 +400,7 @@ namespace TunicRandomizer {
                 ItemRandomizer.SphereZero = ItemRandomizer.GetSphereOne(StartInventoryAndPrecollected);
             }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
-                ArchipelagoItem item = ItemLookup.ItemList[itemkey];
+                ItemInfo item = ItemLookup.ItemList[itemkey];
                 if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
                     var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
@@ -418,7 +418,7 @@ namespace TunicRandomizer {
                             }
                         }
                     }
-                } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Classification == ItemFlags.Advancement) {
+                } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Flags.HasFlag(ItemFlags.Advancement)) {
                     var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
                         int checkCount = 0;
@@ -433,7 +433,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            ArchipelagoItem mailboxitem = null;
+            ItemInfo mailboxitem = null;
             string key = "";
             if (SphereOnePlayer.Count > 0) {
                 key = SphereOnePlayer.Keys.ToList()[random.Next(SphereOnePlayer.Count)];

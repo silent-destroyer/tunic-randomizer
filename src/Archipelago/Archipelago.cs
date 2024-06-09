@@ -74,16 +74,16 @@ namespace TunicRandomizer {
             return GetPlayerGame(Slot) == "TUNIC";
         }
 
-        public string GetItemName(long id) {
-            return integration.session.Items.GetItemName(id);
+        public string GetItemName(long id, string game) {
+            return integration.session.Items.GetItemName(id, game);
         }
 
-        public string GetLocationName(long id) { 
-            return integration.session.Locations.GetLocationNameFromId(id);
+        public string GetLocationName(long id, string game) { 
+            return integration.session.Locations.GetLocationNameFromId(id, game);
         }
 
-        public long GetLocationId(string name) {
-            return integration.session.Locations.GetLocationIdFromName("TUNIC", name);
+        public long GetLocationId(string name, string game) {
+            return integration.session.Locations.GetLocationIdFromName(game, name);
         }
 
         public bool IsConnected() {

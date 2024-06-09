@@ -1,4 +1,5 @@
-﻿using BepInEx.Logging;
+﻿using Archipelago.MultiClient.Net.Models;
+using BepInEx.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -81,9 +82,11 @@ namespace TunicRandomizer {
             foreach (string Key in ImportantItems.Keys.ToList()) {
                 ImportantItems[Key] = 0;
             }
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
+            }
             ImportantItems["Trinket Slot"] = 1;
             ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
-
             ItemsCollected = new List<ItemData>();
         }
 
@@ -93,11 +96,16 @@ namespace TunicRandomizer {
         }
 
         public void ResetTracker() {
-            Seed = 0;
+            Seed = SaveFile.GetInt("seed");
             foreach (string Key in ImportantItems.Keys.ToList()) {
                 ImportantItems[Key] = 0;
             }
+            if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
+            }
             ImportantItems["Trinket Slot"] = 1;
+            ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
+            ItemsCollected = new List<ItemData>();
         }
 
         public void SetCollectedItem(string ItemName, bool WriteToDisk) {
@@ -165,6 +173,17 @@ namespace TunicRandomizer {
             }
         }
 
+        public void PopulateTrackerForAP() {
+            if (IsArchipelago()) {
+                for (int i = 0; i < Archipelago.instance.integration.session.Items.AllItemsReceived.Count; i++) {
+                    if (SaveFile.GetInt($"randomizer processed item index {i}") == 1) {
+                        SetCollectedItem(Archipelago.instance.integration.session.Items.AllItemsReceived[i].ItemName, false);
+                    }
+                }
+                SaveTrackerFile();
+            }
+        }
+
         public static void SaveTrackerFile() {
             if (File.Exists(TunicRandomizer.ItemTrackerPath)) {
                 File.Delete(TunicRandomizer.ItemTrackerPath);
@@ -183,9 +202,9 @@ namespace TunicRandomizer {
 
             if (IsArchipelago()) {
                 foreach (string Key in ItemLookup.ItemList.Keys) {
-                    ArchipelagoItem Item = ItemLookup.ItemList[Key];
+                    ItemInfo Item = ItemLookup.ItemList[Key];
 
-                    string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Archipelago.instance.GetPlayerName(Item.Player)})";
+                    string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Item.Player.Name})";
 
                     SpoilerLog[Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
                 }
@@ -208,9 +227,8 @@ namespace TunicRandomizer {
                 if(MajorItem == "Gold Questagon") { continue; }
                     if(Locations.MajorItemLocations.ContainsKey(MajorItem) && Locations.MajorItemLocations[MajorItem].Count > 0) {
                         foreach (ArchipelagoHint apHint in Locations.MajorItemLocations[MajorItem]) {
-
                             bool HasItem = false;
-                            if (Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Archipelago.instance.integration.session.Locations.GetLocationIdFromName(Archipelago.instance.GetPlayerGame((int)apHint.Player), apHint.Location))) { 
+                            if (Archipelago.instance.integration.session.Items.AllItemsReceived.Any(itemInfo => itemInfo.LocationName == apHint.Location && itemInfo.Player == (int)apHint.Player)) {
                                 HasItem = true;
                             }
                             string Spoiler = $"\t{(HasItem ? "x" : "-")} {MajorItem}: {apHint.Location} ({Archipelago.instance.GetPlayerName((int)apHint.Player)}'s World)";

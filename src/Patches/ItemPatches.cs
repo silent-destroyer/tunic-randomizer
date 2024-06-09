@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using Archipelago.MultiClient.Net.Helpers;
+using Archipelago.MultiClient.Net.Models;
 using BepInEx.Logging;
 using System;
 using System.Collections.Generic;
@@ -150,7 +151,7 @@ namespace TunicRandomizer {
                 int Price = TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : __instance.price;
                 string itemToDisplay = "";
                 if (IsArchipelago()) {
-                    ArchipelagoItem ShopItem = ItemLookup.ItemList[LocationId];
+                    ItemInfo ShopItem = ItemLookup.ItemList[LocationId];
                     itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemName] : "[archipelago]";
                     if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
                         itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;
@@ -170,7 +171,7 @@ namespace TunicRandomizer {
 
                 string CheckName = Locations.LocationIdToDescription[LocationId];
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer && SaveFile.GetInt($"archipelago sent optional hint to server {CheckName}") == 0) {
-                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(CheckName));
+                    Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(CheckName, "TUNIC"));
                     SaveFile.SetInt($"archipelago sent optional hint to server {CheckName}", 1);
                 }
             } else {
@@ -222,7 +223,7 @@ namespace TunicRandomizer {
             return false;
         }
 
-        public static ItemResult GiveItem(string ItemName, NetworkItem networkItem) {
+        public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
             if(ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || 
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
                 GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
@@ -239,7 +240,7 @@ namespace TunicRandomizer {
 
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
-            string LocationId = Archipelago.instance.integration.session.Locations.GetLocationNameFromId(networkItem.Location);
+            string LocationId = itemInfo.LocationName;
             
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Item.QuantityToGive;
@@ -251,7 +252,7 @@ namespace TunicRandomizer {
                     { "Shop - Coin 2", 999 }
                 };
                 // If buying your own money item from the shop, increase amount rewarded
-                if (OriginalShopPrices.ContainsKey(LocationId) && (networkItem.Player == Archipelago.instance.GetPlayerSlot())) {
+                if (OriginalShopPrices.ContainsKey(LocationId) && (itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
                     AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[LocationId];
                 }
 
@@ -377,7 +378,7 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.FOOLTRAP) {
-                (NotificationTop, NotificationBottom) = ApplyFoolEffect(networkItem.Player);
+                (NotificationTop, NotificationBottom) = ApplyFoolEffect(itemInfo.Player);
                 DisplayMessageAnyway = true;
             }
 
@@ -418,27 +419,26 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (networkItem.Player != Archipelago.instance.GetPlayerSlot()) {
-                var sender = Archipelago.instance.GetPlayerName(networkItem.Player);
+            if (itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
+                var sender = itemInfo.Player.Name;
                 NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            if (networkItem.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
                 NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
                 NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            string slotLoc = $"{networkItem.Player}, {Archipelago.instance.GetLocationName(networkItem.Location)}";
+            string slotLoc = $"{itemInfo.Player}, {itemInfo.LocationName}";
             if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
                 SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
             }
             if (Hints.HeroGraveHints.Values.Where(hint => SaveFile.GetInt($"randomizer hint found {hint.PathHintId}") == 1).Count() == 6) {
                 StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue = true;
             }
-            
 
             TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
 

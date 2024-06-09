@@ -461,7 +461,7 @@ namespace TunicRandomizer {
 
                 Dictionary<string, object> slotData = Archipelago.instance.GetPlayerSlotData();
                 if (SaveFile.GetString("archipelago player name") == "") {
-                    SaveFile.SetString("archipelago player name", TunicRandomizer.Settings.ConnectionSettings.Player);
+                    SaveFile.SetString("archipelago player name", Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()));
                 }
 
                 if (slotData.TryGetValue("hexagon_quest", out var hexagonQuest)) {
@@ -539,6 +539,7 @@ namespace TunicRandomizer {
                     }
                     TunicRandomizer.Tracker = new ItemTracker();
                     TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
+                    TunicRandomizer.Tracker.PopulateTrackerForAP();
                 }
                 if (slotData.TryGetValue("logic_rules", out var logicRules)) {
                     if (logicRules.ToString() == "2") {
@@ -563,10 +564,8 @@ namespace TunicRandomizer {
                     Archipelago.instance.Disconnect();
                 } else {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(LocationIDs.ToArray()).ContinueWith(locationInfoPacket => {
-                        foreach (NetworkItem Location in locationInfoPacket.Result.Locations) {
-                            string LocationId = Locations.LocationDescriptionToId[Archipelago.instance.integration.session.Locations.GetLocationNameFromId(Location.Location)];
-                            string ItemName = Archipelago.instance.integration.session.Items.GetItemName(Location.Item) == null ? "UNKNOWN ITEM" : Archipelago.instance.integration.session.Items.GetItemName(Location.Item);
-                            ItemLookup.ItemList.Add(LocationId, new ArchipelagoItem(ItemName, Location.Player, Location.Flags));
+                        foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
+                            ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationName], ItemInfo);
                         }
                     }).Wait(TimeSpan.FromSeconds(5.0f));
                     TunicLogger.LogInfo("Successfully scouted locations for item placements");
