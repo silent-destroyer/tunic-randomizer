@@ -215,7 +215,7 @@ namespace TunicRandomizer {
         }
 
         public static bool ConduitNode_CheckConnectedToPower_PrefixPatch(ConduitNode __instance, ref bool __result) {
-            if (TunicRandomizer.Settings.EnableAllCheckpoints && __instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
+            if (TunicRandomizer.Settings.EnableAllCheckpoints && __instance != null && __instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
                 __result = true;
                 return false;
             }

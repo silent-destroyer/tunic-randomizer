@@ -100,6 +100,15 @@ namespace TunicRandomizer {
                 PaletteEditor.LoadCustomTexture();
             }
 
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+                /*                MusicManager.PlayNewTrackIfDifferent(MusicRandomizer.sceneMusicGuids.Values.ToList()[index]);
+                                TunicLogger.LogInfo("manually playing track " + MusicRandomizer.sceneMusicGuids.Keys.ToList()[index] + " " + MusicRandomizer.sceneMusicGuids.Values.ToList()[index].Guid.ToString());
+                                index++;*/
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+
+                MusicManager.SetParam("zig_3_location_index", 3);
+            }
             if (StungByBee) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
             }
@@ -359,6 +368,8 @@ namespace TunicRandomizer {
             List<MagicSpell> spells = __instance.spells.ToList();
             spells.Reverse();
             __instance.spells = spells.ToArray();
+/*            MusicManager.SetParam("zig_3_location_index", 2);
+            MusicManager.SetParam("zig_3_location_index", 3);*/
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {

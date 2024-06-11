@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using static TunicRandomizer.SaveFlags;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using FMODUnity;
 
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
@@ -204,8 +205,29 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
             OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
             OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
+            OptionsGUI.addToggle("Music Shuffle", "Off", "On", TunicRandomizer.Settings.MusicShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.MusicShuffle = !TunicRandomizer.Settings.MusicShuffle; SaveSettings(); }));
+            //addPageButton("Jukebox", JukeboxPage);
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
+            }
+        }
+
+        public static void JukeboxPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Music");
+
+            foreach (KeyValuePair<string, EventReference> pair in MusicShuffler.Tracks) {
+                OptionsGUI.addButton(Locations.SimplifiedSceneNames.ContainsKey(pair.Key) ? Locations.SimplifiedSceneNames[pair.Key] : pair.Key, 
+                    (Action)(() => {
+                        MusicManager.Stop();
+                        MusicManager.PlayNewTrackIfDifferent(pair.Value);
+                        if (MusicShuffler.TrackParams.ContainsKey(pair.Key)) {
+                            foreach ((string, int) param in MusicShuffler.TrackParams[pair.Key]) {
+                                MusicShuffler.instance.paramsToSet.Enqueue(param);
+                            }
+                            MusicShuffler.instance.TimeSinceMusicStart = Time.time;
+                        }
+                    }));
             }
         }
 
