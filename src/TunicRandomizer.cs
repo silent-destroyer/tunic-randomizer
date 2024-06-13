@@ -131,6 +131,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Item), "ShouldShowInInventory"), new HarmonyMethod(AccessTools.Method(typeof(CustomItemBehaviors), "Item_shouldShowInInventory_GetterPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(Cheats), "giveLotsOfItems"), null, new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "Cheats_giveLotsOfItems_PostfixPatch")));
+
             // Custom Item Behaviors
             Harmony.Patch(AccessTools.Method(typeof(BoneItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(CustomItemBehaviors), "BoneItemBehavior_onActionButtonDown_PrefixPatch")));
 
