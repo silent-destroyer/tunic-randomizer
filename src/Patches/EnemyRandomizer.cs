@@ -1195,13 +1195,16 @@ namespace TunicRandomizer {
             }
         }
 
-        public static bool Foxgod_OnTouchKillbox_PrefixPatch(Foxgod __instance) {
-            GameObject.Destroy(__instance.gameObject);
-            if (PlayerCharacter.Instanced) {
-                PlayerCharacter.instance.cutsceneHidden = false;
-                GUIMode.PushGameMode();
+        public static bool Monster_OnTouchKillbox_PrefixPatch(Monster __instance) {
+            if (__instance.TryCast<Foxgod>() != null) {
+                GameObject.Destroy(__instance.gameObject);
+                if (PlayerCharacter.Instanced) {
+                    PlayerCharacter.instance.cutsceneHidden = false;
+                    GUIMode.PushGameMode();
+                }
+                return false;
             }
-            return false;
+            return true;
         }
 
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
