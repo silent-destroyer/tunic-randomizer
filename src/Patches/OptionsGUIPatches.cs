@@ -206,7 +206,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
             OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
             OptionsGUI.addToggle("Music Shuffle", "Off", "On", TunicRandomizer.Settings.MusicShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.MusicShuffle = !TunicRandomizer.Settings.MusicShuffle; SaveSettings(); }));
-            //addPageButton("Jukebox", JukeboxPage);
+            addPageButton("Jukebox", JukeboxPage);
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }
@@ -217,15 +217,16 @@ namespace TunicRandomizer {
             OptionsGUI.setHeading("Music");
 
             foreach (KeyValuePair<string, EventReference> pair in MusicShuffler.Tracks) {
-                OptionsGUI.addButton(Locations.SimplifiedSceneNames.ContainsKey(pair.Key) ? Locations.SimplifiedSceneNames[pair.Key] : pair.Key, 
+                OptionsGUI.addButton(pair.Key, 
                     (Action)(() => {
                         MusicManager.Stop();
                         MusicManager.PlayNewTrackIfDifferent(pair.Value);
+                        MusicShuffler.instance.TimeSinceMusicStart = Time.realtimeSinceStartup;
                         if (MusicShuffler.TrackParams.ContainsKey(pair.Key)) {
                             foreach ((string, int) param in MusicShuffler.TrackParams[pair.Key]) {
-                                MusicShuffler.instance.paramsToSet.Enqueue(param);
+                                TunicLogger.LogInfo("queueing " + param.Item1 + " " + param.Item2);
+                                MusicShuffler.instance.paramsToSetRealtime.Enqueue(param);
                             }
-                            MusicShuffler.instance.TimeSinceMusicStart = Time.time;
                         }
                     }));
             }
