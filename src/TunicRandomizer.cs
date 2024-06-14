@@ -138,6 +138,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Item), "ShouldShowInInventory"), new HarmonyMethod(AccessTools.Method(typeof(CustomItemBehaviors), "Item_shouldShowInInventory_GetterPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(Cheats), "giveLotsOfItems"), null, new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "Cheats_giveLotsOfItems_PostfixPatch")));
+
             // Custom Item Behaviors
             Harmony.Patch(AccessTools.Method(typeof(BoneItemBehaviour), "onActionButtonDown"), new HarmonyMethod(AccessTools.Method(typeof(CustomItemBehaviors), "BoneItemBehavior_onActionButtonDown_PrefixPatch")));
 
@@ -163,7 +165,7 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(Librarian), "BehaviourUpdate"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Librarian_BehaviourUpdate_PostfixPatch")));
             
-            Harmony.Patch(AccessTools.Method(typeof(Foxgod), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Foxgod_OnTouchKillbox_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(Monster), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_OnTouchKillbox_PrefixPatch")));
 
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));

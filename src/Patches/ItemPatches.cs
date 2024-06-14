@@ -789,5 +789,20 @@ namespace TunicRandomizer {
             return false;
         }
 
+        // Extender for debug/cheat function
+        public static void Cheats_giveLotsOfItems_PostfixPatch(Cheats __instance) {
+            Inventory.GetItemByName("Librarian Sword").Quantity = 1;
+            Inventory.GetItemByName("Heir Sword").Quantity = 1;
+            Inventory.GetItemByName("Dath Stone").Quantity = 1;
+            Inventory.GetItemByName("Torch").Quantity = 1;
+            Inventory.GetItemByName("Bait").Quantity = 99;
+            Inventory.GetItemByName("Berry_MP").Quantity = 99;
+            Inventory.GetItemByName("Berry_HP").Quantity = 99;
+            Inventory.GetItemByName("Ivy").Quantity = 99;
+            Inventory.GetItemByName("Pepper").Quantity = 99;
+            Inventory.GetItemByName("Ice Bomb").Quantity = 99;
+            Inventory.GetItemByName("Piggybank L1").Quantity = 99;
+            Inventory.GetItemByName("Trinket Coin").Quantity = 17;
+        }
     }
 }
