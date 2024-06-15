@@ -372,6 +372,10 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(DiedToHeir) == 1) {
                     SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
                 }
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
+                    GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(-183.9852f, 1f, -79.4829f), new Quaternion(0, 0, 0, 0)).SetActive(true);
+                    GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(-166.9155f, 1f, -72.0338f), new Quaternion(0, 0, 0, 0)).SetActive(true);
+                }
             } else if (SceneName == "Swamp Redux 2") {
                 GhostHints.SpawnCathedralDoorGhost();
 

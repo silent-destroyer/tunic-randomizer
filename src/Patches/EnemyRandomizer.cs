@@ -31,8 +31,9 @@ namespace TunicRandomizer {
 
         public static List<List<GameObject>> FoxgodPools;
 
+        public static GameObject TuningFork;
+
         public static List<string> SpecificExcludedEnemies = new List<string>() {
-            "Overworld Redux (-175.1, 1.0, -76.3)",
             "frog cave main (118.5, 29.9, -52.6)",
             "East Forest Redux (104.3, -16.0, -28.0)"
         };
@@ -569,6 +570,9 @@ namespace TunicRandomizer {
                     Enemies["BlobBigger"].transform.position = new Vector3(-30000f, -30000f, -30000f);
                     Enemies["BlobBigger"].name = "BlobBigger Prefab";
                     Enemies["BlobBigger"].GetComponent<Blob>().attackDistance = 3f;
+                }
+                if (EnemyName == "Turret") {
+                    TuningFork = Enemies[EnemyName].GetComponent<DefenseTurret>().turretCorpsePrefab.transform.GetChild(0).gameObject;
                 }
                 if (EnemyName == "Centipede") {
                     Enemies[EnemyName].GetComponent<Centipede>().maxBeamDistance = 10f;
