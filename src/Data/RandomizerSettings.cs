@@ -175,6 +175,7 @@ namespace TunicRandomizer {
         private const int ARACHNOPHOBIA_MODE = 1024;
         private const int HOLY_CROSS_VIEWER = 2048;
         private const int MUSIC_SHUFFLE = 4096;
+        private const int SEEDED_MUSIC = 8192;
         public bool HeirAssistModeEnabled {
             get;
             set;
@@ -237,6 +238,16 @@ namespace TunicRandomizer {
         }
 
         public bool MusicShuffle {
+            get;
+            set;
+        }
+
+        public bool SeededMusic {
+            get;
+            set;
+        }
+
+        public Dictionary<string, bool> MusicToggles {
             get;
             set;
         }
@@ -413,6 +424,11 @@ namespace TunicRandomizer {
             ArachnophobiaMode = false;
             HolyCrossVisualizer = false;
             MusicShuffle = false;
+            SeededMusic = false;
+            MusicToggles = new Dictionary<string, bool>();
+            foreach(string track in MusicShuffler.Tracks.Keys) {
+                MusicToggles.Add(track, true);
+            }
 
             // Enemy Randomizer
             EnemyRandomizerEnabled = false;
@@ -508,6 +524,7 @@ namespace TunicRandomizer {
                 ArachnophobiaMode = eval(general, ARACHNOPHOBIA_MODE);
                 HolyCrossVisualizer = eval(general, HOLY_CROSS_VIEWER);
                 MusicShuffle = eval(general, MUSIC_SHUFFLE);
+                SeededMusic = eval(general, SEEDED_MUSIC);
 
                 int hints = int.Parse(decodedSplit[6]);
                 HeroPathHintsEnabled = eval(hints, PATH_OF_HERO);
@@ -575,7 +592,7 @@ namespace TunicRandomizer {
         public bool[] generalSettings() {
             return new bool[] { HeirAssistModeEnabled, ClearEarlyBushes, EnableAllCheckpoints, CheaperShopItemsEnabled, 
                 BonusStatUpgradesEnabled, DisableChestInterruption, SkipItemAnimations, FasterUpgrades, CameraFlip, MoreSkulls, 
-                ArachnophobiaMode, HolyCrossVisualizer, MusicShuffle, };
+                ArachnophobiaMode, HolyCrossVisualizer, MusicShuffle, SeededMusic };
         }
 
         public bool[] hintSettings() {
