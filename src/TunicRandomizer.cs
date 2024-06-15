@@ -89,6 +89,20 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(MagicSpell), "CheckInput"), null, new HarmonyMethod(AccessTools.Method(typeof(WaveSpell), "MagicSpell_CheckInput_PostfixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(DollSpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(RealestSpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+            
+            Harmony.Patch(AccessTools.Method(typeof(RealestSpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(FairySpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(BHMSpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(HealSpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(CheapIceboltSpell), "SpellEffect"), null, new HarmonyMethod(AccessTools.Method(typeof(DDRSpell), "MagicSpell_SpellEffect_PostfixPatch")));
+
             Harmony.Patch(AccessTools.Method(typeof(PlayerCharacter._Die_d__481), "MoveNext"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Die_MoveNext_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));

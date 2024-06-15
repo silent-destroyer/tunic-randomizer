@@ -66,9 +66,6 @@ namespace TunicRandomizer {
             if (EntranceSeekerSpell != null) {
                 EntranceSeekerSpell.CheckInput(inputs, length);
             }
-            if (__result) {
-                PlayerCharacter.instance.GetComponent<DDRSpell>().CompletedSpellEffect(__instance.TryCast<CheapIceboltSpell>() != null);
-            }
         }
     }
 }

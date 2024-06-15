@@ -153,5 +153,9 @@ namespace TunicRandomizer {
                 arrow.GetComponent<SpriteRenderer>().color = iceBoltSpell ? Color.cyan : new Color(0.917f, 0.65f, .08f);
             });
         }
+
+        public static void MagicSpell_SpellEffect_PostfixPatch(MagicSpell __instance) {
+            __instance.GetComponent<DDRSpell>().CompletedSpellEffect(__instance.TryCast<CheapIceboltSpell>());
+        }
     }
 }
