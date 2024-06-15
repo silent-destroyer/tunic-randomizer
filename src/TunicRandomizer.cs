@@ -232,6 +232,7 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(ConduitData), "IsFuseClosedByID"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitData_IsFuseClosedByID_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(PlayMusicOnLoad), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "PlayMusicOnLoad_Start_PostfixPatch")));
+
             Harmony.Patch(AccessTools.Method(typeof(MusicManager), "SetParam"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "MusicManager_PlayCuedTrack_PostfixPatch")));
             
         }
