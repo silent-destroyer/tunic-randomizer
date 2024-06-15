@@ -217,7 +217,7 @@ namespace TunicRandomizer {
             OptionsGUI.setHeading("Music Shuffle");
             OptionsGUI.addToggle("Music Shuffle", "Off", "On", TunicRandomizer.Settings.MusicShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.MusicShuffle = !TunicRandomizer.Settings.MusicShuffle; SaveSettings(); }));
             OptionsGUI.addToggle("Seeded Music", "Off", "On", TunicRandomizer.Settings.SeededMusic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.SeededMusic = !TunicRandomizer.Settings.SeededMusic; SaveSettings(); }));
-            addPageButton("Music Toggles", MusicTogglesPage);
+            addPageButton("Configure Music Toggles", MusicTogglesPage);
             addPageButton("Jukebox", JukeboxPage);
         }
 
