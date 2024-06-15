@@ -200,7 +200,7 @@ namespace TunicRandomizer {
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().UseSpecialGhostMat = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().UseSpecialGhostMat;
             }
 
-            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<HexagonQuestCutscene>() == null) {
+            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<HexagonQuestCutscene>() == null && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 new GameObject("hex quest cutscene").gameObject.AddComponent<HexagonQuestCutscene>();
             }
 

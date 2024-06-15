@@ -44,6 +44,13 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
             ClassInjector.RegisterTypeInIl2Cpp<BossEnemy>();
 
+            ClassInjector.RegisterTypeInIl2Cpp<MusicShuffler>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("music shuffler", new Il2CppSystem.Type[]
+            {
+                Il2CppType.Of<MusicShuffler>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
             ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Il2CppSystem.Type[]
             {
@@ -224,6 +231,10 @@ namespace TunicRandomizer {
             
             Harmony.Patch(AccessTools.Method(typeof(ConduitData), "IsFuseClosedByID"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitData_IsFuseClosedByID_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(PlayMusicOnLoad), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "PlayMusicOnLoad_Start_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(MusicManager), "SetParam"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "MusicManager_PlayCuedTrack_PostfixPatch")));
+            
         }
     }
 }

@@ -994,6 +994,9 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<Foxgod>().rainPreview_pool.pool = FoxgodPools[4].ToArray();
                         NewEnemy.GetComponent<Foxgod>().voidhole_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(5).GetComponent<PooledFX>();
                         NewEnemy.GetComponent<Foxgod>().voidhole_pool.pool = FoxgodPools[5].ToArray();
+                        if (CurrentScene != "Cathedral Arena") {
+                            NewEnemy.GetComponent<Foxgod>().IsAggroed = true;
+                        }
                     }
 
                     NewEnemy.name += $" {i}";

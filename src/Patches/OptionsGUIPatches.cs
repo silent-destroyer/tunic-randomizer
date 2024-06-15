@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using static TunicRandomizer.SaveFlags;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using FMODUnity;
 
 namespace TunicRandomizer {
     public class OptionsGUIPatches {
@@ -28,8 +29,9 @@ namespace TunicRandomizer {
             addPageButton("Archipelago Settings", ArchipelagoSettingsPage);
             addPageButton("Hint Settings", HintsSettingsPage);
             addPageButton("Enemy Randomizer Settings", EnemyRandomizerSettings);
-            addPageButton("Fox Customization", CustomFoxSettingsPage);
+            addPageButton("Fox Customization Settings", CustomFoxSettingsPage);
             addPageButton("Race Mode Settings", RaceSettingsPage);
+            addPageButton("Music Shuffle Settings", MusicSettingsPage);
             addPageButton("Other Settings", OtherSettingsPage);
         }
 
@@ -132,6 +134,7 @@ namespace TunicRandomizer {
 
         public static void EnemyTogglesPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Enemy Toggles");
 
             Action<int, bool> toggleAllEnemies = (int index, bool toggle) => {
                 GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
@@ -206,6 +209,83 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
+            }
+        }
+
+        public static void MusicSettingsPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Music Shuffle");
+            OptionsGUI.addToggle("Music Shuffle", "Off", "On", TunicRandomizer.Settings.MusicShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.MusicShuffle = !TunicRandomizer.Settings.MusicShuffle; SaveSettings(); }));
+            OptionsGUI.addToggle("Seeded Music", "Off", "On", TunicRandomizer.Settings.SeededMusic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.SeededMusic = !TunicRandomizer.Settings.SeededMusic; SaveSettings(); }));
+            addPageButton("Music Toggles", MusicTogglesPage);
+            addPageButton("Jukebox", JukeboxPage);
+        }
+
+        public static void MusicTogglesPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Music Toggles");
+
+            Action<int, bool> toggleAllSongs = (int index, bool toggle) => {
+                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
+                    button.SelectIndex(index);
+                    TunicRandomizer.Settings.MusicToggles[button.leftAlignedText.text] = toggle;
+                });
+                SaveSettings();
+            };
+
+            OptionsGUI.addButton("Toggle All Tracks ON", (Action)(() => {
+                toggleAllSongs(1, true);
+            }));
+            OptionsGUI.addButton("Toggle All Tracks OFF", (Action)(() => {
+                toggleAllSongs(0, false);
+            }));
+
+            OptionsGUI.addButton("Randomize All", (Action)(() => {
+                System.Random random = new System.Random();
+                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
+                    int selection = random.Next(2);
+                    button.SelectIndex(selection);
+                    TunicRandomizer.Settings.MusicToggles[button.leftAlignedText.text] = selection == 1;
+                }); SaveSettings();
+            }));
+            Dictionary<string, Action<int>> toggles = new Dictionary<string, Action<int>>();
+            foreach (string track in MusicShuffler.Tracks.Keys) {
+                toggles.Add(track, (int index) => {
+                    TunicRandomizer.Settings.MusicToggles[track] = !TunicRandomizer.Settings.MusicToggles[track];
+                    SaveSettings();
+                });
+            }
+            foreach (string track in MusicShuffler.Tracks.Keys) {
+                OptionsGUI.addToggle(track, "Off", "On", TunicRandomizer.Settings.MusicToggles[track] ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)toggles[track]);
+            }
+        }
+
+        public static void JukeboxPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Jukebox");
+
+            foreach (KeyValuePair<string, EventReference> pair in MusicShuffler.Tracks) {
+                OptionsGUI.addButton(pair.Key, 
+                    (Action)(() => {
+                        if (pair.Value.Guid.ToString() == MusicManager.playingEventRef.Guid.ToString()) {
+                            MusicManager.StopImmediate();
+                        } else {
+                            MusicManager.Stop();
+                        }
+                        MusicManager.PlayNewTrackIfDifferent(pair.Value);
+                        MusicShuffler.instance.TimeSinceMusicStart = Time.realtimeSinceStartup;
+                        if (MusicShuffler.TrackParams.ContainsKey(pair.Key)) {
+                            foreach ((string, int) param in MusicShuffler.TrackParams[pair.Key]) {
+                                MusicShuffler.instance.paramsToSetRealtime.Enqueue(param);
+                            }
+                        }
+                        if (pair.Key == "Cube Cave" && GameObject.FindObjectOfType<RotatingCubeClue>() == null && GameObject.FindObjectOfType<PlayMusicOnLoad>() != null) {
+                            GameObject cube = new GameObject("cube for music track");
+                            cube.AddComponent<RotatingCubeClue>();
+                            cube.GetComponent<RotatingCubeClue>().sequence = "rrrruuuurrruuurruuru";
+                            cube.transform.parent = GameObject.FindObjectOfType<PlayMusicOnLoad>().transform;
+                        }
+                    }));
             }
         }
 
