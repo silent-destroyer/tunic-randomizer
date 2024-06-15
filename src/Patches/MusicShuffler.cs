@@ -78,6 +78,27 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void PlayTrack(string trackName, EventReference track) {
+            if (track.Guid.ToString() == MusicManager.playingEventRef.Guid.ToString()) {
+                MusicManager.StopImmediate();
+            } else {
+                MusicManager.Stop();
+            }
+            MusicManager.PlayNewTrackIfDifferent(track);
+            MusicShuffler.instance.TimeSinceMusicStart = Time.realtimeSinceStartup;
+            if (MusicShuffler.TrackParams.ContainsKey(trackName)) {
+                foreach ((string, int) param in MusicShuffler.TrackParams[trackName]) {
+                    MusicShuffler.instance.paramsToSetRealtime.Enqueue(param);
+                }
+            }
+            if (trackName == "Cube Cave" && GameObject.FindObjectOfType<RotatingCubeClue>() == null && GameObject.FindObjectOfType<PlayMusicOnLoad>() != null) {
+                GameObject cube = new GameObject("cube for music track");
+                cube.AddComponent<RotatingCubeClue>();
+                cube.GetComponent<RotatingCubeClue>().sequence = "rrrruuuurrruuurruuru";
+                cube.transform.parent = GameObject.FindObjectOfType<PlayMusicOnLoad>().transform;
+            }
+        }
+
         public static void MusicManager_PlayCuedTrack_PostfixPatch(ref string paramString, ref int value) {
             TunicLogger.LogInfo("Music Manager setparam " + paramString + " to " + value);
         }

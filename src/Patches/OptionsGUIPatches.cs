@@ -263,29 +263,12 @@ namespace TunicRandomizer {
         public static void JukeboxPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Jukebox");
-
+            OptionsGUI.addButton("Play Random Track", (Action)(() => {
+                string randomTrack = MusicShuffler.Tracks.Keys.ToList()[new System.Random().Next(MusicShuffler.Tracks.Count)];
+                MusicShuffler.PlayTrack(randomTrack, MusicShuffler.Tracks[randomTrack]); 
+            }));
             foreach (KeyValuePair<string, EventReference> pair in MusicShuffler.Tracks) {
-                OptionsGUI.addButton(pair.Key, 
-                    (Action)(() => {
-                        if (pair.Value.Guid.ToString() == MusicManager.playingEventRef.Guid.ToString()) {
-                            MusicManager.StopImmediate();
-                        } else {
-                            MusicManager.Stop();
-                        }
-                        MusicManager.PlayNewTrackIfDifferent(pair.Value);
-                        MusicShuffler.instance.TimeSinceMusicStart = Time.realtimeSinceStartup;
-                        if (MusicShuffler.TrackParams.ContainsKey(pair.Key)) {
-                            foreach ((string, int) param in MusicShuffler.TrackParams[pair.Key]) {
-                                MusicShuffler.instance.paramsToSetRealtime.Enqueue(param);
-                            }
-                        }
-                        if (pair.Key == "Cube Cave" && GameObject.FindObjectOfType<RotatingCubeClue>() == null && GameObject.FindObjectOfType<PlayMusicOnLoad>() != null) {
-                            GameObject cube = new GameObject("cube for music track");
-                            cube.AddComponent<RotatingCubeClue>();
-                            cube.GetComponent<RotatingCubeClue>().sequence = "rrrruuuurrruuurruuru";
-                            cube.transform.parent = GameObject.FindObjectOfType<PlayMusicOnLoad>().transform;
-                        }
-                    }));
+                OptionsGUI.addButton(pair.Key, (Action)(() => { MusicShuffler.PlayTrack(pair.Key, pair.Value); }));
             }
         }
 
