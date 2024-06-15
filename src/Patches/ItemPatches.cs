@@ -282,6 +282,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
                     Inventory.GetItemByName("Flask Shard").Quantity -= 3;
                     Inventory.GetItemByName("Flask Container").Quantity += 1;
+                    NotificationBottom = $"kuhmplEtid A flahsk! \"<#f03c67>+1\" [flask]\"<#f03c67>!\"";
                 }
             }
 
@@ -492,6 +493,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
                     Inventory.GetItemByName("Flask Shard").Quantity -= 3;
                     Inventory.GetItemByName("Flask Container").Quantity += 1;
+                    NotificationBottom = $"kuhmplEtid A flahsk! \"<#f03c67>+1\" [flask]\"<#f03c67>!\"";
                 }
             }
 
@@ -671,11 +673,11 @@ namespace TunicRandomizer {
                 // Mirror trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>loof \"A ERA UOY\"";
+                FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
                 FoolMessageBottom = $"tAk uh mOmint too ruhflehkt.";
                 CameraController.Flip = true;
                 PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 5 && FoolType < 20) {
+            } else if (FoolType >= 5 && FoolType < 15) {
                 // Tiny fox trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
@@ -683,7 +685,7 @@ namespace TunicRandomizer {
                 FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
                 PlayerCharacterPatches.TinierFox = true;
                 PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 20 && FoolType < 40) {
+            } else if (FoolType >= 15 && FoolType < 40) {
                 // Bee trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
