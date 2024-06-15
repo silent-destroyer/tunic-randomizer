@@ -207,6 +207,8 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
             OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
             OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
+            OptionsGUI.addToggle("Bigger Head Mode", "Off", "On", TunicRandomizer.Settings.BiggerHeadMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.BiggerHeadMode = !TunicRandomizer.Settings.BiggerHeadMode; SaveSettings(); }));
+            OptionsGUI.addToggle("Tinier Fox Mode", "Off", "On", TunicRandomizer.Settings.TinierFoxMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.TinierFoxMode = !TunicRandomizer.Settings.TinierFoxMode; SaveSettings(); }));
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }

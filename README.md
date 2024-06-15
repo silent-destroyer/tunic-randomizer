@@ -171,6 +171,13 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Allows you to customize the colors of your fox with more options than what the base game offers, and save it as a custom texture for future use.
 - Custom Fox Texture
   - When enabled, will always apply the saved custom texture to the fox. The custom texture can be found under AppData in the same folder as the Spoiler log and Item Tracker file.
+### Music Shuffler
+- Music Shuffle
+  - Plays a random music track when everytime you enter an area.
+- Seeded Music
+  - Plays a set track per scene.
+- Music Toggles
+  - Allows you to customize which tracks play when the shuffler is turned on.
 ### Race Mode Settings
 - Race Mode
   - An option to help facilitate ranomizer races more easily. Disables the spoiler log, and enables the options below to be used.
@@ -193,6 +200,10 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Turns the spiders and another mulit-legged enemy into...something else.
 - Holy Cross Visualizer
   - It's like DDR but in Tunic.
+- Bigger Head Mode
+  - Beeg
+- Tinier Fox Mode
+  - Smol
   
 ## Credits
 - Glace and RisingStar111 for helping research how to mod this game, and Jabberrock for creating an initial Archipelago integration.

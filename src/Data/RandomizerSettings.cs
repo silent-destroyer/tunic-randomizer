@@ -170,12 +170,7 @@ namespace TunicRandomizer {
         private const int CHEST_INTERRUPTION = 32;
         private const int SKIP_ITEM_POPUPS = 64;
         private const int FASTER_UPGRADES = 128;        
-        private const int CAMERA_FLIP = 256;
-        private const int MORE_SKULLS = 512;
-        private const int ARACHNOPHOBIA_MODE = 1024;
-        private const int HOLY_CROSS_VIEWER = 2048;
-        private const int MUSIC_SHUFFLE = 4096;
-        private const int SEEDED_MUSIC = 8192;
+
         public bool HeirAssistModeEnabled {
             get;
             set;
@@ -217,6 +212,14 @@ namespace TunicRandomizer {
         }
 
         // Other settings
+        private const int CAMERA_FLIP = 1;
+        private const int MORE_SKULLS = 2;
+        private const int ARACHNOPHOBIA_MODE = 4;
+        private const int HOLY_CROSS_VIEWER = 8;
+        private const int MUSIC_SHUFFLE = 16;
+        private const int SEEDED_MUSIC = 32;
+        private const int BIGGER_HEAD_MODE = 64;
+        private const int TINIER_FOX_MODE = 128;
         public bool CameraFlip {
             get;
             set;
@@ -248,6 +251,16 @@ namespace TunicRandomizer {
         }
 
         public Dictionary<string, bool> MusicToggles {
+            get;
+            set;
+        }
+
+        public bool BiggerHeadMode {
+            get;
+            set;
+        }
+
+        public bool TinierFoxMode {
             get;
             set;
         }
@@ -423,6 +436,8 @@ namespace TunicRandomizer {
             MoreSkulls = false;
             ArachnophobiaMode = false;
             HolyCrossVisualizer = false;
+            BiggerHeadMode = false;
+            TinierFoxMode = false;
             MusicShuffle = false;
             SeededMusic = false;
             MusicToggles = new Dictionary<string, bool>();
@@ -468,6 +483,7 @@ namespace TunicRandomizer {
                 $":{Convert.ToInt32(sToB(hintSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(enemySettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(raceSettings()), 2)}" +
+                $":{Convert.ToInt32(sToB(otherSettings()), 2)}" +
                 $":{ConvertEnemyToggles()}"));
             string seed;
             if (SceneManager.GetActiveScene().name != "TitleScreen") {
@@ -550,9 +566,19 @@ namespace TunicRandomizer {
                 DisableIceGrappling = eval(race, ICE_GRAPPLING);
                 DisableLadderStorage = eval(race, LADDER_STORAGE);
                 DisableUpgradeStealing = eval(race, UPGRADE_STEALING);
-               
-                if (decodedSplit.Length >= 10) {
-                    ParseEnemyToggles(decodedSplit[9]);
+
+                if (decodedSplit.Length >= 11) {
+                    int other = int.Parse(decodedSplit[9]);
+                    CameraFlip = eval(other, CAMERA_FLIP);
+                    MoreSkulls = eval(other, MORE_SKULLS);
+                    ArachnophobiaMode = eval(other, ARACHNOPHOBIA_MODE);
+                    HolyCrossVisualizer = eval(other, HOLY_CROSS_VIEWER);
+                    MusicShuffle = eval(other, MUSIC_SHUFFLE);
+                    SeededMusic = eval(other, SEEDED_MUSIC);
+                    BiggerHeadMode = eval(other, BIGGER_HEAD_MODE);
+                    TinierFoxMode = eval(other, TINIER_FOX_MODE);
+
+                    ParseEnemyToggles(decodedSplit[10]);
                 }
 
                 OptionsGUIPatches.SaveSettings();
@@ -591,8 +617,12 @@ namespace TunicRandomizer {
 
         public bool[] generalSettings() {
             return new bool[] { HeirAssistModeEnabled, ClearEarlyBushes, EnableAllCheckpoints, CheaperShopItemsEnabled, 
-                BonusStatUpgradesEnabled, DisableChestInterruption, SkipItemAnimations, FasterUpgrades, CameraFlip, MoreSkulls, 
-                ArachnophobiaMode, HolyCrossVisualizer, MusicShuffle, SeededMusic };
+                BonusStatUpgradesEnabled, DisableChestInterruption, SkipItemAnimations, FasterUpgrades };
+        }
+
+        public bool[] otherSettings() {
+            return new bool[] { CameraFlip, MoreSkulls,
+                ArachnophobiaMode, HolyCrossVisualizer, MusicShuffle, SeededMusic, BiggerHeadMode, TinierFoxMode };
         }
 
         public bool[] hintSettings() {

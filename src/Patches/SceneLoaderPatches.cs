@@ -246,6 +246,8 @@ namespace TunicRandomizer {
             }
 
             PlayerCharacterPatches.StungByBee = false;
+            PlayerCharacterPatches.TinierFox = false;
+
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
                 try {

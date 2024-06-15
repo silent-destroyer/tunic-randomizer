@@ -22,6 +22,7 @@ namespace TunicRandomizer {
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
+        public static bool TinierFox = false;
         public static bool IsTeleporting = false;
         public static bool DiedToDeathLink = false;
         public static string DeathLinkMessage = "";
@@ -100,9 +101,17 @@ namespace TunicRandomizer {
                 PaletteEditor.LoadCustomTexture();
             }
 
-            if (StungByBee) {
-                __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = new Vector3(3f, 3f, 3f);
+            if (StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
+                __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = Vector3.one * 3f;
             }
+            if (TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
+                __instance.gameObject.transform.localScale = Vector3.one * 0.5f;
+                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 5;
+            } else {
+                __instance.gameObject.transform.localScale = Vector3.one;
+                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
+            }
+
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
                 try {
                     SwordProgression.CreateSwordItemBehaviours(__instance);
