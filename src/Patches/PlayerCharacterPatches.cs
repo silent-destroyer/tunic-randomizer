@@ -546,6 +546,16 @@ namespace TunicRandomizer {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
+                if (slotData.TryGetValue("ice_grappling", out var iceGrappling)) {
+                    if (iceGrappling.ToString() == "2" || iceGrappling.ToString() == "3") {
+                        Inventory.GetItemByName("Torch").Quantity = 1;
+                    }
+                }
+                if (slotData.TryGetValue("ladder_storage", out var ladderStorage)) {
+                    if (ladderStorage.ToString() != "0") {
+                        Inventory.GetItemByName("Torch").Quantity = 1;
+                    }
+                }
                 SaveFile.SaveToDisk();
 
                 Locations.PopulateMajorItemLocations(slotData);
