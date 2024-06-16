@@ -5271,12 +5271,32 @@ namespace TunicRandomizer {
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
                     foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals) {
                         if (portal.name == portalCombo.Value.Portal1.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal2.Scene == SceneManager.GetActiveScene().name))) {
-                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
-                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
+                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
+                                if (SaveFlags.IsArchipelago()) {
+                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}{portalCombo.Value.Portal1.Tag}", true);
+                                }
+                            }
+                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
+                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                                if (SaveFlags.IsArchipelago()) {
+                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
+                                }
+                            }
                         }
                         if (portal.name == portalCombo.Value.Portal2.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal1.Scene == SceneManager.GetActiveScene().name))) {
-                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
-                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
+                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
+                                if (SaveFlags.IsArchipelago()) {
+                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}{portalCombo.Value.Portal1.Tag}", true);
+                                }
+                            }
+                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
+                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                                if (SaveFlags.IsArchipelago()) {
+                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
+                                }
+                            }
                         }
                     }
                 }
