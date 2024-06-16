@@ -321,6 +321,15 @@ namespace TunicRandomizer {
             if (!ModelSwaps.SwappedThisSceneAlready) {
                 ModelSwaps.SwapItemsInScene();
             }
+
+            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
+                EnemyRandomizer.SpawnNewEnemies();
+            }
+
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
+                EnemyRandomizer.ToggleArachnophobiaMode();
+            }
+
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 TunicPortals.ModifyPortals("Overworld Redux");

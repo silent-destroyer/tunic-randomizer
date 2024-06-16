@@ -22,6 +22,9 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, string> EnemiesInCurrentScene = new Dictionary<string, string>() { };
 
+        public static bool RandomizedThisSceneAlready = false;
+        public static bool DidArachnophoiaModeAlready = false;
+
         public static GameObject LibrarianPools;
 
         public static List<GameObject> LibrarianOrbs;
@@ -1037,6 +1040,8 @@ namespace TunicRandomizer {
                 BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = bossStateVars[BossStateVars.IndexOf(s)]);
             }
 
+            RandomizedThisSceneAlready = true;
+
             try {
                 foreach (string Key in Enemies.Keys) {
                     if (Enemies[Key] != null) {
@@ -1096,6 +1101,8 @@ namespace TunicRandomizer {
                 CreateRune("E", armature.GetChild(0).GetChild(1).GetChild(4).GetChild(4).GetChild(4), Vector3.zero, localScale, ERune, color, material).transform.localEulerAngles = new Vector3(0, 90, 90);
                 CreateRune("E", armature.GetChild(0).GetChild(1).GetChild(4).GetChild(4).GetChild(4).GetChild(4), Vector3.zero, localScale, dRune, color).transform.localEulerAngles = new Vector3(0, 90, 90);
             }
+
+            DidArachnophoiaModeAlready = true;
         }
 
         private static GameObject CreateRune(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Sprite sprite, Color color, Material material = null) {

@@ -52,6 +52,8 @@ namespace TunicRandomizer {
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
 
             ModelSwaps.SwappedThisSceneAlready = false;
+            EnemyRandomizer.RandomizedThisSceneAlready = false;
+            EnemyRandomizer.DidArachnophoiaModeAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -461,11 +463,11 @@ namespace TunicRandomizer {
                 TunicPortals.MarkPortals();
             }
 
-            if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
+            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            if (TunicRandomizer.Settings.ArachnophobiaMode) {
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
                 EnemyRandomizer.ToggleArachnophobiaMode();
             }
 
