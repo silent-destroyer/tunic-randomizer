@@ -583,25 +583,25 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].GetComponent<Bat>().monsterAggroDistance = 4;
                 }
                 if (EnemyName == "Skuladot redux_ghost") {
-                    Enemies[EnemyName].GetComponent<Monster>().dropValue = Enemies["Skuladot redux"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies[EnemyName].GetComponent<Monster>().dropValue.id] = Enemies["Skuladot redux"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "Skuladot redux_shield_ghost") {
-                    Enemies[EnemyName].GetComponent<Monster>().dropValue = Enemies["Skuladot redux_shield"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies[EnemyName].GetComponent<Monster>().dropValue.id] = Enemies["Skuladot redux_shield"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "Skuladot redux Big_ghost") {
-                    Enemies[EnemyName].GetComponent<Monster>().dropValue = Enemies["Skuladot redux Big"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies[EnemyName].GetComponent<Monster>().dropValue.id] = Enemies["Skuladot redux Big"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "bomezome_easy") {
-                    Enemies["bomezome_easy_ghost"].GetComponent<Monster>().dropValue = Enemies["bomezome_easy"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies["bomezome_easy_ghost"].GetComponent<Monster>().dropValue.id] = Enemies["bomezome_easy"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "Frog Small") {
-                    Enemies["Frog Small_Ghost"].GetComponent<Monster>().dropValue = Enemies["Frog Small"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies["Frog Small_Ghost"].GetComponent<Monster>().dropValue.id] = Enemies["Frog Small"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "Frog Spear") {
-                    Enemies["Frog Spear_Ghost"].GetComponent<Monster>().dropValue = Enemies["Frog Spear"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies["Frog Spear_Ghost"].GetComponent<Monster>().dropValue.id] = Enemies["Frog Spear"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "Wizard_Support") {
-                    Enemies["Wizard_Support_Ghost"].GetComponent<Monster>().dropValue = Enemies["Wizard_Support"].GetComponent<Monster>().dropValue;
+                    Dat.floatDatabase[Enemies["Wizard_Support_Ghost"].GetComponent<Monster>().dropValue.id] = Enemies["Wizard_Support"].GetComponent<Monster>().dropValue.Value;
                 }
                 if (EnemyName == "Scavenger Boss") {
                     Enemies["Scavenger Boss"].GetComponent<ScavengerBoss>().eggTossChance = 0.25f;
