@@ -12,6 +12,9 @@ namespace TunicRandomizer {
 
         public ToggleObjectBySpell[] spellToggles;
         public List<GameObject> Arrows;
+        public Color IncorrectColor = new Color(1f, .25f, .25f, 1f);
+        public Color DefaultColor = new Color(0.2729f, 0.7925f, 0.4009f, 1);
+        public Color SuccessColor = new Color(0.917f, 0.65f, .08f);
 
         List<string> closestSpellStrings = new List<string>();
 
@@ -53,23 +56,24 @@ namespace TunicRandomizer {
                     break;
                 case DPAD.DOWN:
                     arrow.transform.localEulerAngles = new Vector3(0, 225, 270);
-                    arrow.transform.position -= new Vector3(1.25f, 0, 0);
+                    arrow.transform.position -= new Vector3(1.25f, -1f, 0);
                     break;
                 case DPAD.LEFT:
                     arrow.transform.localEulerAngles = new Vector3(0, 225, 0);
-                    arrow.transform.position -= new Vector3(3.75f, 0, 0);
+                    arrow.transform.position -= new Vector3(3.75f, -1.5f, 0);
                     break;
                 case DPAD.RIGHT:
                 default:
                     arrow.transform.localEulerAngles = new Vector3(0, 225, 180);
-                    arrow.transform.position += new Vector3(3.75f, 0, 0);
+                    arrow.transform.position += new Vector3(3.75f, -2.25f, 0);
                     break;
             }
+
             if (incorrect) {
-                arrow.GetComponent<SpriteRenderer>().color = new Color(1f, .25f, .25f, 1f);
+                arrow.GetComponent<SpriteRenderer>().color = IncorrectColor;
             } else {
-                arrow.GetComponent<SpriteRenderer>().color = new Color(0.2729f, 0.7925f, 0.4009f, 1);
-            }            
+                arrow.GetComponent<SpriteRenderer>().color = DefaultColor;
+            }
             arrow.SetActive(true);
             Arrows.Add(arrow);
         }
@@ -90,7 +94,7 @@ namespace TunicRandomizer {
                 bool incorrect = false;
                 bool completedSpell = false;
                 if (closestSpellStrings.Count != 0) {
-                    if (length > closestSpellStrings[0].Length) {
+                    if (length > closestSpellStrings[0].Length || (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1 && SaveFile.GetInt(SaveFlags.HolyCrossUnlocked) == 0)) {
                         incorrect = true;
                     } else {
                         incorrect = closestSpellStrings.All(spell => {
@@ -150,7 +154,7 @@ namespace TunicRandomizer {
 
         public void CompletedSpellEffect(bool iceBoltSpell = false) {
             Arrows.ForEach(arrow => {
-                arrow.GetComponent<SpriteRenderer>().color = iceBoltSpell ? Color.cyan : new Color(0.917f, 0.65f, .08f);
+                arrow.GetComponent<SpriteRenderer>().color = iceBoltSpell ? Color.cyan : SuccessColor;
             });
         }
 

@@ -10,7 +10,7 @@ For discussion around the Archipelago side of things, please visit the dedicated
 
 ## Installation
 - Must use a compatible PC version of TUNIC on the latest update. The mod has been tested on Steam and PC Game Pass versions, but should realistically work on any PC version (including Steam Deck).
-    - If playing on Steam Deck, first follow this guide to [setting up BepInEx on Steam Deck via Proton](https://docs.bepinex.dev/articles/advanced/proton_wine.html).
+    - If playing on Steam Deck or Linux, first follow this guide to [setting up BepInEx via Proton/Wine](https://docs.bepinex.dev/articles/advanced/proton_wine.html).
 
 - Download the appropriate IL2CPP release of [BepInEx 6](https://github.com/BepInEx/BepInEx/releases/download/v6.0.0-pre.1/BepInEx_UnityIL2CPP_x64_6.0.0-pre.1.zip).
 
@@ -198,8 +198,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Does exactly what it says on the tin.
 - Arachnophobia Mode
   - Turns the spiders and another mulit-legged enemy into...something else.
-- Holy Cross Visualizer
-  - It's like DDR but in Tunic.
+- Holy Cross DDR
+  - Spawns DDR-style arrows when you use the holy cross to help visualize your inputs.
 - Bigger Head Mode
   - Beeg
 - Tinier Fox Mode
