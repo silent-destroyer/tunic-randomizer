@@ -433,7 +433,7 @@ namespace TunicRandomizer {
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            string slotLoc = $"{itemInfo.Player}, {itemInfo.LocationName}";
+            string slotLoc = $"{itemInfo.Player.Slot}, {itemInfo.LocationName}";
             if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
                 SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
             }
