@@ -306,6 +306,7 @@ namespace TunicRandomizer {
             {"\"Boss Scavenger\"", $"baws skahvehnjur" },
             {"\"Garden Knight\"", $"gRdin nIt" },
             {"\"The Heir\"", $"#E Ar" },
+            {"\"Fleemer\" (kworteht)", $"flEmur (kworteht)" },
             {$"kawngrahJoulA$uhnz! \"(<#e99d4c>+1 ATT<#FFFFFF>)\"", $"kawngrahJoulA$uhnz! (<#e99d4c>[arrow_up]1 uhtahk<#FFFFFF>)"},
             {$"kawngrahJoulA$uhnz! \"(<#5de7cf>+1 DEF<#FFFFFF>)\"", $"kawngrahJoulA$uhnz! (<#5de7cf>[arrow_up]1 difehns<#FFFFFF>)"},
             {$"kawngrahJoulA$uhnz! \"(<#ca7be4>+1 POTION<#FFFFFF>)\"", $"kawngrahJoulA$uhnz! (<#ca7be4>[arrow_up]1 pO$uhn<#FFFFFF>)"},

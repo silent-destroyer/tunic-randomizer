@@ -122,9 +122,14 @@ namespace TunicRandomizer {
                 SceneLoader.LoadScene("Quarry");
                 return;
             }
+            if (loadingScene.name == "Crypt Redux" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_quartet")) {
+                EnemyRandomizer.InitializeEnemies("Crypt Redux");
+                SceneLoader.LoadScene("Quarry Redux");
+                return;
+            }
             if (loadingScene.name == "Crypt" && !EnemyRandomizer.Enemies.ContainsKey("Shadowreaper")) {
                 EnemyRandomizer.InitializeEnemies("Crypt");
-                SceneLoader.LoadScene("Quarry Redux");
+                SceneLoader.LoadScene("Crypt Redux");
                 return;
             }
             if (loadingScene.name == "Fortress Arena" && !EnemyRandomizer.Enemies.ContainsKey("Spidertank")) {

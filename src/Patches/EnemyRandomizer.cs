@@ -13,7 +13,18 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
 
     public class BossEnemy : MonoBehaviour { }
+    public class FleemerQuartet : MonoBehaviour {
+        public int GroupId;
+        public List<GameObject> Quartet;
+        public void Awake() {
+            GroupId = -1;
+            Quartet = new List<GameObject>();
+        }
 
+        public void Update() {
+            Quartet = Quartet.Where(monster => monster != null).ToList();
+        }
+    }
     public class EnemyRandomizer {
 
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
@@ -177,6 +188,12 @@ namespace TunicRandomizer {
                 "Crypt",
                 new List<string>() {
                     "Shadowreaper"
+                }
+            },
+            {
+                "Crypt Redux",
+                new List<string>() {
+                    "bomezome (3)"
                 }
             },
             {
@@ -348,6 +365,7 @@ namespace TunicRandomizer {
                     "Centipede",
                     "Ghost Knight",
                     "bomezome_easy_ghost (tweaked)",
+                    "bomezome_quartet",
                 }
             },
             {
@@ -448,6 +466,7 @@ namespace TunicRandomizer {
             { "Scavenger Boss", $"\"Boss Scavenger\"" },
             { "tech knight boss", $"\"Garden Knight\"" },
             { "Foxgod", $"\"The Heir\"" },
+            { "bomezome_quartet", $"\"Fleemer\" (kworteht)" },
         };
 
         public static Dictionary<string, string> EnemyToggleOptionNames = new Dictionary<string, string>() {
@@ -509,6 +528,7 @@ namespace TunicRandomizer {
             { "bomezome_easy_ghost", $"Fleemer (Ghost)" },
             { "bomezome_easy_ghost (tweaked)", $"Fleemer (Big Ghost)" },
             { "bomezome_fencer", $"Fleemer (Fencer)" },
+            { "bomezome_quartet", $"Fleemer (Quartet)" },
             { "bomezome big", $"Giant Fleemer" },
             { "Ghostfox_monster", $"Lost Echo" },
             { "Gunslinger", $"Gunslinger" },
@@ -543,7 +563,8 @@ namespace TunicRandomizer {
                 { "Spinnerbot (3)", "Spinnerbot Corrupted" },
                 { "Bat_librarian add", "Bat void" },
                 { "Skuladot redux_librarian add", "Skuladot redux void" },
-                { "Crabbo (1)", "Crabbo" }
+                { "Crabbo (1)", "Crabbo" },
+                { "bomezome (3)", "bomezome_quartet" },
             };
             foreach (string LocationEnemy in LocationEnemies[SceneName]) {
                 string EnemyName = LocationEnemy;
@@ -608,6 +629,10 @@ namespace TunicRandomizer {
                 }
                 if (EnemyName == "Scavenger Boss") {
                     Enemies["Scavenger Boss"].GetComponent<ScavengerBoss>().eggTossChance = 0.25f;
+                }
+                if (EnemyName == "bomezome_quartet") {
+                    Enemies[EnemyName].AddComponent<FleemerQuartet>();
+                    Enemies[EnemyName].GetComponent<FleemerQuartet>().GroupId = -1;
                 }
                 if(EnemyName == "Librarian") {
                     LibrarianPools = GameObject.Instantiate(GameObject.Find("_Pools/"));
@@ -1007,13 +1032,39 @@ namespace TunicRandomizer {
                         }
                     }
 
+
                     NewEnemy.name += $" {i}";
                     EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
 
                     // Give every enemy a unique ID to fix enemies despawning (and more importantly, fixes cathedral)
                     if (NewEnemy.GetComponent<RuntimeStableID>() != null) {
                         NewEnemy.GetComponent<RuntimeStableID>().intraSceneID = Resources.FindObjectsOfTypeAll<RuntimeStableID>().OrderBy(id => id.intraSceneID).Last().intraSceneID + 1;
-                        
+                    }
+
+                    if (NewEnemy.GetComponent<FleemerQuartet>() != null) {
+                        List<GameObject> quartet = new List<GameObject>();
+                        NewEnemy.GetComponent<FleemerQuartet>().GroupId = i;
+                        quartet.Add(NewEnemy);
+                        for (int f = 0; f < 3; f++) {
+                            GameObject fleemer;
+                            if (f == 0) {
+                                fleemer = GameObject.Instantiate(NewEnemy, NewEnemy.transform.position + new Vector3(1, 0, -1), NewEnemy.transform.rotation);
+                            } else if (f == 1) {
+                                fleemer = GameObject.Instantiate(NewEnemy, NewEnemy.transform.position + new Vector3(-1, 0, -1), NewEnemy.transform.rotation);
+                            } else {
+                                fleemer = GameObject.Instantiate(NewEnemy, NewEnemy.transform.position + new Vector3(0, 0, -2), NewEnemy.transform.rotation);
+                            }
+                            fleemer.transform.parent = NewEnemy.transform.parent;
+                            fleemer.SetActive(true);
+                            fleemer.GetComponent<FleemerQuartet>().GroupId = i;
+                            fleemer.name = NewEnemy.name;
+                            quartet.Add(fleemer);
+                            fleemer.GetComponent<RuntimeStableID>().intraSceneID = NewEnemy.GetComponent<RuntimeStableID>().intraSceneID + f;
+
+                        }
+                        foreach (GameObject monster in quartet) {
+                            monster.GetComponent<FleemerQuartet>().Quartet = quartet;
+                        }
                     }
 
                     i++;
@@ -1157,8 +1208,15 @@ namespace TunicRandomizer {
             if (!__result) {
                 int EnemiesDefeated = SaveFile.GetInt(EnemiesDefeatedCount);
                 SaveFile.SetInt(EnemiesDefeatedCount, EnemiesDefeated + 1);
-
-                RecordDefeatedEnemy(__instance.__4__this);
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
+                    if (__instance.__4__this.GetComponent<FleemerQuartet>() != null) {
+                        if (__instance.__4__this.GetComponent<FleemerQuartet>().Quartet.Count == 1) {
+                            RecordDefeatedEnemy(__instance.__4__this);
+                        }
+                    } else {
+                        RecordDefeatedEnemy(__instance.__4__this);
+                    }
+                }
             }
         }
 
@@ -1168,8 +1226,9 @@ namespace TunicRandomizer {
                 if (!DefeatedEnemyTracker.ContainsKey(SceneName)) {
                     DefeatedEnemyTracker.Add(SceneName, new List<string>());
                 }
-                if (EnemiesInCurrentScene.ContainsKey(monster.name)) {
+                if (EnemiesInCurrentScene.ContainsKey(monster.name) && !DefeatedEnemyTracker[SceneName].Contains(EnemiesInCurrentScene[monster.name])) {
                     DefeatedEnemyTracker[SceneName].Add(EnemiesInCurrentScene[monster.name]);
+                    TunicLogger.LogInfo("recorded defeated enemy " + monster.name);
                 }
             }
         }
