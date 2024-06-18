@@ -100,9 +100,6 @@ namespace TunicRandomizer {
         }
 
         public static void MusicManager_PlayCuedTrack_PostfixPatch(ref string paramString, ref int value) {
-            if (TunicRandomizer.Settings.MusicShuffle) {
-                TunicLogger.LogInfo("Music Manager setparam " + paramString + " to " + value);
-            }
         }
 
         public static Dictionary<string, EventReference> Tracks = new Dictionary<string, EventReference>() {
