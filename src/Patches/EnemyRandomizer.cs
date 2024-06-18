@@ -642,6 +642,7 @@ namespace TunicRandomizer {
                         FoxgodPools.Add(pool);
                     }
                     GameObject.DontDestroyOnLoad(FoxgodBossfightRoot);
+                    Enemies[EnemyName].transform.GetChild(12).gameObject.SetActive(false);
                 }
                 Enemies[EnemyName].name = EnemyName + " Prefab";
             }
