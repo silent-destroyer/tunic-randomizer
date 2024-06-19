@@ -244,6 +244,7 @@ namespace TunicRandomizer {
                         }
                     }
 
+                    // pick up all items you can reach with your current inventory
                     foreach (Check placedLocation in ProgressionLocations.Values) {
                         if (placedLocation.Location.reachable(FullInventory)) {
                             string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
@@ -257,6 +258,7 @@ namespace TunicRandomizer {
                     }
                 }
 
+                // this is for testing fill, ignore if not testing
                 // change the testLocations bool to true to have it to test whether all locations can be reached
                 if (testBool) {
                     TunicLogger.LogInfo("test starts here");
@@ -336,7 +338,11 @@ namespace TunicRandomizer {
                 InitialLocations.Remove(InitialLocations[l]);
             }
 
-            SphereZero = FullInventory;
+            if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
+                SphereZero = GetERSphereOne();
+            } else {
+                SphereZero = GetSphereOne();
+            }
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 SphereZero.Clear();
