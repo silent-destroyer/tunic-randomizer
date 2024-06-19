@@ -344,11 +344,6 @@ namespace TunicRandomizer {
                 SphereZero = GetSphereOne();
             }
 
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                SphereZero.Clear();
-                AddDictToDict(SphereZero, GetERSphereOne());
-            }
-
             // shuffle remaining rewards and locations
             Shuffle(InitialRewards, InitialLocations, random);
 
