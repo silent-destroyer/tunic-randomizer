@@ -12,6 +12,7 @@ namespace TunicRandomizer {
         public List<Dictionary<string, int>> Requirements;
         public int SceneId;
         public string SceneName;
+        public string DictId = $"{LocationId} [{SceneName}]";
 
         public bool reachable(Dictionary<string, int> inventory) {
             List<Dictionary<string, int>> itemsRequired;
