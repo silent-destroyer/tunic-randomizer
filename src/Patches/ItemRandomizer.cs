@@ -114,14 +114,6 @@ namespace TunicRandomizer {
                         ProgressionRewards.Add(Item.Reward);
                         InitialLocations.Add(Item.Location);
                     }
-                } else if ((SaveFile.GetInt("randomizer laurels location") == 1 && Item.Location.LocationId == "Well Reward (6 Coins)")
-                    || (SaveFile.GetInt("randomizer laurels location") == 2 && Item.Location.LocationId == "Well Reward (10 Coins)")
-                    || (SaveFile.GetInt("randomizer laurels location") == 3 && Item.Location.LocationId == "waterfall")) {
-                    InitialRewards.Add(Item.Reward);
-                    Laurels.Location = Item.Location;
-                } else if (SaveFile.GetInt("randomizer laurels location") != 0 && Item.Reward.Name == "Hyperdash") {
-                    InitialLocations.Add(Item.Location);
-                    Laurels.Reward = Item.Reward;
                 } else {
                     if (SaveFile.GetInt("randomizer sword progression enabled") != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
                         Item.Reward.Name = "Sword Progression";
@@ -182,6 +174,41 @@ namespace TunicRandomizer {
                 }
             }
 
+            // pre-place laurels in ProgressionRewards, so that fill can collect it as needed
+            if (SaveFile.GetInt("randomizer laurels location") != 0) {
+                foreach (Reward item in ProgressionRewards) {
+                    if (item.Name == "Hyperdash") {
+                        foreach (Location location in InitialLocations) {
+                            if (SaveFile.GetInt("randomizer laurels location") == 1 && location.LocationId == "Well Reward (6 Coins)") {
+                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
+                                Check Check = new Check(item, location);
+                                ProgressionLocations.Add(DictionaryId, Check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
+                            if (SaveFile.GetInt("randomizer laurels location") == 2 && location.LocationId == "Well Reward (10 Coins)") {
+                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
+                                Check Check = new Check(item, location);
+                                ProgressionLocations.Add(DictionaryId, Check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
+                            if (SaveFile.GetInt("randomizer laurels location") == 3 && location.LocationId == "waterfall") {
+                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
+                                Check Check = new Check(item, location);
+                                ProgressionLocations.Add(DictionaryId, Check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
             // adding the progression rewards to the start inventory, so we can reverse fill
             foreach (Reward item in ProgressionRewards) {
                 string itemName = ItemLookup.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
@@ -197,7 +224,6 @@ namespace TunicRandomizer {
             } else {
                 TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
             }
-
             // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
 
@@ -219,11 +245,10 @@ namespace TunicRandomizer {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
                 AddListToDict(FullInventory, PrecollectedItems);
-
                 // fill method: reverse fill and anything you can get with your remaining inventory is assumed to be in your inventory for the purpose of placing the next item
                 while (true) {
                     int start_count = FullInventory.Count;
-
+                    
                     // do some shenanigans to decide whether you have laurels accessible
                     if (!FullInventory.ContainsKey("Hyperdash") && (SaveFile.GetInt("randomizer laurels location") == 1 && FullInventory["Trinket Coin"] >= 6)
                         || (SaveFile.GetInt("randomizer laurels location") == 2 && FullInventory["Trinket Coin"] >= 10)
@@ -366,11 +391,6 @@ namespace TunicRandomizer {
                     string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
                     Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
                 }
-            }
-
-            if (SaveFile.GetInt("randomizer laurels location") != 0) {
-                string DictionaryId = $"{Laurels.Location.LocationId} [{Laurels.Location.SceneName}]";
-                Locations.RandomizedLocations.Add(DictionaryId, Laurels);
             }
 
             if (SaveFile.GetString("randomizer game mode") == "VANILLA") {
