@@ -70,6 +70,9 @@ namespace TunicRandomizer {
     public class Check {
         public Location Location;
         public Reward Reward;
+        public string CheckId {
+            get => $"{Location.LocationId} [{Location.SceneName}]";
+        }
 
         public Check() { }
 
