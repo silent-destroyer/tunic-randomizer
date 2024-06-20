@@ -261,14 +261,6 @@ namespace TunicRandomizer {
                         start_count += count;
                     }
 
-                    // do some shenanigans to decide whether you have laurels accessible
-                    if (!FullInventory.ContainsKey("Hyperdash") && (SaveFile.GetInt("randomizer laurels location") == 1 && FullInventory["Trinket Coin"] >= 6)
-                        || (SaveFile.GetInt("randomizer laurels location") == 2 && FullInventory["Trinket Coin"] >= 10)
-                        || (SaveFile.GetInt("randomizer laurels location") == 3 && FullInventory.ContainsKey("Fairy") && FullInventory["Fairy"] >= 10 && FullInventory.ContainsKey("Secret Gathering Place"))) {
-                        // laurels location is on, and you have the required items to access it
-                        FullInventory.Add("Hyperdash", 1);
-                    }
-
                     // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
                     while (true) {
                         // since regions always have a count of 1, we can just use .count instead of counting up all the values
