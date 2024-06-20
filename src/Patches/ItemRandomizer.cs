@@ -177,13 +177,13 @@ namespace TunicRandomizer {
             }
 
             // pre-place laurels in ProgressionLocations, so that fill can collect it as needed
-            if (SaveFile.GetInt("randomizer laurels location") != 0) {
+            if (SaveFile.GetInt(SaveFlags.LaurelsLocation) != 0) {
                 foreach (Reward item in ProgressionRewards) {
                     if (item.Name == "Hyperdash") {
                         foreach (Location location in InitialLocations) {
-                            if ((SaveFile.GetInt("randomizer laurels location") == 1 && location.LocationId == "Well Reward (6 Coins)")
-                                || (SaveFile.GetInt("randomizer laurels location") == 2 && location.LocationId == "Well Reward (10 Coins)")
-                                || (SaveFile.GetInt("randomizer laurels location") == 3 && location.LocationId == "waterfall")) {
+                            if ((SaveFile.GetInt(SaveFlags.LaurelsLocation) == 1 && location.LocationId == "Well Reward (6 Coins)")
+                                || (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 2 && location.LocationId == "Well Reward (10 Coins)")
+                                || (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3 && location.LocationId == "waterfall")) {
                                 string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
                                 Check Check = new Check(item, location);
                                 ProgressionLocations.Add(DictionaryId, Check);
