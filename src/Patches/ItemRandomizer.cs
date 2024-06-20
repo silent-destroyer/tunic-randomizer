@@ -181,9 +181,9 @@ namespace TunicRandomizer {
                 foreach (Reward item in ProgressionRewards) {
                     if (item.Name == "Hyperdash") {
                         foreach (Location location in InitialLocations) {
-                            if ((SaveFile.GetInt(SaveFlags.LaurelsLocation) == 1 && location.LocationId == "Well Reward (6 Coins)")
-                                || (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 2 && location.LocationId == "Well Reward (10 Coins)")
-                                || (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3 && location.LocationId == "waterfall")) {
+                            if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 1)
+                                || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 2)
+                                || (location.LocationId == "waterfall" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3)) {
                                 string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
                                 Check Check = new Check(item, location);
                                 ProgressionLocations.Add(DictionaryId, Check);
