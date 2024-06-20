@@ -114,14 +114,6 @@ namespace TunicRandomizer {
                         ProgressionRewards.Add(Item.Reward);
                         InitialLocations.Add(Item.Location);
                     }
-                } else if ((SaveFile.GetInt("randomizer laurels location") == 1 && Item.Location.LocationId == "Well Reward (6 Coins)")
-                    || (SaveFile.GetInt("randomizer laurels location") == 2 && Item.Location.LocationId == "Well Reward (10 Coins)")
-                    || (SaveFile.GetInt("randomizer laurels location") == 3 && Item.Location.LocationId == "waterfall")) {
-                    InitialRewards.Add(Item.Reward);
-                    Laurels.Location = Item.Location;
-                } else if (SaveFile.GetInt("randomizer laurels location") != 0 && Item.Reward.Name == "Hyperdash") {
-                    InitialLocations.Add(Item.Location);
-                    Laurels.Reward = Item.Reward;
                 } else {
                     if (SaveFile.GetInt("randomizer sword progression enabled") != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
                         Item.Reward.Name = "Sword Progression";
@@ -179,6 +171,41 @@ namespace TunicRandomizer {
                         InitialRewards.Add(Item.Reward);
                     }
                     InitialLocations.Add(Item.Location);
+                }
+            }
+
+            // pre-place laurels in ProgressionRewards, so that fill can collect it as needed
+            if (SaveFile.GetInt("randomizer laurels location") != 0) {
+                foreach (Reward item in ProgressionRewards) {
+                    if (item.Name == "Hyperdash") {
+                        foreach (Location location in InitialLocations) {
+                            if (SaveFile.GetInt("randomizer laurels location") == 1 && location.LocationId == "Well Reward (6 Coins)") {
+                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
+                                Check Check = new Check(item, location);
+                                ProgressionLocations.Add(DictionaryId, Check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
+                            if (SaveFile.GetInt("randomizer laurels location") == 2 && location.LocationId == "Well Reward (10 Coins)") {
+                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
+                                Check Check = new Check(item, location);
+                                ProgressionLocations.Add(DictionaryId, Check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
+                            if (SaveFile.GetInt("randomizer laurels location") == 3 && location.LocationId == "waterfall") {
+                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
+                                Check Check = new Check(item, location);
+                                ProgressionLocations.Add(DictionaryId, Check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
 
@@ -396,11 +423,6 @@ namespace TunicRandomizer {
                     string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
                     Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
                 }
-            }
-
-            if (SaveFile.GetInt("randomizer laurels location") != 0) {
-                string DictionaryId = $"{Laurels.Location.LocationId} [{Laurels.Location.SceneName}]";
-                Locations.RandomizedLocations.Add(DictionaryId, Laurels);
             }
 
             if (SaveFile.GetString("randomizer game mode") == "VANILLA") {
