@@ -224,11 +224,16 @@ namespace TunicRandomizer {
             } else {
                 TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
             }
+
+            // used in fill to keep checks that you've re-collected items from from being collected again
+            List<Check> checksAlreadyAdded = new List<Check>();
+
             // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
-
+            int iteration_number = 0;
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => random.Next())) {
+                iteration_number++;
                 // pick an item
                 string itemName = ItemLookup.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 // remove item from inventory for reachability checks
@@ -245,10 +250,17 @@ namespace TunicRandomizer {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
                 AddListToDict(FullInventory, PrecollectedItems);
+
+                checksAlreadyAdded.Clear();
+
                 // fill method: reverse fill and anything you can get with your remaining inventory is assumed to be in your inventory for the purpose of placing the next item
                 while (true) {
-                    int start_count = FullInventory.Count;
-                    
+                    // start count is the quantity of items in full inventory. If this stays the same between loops, then you are done getting items
+                    int start_count = 0;
+                    foreach (int count in FullInventory.Values) {
+                        start_count += count;
+                    }
+
                     // do some shenanigans to decide whether you have laurels accessible
                     if (!FullInventory.ContainsKey("Hyperdash") && (SaveFile.GetInt("randomizer laurels location") == 1 && FullInventory["Trinket Coin"] >= 6)
                         || (SaveFile.GetInt("randomizer laurels location") == 2 && FullInventory["Trinket Coin"] >= 10)
@@ -259,6 +271,7 @@ namespace TunicRandomizer {
 
                     // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
                     while (true) {
+                        // since regions always have a count of 1, we can just use .count instead of counting up all the values
                         int start_num = FullInventory.Count;
                         FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
                         foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
@@ -269,19 +282,36 @@ namespace TunicRandomizer {
                         }
                     }
 
+                    // for debugging to check inventory item counts
+                    //TunicLogger.LogInfo("iteration number is " + iteration_number.ToString());
+                    //TunicLogger.LogInfo("item being placed is " + item.Name);
+                    //TunicLogger.LogInfo("Full Inventory is");
+                    //foreach (string iname in FullInventory.Keys) {
+                    //    TunicLogger.LogInfo(iname + ": " + FullInventory[iname].ToString());
+                    //}
+
                     // pick up all items you can reach with your current inventory
                     foreach (Check placedLocation in ProgressionLocations.Values) {
-                        if (placedLocation.Location.reachable(FullInventory)) {
+                        if (placedLocation.Location.reachable(FullInventory) && !checksAlreadyAdded.Contains(placedLocation)) {
+                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[$"{placedLocation.Location.LocationId} [{placedLocation.Location.SceneName}]"] + " is reachable");
+                            //TunicLogger.LogInfo("Adding " + placedLocation.Reward.Name + " to inventory");
                             string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
                             AddStringToDict(FullInventory, item_name);
+                            checksAlreadyAdded.Add(placedLocation);
                         }
                     }
 
+                    int end_count = 0;
+                    foreach (int count in FullInventory.Values) {
+                        end_count += count;
+                    }
+
                     // if these two are equal, then we've gotten everything we have access to
-                    if (start_count == FullInventory.Count) {
+                    if (start_count == end_count) {
                         break;
                     }
                 }
+
 
                 // this is for testing fill, ignore if not testing
                 // change the testLocations bool to true to have it to test whether all locations can be reached
@@ -337,6 +367,7 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo("test ends here");
                     testBool = false;
                 }
+
 
                 // pick a location
                 int l;
