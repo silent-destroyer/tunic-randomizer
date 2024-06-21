@@ -824,6 +824,9 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Ice Bomb").Quantity = 99;
             Inventory.GetItemByName("Piggybank L1").Quantity = 99;
             Inventory.GetItemByName("Trinket Coin").Quantity = 17;
+            Inventory.GetItemByName("Hyperdash").Quantity = 1;
+            Inventory.GetItemByName("Key (House)").Quantity = 1;
+            Inventory.GetItemByName("Vault Key (Red)").Quantity = 1;
         }
     }
 }

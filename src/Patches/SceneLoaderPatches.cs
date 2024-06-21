@@ -611,7 +611,7 @@ namespace TunicRandomizer {
         }
 
         public static void SetupOldCryptStuff() {
-            foreach (ScenePortal portal in GameObject.FindObjectsOfType<ScenePortal>().Where(portal => portal.destinationSceneName != "Overworld Redux")) {
+            foreach (ScenePortal portal in GameObject.FindObjectsOfType<ScenePortal>()) {
                 portal.destinationSceneName = "Sewer_Boss";
             }
             foreach (Spiketrap trap in Resources.FindObjectsOfTypeAll<Spiketrap>()) {
@@ -625,7 +625,6 @@ namespace TunicRandomizer {
             spawn.GetComponent<PlayerCharacterSpawn>().id = "Sewer_Boss_customfasttravel_spawnid";
             spawn.transform.position = new Vector3(-79.3f, 57f, -30.8f);
             spawn.SetActive(true); 
-            GameObject.Instantiate(ModelSwaps.UnderConstruction, new Vector3(-79.3f, 57f, -35.8f), new Quaternion(0, 0, 0, 0)).SetActive(true);
             GameObject.Instantiate(ModelSwaps.UnderConstruction, new Vector3(-72.0534f, 57, -15.2989f), new Quaternion(0, 0.7071f, 0, 0.7071f)).SetActive(true);
             foreach (UnderConstruction sign in GameObject.FindObjectsOfType<UnderConstruction>()) {
                 sign.message = ScriptableObject.CreateInstance<LanguageLine>();
