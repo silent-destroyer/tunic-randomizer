@@ -2310,7 +2310,7 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {
+                    {  // where the access to that orb-locked chest is
                         "Overworld above Patrol Cave",
                         new List<List<string>> {
                             new List<string> {
@@ -4842,6 +4842,10 @@ namespace TunicRandomizer {
                                     }
                                 } else if (req == "Stick") {
                                     if (inventory.ContainsKey("Sword Progression")) {
+                                        met_count++;
+                                    }
+                                } else if (req == "Heir Sword") {
+                                    if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 4) {
                                         met_count++;
                                     }
                                 } else if (req == "12" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
