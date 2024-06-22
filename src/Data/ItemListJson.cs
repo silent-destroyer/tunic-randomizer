@@ -4534,6 +4534,11 @@
                         {
                             ""Rooted Ziggurat Upper Front"": 1,
                             ""Sword"": 1
+                        },
+                        {
+                            ""Rooted Ziggurat Upper Front"": 1,
+                            ""Techbow"": 1,
+                            ""Hyperdash"": 1
                         }
                     ]
                 }
