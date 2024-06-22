@@ -3461,6 +3461,19 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Ruined Atoll Frog Eye",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Ruined Atoll",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders to Frog's Domain",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Ruined Atoll Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
