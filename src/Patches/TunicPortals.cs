@@ -3295,6 +3295,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Sword"
                             },
+                            new List<string> {
+                                "Hyperdash"
+                            },
                         }
                     },
                     {
