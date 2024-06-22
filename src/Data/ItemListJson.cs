@@ -788,7 +788,7 @@
                             ""Stundagger"": 1,
                             ""Techbow"": 1,
                             ""26"": 1,
-                            ""East Forest"": 1
+                            ""Lower Forest"": 1
                         }
                     ]
                 }
