@@ -4271,7 +4271,7 @@ namespace TunicRandomizer {
                         "Lower Quarry Zig Door",
                         new List<List<string>> {
                             new List<string> {
-                                "Quarry", "Quarry Connector", "Wand"
+                                "Quarry", "Quarry Connector", "Wand", "12"
                             }
                         }
                     },
