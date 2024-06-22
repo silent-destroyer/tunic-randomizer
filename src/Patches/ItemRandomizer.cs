@@ -275,7 +275,7 @@ namespace TunicRandomizer {
                     // pick up all items you can reach with your current inventory
                     foreach (Check placedLocation in ProgressionLocations.Values) {
                         if (placedLocation.Location.reachable(FullInventory) && !checksAlreadyAdded.Contains(placedLocation)) {
-                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[$"{placedLocation.Location.LocationId} [{placedLocation.Location.SceneName}]"] + " is reachable");
+                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[placedLocation.CheckId] + " is reachable");
                             //TunicLogger.LogInfo("Adding " + placedLocation.Reward.Name + " to inventory");
                             string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
                             AddStringToDict(FullInventory, item_name);

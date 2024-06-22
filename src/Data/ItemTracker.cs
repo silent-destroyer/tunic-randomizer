@@ -244,7 +244,7 @@ namespace TunicRandomizer {
                 foreach (string MajorItem in ItemLookup.LegacyMajorItems) {
                     foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
-                        string Key = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+                        string Key = Check.CheckId;
                         string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
                         SpoilerLogLines.Add(Spoiler);
                     }
@@ -253,7 +253,7 @@ namespace TunicRandomizer {
                     foreach(string LadderItem in ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name)) {
                         Check Check = ItemRandomizer.FindRandomizedItemByName(LadderItem);
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
-                        string Key = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+                        string Key = Check.CheckId;
                         string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
                         SpoilerLogLines.Add(Spoiler);
                     }
