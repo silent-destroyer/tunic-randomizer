@@ -3381,9 +3381,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
-                            new List<string> {
-                                "Wand",
-                            },
                         }
                     },
                     {
@@ -3425,7 +3422,7 @@ namespace TunicRandomizer {
                         "Ruined Atoll Statue",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Ladders in South Atoll"
+                                "12", "Ladders in South Atoll",
                             },
                         }
                     },
