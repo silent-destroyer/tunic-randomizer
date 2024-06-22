@@ -3163,10 +3163,10 @@ namespace TunicRandomizer {
                         "Beneath the Well Main",
                         new List<List<string>> {
                             new List<string> {
-                                "Stick", "Lantern"
+                                "Stick",
                             },
                             new List<string> {
-                                "Techbow", "Lantern"
+                                "Techbow",
                             },
                         }
                     },
