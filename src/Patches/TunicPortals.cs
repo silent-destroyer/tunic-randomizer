@@ -2207,6 +2207,8 @@ namespace TunicRandomizer {
             },
         };
 
+        // these are the traversal rules for getting from one region to another
+        // for example, with the first one on the list, if you are in Overworld, you can get to Overworld Beach if you have Laurels, Orb, or Ladders in Overworld Town
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>> {
             {
                 "Overworld",
@@ -2225,7 +2227,7 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {
+                    {  // this is the direct path, see Overworld -> Overworld Beach -> Overworld to Atoll Upper for more pathing
                         "Overworld to Atoll Upper",
                         new List<List<string>> {
                             new List<string> {
@@ -2273,7 +2275,7 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {
+                    {  // need both keys, which isn't expressed here
                         "Overworld Ruined Passage Door",
                         new List<List<string>> {
                             new List<string> {
@@ -4868,6 +4870,10 @@ namespace TunicRandomizer {
                                             }
                                             break;
                                         }
+                                    }
+                                } else if (req == "Key") {  // need both keys or you could potentially use them in the wrong order
+                                    if (inventory.ContainsKey("Key") && inventory["Key"] == 2) {
+                                        met_count++;
                                     }
                                 } else if (inventory.ContainsKey(req)) {
                                     met_count++;
