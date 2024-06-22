@@ -113,8 +113,6 @@ namespace TunicRandomizer {
 
         public static void EnableThirdSwordFromExisting(GameObject SwordProxy) {
 
-/*            string SwordPath = "_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/";
-            GameObject SwordProxy = GameObject.Find(SwordPath);*/
             if (SwordProxy != null) {
                 if (SwordProxy.GetComponent<MeshFilter>() != null && SwordProxy.GetComponent<MeshRenderer>() != null) {
                     GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());

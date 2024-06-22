@@ -101,17 +101,6 @@ namespace TunicRandomizer {
                 PaletteEditor.LoadCustomTexture();
             }
 
-            if (StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
-                __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = Vector3.one * 3f;
-            }
-            if (TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
-                __instance.gameObject.transform.localScale = Vector3.one * 0.5f;
-                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 5;
-            } else {
-                __instance.gameObject.transform.localScale = Vector3.one;
-                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
-            }
-
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
                 try {
                     SwordProgression.CreateSwordItemBehaviours(__instance);
@@ -164,7 +153,18 @@ namespace TunicRandomizer {
                 }
             }
 
-            if(SaveFile.GetInt(AbilityShuffle) == 1) { 
+            if (StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
+                __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = Vector3.one * 3f;
+            }
+            if (TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
+                __instance.gameObject.transform.localScale = Vector3.one * 0.5f;
+                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 5;
+            } else {
+                __instance.gameObject.transform.localScale = Vector3.one;
+                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
+            }
+
+            if (SaveFile.GetInt(AbilityShuffle) == 1) { 
                 if(SaveFile.GetInt(PrayerUnlocked) == 0) {
                     __instance.prayerBeginTimer = 0;
                 }

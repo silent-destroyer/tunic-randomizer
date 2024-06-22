@@ -61,6 +61,10 @@ namespace TunicRandomizer {
             GraveHintStateVar.name = "randomizer got all 6 grave items";
             StateVariable.stateVariableList.Add(GraveHintStateVar);
 
+            StateVariable CryptSecretStateVar = ScriptableObject.CreateInstance<StateVariable>();
+            CryptSecretStateVar.name = "randomizer crypt secret filigree door opened";
+            StateVariable.stateVariableList.Add(CryptSecretStateVar);
+
             Inventory.itemList.Add(GoldQuestagon);
             Inventory.itemList.Add(DathStone);
             Inventory.itemList.Add(Cape);
