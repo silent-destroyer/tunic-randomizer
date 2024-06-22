@@ -2338,7 +2338,7 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Wand",
                             },
-                            new List<string> {  // todo: make this work
+                            new List<string> {
                                 "Heir Sword",
                             },
                         }
