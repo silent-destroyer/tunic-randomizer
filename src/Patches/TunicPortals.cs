@@ -2359,7 +2359,7 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {
+                    {  // stick just checks if you have at least one sword progression
                         "Overworld Temple Door",
                         new List<List<string>> {
                             new List<string> {
@@ -4837,11 +4837,11 @@ namespace TunicRandomizer {
                                 //TunicLogger.LogInfo("req is " + req);
                                 // if sword progression is on, check for this too
                                 if (req == "Sword") {
-                                    if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) {
+                                    if ((inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) || inventory.ContainsKey("Sword")) {
                                         met_count++;
                                     }
                                 } else if (req == "Stick") {
-                                    if (inventory.ContainsKey("Sword Progression")) {
+                                    if (inventory.ContainsKey("Sword Progression") || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")) {
                                         met_count++;
                                     }
                                 } else if (req == "Heir Sword") {
