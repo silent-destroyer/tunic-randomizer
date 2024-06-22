@@ -3580,34 +3580,10 @@ namespace TunicRandomizer {
                 "Frog's Domain",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Frog's Domain Entry",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladders to Frog's Domain",
-                            },
-                        }
-                    },
-                    {
                         "Frog's Domain Back",
                         new List<List<string>> {
                             new List<string> {
                                 "Wand",
-                            },
-                        }
-                    },
-                }
-            },
-            {
-                "Library Exterior Ladder",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Library Exterior Tree",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash", "12", "Ladders in Library",
-                            },
-                            new List<string> {
-                                "Wand", "12",
                             },
                         }
                     },
@@ -3624,6 +3600,22 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "Wand", "Ladders in Library",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Library Exterior Ladder",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Exterior Tree",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash", "12", "Ladders in Library",
+                            },
+                            new List<string> {
+                                "Wand", "12",
                             },
                         }
                     },
@@ -4036,7 +4028,7 @@ namespace TunicRandomizer {
             {
                 "Fortress Arena",
                 new Dictionary<string, List<List<string>>> {
-                    {
+                    {  // only the left fuses
                         "Fortress Arena Portal",
                         new List<List<string>> {
                             new List<string> {
@@ -4083,6 +4075,16 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Monastery Front",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Monastery Back",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
                 "Monastery Back",
                 new Dictionary<string, List<List<string>>> {
                     {
@@ -4106,23 +4108,13 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Monastery Front",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Monastery Back",
-                        new List<List<string>> {
-                        }
-                    },
-                }
-            },
-            {
                 "Quarry Entry",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Quarry Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Quarry Connector", "Wand"
+                                "12", "Quarry Connector", "Wand",
                             },
                         }
                     },
@@ -4232,7 +4224,7 @@ namespace TunicRandomizer {
                         "Even Lower Quarry",
                         new List<List<string>> {
                             new List<string> {
-                                "Ladders in Lower Quarry"
+                                "Ladders in Lower Quarry",
                             }
                         }
                     },
@@ -4245,7 +4237,7 @@ namespace TunicRandomizer {
                         "Lower Quarry Zig Door",
                         new List<List<string>> {
                             new List<string> {
-                                "Quarry", "Quarry Connector", "Wand", "12"
+                                "Quarry", "Quarry Connector", "Wand", "12",
                             }
                         }
                     },
@@ -4327,13 +4319,23 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Rooted Ziggurat Lower Back",
+                "Zig Skip Exit",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Rooted Ziggurat Lower Front",
                         new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Lower Back",
+                new Dictionary<string, List<List<string>>> {
+                    {  // can't get to checkpoint if enemies aggro, gap too big
+                        "Rooted Ziggurat Lower Front",
+                        new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "Sword", "12"
+                                "Hyperdash", "Sword", "12",
                             },
                         }
                     },
@@ -4343,16 +4345,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "12",
                             },
-                        }
-                    },
-                }
-            },
-            {
-                "Zig Skip Exit",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Rooted Ziggurat Lower Front",
-                        new List<List<string>> {
                         }
                     },
                 }
@@ -4575,7 +4567,7 @@ namespace TunicRandomizer {
                         "Far Shore to Quarry",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Quarry Connector", "Quarry", "Wand"
+                                "12", "Quarry Connector", "Quarry", "Wand",
                             },
                         }
                     },
@@ -4598,7 +4590,7 @@ namespace TunicRandomizer {
                     {
                         "Far Shore to Fortress",
                         new List<List<string>> {
-                            new List<string> {
+                            new List<string> {  // only left fuses required
                                 "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Eastern Vault Fortress",
                             },
                         }
