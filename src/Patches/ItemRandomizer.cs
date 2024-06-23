@@ -238,7 +238,7 @@ namespace TunicRandomizer {
                 foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
-                AddListToDict(FullInventory, PrecollectedItems);
+                TunicUtils.AddListToDict(FullInventory, PrecollectedItems);
 
                 // cache for picking up items during fill
                 checksAlreadyAdded.Clear();
@@ -278,7 +278,7 @@ namespace TunicRandomizer {
                             //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[$"{placedLocation.Location.LocationId} [{placedLocation.Location.SceneName}]"] + " is reachable");
                             //TunicLogger.LogInfo("Adding " + placedLocation.Reward.Name + " to inventory");
                             string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
-                            AddStringToDict(FullInventory, item_name);
+                            TunicUtils.AddStringToDict(FullInventory, item_name);
                             checksAlreadyAdded.Add(placedLocation);
                         }
                     }
@@ -315,7 +315,7 @@ namespace TunicRandomizer {
                         testFullInventory.Add(testUnplacedItem.Key, testUnplacedItem.Value);
                     }
 
-                    AddListToDict(testFullInventory, PrecollectedItems);
+                    TunicUtils.AddListToDict(testFullInventory, PrecollectedItems);
 
                     if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
                         // this should keep looping until every portal either doesn't give a reward, or has already given its reward
@@ -324,7 +324,7 @@ namespace TunicRandomizer {
                         foreach (KeyValuePair<string, int> unplacedItem in testUnplacedInventory) {
                             testFullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                         }
-                        AddListToDict(testFullInventory, PrecollectedItems);
+                        TunicUtils.AddListToDict(testFullInventory, PrecollectedItems);
 
                         // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
                         while (true) {
@@ -483,29 +483,6 @@ namespace TunicRandomizer {
             }
         }
 
-        // add a key if it doesn't exist, otherwise increment the value by 1
-        public static Dictionary<string, int> AddListToDict(Dictionary<string, int> dictionary, List<string> list) {
-            foreach (string item in list) {
-                dictionary.TryGetValue(item, out var count);
-                dictionary[item] = count + 1;
-            }
-            return dictionary;
-        }
-
-        public static Dictionary<string, int> AddStringToDict(Dictionary<string, int> dictionary, string item) {
-            dictionary.TryGetValue(item, out var count);
-            dictionary[item] = count + 1;
-            return dictionary;
-        }
-
-        public static Dictionary<string, int> AddDictToDict(Dictionary<string, int> dictionary1, Dictionary<string, int> dictionary2) {
-            foreach (KeyValuePair<string, int> pair in dictionary2) {
-                dictionary1.TryGetValue(pair.Key, out var count);
-                dictionary1[pair.Key] = count + pair.Value;
-            }
-            return dictionary1;
-        }
-
         public static Check FindRandomizedItemByName(string Name) {
             foreach (Check Check in Locations.RandomizedLocations.Values) {
                 if (Check.Reward.Name == Name) {
@@ -544,9 +521,9 @@ namespace TunicRandomizer {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
             Dictionary<string, PortalCombo> vanillaPortals = TunicPortals.VanillaPortals();
             if (startInventory == null) {
-                AddListToDict(Inventory, PrecollectedItems);
+                TunicUtils.AddListToDict(Inventory, PrecollectedItems);
             } else {
-                AddDictToDict(Inventory, startInventory);
+                TunicUtils.AddDictToDict(Inventory, startInventory);
             }
 
             while (true) {
@@ -569,9 +546,9 @@ namespace TunicRandomizer {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
             if (startInventory == null) {
-                AddListToDict(Inventory, PrecollectedItems);
+                TunicUtils.AddListToDict(Inventory, PrecollectedItems);
             } else {
-                AddDictToDict(Inventory, startInventory);
+                TunicUtils.AddDictToDict(Inventory, startInventory);
             }
             
             Inventory = TunicPortals.FirstStepsUpdateReachableRegions(Inventory);

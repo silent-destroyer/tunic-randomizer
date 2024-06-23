@@ -455,7 +455,7 @@ namespace TunicRandomizer {
                     if (item.LocationId == -2) {
                         string itemName = item.ItemName;
                         if (ItemLookup.Items.ContainsKey(itemName)) {
-                            ItemRandomizer.AddStringToDict(startInventory, ItemLookup.Items[itemName].ItemNameForInventory);
+                            TunicUtils.AddStringToDict(startInventory, ItemLookup.Items[itemName].ItemNameForInventory);
                         }
                     }
                 }

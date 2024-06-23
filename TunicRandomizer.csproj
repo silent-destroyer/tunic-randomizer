@@ -219,6 +219,7 @@
     <Compile Include="src\Util\ToggleLadderByLadderItem.cs" />
     <Compile Include="src\Util\ToggleObjectByFuse.cs" />
     <Compile Include="src\Util\TunicLogger.cs" />
+    <Compile Include="src\Util\TunicUtils.cs" />
     <Compile Include="src\Util\UnderConstruction.cs" />
     <Compile Include="src\Util\VisibleByNotHavingItem.cs" />
   </ItemGroup>

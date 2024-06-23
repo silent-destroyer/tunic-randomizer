@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Archipelago.MultiClient.Net;
+using UnityEngine.Diagnostics;
+using Newtonsoft.Json;
 
 namespace TunicRandomizer {
     public class FairyTargets {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> EntranceTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
+        public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
+        // list of the checks that are currently in logic
+        public static List<string> ChecksInLogic = new List<string> { };
+        // progression items the player has received
+        public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int> { };
 
         public static void CreateFairyTargets() {
 
@@ -50,6 +58,35 @@ namespace TunicRandomizer {
                     }
                 } else {
                     CreateLoadZoneTargets();
+                }
+            }
+        }
+
+        public static void FindChecksInLogic() {
+            PlayerItemsAndRegions.Clear();
+            ChecksInLogic.Clear();
+
+            TunicUtils.AddListToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
+            PlayerItemsAndRegions.Add("Overworld", 1);
+
+            if (SaveFlags.IsArchipelago()) {
+                TunicUtils.AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
+                foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
+                    string itemName = itemInfo.ItemName;
+                    TunicUtils.AddStringToDict(PlayerItemsAndRegions, itemName);
+                }
+            } else {
+                foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
+                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId)) {
+                        TunicUtils.AddStringToDict(PlayerItemsAndRegions, ItemLookup.SimplifiedItemNames[locationCheck.Reward.Name]);
+                    }
+                }
+            }
+
+            TunicPortals.UpdateReachableRegions(PlayerItemsAndRegions);
+            foreach (Check check in Locations.VanillaLocations.Values) {
+                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions)) {
+                    ChecksInLogic.Add(check.CheckId);
                 }
             }
         }
@@ -94,16 +131,26 @@ namespace TunicRandomizer {
         public static void FindFairyTargets() {
             ItemTargets.Clear();
             EntranceTargets.Clear();
+            ItemTargetsInLogic.Clear();
+            FindChecksInLogic();
             foreach (FairyTarget fairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
                 if (fairyTarget.isActiveAndEnabled) {
                     if (fairyTarget.name.StartsWith("entrance")) {
                         EntranceTargets.Add(fairyTarget);
                     } else {
                         ItemTargets.Add(fairyTarget);
+                        if (ChecksInLogic.Contains(fairyTarget.name.Replace("fairy target ", ""))) {
+                            ItemTargetsInLogic.Add(fairyTarget);
+                        }
                     }
                 }
             }
-            FairyTarget.registered = ItemTargets;
+
+            foreach (string item in PlayerItemsAndRegions.Keys) {
+                TunicLogger.LogInfo(item);
+            }
+            // todo: make an option
+            FairyTarget.registered = ItemTargetsInLogic;
         }
 
         private static Vector3 StringToVector3(string Position) {

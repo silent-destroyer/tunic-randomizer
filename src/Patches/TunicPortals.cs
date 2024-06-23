@@ -4763,6 +4763,7 @@ namespace TunicRandomizer {
         public static List<Portal> deadEndPortals = new List<Portal>();
         public static List<Portal> twoPlusPortals = new List<Portal>();
 
+        // returns an inventory of items and regions with the regions you can reach added in
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // for each origin region
@@ -5037,7 +5038,7 @@ namespace TunicRandomizer {
                 FullInventory.Remove("Hyperdash");
             }
             FullInventory.Add(start_region, 1);
-            FullInventory = ItemRandomizer.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
             FullInventory = UpdateReachableRegions(FullInventory);
 
             // get the total number of regions to get before doing dead ends
