@@ -167,39 +167,25 @@ namespace TunicRandomizer {
 
         // update what targets are in logic based on the item that was received
         public static void UpdateFairyTargetsInLogic(string newItem) {
-            TunicLogger.LogInfo("update fairy targets started");
-            TunicLogger.LogInfo("new item added is " + newItem);
             // add the new item received to the items the player has
             TunicUtils.AddStringToDict(PlayerItemsAndRegions, newItem);
             UpdateChecksInLogic();
-            TunicLogger.LogInfo("current items are");
-            foreach (string itemname in PlayerItemsAndRegions.Keys) {
-                TunicLogger.LogInfo(itemname);
-            }
             // loop through the regular ItemTargets, find ones that are newly in logic
             foreach (FairyTarget fairyTarget in ItemTargets) {
-                TunicLogger.LogInfo("test message 1");
-                if (!fairyTarget.isActiveAndEnabled) { continue; }
-                TunicLogger.LogInfo("test message 2");
-                TunicLogger.LogInfo(fairyTarget.name);
+                if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
                 if (ChecksInLogic.Contains(fairyTarget.name.Replace("fairy target ", ""))
                         && !ItemTargetsInLogic.Contains(fairyTarget)) {
-                    TunicLogger.LogInfo("test message 3");
                     ItemTargetsInLogic.Add(fairyTarget);
-                    TunicLogger.LogInfo("test message 4");
                 }
-                TunicLogger.LogInfo("test message 5");
             }
-            TunicLogger.LogInfo("test message 6");
             // loop through the regular EntranceTargets, find ones that are newly in logic
             foreach (FairyTarget fairyTarget in EntranceTargets) {
-                if (!fairyTarget.isActiveAndEnabled) { continue; }
+                if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
                 if (PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
                         && !EntranceTargetsInLogic.Contains(fairyTarget)) {
                     EntranceTargetsInLogic.Add(fairyTarget);
                 }
             }
-            TunicLogger.LogInfo("update fairy targets done");
         }
 
     }
