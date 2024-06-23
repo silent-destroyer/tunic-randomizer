@@ -137,7 +137,7 @@ namespace TunicRandomizer {
                     Scene = Locations.SimplifiedSceneNames[ItemCheck.Location.SceneName];
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                     Hint += TunicRandomizer.Settings.UseTrunicTranslations ? $"lehjehnd sehz {Prefix} {Translations.Translate(Scene, false)}" : $"lehjehnd sehz {Prefix} \"{Scene.ToUpper()}\"";
-                    slotLocation = $"{ItemCheck.Location.LocationId} [{ItemCheck.Location.SceneName}]";
+                    slotLocation = ItemCheck.CheckId;
                 }
                 Hint += $"\niz lOkAtid awn #uh {(TunicRandomizer.Settings.UseTrunicTranslations ? $"<#ffd700>pah% uhv #uh hErO<#ffffff>\"...\"" : $"\"<#ffd700>PATH OF THE HERO<#ffffff>...\"")}";
 
@@ -189,7 +189,7 @@ namespace TunicRandomizer {
                     Scene = Locations.SimplifiedSceneNames[HexCheck.Location.SceneName];
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                     Hint = $"#A sA {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
-                    slotLocation = $"{HexCheck.Location.LocationId} [{HexCheck.Location.SceneName}]";
+                    slotLocation = HexCheck.CheckId;
                 }
 
                 if (HexagonHintArea == "Swamp Relic") {
@@ -291,7 +291,7 @@ namespace TunicRandomizer {
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
 
                     RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) + "." : $"\"{Scene.ToUpper()}.\"")}";
-                    RelicHints.Add(($"{RelicCheck.Location.LocationId} [{RelicCheck.Location.SceneName}]", RelicHint));
+                    RelicHints.Add((RelicCheck.CheckId, RelicHint));
                 }
             }
 
@@ -368,7 +368,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.UseTrunicTranslations) {
                     HintMessage = $"lehjehnd sehz {Prefix} {Translations.Translate(Scene, false)}\nkuhntAnz wuhn uhv mehnE <#00FFFF>furst stehps<#ffffff> ahn yor jurnE.";
                 }
-                SaveFile.SetString("randomizer mailbox hint location", $"{HintItem.Location.LocationId} [{HintItem.Location.SceneName}]");
+                SaveFile.SetString("randomizer mailbox hint location", HintItem.CheckId);
 
             }
             HintMessages.Add("Mailbox", HintMessage);

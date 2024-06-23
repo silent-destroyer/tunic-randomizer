@@ -1342,15 +1342,32 @@ namespace TunicRandomizer {
                 GameObject boss = GameObject.FindObjectOfType<BossAnnounceOnAggro>().gameObject;
                 if (boss.GetComponent<Knightbot>() != null && SaveFile.GetInt(CustomBossFlags[1]) == 1) {
                     GameObject.Destroy(boss);
+                    if (GameObject.Find("_DAYTIME BOSS/Simple Bloodgate/") != null) {
+                        GameObject.Find("_DAYTIME BOSS/Simple Bloodgate/").SetActive(false);
+                    }
                 }
                 if (boss.GetComponent<Spidertank>() != null && SaveFile.GetInt(CustomBossFlags[2]) == 1) {
                     GameObject.Destroy(boss);
+                    GameObject itemPickup = GameObject.Find("_AfterFight");
+                    if (itemPickup != null && itemPickup.transform.childCount >= 3) {
+                        itemPickup.transform.GetChild(3).gameObject.SetActive(true);
+                    }
                 }
                 if (boss.GetComponent<Librarian>() != null && SaveFile.GetInt(CustomBossFlags[3]) == 1) {
                     GameObject.Destroy(boss);
+                    foreach (ItemPickup itemPickup in Resources.FindObjectsOfTypeAll<ItemPickup>().Where(item => item.gameObject.scene.name == SceneManager.GetActiveScene().name && item.itemToGive.name == "Hexagon Green")) {
+                        itemPickup.gameObject.SetActive(true);
+                        itemPickup.transform.position = new Vector3(0.22f, 1.28f, 0.38f);
+                        itemPickup.transform.parent = null;
+                    }
                 }
                 if (boss.GetComponent<ScavengerBoss>() != null && SaveFile.GetInt(CustomBossFlags[4]) == 1) {
                     GameObject.Destroy(boss);
+                    GameObject plinth = GameObject.Find("_Plinth");
+                    if (plinth != null && plinth.transform.childCount >= 2) {
+                        TunicLogger.LogInfo("activating plinth");
+                        plinth.transform.GetChild(2).GetChild(0).parent = plinth.transform;
+                    }
                 }
             }
         }

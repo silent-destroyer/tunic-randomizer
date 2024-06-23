@@ -184,8 +184,8 @@ namespace TunicRandomizer {
                             if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 1)
                                 || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 2)
                                 || (location.LocationId == "waterfall" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3)) {
-                                string DictionaryId = $"{location.LocationId} [{location.SceneName}]";
                                 Check Check = new Check(item, location);
+                                string DictionaryId = Check.CheckId;
                                 ProgressionLocations.Add(DictionaryId, Check);
                                 InitialLocations.Remove(location);
                                 ProgressionRewards.Remove(item);
@@ -275,7 +275,7 @@ namespace TunicRandomizer {
                     // pick up all items you can reach with your current inventory
                     foreach (Check placedLocation in ProgressionLocations.Values) {
                         if (placedLocation.Location.reachable(FullInventory) && !checksAlreadyAdded.Contains(placedLocation)) {
-                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[$"{placedLocation.Location.LocationId} [{placedLocation.Location.SceneName}]"] + " is reachable");
+                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[placedLocation.CheckId] + " is reachable");
                             //TunicLogger.LogInfo("Adding " + placedLocation.Reward.Name + " to inventory");
                             string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
                             TunicUtils.AddStringToDict(FullInventory, item_name);
@@ -369,8 +369,8 @@ namespace TunicRandomizer {
                 }
 
                 // prepare matched list of progression items and locations
-                string DictionaryId = $"{InitialLocations[l].LocationId} [{InitialLocations[l].SceneName}]";
                 Check Check = new Check(item, InitialLocations[l]);
+                string DictionaryId = Check.CheckId;
                 ProgressionLocations.Add(DictionaryId, Check);
 
                 InitialLocations.Remove(InitialLocations[l]);
@@ -386,8 +386,8 @@ namespace TunicRandomizer {
             Shuffle(InitialRewards, InitialLocations, random);
 
             for (int i = 0; i < InitialRewards.Count; i++) {
-                string DictionaryId = $"{InitialLocations[i].LocationId} [{InitialLocations[i].SceneName}]";
                 Check Check = new Check(InitialRewards[i], InitialLocations[i]);
+                string DictionaryId = Check.CheckId;
                 Locations.RandomizedLocations.Add(DictionaryId, Check);
             }
 
@@ -402,7 +402,7 @@ namespace TunicRandomizer {
                         Hexagon.Reward.Name = "Hexagon Gold";
                         Hexagon.Reward.Type = "SPECIAL";
                     }
-                    string DictionaryId = $"{Hexagon.Location.LocationId} [{Hexagon.Location.SceneName}]";
+                    string DictionaryId = Hexagon.CheckId;
                     Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
                 }
             }
@@ -416,7 +416,7 @@ namespace TunicRandomizer {
                             item.Reward.Type = "SPECIAL";
                         }
                     }
-                    string DictionaryId = $"{item.Location.LocationId} [{item.Location.SceneName}]";
+                    string DictionaryId = item.CheckId;
                     Locations.RandomizedLocations.Add(DictionaryId, item);
                 }
             }
