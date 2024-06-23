@@ -168,7 +168,7 @@ namespace TunicRandomizer {
         // update what targets are in logic based on the item that was received
         public static void UpdateFairyTargetsInLogic(string newItem) {
             TunicLogger.LogInfo("update fairy targets started");
-            TunicLogger.LogInfo("new item added is " + newItem)
+            TunicLogger.LogInfo("new item added is " + newItem);
             // add the new item received to the items the player has
             TunicUtils.AddStringToDict(PlayerItemsAndRegions, newItem);
             UpdateChecksInLogic();
