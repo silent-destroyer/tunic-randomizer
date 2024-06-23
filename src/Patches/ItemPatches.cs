@@ -636,7 +636,7 @@ namespace TunicRandomizer {
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            string slotLoc = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+            string slotLoc = Check.CheckId;
             if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
                 SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
             }
@@ -646,7 +646,7 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Tracker.SetCollectedItem(Item.Name, true);
 
-            string CheckId = $"{Check.Location.LocationId} [{Check.Location.SceneName}]";
+            string CheckId = Check.CheckId;
             TunicLogger.LogInfo("Picked up item " + CheckId + " (" + Item.Name + ")");
 
             Locations.CheckedLocations[CheckId] = true;

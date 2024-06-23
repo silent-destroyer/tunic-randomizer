@@ -27,7 +27,7 @@ namespace TunicRandomizer {
 
         public static void CreateLocationLookups() {
             foreach (Check info in JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList)) {
-                string locationId = $"{info.Location.LocationId} [{info.Location.SceneName}]";
+                string locationId = info.CheckId;
                 VanillaLocations.Add(locationId, info);
             }
             LocationIdToDescription = JsonConvert.DeserializeObject<Dictionary<string, string>>(LocationNamesJson);
