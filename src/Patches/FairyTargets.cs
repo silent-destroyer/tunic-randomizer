@@ -77,8 +77,8 @@ namespace TunicRandomizer {
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 if (ScenePortal.id.Contains("customfasttravel")) { continue; }
-                if (ScenesWithItems.Contains(ScenePortal.destinationSceneName)) {
-                    CreateFairyTarget($"fairy target {ScenePortal.destinationSceneName}", ScenePortal.transform.position);
+                if (ScenesWithItems.Contains(TunicPortals.FindPortalDestSceneFromName(ScenePortal.name))) {
+                    CreateFairyTarget($"fairy target {ScenePortal.name}", ScenePortal.transform.position);
                 }
             }
         }
@@ -100,10 +100,12 @@ namespace TunicRandomizer {
             FairyTarget.transform.position = Position;
         }
 
+        // used to find fairy targets on scene load or player character start
         public static void FindFairyTargets() {
             ItemTargets.Clear();
             EntranceTargets.Clear();
             ItemTargetsInLogic.Clear();
+            EntranceTargetsInLogic.Clear();
             FindChecksInLogic();
             foreach (FairyTarget fairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
                 if (fairyTarget.isActiveAndEnabled) {
@@ -114,7 +116,8 @@ namespace TunicRandomizer {
                         }
                     } else {
                         ItemTargets.Add(fairyTarget);
-                        if (ChecksInLogic.Contains(fairyTarget.name.Replace("fairy target ", ""))) {
+                        string targetName = fairyTarget.name.Replace("fairy target ", "");
+                        if (ChecksInLogic.Contains(targetName) || PlayerItemsAndRegions.ContainsKey(targetName)) {
                             ItemTargetsInLogic.Add(fairyTarget);
                         }
                     }
@@ -214,6 +217,7 @@ namespace TunicRandomizer {
         }
 
         public void DoSpell() {
+            // todo: check options, if it lags then instead make the list that matters based on the logic
             FairyTarget.registered = FairyTargets.EntranceTargetsInLogic;
             PlayerCharacter.instance.GetComponent<FairySpell>().SpellEffect();
             FairyTarget.registered = FairyTargets.ItemTargetsInLogic;

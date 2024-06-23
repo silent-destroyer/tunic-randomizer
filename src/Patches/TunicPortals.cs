@@ -5316,5 +5316,21 @@ namespace TunicRandomizer {
             return null;
         }
 
+        public static string FindPortalDestSceneFromName(string portalName) {
+            foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> regionGroups in RegionPortalsList) {
+                string sceneName = regionGroups.Key;
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups.Value) {
+                    foreach (TunicPortal portal in regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return sceneName;
+                        }
+                    }
+                }
+            }
+            TunicLogger.LogError("Failed to find portal in FindPortalDestSceneFromName");
+            TunicLogger.LogInfo("Portal name was " + portalName);
+            return null;
+        }
+
     }
 }
