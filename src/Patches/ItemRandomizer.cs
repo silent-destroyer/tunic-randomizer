@@ -540,6 +540,29 @@ namespace TunicRandomizer {
             return Inventory;
         }
 
+        // gets all regions that can be reached based on the current inventory
+        public static Dictionary<string, int> GetReachableRegions(Dictionary<string, int> inventory = null) {
+            Dictionary<string, PortalCombo> portalList;
+            if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
+                portalList = TunicPortals.RandomizedPortals;
+            } else {
+                portalList = TunicPortals.VanillaPortals();
+            }
+
+            while (true) {
+                int start_num = inventory.Count;
+                inventory = TunicPortals.UpdateReachableRegions(inventory);
+                foreach (PortalCombo portalCombo in portalList.Values) {
+                    inventory = portalCombo.AddComboRegions(inventory);
+                }
+                int end_num = inventory.Count;
+                if (start_num == end_num) {
+                    break;
+                }
+            }
+            return inventory;
+        }
+
         // In ER, we want sphere 1 to be in Overworld or adjacent to Overworld
         public static Dictionary<string, int> GetERSphereOne(Dictionary<string, int> startInventory = null) {
             List<Portal> PortalInventory = new List<Portal>();

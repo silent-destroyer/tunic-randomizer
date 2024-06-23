@@ -15,12 +15,13 @@ using Newtonsoft.Json;
 namespace TunicRandomizer {
     public class FairyTargets {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> EntranceTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
+        public static Il2CppSystem.Collections.Generic.List<FairyTarget> EntranceTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         // list of the checks that are currently in logic
-        public static List<string> ChecksInLogic = new List<string> { };
+        public static List<string> ChecksInLogic = new List<string>();
         // progression items the player has received
-        public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int> { };
+        public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int>();
 
         public static void CreateFairyTargets() {
 
@@ -62,6 +63,7 @@ namespace TunicRandomizer {
             }
         }
 
+        // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
         public static void FindChecksInLogic() {
             PlayerItemsAndRegions.Clear();
             ChecksInLogic.Clear();
@@ -77,13 +79,13 @@ namespace TunicRandomizer {
                 }
             } else {
                 foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
-                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId)) {
+                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true) {
                         TunicUtils.AddStringToDict(PlayerItemsAndRegions, ItemLookup.SimplifiedItemNames[locationCheck.Reward.Name]);
                     }
                 }
             }
 
-            TunicPortals.UpdateReachableRegions(PlayerItemsAndRegions);
+            ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
             foreach (Check check in Locations.VanillaLocations.Values) {
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions)) {
                     ChecksInLogic.Add(check.CheckId);
@@ -115,17 +117,19 @@ namespace TunicRandomizer {
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 if (ScenePortal.id.Contains("customfasttravel")) { continue; }
                 if (ScenePortal.isActiveAndEnabled && SaveFile.GetInt("randomizer entered portal " + ScenePortal.name) != 1) {
-                    CreateFairyTarget($"entrance target {ScenePortal.destinationSceneName}", ScenePortal.transform.position);
+                    CreateFairyTarget($"entrance target {ScenePortal.name}", ScenePortal.transform.position);
                 }
             }
         }
 
-        private static void CreateFairyTarget(string Name, Vector3 Position) {
+        private static FairyTarget CreateFairyTarget(string Name, Vector3 Position) {
             GameObject FairyTarget = new GameObject(Name);
             FairyTarget.SetActive(true);
             FairyTarget.AddComponent<FairyTarget>();
             FairyTarget.GetComponent<FairyTarget>().stateVariable = StateVariable.GetStateVariableByName("false");
             FairyTarget.transform.position = Position;
+
+            return FairyTarget.GetComponent<FairyTarget>();
         }
 
         public static void FindFairyTargets() {
@@ -137,6 +141,9 @@ namespace TunicRandomizer {
                 if (fairyTarget.isActiveAndEnabled) {
                     if (fairyTarget.name.StartsWith("entrance")) {
                         EntranceTargets.Add(fairyTarget);
+                        if (PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))) {
+                            EntranceTargetsInLogic.Add(fairyTarget);
+                        }
                     } else {
                         ItemTargets.Add(fairyTarget);
                         if (ChecksInLogic.Contains(fairyTarget.name.Replace("fairy target ", ""))) {
@@ -146,9 +153,6 @@ namespace TunicRandomizer {
                 }
             }
 
-            foreach (string item in PlayerItemsAndRegions.Keys) {
-                TunicLogger.LogInfo(item);
-            }
             // todo: make an option
             FairyTarget.registered = ItemTargetsInLogic;
         }
@@ -186,9 +190,9 @@ namespace TunicRandomizer {
         }
 
         public void DoSpell() {
-            FairyTarget.registered = FairyTargets.EntranceTargets;
+            FairyTarget.registered = FairyTargets.EntranceTargetsInLogic;
             PlayerCharacter.instance.GetComponent<FairySpell>().SpellEffect();
-            FairyTarget.registered = FairyTargets.ItemTargets;
+            FairyTarget.registered = FairyTargets.ItemTargetsInLogic;
         }
     }
 }

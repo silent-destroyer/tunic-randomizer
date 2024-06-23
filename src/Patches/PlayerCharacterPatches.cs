@@ -301,6 +301,11 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("last page viewed", 0);
             }
 
+            // this is here for the first time you're loading in, assumes you're in Overworld
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                TunicPortals.ModifyPortals("Overworld Redux");
+            }
+
             try {
                 FairyTargets.CreateFairyTargets();
                 FairyTargets.CreateEntranceTargets();
@@ -328,11 +333,6 @@ namespace TunicRandomizer {
 
             if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
                 EnemyRandomizer.ToggleArachnophobiaMode();
-            }
-
-            // this is here for the first time you're loading in, assumes you're in Overworld
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                TunicPortals.ModifyPortals("Overworld Redux");
             }
 
             try {

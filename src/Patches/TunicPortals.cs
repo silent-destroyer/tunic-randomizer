@@ -4763,7 +4763,7 @@ namespace TunicRandomizer {
         public static List<Portal> deadEndPortals = new List<Portal>();
         public static List<Portal> twoPlusPortals = new List<Portal>();
 
-        // returns an inventory of items and regions with the regions you can reach added in
+        // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // for each origin region
@@ -4880,7 +4880,6 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> FirstStepsUpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // add all regions in Overworld that you can currently reach to the inventory
-            // this could just not be a foreach, but it'll need to be one when ladders gets merged in
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
                 string origin_region = traversal_group.Key;
                 if (!inventory.ContainsKey(origin_region)) {
@@ -5276,6 +5275,21 @@ namespace TunicRandomizer {
                     }
                 }
             }
+        }
+
+        public static string FindPortalRegionFromName(string portalName) {
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in  regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return regionName;
+                        }
+                    }
+                }
+            }
+            TunicLogger.LogError("Failed to find portal in FindPortalRegionFromName");
+            return null;
         }
 
     }
