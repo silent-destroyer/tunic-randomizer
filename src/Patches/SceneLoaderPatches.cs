@@ -465,8 +465,10 @@ namespace TunicRandomizer {
                     TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 }
                 TunicPortals.ModifyPortals(loadingScene.name);
-                TunicPortals.MarkPortals();
+            } else {
+                TunicPortals.ModifyPortalNames(loadingScene.name);
             }
+            TunicPortals.MarkPortals();
 
             if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();

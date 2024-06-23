@@ -443,6 +443,8 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
 
+            FairyTargets.UpdateFairyTargetsInLogic(ItemName);
+
             return ItemResult.Success;
         }
 
@@ -658,6 +660,7 @@ namespace TunicRandomizer {
             if (Locations.VanillaLocations.Keys.Where(key => Locations.VanillaLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0) {
                 FairyTargets.CreateLoadZoneTargets();
             }
+            FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
 
             if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();

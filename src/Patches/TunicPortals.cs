@@ -5237,6 +5237,29 @@ namespace TunicRandomizer {
             }
         }
 
+        // for non-ER, just modifies the portal names -- this is useful for the FairyTargets for the entrance seeking spell
+        public static void ModifyPortalNames(string scene_name) {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+            && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+            foreach (var portal in Portals) {
+                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in VanillaPortals()) {
+                    Portal portal1 = portalCombo.Value.Portal1;
+                    Portal portal2 = portalCombo.Value.Portal2;
+
+                    if (portal1.Scene == scene_name && portal1.DestinationTag == portal.FullID) {
+                        portal.name = portal1.Name;
+                        break;
+                    }
+
+                    if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
+                        portal.name = portal2.Name;
+                        break;
+                    }
+                }
+            }
+        }
+
         public static void MarkPortals() {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
@@ -5289,6 +5312,7 @@ namespace TunicRandomizer {
                 }
             }
             TunicLogger.LogError("Failed to find portal in FindPortalRegionFromName");
+            TunicLogger.LogInfo("Portal name was " + portalName);
             return null;
         }
 

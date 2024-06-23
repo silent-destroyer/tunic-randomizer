@@ -18,7 +18,7 @@ namespace TunicRandomizer {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> EntranceTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
-        // list of the checks that are currently in logic
+        // list of the CheckIds for checks that are currently in logic
         public static List<string> ChecksInLogic = new List<string>();
         // progression items the player has received
         public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int>();
@@ -63,36 +63,6 @@ namespace TunicRandomizer {
             }
         }
 
-        // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
-        public static void FindChecksInLogic() {
-            PlayerItemsAndRegions.Clear();
-            ChecksInLogic.Clear();
-
-            TunicUtils.AddListToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
-            PlayerItemsAndRegions.Add("Overworld", 1);
-
-            if (SaveFlags.IsArchipelago()) {
-                TunicUtils.AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
-                foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
-                    string itemName = itemInfo.ItemName;
-                    TunicUtils.AddStringToDict(PlayerItemsAndRegions, itemName);
-                }
-            } else {
-                foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
-                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true) {
-                        TunicUtils.AddStringToDict(PlayerItemsAndRegions, ItemLookup.SimplifiedItemNames[locationCheck.Reward.Name]);
-                    }
-                }
-            }
-
-            ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
-            foreach (Check check in Locations.VanillaLocations.Values) {
-                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions)) {
-                    ChecksInLogic.Add(check.CheckId);
-                }
-            }
-        }
-
         public static void CreateLoadZoneTargets() {
             HashSet<string> ScenesWithItems = new HashSet<string>();
 
@@ -122,14 +92,12 @@ namespace TunicRandomizer {
             }
         }
 
-        private static FairyTarget CreateFairyTarget(string Name, Vector3 Position) {
+        private static void CreateFairyTarget(string Name, Vector3 Position) {
             GameObject FairyTarget = new GameObject(Name);
             FairyTarget.SetActive(true);
             FairyTarget.AddComponent<FairyTarget>();
             FairyTarget.GetComponent<FairyTarget>().stateVariable = StateVariable.GetStateVariableByName("false");
             FairyTarget.transform.position = Position;
-
-            return FairyTarget.GetComponent<FairyTarget>();
         }
 
         public static void FindFairyTargets() {
@@ -162,6 +130,76 @@ namespace TunicRandomizer {
             string[] coords = Position.Split(',');
             Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
             return vector;
+        }
+
+        // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
+        public static void FindChecksInLogic() {
+            PlayerItemsAndRegions.Clear();
+            ChecksInLogic.Clear();
+
+            TunicUtils.AddListToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
+            PlayerItemsAndRegions.Add("Overworld", 1);
+
+            if (SaveFlags.IsArchipelago()) {
+                TunicUtils.AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
+                foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
+                    string itemName = itemInfo.ItemName;
+                    TunicUtils.AddStringToDict(PlayerItemsAndRegions, itemName);
+                }
+            } else {
+                foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
+                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true) {
+                        TunicUtils.AddStringToDict(PlayerItemsAndRegions, ItemLookup.SimplifiedItemNames[locationCheck.Reward.Name]);
+                    }
+                }
+            }
+            UpdateChecksInLogic();
+        }
+
+        public static void UpdateChecksInLogic() {
+            ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
+            foreach (Check check in Locations.VanillaLocations.Values) {
+                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions)) {
+                    ChecksInLogic.Add(check.CheckId);
+                }
+            }
+        }
+
+        // update what targets are in logic based on the item that was received
+        public static void UpdateFairyTargetsInLogic(string newItem) {
+            TunicLogger.LogInfo("update fairy targets started");
+            TunicLogger.LogInfo("new item added is " + newItem)
+            // add the new item received to the items the player has
+            TunicUtils.AddStringToDict(PlayerItemsAndRegions, newItem);
+            UpdateChecksInLogic();
+            TunicLogger.LogInfo("current items are");
+            foreach (string itemname in PlayerItemsAndRegions.Keys) {
+                TunicLogger.LogInfo(itemname);
+            }
+            // loop through the regular ItemTargets, find ones that are newly in logic
+            foreach (FairyTarget fairyTarget in ItemTargets) {
+                TunicLogger.LogInfo("test message 1");
+                if (!fairyTarget.isActiveAndEnabled) { continue; }
+                TunicLogger.LogInfo("test message 2");
+                TunicLogger.LogInfo(fairyTarget.name);
+                if (ChecksInLogic.Contains(fairyTarget.name.Replace("fairy target ", ""))
+                        && !ItemTargetsInLogic.Contains(fairyTarget)) {
+                    TunicLogger.LogInfo("test message 3");
+                    ItemTargetsInLogic.Add(fairyTarget);
+                    TunicLogger.LogInfo("test message 4");
+                }
+                TunicLogger.LogInfo("test message 5");
+            }
+            TunicLogger.LogInfo("test message 6");
+            // loop through the regular EntranceTargets, find ones that are newly in logic
+            foreach (FairyTarget fairyTarget in EntranceTargets) {
+                if (!fairyTarget.isActiveAndEnabled) { continue; }
+                if (PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
+                        && !EntranceTargetsInLogic.Contains(fairyTarget)) {
+                    EntranceTargetsInLogic.Add(fairyTarget);
+                }
+            }
+            TunicLogger.LogInfo("update fairy targets done");
         }
 
     }
