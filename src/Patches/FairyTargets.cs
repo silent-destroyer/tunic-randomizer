@@ -179,8 +179,6 @@ namespace TunicRandomizer {
             foreach (FairyTarget fairyTarget in ItemTargets) {
                 if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
                 string targetName = fairyTarget.name.Replace("fairy target ", "");
-                TunicLogger.LogInfo("test message 1");
-                TunicLogger.LogInfo(targetName);
                 if (!ItemTargetsInLogic.Contains(fairyTarget) && (
                     ChecksInLogic.Contains(targetName) ||
                         PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(targetName)))) {
