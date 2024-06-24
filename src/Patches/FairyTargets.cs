@@ -117,7 +117,9 @@ namespace TunicRandomizer {
                     } else {
                         ItemTargets.Add(fairyTarget);
                         string targetName = fairyTarget.name.Replace("fairy target ", "");
-                        if (ChecksInLogic.Contains(targetName) || PlayerItemsAndRegions.ContainsKey(targetName)) {
+                        // make it so for adjacent scenes, it checks if that scene contains checks that are in logic
+                        if (ChecksInLogic.Contains(targetName) ||
+                                PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(targetName))) {
                             ItemTargetsInLogic.Add(fairyTarget);
                         }
                     }
@@ -176,8 +178,12 @@ namespace TunicRandomizer {
             // loop through the regular ItemTargets, find ones that are newly in logic
             foreach (FairyTarget fairyTarget in ItemTargets) {
                 if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
-                if (ChecksInLogic.Contains(fairyTarget.name.Replace("fairy target ", ""))
-                        && !ItemTargetsInLogic.Contains(fairyTarget)) {
+                string targetName = fairyTarget.name.Replace("fairy target ", "");
+                TunicLogger.LogInfo("test message 1");
+                TunicLogger.LogInfo(targetName);
+                if (!ItemTargetsInLogic.Contains(fairyTarget) && (
+                    ChecksInLogic.Contains(targetName) ||
+                        PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(targetName)))) {
                     ItemTargetsInLogic.Add(fairyTarget);
                 }
             }

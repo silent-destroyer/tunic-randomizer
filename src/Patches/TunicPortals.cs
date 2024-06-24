@@ -5311,25 +5311,22 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            TunicLogger.LogError("Failed to find portal in FindPortalRegionFromName");
-            TunicLogger.LogInfo("Portal name was " + portalName);
-            return null;
+            // returning this since it should never match
+            return "tunc";
         }
 
         public static string FindPortalDestSceneFromName(string portalName) {
-            foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> regionGroups in RegionPortalsList) {
-                string sceneName = regionGroups.Key;
-                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups.Value) {
-                    foreach (TunicPortal portal in regionGroup.Value) {
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (List<TunicPortal> regionGroup in regionGroups.Values) {
+                    foreach (TunicPortal portal in regionGroup) {
                         if (portal.Name == portalName) {
-                            return sceneName;
+                            return portal.Destination;
                         }
                     }
                 }
             }
-            TunicLogger.LogError("Failed to find portal in FindPortalDestSceneFromName");
-            TunicLogger.LogInfo("Portal name was " + portalName);
-            return null;
+            // returning this since it should never match
+            return "tunc";
         }
 
     }
