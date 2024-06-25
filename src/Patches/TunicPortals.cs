@@ -5311,23 +5311,22 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            // returning this since it should never match
-            return "tunc";
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPortalRegionFromName failed to find a match";
         }
 
-        public static string FindPortalDestSceneFromName(string portalName) {
-            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
-                foreach (List<TunicPortal> regionGroup in regionGroups.Values) {
-                    foreach (TunicPortal portal in regionGroup) {
-                        if (portal.Name == portalName) {
-                            return portal.Destination;
-                        }
-                    }
+        public static string FindPairedPortalSceneFromName(string portalName) {
+            foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    return portalCombo.Portal2.Scene;
+                }
+                if (portalCombo.Portal2.Name == portalName) {
+                    return portalCombo.Portal1.Scene;
                 }
             }
-            // returning this since it should never match
-            return "tunc";
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalSceneFromName failed to find a match";
         }
-
+        
     }
 }

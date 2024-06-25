@@ -77,7 +77,7 @@ namespace TunicRandomizer {
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 if (ScenePortal.id.Contains("customfasttravel")) { continue; }
-                if (ScenesWithItems.Contains(TunicPortals.FindPortalDestSceneFromName(ScenePortal.name))) {
+                if (ScenesWithItems.Contains(TunicPortals.FindPairedPortalSceneFromName(ScenePortal.name))) {
                     CreateFairyTarget($"fairy target {ScenePortal.name}", ScenePortal.transform.position);
                 }
             }
@@ -117,10 +117,23 @@ namespace TunicRandomizer {
                     } else {
                         ItemTargets.Add(fairyTarget);
                         string targetName = fairyTarget.name.Replace("fairy target ", "");
-                        // make it so for adjacent scenes, it checks if that scene contains checks that are in logic
-                        if (ChecksInLogic.Contains(targetName) ||
-                                PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(targetName))) {
+                        if (ChecksInLogic.Contains(targetName)) {
                             ItemTargetsInLogic.Add(fairyTarget);
+                        } else {
+                            // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
+                            string regionName = TunicPortals.FindPortalRegionFromName(targetName);
+                            TunicLogger.LogInfo("region name is " + regionName);
+                            string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
+                            TunicLogger.LogInfo("dest scene name is " + destSceneName);
+                            if (PlayerItemsAndRegions.ContainsKey(regionName)) {
+                                foreach (string checkId in ChecksInLogic) {
+                                    if (checkId.Contains(destSceneName)) {
+                                        TunicLogger.LogInfo("success");
+                                        TunicLogger.LogInfo(checkId);
+                                        ItemTargetsInLogic.Add(fairyTarget);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -149,12 +162,18 @@ namespace TunicRandomizer {
                 TunicUtils.AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
                 foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
                     string itemName = itemInfo.ItemName;
+                    // convert display name to internal name
+                    foreach (KeyValuePair<string, string> namePair in ItemLookup.SimplifiedItemNames) {
+                        if (namePair.Value == itemName) {
+                            itemName = namePair.Key;
+                        }
+                    }
                     TunicUtils.AddStringToDict(PlayerItemsAndRegions, itemName);
                 }
             } else {
                 foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
                     if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true) {
-                        TunicUtils.AddStringToDict(PlayerItemsAndRegions, ItemLookup.SimplifiedItemNames[locationCheck.Reward.Name]);
+                        TunicUtils.AddStringToDict(PlayerItemsAndRegions, locationCheck.Reward.Name);
                     }
                 }
             }
@@ -164,14 +183,21 @@ namespace TunicRandomizer {
         public static void UpdateChecksInLogic() {
             ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
             foreach (Check check in Locations.VanillaLocations.Values) {
-                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions)) {
+                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && Locations.CheckedLocations[check.CheckId] == false) {
                     ChecksInLogic.Add(check.CheckId);
+                    TunicLogger.LogInfo("adding " + check.CheckId + " to checks in logic");
                 }
             }
         }
 
         // update what targets are in logic based on the item that was received
         public static void UpdateFairyTargetsInLogic(string newItem) {
+            // convert display name to internal name
+            foreach (KeyValuePair<string, string> namePair in ItemLookup.SimplifiedItemNames) {
+                if (namePair.Value == newItem) {
+                    newItem = namePair.Key;
+                }
+            }
             // add the new item received to the items the player has
             TunicUtils.AddStringToDict(PlayerItemsAndRegions, newItem);
             UpdateChecksInLogic();
@@ -179,10 +205,21 @@ namespace TunicRandomizer {
             foreach (FairyTarget fairyTarget in ItemTargets) {
                 if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
                 string targetName = fairyTarget.name.Replace("fairy target ", "");
-                if (!ItemTargetsInLogic.Contains(fairyTarget) && (
-                    ChecksInLogic.Contains(targetName) ||
-                        PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(targetName)))) {
-                    ItemTargetsInLogic.Add(fairyTarget);
+                if (!ItemTargetsInLogic.Contains(fairyTarget)) {
+                    if (ChecksInLogic.Contains(targetName)) {
+                        ItemTargetsInLogic.Add(fairyTarget);
+                    } else {
+                        // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
+                        string regionName = TunicPortals.FindPortalRegionFromName(targetName);
+                        string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
+                        if (PlayerItemsAndRegions.ContainsKey(regionName)) {
+                            foreach (string checkId in ChecksInLogic) {
+                                if (checkId.Contains(destSceneName)) {
+                                    ItemTargetsInLogic.Add(fairyTarget);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             // loop through the regular EntranceTargets, find ones that are newly in logic
