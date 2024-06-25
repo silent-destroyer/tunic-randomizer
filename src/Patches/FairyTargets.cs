@@ -122,14 +122,10 @@ namespace TunicRandomizer {
                         } else {
                             // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
                             string regionName = TunicPortals.FindPortalRegionFromName(targetName);
-                            TunicLogger.LogInfo("region name is " + regionName);
                             string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
-                            TunicLogger.LogInfo("dest scene name is " + destSceneName);
                             if (PlayerItemsAndRegions.ContainsKey(regionName)) {
                                 foreach (string checkId in ChecksInLogic) {
                                     if (checkId.Contains(destSceneName)) {
-                                        TunicLogger.LogInfo("success");
-                                        TunicLogger.LogInfo(checkId);
                                         ItemTargetsInLogic.Add(fairyTarget);
                                     }
                                 }
@@ -185,7 +181,6 @@ namespace TunicRandomizer {
             foreach (Check check in Locations.VanillaLocations.Values) {
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && Locations.CheckedLocations[check.CheckId] == false) {
                     ChecksInLogic.Add(check.CheckId);
-                    TunicLogger.LogInfo("adding " + check.CheckId + " to checks in logic");
                 }
             }
         }
