@@ -182,6 +182,8 @@ namespace TunicRandomizer {
             
             Harmony.Patch(AccessTools.Method(typeof(Monster), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_OnTouchKillbox_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(CathedralGauntletManager), "Spawn"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "CathedralGauntletManager_Spawn_PostfixPatch")));
+
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));
 
