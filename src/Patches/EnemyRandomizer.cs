@@ -803,6 +803,9 @@ namespace TunicRandomizer {
                     if (CurrentScene == "Sewer" && Enemy.name.Contains("Spinnerbot") && !Enemy.name.Contains("Corrupted")) {
                         Enemy.name = Enemy.name.Replace("Spinnerbot", "Spinnerbot Corrupted");
                     }
+                    if (CurrentScene == "Crypt Redux" && Enemy.name.Contains("bomezome") && !Enemy.name.Contains("big") && !Enemy.name.Contains("easy")) {
+                        Enemy.name = Enemy.name.Replace("bomezome", "bomezome_easy");
+                    }
                     if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                         if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && CurrentScene != "Cathedral Arena"))) {
                             Enemy.transform.parent.gameObject.SetActive(true);
@@ -851,6 +854,13 @@ namespace TunicRandomizer {
                             }
                         });
                     }
+
+                    if (TunicRandomizer.Settings.BalancedEnemies) {
+                        EnemyRankings["Bosses"].ForEach(x => {
+                            EnemyKeys.Remove(x);
+                        });
+                    }
+
                     if (EnemyKeys.Count == 0) {
                         GameObject.Destroy(Enemy.gameObject);
                         continue;
