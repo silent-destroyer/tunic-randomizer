@@ -309,6 +309,7 @@ namespace TunicRandomizer {
             }
 
             try {
+                FairyTargets.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();
                 FairyTargets.CreateEntranceTargets();
                 FairyTargets.FindFairyTargets();

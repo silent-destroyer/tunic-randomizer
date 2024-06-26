@@ -492,6 +492,7 @@ namespace TunicRandomizer {
             }
             try {
                 if (PlayerCharacter.instance != null) {
+                    FairyTargets.FindChecksInLogic();
                     FairyTargets.CreateFairyTargets();
                     FairyTargets.CreateEntranceTargets();
                     FairyTargets.FindFairyTargets();

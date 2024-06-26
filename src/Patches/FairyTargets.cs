@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 using Archipelago.MultiClient.Net;
 using UnityEngine.Diagnostics;
 using Newtonsoft.Json;
+using System.Diagnostics.Eventing.Reader;
 
 namespace TunicRandomizer {
     public class FairyTargets {
@@ -31,6 +32,7 @@ namespace TunicRandomizer {
 
             if (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) {
 
+                bool hasChecksInLogicInScene = false;
                 List<string> ItemIdsInScene = Locations.VanillaLocations.Keys.Where(ItemId => Locations.VanillaLocations[ItemId].Location.SceneName == SceneManager.GetActiveScene().name
                 && SaveFile.GetInt($"randomizer picked up {ItemId}") == 0 &&
                 ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {ItemId} was collected") == 0 : true)).ToList();
@@ -42,7 +44,17 @@ namespace TunicRandomizer {
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
                         }
+
+                        if (ChecksInLogic.Contains(ItemId)) {
+                            hasChecksInLogicInScene = true;
+                        }
                     }
+
+                    // if there are no checks in logic in the current scene, go create load zone targets specifically for fairy seeking spell with logic
+                    if (!hasChecksInLogicInScene) {
+                        CreateLogicLoadZoneTargets();
+                    }
+
                     if (GameObject.FindObjectOfType<TrinketWell>() != null) {
                         int CoinCount = Inventory.GetItemByName("Trinket Coin").Quantity + TunicRandomizer.Tracker.ImportantItems["Coins Tossed"];
                         List<int> CoinLevels = new List<int>() { 3, 6, 10, 15, 20 };
@@ -83,6 +95,19 @@ namespace TunicRandomizer {
             }
         }
 
+        // specifically for fairy seeking spell with logic
+        public static void CreateLogicLoadZoneTargets() {
+            foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
+                string destScene = TunicPortals.FindPairedPortalSceneFromName(ScenePortal.name);
+                foreach (string CheckId in ChecksInLogic) {
+                    if (CheckId.Contains(destScene)) {
+                        CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position);
+                        break;
+                    }
+                }
+            }
+        }
+
         public static void CreateEntranceTargets() {
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 if (ScenePortal.id.Contains("customfasttravel")) { continue; }
@@ -106,15 +131,14 @@ namespace TunicRandomizer {
             EntranceTargets.Clear();
             ItemTargetsInLogic.Clear();
             EntranceTargetsInLogic.Clear();
-            FindChecksInLogic();
             foreach (FairyTarget fairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
-                if (fairyTarget.isActiveAndEnabled) {
+                if (fairyTarget != null && fairyTarget.isActiveAndEnabled) {
                     if (fairyTarget.name.StartsWith("entrance")) {
                         EntranceTargets.Add(fairyTarget);
                         if (PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))) {
                             EntranceTargetsInLogic.Add(fairyTarget);
                         }
-                    } else {
+                    } else if (fairyTarget.name.StartsWith("fairy")) {
                         ItemTargets.Add(fairyTarget);
                         string targetName = fairyTarget.name.Replace("fairy target ", "");
                         if (ChecksInLogic.Contains(targetName)) {
@@ -127,10 +151,13 @@ namespace TunicRandomizer {
                                 foreach (string checkId in ChecksInLogic) {
                                     if (checkId.Contains(destSceneName)) {
                                         ItemTargetsInLogic.Add(fairyTarget);
+                                        break;
                                     }
                                 }
                             }
                         }
+                    } else if (fairyTarget.name.StartsWith("alt")) {
+                        ItemTargetsInLogic.Add(fairyTarget);
                     }
                 }
             }
