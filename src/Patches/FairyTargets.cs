@@ -238,6 +238,7 @@ namespace TunicRandomizer {
                             foreach (string checkId in ChecksInLogic) {
                                 if (checkId.Contains(destSceneName)) {
                                     ItemTargetsInLogic.Add(fairyTarget);
+                                    break;
                                 }
                             }
                         }
