@@ -710,7 +710,7 @@ namespace TunicRandomizer {
                 SavedFox.transform.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
 
                 LanguageLine SavedFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
-                SavedFoxScript.text = $"%ah^k yoo for sehnding mE hOm.---plEz kEp #aht stOn ahs A rEword. it wil tAk yoo\nbahk too yor wurld.";
+                SavedFoxScript.text = $"%ah^k yoo for sehndi^ mE hOm.---plEz kEp #aht stOn ahs A rEword. it wil tAk yoo\nbahk too yor wurld.";
                 SavedFox.GetComponent<NPC>().script = SavedFoxScript;
 
                 SavedFox.SetActive(true);

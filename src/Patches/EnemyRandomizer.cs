@@ -9,6 +9,7 @@ using UnhollowerBaseLib;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 using static TunicRandomizer.SaveFlags;
+using FMODUnity;
 
 namespace TunicRandomizer {
 
@@ -802,8 +803,11 @@ namespace TunicRandomizer {
                     if (CurrentScene == "Sewer" && Enemy.name.Contains("Spinnerbot") && !Enemy.name.Contains("Corrupted")) {
                         Enemy.name = Enemy.name.Replace("Spinnerbot", "Spinnerbot Corrupted");
                     }
+                    if (CurrentScene == "Crypt Redux" && Enemy.name.Contains("bomezome") && !Enemy.name.Contains("big") && !Enemy.name.Contains("easy")) {
+                        Enemy.name = Enemy.name.Replace("bomezome", "bomezome_easy");
+                    }
                     if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                        if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || Enemy.transform.parent.name.ToLower().Contains("night"))) {
+                        if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && CurrentScene != "Cathedral Arena"))) {
                             Enemy.transform.parent.gameObject.SetActive(true);
                         }
 
@@ -850,6 +854,13 @@ namespace TunicRandomizer {
                             }
                         });
                     }
+
+                    if (TunicRandomizer.Settings.BalancedEnemies) {
+                        EnemyRankings["Bosses"].ForEach(x => {
+                            EnemyKeys.Remove(x);
+                        });
+                    }
+
                     if (EnemyKeys.Count == 0) {
                         GameObject.Destroy(Enemy.gameObject);
                         continue;
@@ -1028,7 +1039,7 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<Foxgod>().voidhole_pool = FoxgodBossfightRoot.transform.GetChild(0).GetChild(5).GetComponent<PooledFX>();
                         NewEnemy.GetComponent<Foxgod>().voidhole_pool.pool = FoxgodPools[5].ToArray();
                         if (CurrentScene != "Cathedral Arena") {
-                            NewEnemy.GetComponent<Foxgod>().IsAggroed = true;
+                            NewEnemy.GetComponent<Foxgod>()._monsterAggroed = true;
                         }
                     }
 
@@ -1041,30 +1052,9 @@ namespace TunicRandomizer {
                         NewEnemy.GetComponent<RuntimeStableID>().intraSceneID = Resources.FindObjectsOfTypeAll<RuntimeStableID>().OrderBy(id => id.intraSceneID).Last().intraSceneID + 1;
                     }
 
-                    if (NewEnemy.GetComponent<FleemerQuartet>() != null) {
-                        List<GameObject> quartet = new List<GameObject>();
+                    if (NewEnemy.GetComponent<FleemerQuartet>() != null && NewEnemy.GetComponentInParent<CathedralGauntletManager>() == null) {
                         NewEnemy.GetComponent<FleemerQuartet>().GroupId = i;
-                        quartet.Add(NewEnemy);
-                        for (int f = 0; f < 3; f++) {
-                            GameObject fleemer;
-                            if (f == 0) {
-                                fleemer = GameObject.Instantiate(NewEnemy, NewEnemy.transform.position + new Vector3(1, 0, -1), NewEnemy.transform.rotation);
-                            } else if (f == 1) {
-                                fleemer = GameObject.Instantiate(NewEnemy, NewEnemy.transform.position + new Vector3(-1, 0, -1), NewEnemy.transform.rotation);
-                            } else {
-                                fleemer = GameObject.Instantiate(NewEnemy, NewEnemy.transform.position + new Vector3(0, 0, -2), NewEnemy.transform.rotation);
-                            }
-                            fleemer.transform.parent = NewEnemy.transform.parent;
-                            fleemer.SetActive(true);
-                            fleemer.GetComponent<FleemerQuartet>().GroupId = i;
-                            fleemer.name = NewEnemy.name;
-                            quartet.Add(fleemer);
-                            fleemer.GetComponent<RuntimeStableID>().intraSceneID = NewEnemy.GetComponent<RuntimeStableID>().intraSceneID + f;
-
-                        }
-                        foreach (GameObject monster in quartet) {
-                            monster.GetComponent<FleemerQuartet>().Quartet = quartet;
-                        }
+                        SpawnFleemerQuartet(NewEnemy);
                     }
 
                     i++;
@@ -1170,6 +1160,31 @@ namespace TunicRandomizer {
             return rune;
         }
 
+        private static void SpawnFleemerQuartet(GameObject Fleemer) {
+            List<GameObject> quartet = new List<GameObject> {
+                Fleemer
+            };
+            for (int f = 0; f < 3; f++) {
+                GameObject fleemer;
+                if (f == 0) {
+                    fleemer = GameObject.Instantiate(Fleemer, Fleemer.transform.position + new Vector3(1, 0, -1), Fleemer.transform.rotation);
+                } else if (f == 1) {
+                    fleemer = GameObject.Instantiate(Fleemer, Fleemer.transform.position + new Vector3(-1, 0, -1), Fleemer.transform.rotation);
+                } else {
+                    fleemer = GameObject.Instantiate(Fleemer, Fleemer.transform.position + new Vector3(0, 0, -2), Fleemer.transform.rotation);
+                }
+                fleemer.transform.parent = Fleemer.transform.parent;
+                fleemer.SetActive(true);
+                fleemer.GetComponent<FleemerQuartet>().GroupId = Fleemer.GetComponent<FleemerQuartet>().GroupId;
+                fleemer.name = Fleemer.name;
+                quartet.Add(fleemer);
+                fleemer.GetComponent<RuntimeStableID>().intraSceneID = Fleemer.GetComponent<RuntimeStableID>().intraSceneID + f;
+            }
+            foreach (GameObject monster in quartet) {
+                monster.GetComponent<FleemerQuartet>().Quartet = quartet;
+            }
+        }
+
         public static bool Monster_Die_MoveNext_PrefixPatch(Monster._Die_d__77 __instance, ref bool __result) {
             if (__instance.__4__this.GetComponent<BossAnnounceOnAggro>() != null) {
                 if (SceneManager.GetActiveScene().name == "Forest Boss Room") {
@@ -1252,6 +1267,13 @@ namespace TunicRandomizer {
         public static void ToggleObjectAnimation_SetToggle_PostfixPatch(ToggleObjectAnimation __instance, ref bool state) {
             if (SceneManager.GetActiveScene().name == "Cathedral Arena" && __instance.name == "Chest Reveal" && state) {
                 Archipelago.instance.UpdateDataStorage("Cleared Cathedral Gauntlet", true);
+            }
+        }
+
+        public static void CathedralGauntletManager_Spawn_PostfixPatch(CathedralGauntletManager __instance, ref GameObject go, ref EventReference sfx) {
+            if (go.GetComponent<FleemerQuartet>() != null) {
+                TunicLogger.LogInfo("cathedral gauntlet manager spawning fleemer quartet");
+                SpawnFleemerQuartet(go);
             }
         }
 
