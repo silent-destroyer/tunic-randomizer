@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace TunicRandomizer {
     public class TunicUtils {
+        // list of the CheckIds for checks that are currently in logic
+        public static List<string> ChecksInLogic = new List<string>();
+        // progression items the player has received
+        public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int>();
+
         // add a key if it doesn't exist, otherwise increment the value by 1
         public static Dictionary<string, int> AddListToDict(Dictionary<string, int> dictionary, List<string> list) {
             foreach (string item in list) {
@@ -28,5 +33,45 @@ namespace TunicRandomizer {
             }
             return dictionary1;
         }
+
+        // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
+        public static void FindChecksInLogic() {
+            PlayerItemsAndRegions.Clear();
+            ChecksInLogic.Clear();
+
+            TunicUtils.AddListToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
+            PlayerItemsAndRegions.Add("Overworld", 1);
+
+            if (SaveFlags.IsArchipelago()) {
+                TunicUtils.AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
+                foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
+                    string itemName = itemInfo.ItemName;
+                    // convert display name to internal name
+                    foreach (KeyValuePair<string, string> namePair in ItemLookup.SimplifiedItemNames) {
+                        if (namePair.Value == itemName) {
+                            itemName = namePair.Key;
+                        }
+                    }
+                    TunicUtils.AddStringToDict(PlayerItemsAndRegions, itemName);
+                }
+            } else {
+                foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
+                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true) {
+                        TunicUtils.AddStringToDict(PlayerItemsAndRegions, locationCheck.Reward.Name);
+                    }
+                }
+            }
+            UpdateChecksInLogic();
+        }
+
+        public static void UpdateChecksInLogic() {
+            ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
+            foreach (Check check in Locations.VanillaLocations.Values) {
+                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && Locations.CheckedLocations[check.CheckId] == false) {
+                    ChecksInLogic.Add(check.CheckId);
+                }
+            }
+        }
+
     }
 }
