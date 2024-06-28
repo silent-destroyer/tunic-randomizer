@@ -27,7 +27,12 @@ namespace TunicRandomizer {
             }
 
             foreach (GameObject gameObject in optionalObjectsToDisable) {
-                gameObject.SetActive(ladderItem.Quantity > 0);
+                if(ladderItem.Quantity == 0 && gameObject.name.Contains("Stone Switch")) {
+                    //instead of removing the switches (causing a ton of lag when an every-frame coroutine tries to run on them), lets just move them really far away
+                    gameObject.transform.position = new Vector3(10000, 10000, 10000);
+                } else {
+                    gameObject.SetActive(ladderItem.Quantity > 0);
+                }
             }
 
             for (int i = 0; i < this.transform.childCount; i++) {
