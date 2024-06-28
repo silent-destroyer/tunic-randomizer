@@ -33,7 +33,7 @@ namespace TunicRandomizer {
                 primaryDictionary.TryGetValue(pair.Key, out var count);
                 primaryDictionary[pair.Key] = count + pair.Value;
             }
-            return dictionary1;
+            return primaryDictionary;
         }
 
         // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
