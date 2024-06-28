@@ -166,9 +166,11 @@ namespace TunicRandomizer {
                     }
                 }
             }
-
-            // todo: make an option
-            FairyTarget.registered = ItemTargetsInLogic;
+            if (TunicRandomizer.Settings.FairyLogic) {
+                FairyTarget.registered = ItemTargetsInLogic;
+            } else {
+                FairyTarget.registered = ItemTargets;
+            }
         }
 
         private static Vector3 StringToVector3(string Position) {
@@ -251,10 +253,17 @@ namespace TunicRandomizer {
         }
 
         public void DoSpell() {
-            // todo: check options, if it lags then instead make the list that matters based on the logic
-            FairyTarget.registered = FairyTargets.EntranceTargetsInLogic;
+            if (TunicRandomizer.Settings.FairyLogic) {
+                FairyTarget.registered = FairyTargets.EntranceTargetsInLogic;
+            } else {
+                FairyTarget.registered = FairyTargets.EntranceTargets;
+            }
             PlayerCharacter.instance.GetComponent<FairySpell>().SpellEffect();
-            FairyTarget.registered = FairyTargets.ItemTargetsInLogic;
+            if (TunicRandomizer.Settings.FairyLogic) {
+                FairyTarget.registered = FairyTargets.ItemTargetsInLogic;
+            } else {
+                FairyTarget.registered = FairyTargets.ItemTargets;
+            }
         }
     }
 }
