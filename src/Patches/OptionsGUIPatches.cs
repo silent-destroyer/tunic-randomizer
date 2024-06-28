@@ -115,6 +115,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Disable Chest Interruption", "Off", "On", TunicRandomizer.Settings.DisableChestInterruption ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestInterruption);
             OptionsGUI.addToggle("Skip Item Popups", "Off", "On", TunicRandomizer.Settings.SkipItemAnimations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSkipItemAnimations);
             OptionsGUI.addToggle("Skip Upgrade Animations", "Off", "On", TunicRandomizer.Settings.FasterUpgrades ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterUpgrades);
+            OptionsGUI.addToggle("Fairy Seeking with Logic", "Off", "On", TunicRandomizer.Settings.FairyLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
         }
 
         public static void EnemyRandomizerSettings() {
@@ -504,6 +505,11 @@ namespace TunicRandomizer {
 
         public static void ToggleFasterUpgrades(int index) {
             TunicRandomizer.Settings.FasterUpgrades = !TunicRandomizer.Settings.FasterUpgrades;
+            SaveSettings();
+        }
+
+        public static void ToggleFairyLogic(int index) {
+            TunicRandomizer.Settings.FairyLogic = !TunicRandomizer.Settings.FairyLogic;
             SaveSettings();
         }
 

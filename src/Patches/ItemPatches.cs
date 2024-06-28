@@ -658,7 +658,8 @@ namespace TunicRandomizer {
                 GameObject.Destroy(FairyTarget);
             }
             // todo: set this to only happen if the logic option isn't on
-            if (Locations.VanillaLocations.Keys.Where(key => Locations.VanillaLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0) {
+            if (Locations.VanillaLocations.Keys.Where(key => Locations.VanillaLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0
+                && !TunicRandomizer.Settings.FairyLogic) {
                 FairyTargets.CreateLoadZoneTargets();
             }
             FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);

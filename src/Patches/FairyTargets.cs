@@ -92,13 +92,21 @@ namespace TunicRandomizer {
         }
 
         // specifically for fairy seeking spell with logic
-        public static void CreateLogicLoadZoneTargets() {
+        public static void CreateLogicLoadZoneTargets(bool addImmediately = false) {
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
+                string portalRegion = TunicPortals.FindPortalRegionFromName(ScenePortal.name);
                 string destScene = TunicPortals.FindPairedPortalSceneFromName(ScenePortal.name);
-                foreach (string CheckId in TunicUtils.ChecksInLogic) {
-                    if (CheckId.Contains(destScene)) {
-                        CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position);
-                        break;
+                // check if the entrance is logically accessible first
+                if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion)) {
+                    // then check if the scene it leads to has checks in logic
+                    foreach (string CheckId in TunicUtils.ChecksInLogic) {
+                        if (CheckId.Contains($"[{destScene}]")) {
+                            FairyTarget newFairyTarget = CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position);
+                            if (addImmediately == true) {
+                                ItemTargetsInLogic.Add(newFairyTarget);
+                            }
+                            break;
+                        }
                     }
                 }
             }
@@ -113,12 +121,13 @@ namespace TunicRandomizer {
             }
         }
 
-        private static void CreateFairyTarget(string Name, Vector3 Position) {
-            GameObject FairyTarget = new GameObject(Name);
-            FairyTarget.SetActive(true);
-            FairyTarget.AddComponent<FairyTarget>();
-            FairyTarget.GetComponent<FairyTarget>().stateVariable = StateVariable.GetStateVariableByName("false");
-            FairyTarget.transform.position = Position;
+        private static FairyTarget CreateFairyTarget(string Name, Vector3 Position) {
+            GameObject fairyTarget = new GameObject(Name);
+            fairyTarget.SetActive(true);
+            fairyTarget.AddComponent<FairyTarget>();
+            fairyTarget.GetComponent<FairyTarget>().stateVariable = StateVariable.GetStateVariableByName("false");
+            fairyTarget.transform.position = Position;
+            return fairyTarget.GetComponent<FairyTarget>();
         }
 
         // used to find fairy targets on scene load or player character start
@@ -152,7 +161,7 @@ namespace TunicRandomizer {
                                 }
                             }
                         }
-                    } else if (fairyTarget.name.StartsWith("alt")) {
+                    } else if (fairyTarget.name.StartsWith("alt") && !ItemTargetsInLogic.Contains(fairyTarget)) {
                         ItemTargetsInLogic.Add(fairyTarget);
                     }
                 }
@@ -209,6 +218,10 @@ namespace TunicRandomizer {
                         && !EntranceTargetsInLogic.Contains(fairyTarget)) {
                     EntranceTargetsInLogic.Add(fairyTarget);
                 }
+            }
+            // if it is still empty, check if there's locations in logic in adjacent regions
+            if (ItemTargetsInLogic.Count == 0) {
+                CreateLogicLoadZoneTargets(addImmediately:true);
             }
         }
 

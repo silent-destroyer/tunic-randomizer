@@ -211,6 +211,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool FairyLogic {
+            get;
+            set;
+        }
+
         // Other settings
         private const int CAMERA_FLIP = 1;
         private const int MORE_SKULLS = 2;
@@ -430,6 +435,7 @@ namespace TunicRandomizer {
             BonusStatUpgradesEnabled = true;
             DisableChestInterruption = false;
             FasterUpgrades = false;
+            FairyLogic = false;
 
             // Other
             CameraFlip = false;
