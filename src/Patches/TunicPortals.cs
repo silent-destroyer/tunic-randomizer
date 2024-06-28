@@ -5242,6 +5242,10 @@ namespace TunicRandomizer {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
+                // skips the extra west garden shop portal
+                if (!portal.isActiveAndEnabled) {
+                    continue;
+                }
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in VanillaPortals()) {
                     Portal portal1 = portalCombo.Value.Portal1;
@@ -5265,6 +5269,10 @@ namespace TunicRandomizer {
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
 
             foreach (var portal in Portals) {
+                // skips the extra west garden shop portal
+                if (!portal.isActiveAndEnabled) {
+                    continue;
+                }
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
                     foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals) {
                         if (portal.name == portalCombo.Value.Portal1.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal2.Scene == SceneManager.GetActiveScene().name))) {
