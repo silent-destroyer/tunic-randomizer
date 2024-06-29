@@ -248,6 +248,8 @@ namespace TunicRandomizer {
             if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue &&
                 StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(DiedToHeir) != 1 && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
                 PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
+                SaveFile.SetString("last campfire scene name", "Overworld Redux");
+                SaveFile.SetString("last campfire id", "checkpoint");
                 TunicLogger.LogInfo("Resetting time of day to daytime!"); 
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
             }
