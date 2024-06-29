@@ -66,7 +66,14 @@ namespace TunicRandomizer {
             }) {
                 hideFlags = HideFlags.HideAndDontSave
             });
-            
+            ClassInjector.RegisterTypeInIl2Cpp<CreditsSkipper>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("credits skipper", new Il2CppSystem.Type[]
+            {
+                Il2CppType.Of<CreditsSkipper>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
+
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");
             }

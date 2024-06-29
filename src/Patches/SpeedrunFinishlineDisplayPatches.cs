@@ -1,13 +1,9 @@
-﻿using BepInEx.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static TunicRandomizer.SaveFlags;
 
@@ -297,6 +293,7 @@ namespace TunicRandomizer {
                     if (IsArchipelago()) {
                         AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.\nPress C to collect items.";
                     }
+                    AreaCount.GetComponent<TextMeshPro>().text += "\nHold S to skip credits.";
                 }
                 if (Area == "Far Shore/Hero's Grave") {
                     AreaCount.GetComponent<TextMeshPro>().text = $"<size=90%>{AreaCount.GetComponent<TextMeshPro>().text}";
@@ -423,10 +420,13 @@ namespace TunicRandomizer {
                 Archipelago.instance.integration.sentCollect = false;
                 Archipelago.instance.integration.sentRelease = false;
             }
-
+            if (Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode)) {
+                SpeedrunFinishlineDisplay.HideFinishline();
+            }
             GameCompleted = false;
-            
-            return true;
+            SpeedrunData.gameComplete = 0;
+            PauseMenu.ReturnToTitleScreen();
+            return false;
         }
 
         public static void GameOverDecision_Start_PostfixPatch(GameOverDecision __instance) {
@@ -434,7 +434,10 @@ namespace TunicRandomizer {
             string MissingPageText = $"Missing {MissingPageCount} page{(MissingPageCount != 1 ? "s" : "")}. Return to seek another path.";
             __instance.retryKey_plural = MissingPageText;
             __instance.retryKey_single = MissingPageText;
+            __instance.newgame_option.transform.GetChild(1).GetComponent<LocalizeTMP>().enabled = false;
+            __instance.newgame_option.transform.GetChild(1).GetComponent<RTLTMPro.RTLTextMeshPro>().text = "Return to Title Screen";
+            __instance.newgame_option.transform.GetChild(2).GetComponent<LocalizeTMP>().enabled = false;
+            __instance.newgame_option.transform.GetChild(2).GetComponent<RTLTMPro.RTLTextMeshPro>().text = "Thank you for playing the TUNIC Randomizer!";
         }
-    
     }
 }
