@@ -2260,14 +2260,6 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Special Shop Entry",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash",
-                            },
-                        }
-                    },
-                    {
                         "Overworld Well Ladder",
                         new List<List<string>> {
                             new List<string> {
