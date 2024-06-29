@@ -792,6 +792,7 @@ namespace TunicRandomizer {
             
             if (TunicRandomizer.Settings.FasterUpgrades) {
                 Notifications.Show($"{TextBuilderPatches.SpriteNameToAbbreviation[offeringItemToOffer.icon.name]} \"{offeringItemToOffer.statLabelLocKey}\" wehnt uhp fruhm {offeringItemToOffer.upgradeItemReceived.Quantity} [arrow_right] {offeringItemToOffer.upgradeItemReceived.Quantity+1}!", $"#E Ar ahksehpts yor awfuri^.");
+                UpgradePresentation.instance.afterEnable().MoveNext();
                 UpgradeMenu.instance.__Exit();
                 return false;
             }
