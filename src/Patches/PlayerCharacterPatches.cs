@@ -33,8 +33,6 @@ namespace TunicRandomizer {
         public static bool LoadCustomTexture = false;
         public static bool WearHat = false;
         public static float TimeWhenLastChangedDayNight = 0.0f;
-        public static float FinishLineSwordTimer = 0.0f;
-        public static float CompletionTimer = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
         public static LadderEnd LastLadder = null;
 
@@ -124,18 +122,6 @@ namespace TunicRandomizer {
                     CycleController.AnimateSunrise();
                     SaveFile.SetInt(DiedToHeir, 1);
                     ResetDayNightTimer = -1.0f;
-                }
-            }
-            if (SpeedrunData.gameComplete != 0 && !SpeedrunFinishlineDisplayPatches.GameCompleted) {
-                SpeedrunFinishlineDisplayPatches.GameCompleted = true;
-                SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
-            }
-            if (SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay) {
-                CompletionTimer += Time.fixedUnscaledDeltaTime;
-                if (CompletionTimer > 6.0f) {
-                    CompletionTimer = 0.0f;
-                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
-                    SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = false;
                 }
             }
             if (SpeedrunData.timerRunning && SceneLoaderPatches.SceneName != null && Locations.AllScenes.Count > 0) {

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class ToggleLadderByLadderItem : MonoBehaviour {
@@ -21,33 +14,34 @@ namespace TunicRandomizer {
             if (ladderItem == null) {
                 return;
             }
+            bool hasLadder = ladderItem.Quantity > 0;
 
             foreach (GameObject gameObject in constructionItems) {
-                gameObject.SetActive(ladderItem.Quantity == 0);
+                gameObject.SetActive(!hasLadder);
             }
 
             foreach (GameObject gameObject in optionalObjectsToDisable) {
-                gameObject.SetActive(ladderItem.Quantity > 0);
+                gameObject.SetActive(hasLadder);
             }
 
             for (int i = 0; i < this.transform.childCount; i++) {
                 if (PlayerCharacter.instance.currentLadder == this.GetComponent<Ladder>() && this.GetComponent<Ladder>() != null) {
                     continue;
                 }
-                this.transform.GetChild(i).gameObject.SetActive(ladderItem.Quantity > 0);
+                this.transform.GetChild(i).gameObject.SetActive(hasLadder);
             }
 
             if (this.GetComponent<Renderer>() != null) {
-                this.GetComponent<Renderer>().enabled = ladderItem.Quantity > 0;
+                this.GetComponent<Renderer>().enabled = hasLadder;
             }
             foreach(Collider c in extraColliders) {
                 if (c != null) {
-                    c.enabled = ladderItem.Quantity == 0;
+                    c.enabled = !hasLadder;
                 }
             }
 
-            if (stateVariable != null) {
-                stateVariable.BoolValue = ladderItem.Quantity > 0;
+            if (stateVariable != null && stateVariable.BoolValue != hasLadder)  {
+                stateVariable.BoolValue = hasLadder;
             }
         }
 

@@ -91,6 +91,10 @@
       <HintPath>packages\Archipelago.MultiClient.Net.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RTLTMPro">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\RTLTMPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -212,6 +216,7 @@
     <Compile Include="src\Patches\WaveSpell.cs" />
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
+    <Compile Include="src\Util\CreditsSkipper.cs" />
     <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
