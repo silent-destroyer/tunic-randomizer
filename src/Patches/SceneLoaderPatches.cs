@@ -354,7 +354,9 @@ namespace TunicRandomizer {
                 GameObject.Find("_Environment/_Decorations/Mailbox (1)/mailbox flag").AddComponent<MailboxFlag>();
 
                 GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>().dayOrNight = StateVariable.GetStateVariableByName("Is Night").BoolValue ? DayNightBridge.DayNight.NIGHT : DayNightBridge.DayNight.DAY;
-                
+                GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>().updateActiveness();
+                GameObject.Destroy(GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>());
+
                 if (SaveFile.GetInt("seed") != 0 && (SaveFile.GetInt(LadderRandoEnabled) == 0 || Inventory.GetItemByName("Ladder to Swamp").Quantity == 1)) {
                     for(int i = 0; i < 3; i++) {
                         GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.AddComponent<ToggleObjectByFuse>().fuseId = 1096;
