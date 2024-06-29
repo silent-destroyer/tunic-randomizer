@@ -260,8 +260,7 @@ namespace TunicRandomizer {
                                 new List<TransformData>(){
                                     new TransformData(new Vector3(-80.53674f, 12.08334f, -203.4905f), new Quaternion(0f, 0.1536293f, 0f, 0.9881286f), Vector3.one),
                                     new TransformData(new Vector3(-85.23936f, 12.08334f, -203.5708f), new Quaternion(0f, 0.9848078f, 0f, 0.1736482f), Vector3.one),
-                                    new TransformData(new Vector3(-88.95196f, 1.698261f, -193.692f), new Quaternion(0f, 0.9544535f, 0f, 0.2983598f), Vector3.one),
-                                    new TransformData(new Vector3(-86.29558f, 1.667531f, -190.894f), new Quaternion(0.1041922f, 0.8645646f, 0.05881932f, 0.48807f), Vector3.one),
+                                    new TransformData(new Vector3(-86.2956f, 2.2675f, -193.2215f), new Quaternion(0.0997f, 0.8272f, 0.0662f, 0.549f), Vector3.one),
                                 }
                             ),
                         }
