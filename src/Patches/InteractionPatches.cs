@@ -37,6 +37,9 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (hintGhost.Hint.Contains("THE HEIR") && SaveFile.GetInt("randomizer entered portal Heir Arena Exit") == 1) {
+                        __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" #ehm \"ALREADY?\" goud wurk!";
+                    }
                 }
 
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name) && GhostHints.HexQuestHintLookup.ContainsKey(GhostHints.HintGhosts[__instance.name].Hint)) {
