@@ -67,7 +67,7 @@ namespace TunicRandomizer {
                         stringToEdit += Input.inputString;
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.Return)) {
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
                     if (!editingPlayer && !editingHostname && !editingPort && !editingHostname) {
                         CloseAPSettingsWindow();
                     } else {
