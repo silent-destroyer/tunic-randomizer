@@ -221,6 +221,7 @@ namespace TunicRandomizer {
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }
+            addPageButton("Debug Menu", DebugFunctionsPage);
         }
 
         public static void MusicSettingsPage() {
@@ -281,6 +282,13 @@ namespace TunicRandomizer {
             foreach (KeyValuePair<string, EventReference> pair in MusicShuffler.Tracks) {
                 OptionsGUI.addButton(pair.Key, (Action)(() => { MusicShuffler.PlayTrack(pair.Key, pair.Value); }));
             }
+        }
+
+        public static void DebugFunctionsPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Debug");
+            OptionsGUI.addButton("Open Saves Folder", (Action)(() => { System.Diagnostics.Process.Start(Application.persistentDataPath + "/SAVES"); }));
+            OptionsGUI.addButton("Open Log File", (Action)(() => { System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log"); }));
         }
 
         public static void addPageButton(string pageName, Action pageMethod) {
