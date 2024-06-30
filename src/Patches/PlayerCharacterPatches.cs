@@ -211,13 +211,6 @@ namespace TunicRandomizer {
                 InvButton.SetActive(false);
             }
 
-            if (Locations.AllScenes.Count == 0) {
-                for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++) {
-                    string SceneName = Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
-                    Locations.AllScenes.Add(SceneName);
-                }
-            }
-
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Fortress").BoolValue = true;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Sewer").BoolValue = true;
             StateVariable.GetStateVariableByName("SV_ShopTrigger_Swamp(Night)").BoolValue = true;
