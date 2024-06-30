@@ -200,7 +200,7 @@
     <Compile Include="src\Patches\FairyTargets.cs" />
     <Compile Include="src\Patches\ModelSwaps.cs" />
     <Compile Include="src\Patches\CustomItemBehaviors.cs" />
-    <Compile Include="src\Patches\ItemStatsHUD.cs" />
+    <Compile Include="src\Patches\InventoryDisplayPatches.cs" />
     <Compile Include="src\Patches\PaletteEditor.cs" />
     <Compile Include="src\Patches\ItemPatches.cs" />
     <Compile Include="src\Patches\PageDisplayPatches.cs" />

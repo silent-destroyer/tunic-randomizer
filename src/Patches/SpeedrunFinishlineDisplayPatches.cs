@@ -277,7 +277,7 @@ namespace TunicRandomizer {
                 int AreaChecksFound = 0;
                 float Percentage = 0;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
+                    TotalAreaChecks += Locations.CheckCountsPerScene[SubArea];
                     AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }

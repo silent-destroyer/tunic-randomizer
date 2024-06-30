@@ -19,6 +19,8 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> RandomizedLocations = new Dictionary<string, Check> { };
         public static Dictionary<string, bool> CheckedLocations = new Dictionary<string, bool>();
 
+        public static Dictionary<string, int> CheckCountsPerScene = new Dictionary<string, int>();
+
         public static Dictionary<string, List<ArchipelagoHint>> MajorItemLocations = new Dictionary<string, List<ArchipelagoHint>>();
 
         public static List<string> AllScenes = new List<string>();
@@ -29,6 +31,10 @@ namespace TunicRandomizer {
             foreach (Check info in JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList)) {
                 string locationId = info.CheckId;
                 VanillaLocations.Add(locationId, info);
+                if (!CheckCountsPerScene.ContainsKey(info.Location.SceneName)) {
+                    CheckCountsPerScene.Add(info.Location.SceneName, 0);
+                }
+                CheckCountsPerScene[info.Location.SceneName]++;
             }
             LocationIdToDescription = JsonConvert.DeserializeObject<Dictionary<string, string>>(LocationNamesJson);
             foreach (string Key in LocationIdToDescription.Keys) {

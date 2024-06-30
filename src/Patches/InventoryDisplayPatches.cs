@@ -13,9 +13,10 @@ using AmplifyColor;
 using BepInEx;
 
 namespace TunicRandomizer {
-    public class ItemStatsHUD {
+    public class InventoryDisplayPatches {
 
         public static bool Loaded = false;
+        public static bool GridSetup = false;
         public static GameObject Title;
         public static GameObject Pages;
         public static GameObject Fairies;
@@ -38,6 +39,15 @@ namespace TunicRandomizer {
         public static GameObject BlueHexagon;
         public static GameObject HexagonQuest;
         public static GameObject QuestionMark;
+
+        public static GameObject EquipmentRoot;
+
+        public static Color BellMarkerColor = new Color(1f, 0.84f, 0f);
+        public static Color GuardCaptainColor = new Color(.627f, .125f, .941f);
+        public static Color RedMarkerColor = new Color(1f, 0f, 0f, 0.75f);
+        public static Color GreenMarkerColor = new Color(0f, 1f, 0f, 0.75f);
+
+
         public static void Initialize() {
             if (!Loaded) {
                 TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
@@ -370,34 +380,45 @@ namespace TunicRandomizer {
 
         }
 
-        public static void Update() {
+        public static void UpdateInventoryStats() {
             try {
                 if (Locations.VanillaLocations.Count > 0) {
-                    int ObtainedItemCount = Locations.VanillaLocations.Keys.Where(loc => Locations.CheckedLocations[loc] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc} was collected") == 1)).ToList().Count;
-                    int ObtainedItemCountInCurrentScene = Locations.VanillaLocations.Keys.Where(loc => Locations.VanillaLocations[loc].Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc} was collected") == 1))).ToList().Count;
-                    int TotalItemCountInCurrentScene = Locations.VanillaLocations.Keys.Where(loc => Locations.VanillaLocations[loc].Location.SceneName == SceneLoaderPatches.SceneName).ToList().Count;
+                    int ObtainedItemCount = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? Archipelago.instance.integration.session.Locations.AllLocationsChecked.Count : Locations.CheckedLocations.Where(loc => loc.Value).Count();
+                    int ObtainedItemCountInCurrentScene = Locations.VanillaLocations.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
+                    int TotalItemCountInCurrentScene = Locations.CheckCountsPerScene[SceneLoaderPatches.SceneName];
                     Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
-                    Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
                     Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  {TunicRandomizer.Tracker.ImportantItems["Fairies"]}/20";
-                    Fairies.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20 ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    Fairies.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20 ? PaletteEditor.Gold : Color.white;
                     Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t{TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]}/12";
-                    Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? PaletteEditor.Gold : Color.white;
                     CoinsTossed.GetComponent<TextMeshProUGUI>().text = $"Coins Tossed: {TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]}/15";
-                    CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
                     ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:\t{ObtainedItemCountInCurrentScene}/{TotalItemCountInCurrentScene}";
-                    ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
                     Total.GetComponent<TextMeshProUGUI>().text = $"Total:\t\t  {ObtainedItemCount}/302";
                     if (GoldHexagons != null) {
                         GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
-                        GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                        GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
                     }
-                    if (Inventory.GetItemByName("Spear").Quantity == 1) {
-                        QuestionMark.SetActive(false);
-                    }
-                    Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= 302) ? new Color(0.917f, 0.65f, .08f) : Color.white;
+                    QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
+                    Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= 302) ? PaletteEditor.Gold : Color.white;
                 }
             } catch (Exception e) {
 
+            }
+        }
+
+        public static void SetupGridLayoutForEquipmentGroup() {
+            EquipmentRoot = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/Body/Section 5 Equipment/GROUP: Equipment/");
+            GameObject.Destroy(EquipmentRoot.GetComponent<HorizontalLayoutGroup>());
+            if (EquipmentRoot != null && EquipmentRoot.GetComponent<HorizontalLayoutGroup>() == null && EquipmentRoot.GetComponent<GridLayoutGroup>() == null) {
+                EquipmentRoot.AddComponent<GridLayoutGroup>().constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+                EquipmentRoot.GetComponent<GridLayoutGroup>().constraintCount = 7;
+                EquipmentRoot.GetComponent<GridLayoutGroup>().spacing = new Vector2(50, 32);
+                EquipmentRoot.GetComponent<GridLayoutGroup>().cellSize = new Vector2(160, 160);
+                InventoryDisplay.instance.equipmentRoot = EquipmentRoot.GetComponent<GridLayoutGroup>();
+                GridSetup = true;
             }
         }
 
@@ -407,92 +428,63 @@ namespace TunicRandomizer {
             } catch (Exception e) {
                 TunicLogger.LogError(e + " " + e.Message);
             }
-            GameObject Equipment = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/Body/Section 5 Equipment/GROUP: Equipment/");
-            Update();
+            UpdateInventoryStats();
+
+            if (!GridSetup) {
+                SetupGridLayoutForEquipmentGroup();
+            }
 
             if (InventoryDisplay.InventoryOpen) {
-                GuardCaptain.GetComponent<Image>().color = Color.white;
-                Ding.GetComponent<Image>().color = Color.white;
-                GardenKnight.GetComponent<Image>().color = Color.white;
-                Dong.GetComponent<Image>().color = Color.white;
-                SiegeEngine.GetComponent<Image>().color = Color.white;
-                RedHexagon.GetComponent<Image>().color = Color.white;
-                Librarian.GetComponent<Image>().color = Color.white;
-                GreenHexagon.GetComponent<Image>().color = Color.white;
-                BossScavenger.GetComponent<Image>().color = Color.white;
-                BlueHexagon.GetComponent<Image>().color = Color.white;
-                if (Inventory.GetItemByName("Hexagon Red").Quantity == 1 || StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue) {
+
+                if (Inventory.GetItemByName("Hexagon Red").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 1 Red") == 1) {
                     __instance.hexagonImages[0].enabled = true;
-                    RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? new Color(0.917f, 0.65f, .08f) : new Color(1f, 0f, 0f, 0.75f);
+                    RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : RedMarkerColor;
                 } else {
                     __instance.hexagonImages[0].enabled = false;
+                    RedHexagon.GetComponent<Image>().color = Color.white;
                 }
-                if (Inventory.GetItemByName("Hexagon Green").Quantity == 1 || StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue) {
+                if (Inventory.GetItemByName("Hexagon Green").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 2 Green") == 1) {
                     __instance.hexagonImages[1].enabled = true;
-                    GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? new Color(0.917f, 0.65f, .08f) : new Color(0f, 1f, 0f, 0.75f);
+                    GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : GreenMarkerColor;
                 } else {
                     __instance.hexagonImages[1].enabled = false;
+                    GreenHexagon.GetComponent<Image>().color = Color.white;
                 }
-                if (Inventory.GetItemByName("Hexagon Blue").Quantity == 1 || StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue) {
+                if (Inventory.GetItemByName("Hexagon Blue").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 3 Blue") == 1) {
                     __instance.hexagonImages[2].enabled = true;
-                    BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? new Color(0.917f, 0.65f, .08f) : new Color(0f, 0f, 1f, 1f);
+                    BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : Color.blue;
                 } else {
                     __instance.hexagonImages[2].enabled = false;
+                    BlueHexagon.GetComponent<Image>().color = Color.white;
                 }
-                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1) {
-                    GuardCaptain.GetComponent<Image>().color = new Color(.627f, .125f, .941f);
-                }
-                if (StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue) {
-                    Ding.GetComponent<Image>().color = new Color(1f, 0.84f, 0f);
-                }
-                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1) {
-                    GardenKnight.GetComponent<Image>().color = Color.cyan;
-                }
-                if (StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue) {
-                    Dong.GetComponent<Image>().color = new Color(1f, 0.84f, 0f);
-                }
-                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1) {
-                    SiegeEngine.GetComponent<Image>().color = new Color(1f, 0f, 0f, 0.75f);
-                }
-                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1) {
-                    Librarian.GetComponent<Image>().color = new Color(0f, 1f, 0f, 0.75f);
-                }
-                if (SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1) {
-                    BossScavenger.GetComponent<Image>().color = new Color(0f, 0f, 1f, 1f);
-                }
+
+                GuardCaptain.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1 ? GuardCaptainColor : Color.white;
+                Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? BellMarkerColor : Color.white;
+                GardenKnight.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1 ? Color.cyan : Color.white;
+                Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? BellMarkerColor : Color.white;
+                SiegeEngine.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1 ? RedMarkerColor : Color.white;
+                Librarian.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1 ? GreenMarkerColor : Color.white;
+                BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;
 
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
-                    Equipment.transform.GetChild(0).transform.position = new Vector3(20f, -20f, 0);
-                    Equipment.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = new Color(0, 0, 0, 1);
-                    for (int i = 1; i < Equipment.transform.childCount; i++) {
-                        Vector3 Position = Equipment.transform.GetChild(i).transform.position;
-                        Equipment.transform.GetChild(i).transform.position = new Vector3(-331.975f + ((i - 1) * 52.5f), Position.y, Position.z);
-                    }
-                    if (Equipment.transform.childCount > 8) {
-                        for (int i = 8; i < Equipment.transform.childCount; i++) {
-                            Equipment.transform.GetChild(i).transform.position = new Vector3(-331.975f + ((i - 8) * 52.5f), -245.9078f, -98f);
-                        }
-                    }
-                } else {
-                    if (Equipment.transform.childCount > 7) {
-                        for (int i = 7; i < Equipment.transform.childCount; i++) {
-                            Equipment.transform.GetChild(i).transform.position = new Vector3(-331.975f + ((i - 7) * 52.5f), -245.9078f, -98f);
-                        }
-                    }
+                    EquipmentRoot.transform.GetChild(EquipmentRoot.transform.childCount-1).transform.position = new Vector3(20f, -20f, 0);
+                    EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
                 }
 
-                AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
-                AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
-                bool hexQuest = SaveFile.GetInt(HexagonQuestEnabled) == 1;
-                for (int i = 16; i < 19; i++) {
-                    AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
-                    AbilityShuffle.transform.GetChild(i).gameObject.SetActive(!hexQuest);
-                    AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(!hexQuest);
-                }
-                for (int i = 19; i < AbilityShuffle.transform.childCount; i++) {
-                    AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(77, -197 - ((i - 19) * 96), 0f);
-                    AbilityShuffle.transform.GetChild(i).gameObject.SetActive(hexQuest);
-                    AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
+                if (AbilityShuffle.active) {
+                    AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
+                    AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
+                    bool hexQuest = SaveFile.GetInt(HexagonQuestEnabled) == 1;
+                    for (int i = 16; i < 19; i++) {
+                        AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
+                        AbilityShuffle.transform.GetChild(i).gameObject.SetActive(!hexQuest);
+                        AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(!hexQuest);
+                    }
+                    for (int i = 19; i < AbilityShuffle.transform.childCount; i++) {
+                        AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(77, -197 - ((i - 19) * 96), 0f);
+                        AbilityShuffle.transform.GetChild(i).gameObject.SetActive(hexQuest);
+                        AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
+                    }
                 }
             }
 

@@ -335,7 +335,7 @@ namespace TunicRandomizer {
                         if (Item.ItemNameForInventory == "21") {
                             ToggleHolyCrossObjects(true);
                         }
-                        ItemStatsHUD.UpdateAbilitySection();
+                        InventoryDisplayPatches.UpdateAbilitySection();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -402,7 +402,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
 
-                        ItemStatsHUD.UpdateAbilitySection();
+                        InventoryDisplayPatches.UpdateAbilitySection();
                     }
                 }
 
@@ -546,7 +546,7 @@ namespace TunicRandomizer {
                         if (Item.ItemNameForInventory == "21") {
                             ToggleHolyCrossObjects(true);
                         }
-                        ItemStatsHUD.UpdateAbilitySection();
+                        InventoryDisplayPatches.UpdateAbilitySection();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -613,7 +613,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
 
-                        ItemStatsHUD.UpdateAbilitySection();
+                        InventoryDisplayPatches.UpdateAbilitySection();
                     }
                 }
 

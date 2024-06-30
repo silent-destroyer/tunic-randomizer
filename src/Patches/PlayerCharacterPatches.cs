@@ -1,18 +1,12 @@
 ﻿using Archipelago.MultiClient.Net.Models;
-using BepInEx.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
-using UnityEngine.UI;
 using System.Globalization;
-using Archipelago.MultiClient.Net.Enums;
 using static TunicRandomizer.SaveFlags;
 using Newtonsoft.Json.Linq;
 
@@ -300,7 +294,7 @@ namespace TunicRandomizer {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
 
-            ItemStatsHUD.UpdateAbilitySection();
+            InventoryDisplayPatches.UpdateAbilitySection();
 
             OptionsGUIPatches.SaveSettings();
 

@@ -639,8 +639,8 @@ namespace TunicRandomizer {
 
         public static void PauseMenu___button_ReturnToTitle_PostfixPatch(PauseMenu __instance) {
 
-            if (ItemStatsHUD.HexagonQuest != null) {
-                ItemStatsHUD.HexagonQuest.SetActive(false);
+            if (InventoryDisplayPatches.HexagonQuest != null) {
+                InventoryDisplayPatches.HexagonQuest.SetActive(false);
             }
             SceneName = "TitleScreen";
         }

@@ -41,7 +41,7 @@ namespace TunicRandomizer {
 
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name) && GhostHints.HexQuestHintLookup.ContainsKey(GhostHints.HintGhosts[__instance.name].Hint)) {
                     SaveFile.SetInt($"randomizer hex quest read {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint]} hint", 1);
-                    ItemStatsHUD.UpdateAbilitySection();
+                    InventoryDisplayPatches.UpdateAbilitySection();
                     if (Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt($"randomizer hexagon quest {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint].ToLower()} requirement")) {
                         __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" Enuhf \"ALREADY?\" goud wurk!";
                     }

@@ -12,9 +12,6 @@ namespace TunicRandomizer {
 
         public ToggleObjectBySpell[] spellToggles;
         public List<GameObject> Arrows;
-        public Color IncorrectColor = new Color(1f, .25f, .25f, 1f);
-        public Color DefaultColor = new Color(0.2729f, 0.7925f, 0.4009f, 1);
-        public Color SuccessColor = new Color(0.917f, 0.65f, .08f);
 
         List<string> closestSpellStrings = new List<string>();
 
@@ -70,9 +67,9 @@ namespace TunicRandomizer {
             }
 
             if (incorrect) {
-                arrow.GetComponent<SpriteRenderer>().color = IncorrectColor;
+                arrow.GetComponent<SpriteRenderer>().color = PaletteEditor.Red;
             } else {
-                arrow.GetComponent<SpriteRenderer>().color = DefaultColor;
+                arrow.GetComponent<SpriteRenderer>().color = PaletteEditor.Green;
             }
             arrow.SetActive(true);
             Arrows.Add(arrow);
@@ -154,7 +151,7 @@ namespace TunicRandomizer {
 
         public void CompletedSpellEffect(bool iceBoltSpell = false) {
             Arrows.ForEach(arrow => {
-                arrow.GetComponent<SpriteRenderer>().color = iceBoltSpell ? Color.cyan : SuccessColor;
+                arrow.GetComponent<SpriteRenderer>().color = iceBoltSpell ? Color.cyan : PaletteEditor.Gold;
             });
         }
 

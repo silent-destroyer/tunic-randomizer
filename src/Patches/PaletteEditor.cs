@@ -72,6 +72,10 @@ namespace TunicRandomizer {
             {15, new Color(0.9882353f, 0.4431373f, 0.945098f) },
         };
 
+        public static Color Red = new Color(1f, .25f, .25f, 1f);
+        public static Color Green = new Color(0.2729f, 0.7925f, 0.4009f, 1);
+        public static Color Gold = new Color(0.917f, 0.65f, .08f);
+
         public static bool CelShadingEnabled = false;
         public static bool PartyHatEnabled = false;
         public static GameObject ToonFox;

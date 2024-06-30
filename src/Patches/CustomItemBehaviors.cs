@@ -80,6 +80,9 @@ namespace TunicRandomizer {
                     Inventory.itemList.Add(Torch);
                 }
             }
+            Item Spear = Inventory.GetItemByName("Spear");
+            Inventory.itemList.Remove(Spear);
+            Inventory.itemList.Add(Spear);
         }
 
         public static bool SpearItemBehaviour_onActionButtonDown_PrefixPatch(SpearItemBehaviour __instance) {
