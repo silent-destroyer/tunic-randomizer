@@ -300,6 +300,10 @@ namespace TunicRandomizer {
                     }
                 });
 
+                if (FairyTargets.ItemTargetsInLogic.Count == 0) {
+                    FairyTargets.CreateLogicLoadZoneTargets(addImmediately: true);
+                }
+
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
