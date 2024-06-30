@@ -155,7 +155,9 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(FairyCollection), "getFairyCount"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "FairyCollection_getFairyCount_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(UpgradeAltar), "DoOfferingSequence"), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "UpgradeAltar_DoOfferingSequence_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "UpgradeAltar_DoOfferingSequence_PostfixPatch")));
-            
+
+            Harmony.Patch(AccessTools.Method(typeof(OfferingItem), "PriceForNext"), null, new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "OfferingItem_PriceForNext_PostfixPatch")));
+
             Harmony.Patch(AccessTools.Method(typeof(ButtonAssignableItem), "CheckFreeItemSpell"), null, new HarmonyMethod(AccessTools.Method(typeof(ItemPatches), "ButtonAssignableItem_CheckFreeItemSpell_PostfixPatch")));
 
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Item), "ShouldShowInInventory"), new HarmonyMethod(AccessTools.Method(typeof(CustomItemBehaviors), "Item_shouldShowInInventory_GetterPatch")));

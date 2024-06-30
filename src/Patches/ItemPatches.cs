@@ -806,6 +806,10 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void OfferingItem_PriceForNext_PostfixPatch(OfferingItem __instance, ref int __result) {
+            __result -= Mathf.RoundToInt(__instance.priceIncreasePerLevelup * (float)ItemLookup.BonusUpgrades.Where(bonus => Inventory.GetItemByName(bonus.Key).Quantity > 0 && bonus.Value.LevelUp == __instance.upgradeItemReceived.name).Count());
+        }
+
         public static bool FairyCollection_getFairyCount_PrefixPatch(FairyCollection __instance, ref int __result) {
             __result = TunicRandomizer.Tracker.ImportantItems["Fairies"];
             return false;
