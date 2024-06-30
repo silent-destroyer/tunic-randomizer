@@ -233,10 +233,9 @@ namespace TunicRandomizer {
             y += 40f;
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
-            bool DeathLink = GUI.Toggle(new Rect(10f, y, 115f, 30f), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
-            TunicRandomizer.Settings.DeathLinkEnabled = DeathLink;
-            bool EnemyRandomizer = GUI.Toggle(new Rect(150f, y, 180f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
-            TunicRandomizer.Settings.EnemyRandomizerEnabled = EnemyRandomizer;
+            TunicRandomizer.Settings.DeathLinkEnabled = GUI.Toggle(new Rect(10f, y, 105f, 30f), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
+            TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(new Rect(120f, y, 170f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
+            TunicRandomizer.Settings.MusicShuffle = GUI.Toggle(new Rect(295f, y, 130f, 30f), TunicRandomizer.Settings.MusicShuffle, "Music Shuffle");
             GUI.skin.label.fontSize = 20;
         }
 
@@ -298,7 +297,7 @@ namespace TunicRandomizer {
                 GUI.Label(new Rect(10f, y, 400f, 30f), "Settings will be chosen randomly on New Game.");
                 y += 40f;
             } else {
-                bool ToggleHexagonQuest = GUI.Toggle(new Rect(10f, y, 175f, 30f), TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST, "Hexagon Quest");
+                bool ToggleHexagonQuest = GUI.Toggle(new Rect(10f, y, 185f, 30f), TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST, $"Hexagon Quest {(TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST ? $"(<color=#E3D457>{TunicRandomizer.Settings.HexagonQuestGoal}</color>)" : "")}");
                 if (ToggleHexagonQuest) {
                     TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.HEXAGONQUEST;
                 } else if (!ToggleHexagonQuest && TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
@@ -325,7 +324,8 @@ namespace TunicRandomizer {
             }
             GUI.Label(new Rect(10f, y, 400f, 30f), "Other Settings <size=18>(more in options menu!)</size>");
             y += 40f;
-            TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(new Rect(10f, y, 200f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
+            TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(new Rect(10f, y, 180f, 30f), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
+            TunicRandomizer.Settings.MusicShuffle = GUI.Toggle(new Rect(210f, y, 150f, 30f), TunicRandomizer.Settings.MusicShuffle, "Music Shuffle");
             y += 40f;
             GUI.Label(new Rect(10f, y, 300f, 30f), $"Custom Seed: {(CustomSeed == "" ? "Not Set" : CustomSeed.ToString())}");
             y += 40f;
