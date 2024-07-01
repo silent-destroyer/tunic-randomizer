@@ -542,13 +542,6 @@ namespace TunicRandomizer {
                 SkipItemAnimations = eval(general, SKIP_ITEM_POPUPS);
                 FasterUpgrades = eval(general, FASTER_UPGRADES);
 
-                CameraFlip = eval(general, CAMERA_FLIP);
-                MoreSkulls = eval(general, MORE_SKULLS);
-                ArachnophobiaMode = eval(general, ARACHNOPHOBIA_MODE);
-                HolyCrossVisualizer = eval(general, HOLY_CROSS_VIEWER);
-                MusicShuffle = eval(general, MUSIC_SHUFFLE);
-                SeededMusic = eval(general, SEEDED_MUSIC);
-
                 int hints = int.Parse(decodedSplit[6]);
                 HeroPathHintsEnabled = eval(hints, PATH_OF_HERO);
                 GhostFoxHintsEnabled = eval(hints, GHOST_FOXES);
@@ -556,7 +549,6 @@ namespace TunicRandomizer {
                 ChestsMatchContentsEnabled = eval(hints, CHESTS_MATCH);
                 UseTrunicTranslations = eval(hints, USE_TRUNIC);
                 CreateSpoilerLog = eval(hints, SPOILER_LOG);
-                SeekingSpellLogic = eval(hints, SEEKING_SPELL_LOGIC);
 
                 int enemies = int.Parse(decodedSplit[7]);
                 EnemyRandomizerEnabled = eval(enemies, ENEMY_RANDOMIZER);
@@ -581,8 +573,6 @@ namespace TunicRandomizer {
                     MoreSkulls = eval(other, MORE_SKULLS);
                     ArachnophobiaMode = eval(other, ARACHNOPHOBIA_MODE);
                     HolyCrossVisualizer = eval(other, HOLY_CROSS_VIEWER);
-                    MusicShuffle = eval(other, MUSIC_SHUFFLE);
-                    SeededMusic = eval(other, SEEDED_MUSIC);
                     BiggerHeadMode = eval(other, BIGGER_HEAD_MODE);
                     TinierFoxMode = eval(other, TINIER_FOX_MODE);
 
