@@ -118,6 +118,24 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Makes checks that you haven't found but were completed by another player (via !collect, slot co-op, etc) appear as already been opened/picked up. Also reflects the item counts on the inventory screen/ending summary. Can be toggled on/off freely, and will revert the appearance of checks to their previous state on the next scene transition.
 - Send hints to server
   - This setting will record certain hints from the ghost foxes and any shop items you inspect in the Archipelago Text Client.
+### General
+- Easier Heir Fight
+  - Attacks deal additional damage to The Heir based on the total number of checks found.
+- Clear Early Bushes
+  - Removes a number of bushes from the Overworld when enabled, allowing free access to the East and West sides of the map.
+- Enable All Checkpoints
+  - Allows all checkpoints (save statues) to be used regardless of if they are powered or not.
+- Cheaper Shop Items
+  - Reduces the cost of the four randomized Shop items to 300 bits each.
+- Bonus Upgrades
+  - Makes the Golden Trophy and Hero Relic items give free stat level ups, allowing you to get up to +8 in every stat in a single playthrough when combined with the regular stat upgrades and the +2 Attack levels from Sword Progression.
+  - Note: Bonus upgrades will not be retroactively awarded if this setting is turned on after obtaining Golden Trophies with it disabled. The +2 Attack Levels from Sword Progression are always awarded and are not affected by this setting.
+- Disable Chest Interruption
+  - Enemies will not be able to interrupt you while opening chests if this option is turned on.
+- Skip Item Popups
+  - Turns off the item/page popups when receiving items.
+- Skip Upgrade Animations
+  - Skips the animation that plays when upgrading stats.
 ### Hints
 - Path of the Hero
   - Places a major hint at specific locations around the world, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple. These hint towards major progression items, such as Magic Items, Laurels, Hexagons, and more.
@@ -129,24 +147,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Chest textures will be swapped to indicate what item is in them. Currently, the items with different chest textures are Fairies, Golden Trophies, the three Hexagons, and the Hero's Laurels.
 - Display Hints in Trunic
   - For the experienced Ruin Seekers out there, this option removes most English words from custom dialogue, hints, or other text produced by the randomizer, leaving it up to your own knowledge to figure out what is where.
-### General
-- Easier Heir Fight
-  - Attacks deal additional damage to The Heir based on the total number of checks found.
-- Clear Early Bushes
-  - Removes a number of bushes from the Overworld when enabled, allowing free access to the East and West sides of the map.
-- Enable All Checkpoints
-  - Allows all checkpoints (save statues) to be used regardless of if they are powered or not.
-- Cheaper Shop Items
-  - Reduces the cost of the four randomized Shop items to 300 bits each.
-- Bonus Upgrades
-  - Makes the Golden Trophy items give free Level Ups for certain stats, allowing you to get up to +8 in every stat in a single playthrough when combined with the regular stat upgrades and the +2 Attack levels from Sword Progression.
-  - Note: Bonus upgrades will not be retroactively awarded if this setting is turned on after obtaining Golden Trophies with it disabled. The +2 Attack Levels from Sword Progression are always awarded and are not affected by this setting.
-- Disable Chest Interruption
-  - Enemies will not be able to interrupt you while opening chests if this option is turned on.
-- Skip Item Popups
-  - Turns off the item/page popups when receiving items.
-- Skip Upgrade Animations
-  - Skips the animation that plays when upgrading stats.
+- Seeking Spell Uses Logic
+  - Makes it so the seeking spell only searches for checks that can be reached in logic. By default, the seeking spell will target the closest item regardless of if it can be reached or not.
 ### Enemy Randomization 
 - Enemy Randomizer
   - Randomly swaps out enemies with new ones when you load into a scene. You may even see some enemies you've never seen before!
