@@ -235,7 +235,6 @@ namespace TunicRandomizer {
 
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
-            string LocationId = itemInfo.LocationName;
             
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Item.QuantityToGive;
@@ -247,8 +246,8 @@ namespace TunicRandomizer {
                     { "Shop - Coin 2", 999 }
                 };
                 // If buying your own money item from the shop, increase amount rewarded
-                if (OriginalShopPrices.ContainsKey(LocationId) && (itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
-                    AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[LocationId];
+                if (itemInfo.LocationName != null && OriginalShopPrices.ContainsKey(itemInfo.LocationName) && (itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
+                    AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[itemInfo.LocationName];
                 }
 
                 if (TunicRandomizer.Settings.SkipItemAnimations) {
