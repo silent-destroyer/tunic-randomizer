@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx.Logging;
-using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net;
-using Archipelago.MultiClient.Net.Models;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace TunicRandomizer {

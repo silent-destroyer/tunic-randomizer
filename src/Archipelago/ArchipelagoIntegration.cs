@@ -1,25 +1,16 @@
-﻿using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net;
-using BepInEx.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Archipelago.MultiClient.Net.Models;
-using System.Collections.Concurrent;
-using System.Threading;
-using UnityEngine.SceneManagement;
-using UnityEngine;
+﻿using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
-using System.Globalization;
-using Archipelago.MultiClient.Net.Packets;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
-using Archipelago.MultiClient.Net.Helpers;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
-using Archipelago.MultiClient.Net.Exceptions;
 using static TunicRandomizer.TunicPortals;
 
 namespace TunicRandomizer {

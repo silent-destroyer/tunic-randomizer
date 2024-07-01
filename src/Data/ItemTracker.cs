@@ -1,5 +1,4 @@
 ﻿using Archipelago.MultiClient.Net.Models;
-using BepInEx.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;

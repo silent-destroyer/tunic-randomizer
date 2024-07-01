@@ -1,5 +1,4 @@
-﻿
-namespace TunicRandomizer {
+﻿namespace TunicRandomizer {
     public class SaveFlags {
 
         public const string ItemCollectedKey = "randomizer picked up ";

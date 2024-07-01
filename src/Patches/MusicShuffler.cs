@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using FMODUnity;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using FMODUnity;
 
 namespace TunicRandomizer {
     public class MusicShuffler : MonoBehaviour {

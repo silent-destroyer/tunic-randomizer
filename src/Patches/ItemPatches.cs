@@ -1,15 +1,10 @@
-﻿using Archipelago.MultiClient.Net.Helpers;
-using Archipelago.MultiClient.Net.Models;
-using BepInEx.Logging;
+﻿using Archipelago.MultiClient.Net.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static TunicRandomizer.GhostHints;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {

@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using BepInEx.Logging;
 using static TunicRandomizer.SaveFlags;
-using UnityEngine.PlayerLoop;
-using AmplifyColor;
-using BepInEx;
 
 namespace TunicRandomizer {
     public class InventoryDisplayPatches {

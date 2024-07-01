@@ -1,9 +1,8 @@
 ﻿using HarmonyLib;
-using System.Diagnostics.Contracts;
+using System.Collections.Generic;
 using System.Linq;
 using UnhollowerBaseLib;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace TunicRandomizer {
     public class DDRSpell : MagicSpell {

@@ -1,19 +1,11 @@
-﻿using System;
+﻿using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.GhostHints;
-using Archipelago.MultiClient.Net.Enums;
 using static TunicRandomizer.SaveFlags;
-using BepInEx.Logging;
-using UnityEngine;
-using Archipelago.MultiClient.Net.Models;
-using Il2CppSystem;
-using UnityEngine.InputSystem;
-using Archipelago.MultiClient.Net;
-using Archipelago.MultiClient.Net.Helpers;
 
 namespace TunicRandomizer {
     public class Hints {

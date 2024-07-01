@@ -1,17 +1,10 @@
-﻿using BepInEx.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Archipelago.MultiClient.Net;
-using UnityEngine.Diagnostics;
-using Newtonsoft.Json;
-using System.Diagnostics.Eventing.Reader;
 
 namespace TunicRandomizer {
     public class FairyTargets {

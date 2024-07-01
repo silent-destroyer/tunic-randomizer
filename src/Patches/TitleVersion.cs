@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using System.Net;
-using UnityEngine.InputSystem.Utilities;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Net;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
     public class TitleVersion {

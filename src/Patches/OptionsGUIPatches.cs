@@ -1,15 +1,15 @@
-﻿using System;
+﻿using FMODUnity;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using UnityEngine;
+using System.Linq;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
-using Newtonsoft.Json;
-using static TunicRandomizer.SaveFlags;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using FMODUnity;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class OptionsGUIPatches {

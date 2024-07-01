@@ -1,6 +1,4 @@
-﻿using BepInEx.Logging;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;

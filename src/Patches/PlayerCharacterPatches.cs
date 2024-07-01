@@ -1,14 +1,13 @@
 ﻿using Archipelago.MultiClient.Net.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
-using System.Globalization;
 using static TunicRandomizer.SaveFlags;
-using Newtonsoft.Json.Linq;
 
 namespace TunicRandomizer {
     public class PlayerCharacterPatches {

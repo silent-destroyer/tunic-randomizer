@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-
-namespace TunicRandomizer {
+﻿namespace TunicRandomizer {
     public class UnderConstruction : Signpost {
 
         public bool isChecklistSign = false;

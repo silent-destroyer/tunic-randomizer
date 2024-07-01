@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
-using BepInEx.Logging;
 using System.IO;
-using UnityEngine.SceneManagement;
+using System.Linq;
+using UnityEngine;
 
 namespace TunicRandomizer {
     public class PaletteEditor : MonoBehaviour {
