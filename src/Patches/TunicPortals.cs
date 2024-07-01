@@ -2260,14 +2260,6 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Special Shop Entry",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash",
-                            },
-                        }
-                    },
-                    {
                         "Overworld Well Ladder",
                         new List<List<string>> {
                             new List<string> {
@@ -4763,6 +4755,7 @@ namespace TunicRandomizer {
         public static List<Portal> deadEndPortals = new List<Portal>();
         public static List<Portal> twoPlusPortals = new List<Portal>();
 
+        // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // for each origin region
@@ -4879,7 +4872,6 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> FirstStepsUpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // add all regions in Overworld that you can currently reach to the inventory
-            // this could just not be a foreach, but it'll need to be one when ladders gets merged in
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
                 string origin_region = traversal_group.Key;
                 if (!inventory.ContainsKey(origin_region)) {
@@ -5037,7 +5029,7 @@ namespace TunicRandomizer {
                 FullInventory.Remove("Hyperdash");
             }
             FullInventory.Add(start_region, 1);
-            FullInventory = ItemRandomizer.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
             FullInventory = UpdateReachableRegions(FullInventory);
 
             // get the total number of regions to get before doing dead ends
@@ -5198,6 +5190,10 @@ namespace TunicRandomizer {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
+                // skips the extra west garden shop portal
+                if (!portal.isActiveAndEnabled) {
+                    continue;
+                }
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
@@ -5237,11 +5233,42 @@ namespace TunicRandomizer {
             }
         }
 
+        // for non-ER, just modifies the portal names -- this is useful for the FairyTargets for the entrance seeking spell
+        public static void ModifyPortalNames(string scene_name) {
+            var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+            && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+            foreach (var portal in Portals) {
+                // skips the extra west garden shop portal
+                if (!portal.isActiveAndEnabled) {
+                    continue;
+                }
+                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in VanillaPortals()) {
+                    Portal portal1 = portalCombo.Value.Portal1;
+                    Portal portal2 = portalCombo.Value.Portal2;
+
+                    if (portal1.Scene == scene_name && portal1.DestinationTag == portal.FullID) {
+                        portal.name = portal1.Name;
+                        break;
+                    }
+
+                    if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
+                        portal.name = portal2.Name;
+                        break;
+                    }
+                }
+            }
+        }
+
         public static void MarkPortals() {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
 
             foreach (var portal in Portals) {
+                // skips the extra west garden shop portal
+                if (!portal.isActiveAndEnabled) {
+                    continue;
+                }
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
                     foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals) {
                         if (portal.name == portalCombo.Value.Portal1.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal2.Scene == SceneManager.GetActiveScene().name))) {
@@ -5277,5 +5304,33 @@ namespace TunicRandomizer {
             }
         }
 
+        public static string FindPortalRegionFromName(string portalName) {
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in  regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return regionName;
+                        }
+                    }
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPortalRegionFromName failed to find a match";
+        }
+
+        public static string FindPairedPortalSceneFromName(string portalName) {
+            foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    return portalCombo.Portal2.Scene;
+                }
+                if (portalCombo.Portal2.Name == portalName) {
+                    return portalCombo.Portal1.Scene;
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalSceneFromName failed to find a match";
+        }
+        
     }
 }

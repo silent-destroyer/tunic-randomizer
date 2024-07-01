@@ -98,7 +98,8 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
             OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
             OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
-            OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints); 
+            OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints);
+            OptionsGUI.addToggle("Seeking Spell Uses Logic", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
             OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
             OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
             OptionsGUI.setHeading("Hints");
@@ -512,6 +513,11 @@ namespace TunicRandomizer {
 
         public static void ToggleFasterUpgrades(int index) {
             TunicRandomizer.Settings.FasterUpgrades = !TunicRandomizer.Settings.FasterUpgrades;
+            SaveSettings();
+        }
+
+        public static void ToggleFairyLogic(int index) {
+            TunicRandomizer.Settings.SeekingSpellLogic = !TunicRandomizer.Settings.SeekingSpellLogic;
             SaveSettings();
         }
 

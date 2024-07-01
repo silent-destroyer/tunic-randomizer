@@ -274,7 +274,15 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("last page viewed", 0);
             }
 
+            // this is here for the first time you're loading in, assumes you're in Overworld
+            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                TunicPortals.ModifyPortals("Overworld Redux");
+            } else {
+                TunicPortals.ModifyPortalNames("Overworld Redux");
+            }
+
             try {
+                TunicUtils.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();
                 FairyTargets.CreateEntranceTargets();
                 FairyTargets.FindFairyTargets();
@@ -301,11 +309,6 @@ namespace TunicRandomizer {
 
             if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
                 EnemyRandomizer.ToggleArachnophobiaMode();
-            }
-
-            // this is here for the first time you're loading in, assumes you're in Overworld
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                TunicPortals.ModifyPortals("Overworld Redux");
             }
 
             try {
@@ -514,6 +517,8 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.ModifyPortals("Overworld Redux");
+                } else {
+                    TunicPortals.ModifyPortalNames("Overworld Redux");
                 }
                 if (slotData.TryGetValue("shuffle_ladders", out var ladderRando)) {
                     if (SaveFile.GetInt(LadderRandoEnabled) == 0 && ladderRando.ToString() == "1") {

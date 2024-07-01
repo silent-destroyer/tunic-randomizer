@@ -36,8 +36,8 @@ namespace TunicRandomizer {
             integration.TryDisconnect();
         }
 
-        public void ActivateCheck(string LocationId) {
-            integration.ActivateCheck(LocationId);
+        public void ActivateCheck(string LocationName) {
+            integration.ActivateCheck(LocationName);
         }
 
         public void UpdateDataStorage(string Key, object Value) {

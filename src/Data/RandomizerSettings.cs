@@ -131,6 +131,7 @@ namespace TunicRandomizer {
         private const int CHESTS_MATCH = 8;
         private const int USE_TRUNIC = 16;
         private const int SPOILER_LOG = 32;
+        private const int SEEKING_SPELL_LOGIC = 64;
         public bool HeroPathHintsEnabled {
             get;
             set;
@@ -157,6 +158,11 @@ namespace TunicRandomizer {
         }
 
         public bool CreateSpoilerLog {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellLogic {
             get;
             set;
         }
@@ -421,6 +427,7 @@ namespace TunicRandomizer {
             ChestsMatchContentsEnabled = true;
             UseTrunicTranslations = false;
             CreateSpoilerLog = true;
+            SeekingSpellLogic = false;
 
             // General
             HeirAssistModeEnabled = false;
@@ -535,13 +542,6 @@ namespace TunicRandomizer {
                 SkipItemAnimations = eval(general, SKIP_ITEM_POPUPS);
                 FasterUpgrades = eval(general, FASTER_UPGRADES);
 
-                CameraFlip = eval(general, CAMERA_FLIP);
-                MoreSkulls = eval(general, MORE_SKULLS);
-                ArachnophobiaMode = eval(general, ARACHNOPHOBIA_MODE);
-                HolyCrossVisualizer = eval(general, HOLY_CROSS_VIEWER);
-                MusicShuffle = eval(general, MUSIC_SHUFFLE);
-                SeededMusic = eval(general, SEEDED_MUSIC);
-
                 int hints = int.Parse(decodedSplit[6]);
                 HeroPathHintsEnabled = eval(hints, PATH_OF_HERO);
                 GhostFoxHintsEnabled = eval(hints, GHOST_FOXES);
@@ -573,8 +573,6 @@ namespace TunicRandomizer {
                     MoreSkulls = eval(other, MORE_SKULLS);
                     ArachnophobiaMode = eval(other, ARACHNOPHOBIA_MODE);
                     HolyCrossVisualizer = eval(other, HOLY_CROSS_VIEWER);
-                    MusicShuffle = eval(other, MUSIC_SHUFFLE);
-                    SeededMusic = eval(other, SEEDED_MUSIC);
                     BiggerHeadMode = eval(other, BIGGER_HEAD_MODE);
                     TinierFoxMode = eval(other, TINIER_FOX_MODE);
 
@@ -627,7 +625,7 @@ namespace TunicRandomizer {
 
         public bool[] hintSettings() {
             return new bool[] { HeroPathHintsEnabled, GhostFoxHintsEnabled, ShowItemsEnabled, ChestsMatchContentsEnabled, 
-                UseTrunicTranslations, CreateSpoilerLog, };
+                UseTrunicTranslations, CreateSpoilerLog, SeekingSpellLogic };
         }
 
         public bool[] enemySettings() {

@@ -300,6 +300,10 @@ namespace TunicRandomizer {
                     }
                 });
 
+                if (FairyTargets.ItemTargetsInLogic.Count == 0) {
+                    FairyTargets.CreateLogicLoadZoneTargets(addImmediately: true);
+                }
+
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
@@ -455,7 +459,7 @@ namespace TunicRandomizer {
                     if (item.LocationId == -2) {
                         string itemName = item.ItemName;
                         if (ItemLookup.Items.ContainsKey(itemName)) {
-                            ItemRandomizer.AddStringToDict(startInventory, ItemLookup.Items[itemName].ItemNameForInventory);
+                            TunicUtils.AddStringToDict(startInventory, ItemLookup.Items[itemName].ItemNameForInventory);
                         }
                     }
                 }

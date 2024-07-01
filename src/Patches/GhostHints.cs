@@ -392,8 +392,7 @@ namespace TunicRandomizer {
                 }
             }
             for (int i = 0; i < 3; i++) {
-                if (i == 0 && SaveFile.GetInt(EntranceRando) == 1)
-                {
+                if (i == 0 && SaveFile.GetInt(EntranceRando) == 1) {
                     GenerateHeirHint();
                     Hints.Add((HeirHint, "", "", ""));
                 }
@@ -642,18 +641,14 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void GenerateHeirHint()
-        {
+        public static void GenerateHeirHint() {
             string heirPortal = "error finding heir";
-            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
-            {
-                if (portalCombo.Portal1.Scene == "Spirit Arena")
-                {
+            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                if (portalCombo.Portal1.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal2.Name;
                     break;
                 }
-                if (portalCombo.Portal2.Scene == "Spirit Arena")
-                {
+                if (portalCombo.Portal2.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal1.Name;
                     break;
                 }
