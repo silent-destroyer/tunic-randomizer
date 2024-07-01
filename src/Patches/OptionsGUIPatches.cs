@@ -98,7 +98,8 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
             OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
             OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
-            OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints); 
+            OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints);
+            OptionsGUI.addToggle("Seeking Spell Uses Logic", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
             OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
             OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
             OptionsGUI.setHeading("Hints");
@@ -115,7 +116,6 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Disable Chest Interruption", "Off", "On", TunicRandomizer.Settings.DisableChestInterruption ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestInterruption);
             OptionsGUI.addToggle("Skip Item Popups", "Off", "On", TunicRandomizer.Settings.SkipItemAnimations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSkipItemAnimations);
             OptionsGUI.addToggle("Skip Upgrade Animations", "Off", "On", TunicRandomizer.Settings.FasterUpgrades ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterUpgrades);
-            OptionsGUI.addToggle("Fairy Seeking with Logic", "Off", "On", TunicRandomizer.Settings.FairyLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
         }
 
         public static void EnemyRandomizerSettings() {
@@ -509,7 +509,7 @@ namespace TunicRandomizer {
         }
 
         public static void ToggleFairyLogic(int index) {
-            TunicRandomizer.Settings.FairyLogic = !TunicRandomizer.Settings.FairyLogic;
+            TunicRandomizer.Settings.SeekingSpellLogic = !TunicRandomizer.Settings.SeekingSpellLogic;
             SaveSettings();
         }
 

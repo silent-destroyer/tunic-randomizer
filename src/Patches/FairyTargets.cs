@@ -166,7 +166,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            if (TunicRandomizer.Settings.FairyLogic) {
+            if (TunicRandomizer.Settings.SeekingSpellLogic) {
                 FairyTarget.registered = ItemTargetsInLogic;
             } else {
                 FairyTarget.registered = ItemTargets;
@@ -253,13 +253,13 @@ namespace TunicRandomizer {
         }
 
         public void DoSpell() {
-            if (TunicRandomizer.Settings.FairyLogic) {
+            if (TunicRandomizer.Settings.SeekingSpellLogic) {
                 FairyTarget.registered = FairyTargets.EntranceTargetsInLogic;
             } else {
                 FairyTarget.registered = FairyTargets.EntranceTargets;
             }
             PlayerCharacter.instance.GetComponent<FairySpell>().SpellEffect();
-            if (TunicRandomizer.Settings.FairyLogic) {
+            if (TunicRandomizer.Settings.SeekingSpellLogic) {
                 FairyTarget.registered = FairyTargets.ItemTargetsInLogic;
             } else {
                 FairyTarget.registered = FairyTargets.ItemTargets;

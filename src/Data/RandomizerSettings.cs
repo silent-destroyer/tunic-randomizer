@@ -131,6 +131,7 @@ namespace TunicRandomizer {
         private const int CHESTS_MATCH = 8;
         private const int USE_TRUNIC = 16;
         private const int SPOILER_LOG = 32;
+        private const int SEEKING_SPELL_LOGIC = 64;
         public bool HeroPathHintsEnabled {
             get;
             set;
@@ -157,6 +158,11 @@ namespace TunicRandomizer {
         }
 
         public bool CreateSpoilerLog {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellLogic {
             get;
             set;
         }
@@ -207,11 +213,6 @@ namespace TunicRandomizer {
         }
 
         public bool FasterUpgrades {
-            get;
-            set;
-        }
-
-        public bool FairyLogic {
             get;
             set;
         }
@@ -426,6 +427,7 @@ namespace TunicRandomizer {
             ChestsMatchContentsEnabled = true;
             UseTrunicTranslations = false;
             CreateSpoilerLog = true;
+            SeekingSpellLogic = false;
 
             // General
             HeirAssistModeEnabled = false;
@@ -435,7 +437,6 @@ namespace TunicRandomizer {
             BonusStatUpgradesEnabled = true;
             DisableChestInterruption = false;
             FasterUpgrades = false;
-            FairyLogic = false;
 
             // Other
             CameraFlip = false;
@@ -555,6 +556,7 @@ namespace TunicRandomizer {
                 ChestsMatchContentsEnabled = eval(hints, CHESTS_MATCH);
                 UseTrunicTranslations = eval(hints, USE_TRUNIC);
                 CreateSpoilerLog = eval(hints, SPOILER_LOG);
+                SeekingSpellLogic = eval(hints, SEEKING_SPELL_LOGIC);
 
                 int enemies = int.Parse(decodedSplit[7]);
                 EnemyRandomizerEnabled = eval(enemies, ENEMY_RANDOMIZER);
@@ -633,7 +635,7 @@ namespace TunicRandomizer {
 
         public bool[] hintSettings() {
             return new bool[] { HeroPathHintsEnabled, GhostFoxHintsEnabled, ShowItemsEnabled, ChestsMatchContentsEnabled, 
-                UseTrunicTranslations, CreateSpoilerLog, };
+                UseTrunicTranslations, CreateSpoilerLog, SeekingSpellLogic };
         }
 
         public bool[] enemySettings() {
