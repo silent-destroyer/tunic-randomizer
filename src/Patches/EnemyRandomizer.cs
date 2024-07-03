@@ -1288,7 +1288,7 @@ namespace TunicRandomizer {
         }
 
         public static bool Monster_OnTouchKillbox_PrefixPatch(Monster __instance) {
-            if (__instance.TryCast<Foxgod>() != null) {
+            if (__instance.GetComponent<BossEnemy>() != null) {
                 GameObject.Destroy(__instance.gameObject);
                 if (PlayerCharacter.Instanced) {
                     PlayerCharacter.instance.cutsceneHidden = false;
