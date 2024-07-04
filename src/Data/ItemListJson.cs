@@ -5524,7 +5524,8 @@
                     ""Position"": ""(-1.9, 1.2, -2.0)"",
                     ""Requirements"": [
                         {
-                            ""Shop"": 1
+                            ""Shop"": 1,
+                            ""Sword"": 1
                         }
                     ]
                 }
@@ -5542,7 +5543,8 @@
                     ""Position"": ""(0.4, 1.2, -2.0)"",
                     ""Requirements"": [
                         {
-                            ""Shop"": 1
+                            ""Shop"": 1,
+                            ""Sword"": 1
                         }
                     ]
                 }
@@ -5560,7 +5562,8 @@
                     ""Position"": ""(0.0, 2.0, -21.5)"",
                     ""Requirements"": [
                         {
-                            ""Shop"": 1
+                            ""Shop"": 1,
+                            ""Sword"": 1
                         }
                     ]
                 }
@@ -5578,7 +5581,8 @@
                     ""Position"": ""(0.0, 2.0, -21.5)"",
                     ""Requirements"": [
                         {
-                            ""Shop"": 1
+                            ""Shop"": 1,
+                            ""Sword"": 1
                         }
                     ]
                 }
