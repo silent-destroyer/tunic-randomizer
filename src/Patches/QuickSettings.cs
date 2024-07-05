@@ -27,7 +27,6 @@ namespace TunicRandomizer {
             if (SceneManager.GetActiveScene().name == "TitleScreen" && GameObject.FindObjectOfType<TitleScreen>() != null) {
                 if (Screen.width == 3840 && Screen.height == 2160) {
                     guiScale = 1.25f;
-
                 } else if (Screen.width == 1280 && Screen.height <= 800) {
                     guiScale = 0.75f;
                 } else {
@@ -37,7 +36,7 @@ namespace TunicRandomizer {
                 Cursor.visible = true;
                 switch (TunicRandomizer.Settings.Mode) {
                     case RandomizerSettings.RandomizerType.SINGLEPLAYER:
-                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, TunicRandomizer.Settings.MysterySeed ? 430f : 550f * guiScale), new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
+                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, TunicRandomizer.Settings.MysterySeed ? 470f * guiScale : 550f * guiScale), new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
                         ShowAPSettingsWindow = false;
                         editingPlayer = false;
                         editingHostname = false;
@@ -294,13 +293,12 @@ namespace TunicRandomizer {
             y += 45f * guiScale; 
             if (TunicRandomizer.Settings.MysterySeed) {
                 GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), "Mystery Seed Enabled!");
-                bool DisableMysterySeed = GUI.Button(new Rect(260f * guiScale, y+2.5f * guiScale, 160f * guiScale, 30f * guiScale), "Disable");
-                if (DisableMysterySeed) {
-                    TunicRandomizer.Settings.MysterySeed = false;
-                }
                 GUI.skin.label.fontSize = (int)(20 * guiScale);
                 y += 40f * guiScale;
                 GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), "Settings will be chosen randomly on New Game.");
+                y += 40f * guiScale;
+                TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
+                TunicRandomizer.Settings.MysterySeed = GUI.Toggle(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
                 y += 40f * guiScale;
             } else {
                 bool ToggleHexagonQuest = GUI.Toggle(new Rect(10f * guiScale, y, 185f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST, $"Hexagon Quest {(TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST ? $"(<color=#E3D457>{TunicRandomizer.Settings.HexagonQuestGoal}</color>)" : "")}");

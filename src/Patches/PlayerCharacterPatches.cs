@@ -608,7 +608,7 @@ namespace TunicRandomizer {
             if (random.Next(2) == 1) {
                 SaveFile.SetInt("randomizer keys behind bosses", 1);
             }
-            if (random.Next(2) == 1) {
+            if (TunicRandomizer.Settings.StartWithSwordEnabled) {
                 Inventory.GetItemByName("Sword").Quantity = 1;
                 SaveFile.SetInt("randomizer started with sword", 1);
             }
