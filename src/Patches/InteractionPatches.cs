@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;
+using FMOD;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
-        
+
         public static bool InteractionTrigger_Interact_PrefixPatch(Item item, InteractionTrigger __instance) {
             string InteractionLocation = SceneLoaderPatches.SceneName + " " + __instance.transform.position;
 
@@ -18,7 +20,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (GhostHints.HintGhosts.ContainsKey(__instance.name)) { 
+                if (GhostHints.HintGhosts.ContainsKey(__instance.name)) {
                     GhostHints.HintGhost hintGhost = GhostHints.HintGhosts[__instance.name];
                     __instance.GetComponent<NPC>().script.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.TrunicDialogue : hintGhost.Dialogue)}---{hintGhost.Hint}";
                     if (hintGhost.CheckId != "") {
@@ -28,7 +30,7 @@ namespace TunicRandomizer {
                         if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
                             if (IsSinglePlayer()) {
                                 __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
-                            } else if(IsArchipelago()) {
+                            } else if (IsArchipelago()) {
                                 if (hintGhost.CheckId == "Your Pocket" || ItemLookup.ItemList[hintGhost.CheckId].Player == Archipelago.instance.GetPlayerSlot()) {
                                     __instance.GetComponent<NPC>().script.text = __instance.GetComponent<NPC>().script.text.Replace("[realsword]", hintGhost.CheckId == "Your Pocket" || Locations.CheckedLocations[hintGhost.CheckId] ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel)) : TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1));
                                 }
@@ -93,7 +95,7 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(-38.0, 29.0, -55.0)") {
                 PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key (House)"].GetComponent<MeshRenderer>().materials;
             }
-            if ((SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(21.0, 20.0, -122.0)") || 
+            if ((SceneLoaderPatches.SceneName == "Overworld Redux" && __instance.transform.position.ToString() == "(21.0, 20.0, -122.0)") ||
                 (SceneLoaderPatches.SceneName == "Atoll Redux") && __instance.transform.position.ToString() == "(64.0, 4.0, 0.0)") {
                 PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(10).GetChild(0).gameObject.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Key"].GetComponent<MeshRenderer>().materials;
             }
@@ -205,7 +207,7 @@ namespace TunicRandomizer {
         }
 
         public static bool Campfire_isUseableAccordingToConduitSystem_GetterPatch(Campfire __instance, ref bool __result) {
-            
+
             if (TunicRandomizer.Settings.EnableAllCheckpoints) {
                 __result = true;
 

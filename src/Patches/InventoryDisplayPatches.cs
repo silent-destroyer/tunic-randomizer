@@ -397,6 +397,8 @@ namespace TunicRandomizer {
                     }
                     QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
                     Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= 302) ? PaletteEditor.Gold : Color.white;
+
+                    GoldHexagons.GetComponent<TextMeshProUGUI>().text += $"\nGrass: {Inventory.GetItemByName("Grass").Quantity}\nGrass in Area: {SceneLoaderPatches.GrassInArea}";
                 }
             } catch (Exception e) {
 

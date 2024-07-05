@@ -222,6 +222,29 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupGrassPresentation() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "VaultKey").First().gameObject;
+
+                GameObject GrassPresentation = GameObject.Instantiate(PresentationBase);
+                GrassPresentation.transform.parent = PresentationBase.transform.parent;
+                GrassPresentation.transform.localScale = Vector3.one/2;
+                GrassPresentation.transform.localPosition = new Vector3(0f, -0.4f, 0.1f);
+                GrassPresentation.transform.localEulerAngles = new Vector3(345f, 45f, 345f);
+                GrassPresentation.name = "grass";
+                GrassPresentation.GetComponent<MeshFilter>().mesh = Resources.FindObjectsOfTypeAll<Mesh>().Where(mesh => mesh.name == "bush cube").First();
+                GrassPresentation.GetComponent<MeshRenderer>().materials = new Material[] { ModelSwaps.FindMaterial("bush") };
+                GrassPresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Grass") };
+                GrassPresentation.SetActive(false);
+                ModelSwaps.Items["Grass"] = GrassPresentation;
+
+                RegisterNewItemPresentation(GrassPresentation.GetComponent<ItemPresentationGraphic>());
+            } catch (Exception e) {
+                TunicLogger.LogError("Grass presentation error: " + e.Message);
+
+            }
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);

@@ -450,6 +450,14 @@ namespace TunicRandomizer {
 
             ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "";
+
+            Item.Type = ItemTypes.GRASS;
+
+            if (Item.Type == ItemTypes.GRASS) {
+                ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
+                Inventory.GetItemByName("Grass").Quantity += 1;
+            }
+
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Check.Reward.Amount;
 

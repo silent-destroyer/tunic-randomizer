@@ -56,6 +56,13 @@ namespace TunicRandomizer {
             StateVariable.stateVariableList.Add(GrantedCape);
             Cape.freeItemCountStateVar = GrantedCape;
 
+
+            SpecialItem Grass = ScriptableObject.CreateInstance<SpecialItem>();
+            Grass.name = "Grass";
+            Grass.collectionMessage = new LanguageLine();
+            Grass.collectionMessage.text = $"grahs!";
+            Grass.controlAction = "";
+
             StateVariable GraveHintStateVar = ScriptableObject.CreateInstance<StateVariable>();
             GraveHintStateVar.name = "randomizer got all 6 grave items";
             StateVariable.stateVariableList.Add(GraveHintStateVar);
@@ -67,6 +74,7 @@ namespace TunicRandomizer {
             Inventory.itemList.Add(GoldQuestagon);
             Inventory.itemList.Add(DathStone);
             Inventory.itemList.Add(Cape);
+            Inventory.itemList.Add(Grass);
             Item Torch = Inventory.GetItemByName("Torch");
             for (int i = 0; i < Inventory.itemList.Count; i++) {
                 if (Inventory.itemList[i].name == "Sword") {

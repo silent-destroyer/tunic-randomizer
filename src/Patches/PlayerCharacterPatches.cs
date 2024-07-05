@@ -90,6 +90,9 @@ namespace TunicRandomizer {
             }
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
+                SceneLoaderPatches.GrassInArea = Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == SceneManager.GetActiveScene().name && !grass.permanentlyDead).ToList().Count;
+
+                GrassInfo.SaveGrassList();
             }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {

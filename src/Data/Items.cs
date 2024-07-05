@@ -18,6 +18,7 @@ namespace TunicRandomizer {
         FOOLTRAP,
         HEXAGONQUEST,
         LADDER,
+        GRASS
     }
 
     public struct BonusUpgrade {
@@ -278,6 +279,9 @@ namespace TunicRandomizer {
             { "Ladder to Beneath the Vault", new ItemData("Ladder to Beneath the Vault", "progression", "Ladder to Beneath the Vault", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders in Lower Quarry", new ItemData("Ladders in Lower Quarry", "progression", "Ladders in Lower Quarry", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders in Library", new ItemData("Ladders in Library", "progression", "Ladders in Library", ItemTypes.LADDER, 1) }, // DONE
+
+            // Grass
+            { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {

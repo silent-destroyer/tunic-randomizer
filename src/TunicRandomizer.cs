@@ -256,6 +256,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(MusicManager), "SetParam"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "MusicManager_PlayCuedTrack_PostfixPatch")));
             
+            Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "PermanentStateByPosition_onKilled_PrefixPatch")));
+
         }
     }
 }

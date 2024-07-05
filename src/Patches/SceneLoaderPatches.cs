@@ -14,6 +14,7 @@ namespace TunicRandomizer {
         public static float TimeOfLastSceneTransition = 0.0f;
         public static bool SpawnedGhosts = false;
         public static bool InitialLoadDone = false;
+        public static int GrassInArea = 0;
 
         public static GameObject SpiritArenaTeleporterPrefab;
         public static GameObject GlyphTowerTeleporterPrefab;
@@ -223,6 +224,9 @@ namespace TunicRandomizer {
                 return;
             }
             if (ModelSwaps.Chests.Count == 0 && loadingScene.name == "TitleScreen") {
+                foreach(string region in TunicPortals.RegionDict.Keys) {
+                    GrassInfo.GrassInRegion[region] = new List<string>();
+                }
 
                 CustomItemBehaviors.CreateCustomItems();
                 GameObject ArchipelagoObject = new GameObject("archipelago");
@@ -460,6 +464,8 @@ namespace TunicRandomizer {
             }
 
             EnemyRandomizer.CheckBossState();
+
+            GrassInArea = Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name && !grass.permanentlyDead).ToList().Count;
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 if (IsArchipelago()) {
