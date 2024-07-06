@@ -52,7 +52,7 @@ namespace TunicRandomizer {
                     GUI.Window(103, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 350f * guiScale, 490f * guiScale), new Action<int>(ArchipelagoConfigEditorWindow), "Archipelago Config");
                 }
                 if (ShowAdvancedSinglePlayerOptions && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER && !TunicRandomizer.Settings.MysterySeed) {
-                    GUI.Window(105, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 405f * guiScale, 485f * guiScale), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
+                    GUI.Window(105, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 405f * guiScale, 565f * guiScale), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
                 }
                 GameObject.Find("elderfox_sword graphic").GetComponent<Renderer>().enabled = !ShowAdvancedSinglePlayerOptions && !ShowAPSettingsWindow;
                 if (TitleVersion.TitleButtons != null) {
@@ -407,6 +407,10 @@ namespace TunicRandomizer {
             if (TenFairiesLaurels) {
                 TunicRandomizer.Settings.FixedLaurelsOption = RandomizerSettings.FixedLaurelsType.TENFAIRIES;
             }
+            y += 40f * guiScale;
+            GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
+            y += 40f * guiScale;
+            TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
             y += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Difficulty Options");
             y += 40f * guiScale;

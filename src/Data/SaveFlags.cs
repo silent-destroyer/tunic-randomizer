@@ -35,6 +35,7 @@
         public const string LanternlessLogic = "randomizer lanternless logic enabled";
         public const string LadderRandoEnabled = "randomizer ladder rando enabled";
         public const string LaurelsLocation = "randomizer laurels location";
+        public const string GrassRandoEnabled = "randomizer grass rando enabled";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";

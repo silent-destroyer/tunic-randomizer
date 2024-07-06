@@ -33,6 +33,7 @@ namespace TunicRandomizer {
         private const int MASKLESS = 256;
         private const int MYSTERY_SEED = 512;
         private const int SHUFFLE_LADDERS = 1024;
+        private const int GRASS_RANDOMIZER = 2048;
 
         public GameModes GameMode {
             get;
@@ -104,6 +105,11 @@ namespace TunicRandomizer {
         }
 
         public bool ShuffleLadders {
+            get;
+            set;
+        }
+
+        public bool GrassRandomizer {
             get;
             set;
         }
@@ -413,6 +419,7 @@ namespace TunicRandomizer {
             Maskless = false;
             MysterySeed = false;
             ShuffleLadders = false;
+            GrassRandomizer = false;
 
             // Archipelago 
             DeathLinkEnabled = false;
@@ -531,6 +538,7 @@ namespace TunicRandomizer {
                 Maskless = eval(logic, MASKLESS);
                 MysterySeed = eval(logic, MYSTERY_SEED);
                 ShuffleLadders = eval(logic, SHUFFLE_LADDERS);
+                GrassRandomizer = eval(logic, GRASS_RANDOMIZER);
 
                 int general = int.Parse(decodedSplit[5]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -599,7 +607,8 @@ namespace TunicRandomizer {
                     GameMode == GameModes.HEXAGONQUEST,
                     KeysBehindBosses, StartWithSwordEnabled, SwordProgressionEnabled,
                     ShuffleAbilities, EntranceRandoEnabled, ERFixedShop,
-                    Lanternless, Maskless, MysterySeed, ShuffleLadders
+                    Lanternless, Maskless, MysterySeed, ShuffleLadders,
+                    GrassRandomizer
                 };
             } else {
                 return new bool[] { 
@@ -608,7 +617,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1, SaveFile.GetInt(SaveFlags.EntranceRando) == 1,
                     SaveFile.GetInt("randomizer ER fixed shop") == 1, SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1,
                     SaveFile.GetInt(SaveFlags.MasklessLogic) == 1, SaveFile.GetInt("randomizer mystery seed") == 1, 
-                    SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1
+                    SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1
                 };
             }
         }

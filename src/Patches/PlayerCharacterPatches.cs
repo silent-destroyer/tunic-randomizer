@@ -421,6 +421,9 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ShuffleLadders) {
                         SaveFile.SetInt(LadderRandoEnabled, 1);
                     }
+                    if (TunicRandomizer.Settings.GrassRandomizer) {
+                        SaveFile.SetInt(GrassRandoEnabled, 1);
+                    }
                 }
 
                 foreach (string Scene in Locations.AllScenes) {
@@ -640,6 +643,9 @@ namespace TunicRandomizer {
             if (random.Next(2) == 1) {
                 SaveFile.SetInt(LadderRandoEnabled, 1);
             }
+            if (random.Next(5) == 1) {
+                SaveFile.SetInt(GrassRandoEnabled, 1);
+            } 
         }
 
         public static void PlayerCharacter_Die_MoveNext_PostfixPatch(PlayerCharacter._Die_d__481 __instance, ref bool __result) {
