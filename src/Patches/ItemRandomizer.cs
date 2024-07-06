@@ -74,6 +74,7 @@ namespace TunicRandomizer {
             }
 
             List<Check> InitialItems = JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList);
+            InitialItems.AddRange(GrassRandomizer.GrassChecks.Values);
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
             List<Check> Hexagons = new List<Check>();

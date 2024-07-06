@@ -171,6 +171,7 @@ namespace TunicRandomizer {
             {"archipelagos_house", "West Garden (Ice Dagger Cave)"},
             {"Atoll Redux", "Ruined Atoll"},
             {"frog cave main", "Frog's Domain"},
+            {"Frog Stairs", "Frog Stairway"},
             {"Library Hall", "Library (Hall)"},
             {"Library Lab", "Library (Lab)"},
             {"Library Arena", "Library (Librarian)"},

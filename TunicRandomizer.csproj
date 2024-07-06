@@ -175,6 +175,7 @@
     <Compile Include="src\Archipelago\DeathLinkMessages.cs" />
     <Compile Include="src\Data\Check.cs" />
     <Compile Include="src\Data\ConnectionSettings.cs" />
+    <Compile Include="src\Data\GrassInfo.cs" />
     <Compile Include="src\Data\Hints.cs" />
     <Compile Include="src\Data\ImageData.cs" />
     <Compile Include="src\Data\ItemListJson.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
+    <Compile Include="src\Patches\GrassRandomizer.cs" />
     <Compile Include="src\Patches\HexagonQuestCutscene.cs" />
     <Compile Include="src\Patches\InteractionPatches.cs" />
     <Compile Include="src\Patches\ItemPresentationPatches.cs" />
@@ -230,9 +232,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="src\Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="src\Data\Grass.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

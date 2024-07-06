@@ -451,8 +451,6 @@ namespace TunicRandomizer {
             ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "";
 
-            Item.Type = ItemTypes.GRASS;
-
             if (Item.Type == ItemTypes.GRASS) {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
                 Inventory.GetItemByName("Grass").Quantity += 1;
@@ -667,7 +665,7 @@ namespace TunicRandomizer {
             FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
 
             if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
-                ItemTracker.PopulateSpoilerLog();
+                //ItemTracker.PopulateSpoilerLog();
             }
         }
 

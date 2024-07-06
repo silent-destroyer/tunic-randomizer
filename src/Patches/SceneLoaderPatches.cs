@@ -227,7 +227,6 @@ namespace TunicRandomizer {
                 foreach(string region in TunicPortals.RegionDict.Keys) {
                     GrassInfo.GrassInRegion[region] = new List<string>();
                 }
-
                 CustomItemBehaviors.CreateCustomItems();
                 GameObject ArchipelagoObject = new GameObject("archipelago");
                 Archipelago.instance = ArchipelagoObject.AddComponent<Archipelago>();
@@ -235,6 +234,7 @@ namespace TunicRandomizer {
                 if (Locations.VanillaLocations.Count == 0) {
                     Locations.CreateLocationLookups();
                 }
+                GrassRandomizer.LoadGrassJson();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
                 SceneLoader.LoadScene("Overworld Redux");
                 return;
@@ -556,6 +556,7 @@ namespace TunicRandomizer {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             }
             ItemTracker.SaveTrackerFile();
+            //GrassInfo.SaveGrassList();
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {

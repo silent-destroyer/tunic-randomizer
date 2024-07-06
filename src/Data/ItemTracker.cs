@@ -209,11 +209,16 @@ namespace TunicRandomizer {
                 }
             }
             if (IsSinglePlayer()) {
+                TunicLogger.LogInfo(Locations.RandomizedLocations.Count.ToString());
                 foreach(string Key in Locations.RandomizedLocations.Keys) {
+                    TunicLogger.LogInfo(Key);
                     Check Check = Locations.RandomizedLocations[Key];
+                    TunicLogger.LogInfo("after check " + Check.CheckId);
                     ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
+                    TunicLogger.LogInfo("after item " + Item.Name);
                     string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.Name}";
-                    SpoilerLog[Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
+                    TunicLogger.LogInfo(Spoiler);
+                    SpoilerLog[Check.Location.SceneName].Add(Spoiler);
                 }
             }
             List<string> SpoilerLogLines = new List<string>() {
