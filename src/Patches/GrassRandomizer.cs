@@ -22,7 +22,7 @@ namespace TunicRandomizer {
                     foreach(string grass in pair.Value) {
                         Check check = new Check(new Reward(), new Location());
                         check.Reward.Name = "Grass";
-                        check.Reward.Type = "GRASS";
+                        check.Reward.Type = "Grass";
                         check.Reward.Amount = 1;
                         
                         check.Location.SceneName = TunicPortals.RegionDict.ContainsKey(pair.Key) ? TunicPortals.RegionDict[pair.Key].Scene : "Atoll Redux";

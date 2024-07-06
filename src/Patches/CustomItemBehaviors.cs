@@ -57,7 +57,7 @@ namespace TunicRandomizer {
             Cape.freeItemCountStateVar = GrantedCape;
 
 
-            SpecialItem Grass = ScriptableObject.CreateInstance<SpecialItem>();
+            Item Grass = ScriptableObject.CreateInstance<Item>();
             Grass.name = "Grass";
             Grass.collectionMessage = new LanguageLine();
             Grass.collectionMessage.text = $"grahs!";

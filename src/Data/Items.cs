@@ -513,6 +513,7 @@ namespace TunicRandomizer {
             { "Ladder to Beneath the Vault", "Ladder to Beneath the Vault" },
             { "Ladders in Lower Quarry", "Ladders in Lower Quarry" },
             { "Ladders in Library", "Ladders in Library" },
+            { "Grass", "Grass" }
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {
