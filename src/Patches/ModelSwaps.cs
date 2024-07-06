@@ -401,6 +401,11 @@ namespace TunicRandomizer {
                     foreach (Chest Chest in Resources.FindObjectsOfTypeAll<Chest>()) {
                         ApplyChestTexture(Chest);
                     }
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                        foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => Locations.RandomizedLocations.ContainsKey($"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]"))) {
+                            ApplyGrassTexture(grass);
+                        }
+                    }
                 }
 
                 if (SceneLoaderPatches.SceneName == "Fortress Arena") {
@@ -479,6 +484,29 @@ namespace TunicRandomizer {
             
             if(APItem.Flags.HasFlag(ItemFlags.Trap)) {
                 ChestTop.transform.localEulerAngles = new Vector3(57f, 180f, 180f);
+            }
+        }
+
+        public static void ApplyGrassTexture(Grass grass) {
+            string GrassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+            if(Locations.RandomizedLocations.ContainsKey(GrassId)) {
+                Check check = Locations.RandomizedLocations[GrassId];
+                ItemData Item = ItemLookup.GetItemDataFromCheck(check);
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+                if (material != null) {
+                    foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                        r.material = material;
+                    }
+                }
             }
         }
 
