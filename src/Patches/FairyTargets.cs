@@ -22,13 +22,13 @@ namespace TunicRandomizer {
             if (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) {
 
                 bool hasChecksInLogicInScene = false;
-                List<string> ItemIdsInScene = Locations.VanillaLocations.Keys.Where(ItemId => Locations.VanillaLocations[ItemId].Location.SceneName == SceneManager.GetActiveScene().name
+                List<string> ItemIdsInScene = Locations.RandomizedLocations.Keys.Where(ItemId => Locations.RandomizedLocations[ItemId].Location.SceneName == SceneManager.GetActiveScene().name
                 && SaveFile.GetInt($"randomizer picked up {ItemId}") == 0 &&
                 ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {ItemId} was collected") == 0 : true)).ToList();
 
                 if (ItemIdsInScene.Count > 0) {
                     foreach (string ItemId in ItemIdsInScene) {
-                        Location Location = Locations.VanillaLocations[ItemId].Location;
+                        Location Location = Locations.RandomizedLocations[ItemId].Location;
 
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
@@ -71,9 +71,9 @@ namespace TunicRandomizer {
                 FairyTarget.enabled = false;
             }
 
-            foreach (string ItemId in Locations.VanillaLocations.Keys.Where(itemId => Locations.VanillaLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
+            foreach (string ItemId in Locations.RandomizedLocations.Keys.Where(itemId => Locations.RandomizedLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
             ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true)))) {
-                ScenesWithItems.Add(Locations.VanillaLocations[ItemId].Location.SceneName);
+                ScenesWithItems.Add(Locations.RandomizedLocations[ItemId].Location.SceneName);
             }
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {

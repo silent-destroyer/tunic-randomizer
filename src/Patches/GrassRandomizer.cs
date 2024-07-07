@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Il2CppSystem.Uri;
 
 namespace TunicRandomizer {
     public class GrassRandomizer {
@@ -153,6 +154,10 @@ namespace TunicRandomizer {
                         grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
                         
                         ItemPatches.GiveItem(check);
+                    }
+                    GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
+                    if (FairyTarget != null) {
+                        GameObject.Destroy(FairyTarget);
                     }
                 }
             }
