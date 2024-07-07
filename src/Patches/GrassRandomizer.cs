@@ -9,6 +9,7 @@ namespace TunicRandomizer {
     public class GrassRandomizer {
 
         public static Dictionary<string, Check> GrassChecks = new Dictionary<string, Check>();
+        public static Dictionary<string, int> GrassChecksPerScene = new Dictionary<string, int>();
 
         public static void LoadGrassJson() {
             var assembly = Assembly.GetExecutingAssembly();
@@ -105,7 +106,11 @@ namespace TunicRandomizer {
                         check.Location.Position = grass.Split('~')[1];
                         GrassChecks.Add(check.CheckId, check);
                         Locations.LocationIdToDescription.Add(check.CheckId, check.CheckId);
-                        Locations.LocationDescriptionToId.Add(check.CheckId, check.CheckId); 
+                        Locations.LocationDescriptionToId.Add(check.CheckId, check.CheckId);
+                        if (!GrassChecksPerScene.ContainsKey(check.Location.SceneName)) {
+                            GrassChecksPerScene.Add(check.Location.SceneName, 0);
+                        }
+                        GrassChecksPerScene[check.Location.SceneName]++;
                     }
                 }
             }
@@ -132,6 +137,19 @@ namespace TunicRandomizer {
                         Inventory.GetItemByName("Grass").Quantity += 1;
                         Locations.CheckedLocations[grassId] = true;
                     } else {
+                        GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, Check: check);
+                        grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                        if (item.Type == ItemTypes.TRINKET) {
+                            grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
+                        }
+                        grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : grassSpawn.transform.localPosition;
+                        grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                        grassSpawn.layer = 0;
+                        grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : grassSpawn.transform.localScale;
+                        grassSpawn.SetActive(true);
+                        grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
+                        grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
+                        
                         ItemPatches.GiveItem(check);
                     }
                 }

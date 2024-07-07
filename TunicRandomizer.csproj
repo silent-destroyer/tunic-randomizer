@@ -232,7 +232,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="src\Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
