@@ -14,7 +14,6 @@ namespace TunicRandomizer {
         public static float TimeOfLastSceneTransition = 0.0f;
         public static bool SpawnedGhosts = false;
         public static bool InitialLoadDone = false;
-        public static int GrassInArea = 0;
 
         public static GameObject SpiritArenaTeleporterPrefab;
         public static GameObject GlyphTowerTeleporterPrefab;
@@ -461,11 +460,21 @@ namespace TunicRandomizer {
                 if (Bush != null) {
                     Bush.SetActive(false);
                 }
+            } else if (SceneName == "Fortress Courtyard") {
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    GameObject sign = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+                    sign.GetComponent<MeshFilter>().mesh = ModelSwaps.Signpost.GetComponent<MeshFilter>().mesh;
+                    sign.GetComponent<MeshRenderer>().materials = ModelSwaps.Signpost.GetComponent<MeshRenderer>().materials;
+                    sign.transform.position = new Vector3(72.7274f, 8.0417f, -7.0365f);
+                    sign.transform.localEulerAngles = new Vector3(0, 270, 0);
+                    sign.transform.localScale = Vector3.one * 1.25f;
+                    sign.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+                    sign.GetComponent<Signpost>().message.text = $"[grass]  [arrow_right]\n\n[wand]  rehkuhmehndid.";
+                    sign.SetActive(true);
+                }
             }
 
             EnemyRandomizer.CheckBossState();
-
-            GrassInArea = Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name && !grass.permanentlyDead).ToList().Count;
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 if (IsArchipelago()) {
