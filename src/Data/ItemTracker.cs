@@ -69,6 +69,7 @@ namespace TunicRandomizer {
             {"Hexagon Green", 0},
             {"Hexagon Blue", 0},
             {"Hexagon Gold", 0},
+            {"Grass", 0}
         };
 
         public List<ItemData> ItemsCollected = new List<ItemData>();

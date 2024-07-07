@@ -391,9 +391,9 @@ namespace TunicRandomizer {
                     Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? PaletteEditor.Gold : Color.white;
                     CoinsTossed.GetComponent<TextMeshProUGUI>().text = $"Coins Tossed: {TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]}/15";
                     CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
-                    ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:\t{ObtainedItemCountInCurrentScene}/{TotalItemCountInCurrentScene}";
+                    ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:{(TotalItemCountInCurrentScene >= 1000 ? " " : "\t")}{ObtainedItemCountInCurrentScene}/{TotalItemCountInCurrentScene}";
                     ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
-                    Total.GetComponent<TextMeshProUGUI>().text = $"Total:\t\t  {ObtainedItemCount}/{Locations.RandomizedLocations.Count}";
+                    Total.GetComponent<TextMeshProUGUI>().text = $"Total:{(Locations.RandomizedLocations.Count >= 1000 ? "\t" : "\t\t")}  {ObtainedItemCount}/{Locations.RandomizedLocations.Count}";
                     if (GoldHexagons != null) {
                         GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
                         GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;

@@ -136,16 +136,18 @@ namespace TunicRandomizer {
                     if (item.Name == "Grass") {
                         Inventory.GetItemByName("Grass").Quantity += 1;
                         Locations.CheckedLocations[grassId] = true;
+                        SaveFile.SetInt("randomizer picked up " + check.CheckId, 1);
+                        TunicRandomizer.Tracker.SetCollectedItem("Grass", false);
                     } else {
                         GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, Check: check);
                         grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
                         if (item.Type == ItemTypes.TRINKET) {
                             grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
                         }
-                        grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : grassSpawn.transform.localPosition;
+                        grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
                         grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
                         grassSpawn.layer = 0;
-                        grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : grassSpawn.transform.localScale;
+                        grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
                         grassSpawn.SetActive(true);
                         grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
                         grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
