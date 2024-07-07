@@ -378,8 +378,11 @@ namespace TunicRandomizer {
             try {
                 if (Locations.VanillaLocations.Count > 0) {
                     int ObtainedItemCount = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? Archipelago.instance.integration.session.Locations.AllLocationsChecked.Count : Locations.CheckedLocations.Where(loc => loc.Value).Count();
-                    int ObtainedItemCountInCurrentScene = Locations.VanillaLocations.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
+                    int ObtainedItemCountInCurrentScene = Locations.RandomizedLocations.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
                     int TotalItemCountInCurrentScene = Locations.CheckCountsPerScene[SceneLoaderPatches.SceneName];
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1 && GrassRandomizer.GrassChecksPerScene.ContainsKey(SceneLoaderPatches.SceneName)) {
+                        TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName];
+                    }
                     Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
                     Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
                     Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  {TunicRandomizer.Tracker.ImportantItems["Fairies"]}/20";
@@ -390,7 +393,7 @@ namespace TunicRandomizer {
                     CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
                     ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:\t{ObtainedItemCountInCurrentScene}/{TotalItemCountInCurrentScene}";
                     ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
-                    Total.GetComponent<TextMeshProUGUI>().text = $"Total:\t\t  {ObtainedItemCount}/302";
+                    Total.GetComponent<TextMeshProUGUI>().text = $"Total:\t\t  {ObtainedItemCount}/{Locations.RandomizedLocations.Count}";
                     if (GoldHexagons != null) {
                         GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
                         GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
