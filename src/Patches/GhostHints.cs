@@ -116,6 +116,7 @@ namespace TunicRandomizer {
             "Hero Relic - SP",
             "Hero Relic - MP",
             "Dath Stone",
+            "Lantern",
         };
 
         public static List<string> HintableItemNamesSinglePlayer = new List<string>() {
@@ -134,6 +135,7 @@ namespace TunicRandomizer {
             "Relic - Hero Pendant SP",
             "Relic - Hero Pendant MP",
             "Dath Stone",
+            "Lantern",
         };
 
         public static List<string> BarrenItemNames = new List<string>() {

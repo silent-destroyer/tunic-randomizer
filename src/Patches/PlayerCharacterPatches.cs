@@ -553,8 +553,6 @@ namespace TunicRandomizer {
                 }
                 SaveFile.SaveToDisk();
 
-                Locations.PopulateMajorItemLocations(slotData);
-
                 Locations.RandomizedLocations.Clear();
                 Locations.CheckedLocations.Clear();
                 ItemLookup.ItemList.Clear();
@@ -577,6 +575,8 @@ namespace TunicRandomizer {
 
                     Archipelago.instance.integration.UpdateDataStorageOnLoad();
                 }
+
+                Locations.PopulateMajorItemLocations(slotData);
 
             }
         }
