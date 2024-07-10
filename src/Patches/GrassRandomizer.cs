@@ -152,7 +152,13 @@ namespace TunicRandomizer {
                         grassSpawn.SetActive(true);
                         grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
                         grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
-                        
+                        if (item.Name == "Fool Trap") {
+                            foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
+                                if (child.name == __instance.name) { continue; }
+                                child.localEulerAngles = Vector3.zero;
+                                child.position -= new Vector3(0, 2, 0);
+                            }
+                        }
                         ItemPatches.GiveItem(check);
                     }
                     GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
@@ -161,6 +167,11 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            return true;
+        }
+
+        public static bool PauseMenu___button_ReturnToTitle_PrefixPatch(PauseMenu __instance) {
+            Profile.SavePermanentStatesByPosition(SceneManager.GetActiveScene().buildIndex, PermanentStateByPositionManager.deadPositionsInCurrentScene);
             return true;
         }
     }

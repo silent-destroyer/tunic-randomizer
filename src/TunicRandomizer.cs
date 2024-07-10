@@ -210,7 +210,7 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(InventoryDisplay), "Update"), new HarmonyMethod(AccessTools.Method(typeof(InventoryDisplayPatches), "InventoryDisplay_Update_PrefixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), null, new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "PauseMenu___button_ReturnToTitle_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "InteractionTrigger_Interact_PrefixPatch")));
 

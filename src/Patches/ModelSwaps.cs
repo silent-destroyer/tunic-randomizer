@@ -402,8 +402,11 @@ namespace TunicRandomizer {
                         ApplyChestTexture(Chest);
                     }
                     if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                        foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => Locations.RandomizedLocations.ContainsKey($"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]"))) {
-                            ApplyGrassTexture(grass);
+                        foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>()) {
+                            string grassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+                            if (Locations.RandomizedLocations.ContainsKey(grassId) && Locations.RandomizedLocations[grassId].Reward.Name != "Grass") {
+                                ApplyGrassTexture(grass);
+                            }
                         }
                     }
                 }
@@ -502,6 +505,15 @@ namespace TunicRandomizer {
                 } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
                     material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
                 }
+
+                if (check.Reward.Name == "Fool Trap") {
+                    foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
+                        if (child.name == grass.name) { continue; }
+                        child.localEulerAngles = new Vector3(180, 0, 0);
+                        child.position += new Vector3(0, 2, 0);
+                    }
+                }
+
                 if (material != null) {
                     foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
                         r.material = material;
