@@ -270,11 +270,6 @@ namespace TunicRandomizer {
                                 new List<TransformData>(){
                                     new TransformData(new Vector3(90.99981f, 3.422601f, -159.4951f), new Quaternion(0f, -1.632343E-36f, 0f, 1f), Vector3.one),
                                     new TransformData(new Vector3(91f, 12.08334f, -157.0632f), new Quaternion(0f, 0f, 0f, 1f), Vector3.one),
-                                },
-                                new List<string>() {
-                                    "_Bush and Grass/bush (41)/",
-                                    "_Bush and Grass/bush (42)/",
-                                    "_Bush and Grass/bush (43)/"
                                 }
                             ),
                         }

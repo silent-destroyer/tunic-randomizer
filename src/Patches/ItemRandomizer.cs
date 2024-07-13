@@ -76,7 +76,7 @@ namespace TunicRandomizer {
 
             List<Check> InitialItems = JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList);
             if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                InitialItems.AddRange(GrassRandomizer.GrassChecks.Values);
+                InitialItems.AddRange(GrassRandomizer.GrassChecks.Values.Where(check => !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)));
                 ProgressionNames.AddRange(GrassCutters);
             }
             List<Reward> InitialRewards = new List<Reward>();
@@ -404,6 +404,13 @@ namespace TunicRandomizer {
                     }
                     string DictionaryId = Hexagon.CheckId;
                     Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
+                }
+            }
+
+            // Add grass checks back in that shouldn't be randomized (ones that are affected by clear early bushes)
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                foreach(KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks.Where(grass => GrassRandomizer.ExcludedGrassChecks.Contains(grass.Key))) {
+                    Locations.RandomizedLocations.Add(pair.Key, pair.Value);
                 }
             }
 

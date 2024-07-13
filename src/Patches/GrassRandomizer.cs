@@ -12,7 +12,19 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> GrassChecksPerScene = new Dictionary<string, int>() {
             {"Trinket Well", 0},
         };
-
+        public static List<string> ExcludedGrassChecks = new List<string>() {
+            "bush (7)~(-39.0, 40.0, -41.0)",
+            "bush (2)~(-41.0, 40.0, -41.0)",
+            "bush (16)~(53.0, 12.0, -151.0)",
+            "bush (9)~(-19.0, 28.0, -103.0)",
+            "bush (23)~(-19.0, 28.0, -105.0)",
+            "bush (26)~(-19.0, 28.0, -107.0)",
+            "bush (47)~(91.0, 12.0, -155.0)",
+            "bush (42)~(91.0, 12.0, -157.0)",
+            "bush (58)~(58.0, 44.0, -109.0)",
+            "bush (62)~(66.5, 44.0, -111.0)",
+            "bush (64)~(56.0, 44.0, -107.0)",
+        };
         public static void LoadGrassChecks() {
             var assembly = Assembly.GetExecutingAssembly();
             var grassJson = "TunicRandomizer.src.Data.Grass.json";
