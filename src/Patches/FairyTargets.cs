@@ -22,13 +22,18 @@ namespace TunicRandomizer {
             if (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) {
 
                 bool hasChecksInLogicInScene = false;
-                List<string> ItemIdsInScene = Locations.RandomizedLocations.Keys.Where(ItemId => Locations.RandomizedLocations[ItemId].Location.SceneName == SceneManager.GetActiveScene().name
-                && SaveFile.GetInt($"randomizer picked up {ItemId}") == 0 &&
-                ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {ItemId} was collected") == 0 : true)).ToList();
+
+                List<string> ItemIdsInScene = Locations.VanillaLocations.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
+                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList();
+
+                if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                    ItemIdsInScene.AddRange(GrassRandomizer.GrassChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
+                        ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
+                }
 
                 if (ItemIdsInScene.Count > 0) {
                     foreach (string ItemId in ItemIdsInScene) {
-                        Location Location = Locations.RandomizedLocations[ItemId].Location;
+                        Location Location = GrassRandomizer.GrassChecks.ContainsKey(ItemId) ? GrassRandomizer.GrassChecks[ItemId].Location : Locations.VanillaLocations[ItemId].Location;
 
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
@@ -70,10 +75,14 @@ namespace TunicRandomizer {
             foreach (FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
                 FairyTarget.enabled = false;
             }
-
-            foreach (string ItemId in Locations.RandomizedLocations.Keys.Where(itemId => Locations.RandomizedLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
-            ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true)))) {
-                ScenesWithItems.Add(Locations.RandomizedLocations[ItemId].Location.SceneName);
+            List<string> ItemIds = Locations.VanillaLocations.Keys.Where(itemId => Locations.VanillaLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
+                ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList();
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                ItemIds.AddRange(GrassRandomizer.GrassChecks.Keys.Where(itemId => GrassRandomizer.GrassChecks[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
+                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList());
+            }
+            foreach (string ItemId in ItemIds) {
+                ScenesWithItems.Add(GrassRandomizer.GrassChecks.ContainsKey(ItemId) ? GrassRandomizer.GrassChecks[ItemId].Location.SceneName : Locations.VanillaLocations[ItemId].Location.SceneName);
             }
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
