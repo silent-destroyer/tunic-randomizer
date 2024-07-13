@@ -329,15 +329,23 @@ namespace TunicRandomizer {
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
                     TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
                     AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1 ) {
+                        TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
+                        AreaChecksFound += SaveFile.GetInt("randomizer grass cut " + SubArea);
+                    }
                 }
-                displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(26, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(7, '.')}\"\n";
+                displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(24, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(9, '.')}\"\n";
                 if (Area == "Rooted Ziggurat") {
                     displayText += "---" + title;
                 }
             }
             int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
             int TotalChecks = Locations.VanillaLocations.Count;
-            displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(26, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(7, '.')}\"";
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                TotalChecksFound += GrassRandomizer.GrassChecks.Where(grass => Locations.CheckedLocations[grass.Key]).Count();
+                TotalChecks += GrassRandomizer.GrassChecks.Count;
+            }
+            displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(24, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(9, '.')}\"";
             if (TotalChecksFound == TotalChecks) {
                 displayText += "---\"<#eaa614>- - - - - -  302/302  - - - - - -\"\n\n    ";
                 int i = 0;

@@ -30,6 +30,7 @@ namespace TunicRandomizer {
                 string SceneName = Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
                 AllScenes.Add(SceneName);
                 CheckCountsPerScene.Add(SceneName, 0);
+                GrassRandomizer.GrassChecksPerScene.Add(SceneName, 0);
             }
             foreach (Check info in JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList)) {
                 string locationId = info.CheckId;

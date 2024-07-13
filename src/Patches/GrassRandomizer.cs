@@ -9,7 +9,9 @@ namespace TunicRandomizer {
     public class GrassRandomizer {
 
         public static Dictionary<string, Check> GrassChecks = new Dictionary<string, Check>();
-        public static Dictionary<string, int> GrassChecksPerScene = new Dictionary<string, int>();
+        public static Dictionary<string, int> GrassChecksPerScene = new Dictionary<string, int>() {
+            {"Trinket Well", 0},
+        };
 
         public static void LoadGrassChecks() {
             var assembly = Assembly.GetExecutingAssembly();
@@ -84,21 +86,11 @@ namespace TunicRandomizer {
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             if (__instance.GetComponent<Grass>() != null) {
-                TunicLogger.LogInfo("Grass destroyed: " + __instance.transform.position + " " + __instance.name);
-                /*                if (!GrassInfo.GrassInRegion.ContainsKey(GrassInfo.GrassRegion)) {
-                                    GrassInfo.GrassInRegion[GrassInfo.GrassRegion] = new List<string>();
-                                }
-
-                                if (!GrassInfo.GrassInRegion[GrassInfo.GrassRegion].Contains(__instance.transform.position.ToString())) {
-                                    Inventory.GetItemByName("Grass").Quantity += 1;
-                                    GrassInfo.GrassInRegion[GrassInfo.GrassRegion].Add(__instance.name + "~" + __instance.transform.position.ToString());
-                                    SceneLoaderPatches.GrassInArea--;
-                                }*/
                 string grassId = $"{__instance.name}~{__instance.transform.position.ToString()} [{__instance.gameObject.scene.name}]";
                 if (Locations.RandomizedLocations.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                     Check check = Locations.RandomizedLocations[grassId];
                     ItemData item = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[grassId]);
-                    TunicLogger.LogInfo(item.Name);
+                    SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
                     if (item.Name == "Grass") {
                         Inventory.GetItemByName("Grass").Quantity += 1;
                         Locations.CheckedLocations[grassId] = true;
