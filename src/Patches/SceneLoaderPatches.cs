@@ -659,6 +659,9 @@ namespace TunicRandomizer {
             if (InventoryDisplayPatches.HexagonQuest != null) {
                 InventoryDisplayPatches.HexagonQuest.SetActive(false);
             }
+            if (InventoryDisplayPatches.GrassCounter != null) {
+                InventoryDisplayPatches.GrassCounter.SetActive(false);
+            }
             SceneName = "TitleScreen";
         }
 

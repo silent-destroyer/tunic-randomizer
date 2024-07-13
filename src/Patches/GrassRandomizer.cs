@@ -103,6 +103,8 @@ namespace TunicRandomizer {
                     Check check = Locations.RandomizedLocations[grassId];
                     ItemData item = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[grassId]);
                     SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
+
+                    SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
                     if (item.Name == "Grass") {
                         Inventory.GetItemByName("Grass").Quantity += 1;
                         Locations.CheckedLocations[grassId] = true;

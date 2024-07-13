@@ -20,6 +20,7 @@ namespace TunicRandomizer {
         public static GameObject ThisArea;
         public static GameObject Total;
         public static GameObject GoldHexagons;
+        public static GameObject GrassText;
         public static GameObject AbilityShuffle;
 
         public static GameObject GuardCaptain;
@@ -33,6 +34,7 @@ namespace TunicRandomizer {
         public static GameObject BossScavenger;
         public static GameObject BlueHexagon;
         public static GameObject HexagonQuest;
+        public static GameObject GrassCounter;
         public static GameObject QuestionMark;
 
         public static GameObject EquipmentRoot;
@@ -115,7 +117,28 @@ namespace TunicRandomizer {
                 if ((float)Screen.width/Screen.height < 1.7f) {
                     HexagonQuest.transform.position = new Vector3(50f, 0f, 100f);
                 }
+                GrassCounter = new GameObject("grass counter");
+                GrassCounter.transform.parent = GameObject.Find("_GameGUI(Clone)/AreaLabels").transform;
+                GrassCounter.transform.position = Vector3.zero;
+                GameObject GrassBacking = new GameObject("backing");
+                GrassBacking.AddComponent<Image>().sprite = Resources.FindObjectsOfTypeAll<Sprite>().Where(sprite => sprite.name == "game gui_button circle").ToList()[0];
+                GrassBacking.transform.parent = GrassCounter.transform;
+                GrassBacking.transform.position = new Vector3(-445f, 210f, 0f);
+                GrassBacking.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                GameObject GrassIcon = GameObject.Instantiate(ModelSwaps.HexagonGoldImage, GrassBacking.transform);
+                GrassIcon.transform.localPosition = Vector3.zero;
+                GrassIcon.GetComponent<Image>().sprite = Inventory.GetItemByName("Grass").icon;
+                GrassIcon.SetActive(true);
+                GrassBacking.transform.GetChild(0).localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                GrassText = SetupText("gold hexagons", new Vector3(-160f, 200f, 0f), GrassCounter.transform, 24f, FontAsset, FontMaterial);
+                GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0 | 0/0";
+                GrassText.GetComponent<RectTransform>().sizeDelta = new Vector2(500f, 50f);
+                GrassText.transform.parent = GrassCounter.transform;
+                if ((float)Screen.width / Screen.height < 1.7f) {
+                    GrassCounter.transform.position = new Vector3(50f, 0f, 100f);
+                }
                 GameObject.DontDestroyOnLoad(HexagonQuest);
+                GameObject.DontDestroyOnLoad(GrassCounter);
 
 
                 Material ImageMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
@@ -383,8 +406,9 @@ namespace TunicRandomizer {
                     int TotalItemCountInCurrentScene = Locations.CheckCountsPerScene[SceneLoaderPatches.SceneName];
                     int TotalItemCount = Locations.VanillaLocations.Count;
                     bool isGrassRando = SaveFile.GetInt(GrassRandoEnabled) == 1;
+                    string sceneName = SceneManager.GetActiveScene().name;
                     if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(SceneLoaderPatches.SceneName)) {
-                        ObtainedItemCountInCurrentScene += SaveFile.GetInt("randomizer grass cut " + SceneManager.GetActiveScene().name);
+                        ObtainedItemCountInCurrentScene += SaveFile.GetInt("randomizer grass cut " + sceneName);
                         TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName];
                         TotalItemCount += GrassRandomizer.GrassChecks.Count;
                     }
@@ -402,6 +426,11 @@ namespace TunicRandomizer {
                     if (GoldHexagons != null) {
                         GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
                         GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
+                    }
+                    if (GrassText != null) {
+                        int grassCut = SaveFile.GetInt("randomizer total grass cut");
+                        GrassText.GetComponent<TextMeshProUGUI>().text = $"{(SaveFile.GetInt("randomizer grass cut " + sceneName) >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{SaveFile.GetInt("randomizer grass cut " + sceneName)} / {GrassRandomizer.GrassChecksPerScene[SceneManager.GetActiveScene().name]} " +
+                            $"<#ffffff>| {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut} / {GrassRandomizer.GrassChecks.Count}";
                     }
                     QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
                     Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
@@ -491,7 +520,13 @@ namespace TunicRandomizer {
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1);
+            GrassCounter.SetActive(SaveFile.GetInt(GrassRandoEnabled) == 1);
 
+            if (HexagonQuest.active && GrassCounter.active) {
+                GrassCounter.transform.position = HexagonQuest.transform.position + new Vector3(125, 0, 0);
+            } else {
+                GrassCounter.transform.position = HexagonQuest.transform.position;
+            }
             return true;
         }
     }
