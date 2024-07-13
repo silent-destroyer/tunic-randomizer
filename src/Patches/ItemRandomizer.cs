@@ -50,8 +50,9 @@ namespace TunicRandomizer {
             Locations.CheckedLocations.Clear();
 
             PopulatePrecollected();
-            List<string> ProgressionNames = new List<string>{ "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
+            List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             List<string> Ladders = new List<string>(LadderItems);
+            List<string> GrassCutters = new List<string>() { "Stick", "Trinket - Glass Cannon", "Shotgun" };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1) {
                     ProgressionNames.Add("Hexagon Gold");
@@ -76,6 +77,7 @@ namespace TunicRandomizer {
             List<Check> InitialItems = JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList);
             if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
                 InitialItems.AddRange(GrassRandomizer.GrassChecks.Values);
+                ProgressionNames.AddRange(GrassCutters);
             }
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();

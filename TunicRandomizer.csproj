@@ -175,7 +175,6 @@
     <Compile Include="src\Archipelago\DeathLinkMessages.cs" />
     <Compile Include="src\Data\Check.cs" />
     <Compile Include="src\Data\ConnectionSettings.cs" />
-    <Compile Include="src\Data\GrassInfo.cs" />
     <Compile Include="src\Data\Hints.cs" />
     <Compile Include="src\Data\ImageData.cs" />
     <Compile Include="src\Data\ItemListJson.cs" />
@@ -236,6 +235,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="src\Data\Grass.json" />
+    <EmbeddedResource Include="src\Data\GrassReqs.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

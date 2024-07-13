@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Il2CppSystem.Uri;
 
 namespace TunicRandomizer {
     public class GrassRandomizer {
@@ -12,14 +11,21 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> GrassChecks = new Dictionary<string, Check>();
         public static Dictionary<string, int> GrassChecksPerScene = new Dictionary<string, int>();
 
-        public static void LoadGrassJson() {
+        public static void LoadGrassChecks() {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "TunicRandomizer.src.Data.Grass.json";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            var grassJson = "TunicRandomizer.src.Data.Grass.json";
+            var grassReqsJson = "TunicRandomizer.src.Data.GrassReqs.json";
+            List<List<string>> grassCutters = new List<List<string>>() {
+                new List<string>() {"Sword"},
+                new List<string>() {"Techbow"},
+                new List<string>() {"Stick", "Trinket - Glass Cannon"},
+                new List<string>() {"Shotgun"},
+            };
+            using (Stream stream = assembly.GetManifestResourceStream(grassJson))
             using (StreamReader reader = new StreamReader(stream)) {
                 Dictionary<string, List<string>> grassRegions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(reader.ReadToEnd());
-
+                StreamReader extraReader = new StreamReader(assembly.GetManifestResourceStream(grassReqsJson));
+                Dictionary<string, List<List<string>>> extraGrassReqs = JsonConvert.DeserializeObject<Dictionary<string, List<List<string>>>>(extraReader.ReadToEnd());
                 foreach(KeyValuePair<string, List<string>> pair in grassRegions) {
                     foreach(string grass in pair.Value) {
                         Check check = new Check(new Reward(), new Location());
@@ -27,84 +33,42 @@ namespace TunicRandomizer {
                         check.Reward.Type = "Grass";
                         check.Reward.Amount = 1;
                         
-                        check.Location.SceneName = TunicPortals.RegionDict.ContainsKey(pair.Key) ? TunicPortals.RegionDict[pair.Key].Scene : "Atoll Redux";
+                        check.Location.SceneName = TunicPortals.RegionDict[pair.Key].Scene;
+                        check.Location.SceneId = 0; // Update this if sceneid ever actually gets used for anything
                         check.Location.LocationId = grass;
-                        if (pair.Key == "Ruined Atoll Kevin") {
-                            check.Location.Requirements = new List<Dictionary<string, int>>() {
-                                new Dictionary<string, int>() {
-                                    {"Ruined Atoll", 1},
-                                    {"Hyperdash", 1},
-                                    {"Sword", 1}
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Ruined Atoll", 1},
-                                    {"Hyperdash", 1},
-                                    {"Techbow", 1 }
-                                }
-                            };
-                            check.Location.SceneId = 0;
-                        } else if (pair.Key == "Ruined Atoll Frog Fuse") {
-                            check.Location.Requirements = new List<Dictionary<string, int>>() {
-                                new Dictionary<string, int>() {
-                                    {"Ruined Atoll", 1},
-                                    {"Hyperdash", 1},
-                                    {"Sword", 1},
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Ruined Atoll", 1},
-                                    {"Wand", 1},
-                                    {"Sword", 1},
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Ruined Atoll", 1},
-                                    {"Hyperdash", 1},
-                                    {"Techbow", 1},
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Ruined Atoll", 1},
-                                    {"Wand", 1},
-                                    {"Techbow", 1},
-                                },
-                            };
-                            check.Location.SceneId = 0;
-                        } else if (pair.Key == "Frog Stairs Lower") {
-                            check.Location.Requirements = new List<Dictionary<string, int>>() {
-                                new Dictionary<string, int>() {
-                                    {"Frog Stairs Lower", 1},
-                                    {"Wand", 1},
-                                    {"Sword", 1},
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Frog Stairs Lower", 1},
-                                    {"Wand", 1},
-                                    {"Techbow", 1},
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Frog Stairs Lower", 1},
-                                    {"Ladders to Frog's Domain", 1},
-                                    {"Sword", 1},
-                                },
-                                new Dictionary<string, int>() {
-                                    {"Frog Stairs Lower", 1},
-                                    {"Ladders to Frog's Domain", 1},
-                                    {"Techbow", 1},
-                                },
-                            };
-                            check.Location.SceneId = 0;
-                        } else {
-                            check.Location.Requirements = new List<Dictionary<string, int>>() {
-                                new Dictionary<string, int>() {
-                                    {pair.Key, 1},
-                                    {"Sword", 1}
-                                },
-                                new Dictionary<string, int>() {
-                                    {pair.Key, 1},
-                                    {"Techbow", 1}
-                                }
-                            };
-                            check.Location.SceneId = 0;
-                        }
                         check.Location.Position = grass.Split('~')[1];
+                        check.Location.Requirements = new List<Dictionary<string, int>>();
+                        if (grass == "grass (1)~(72.0, 8.0, -29.0)") {
+                            // Special case for long distance grass in fortress courtyard
+                            check.Location.Requirements.Add(new Dictionary<string, int>() {
+                                {pair.Key, 1},
+                                {"Techbow", 1},
+                            });
+                        } else if (extraGrassReqs.ContainsKey(grass)) {
+                            foreach (List<string> extraReqs in extraGrassReqs[extraGrassReqs.ContainsKey(grass) ? grass : pair.Key]) {
+                                foreach (List<string> items in grassCutters) {
+                                    Dictionary<string, int> reqs = new Dictionary<string, int> { };
+                                    foreach (string item in items) {
+                                        reqs.Add(item, 1);
+                                    }
+                                    foreach (string item in extraReqs) {
+                                        reqs.Add(item, 1);
+                                    }
+                                    check.Location.Requirements.Add(reqs);
+                                }
+                            }
+                        } else {
+                            foreach (List<string> items in grassCutters) {
+                                Dictionary<string, int> reqs = new Dictionary<string, int> {
+                                    { pair.Key, 1 }
+                                };
+                                foreach (string item in items) {
+                                    reqs.Add(item, 1);
+                                }
+                                check.Location.Requirements.Add(reqs);
+                            }
+                        }
+
                         GrassChecks.Add(check.CheckId, check);
                         Locations.LocationIdToDescription.Add(check.CheckId, check.CheckId);
                         Locations.LocationDescriptionToId.Add(check.CheckId, check.CheckId);
@@ -114,6 +78,7 @@ namespace TunicRandomizer {
                         GrassChecksPerScene[check.Location.SceneName]++;
                     }
                 }
+                extraReader.Close();
             }
         }
 
