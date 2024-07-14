@@ -229,6 +229,12 @@ namespace TunicRandomizer {
                 return ItemResult.PermanentFailure;
             }
 
+            bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
+
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(itemInfo.LocationName)) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
+
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
@@ -236,6 +242,11 @@ namespace TunicRandomizer {
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
             
+            if (Item.Type == ItemTypes.GRASS) {
+                ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
+                Inventory.GetItemByName("Grass").Quantity += 1;
+            }
+
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Item.QuantityToGive;
 
@@ -437,7 +448,11 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
 
-            FairyTargets.UpdateFairyTargetsInLogic(ItemName);
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                FairyTargets.UpdateFairyTargetsInLogic(ItemName);
+            }
+
+            TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
 
             return ItemResult.Success;
         }
@@ -672,8 +687,8 @@ namespace TunicRandomizer {
                 FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
             }
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
-            if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
-                //ItemTracker.PopulateSpoilerLog();
+            if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                ItemTracker.PopulateSpoilerLog();
             }
         }
 

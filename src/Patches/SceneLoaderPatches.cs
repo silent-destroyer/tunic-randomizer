@@ -564,7 +564,10 @@ namespace TunicRandomizer {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             }
             ItemTracker.SaveTrackerFile();
-            //GrassInfo.SaveGrassList();
+
+            if (SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                ItemTracker.PopulateSpoilerLog();
+            }
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {

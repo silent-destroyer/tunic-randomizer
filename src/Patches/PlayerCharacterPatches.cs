@@ -554,6 +554,11 @@ namespace TunicRandomizer {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
+                if (slotData.TryGetValue("grass_randomizer", out var grassRandomizer)) {
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 0 && grassRandomizer.ToString() != "0") {
+                        SaveFile.SetInt(GrassRandoEnabled, 1);
+                    }
+                }
                 SaveFile.SaveToDisk();
 
                 Locations.RandomizedLocations.Clear();
@@ -563,6 +568,13 @@ namespace TunicRandomizer {
                 foreach (string Key in Locations.VanillaLocations.Keys) {
                     Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
                     LocationIDs.Add(Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]));
+                }
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    foreach (string Key in GrassRandomizer.GrassChecks.Keys) {
+                        Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
+                        long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]);
+                        LocationIDs.Add(id);
+                    }
                 }
                 if (LocationIDs.Contains(-1L)) {
                     Notifications.Show($"\"An error has occurred!\"", $"\"Connected slot is incompatible with this client version.\"");

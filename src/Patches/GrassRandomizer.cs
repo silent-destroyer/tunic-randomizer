@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Archipelago.MultiClient.Net.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -98,43 +99,97 @@ namespace TunicRandomizer {
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             if (__instance.GetComponent<Grass>() != null) {
-                string grassId = $"{__instance.name}~{__instance.transform.position.ToString()} [{__instance.gameObject.scene.name}]";
-                if (Locations.RandomizedLocations.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
-                    Check check = Locations.RandomizedLocations[grassId];
-                    ItemData item = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[grassId]);
-                    SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
-
-                    SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
-                    if (item.Name == "Grass") {
-                        Inventory.GetItemByName("Grass").Quantity += 1;
-                        Locations.CheckedLocations[grassId] = true;
-                        SaveFile.SetInt("randomizer picked up " + check.CheckId, 1);
-                        TunicRandomizer.Tracker.SetCollectedItem("Grass", false);
-                    } else {
-                        GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, Check: check);
-                        grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
-                        if (item.Type == ItemTypes.TRINKET) {
-                            grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
-                        }
-                        grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
-                        grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                        grassSpawn.layer = 0;
-                        grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
-                        grassSpawn.SetActive(true);
-                        grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
-                        grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
-                        if (item.Name == "Fool Trap") {
-                            foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
-                                if (child.name == __instance.name) { continue; }
-                                child.localEulerAngles = Vector3.zero;
-                                child.position -= new Vector3(0, 2, 0);
+                if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                    string grassId = $"{__instance.name}~{__instance.transform.position.ToString()} [{__instance.gameObject.scene.name}]";
+                        
+                    if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
+                        ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
+                        SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
+                        SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
+                        if (Archipelago.instance.IsTunicPlayer(ItemInfo.Player)) {
+                            ItemData item = ItemLookup.Items[ItemInfo.ItemName];
+                            if (item.Type != ItemTypes.GRASS) {
+                                Archipelago.instance.ActivateCheck(grassId);
+                                GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, APItem: ItemInfo);
+                                if (item.Type == ItemTypes.TRINKET) {
+                                    grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
+                                }
+                                grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].pos : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].pos : grassSpawn.transform.localPosition;
+                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                                grassSpawn.layer = 0;
+                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].scale : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].scale : grassSpawn.transform.localScale;
+                                grassSpawn.SetActive(true);
+                                grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
+                                grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
+                                if (item.Name == "Fool Trap") {
+                                    foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
+                                        if (child.name == __instance.name) { continue; }
+                                        child.localEulerAngles = Vector3.zero;
+                                        child.position -= new Vector3(0, 2, 0);
+                                    }
+                                }
+                            } else {
+                                Archipelago.instance.CompleteLocationCheck(grassId);
+                                SaveFile.SetInt("randomizer picked up " + grassId, 1);
+                                Locations.CheckedLocations[grassId] = true;
+                                if (GameObject.Find($"fairy target {grassId}")) {
+                                    GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
+                                }
                             }
+                        } else {
+                            Archipelago.instance.ActivateCheck(grassId);
+
+                            GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, APItem: ItemInfo);
+                            grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                            grassSpawn.transform.localPosition = ItemPositions.Techbow["Other World"].pos;
+                            grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                            grassSpawn.layer = 0;
+                            grassSpawn.transform.localScale = ItemPositions.Techbow["Other World"].scale;
+                            grassSpawn.SetActive(true);
+                            grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
+                            grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
                         }
-                        ItemPatches.GiveItem(check, isGrassCheck: true);
-                    }
-                    GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
-                    if (FairyTarget != null) {
-                        GameObject.Destroy(FairyTarget);
+                        if (__instance.transform.GetChild(1).childCount == 1) {
+                            __instance.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                        }
+                    } else if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
+                        Check check = Locations.RandomizedLocations[grassId];
+                        ItemData item = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[grassId]);
+                        SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
+
+                        SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
+                        if (item.Name == "Grass") {
+                            Inventory.GetItemByName("Grass").Quantity += 1;
+                            Locations.CheckedLocations[grassId] = true;
+                            SaveFile.SetInt("randomizer picked up " + check.CheckId, 1);
+                            TunicRandomizer.Tracker.SetCollectedItem("Grass", false);
+                        } else {
+                            GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, Check: check);
+                            grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                            if (item.Type == ItemTypes.TRINKET) {
+                                grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
+                            }
+                            grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
+                            grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                            grassSpawn.layer = 0;
+                            grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
+                            grassSpawn.SetActive(true);
+                            grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
+                            grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
+                            if (item.Name == "Fool Trap") {
+                                foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
+                                    if (child.name == __instance.name) { continue; }
+                                    child.localEulerAngles = Vector3.zero;
+                                    child.position -= new Vector3(0, 2, 0);
+                                }
+                            }
+                            ItemPatches.GiveItem(check, isGrassCheck: true);
+                        }
+                        GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
+                        if (FairyTarget != null) {
+                            GameObject.Destroy(FairyTarget);
+                        }
                     }
                 }
             }

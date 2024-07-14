@@ -7,6 +7,7 @@ using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Il2CppSystem.Uri;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -404,7 +405,7 @@ namespace TunicRandomizer {
                     if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                         foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>()) {
                             string grassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
-                            if (Locations.RandomizedLocations.ContainsKey(grassId) && Locations.RandomizedLocations[grassId].Reward.Name != "Grass") {
+                            if (Locations.RandomizedLocations.ContainsKey(grassId) || ItemLookup.ItemList.ContainsKey(grassId)) {
                                 ApplyGrassTexture(grass);
                             }
                         }
@@ -492,9 +493,22 @@ namespace TunicRandomizer {
 
         public static void ApplyGrassTexture(Grass grass) {
             string GrassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
-            if(Locations.RandomizedLocations.ContainsKey(GrassId)) {
-                Check check = Locations.RandomizedLocations[GrassId];
-                ItemData Item = ItemLookup.GetItemDataFromCheck(check);
+            if(Locations.RandomizedLocations.ContainsKey(GrassId) || ItemLookup.ItemList.ContainsKey(GrassId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[GrassId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[GrassId];
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId]);
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+                if (Item.Type == ItemTypes.GRASS) {
+                    return;
+                }
                 Material material = null;
                 if (Item.Type == ItemTypes.FAIRY) {
                     material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
@@ -506,7 +520,7 @@ namespace TunicRandomizer {
                     material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
                 }
 
-                if (check.Reward.Name == "Fool Trap") {
+                if (Item.Name == "Fool Trap") {
                     foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
                         if (child.name == grass.name) { continue; }
                         child.localEulerAngles = new Vector3(180, 0, 0);
@@ -520,6 +534,52 @@ namespace TunicRandomizer {
                     }
                 }
             }
+        }
+
+        public static void ApplyAPGrassTexture(Grass grass, ItemInfo itemInfo, bool Checked) {
+            GameObject questionMark = new GameObject("question mark");
+            questionMark.transform.parent = grass.transform.GetChild(1);
+            questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
+            if (grass.name.Contains("bush")) {
+                questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
+                questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+                questionMark.transform.localScale = new Vector3(0.33f, 0.33f, 0.33f);
+            } else {
+                questionMark.transform.localPosition = new Vector3(0f, 1.9f, 0f);
+                questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+                questionMark.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            }
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            UnityEngine.Color color;
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    r.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
+                    grass.materialForBase = r.material;
+                }
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                    grass.materialForBase = r.material;
+                }
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    r.material = Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().material;
+                    grass.materialForBase = r.material;
+                }
+            }
+
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                questionMark.transform.localEulerAngles = new Vector3(270, 0, 0);
+                foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
+                    if (child.name == grass.name) { continue; }
+                    child.localEulerAngles = new Vector3(180, 0, 0);
+                    child.position += new Vector3(0, 2, 0);
+                }
+            }
+            questionMark.SetActive(!Checked);
         }
 
         public static void CheckCollectedItemFlags() {

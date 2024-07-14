@@ -206,7 +206,7 @@ namespace TunicRandomizer {
 
                     string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Item.Player.Name})";
 
-                    SpoilerLog[Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
+                    SpoilerLog[GrassRandomizer.GrassChecks.ContainsKey(Key) ? GrassRandomizer.GrassChecks[Key].Location.SceneName : Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
                 }
             }
             if (IsSinglePlayer()) {

@@ -31,6 +31,10 @@ namespace TunicRandomizer {
             integration.ActivateCheck(LocationName);
         }
 
+        public void CompleteLocationCheck(string LocationName) {
+            integration.CompleteLocationCheck(LocationName);
+        }
+
         public void UpdateDataStorage(string Key, object Value) {
             if (SaveFlags.IsArchipelago()) {
                 integration.UpdateDataStorage(Key, Value);

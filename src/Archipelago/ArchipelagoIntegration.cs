@@ -32,6 +32,9 @@ namespace TunicRandomizer {
         public bool sentRelease = false;
         public bool sentCollect = false;
         public int ItemIndex = 0;
+/*        public List<string> LocationsToSend = new List<string>();
+        public float SendDelayTimer = 0.0f;
+        public float SendDelayTimerThreshold = 3.0f;*/
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -56,6 +59,12 @@ namespace TunicRandomizer {
                     outgoingItemHandler.MoveNext();
                 }
 
+/*                if (LocationsToSend.Count > 0) {
+                    SendDelayTimer += Time.unscaledDeltaTime;
+                    if (SendDelayTimer > SendDelayTimerThreshold) {
+                        ActivateChecks();
+                    }
+                }*/
             }
 
             if (SpeedrunData.gameComplete != 0 && !sentCompletion) {
@@ -185,6 +194,11 @@ namespace TunicRandomizer {
                 var itemName = itemInfo.ItemName;
                 var itemDisplayName = itemName + " (" + itemInfo.ItemId + ") at index " + pendingItem.index;
 
+                if (itemInfo.ItemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(itemInfo.LocationName))) {
+                    SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
+                    Inventory.GetItemByName("Grass").Quantity += 1;
+                }
+
                 if (SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 1) {
                     incomingItems.TryDequeue(out _);
                     TunicLogger.LogInfo("Skipping item " + itemName + " at index " + pendingItem.index + " as it has already been processed.");
@@ -217,9 +231,11 @@ namespace TunicRandomizer {
                         }
 
                         // Pause before processing next item
-                        DateTime postInteractionStart = DateTime.Now;
-                        while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
-                            yield return true;
+                        if (itemInfo.ItemName != "Grass") {
+                            DateTime postInteractionStart = DateTime.Now;
+                            while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
+                                yield return true;
+                            }
                         }
 
                         break;
@@ -280,7 +296,7 @@ namespace TunicRandomizer {
                     FairyTargets.CreateLoadZoneTargets();
                 }
 
-                if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                     ItemTracker.PopulateSpoilerLog();
                 }
 
@@ -300,6 +316,30 @@ namespace TunicRandomizer {
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
             }
         }
+
+        public void CompleteLocationCheck(string LocationName) {
+            if (LocationName != null) {
+                var location = session.Locations.GetLocationIdFromName(session.ConnectionInfo.Game, LocationName);
+                session.Locations.CompleteLocationChecks(location);
+
+            }
+        }
+
+/*        public void ActivateChecks() {
+            if (LocationsToSend.Count > 0) {
+                long[] locationIDs = LocationsToSend.Select(loc => session.Locations.GetLocationIdFromName("TUNIC", loc)).ToArray();
+                session.Locations.CompleteLocationChecks(locationIDs);
+                session.Locations.ScoutLocationsAsync(locationIDs)
+                    .ContinueWith(locationInfoPacket => {
+                        foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
+                            outgoingItems.Enqueue(ItemInfo);
+                        }
+                    });
+
+                LocationsToSend.Clear();
+                SendDelayTimer = 0.0f;
+            }
+        }*/
 
         public void SendCompletion() {
             session.SetGoalAchieved();
