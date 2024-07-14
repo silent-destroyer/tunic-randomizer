@@ -442,11 +442,17 @@ namespace TunicRandomizer {
             return ItemResult.Success;
         }
 
-        public static void GiveItem(Check Check) {
+        public static void GiveItem(Check Check, bool isGrassCheck = false) {
 
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
+
+            bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
+
+            if (isGrassCheck) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
 
             ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "";
@@ -665,7 +671,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(GrassRandoEnabled) == 0) {
                 FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
             }
-
+            TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
             if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 //ItemTracker.PopulateSpoilerLog();
             }

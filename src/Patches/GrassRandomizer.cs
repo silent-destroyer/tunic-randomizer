@@ -130,7 +130,7 @@ namespace TunicRandomizer {
                                 child.position -= new Vector3(0, 2, 0);
                             }
                         }
-                        ItemPatches.GiveItem(check);
+                        ItemPatches.GiveItem(check, isGrassCheck: true);
                     }
                     GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
                     if (FairyTarget != null) {
