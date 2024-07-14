@@ -349,9 +349,18 @@ namespace TunicRandomizer {
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
+
             List<MagicSpell> spells = __instance.spells.ToList();
             spells.Reverse();
             __instance.spells = spells.ToArray();
+
+            Vector3 scale = AreaLabel.instance.transform.GetChild(0).localScale;
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1 && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.5f, scale.y, scale.z);
+            } else {
+                AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.0777f, scale.y, scale.z);
+            }
+
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {

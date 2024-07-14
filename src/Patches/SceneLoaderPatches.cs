@@ -232,8 +232,6 @@ namespace TunicRandomizer {
                 }
                 GrassRandomizer.LoadGrassChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
-                Vector3 scale = AreaLabel.instance.transform.GetChild(0).localScale;
-                AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.5f, scale.y, scale.z);
                 SceneLoader.LoadScene("Overworld Redux");
                 return;
             }
