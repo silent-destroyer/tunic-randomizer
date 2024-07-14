@@ -135,7 +135,7 @@ namespace TunicRandomizer {
                             GoldHexagonsAdded++;
                         }
 
-                        // todo: rewrite this to not modify the itemlistjson, and instead remove abilities as hexes get placed
+                        // can probably be removed now that Check.reachable got updated to check hex counts
                         if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                             if (Item.Location.Requirements.Count > 0) {
                                 for (int i = 0; i < Item.Location.Requirements.Count; i++) {

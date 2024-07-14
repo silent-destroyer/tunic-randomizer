@@ -38,6 +38,28 @@ namespace TunicRandomizer {
                 foreach (string item in req.Keys) {
                     //TunicLogger.LogInfo(item);
                     if (!inventory.ContainsKey(item)) {
+                        if (item == "12") {
+                            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
+                                met++;
+                            } else if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 
+                                    && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestPrayer)) {
+                                met++;
+                            }
+                        } else if (item == "21") {
+                            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
+                                met++;
+                            } else if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
+                                    && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestHolyCross)) {
+                                met++;
+                            }
+                        } else if (item == "26") {
+                            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
+                                met++;
+                            } else if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
+                                    && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
+                                met++;
+                            }
+                        }
                         if (ItemRandomizer.testBool) {
                             TunicLogger.LogInfo("LocationID is " + this.LocationId);
                             TunicLogger.LogInfo("inventory does not contain " + item);
