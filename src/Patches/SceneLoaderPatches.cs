@@ -471,6 +471,14 @@ namespace TunicRandomizer {
                     sign.GetComponent<Signpost>().message.text = $"[grass]  [arrow_right]\n\n[wand]  rehkuhmehndid.";
                     sign.SetActive(true);
                 }
+            } else if (SceneName == "Atoll Redux") {
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    // Hide thw two unbreakable pieces of grass in grass rando
+                    if (GameObject.Find("_GRASS/grass beach (154)/grass base (1)") != null && GameObject.Find("_GRASS/grass beach (154)/grass base (2)") != null) {
+                        GameObject.Find("_GRASS/grass beach (154)/grass base (1)").SetActive(false);
+                        GameObject.Find("_GRASS/grass beach (154)/grass base (2)").SetActive(false);
+                    }
+                }
             }
 
             EnemyRandomizer.CheckBossState();
