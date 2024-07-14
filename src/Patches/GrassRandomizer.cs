@@ -1,6 +1,7 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
@@ -113,12 +114,18 @@ namespace TunicRandomizer {
                                 GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, APItem: ItemInfo);
                                 if (item.Type == ItemTypes.TRINKET) {
                                     grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
+                                } else if (item.Type == ItemTypes.SWORDUPGRADE) {
+                                    grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].pos : grassSpawn.transform.localPosition;
+                                    grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                                    grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].scale : grassSpawn.transform.localScale;
+                                    grassSpawn.transform.localRotation = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].rot : grassSpawn.transform.localRotation;
+                                } else {
+                                    grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                                    grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].pos : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].pos : grassSpawn.transform.localPosition;
+                                    grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                                    grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].scale : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].scale : grassSpawn.transform.localScale;
                                 }
-                                grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
-                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].pos : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].pos : grassSpawn.transform.localPosition;
-                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
                                 grassSpawn.layer = 0;
-                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].scale : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].scale : grassSpawn.transform.localScale;
                                 grassSpawn.SetActive(true);
                                 grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
                                 grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
@@ -169,11 +176,17 @@ namespace TunicRandomizer {
                             grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
                             if (item.Type == ItemTypes.TRINKET) {
                                 grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
+                            } else if (item.Type == ItemTypes.SWORDUPGRADE) {
+                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].pos : grassSpawn.transform.localPosition;
+                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].scale : grassSpawn.transform.localScale;
+                                grassSpawn.transform.localRotation = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].rot : grassSpawn.transform.localRotation;
+                            } else {
+                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
+                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
+                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
                             }
-                            grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
-                            grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
                             grassSpawn.layer = 0;
-                            grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
                             grassSpawn.SetActive(true);
                             grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
                             grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
