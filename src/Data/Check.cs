@@ -37,25 +37,20 @@ namespace TunicRandomizer {
                 int met = 0;
                 foreach (string item in req.Keys) {
                     //TunicLogger.LogInfo(item);
+                    // don't need to check if ability shuffle is on since the abilities are precollected if ability shuffle is off
                     if (!inventory.ContainsKey(item)) {
                         if (item == "12") {
-                            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
-                                met++;
-                            } else if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 
+                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestPrayer)) {
                                 met++;
                             }
                         } else if (item == "21") {
-                            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
-                                met++;
-                            } else if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
+                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestHolyCross)) {
                                 met++;
                             }
                         } else if (item == "26") {
-                            if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
-                                met++;
-                            } else if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
+                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
                                 met++;
                             }
