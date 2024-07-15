@@ -21,36 +21,32 @@ namespace TunicRandomizer {
 
             //if there are requirements, loop through each requirement to see if any are fully met
             foreach (Dictionary<string, int> req in itemsRequired) {
-                //ensure req and items use same terms
-                if (SaveFile.GetInt("randomizer sword progression enabled") != 0) {
-                    if (req.ContainsKey("Stick")) {
-                        req["Sword Progression"] = 1;
-                        req.Remove("Stick");
-                    }
-                    if (req.ContainsKey("Sword")) {
-                        req["Sword Progression"] = 2;
-                        req.Remove("Sword");
-                    }
-                }
-
                 //check if this requirement is fully met, otherwise move to the next requirement
                 int met = 0;
                 foreach (string item in req.Keys) {
                     //TunicLogger.LogInfo(item);
                     // don't need to check if ability shuffle is on since the abilities are precollected if ability shuffle is off
                     if (!inventory.ContainsKey(item)) {
-                        if (item == "12") {
-                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 
+                        if (item == "Sword") {
+                            if (inventory.ContainsKey("Sword Upgrade") && inventory["Sword Upgrade"] >= 2) {
+                                met++;
+                            }
+                        } else if (item == "Stick") { 
+                            if (inventory.ContainsKey("Sword Upgrade") && inventory["Sword Upgrade"] >= 1) {
+                                met++;
+                            }
+                        } else if (item == "12") {
+                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && inventory.ContainsKey("Hexagon Gold")
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestPrayer)) {
                                 met++;
                             }
                         } else if (item == "21") {
-                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
+                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && inventory.ContainsKey("Hexagon Gold")
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestHolyCross)) {
                                 met++;
                             }
                         } else if (item == "26") {
-                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1
+                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && inventory.ContainsKey("Hexagon Gold")
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
                                 met++;
                             }

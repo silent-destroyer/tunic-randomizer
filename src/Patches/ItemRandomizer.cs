@@ -33,6 +33,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
                 PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
             }
+            if (SaveFile.GetInt(SaveFlags.StartWithSword) == 1) {
+                PrecollectedItems.Add("Sword");
+            }
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
