@@ -33,9 +33,7 @@ namespace TunicRandomizer {
             var grassReqsJson = "TunicRandomizer.src.Data.GrassReqs.json";
             List<List<string>> grassCutters = new List<List<string>>() {
                 new List<string>() {"Sword"},
-                new List<string>() {"Techbow"},
                 new List<string>() {"Stick", "Trinket - Glass Cannon"},
-                new List<string>() {"Shotgun"},
             };
             using (Stream stream = assembly.GetManifestResourceStream(grassJson))
             using (StreamReader reader = new StreamReader(stream)) {
