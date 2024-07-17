@@ -142,24 +142,6 @@ namespace TunicRandomizer {
                             SaveFile.SetInt("randomizer picked up " + check.CheckId, 1);
                             TunicRandomizer.Tracker.SetCollectedItem("Grass", false);
                         } else {
-/*                            GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, Check: check);
-                            if (item.Type == ItemTypes.TRINKET) {
-                                grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
-                            } else if (item.Type == ItemTypes.SWORDUPGRADE) {
-                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].pos : grassSpawn.transform.localPosition;
-                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].scale : grassSpawn.transform.localScale;
-                                grassSpawn.transform.localRotation = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].rot : grassSpawn.transform.localRotation;
-                            } else {
-                                grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
-                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
-                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
-                            }
-                            grassSpawn.layer = 0;
-                            grassSpawn.SetActive(true);
-                            grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
-                            grassSpawn.AddComponent<MoveUp>().speed = 0.5f;*/
                             if (item.Name == "Fool Trap") {
                                 foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
                                     if (child.name == __instance.name) { continue; }
