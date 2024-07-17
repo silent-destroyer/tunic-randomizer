@@ -521,7 +521,7 @@ namespace TunicRandomizer {
             { "Bait", new TransformData(new Vector3(0f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Piggybank L1", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Trinket Coin", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
-            { "Trinket Card", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Trinket Card", new TransformData(new Vector3(0f, 0f, 0f), Quaternion.Euler(0, 45, 0), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "Trinket Slot", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.3999999f, 0.4f, 0.3999999f)) },
             { "Sword", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
             { "Sword Progression", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
