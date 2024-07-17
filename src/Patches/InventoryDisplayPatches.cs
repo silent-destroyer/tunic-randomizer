@@ -130,8 +130,12 @@ namespace TunicRandomizer {
                 GrassIcon.GetComponent<Image>().sprite = Inventory.GetItemByName("Grass").icon;
                 GrassIcon.SetActive(true);
                 GrassBacking.transform.GetChild(0).localScale = new Vector3(0.75f, 0.75f, 0.75f);
-                GrassText = SetupText("gold hexagons", new Vector3(-160f, 200f, 0f), GrassCounter.transform, 24f, FontAsset, FontMaterial);
-                GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0 | 0/0";
+                GrassText = SetupText("grass counter", new Vector3(-160f, 209f, 0f), GrassCounter.transform, 24f, FontAsset, FontMaterial);
+                GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0\n0/0";
+                GrassText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.TopLeft;
+                GrassText.GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Left;
+                GrassText.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Top;
+                GrassText.GetComponent<TextMeshProUGUI>().fontSize = 20;
                 GrassText.GetComponent<RectTransform>().sizeDelta = new Vector2(500f, 50f);
                 GrassText.transform.parent = GrassCounter.transform;
                 if ((float)Screen.width / Screen.height < 1.7f) {
@@ -429,8 +433,8 @@ namespace TunicRandomizer {
                     }
                     if (GrassText != null) {
                         int grassCut = SaveFile.GetInt("randomizer total grass cut");
-                        GrassText.GetComponent<TextMeshProUGUI>().text = $"{(SaveFile.GetInt("randomizer grass cut " + sceneName) >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{SaveFile.GetInt("randomizer grass cut " + sceneName)} / {GrassRandomizer.GrassChecksPerScene[SceneManager.GetActiveScene().name]} " +
-                            $"<#ffffff>| {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut} / {GrassRandomizer.GrassChecks.Count}";
+                        GrassText.GetComponent<TextMeshProUGUI>().text = $"{(SaveFile.GetInt("randomizer grass cut " + sceneName) >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{SaveFile.GetInt("randomizer grass cut " + sceneName)}/{GrassRandomizer.GrassChecksPerScene[SceneManager.GetActiveScene().name]}" +
+                            $"<#ffffff>\n{(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                     }
                     QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
                     Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
