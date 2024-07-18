@@ -26,6 +26,7 @@ namespace TunicRandomizer {
         private ConcurrentQueue<(ItemInfo ItemInfo, int index)> incomingItems;
         private DeathLinkService deathLinkService;
         public Dictionary<string, object> slotData;
+        public bool disableSpoilerLog = false;
         public bool sentCompletion = false;
         public bool sentRelease = false;
         public bool sentCollect = false;
@@ -117,6 +118,16 @@ namespace TunicRandomizer {
                     deathLinkService.EnableDeathLink();
                 }
 
+                if (slotData.ContainsKey("disable_local_spoiler") && slotData["disable_local_spoiler"].ToString() == "1") {
+                    disableSpoilerLog = true;
+                    TunicRandomizer.Settings.CreateSpoilerLog = false;
+                    if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
+                        File.Delete(TunicRandomizer.SpoilerLogPath);
+                    }
+                } else {
+                    disableSpoilerLog = false;
+                }
+
                 SetupDataStorage();
 
             } else {
@@ -144,6 +155,7 @@ namespace TunicRandomizer {
 
                 incomingItemHandler = null;
                 checkItemsReceived = null;
+                disableSpoilerLog = false;
                 incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
                 deathLinkService = null;
                 slotData = null;
