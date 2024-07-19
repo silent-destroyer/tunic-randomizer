@@ -498,8 +498,10 @@ namespace TunicRandomizer {
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[GrassId];
                     Item = ItemLookup.GetItemDataFromCheck(check);
+                    SetupItemMoveUp(grass, check: check);
                 } else if (IsArchipelago()) {
                     ItemInfo itemInfo = ItemLookup.ItemList[GrassId];
+                    SetupItemMoveUp(grass, itemInfo: itemInfo);
                     if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                         ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId]);
                         return;
@@ -538,6 +540,9 @@ namespace TunicRandomizer {
 
         public static void ApplyAPGrassTexture(Grass grass, ItemInfo itemInfo, bool Checked) {
             GameObject questionMark = new GameObject("question mark");
+            for(int i = 0; i < grass.transform.GetChild(1).childCount; i++) {
+                GameObject.Destroy(grass.transform.GetChild(1).GetChild(i).gameObject);
+            }
             questionMark.transform.parent = grass.transform.GetChild(1);
             questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
             if (grass.name.Contains("bush")) {
@@ -580,6 +585,57 @@ namespace TunicRandomizer {
                 }
             }
             questionMark.SetActive(!Checked);
+        }
+
+        public static void SetupItemMoveUp(Grass grass, Check check = null, ItemInfo itemInfo = null) {
+            if (check == null && itemInfo == null) { return; }
+            string grassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+            if (Locations.CheckedLocations.ContainsKey(grassId) && Locations.CheckedLocations[grassId]) { return; }
+            if (grass.GetComponentInChildren<MoveUp>(true) != null) {
+                GameObject.Destroy(grass.GetComponentInChildren<MoveUp>(true).gameObject);
+            }
+            ItemData Item = null;
+            if (check != null) {
+                Item = ItemLookup.GetItemDataFromCheck(check);
+            } else if (itemInfo != null && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                Item = ItemLookup.Items[itemInfo.ItemName];
+            }
+            if (Item != null && Item.Type == ItemTypes.GRASS) {
+                return;
+            }
+            GameObject moveUp = SetupItemBase(grass.transform, itemInfo, check);
+            TransformData TransformData;
+            if (IsArchipelago() && Item == null && (itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName))) {
+                TransformData = ItemPositions.Techbow["Other World"];
+            } else {
+                if (Item.Type == ItemTypes.TRINKET) {
+                    TransformData = ItemPositions.Techbow["Trinket Card"];
+                } else if (Item.Type == ItemTypes.MONEY || Item.Type == ItemTypes.FOOLTRAP) {
+                    if (Item.QuantityToGive < 30) {
+                        TransformData = ItemPositions.Techbow["money small"];
+                    } else if (Item.QuantityToGive >= 30 && Item.QuantityToGive < 100) {
+                        TransformData = ItemPositions.Techbow["money medium"];
+                    } else {
+                        TransformData = ItemPositions.Techbow["money large"];
+                    }
+                } else if (Item.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
+                    int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                    TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.ItemNameForInventory];
+                } else {
+                    TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
+                    TransformData.rot = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                }
+            }
+
+            moveUp.transform.localPosition = TransformData.pos;
+            moveUp.transform.localRotation = TransformData.rot;
+            moveUp.transform.localScale = TransformData.scale;
+            moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
+
+            moveUp.layer = 0;
+            moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
+            moveUp.AddComponent<MoveUp>().speed = 0.5f;
+            moveUp.SetActive(false);
         }
 
         public static void CheckCollectedItemFlags() {

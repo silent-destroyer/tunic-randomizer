@@ -118,23 +118,30 @@ namespace TunicRandomizer {
             float y = 20f * guiScale;
 
             GUI.skin.toggle.fontSize = (int)(15 * guiScale); 
-            GUI.skin.button.fontSize = (int)(15 * guiScale);
+            GUI.skin.button.fontSize = (int)(15 * guiScale); 
+            GUI.skin.label.fontSize = (int)(15 * guiScale);
+
             if (TunicRandomizer.Settings.RaceMode) {
                 TunicRandomizer.Settings.RaceMode = GUI.Toggle(new Rect(330f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.RaceMode, "Race Mode");
             } else {
-                bool ToggleSpoilerLog = GUI.Toggle(new Rect(TunicRandomizer.Settings.CreateSpoilerLog ? 280f * guiScale : 330f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.CreateSpoilerLog, "Spoiler Log");
-                TunicRandomizer.Settings.CreateSpoilerLog = ToggleSpoilerLog;
-                if (ToggleSpoilerLog) {
-                    GUI.skin.button.fontSize = (int)(15 * guiScale);
-                    bool OpenSpoilerLog = GUI.Button(new Rect(370f * guiScale, y, 50f * guiScale, 25f * guiScale), "Open");
-                    if (OpenSpoilerLog) {
-                        if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
-                            System.Diagnostics.Process.Start(TunicRandomizer.SpoilerLogPath);
+                if (Archipelago.instance.integration.disableSpoilerLog) {
+                    GUI.Label(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), "Spoiler Log Disabled by Host");
+                } else {
+                    bool ToggleSpoilerLog = GUI.Toggle(new Rect(TunicRandomizer.Settings.CreateSpoilerLog ? 280f * guiScale : 330f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.CreateSpoilerLog, "Spoiler Log");
+                    TunicRandomizer.Settings.CreateSpoilerLog = ToggleSpoilerLog;
+                    if (ToggleSpoilerLog) {
+                        GUI.skin.button.fontSize = (int)(15 * guiScale);
+                        bool OpenSpoilerLog = GUI.Button(new Rect(370f * guiScale, y, 50f * guiScale, 25f * guiScale), "Open");
+                        if (OpenSpoilerLog) {
+                            if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
+                                System.Diagnostics.Process.Start(TunicRandomizer.SpoilerLogPath);
+                            }
                         }
                     }
                 }
             }
 
+            GUI.skin.label.fontSize = (int)(25 * guiScale);
             GUI.skin.toggle.fontSize = (int)(20 * guiScale);
             GUI.skin.button.fontSize = (int)(20 * guiScale);
 

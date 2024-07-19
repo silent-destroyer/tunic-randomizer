@@ -33,9 +33,7 @@ namespace TunicRandomizer {
             var grassReqsJson = "TunicRandomizer.src.Data.GrassReqs.json";
             List<List<string>> grassCutters = new List<List<string>>() {
                 new List<string>() {"Sword"},
-                new List<string>() {"Techbow"},
                 new List<string>() {"Stick", "Trinket - Glass Cannon"},
-                new List<string>() {"Shotgun"},
             };
             using (Stream stream = assembly.GetManifestResourceStream(grassJson))
             using (StreamReader reader = new StreamReader(stream)) {
@@ -111,24 +109,6 @@ namespace TunicRandomizer {
                             ItemData item = ItemLookup.Items[ItemInfo.ItemName];
                             if (item.Type != ItemTypes.GRASS) {
                                 Archipelago.instance.ActivateCheck(grassId);
-                                GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, APItem: ItemInfo);
-                                if (item.Type == ItemTypes.TRINKET) {
-                                    grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
-                                } else if (item.Type == ItemTypes.SWORDUPGRADE) {
-                                    grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].pos : grassSpawn.transform.localPosition;
-                                    grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                                    grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].scale : grassSpawn.transform.localScale;
-                                    grassSpawn.transform.localRotation = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].rot : grassSpawn.transform.localRotation;
-                                } else {
-                                    grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
-                                    grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].pos : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].pos : grassSpawn.transform.localPosition;
-                                    grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                                    grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(item.ItemNameForInventory) ? ItemPositions.Techbow[item.ItemNameForInventory].scale : ItemPositions.Techbow.ContainsKey(item.Type.ToString()) ? ItemPositions.Techbow[item.Type.ToString()].scale : grassSpawn.transform.localScale;
-                                }
-                                grassSpawn.layer = 0;
-                                grassSpawn.SetActive(true);
-                                grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
-                                grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
                                 if (item.Name == "Fool Trap") {
                                     foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
                                         if (child.name == __instance.name) { continue; }
@@ -146,16 +126,6 @@ namespace TunicRandomizer {
                             }
                         } else {
                             Archipelago.instance.ActivateCheck(grassId);
-
-                            GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, APItem: ItemInfo);
-                            grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
-                            grassSpawn.transform.localPosition = ItemPositions.Techbow["Other World"].pos;
-                            grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                            grassSpawn.layer = 0;
-                            grassSpawn.transform.localScale = ItemPositions.Techbow["Other World"].scale;
-                            grassSpawn.SetActive(true);
-                            grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
-                            grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
                         }
                         if (__instance.transform.GetChild(1).childCount == 1) {
                             __instance.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
@@ -172,24 +142,6 @@ namespace TunicRandomizer {
                             SaveFile.SetInt("randomizer picked up " + check.CheckId, 1);
                             TunicRandomizer.Tracker.SetCollectedItem("Grass", false);
                         } else {
-                            GameObject grassSpawn = ModelSwaps.SetupItemBase(__instance.transform, Check: check);
-                            if (item.Type == ItemTypes.TRINKET) {
-                                grassSpawn.transform.localEulerAngles = new Vector3(0, 45, 0);
-                            } else if (item.Type == ItemTypes.SWORDUPGRADE) {
-                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].pos : grassSpawn.transform.localPosition;
-                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].scale : grassSpawn.transform.localScale;
-                                grassSpawn.transform.localRotation = ItemPositions.Techbow.ContainsKey($"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}") ? ItemPositions.Techbow[$"Sword Progression {SaveFile.GetInt(SaveFlags.SwordProgressionLevel)}"].rot : grassSpawn.transform.localRotation;
-                            } else {
-                                grassSpawn.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
-                                grassSpawn.transform.localPosition = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].pos : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].pos : grassSpawn.transform.localPosition;
-                                grassSpawn.transform.localPosition += new Vector3(0, 0.5f, 0);
-                                grassSpawn.transform.localScale = ItemPositions.Techbow.ContainsKey(check.Reward.Name) ? ItemPositions.Techbow[check.Reward.Name].scale : ItemPositions.Techbow.ContainsKey(check.Reward.Type) ? ItemPositions.Techbow[check.Reward.Type].scale : grassSpawn.transform.localScale;
-                            }
-                            grassSpawn.layer = 0;
-                            grassSpawn.SetActive(true);
-                            grassSpawn.AddComponent<DestroyAfterTime>().lifetime = 2f;
-                            grassSpawn.AddComponent<MoveUp>().speed = 0.5f;
                             if (item.Name == "Fool Trap") {
                                 foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
                                     if (child.name == __instance.name) { continue; }
@@ -204,6 +156,9 @@ namespace TunicRandomizer {
                             GameObject.Destroy(FairyTarget);
                         }
                     }
+                }
+                if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
+                    __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
                 }
             }
             return true;

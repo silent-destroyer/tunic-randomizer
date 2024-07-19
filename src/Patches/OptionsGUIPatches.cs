@@ -104,8 +104,10 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
             OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints);
             OptionsGUI.addToggle("Seeking Spell Uses Logic", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
-            OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
-            OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
+            if (!Archipelago.instance.integration.disableSpoilerLog) {
+                OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
+                OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
+            }
             OptionsGUI.setHeading("Hints");
         }
 

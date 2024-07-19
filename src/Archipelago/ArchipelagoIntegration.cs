@@ -22,12 +22,11 @@ namespace TunicRandomizer {
 
         public ArchipelagoSession session;
         private IEnumerator<bool> incomingItemHandler;
-        private IEnumerator<bool> outgoingItemHandler;
         private IEnumerator<bool> checkItemsReceived;
         private ConcurrentQueue<(ItemInfo ItemInfo, int index)> incomingItems;
-        private ConcurrentQueue<ItemInfo> outgoingItems;
         private DeathLinkService deathLinkService;
         public Dictionary<string, object> slotData;
+        public bool disableSpoilerLog = false;
         public bool sentCompletion = false;
         public bool sentRelease = false;
         public bool sentCollect = false;
@@ -53,10 +52,6 @@ namespace TunicRandomizer {
 
                 if (incomingItemHandler != null) {
                     incomingItemHandler.MoveNext();
-                }
-
-                if (outgoingItemHandler != null) {
-                    outgoingItemHandler.MoveNext();
                 }
 
 /*                if (LocationsToSend.Count > 0) {
@@ -94,10 +89,8 @@ namespace TunicRandomizer {
                 }
             }
             incomingItemHandler = IncomingItemHandler();
-            outgoingItemHandler = OutgoingItemHandler();
             checkItemsReceived = CheckItemsReceived();
             incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int index)>();
-            outgoingItems = new ConcurrentQueue<ItemInfo>();
 
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
@@ -123,6 +116,16 @@ namespace TunicRandomizer {
 
                 if (TunicRandomizer.Settings.DeathLinkEnabled) {
                     deathLinkService.EnableDeathLink();
+                }
+
+                if (slotData.ContainsKey("disable_local_spoiler") && slotData["disable_local_spoiler"].ToString() == "1") {
+                    disableSpoilerLog = true;
+                    TunicRandomizer.Settings.CreateSpoilerLog = false;
+                    if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
+                        File.Delete(TunicRandomizer.SpoilerLogPath);
+                    }
+                } else {
+                    disableSpoilerLog = false;
                 }
 
                 SetupDataStorage();
@@ -151,10 +154,9 @@ namespace TunicRandomizer {
                 }
 
                 incomingItemHandler = null;
-                outgoingItemHandler = null;
                 checkItemsReceived = null;
+                disableSpoilerLog = false;
                 incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
-                outgoingItems = new ConcurrentQueue<ItemInfo>();
                 deathLinkService = null;
                 slotData = null;
                 ItemIndex = 0;
@@ -255,28 +257,6 @@ namespace TunicRandomizer {
             }
         }
 
-        private IEnumerator<bool> OutgoingItemHandler() {
-            while (connected) {
-                if (!outgoingItems.TryDequeue(out var itemInfo)) {
-                    yield return true;
-                    continue;
-                }
-
-                var itemName = itemInfo.ItemName;
-                var location = itemInfo.LocationName;
-                var receiver = itemInfo.Player.Name;
-
-                TunicLogger.LogInfo("Sent " + itemName + " at " + location + " to " + receiver);
-
-                if (itemInfo.Player != session.ConnectionInfo.Slot) {
-                    SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players")+1);
-                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
-                }
-                
-                yield return true;
-            }
-        }
-
         public void ActivateCheck(string LocationName) {
             var sceneName = SceneManager.GetActiveScene().name;
             if (LocationName != null) {
@@ -300,12 +280,14 @@ namespace TunicRandomizer {
                     ItemTracker.PopulateSpoilerLog();
                 }
 
-                session.Locations.ScoutLocationsAsync(location)
-                .ContinueWith(locationInfoPacket => {
-                    foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                        outgoingItems.Enqueue(ItemInfo);
-                    }
-                });
+                ItemInfo itemInfo = ItemLookup.ItemList[GameObjectId];
+                string receiver = session.Players.GetPlayerName(itemInfo.Player);
+                string itemName = itemInfo.ItemName;
+                TunicLogger.LogInfo("Sent " + itemInfo.ItemName + " at " + location + " to " + receiver);
+                if (itemInfo.Player != session.ConnectionInfo.Slot) {
+                    SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
+                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
+                }
 
                 if (FairyTargets.ItemTargetsInLogic.Count == 0) {
                     FairyTargets.CreateLogicLoadZoneTargets(addImmediately: true);

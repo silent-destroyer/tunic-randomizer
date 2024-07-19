@@ -55,7 +55,7 @@ namespace TunicRandomizer {
             PopulatePrecollected();
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             List<string> Ladders = new List<string>(LadderItems);
-            List<string> GrassCutters = new List<string>() { "Stick", "Trinket - Glass Cannon", "Shotgun" };
+            List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1) {
                     ProgressionNames.Add("Hexagon Gold");
