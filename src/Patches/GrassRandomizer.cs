@@ -85,8 +85,14 @@ namespace TunicRandomizer {
                         }
 
                         GrassChecks.Add(check.CheckId, check);
-                        Locations.LocationIdToDescription.Add(check.CheckId, check.CheckId);
-                        Locations.LocationDescriptionToId.Add(check.CheckId, check.CheckId);
+                        string description = "";
+                        if (grass.Contains("bush")) {
+                            description = $"{Locations.SimplifiedSceneNames[check.Location.SceneName]} - {pair.Key} {grass.Split('~')[0].Replace("bush", "Bush")} {check.Location.Position}";
+                        } else {
+                            description = $"{Locations.SimplifiedSceneNames[check.Location.SceneName]} - {pair.Key} {grass.Split('~')[0].Replace("grass", "Grass")} {check.Location.Position}";
+                        }
+                        Locations.LocationIdToDescription.Add(check.CheckId, description);
+                        Locations.LocationDescriptionToId.Add(description, check.CheckId);
                         if (!GrassChecksPerScene.ContainsKey(check.Location.SceneName)) {
                             GrassChecksPerScene.Add(check.Location.SceneName, 0);
                         }

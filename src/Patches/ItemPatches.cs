@@ -238,7 +238,7 @@ namespace TunicRandomizer {
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
-            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(itemInfo.LocationName)) {
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 

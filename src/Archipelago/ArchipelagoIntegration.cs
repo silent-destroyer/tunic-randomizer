@@ -188,7 +188,7 @@ namespace TunicRandomizer {
                 var itemName = itemInfo.ItemName;
                 var itemDisplayName = itemName + " (" + itemInfo.ItemId + ") at index " + pendingItem.index;
 
-                if (itemInfo.ItemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(itemInfo.LocationName))) {
+                if (itemInfo.ItemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]))) {
                     SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
                     Inventory.GetItemByName("Grass").Quantity += 1;
                 }
@@ -268,7 +268,7 @@ namespace TunicRandomizer {
                     FairyTargets.CreateLoadZoneTargets();
                 }
 
-                if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                if (SaveFile.GetInt(GrassRandoEnabled) != 1 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                     ItemTracker.PopulateSpoilerLog();
                 }
 
