@@ -7,7 +7,6 @@ using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static Il2CppSystem.Uri;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -422,8 +421,7 @@ namespace TunicRandomizer {
 
         public static void ApplyChestTexture(Chest Chest) {
             if (Chest != null) {
-
-                string ItemId = Chest.chestID == 0 ? $"{SceneLoaderPatches.SceneName}-{Chest.transform.position.ToString()} [{SceneLoaderPatches.SceneName}]" : $"{Chest.chestID} [{SceneLoaderPatches.SceneName}]";
+                string ItemId = ItemPatches.GetChestRewardID(Chest);
                 string ItemName = "Stick";
                 if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(ItemId)) {
                     ItemInfo APItem = ItemLookup.ItemList[ItemId];
@@ -498,10 +496,10 @@ namespace TunicRandomizer {
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[GrassId];
                     Item = ItemLookup.GetItemDataFromCheck(check);
-                    SetupItemMoveUp(grass, check: check);
+                    SetupItemMoveUp(grass.transform, check: check);
                 } else if (IsArchipelago()) {
                     ItemInfo itemInfo = ItemLookup.ItemList[GrassId];
-                    SetupItemMoveUp(grass, itemInfo: itemInfo);
+                    SetupItemMoveUp(grass.transform, itemInfo: itemInfo);
                     if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                         ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId]);
                         return;
@@ -587,12 +585,12 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
-        public static void SetupItemMoveUp(Grass grass, Check check = null, ItemInfo itemInfo = null) {
+        public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
             if (check == null && itemInfo == null) { return; }
-            string grassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
-            if (Locations.CheckedLocations.ContainsKey(grassId) && Locations.CheckedLocations[grassId]) { return; }
-            if (grass.GetComponentInChildren<MoveUp>(true) != null) {
-                GameObject.Destroy(grass.GetComponentInChildren<MoveUp>(true).gameObject);
+            string checkId = transform.GetComponent<Grass>() != null ? GrassRandomizer.getGrassGameObjectId(transform.GetComponent<Grass>()) : ItemPatches.GetChestRewardID(transform.GetComponent<Chest>());
+            //if (Locations.CheckedLocations.ContainsKey(checkId) && Locations.CheckedLocations[checkId]) { return; }
+            if (transform.GetComponentInChildren<MoveUp>(true) != null && !transform.GetComponentInChildren<MoveUp>(true).gameObject.active) {
+                GameObject.Destroy(transform.GetComponentInChildren<MoveUp>(true).gameObject);
             }
             ItemData Item = null;
             if (check != null) {
@@ -600,10 +598,13 @@ namespace TunicRandomizer {
             } else if (itemInfo != null && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                 Item = ItemLookup.Items[itemInfo.ItemName];
             }
-            if (Item != null && Item.Type == ItemTypes.GRASS) {
+            if (transform.GetComponent<Grass>() != null && Item != null && Item.Type == ItemTypes.GRASS) {
                 return;
             }
-            GameObject moveUp = SetupItemBase(grass.transform, itemInfo, check);
+            if (transform.GetComponent<Chest>() != null && Item != null && Item.Type == ItemTypes.FAIRY) {
+                return;
+            }
+            GameObject moveUp = SetupItemBase(transform, itemInfo, check);
             TransformData TransformData;
             if (IsArchipelago() && Item == null && (itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName))) {
                 TransformData = ItemPositions.Techbow["Other World"];
@@ -623,19 +624,31 @@ namespace TunicRandomizer {
                     TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.ItemNameForInventory];
                 } else {
                     TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
-                    TransformData.rot = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                    if (transform.GetComponent<Grass>() != null) {
+                        TransformData.rot = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                    }
                 }
             }
 
             moveUp.transform.localPosition = TransformData.pos;
             moveUp.transform.localRotation = TransformData.rot;
+            if (transform.GetComponent<Chest>() != null) {
+                moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
+                if (Item != null) {
+                    if (Item.Name == "Just Some Pals") {
+                        moveUp.transform.localEulerAngles += new Vector3(0, 90, 0);
+                    } else if (Item.Type == ItemTypes.TRINKET) {
+                        moveUp.transform.localEulerAngles += new Vector3(0, 135, 0);
+                    }
+                }
+            }
             moveUp.transform.localScale = TransformData.scale;
             moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
 
             moveUp.layer = 0;
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
-            moveUp.SetActive(false);
+            moveUp.SetActive(transform.GetComponent<Chest>() != null);
         }
 
         public static void CheckCollectedItemFlags() {
