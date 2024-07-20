@@ -28,11 +28,11 @@ namespace TunicRandomizer {
                     // don't need to check if ability shuffle is on since the abilities are precollected if ability shuffle is off
                     if (!inventory.ContainsKey(item)) {
                         if (item == "Sword") {
-                            if (inventory.ContainsKey("Sword Upgrade") && inventory["Sword Upgrade"] >= 2) {
+                            if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) {
                                 met++;
                             }
                         } else if (item == "Stick") { 
-                            if (inventory.ContainsKey("Sword Upgrade") && inventory["Sword Upgrade"] >= 1) {
+                            if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 1) {
                                 met++;
                             }
                         } else if (item == "12") {
