@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -100,32 +101,34 @@ namespace TunicRandomizer {
             if (__instance.GetComponent<Grass>() != null) {
                 if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
                     string grassId = $"{__instance.name}~{__instance.transform.position.ToString()} [{__instance.gameObject.scene.name}]";
-                        
+                    
                     if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
                         SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
                         SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
-                        if (Archipelago.instance.IsTunicPlayer(ItemInfo.Player)) {
-                            ItemData item = ItemLookup.Items[ItemInfo.ItemName];
-                            if (item.Type != ItemTypes.GRASS) {
-                                Archipelago.instance.ActivateCheck(grassId);
-                                if (item.Name == "Fool Trap") {
-                                    foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
-                                        if (child.name == __instance.name) { continue; }
-                                        child.localEulerAngles = Vector3.zero;
-                                        child.position -= new Vector3(0, 2, 0);
-                                    }
-                                }
-                            } else {
-                                Archipelago.instance.CompleteLocationCheck(grassId);
-                                SaveFile.SetInt("randomizer picked up " + grassId, 1);
-                                Locations.CheckedLocations[grassId] = true;
-                                if (GameObject.Find($"fairy target {grassId}")) {
-                                    GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
+                        bool isForTunicPlayer = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
+                        if (isForTunicPlayer && ItemInfo.ItemName != "Grass") {
+                            if (ItemInfo.ItemName == "Fool Trap") {
+                                foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
+                                    if (child.name == __instance.name) { continue; }
+                                    child.localEulerAngles = Vector3.zero;
+                                    child.position -= new Vector3(0, 2, 0);
                                 }
                             }
-                        } else {
-                            Archipelago.instance.ActivateCheck(grassId);
+                        } 
+                        Task.Run(() => Archipelago.instance.integration.session.Locations.CompleteLocationChecks(ItemInfo.LocationId));
+                        SaveFile.SetInt("randomizer picked up " + grassId, 1);
+                        Locations.CheckedLocations[grassId] = true;
+                        TunicLogger.LogInfo("Cut Grass: " + grassId);
+                        if (GameObject.Find($"fairy target {grassId}")) {
+                            GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
+                        }
+                        string receiver = ItemInfo.Player.Name;
+                        string itemName = ItemInfo.ItemName;
+                        TunicLogger.LogInfo("Sent " + ItemInfo.ItemName + " at " + ItemInfo.LocationName + " to " + receiver);
+                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemName != "Grass" : true)) {
+                            SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
+                            Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && isForTunicPlayer ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                         }
                         if (__instance.transform.GetChild(1).childCount == 1) {
                             __instance.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);

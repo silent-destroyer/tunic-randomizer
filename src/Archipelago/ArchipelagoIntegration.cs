@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
@@ -31,9 +32,6 @@ namespace TunicRandomizer {
         public bool sentRelease = false;
         public bool sentCollect = false;
         public int ItemIndex = 0;
-/*        public List<string> LocationsToSend = new List<string>();
-        public float SendDelayTimer = 0.0f;
-        public float SendDelayTimerThreshold = 3.0f;*/
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -54,12 +52,6 @@ namespace TunicRandomizer {
                     incomingItemHandler.MoveNext();
                 }
 
-/*                if (LocationsToSend.Count > 0) {
-                    SendDelayTimer += Time.unscaledDeltaTime;
-                    if (SendDelayTimer > SendDelayTimerThreshold) {
-                        ActivateChecks();
-                    }
-                }*/
             }
 
             if (SpeedrunData.gameComplete != 0 && !sentCompletion) {
@@ -261,11 +253,11 @@ namespace TunicRandomizer {
             var sceneName = SceneManager.GetActiveScene().name;
             if (LocationName != null) {
                 TunicLogger.LogInfo("Checked location " + LocationName);
-                var location = session.Locations.GetLocationIdFromName(session.ConnectionInfo.Game, LocationName);
+                string GameObjectId = Locations.LocationDescriptionToId[LocationName];
+                var location = ItemLookup.ItemList[GameObjectId].LocationId;
 
                 session.Locations.CompleteLocationChecks(location);
 
-                string GameObjectId = Locations.LocationDescriptionToId[LocationName];
                 SaveFile.SetInt(ItemCollectedKey + GameObjectId, 1);
 
                 Locations.CheckedLocations[GameObjectId] = true;
@@ -276,12 +268,12 @@ namespace TunicRandomizer {
                     FairyTargets.CreateLoadZoneTargets();
                 }
 
-                if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                     ItemTracker.PopulateSpoilerLog();
                 }
 
                 ItemInfo itemInfo = ItemLookup.ItemList[GameObjectId];
-                string receiver = session.Players.GetPlayerName(itemInfo.Player);
+                string receiver = itemInfo.Player.Name;
                 string itemName = itemInfo.ItemName;
                 TunicLogger.LogInfo("Sent " + itemInfo.ItemName + " at " + location + " to " + receiver);
                 if (itemInfo.Player != session.ConnectionInfo.Slot) {
@@ -306,22 +298,6 @@ namespace TunicRandomizer {
 
             }
         }
-
-/*        public void ActivateChecks() {
-            if (LocationsToSend.Count > 0) {
-                long[] locationIDs = LocationsToSend.Select(loc => session.Locations.GetLocationIdFromName("TUNIC", loc)).ToArray();
-                session.Locations.CompleteLocationChecks(locationIDs);
-                session.Locations.ScoutLocationsAsync(locationIDs)
-                    .ContinueWith(locationInfoPacket => {
-                        foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                            outgoingItems.Enqueue(ItemInfo);
-                        }
-                    });
-
-                LocationsToSend.Clear();
-                SendDelayTimer = 0.0f;
-            }
-        }*/
 
         public void SendCompletion() {
             session.SetGoalAchieved();
