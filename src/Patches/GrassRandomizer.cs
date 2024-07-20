@@ -100,7 +100,10 @@ namespace TunicRandomizer {
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             if (__instance.GetComponent<Grass>() != null) {
                 if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                    string grassId = $"{__instance.name}~{__instance.transform.position.ToString()} [{__instance.gameObject.scene.name}]";
+                    string grassId = getGrassGameObjectId(__instance.GetComponent<Grass>());
+                    if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                        return false;
+                    }
                     
                     if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
@@ -169,6 +172,22 @@ namespace TunicRandomizer {
 
         public static bool PauseMenu___button_ReturnToTitle_PrefixPatch(PauseMenu __instance) {
             Profile.SavePermanentStatesByPosition(SceneManager.GetActiveScene().buildIndex, PermanentStateByPositionManager.deadPositionsInCurrentScene);
+            return true;
+        }
+
+        public static string getGrassGameObjectId(Grass grass) {
+            return $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+        }
+
+        public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
+
+            // Prevent grass from being cut if AP connection is lost
+            if (__instance.GetComponent<Grass>() != null && SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                    return false;
+                }
+            }
+
             return true;
         }
     }
