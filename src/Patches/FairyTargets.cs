@@ -230,6 +230,7 @@ namespace TunicRandomizer {
             // if there are no item targets in logic, check if there's locations in logic in adjacent regions
             if (ItemTargetsInLogic.Count == 0) {
                 CreateLogicLoadZoneTargets(addImmediately:true);
+                FairyTarget.registered = ItemTargetsInLogic;
             }
         }
 
