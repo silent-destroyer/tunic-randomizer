@@ -418,6 +418,7 @@ namespace TunicRandomizer {
             GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
             y += 40f * guiScale;
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
+            TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(new Rect(195 * guiScale, y, 195f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
             y += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Difficulty Options");
             y += 40f * guiScale;
