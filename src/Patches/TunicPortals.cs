@@ -4978,8 +4978,15 @@ namespace TunicRandomizer {
         public static void RandomizePortals(int seed) {
             RandomizedPortals.Clear();
 
-            // keeping track of how many portals of each are left while pairing
-            Dictionary<int, int> portalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 } };
+            // keeping track of how many portals of each are left while pairing the two plus portals
+            Dictionary<int, int> portalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
+            Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
+            foreach (KeyValuePair<int, int> pair in directionPairs) {
+                if (directionPairs.ContainsKey(pair.Value)) {
+                    continue;
+                }
+                directionPairs.Add(pair.Value, pair.Key);
+            }
 
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
@@ -5000,11 +5007,13 @@ namespace TunicRandomizer {
                             deadEndPortals.Add(portal);
                         } else {
                             twoPlusPortals.Add(portal);
+                            portalDirectionTracker[portal.Direction]++;
                         }
                         // need to throw fairy cave into the twoPlus list if laurels is at 10 fairies
                         if (portal.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
                             deadEndPortals.Remove(portal);
                             twoPlusPortals.Add(portal);
+                            portalDirectionTracker[portal.Direction]++;
                         }
                     }
                 }
@@ -5074,13 +5083,22 @@ namespace TunicRandomizer {
 
                 ShuffleList(twoPlusPortals, seed);
                 foreach (Portal secondPortal in twoPlusPortals) {
+                    // find a portal in a region we can access
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
+                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+
+                        }
                         portal2 = secondPortal;
                         twoPlusPortals.Remove(secondPortal);
                         break;
                     }
                 }
-                if (portal2 == null) { 
+                if (portal2 == null) {
+                    if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                        // portal probably doesn't have any valid directional pairs right this second, put it back in and go again
+                        twoPlusPortals.Add(portal1);
+                        continue;
+                    }
                     TunicLogger.LogInfo("something messed up in portal pairing for portal 2");
                 }
 
