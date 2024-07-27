@@ -76,9 +76,10 @@ namespace TunicRandomizer {
                         recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = itemData.Name;
                     } else if (item.itemInfo != null) {
                         isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
-                        if (item.itemInfo.Player.Game != "TUNIC") {
+                        if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
                             recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
                             string itemFormatted = item.itemInfo.ItemName.Length > 20 ? item.itemInfo.ItemName.Substring(0, 20) + "..." : item.itemInfo.ItemName;
+                            itemFormatted = itemFormatted.Replace("_", " ");
                             recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
                         } else {
                             ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
@@ -131,7 +132,7 @@ namespace TunicRandomizer {
         }
 
         public void EnqueueItem(ItemInfo itemInfo, bool forYou) {
-            if (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) && itemInfo.Player.Game == "TUNIC" && itemInfo.ItemName == "Grass") {
+            if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) && itemInfo.ItemName == "Grass") {
                 return;
             }
             recentItemsQueue.Enqueue(new RecentItemData(itemInfo, forYou));
