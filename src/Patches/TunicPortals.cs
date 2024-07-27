@@ -4974,6 +4974,9 @@ namespace TunicRandomizer {
         public static void RandomizePortals(int seed) {
             RandomizedPortals.Clear();
 
+            // keeping track of how many portals of each are left while pairing
+            Dictionary<int, int> portalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 } };
+
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
                 string scene_name = scene_group.Key;
@@ -5101,12 +5104,17 @@ namespace TunicRandomizer {
             // shops get added separately cause they're weird
             List<string> shopSceneList = new List<string>();
             int shopCount = 6;
-            if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+            if (SaveFile.GetInt(SaveFlags.FixedShop) == 1 && SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
                 shopCount = 0;
                 Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "_", scene: "Overworld Redux", region: "Overworld");
                 Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 2");
                 RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
                 shopSceneList.Add("Overworld Redux");
+            }
+            // todo: when figuring out format, swap this to be more like options than individual if statements
+            if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                // need all 8 shops to match up everything nicely
+                shopCount = 8;
             }
             int regionNumber = 0;
             while (shopCount > 0) {

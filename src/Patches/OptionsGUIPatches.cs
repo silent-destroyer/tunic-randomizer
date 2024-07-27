@@ -361,11 +361,17 @@ namespace TunicRandomizer {
 
         public static void ToggleFixedShop(int index) {
             TunicRandomizer.Settings.ERFixedShop = !TunicRandomizer.Settings.ERFixedShop;
+            if (TunicRandomizer.Settings.ERFixedShop == true) {
+                TunicRandomizer.Settings.PortalDirectionPairs = false;
+            }
             SaveSettings();
         }
 
         public static void TogglePortalDirectionPairs(int index) {
             TunicRandomizer.Settings.PortalDirectionPairs = !TunicRandomizer.Settings.PortalDirectionPairs;
+            if (TunicRandomizer.Settings.PortalDirectionPairs == true) {
+                TunicRandomizer.Settings.ERFixedShop = false;
+            }
             SaveSettings();
         }
 
