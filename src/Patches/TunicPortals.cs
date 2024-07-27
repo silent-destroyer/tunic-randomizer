@@ -7,9 +7,11 @@ namespace TunicRandomizer {
     public class TunicPortals {
         
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+        public static List<string> FlippedShopScenes = new List<string>();
 
         // the direction you move while entering the portal
         public enum PDir {
+            NONE,
             NORTH,
             SOUTH,
             EAST,
@@ -29,6 +31,7 @@ namespace TunicRandomizer {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
+                Direction = (int) PDir.NONE;
             }
 
             public TunicPortal(string name, string destination, string tag, PDir direction) {
@@ -1176,7 +1179,7 @@ namespace TunicRandomizer {
                     {
                         "Zig Skip Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1", "_zig2_skip", PDir.FLOOR),
+                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1", "_zig2_skip", PDir.FLOOR),  // floor is weird but oh well
                         }
                     },
                 }
@@ -1396,7 +1399,8 @@ namespace TunicRandomizer {
                     {
                         "Shop",
                         new List<TunicPortal> {
-                            new TunicPortal("Shop", "Previous Region", "_"),  // "Previous Region" is just a placeholder
+                            new TunicPortal("Shop Portal", "Previous Region", "_"),  // "Previous Region" is just a placeholder
+                            // 6 shops connect to a north portal, 2 shops connect to an east portal (West Garden and Gauntlet)
                         }
                     },
                 }
@@ -4988,7 +4992,7 @@ namespace TunicRandomizer {
                     }
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal tunicPortal in region_portals) {
-                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name);
+                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name, direction: tunicPortal.Direction);
                         if (RegionDict[region_name].DeadEnd == true) {
                             deadEndPortals.Add(portal);
                         } else {
@@ -5020,6 +5024,7 @@ namespace TunicRandomizer {
             };
 
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
+            // todo: swap this to use AddDictToDict in a later PR
             foreach (KeyValuePair<string, int> item in MaxItems) {
                 FullInventory.Add(item.Key, item.Value);
             }
@@ -5139,10 +5144,6 @@ namespace TunicRandomizer {
                 // if this triggers, there's an odd number of portals total
                 TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
-            // todo: figure out why the quarry portal isn't working right
-            //Portal betaQuarryPortal = new Portal(destination: "Darkwoods", tag: "", name: "Beta Quarry", scene: "Quarry", region: "Quarry", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
-            //Portal zigSkipPortal = new Portal(destination: "ziggurat2020_3", tag: "zig2_skip", name: "Zig Skip", scene: "ziggurat2020_1", region: "Zig 1", requiredItems: new Dictionary<string, int>(), givesAccess: new List<string>(), deadEnd: true, prayerPortal: false, oneWay: false, ignoreScene: false);
-            //RandomizedPortals.Add("zigsecret", new PortalCombo(betaQuarryPortal, zigSkipPortal));
         }
 
         // this is for using the info from Archipelago to pair up the portals
@@ -5157,7 +5158,7 @@ namespace TunicRandomizer {
                     string region_name = region_group.Key;
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal tunicPortal in region_portals) {
-                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name);
+                        Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name, direction: tunicPortal.Direction);
                         portalsList.Add(portal);
                     }
                 }
@@ -5193,7 +5194,20 @@ namespace TunicRandomizer {
                 if (!portal.isActiveAndEnabled) {
                     continue;
                 }
+                // there's only ever 1 ShopScenePortal in a scene, so we can safely break at the end of this if
+                if (scene_name == "Shop" && portal.TryCast<ShopScenePortal>() != null) {
+                    string shop_scene = portal.FullID.Remove(portal.FullID.Length - 1);  // FullID always ends with an underscore, need to remove it
+                    foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+                        // shop is always portal2
+                        if (portalCombo.FlippedShop() == true && portalCombo.Portal1.Scene == shop_scene) {
+                            portal.TryCast<ShopScenePortal>().flippedArrivalScenes.Add(shop_scene);
+                            break;
+                        }
+                    }
+                    break;
+                }
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
+                // shops go to Previous Region, so this intentionally skips them
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
