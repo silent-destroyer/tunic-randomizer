@@ -29,6 +29,8 @@
 
         // Entrance Rando Flag
         public const string EntranceRando = "randomizer entrance rando enabled";
+        public const string FixedShop = "randomizer ER fixed shop enabled";
+        public const string PairedPortalDirections = "randomizer paired portal directions enabled";
 
         // Other Logic Flags
         public const string MasklessLogic = "randomizer maskless logic enabled";

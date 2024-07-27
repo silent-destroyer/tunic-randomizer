@@ -4983,7 +4983,7 @@ namespace TunicRandomizer {
                 foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
                     // if fixed shop is off, don't add zig skip exit to the portal list
                     string region_name = region_group.Key;
-                    if (region_name == "Zig Skip Exit" && SaveFile.GetInt("randomizer ER fixed shop") != 1) {
+                    if (region_name == "Zig Skip Exit" && SaveFile.GetInt(SaveFlags.FixedShop) != 1) {
                         continue;
                     }
                     List<TunicPortal> region_portals = region_group.Value;
@@ -5002,7 +5002,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
+            if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
                 foreach (Portal portal in twoPlusPortals) {
                     if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
                         twoPlusPortals.Remove(portal);
@@ -5035,7 +5035,7 @@ namespace TunicRandomizer {
             int total_nondeadend_count = 0;
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
                 // if fixed shop is off, don't add the zig skip exit region to the nondeadend count
-                if (region.Key == "Zig Skip Exit" && SaveFile.GetInt("randomizer ER fixed shop") != 1) {
+                if (region.Key == "Zig Skip Exit" && SaveFile.GetInt(SaveFlags.FixedShop) != 1) {
                     continue;
                 }
                 if (region.Value.DeadEnd == false) {
@@ -5101,7 +5101,7 @@ namespace TunicRandomizer {
             // shops get added separately cause they're weird
             List<string> shopSceneList = new List<string>();
             int shopCount = 6;
-            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
+            if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
                 shopCount = 0;
                 Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "_", scene: "Overworld Redux", region: "Overworld");
                 Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 2");

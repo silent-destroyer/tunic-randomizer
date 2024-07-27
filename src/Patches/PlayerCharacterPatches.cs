@@ -410,7 +410,7 @@ namespace TunicRandomizer {
                         SaveFile.SetInt("randomizer entrance rando enabled", 1);
                     }
                     if (TunicRandomizer.Settings.ERFixedShop) {
-                        SaveFile.SetInt("randomizer ER fixed shop", 1);
+                        SaveFile.SetInt(FixedShop, 1);
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
@@ -629,7 +629,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Torch").Quantity = 1;
             }
             if (random.Next(2) == 1) {
-                SaveFile.SetInt("randomizer ER fixed shop", 1);
+                SaveFile.SetInt(FixedShop, 1);
             }
             if (random.Next(2) == 1) {
                 SaveFile.SetInt("randomizer shuffled abilities", 1);

@@ -82,7 +82,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Shuffled Ladders", SaveFile.GetInt("randomizer ladder rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt("randomizer entrance rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && IsSinglePlayer()) {
-                    OptionsGUI.addButton("Entrance Randomizer: Fewer Shops", SaveFile.GetInt("randomizer ER fixed shop") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                    OptionsGUI.addButton("Entrance Randomizer: Fewer Shops", SaveFile.GetInt(FixedShop) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 }
                 OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt("randomizer laurels location")], null);
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
