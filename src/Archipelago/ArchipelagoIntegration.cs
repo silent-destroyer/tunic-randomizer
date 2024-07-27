@@ -208,7 +208,7 @@ namespace TunicRandomizer {
                 var handleResult = ItemPatches.GiveItem(itemName, itemInfo);
                 switch (handleResult) {
                     case ItemPatches.ItemResult.Success:
-                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + session.Players.GetPlayerName(itemInfo.Player) + " at " + itemInfo.LocationName);
+                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + itemInfo.Player.Name + " at " + itemInfo.LocationName);
 
                         incomingItems.TryDequeue(out _);
                         SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
@@ -279,11 +279,13 @@ namespace TunicRandomizer {
                 if (itemInfo.Player != session.ConnectionInfo.Slot) {
                     SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
                     Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
+                    RecentItemsDisplay.instance.EnqueueItem(itemInfo, false);
                 }
 
                 if (FairyTargets.ItemTargetsInLogic.Count == 0) {
                     FairyTargets.CreateLogicLoadZoneTargets(addImmediately: true);
                 }
+
 
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);

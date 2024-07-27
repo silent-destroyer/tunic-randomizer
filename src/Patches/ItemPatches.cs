@@ -461,6 +461,8 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
 
+            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+
             return ItemResult.Success;
         }
 
@@ -685,6 +687,9 @@ namespace TunicRandomizer {
             if (FairyTarget != null) {
                 GameObject.Destroy(FairyTarget);
             }
+
+            RecentItemsDisplay.instance.EnqueueItem(Check);
+
             // todo: set this to only happen if the logic option isn't on
             if (Locations.RandomizedLocations.Keys.Where(key => Locations.RandomizedLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0
                 && !TunicRandomizer.Settings.SeekingSpellLogic) {

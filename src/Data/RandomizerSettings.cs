@@ -223,6 +223,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ShowRecentItems {
+            get;
+            set;
+        }
+
         // Other settings
         private const int CAMERA_FLIP = 1;
         private const int MORE_SKULLS = 2;
@@ -444,6 +449,7 @@ namespace TunicRandomizer {
             BonusStatUpgradesEnabled = true;
             DisableChestInterruption = false;
             FasterUpgrades = false;
+            ShowRecentItems = true;
 
             // Other
             CameraFlip = false;

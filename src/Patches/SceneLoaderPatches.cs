@@ -330,6 +330,7 @@ namespace TunicRandomizer {
             } else if (SceneName == "TitleScreen") {
                 InitialLoadDone = true;
                 TitleVersion.Initialize();
+                RecentItemsDisplay.SetupRecentItemsDisplay();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                     Archipelago.instance.Connect();
                 }

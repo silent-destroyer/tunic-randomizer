@@ -361,6 +361,8 @@ namespace TunicRandomizer {
                 AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.0777f, scale.y, scale.z);
             }
 
+            RecentItemsDisplay.instance.ResetQueue();
+
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
