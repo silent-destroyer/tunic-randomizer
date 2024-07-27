@@ -305,7 +305,8 @@ namespace TunicRandomizer {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-                PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / 15;
+                int denominator = SaveFile.GetInt(GrassRandoEnabled) == 1 ? 325 : 15;
+                PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / denominator;
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     GameObject.FindObjectOfType<Foxgod>().gameObject.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
                     GameObject.FindObjectOfType<Foxgod>().gameObject.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;

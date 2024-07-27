@@ -43,9 +43,16 @@ namespace TunicRandomizer {
                 }
                 TunicLogger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
                 if (IsArchipelago()) {
+                    if (TunicRandomizer.Settings.SkipItemAnimations) {
+                        ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, itemInfo: ItemLookup.ItemList[LocationId]);
+                    }
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
                 } else if (IsSinglePlayer()) {
-                    GiveItem(Locations.RandomizedLocations[LocationId]);
+                    Check check = Locations.RandomizedLocations[LocationId];
+                    if (TunicRandomizer.Settings.SkipItemAnimations) {
+                        ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, check: check);
+                    }
+                    GiveItem(check);
                 }
             }
 
@@ -231,7 +238,7 @@ namespace TunicRandomizer {
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
-            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(itemInfo.LocationName)) {
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 

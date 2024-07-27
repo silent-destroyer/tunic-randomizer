@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -84,8 +85,14 @@ namespace TunicRandomizer {
                         }
 
                         GrassChecks.Add(check.CheckId, check);
-                        Locations.LocationIdToDescription.Add(check.CheckId, check.CheckId);
-                        Locations.LocationDescriptionToId.Add(check.CheckId, check.CheckId);
+                        string description = "";
+                        if (grass.Contains("bush")) {
+                            description = $"{Locations.SimplifiedSceneNames[check.Location.SceneName]} - {pair.Key} {grass.Split('~')[0].Replace("bush", "Bush")} {check.Location.Position}";
+                        } else {
+                            description = $"{Locations.SimplifiedSceneNames[check.Location.SceneName]} - {pair.Key} {grass.Split('~')[0].Replace("grass", "Grass")} {check.Location.Position}";
+                        }
+                        Locations.LocationIdToDescription.Add(check.CheckId, description);
+                        Locations.LocationDescriptionToId.Add(description, check.CheckId);
                         if (!GrassChecksPerScene.ContainsKey(check.Location.SceneName)) {
                             GrassChecksPerScene.Add(check.Location.SceneName, 0);
                         }
@@ -99,33 +106,38 @@ namespace TunicRandomizer {
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             if (__instance.GetComponent<Grass>() != null) {
                 if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                    string grassId = $"{__instance.name}~{__instance.transform.position.ToString()} [{__instance.gameObject.scene.name}]";
-                        
+                    string grassId = getGrassGameObjectId(__instance.GetComponent<Grass>());
+                    if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                        return false;
+                    }
+                    
                     if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
                         SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
                         SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
-                        if (Archipelago.instance.IsTunicPlayer(ItemInfo.Player)) {
-                            ItemData item = ItemLookup.Items[ItemInfo.ItemName];
-                            if (item.Type != ItemTypes.GRASS) {
-                                Archipelago.instance.ActivateCheck(grassId);
-                                if (item.Name == "Fool Trap") {
-                                    foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
-                                        if (child.name == __instance.name) { continue; }
-                                        child.localEulerAngles = Vector3.zero;
-                                        child.position -= new Vector3(0, 2, 0);
-                                    }
-                                }
-                            } else {
-                                Archipelago.instance.CompleteLocationCheck(grassId);
-                                SaveFile.SetInt("randomizer picked up " + grassId, 1);
-                                Locations.CheckedLocations[grassId] = true;
-                                if (GameObject.Find($"fairy target {grassId}")) {
-                                    GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
+                        bool isForTunicPlayer = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
+                        if (isForTunicPlayer && ItemInfo.ItemName != "Grass") {
+                            if (ItemInfo.ItemName == "Fool Trap") {
+                                foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
+                                    if (child.name == __instance.name) { continue; }
+                                    child.localEulerAngles = Vector3.zero;
+                                    child.position -= new Vector3(0, 2, 0);
                                 }
                             }
-                        } else {
-                            Archipelago.instance.ActivateCheck(grassId);
+                        } 
+                        Task.Run(() => Archipelago.instance.integration.session.Locations.CompleteLocationChecks(ItemInfo.LocationId));
+                        SaveFile.SetInt("randomizer picked up " + grassId, 1);
+                        Locations.CheckedLocations[grassId] = true;
+                        TunicLogger.LogInfo("Cut Grass: " + grassId);
+                        if (GameObject.Find($"fairy target {grassId}")) {
+                            GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
+                        }
+                        string receiver = ItemInfo.Player.Name;
+                        string itemName = ItemInfo.ItemName;
+                        TunicLogger.LogInfo("Sent " + ItemInfo.ItemName + " at " + ItemInfo.LocationName + " to " + receiver);
+                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemName != "Grass" : true)) {
+                            SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
+                            Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && isForTunicPlayer ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                         }
                         if (__instance.transform.GetChild(1).childCount == 1) {
                             __instance.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
@@ -166,6 +178,22 @@ namespace TunicRandomizer {
 
         public static bool PauseMenu___button_ReturnToTitle_PrefixPatch(PauseMenu __instance) {
             Profile.SavePermanentStatesByPosition(SceneManager.GetActiveScene().buildIndex, PermanentStateByPositionManager.deadPositionsInCurrentScene);
+            return true;
+        }
+
+        public static string getGrassGameObjectId(Grass grass) {
+            return $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+        }
+
+        public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
+
+            // Prevent grass from being cut if AP connection is lost
+            if (__instance.GetComponent<Grass>() != null && SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                    return false;
+                }
+            }
+
             return true;
         }
     }
