@@ -43,5 +43,14 @@ namespace TunicRandomizer {
             }
             return inventory;
         }
+
+        // check if this portal is oriented such that we should use the left-to-right shop look
+        public bool FlippedShop() {
+            if (Portal2.Name == "Shop Portal" && (Portal1.Direction == (int)TunicPortals.PDir.EAST || Portal1.Direction == (int)TunicPortals.PDir.SOUTH)) {
+                return true;
+            }
+            return false;
+        }
+
     }
 }
