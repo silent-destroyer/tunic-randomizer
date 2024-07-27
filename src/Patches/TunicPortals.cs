@@ -4980,6 +4980,7 @@ namespace TunicRandomizer {
 
             // keeping track of how many portals of each are left while pairing the two plus portals
             Dictionary<int, int> portalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
+            // quick reference for which directions you can pair to which
             Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
             foreach (KeyValuePair<int, int> pair in directionPairs) {
                 if (directionPairs.ContainsKey(pair.Value)) {
@@ -5085,8 +5086,11 @@ namespace TunicRandomizer {
                 foreach (Portal secondPortal in twoPlusPortals) {
                     // find a portal in a region we can access
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
+                        // for pairing to opposite direction portals, we also want to check if the directions match
                         if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
-
+                            if (directionPairs[secondPortal.Direction] != portal1.Direction) {
+                                continue;
+                            }
                         }
                         portal2 = secondPortal;
                         twoPlusPortals.Remove(secondPortal);
@@ -5114,16 +5118,22 @@ namespace TunicRandomizer {
                 comboNumber++;
             }
 
+            // todo: put the shops in deadEndPortals directly, put something together to make sure shops don't get duplicate scenes
+
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
-            while (deadEndPortals.Count > 0) {
-                comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
-                deadEndPortals.RemoveAt(0);
-                twoPlusPortals.RemoveAt(0);
+            if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                
+            } else {
+                while (deadEndPortals.Count > 0) {
+                    comboNumber++;
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+                    deadEndPortals.RemoveAt(0);
+                    twoPlusPortals.RemoveAt(0);
+                }
             }
-
+            
             // shops get added separately cause they're weird
             List<string> shopSceneList = new List<string>();
             int shopCount = 6;
