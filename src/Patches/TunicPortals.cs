@@ -3779,6 +3779,12 @@ namespace TunicRandomizer {
                     {
                         "Library Lab",
                         new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
                         }
                     },
                 }
@@ -5265,6 +5271,12 @@ namespace TunicRandomizer {
                         }
                     }
                     break;
+                }
+                if (portal.FullID == "ziggurat2020_3_zig2_skip") {
+                    portal.name = "Zig Skip";
+                    portal.destinationSceneName = "ziggurat2020_1";
+                    portal.optionalIDToSpawnAt = "zig_skip_recovery";
+                    continue;
                 }
                 // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
                 // shops go to Previous Region, so this intentionally skips them
