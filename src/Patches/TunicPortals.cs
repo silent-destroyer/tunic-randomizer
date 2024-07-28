@@ -1509,7 +1509,7 @@ namespace TunicRandomizer {
             {
                 "Overworld to Atoll Upper",
                 new RegionInfo("Overworld Redux", false)
-            }, 
+            },
             {
                 "Overworld Well to Furnace Rail",
                 new RegionInfo("Overworld Redux", false)
@@ -1528,7 +1528,7 @@ namespace TunicRandomizer {
             },
             {
                 "Overworld Fountain Cross Door",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
                 "Overworld Temple Door",
@@ -1536,11 +1536,11 @@ namespace TunicRandomizer {
             },
             {
                 "Overworld Town Portal",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
                 "Overworld Spawn Portal",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
                 "Stick House",
@@ -1656,7 +1656,7 @@ namespace TunicRandomizer {
             },
             {
                 "East Forest Portal",
-                new RegionInfo("East Forest Redux", false)
+                new RegionInfo("East Forest Redux", false, outletRegion:"East Forest")
             },
             {
                 "Lower Forest",
@@ -1696,7 +1696,7 @@ namespace TunicRandomizer {
             },
             {
                 "Forest Hero's Grave",
-                new RegionInfo("Sword Access", false)
+                new RegionInfo("Sword Access", false, outletRegion:"Forest Grave Path by Grave")
             },
             {
                 "Dark Tomb Entry Point",
@@ -1744,6 +1744,10 @@ namespace TunicRandomizer {
             },
             {
                 "West Garden Portal",
+                new RegionInfo("Archipelagos Redux", true, outletRegion:"West Garden by Portal")
+            },
+            {
+                "West Garden by Portal",
                 new RegionInfo("Archipelagos Redux", true)
             },
             {
@@ -1760,7 +1764,7 @@ namespace TunicRandomizer {
             },
             {
                 "West Garden Hero's Grave",
-                new RegionInfo("Archipelagos Redux", false)
+                new RegionInfo("Archipelagos Redux", false, outletRegion:"West Garden")
             },
             {
                 "Magic Dagger House",
@@ -1788,11 +1792,11 @@ namespace TunicRandomizer {
             },
             {
                 "Ruined Atoll Portal",
-                new RegionInfo("Atoll Redux", false)
+                new RegionInfo("Atoll Redux", false, outletRegion:"Ruined Atoll")
             },
             {
                 "Ruined Atoll Statue",
-                new RegionInfo("Atoll Redux", false)
+                new RegionInfo("Atoll Redux", false, outletRegion:"Ruined Atoll")
             },
             {
                 "Frog Stairs Eye Exit",
@@ -1824,6 +1828,10 @@ namespace TunicRandomizer {
             },
             {
                 "Library Exterior Tree",
+                new RegionInfo("Library Exterior", false, outletRegion:"Library Exterior by Tree")
+            },
+            {
+                "Library Exterior by Tree",
                 new RegionInfo("Library Exterior", false)
             },
             {
@@ -1840,7 +1848,7 @@ namespace TunicRandomizer {
             },
             {
                 "Library Hero's Grave",
-                new RegionInfo("Library Hall", false)
+                new RegionInfo("Library Hall", false, outletRegion:"Library Hall")
             },
             {
                 "Library Hall to Rotunda",
@@ -1867,8 +1875,12 @@ namespace TunicRandomizer {
                 new RegionInfo("Library Lab", false)
             },
             {
-                "Library Portal",
+                "Library Lab on Portal Pad",
                 new RegionInfo("Library Lab", false)
+            },
+            {
+                "Library Portal",
+                new RegionInfo("Library Lab", false, outletRegion:"Library Lab on Portal Pad")
             },
             {
                 "Library Lab to Librarian",
@@ -1944,7 +1956,7 @@ namespace TunicRandomizer {
             },
             {
                 "Fortress Hero's Grave",
-                new RegionInfo("Fortress Reliquary", false)
+                new RegionInfo("Fortress Reliquary", false, outletRegion:"Fortress Grave Path")
             },
             {
                 "Fortress Leaf Piles",
@@ -1956,7 +1968,7 @@ namespace TunicRandomizer {
             },
             {
                 "Fortress Arena Portal",
-                new RegionInfo("Fortress Arena", false)
+                new RegionInfo("Fortress Arena", false, outletRegion:"Fortress Arena")
             },
             {
                 "Lower Mountain",
@@ -1984,7 +1996,7 @@ namespace TunicRandomizer {
             },
             {
                 "Quarry Portal",
-                new RegionInfo("Quarry Redux", false)
+                new RegionInfo("Quarry Redux", false, outletRegion:"Quarry Entry")
             },
             {
                 "Quarry Back",
@@ -2004,7 +2016,7 @@ namespace TunicRandomizer {
             },
             {
                 "Monastery Hero's Grave",
-                new RegionInfo("Monastery", false)
+                new RegionInfo("Monastery", false, outletRegion:"Monastery Back")
             },
             {
                 "Monastery Rope",
@@ -2056,7 +2068,7 @@ namespace TunicRandomizer {
             },
             {
                 "Zig Skip Exit",
-                new RegionInfo("ziggurat2020_3", false)
+                new RegionInfo("ziggurat2020_3", false, outletRegion:"Rooted Ziggurat Lower Front")
             },
             {
                 "Rooted Ziggurat Portal Room Entrance",
@@ -2064,11 +2076,15 @@ namespace TunicRandomizer {
             },
             {
                 "Rooted Ziggurat Portal",
+                new RegionInfo("ziggurat2020_FTRoom", false, outletRegion:"Rooted Ziggurat Portal Room")
+            },
+            {
+                "Rooted Ziggurat Portal Room",
                 new RegionInfo("ziggurat2020_FTRoom", false)
             },
             {
                 "Rooted Ziggurat Portal Room Exit",
-                new RegionInfo("ziggurat2020_FTRoom", false)
+                new RegionInfo("ziggurat2020_FTRoom", false, outletRegion:"Rooted Ziggurat Portal Room")
             },
             {
                 "Swamp Front",
@@ -2084,7 +2100,7 @@ namespace TunicRandomizer {
             },
             {
                 "Swamp to Cathedral Treasure Room",
-                new RegionInfo("Swamp Redux 2", false)
+                new RegionInfo("Swamp Redux 2", false, outletRegion:"Swamp Ledge under Cathedral Door")
             },
             {
                 "Swamp to Cathedral Main Entrance",
@@ -2096,7 +2112,7 @@ namespace TunicRandomizer {
             },
             {
                 "Swamp Hero's Grave",
-                new RegionInfo("Swamp Redux 2", false)
+                new RegionInfo("Swamp Redux 2", false, outletRegion:"Back of Swamp")
             },
             {
                 "Back of Swamp Laurels Area",
@@ -2136,19 +2152,19 @@ namespace TunicRandomizer {
             },
             {
                 "Far Shore to Quarry",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Far Shore to Fortress",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Far Shore to Library",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Far Shore to West Garden",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Hero Relic - Fortress",
@@ -3345,10 +3361,31 @@ namespace TunicRandomizer {
                 "West Garden Portal Item",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "West Garden by Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden by Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden Portal Item",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
                         "West Garden Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "12", "West Garden"
+                                "12", "West Garden",
                             },
                         }
                     },
@@ -3358,11 +3395,8 @@ namespace TunicRandomizer {
                 "West Garden Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "West Garden Portal Item",
+                        "West Garden by Portal",
                         new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash"
-                            },
                         }
                     },
                 }
@@ -3598,6 +3632,24 @@ namespace TunicRandomizer {
                 "Library Exterior Tree",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "Library Exterior by Tree",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Library Exterior by Tree",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Exterior Tree",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
                         "Library Exterior Ladder",
                         new List<List<string>> {
                             new List<string> {
@@ -3614,13 +3666,13 @@ namespace TunicRandomizer {
                 "Library Exterior Ladder",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Library Exterior Tree",
+                        "Library Exterior by Tree",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "12", "Ladders in Library",
+                                "Hyperdash", "Ladders in Library",
                             },
                             new List<string> {
-                                "Wand", "12",
+                                "Wand",
                             },
                         }
                     },
@@ -3766,7 +3818,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Library Portal",
+                        "Library Lab on Portal Pad",
                         new List<List<string>> {
                             new List<string> {
                                 "12",
@@ -3784,10 +3836,34 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Library Lab on Portal Pad",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            }
+                        }
+                    },
+                    {
+                        "Library Lab",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Library Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Library Lab",
+                        "Library Lab on Portal Pad",
                         new List<List<string>> {
                         }
                     },
@@ -4368,6 +4444,24 @@ namespace TunicRandomizer {
                 "Rooted Ziggurat Portal Room Exit",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "Rooted Ziggurat Portal Room",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Portal Room",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Portal Room Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Rooted Ziggurat Lower Back",
+                            },
+                        }
+                    },
+                    {
                         "Rooted Ziggurat Portal",
                         new List<List<string>> {
                             new List<string> {
@@ -4381,11 +4475,8 @@ namespace TunicRandomizer {
                 "Rooted Ziggurat Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Rooted Ziggurat Portal Room Exit",
+                        "Rooted Ziggurat Portal Room",
                         new List<List<string>> {
-                            new List<string> {
-                                "12", "Rooted Ziggurat Lower Back",
-                            },
                         }
                     },
                 }
