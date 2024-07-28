@@ -4976,7 +4976,6 @@ namespace TunicRandomizer {
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static void RandomizePortals(int seed) {
-            TunicLogger.LogInfo("randomize portals started");
             RandomizedPortals.Clear();
 
             // keeping track of how many portals of each are left while pairing portals
@@ -5018,8 +5017,6 @@ namespace TunicRandomizer {
                 }
             }
 
-            TunicLogger.LogInfo("portal lists sorted");
-
             // shops get added separately cause they're weird
             List<string> shopSceneList = new List<string>();
             int shopCount = 6;
@@ -5053,8 +5050,6 @@ namespace TunicRandomizer {
                 i++;
                 deadEndPortalDirectionTracker[dir]++;
             }
-
-            TunicLogger.LogInfo("shops added to lists");
 
             // modify later if we ever do random start location
             string start_region = "Overworld";
@@ -5091,14 +5086,6 @@ namespace TunicRandomizer {
             // added fairy cave to the non-dead end regions, so it should increase the count here too
             if (SaveFile.GetInt("randomizer laurels location") == 3) {
                 total_nondeadend_count++;
-            }
-            TunicLogger.LogInfo("item stuff done");
-            foreach (KeyValuePair<int, int> pair in twoPlusPortalDirectionTracker) {
-                TunicLogger.LogInfo(pair.Key.ToString() + ": " + pair.Value.ToString());
-            }
-            TunicLogger.LogInfo("---");
-            foreach (KeyValuePair<int, int> pair in deadEndPortalDirectionTracker) {
-                TunicLogger.LogInfo(pair.Key.ToString() + ": " + pair.Value.ToString());
             }
 
             int comboNumber = 0;
@@ -5161,7 +5148,6 @@ namespace TunicRandomizer {
                 FullInventory = UpdateReachableRegions(FullInventory);
                 comboNumber++;
             }
-            TunicLogger.LogInfo("portal pairing phase 1 complete");
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
@@ -5190,15 +5176,12 @@ namespace TunicRandomizer {
                     ShuffleList(deadEndPortals, seed);
                 }
             }
-            TunicLogger.LogInfo("portal pairing phase 2 complete");
             
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
-            TunicLogger.LogInfo(twoPlusPortals.Count.ToString());
             while (twoPlusPortals.Count > 1) {
                 comboNumber++;
                 Portal portal1 = twoPlusPortals[0];
-                TunicLogger.LogInfo("portal 1 is " + portal1.Name);
                 twoPlusPortals.RemoveAt(0);
                 Portal portal2 = null;
                 if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
@@ -5209,7 +5192,6 @@ namespace TunicRandomizer {
                         if (directionPairs[portal1.Direction] == portal.Direction) {
                             portal2 = portal;
                             twoPlusPortals.Remove(portal);
-                            TunicLogger.LogInfo("portal 2 is " + portal2.Name);
                             break;
                         }
                     }
@@ -5217,12 +5199,9 @@ namespace TunicRandomizer {
                 if (portal2 == null) {
                     TunicLogger.LogInfo("something went wrong with the remaining two plus portals");
                 }
-                TunicLogger.LogInfo("adding portal combo with " + portal1.Name + " and " + portal2.Name);
-                TunicLogger.LogInfo("length of twoplusportals is " + twoPlusPortals.Count.ToString());
                 RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
             }
             if (twoPlusPortals.Count == 1) {
-                // if this triggers, there's an odd number of portals total
                 TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
         }
