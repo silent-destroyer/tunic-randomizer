@@ -4005,8 +4005,7 @@
                     ""Position"": ""(80.0, 16.0, 13.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4024,8 +4023,7 @@
                     ""Position"": ""(3.4, -8.0, -21.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4305,8 +4303,7 @@
                     ""Position"": ""(-9.0, -12.0, -64.7)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4324,8 +4321,7 @@
                     ""Position"": ""(-23.0, 0.0, 7.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4343,8 +4339,7 @@
                     ""Position"": ""(28.5, 0.0, -3.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4362,8 +4357,7 @@
                     ""Position"": ""(52.0, 0.0, 2.5)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4381,8 +4375,7 @@
                     ""Position"": ""(125.4, 16.0, 14.8)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4400,8 +4393,7 @@
                     ""Position"": ""(-13.0, 8.0, 21.6)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4419,8 +4411,7 @@
                     ""Position"": ""(38.7, 24.5, 28.6)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4438,8 +4429,7 @@
                     ""Position"": ""(62.0, 8.0, 15.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4457,8 +4447,7 @@
                     ""Position"": ""(81.0, 56.0, 25.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }
@@ -4513,8 +4502,7 @@
                     ""Position"": ""(1.0, 40.0, -19.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1,
-                            ""Sword"": 1
+                            ""Quarry"": 1
                         }
                     ]
                 }

@@ -481,6 +481,8 @@ namespace TunicRandomizer {
                         GameObject.Find("_GRASS/grass beach (154)/grass base (2)").SetActive(false);
                     }
                 }
+            } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
+                SpawnZigSkipRecovery();
             }
 
             EnemyRandomizer.CheckBossState();
@@ -593,6 +595,17 @@ namespace TunicRandomizer {
                 scenePortal.spawnTransform = gameObject.transform.GetChild(0).GetChild(0).GetChild(0);
             }
             scenePortal.optionalIDToSpawnAt = "";
+            gameObject.SetActive(true);
+        }
+
+        private static void SpawnZigSkipRecovery() {
+            GameObject gameObject = GameObject.Instantiate<GameObject>(SpiritArenaTeleporterPrefab, new Vector3(207f, 750f, -126f), SpiritArenaTeleporterPrefab.transform.rotation);
+            ScenePortal scenePortal = gameObject.transform.GetComponentInChildren<ScenePortal>();
+            scenePortal.id = "zig_skip_recovery";
+            scenePortal.optionalIDToSpawnAt = "zig2_skip";
+            scenePortal.destinationSceneName = "ziggurat2020_1";
+            scenePortal.name = "Zig Skip Recovery";
+            scenePortal.spawnTransform = gameObject.transform.GetChild(0).GetChild(0).GetChild(0);
             gameObject.SetActive(true);
         }
 
