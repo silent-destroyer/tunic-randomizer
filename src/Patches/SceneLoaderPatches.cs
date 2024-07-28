@@ -550,6 +550,11 @@ namespace TunicRandomizer {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             }
             ItemTracker.SaveTrackerFile();
+
+            PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                TunicLogger.LogInfo("on arrival callback");
+                TunicPortals.ModifyPortals(SceneName, sending:true);
+            });
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
