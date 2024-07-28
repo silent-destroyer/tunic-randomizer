@@ -569,6 +569,7 @@ namespace TunicRandomizer {
 
             if (IsArchipelago()) {
                 Archipelago.instance.integration.UpdateDataStorageOnLoad();
+                Archipelago.instance.integration.SendQueuedLocations();
             }
             if (GameObject.FindObjectOfType<DDRSpell>() != null) {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
@@ -674,6 +675,9 @@ namespace TunicRandomizer {
             }
             if (InventoryDisplayPatches.GrassCounter != null) {
                 InventoryDisplayPatches.GrassCounter.SetActive(false);
+            }
+            if (IsArchipelago()) {
+                Archipelago.instance.integration.SendQueuedLocations();
             }
             SceneName = "TitleScreen";
         }

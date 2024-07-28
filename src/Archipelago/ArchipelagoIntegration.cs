@@ -32,6 +32,9 @@ namespace TunicRandomizer {
         public bool sentRelease = false;
         public bool sentCollect = false;
         public int ItemIndex = 0;
+        public List<long> locationsToSend = new List<long>();
+        public float locationsToSendTimer = 0.0f;
+        public float locationsToSendDelay = 5.0f;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -52,6 +55,11 @@ namespace TunicRandomizer {
                     incomingItemHandler.MoveNext();
                 }
 
+                if ((locationsToSendTimer > locationsToSendDelay && locationsToSend.Count > 0) || locationsToSend.Count >= 10) {
+                    SendQueuedLocations();
+                    locationsToSendTimer = 0.0f;
+                }
+                locationsToSendTimer += Time.fixedUnscaledDeltaTime;
             }
 
             if (SpeedrunData.gameComplete != 0 && !sentCompletion) {
@@ -83,6 +91,7 @@ namespace TunicRandomizer {
             incomingItemHandler = IncomingItemHandler();
             checkItemsReceived = CheckItemsReceived();
             incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int index)>();
+            locationsToSend = new List<long>();
 
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
@@ -139,7 +148,7 @@ namespace TunicRandomizer {
         public void TryDisconnect() {
 
             try {
-                
+                SendQueuedLocations();
                 if (session != null) {
                     session.Socket.DisconnectAsync();
                     session = null;
@@ -149,6 +158,7 @@ namespace TunicRandomizer {
                 checkItemsReceived = null;
                 disableSpoilerLog = false;
                 incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
+                locationsToSend = new List<long>();
                 deathLinkService = null;
                 slotData = null;
                 ItemIndex = 0;
@@ -291,6 +301,14 @@ namespace TunicRandomizer {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
             }
+        }
+
+        public void SendQueuedLocations() {
+            Task.Run(() => {
+                session.Locations.CompleteLocationChecks(locationsToSend.ToArray());
+                locationsToSend.Clear();
+                }
+            );
         }
 
         public void CompleteLocationCheck(string LocationName) {

@@ -337,7 +337,7 @@ namespace TunicRandomizer {
                     AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
                     if (SaveFile.GetInt(GrassRandoEnabled) == 1 ) {
                         TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
-                        AreaChecksFound += SaveFile.GetInt("randomizer grass cut " + SubArea);
+                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && Locations.CheckedLocations[check.Key]).Count();
                     }
                 }
                 displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(24, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(9, '.')}\"\n";

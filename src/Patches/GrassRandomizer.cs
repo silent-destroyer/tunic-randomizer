@@ -113,8 +113,6 @@ namespace TunicRandomizer {
                     
                     if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
-                        SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
-                        SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
                         bool isForTunicPlayer = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
                         if (isForTunicPlayer && ItemInfo.ItemName != "Grass") {
                             if (ItemInfo.ItemName == "Fool Trap") {
@@ -125,7 +123,11 @@ namespace TunicRandomizer {
                                 }
                             }
                         } 
-                        Task.Run(() => Archipelago.instance.integration.session.Locations.CompleteLocationChecks(ItemInfo.LocationId));
+                        if (isForTunicPlayer && ItemInfo.ItemName == "Grass") {
+                            Archipelago.instance.integration.locationsToSend.Add(ItemInfo.LocationId);
+                        } else {
+                            Task.Run(() => Archipelago.instance.integration.session.Locations.CompleteLocationChecks(ItemInfo.LocationId));
+                        }
                         SaveFile.SetInt("randomizer picked up " + grassId, 1);
                         Locations.CheckedLocations[grassId] = true;
                         TunicLogger.LogInfo("Cut Grass: " + grassId);
@@ -145,9 +147,6 @@ namespace TunicRandomizer {
                     } else if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         Check check = Locations.RandomizedLocations[grassId];
                         ItemData item = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[grassId]);
-                        SaveFile.SetInt("randomizer grass cut " + __instance.gameObject.scene.name, SaveFile.GetInt("randomizer grass cut " + __instance.gameObject.scene.name) + 1);
-
-                        SaveFile.SetInt("randomizer total grass cut", SaveFile.GetInt("randomizer total grass cut") + 1);
                         if (item.Name == "Grass") {
                             Inventory.GetItemByName("Grass").Quantity += 1;
                             Locations.CheckedLocations[grassId] = true;

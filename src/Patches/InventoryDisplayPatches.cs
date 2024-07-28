@@ -412,9 +412,15 @@ namespace TunicRandomizer {
                     bool isGrassRando = SaveFile.GetInt(GrassRandoEnabled) == 1;
                     string sceneName = SceneManager.GetActiveScene().name;
                     if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(SceneLoaderPatches.SceneName)) {
-                        ObtainedItemCountInCurrentScene += SaveFile.GetInt("randomizer grass cut " + sceneName);
+                        int grassCutInCurrentScene =  GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SceneLoaderPatches.SceneName && Locations.CheckedLocations[check.Key]).Count();
+                        ObtainedItemCountInCurrentScene += grassCutInCurrentScene;
                         TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName];
                         TotalItemCount += GrassRandomizer.GrassChecks.Count;
+                        if (GrassText != null) {
+                            int grassCut = GrassRandomizer.GrassChecks.Where(check => Locations.CheckedLocations[check.Value.CheckId]).Count();
+                            GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName]}" +
+                                $"<#ffffff>\n{(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
+                        }
                     }
                     Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
                     Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
@@ -430,11 +436,6 @@ namespace TunicRandomizer {
                     if (GoldHexagons != null) {
                         GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
                         GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
-                    }
-                    if (GrassText != null) {
-                        int grassCut = SaveFile.GetInt("randomizer total grass cut");
-                        GrassText.GetComponent<TextMeshProUGUI>().text = $"{(SaveFile.GetInt("randomizer grass cut " + sceneName) >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{SaveFile.GetInt("randomizer grass cut " + sceneName)}/{GrassRandomizer.GrassChecksPerScene[SceneManager.GetActiveScene().name]}" +
-                            $"<#ffffff>\n{(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                     }
                     QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
                     Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
