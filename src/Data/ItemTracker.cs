@@ -247,17 +247,15 @@ namespace TunicRandomizer {
                 SpoilerLogLines.AddRange(GetMysterySeedSettingsForSpoilerLog());
 
                 SpoilerLogLines.Add("Major Items");
-                foreach (string MajorItem in ItemLookup.LegacyMajorItems) {
-                    foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {
-                        ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
-                        string Key = Check.CheckId;
-                        string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
-                        SpoilerLogLines.Add(Spoiler);
-                    }
+                List<string> MajorItems = ItemLookup.LegacyMajorItems;
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    MajorItems.Add("Trinket - Glass Cannon");
                 }
-                if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
-                    foreach(string LadderItem in ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name)) {
-                        Check Check = ItemRandomizer.FindRandomizedItemByName(LadderItem);
+                if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
+                    MajorItems.AddRange(ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name));
+                }
+                foreach (string MajorItem in MajorItems) {
+                    foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
                         string Key = Check.CheckId;
                         string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
