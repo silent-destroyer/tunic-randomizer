@@ -1250,7 +1250,7 @@ namespace TunicRandomizer {
                         "Cathedral",
                         new List<TunicPortal> {
                             new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "_main", PDir.SOUTH),
-                            new TunicPortal("Cathedral Elevator", "Cathedral Arena", "_", PDir.FLOOR),
+                            new TunicPortal("Cathedral Elevator", "Cathedral Arena", "_", PDir.LADDER_DOWN),
                         }
                     },
                     {
@@ -1273,7 +1273,7 @@ namespace TunicRandomizer {
                     {
                         "Cathedral Gauntlet Checkpoint",
                         new List<TunicPortal> {
-                            new TunicPortal("Gauntlet Elevator", "Cathedral Redux", "_", PDir.FLOOR),
+                            new TunicPortal("Gauntlet Elevator", "Cathedral Redux", "_", PDir.LADDER_UP),
                             new TunicPortal("Gauntlet Shop", "Shop", "_", PDir.EAST),
                         }
                     },
