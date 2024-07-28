@@ -412,6 +412,9 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ERFixedShop) {
                         SaveFile.SetInt(FixedShop, 1);
                     }
+                    if (TunicRandomizer.Settings.PortalDirectionPairs) {
+                        SaveFile.SetInt(PortalDirectionPairs, 1);
+                    }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
                     }

@@ -156,7 +156,7 @@ namespace TunicRandomizer {
                     {
                         "Overworld Swamp Lower Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "_", PDir.SOUTH),
+                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "_", PDir.NORTH),
                             new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2", "_conduit", PDir.SOUTH),
                         }
                     },
@@ -175,7 +175,7 @@ namespace TunicRandomizer {
                     {
                         "After Ruined Passage",
                         new List<TunicPortal> {
-                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "_east", PDir.WEST),
+                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "_east", PDir.NORTH),
                         }
                     },
                     {
@@ -371,7 +371,7 @@ namespace TunicRandomizer {
                     {
                         "Ruined Passage",
                         new List<TunicPortal> {
-                            new TunicPortal("Ruined Passage Not-Door Exit", "Overworld Redux", "_east", PDir.EAST),
+                            new TunicPortal("Ruined Passage Not-Door Exit", "Overworld Redux", "_east", PDir.SOUTH),
                             new TunicPortal("Ruined Passage Door Exit", "Overworld Redux", "_west", PDir.WEST),
                         }
                     },
@@ -951,8 +951,8 @@ namespace TunicRandomizer {
                     {
                         "Fortress East Shortcut Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "_", PDir.WEST),
-                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "_upper", PDir.SOUTH),
+                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "_", PDir.SOUTH),
+                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "_upper", PDir.WEST),
                         }
                     },
                 }
@@ -4976,18 +4976,14 @@ namespace TunicRandomizer {
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static void RandomizePortals(int seed) {
+            TunicLogger.LogInfo("randomize portals started");
             RandomizedPortals.Clear();
 
-            // keeping track of how many portals of each are left while pairing the two plus portals
-            Dictionary<int, int> portalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
+            // keeping track of how many portals of each are left while pairing portals
+            Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
+            Dictionary<int, int> deadEndPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
             // quick reference for which directions you can pair to which
-            Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
-            foreach (KeyValuePair<int, int> pair in directionPairs) {
-                if (directionPairs.ContainsKey(pair.Value)) {
-                    continue;
-                }
-                directionPairs.Add(pair.Value, pair.Key);
-            }
+            Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH}, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
 
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
@@ -5006,20 +5002,33 @@ namespace TunicRandomizer {
                         Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name, direction: tunicPortal.Direction);
                         if (RegionDict[region_name].DeadEnd == true) {
                             deadEndPortals.Add(portal);
+                            deadEndPortalDirectionTracker[portal.Direction]++;
                         } else {
                             twoPlusPortals.Add(portal);
-                            portalDirectionTracker[portal.Direction]++;
+                            twoPlusPortalDirectionTracker[portal.Direction]++;
                         }
                         // need to throw fairy cave into the twoPlus list if laurels is at 10 fairies
                         if (portal.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
                             deadEndPortals.Remove(portal);
                             twoPlusPortals.Add(portal);
-                            portalDirectionTracker[portal.Direction]++;
+                            twoPlusPortalDirectionTracker[portal.Direction]++;
+                            deadEndPortalDirectionTracker[portal.Direction]--;
                         }
                     }
                 }
             }
+
+            TunicLogger.LogInfo("portal lists sorted");
+
+            // shops get added separately cause they're weird
+            List<string> shopSceneList = new List<string>();
+            int shopCount = 6;
             if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+                shopCount = 0;
+                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "_", scene: "Overworld Redux", region: "Overworld");
+                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 2");
+                RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
+                shopSceneList.Add("Overworld Redux");
                 foreach (Portal portal in twoPlusPortals) {
                     if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
                         twoPlusPortals.Remove(portal);
@@ -5027,6 +5036,25 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                // need all 8 shops to match up everything nicely
+                shopCount = 8;
+            }
+            int i = 1;
+            while (i <= shopCount) {
+                // 6 of the shops south, 2 of them are west in vanilla
+                int dir = (int)PDir.SOUTH;
+                if (i > 6) {
+                    dir = (int)PDir.WEST;
+                }
+                // manually making a portal for the shop, because it has some special properties
+                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {i}", direction: dir);
+                deadEndPortals.Add(shopPortal);
+                i++;
+                deadEndPortalDirectionTracker[dir]++;
+            }
+
+            TunicLogger.LogInfo("shops added to lists");
 
             // modify later if we ever do random start location
             string start_region = "Overworld";
@@ -5064,6 +5092,14 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer laurels location") == 3) {
                 total_nondeadend_count++;
             }
+            TunicLogger.LogInfo("item stuff done");
+            foreach (KeyValuePair<int, int> pair in twoPlusPortalDirectionTracker) {
+                TunicLogger.LogInfo(pair.Key.ToString() + ": " + pair.Value.ToString());
+            }
+            TunicLogger.LogInfo("---");
+            foreach (KeyValuePair<int, int> pair in deadEndPortalDirectionTracker) {
+                TunicLogger.LogInfo(pair.Key.ToString() + ": " + pair.Value.ToString());
+            }
 
             int comboNumber = 0;
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
@@ -5073,8 +5109,15 @@ namespace TunicRandomizer {
                 foreach (Portal portal in twoPlusPortals) {
                     // find a portal in a region we can't access yet
                     if (!FullInventory.ContainsKey(portal.Region)) {
+                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                            // if there's more east dead ends than west two plus, then we'll end up needing to pair dead ends, which isn't viable
+                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]]) {
+                                continue;
+                            }
+                        }
                         portal1 = portal;
                         twoPlusPortals.Remove(portal1);
+                        twoPlusPortalDirectionTracker[portal1.Direction]--;
                         break;
                     }
                 }
@@ -5094,6 +5137,7 @@ namespace TunicRandomizer {
                         }
                         portal2 = secondPortal;
                         twoPlusPortals.Remove(secondPortal);
+                        twoPlusPortalDirectionTracker[portal2.Direction]--;
                         break;
                     }
                 }
@@ -5117,64 +5161,65 @@ namespace TunicRandomizer {
                 FullInventory = UpdateReachableRegions(FullInventory);
                 comboNumber++;
             }
-
-            // todo: put the shops in deadEndPortals directly, put something together to make sure shops don't get duplicate scenes
+            TunicLogger.LogInfo("portal pairing phase 1 complete");
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
-            if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
-                
-            } else {
-                while (deadEndPortals.Count > 0) {
-                    comboNumber++;
-                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
+            comboNumber++;
+
+            // pair dead end portals to non-dead end portals
+            while (deadEndPortals.Count > 0) {
+                comboNumber++;
+                Portal portal1 = deadEndPortals[0];
+                bool foundPair = false;
+                foreach (Portal portal2 in twoPlusPortals) {
+                    if (portal1.Scene == "Shop" && shopSceneList.Contains(portal2.Scene)) {
+                        continue;
+                    }
+                    if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && directionPairs[portal1.Direction] != portal2.Direction) {
+                        continue;
+                    }
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal2, portal1));
+                    twoPlusPortals.Remove(portal2);
                     deadEndPortals.RemoveAt(0);
-                    twoPlusPortals.RemoveAt(0);
+                    foundPair = true;
+                    break;
+                }
+                if (foundPair == false) {
+                    ShuffleList(deadEndPortals, seed);
                 }
             }
+            TunicLogger.LogInfo("portal pairing phase 2 complete");
             
-            // shops get added separately cause they're weird
-            List<string> shopSceneList = new List<string>();
-            int shopCount = 6;
-            if (SaveFile.GetInt(SaveFlags.FixedShop) == 1 && SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
-                shopCount = 0;
-                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "_", scene: "Overworld Redux", region: "Overworld");
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 2");
-                RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
-                shopSceneList.Add("Overworld Redux");
-            }
-            // todo: when figuring out format, swap this to be more like options than individual if statements
-            if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
-                // need all 8 shops to match up everything nicely
-                shopCount = 8;
-            }
-            int regionNumber = 0;
-            while (shopCount > 0) {
-                // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shopCount}");
-                // check that a shop has not already been added to this region, since two shops in the same region causes problems
-                if (!shopSceneList.Contains(twoPlusPortals[regionNumber].Scene)) {
-                    comboNumber++;
-                    shopSceneList.Add(twoPlusPortals[regionNumber].Scene);
-                    //TunicLogger.LogInfo("adding scene " + twoPlusPortals[regionNumber].Scene + " to shop scene list");
-                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[regionNumber], shopPortal));
-                    twoPlusPortals.RemoveAt(regionNumber);
-                    shopCount--;
-                } else {
-                    regionNumber++;
-                }
-                if (regionNumber == twoPlusPortals.Count - 1) {
-                    TunicLogger.LogInfo("too many shops, not enough regions, add more shops");
-                }
-            }
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
+            TunicLogger.LogInfo(twoPlusPortals.Count.ToString());
             while (twoPlusPortals.Count > 1) {
                 comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[0], twoPlusPortals[1]));
-                twoPlusPortals.RemoveAt(1); // I could do removeat0 twice, but I don't like how that looks
+                Portal portal1 = twoPlusPortals[0];
+                TunicLogger.LogInfo("portal 1 is " + portal1.Name);
                 twoPlusPortals.RemoveAt(0);
+                Portal portal2 = null;
+                if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
+                    portal2 = twoPlusPortals[0];
+                    twoPlusPortals.RemoveAt(0);
+                } else {
+                    foreach (Portal portal in twoPlusPortals) {
+                        if (directionPairs[portal1.Direction] == portal.Direction) {
+                            portal2 = portal;
+                            twoPlusPortals.Remove(portal);
+                            TunicLogger.LogInfo("portal 2 is " + portal2.Name);
+                            break;
+                        }
+                    }
+                }
+                if (portal2 == null) {
+                    TunicLogger.LogInfo("something went wrong with the remaining two plus portals");
+                }
+                TunicLogger.LogInfo("adding portal combo with " + portal1.Name + " and " + portal2.Name);
+                TunicLogger.LogInfo("length of twoplusportals is " + twoPlusPortals.Count.ToString());
+                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
             }
             if (twoPlusPortals.Count == 1) {
                 // if this triggers, there's an odd number of portals total
