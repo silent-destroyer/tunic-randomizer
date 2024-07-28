@@ -3775,6 +3775,12 @@ namespace TunicRandomizer {
                     {
                         "Library Lab",
                         new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
                         }
                     },
                 }
