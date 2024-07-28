@@ -45,11 +45,21 @@ namespace TunicRandomizer {
         public class RegionInfo {
             public string Scene;
             public bool DeadEnd;
+            public string OutletRegion;  // for where a portal forces you to another region immediately
+            // example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
 
             public RegionInfo(string scene, bool deadEnd) {
                 Scene = scene;
                 DeadEnd = deadEnd;
+                OutletRegion = null;
             }
+
+            public RegionInfo(string scene, bool deadEnd, string outletRegion) {
+                Scene = scene;
+                DeadEnd = deadEnd;
+                OutletRegion = outletRegion;
+            }
+
         }
 
         public static Dictionary<string, Dictionary<string, List<TunicPortal>>> RegionPortalsList = new Dictionary<string, Dictionary<string, List<TunicPortal>>> {
