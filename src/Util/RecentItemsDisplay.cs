@@ -30,21 +30,24 @@ namespace TunicRandomizer {
         public static GameObject title;
         public static Queue<RecentItemData> recentItemsQueue = new Queue<RecentItemData>();
         public float itemQueueTimer = 0f;
-        public float itemQueueDelay = 3f;
+        public float itemQueueDelay = 2f;
         public void Start() {
-            
         }
         public void Update() {
-            title.SetActive(TunicRandomizer.Settings.ShowRecentItems);
+            title.SetActive(TunicRandomizer.Settings.ShowRecentItems && !InventoryDisplay.InventoryOpen);
             if (!TunicRandomizer.Settings.ShowRecentItems) {
                 foreach (GameObject obj in recentItems) {
                     obj.SetActive(false);
                 }
                 return;
+            } else {
+                for(int i = 0; i < recentItems.Count; i++) {
+                    recentItems[i].SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen);
+                }
             }
             if (PlayerCharacter.Instanced) {
                 itemQueueTimer += Time.fixedUnscaledDeltaTime;
-                if (itemQueueTimer > (recentItemsQueue.Count > 10 ? 1.5 : itemQueueDelay)) {
+                if (itemQueueTimer > (itemQueueDelay)) {
                     if (recentItemsQueue.Count > 5) {
                         recentItemsQueue.Dequeue();
                         UpdateItemDisplay();
@@ -56,64 +59,68 @@ namespace TunicRandomizer {
 
         public void UpdateItemDisplay() {
             for (int i = 0; i < 5; i++) {
-                recentItems[i].transform.GetChild(2).gameObject.SetActive(false);
-                recentItems[i].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
-                recentItems[i].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
-                if (recentItems[i].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
-                    recentItems[i].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
+                int index = recentItemsQueue.Count - 1 - i;
+                if (recentItemsQueue.Count >= recentItems.Count) {
+                    index = recentItems.Count - 1 - i;
                 }
-                bool isMoney = false;
-                bool isTrap = false;
-                bool isTrinket = false;
-                if (recentItemsQueue.Count > i) {
-                    RecentItemData item = recentItemsQueue.ElementAt(i);
-                    if (item.check != null) {
-                        ItemData itemData = ItemLookup.GetItemDataFromCheck(item.check);
-                        isMoney = itemData.Type == ItemTypes.MONEY;
-                        isTrinket = itemData.Type == ItemTypes.TRINKET;
-                        isTrap = itemData.Type == ItemTypes.FOOLTRAP;
-                        recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[itemData.Name]]);
-                        recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = itemData.Name;
-                    } else if (item.itemInfo != null) {
-                        isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
-                        if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
-                            recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
-                            string itemFormatted = item.itemInfo.ItemName.Length > 20 ? item.itemInfo.ItemName.Substring(0, 20) + "..." : item.itemInfo.ItemName;
-                            itemFormatted = itemFormatted.Replace("_", " ");
-                            recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
-                        } else {
-                            ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
+                if (index >= 0) {
+                    recentItems[index].transform.GetChild(2).gameObject.SetActive(false);
+                    recentItems[index].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
+                    recentItems[index].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
+                    if (recentItems[index].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
+                        recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
+                    }
+                    bool isMoney = false;
+                    bool isTrap = false;
+                    bool isTrinket = false;
+                    if (recentItemsQueue.Count > i) {
+                        RecentItemData item = recentItemsQueue.ElementAt(i);
+                        if (item.check != null) {
+                            ItemData itemData = ItemLookup.GetItemDataFromCheck(item.check);
                             isMoney = itemData.Type == ItemTypes.MONEY;
                             isTrinket = itemData.Type == ItemTypes.TRINKET;
-                            recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.itemInfo.ItemName]]);
-                            if (item.isForYou) {
-                                recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{item.itemInfo.ItemName}";
-                                if (item.itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
-                                    recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text += $"\nfrom {item.itemInfo.Player.Name}";
-                                }
+                            isTrap = itemData.Type == ItemTypes.FOOLTRAP;
+                            recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[itemData.Name]]);
+                            recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = itemData.Name;
+                        } else if (item.itemInfo != null) {
+                            isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
+                            if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
+                                recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
+                                string itemFormatted = item.itemInfo.ItemName.Length > 20 ? item.itemInfo.ItemName.Substring(0, 20) + "..." : item.itemInfo.ItemName;
+                                itemFormatted = itemFormatted.Replace("_", " ");
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
                             } else {
-                                recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{item.itemInfo.ItemName}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
+                                ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
+                                isMoney = itemData.Type == ItemTypes.MONEY;
+                                isTrinket = itemData.Type == ItemTypes.TRINKET;
+                                recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.itemInfo.ItemName]]);
+                                if (item.isForYou) {
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = $"{item.itemInfo.ItemName}";
+                                    if (item.itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
+                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text += $"\nfrom {item.itemInfo.Player.Name}";
+                                    }
+                                } else {
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = $"{item.itemInfo.ItemName}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
+                                }
                             }
                         }
-                    }
-                    if (isMoney) {
-                        recentItems[i].transform.GetChild(3).transform.localScale = Vector3.one * 0.2f;
-                    }
-                    if (isTrap) {
-                        if(!recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite.name.Contains("Archipelago")) {
-                            recentItems[i].transform.GetChild(3).transform.localScale = Vector3.one * 0.2f;
+                        if (isMoney) {
+                            recentItems[index].transform.GetChild(3).transform.localScale = Vector3.one * 0.2f;
                         }
-                        recentItems[i].transform.GetChild(3).transform.localEulerAngles = new Vector3(180, 0, 0);
+                        if (isTrap) {
+                            if (!recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite.name.Contains("Archipelago")) {
+                                recentItems[index].transform.GetChild(3).transform.localScale = Vector3.one * 0.2f;
+                            }
+                            recentItems[index].transform.GetChild(3).transform.localEulerAngles = new Vector3(180, 0, 0);
+                        }
+                        if (isTrinket) {
+                            recentItems[index].transform.GetChild(2).gameObject.SetActive(true);
+                            recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI-trinket");
+                        }
+                    } else {
+                        recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = null;
+                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = "";
                     }
-                    if (isTrinket) {
-                        recentItems[i].transform.GetChild(2).gameObject.SetActive(true);
-                        recentItems[i].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI-trinket");
-                    }
-                    recentItems[i].SetActive(true);
-                } else {
-                    recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite = null;
-                    recentItems[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
-                    recentItems[i].SetActive(false);
                 }
             }
         }
