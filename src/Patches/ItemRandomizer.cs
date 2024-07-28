@@ -33,6 +33,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
                 PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
             }
+            if (SaveFile.GetInt(SaveFlags.StartWithSword) == 1) {
+                PrecollectedItems.Add("Sword");
+            }
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
@@ -135,7 +138,7 @@ namespace TunicRandomizer {
                             GoldHexagonsAdded++;
                         }
 
-                        // todo: rewrite this to not modify the itemlistjson, and instead remove abilities as hexes get placed
+                        // can probably be removed now that Check.reachable got updated to check hex counts
                         if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                             if (Item.Location.Requirements.Count > 0) {
                                 for (int i = 0; i < Item.Location.Requirements.Count; i++) {

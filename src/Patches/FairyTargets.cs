@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Archipelago.MultiClient.Net.Enums;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace TunicRandomizer {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> EntranceTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
-        
+
         public static void CreateFairyTargets() {
 
             foreach (FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
@@ -190,42 +191,46 @@ namespace TunicRandomizer {
                     newItem = namePair.Key;
                 }
             }
-            // add the new item received to the items the player has
-            TunicUtils.AddStringToDict(TunicUtils.PlayerItemsAndRegions, newItem);
-            TunicUtils.UpdateChecksInLogic();
-            // loop through the regular ItemTargets, find ones that are newly in logic
-            foreach (FairyTarget fairyTarget in ItemTargets) {
-                if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
-                string targetName = fairyTarget.name.Replace("fairy target ", "");
-                if (!ItemTargetsInLogic.Contains(fairyTarget)) {
-                    if (TunicUtils.ChecksInLogic.Contains(targetName)) {
-                        ItemTargetsInLogic.Add(fairyTarget);
-                    } else {
-                        // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
-                        string regionName = TunicPortals.FindPortalRegionFromName(targetName);
-                        string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
-                        if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
-                            foreach (string checkId in TunicUtils.ChecksInLogic) {
-                                if (checkId.Contains(destSceneName)) {
-                                    ItemTargetsInLogic.Add(fairyTarget);
-                                    break;
+            if (ItemLookup.LegacyMajorItems.Contains(newItem) || newItem.StartsWith("Ladder")) {
+                // add the new item received to the items the player has
+                TunicUtils.AddStringToDict(TunicUtils.PlayerItemsAndRegions, newItem);
+                TunicUtils.UpdateChecksInLogic();
+                // loop through the regular ItemTargets, find ones that are newly in logic
+                foreach (FairyTarget fairyTarget in ItemTargets) {
+                    if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
+                    string targetName = fairyTarget.name.Replace("fairy target ", "");
+                    if (!ItemTargetsInLogic.Contains(fairyTarget)) {
+                        if (TunicUtils.ChecksInLogic.Contains(targetName)) {
+                            ItemTargetsInLogic.Add(fairyTarget);
+                        } else {
+                            // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
+                            string regionName = TunicPortals.FindPortalRegionFromName(targetName);
+                            string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
+                            if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
+                                foreach (string checkId in TunicUtils.ChecksInLogic) {
+                                    if (checkId.Contains(destSceneName)) {
+                                        ItemTargetsInLogic.Add(fairyTarget);
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            // loop through the regular EntranceTargets, find ones that are newly in logic
-            foreach (FairyTarget fairyTarget in EntranceTargets) {
-                if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
-                if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
-                        && !EntranceTargetsInLogic.Contains(fairyTarget)) {
-                    EntranceTargetsInLogic.Add(fairyTarget);
+                // loop through the regular EntranceTargets, find ones that are newly in logic
+                foreach (FairyTarget fairyTarget in EntranceTargets) {
+                    if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
+                    if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
+                            && !EntranceTargetsInLogic.Contains(fairyTarget)) {
+                        EntranceTargetsInLogic.Add(fairyTarget);
+                    }
                 }
             }
-            // if it is still empty, check if there's locations in logic in adjacent regions
+            
+            // if there are no item targets in logic, check if there's locations in logic in adjacent regions
             if (ItemTargetsInLogic.Count == 0) {
                 CreateLogicLoadZoneTargets(addImmediately:true);
+                FairyTarget.registered = ItemTargetsInLogic;
             }
         }
 

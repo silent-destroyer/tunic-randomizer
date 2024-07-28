@@ -31,6 +31,7 @@
         public const string EntranceRando = "randomizer entrance rando enabled";
 
         // Other Logic Flags
+        public const string StartWithSword = "randomizer started with sword";
         public const string MasklessLogic = "randomizer maskless logic enabled";
         public const string LanternlessLogic = "randomizer lanternless logic enabled";
         public const string LadderRandoEnabled = "randomizer ladder rando enabled";
