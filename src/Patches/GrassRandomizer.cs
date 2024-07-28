@@ -124,13 +124,14 @@ namespace TunicRandomizer {
                             }
                         } 
                         if (isForTunicPlayer && ItemInfo.ItemName == "Grass") {
+                            TunicLogger.LogInfo("Adding location id to queue " + ItemInfo.LocationId);
                             Archipelago.instance.integration.locationsToSend.Add(ItemInfo.LocationId);
                         } else {
                             Task.Run(() => Archipelago.instance.integration.session.Locations.CompleteLocationChecks(ItemInfo.LocationId));
                         }
                         SaveFile.SetInt("randomizer picked up " + grassId, 1);
                         Locations.CheckedLocations[grassId] = true;
-                        TunicLogger.LogInfo("Cut Grass: " + grassId);
+                        TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
                         if (GameObject.Find($"fairy target {grassId}")) {
                             GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
                         }
@@ -140,6 +141,7 @@ namespace TunicRandomizer {
                         if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemName != "Grass" : true)) {
                             SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
                             Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && isForTunicPlayer ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
+                            RecentItemsDisplay.instance.EnqueueItem(ItemInfo, false);
                         }
                         if (__instance.transform.GetChild(1).childCount == 1) {
                             __instance.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);

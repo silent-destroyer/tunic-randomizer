@@ -585,6 +585,9 @@ namespace TunicRandomizer {
                         Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
                         long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]);
                         LocationIDs.Add(id);
+                        if (Locations.CheckedLocations[Key] && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(id)) {
+                            TunicLogger.LogInfo("Checked in save file but not on AP: " + id + " " + Key + "[" + Locations.LocationIdToDescription[Key] + "]");
+                        }
                     }
                 }
                 if (LocationIDs.Contains(-1L)) {

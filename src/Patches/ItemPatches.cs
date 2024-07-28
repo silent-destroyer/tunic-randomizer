@@ -455,7 +455,7 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
 
-            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+            if (SaveFile.GetInt(GrassRandoEnabled) == 0) {
                 FairyTargets.UpdateFairyTargetsInLogic(ItemName);
             }
 

@@ -575,12 +575,12 @@ namespace TunicRandomizer {
             }
 
             if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
-                questionMark.transform.localEulerAngles = new Vector3(270, 0, 0);
                 foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
                     if (child.name == grass.name) { continue; }
                     child.localEulerAngles = new Vector3(180, 0, 0);
                     child.position += new Vector3(0, 2, 0);
                 }
+                questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
             }
             questionMark.SetActive(!Checked);
         }

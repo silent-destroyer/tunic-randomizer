@@ -304,11 +304,9 @@ namespace TunicRandomizer {
         }
 
         public void SendQueuedLocations() {
-            Task.Run(() => {
-                session.Locations.CompleteLocationChecks(locationsToSend.ToArray());
-                locationsToSend.Clear();
-                }
-            );
+            TunicLogger.LogInfo("Sending queued grass checks: " + string.Join(", ", locationsToSend));
+            session.Locations.CompleteLocationChecks(locationsToSend.ToArray());
+            locationsToSend.Clear();
         }
 
         public void CompleteLocationCheck(string LocationName) {
