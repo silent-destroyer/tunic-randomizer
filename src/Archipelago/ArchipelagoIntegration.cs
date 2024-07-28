@@ -148,7 +148,6 @@ namespace TunicRandomizer {
         public void TryDisconnect() {
 
             try {
-                SendQueuedLocations();
                 if (session != null) {
                     session.Socket.DisconnectAsync();
                     session = null;
