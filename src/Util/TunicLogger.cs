@@ -4,6 +4,8 @@ namespace TunicRandomizer {
     public class TunicLogger {
 
         private static ManualLogSource Logger;
+        // set this to true to trigger logging for all log testing messages
+        public static bool Testing = false;
 
         public static void LogInfo(string message) {
             Logger.LogInfo(message);
@@ -23,6 +25,12 @@ namespace TunicRandomizer {
 
         public static void SetLogger(ManualLogSource logger) {
             Logger = logger;
+        }
+
+        public static void LogTesting(string message) {
+            if (Testing) {
+                Logger.LogInfo(message);
+            }
         }
     }
 }
