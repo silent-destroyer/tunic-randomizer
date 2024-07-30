@@ -37,12 +37,17 @@ namespace TunicRandomizer {
             title.SetActive(TunicRandomizer.Settings.ShowRecentItems && !InventoryDisplay.InventoryOpen);
             if (!TunicRandomizer.Settings.ShowRecentItems) {
                 foreach (GameObject obj in recentItems) {
-                    obj.SetActive(false);
+                    for(int i = 0; i < obj.transform.childCount; i++) {
+                        obj.transform.GetChild(i).gameObject.SetActive(false);
+                    }
                 }
                 return;
             } else {
                 for(int i = 0; i < recentItems.Count; i++) {
-                    recentItems[i].SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen);
+                    for (int j = 0; j < recentItems[i].transform.childCount; j++) {
+                        if (j == 2) { continue; }
+                        recentItems[i].transform.GetChild(j).gameObject.SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen);
+                    }
                 }
             }
             if (PlayerCharacter.Instanced) {
@@ -63,13 +68,13 @@ namespace TunicRandomizer {
                 if (recentItemsQueue.Count >= recentItems.Count) {
                     index = recentItems.Count - 1 - i;
                 }
+                recentItems[i].transform.GetChild(2).gameObject.SetActive(false);
+                recentItems[i].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
+                recentItems[i].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
+                if (recentItems[i].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
+                    recentItems[i].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
+                }
                 if (index >= 0) {
-                    recentItems[index].transform.GetChild(2).gameObject.SetActive(false);
-                    recentItems[index].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
-                    recentItems[index].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
-                    if (recentItems[index].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
-                        recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
-                    }
                     bool isMoney = false;
                     bool isTrap = false;
                     bool isTrinket = false;
@@ -81,26 +86,26 @@ namespace TunicRandomizer {
                             isTrinket = itemData.Type == ItemTypes.TRINKET;
                             isTrap = itemData.Type == ItemTypes.FOOLTRAP;
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[itemData.Name]]);
-                            recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = itemData.Name;
+                            recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = itemData.Name;
                         } else if (item.itemInfo != null) {
                             isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
                             if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
                                 string itemFormatted = item.itemInfo.ItemName.Length > 20 ? item.itemInfo.ItemName.Substring(0, 20) + "..." : item.itemInfo.ItemName;
                                 itemFormatted = itemFormatted.Replace("_", " ");
-                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
                             } else {
                                 ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
                                 isMoney = itemData.Type == ItemTypes.MONEY;
                                 isTrinket = itemData.Type == ItemTypes.TRINKET;
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.itemInfo.ItemName]]);
                                 if (item.isForYou) {
-                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = $"{item.itemInfo.ItemName}";
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{item.itemInfo.ItemName}";
                                     if (item.itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
-                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text += $"\nfrom {item.itemInfo.Player.Name}";
+                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\nfrom {item.itemInfo.Player.Name}";
                                     }
                                 } else {
-                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = $"{item.itemInfo.ItemName}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{item.itemInfo.ItemName}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
                                 }
                             }
                         }
@@ -119,7 +124,7 @@ namespace TunicRandomizer {
                         }
                     } else {
                         recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = null;
-                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>().text = "";
+                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = "";
                     }
                 }
             }
@@ -152,20 +157,29 @@ namespace TunicRandomizer {
 
             GameObject potionDisplay = Resources.FindObjectsOfTypeAll<PotionDisplay>().First().gameObject;
             title = new GameObject("randomizer recent items text");
-            title.transform.parent = potionDisplay.transform;
             title.AddComponent<TextMeshProUGUI>().text = "Recent Items";
             title.GetComponent<TextMeshProUGUI>().fontSize = 24;
             title.GetComponent<TextMeshProUGUI>().font = FontAsset;
             title.GetComponent<TextMeshProUGUI>().fontMaterial = FontMaterial;
-            title.transform.localPosition = new Vector3(-205f, -205f, 0f);
+            title.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Left;
             GameObject recentItemsDisplay = new GameObject("randomizer recent items display");
+            title.transform.parent = recentItemsDisplay.transform;
+            RecentItemsDisplay.instance = recentItemsDisplay.AddComponent<RecentItemsDisplay>();
+            recentItemsDisplay.transform.parent = potionDisplay.transform;
+            recentItemsDisplay.transform.localPosition = new Vector3(-166f, -250f, 0f);
+            recentItemsDisplay.layer = 5;
+            recentItemsDisplay.AddComponent<Canvas>();
+            recentItemsDisplay.AddComponent<CanvasScaler>();
+            recentItemsDisplay.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            recentItemsDisplay.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1920, 1080);
+            recentItemsDisplay.AddComponent<VerticalLayoutGroup>();
+            title.AddComponent<LayoutElement>().minWidth = 130;
             for(int i = 0; i < 5; i++) {
                 recentItems.Add(SetupItemTextAndSprite(recentItemsDisplay.transform, i));
             }
-            RecentItemsDisplay.instance = recentItemsDisplay.AddComponent<RecentItemsDisplay>();
-            recentItemsDisplay.transform.parent = potionDisplay.transform;
-            recentItemsDisplay.transform.localPosition = new Vector3(-166f, -305f, 0f);
-            recentItemsDisplay.AddComponent<VerticalLayoutGroup>().spacing = 50f;
+            recentItemsDisplay.GetComponent<VerticalLayoutGroup>().spacing = 50f;
+            recentItemsDisplay.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
+            recentItemsDisplay.transform.localScale = Vector3.one * 2;
         }
 
         public static GameObject SetupItemTextAndSprite(Transform parent, int i) {
@@ -173,7 +187,7 @@ namespace TunicRandomizer {
             Material FontMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(Material => Material.name == "Latin Rounded - Quantity Outline").ToList()[0];
             GameObject item = new GameObject("item");
             item.transform.parent = parent.transform;
-
+            item.AddComponent<LayoutElement>();
             GameObject backing = new GameObject("backing");
             GameObject sprite = new GameObject("sprite");
             GameObject spriteBacking = new GameObject("sprite backing");
@@ -211,7 +225,13 @@ namespace TunicRandomizer {
             text.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Middle;
             text.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 50);
             text.transform.localPosition = new Vector3(22f, 0, 0f);
-            item.transform.localPosition += new Vector3(0, 40-(i*50), 0);
+            //item.transform.localPosition += new Vector3(0, 40-(i*50), 0);
+            item.SetActive(true);
+            backing.SetActive(false);
+            sprite.SetActive(false);
+            spriteBacking.SetActive(false);
+            trinketBacking.SetActive(false);
+            text.SetActive(false);
             return item;
         }
 
