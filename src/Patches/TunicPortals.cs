@@ -3865,6 +3865,12 @@ namespace TunicRandomizer {
                     {
                         "Library Lab on Portal Pad",
                         new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
                         }
                     },
                 }
@@ -5080,6 +5086,7 @@ namespace TunicRandomizer {
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static void RandomizePortals(int seed) {
+            TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             Dictionary<string, PortalCombo> randomizedPortals = new Dictionary<string, PortalCombo>();
 
@@ -5121,6 +5128,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            TunicLogger.LogTesting("got through step 1 of entrance rando setup");
 
             // shops get added separately cause they're weird
             List<string> shopSceneList = new List<string>();
@@ -5192,7 +5200,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer laurels location") == 3) {
                 total_nondeadend_count++;
             }
-
+            TunicLogger.LogTesting("step 2 of entrance rando setup done");
             int comboNumber = 0;
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
                 ShuffleList(twoPlusPortals, seed);
@@ -5203,18 +5211,56 @@ namespace TunicRandomizer {
                     if (!FullInventory.ContainsKey(portal.Region)) {
                         if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
                             // if there's more east dead ends than west two plus, then we'll end up needing to pair dead ends, which isn't viable
-                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]]) {
+                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]]
+                                || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction]) {
+                                TunicLogger.LogTesting($"Not pairing {portal.Name} because {portal.Direction} is out of spots in twoPlus");
+                                continue;
+                            }
+                            bool shouldContinue = false;
+                            // we need to ensure the ones that can cause failures have already been paired
+                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 3
+                                || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 3) {
+                                List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
+                                if ((portal.Direction == (int)PDir.SOUTH && !southProblems.Contains(portal.Name)) || portal.Direction == (int)PDir.NORTH) {
+                                    foreach (Portal testPortal in twoPlusPortals) {
+                                        if (testPortal.Name == "Ziggurat Upper to Ziggurat Entry Hallway" 
+                                            || testPortal.Name == "Ziggurat Tower to Ziggurat Upper"
+                                            || testPortal.Name == "Forest Belltower to Guard Captain Room") {
+                                            TunicLogger.LogTesting($"skipped {portal.Name} because of zig upper, zig mid, or forest belltower not being done yet");
+                                            shouldContinue = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 1
+                                || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 1) {
+                                if ((portal.Direction == (int)PDir.LADDER_UP && portal.Name != "Frog's Domain Ladder Exit") || portal.Direction == (int)PDir.LADDER_DOWN) {
+                                    foreach (Portal testPortal in twoPlusPortals) {
+                                        if (testPortal.Name == "Frog's Domain Ladder Exit") {
+                                            TunicLogger.LogTesting($"skipped {portal.Name} because of frog's domain ladder exit not being done yet");
+                                            shouldContinue = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (shouldContinue == true) {
                                 continue;
                             }
                         }
                         portal1 = portal;
                         twoPlusPortals.Remove(portal1);
-                        twoPlusPortalDirectionTracker[portal1.Direction]--;
                         break;
                     }
                 }
                 if (portal1 == null) {
+                    // it will fail after this
                     TunicLogger.LogInfo("something messed up in portal pairing for portal 1");
+                    TunicLogger.LogInfo("remaining portals in twoPlusPortals are:");
+                    foreach (Portal debugportal in twoPlusPortals) {
+                        TunicLogger.LogInfo(debugportal.Name);
+                    }
                 }
 
                 ShuffleList(twoPlusPortals, seed);
@@ -5229,30 +5275,34 @@ namespace TunicRandomizer {
                         }
                         portal2 = secondPortal;
                         twoPlusPortals.Remove(secondPortal);
-                        twoPlusPortalDirectionTracker[portal2.Direction]--;
                         break;
                     }
                 }
                 if (portal2 == null) {
                     if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
-                        // portal probably doesn't have any valid directional pairs right this second, put it back in and go again
+                        TunicLogger.LogTesting($"portal {portal1.Name} doesn't have any valid directional pairs yet, put it back in and go again");
                         twoPlusPortals.Add(portal1);
+                        seed++;
                         continue;
                     }
+                    // it will fail after this
                     TunicLogger.LogInfo("something messed up in portal pairing for portal 2");
                 }
 
                 // add the portal combo to the randomized portals list
                 randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                twoPlusPortalDirectionTracker[portal1.Direction]--;
+                twoPlusPortalDirectionTracker[portal2.Direction]--;
                 comboNumber++;
 
                 FullInventory.Add(portal1.Region, 1);
                 // if laurels is at fairy cave, add it when we connect fairy cave
-                if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
+                if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                     FullInventory.Add("Hyperdash", 1);
                 }
                 FullInventory = UpdateReachableRegions(FullInventory);
             }
+            TunicLogger.LogTesting("done pairing portals");
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
@@ -5301,12 +5351,14 @@ namespace TunicRandomizer {
                     }
                 }
                 if (portal2 == null) {
+                    // it will fail after this
                     TunicLogger.LogInfo("something went wrong with the remaining two plus portals");
                 }
                 randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
                 comboNumber++;
             }
             if (twoPlusPortals.Count == 1) {
+                // it will fail after this
                 TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
             foreach (PortalCombo portalCombo in randomizedPortals.Values) {
@@ -5379,6 +5431,14 @@ namespace TunicRandomizer {
                     }
                     break;
                 }
+
+                if (portal.FullID == "ziggurat2020_3_zig2_skip") {
+                    portal.name = "Zig Skip";
+                    portal.destinationSceneName = "ziggurat2020_1";
+                    portal.optionalIDToSpawnAt = "zig_skip_recovery";
+                    continue;
+                }
+
                 TunicLogger.LogInfo("looping through randomized portals now");
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
                 // shops go to Previous Region, so this intentionally skips them
