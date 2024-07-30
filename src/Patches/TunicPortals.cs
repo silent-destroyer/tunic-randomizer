@@ -5219,6 +5219,9 @@ namespace TunicRandomizer {
                     RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal2, portal1));
                     twoPlusPortals.Remove(portal2);
                     deadEndPortals.RemoveAt(0);
+                    if (portal1.Scene == "Shop") {
+                        shopSceneList.Add(portal2.Scene);
+                    }
                     foundPair = true;
                     break;
                 }
