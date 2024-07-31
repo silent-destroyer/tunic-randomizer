@@ -5324,6 +5324,9 @@ namespace TunicRandomizer {
 
                     twoPlusPortals.Remove(portal2);
                     deadEndPortals.RemoveAt(0);
+                    if (portal1.Scene == "Shop") {
+                        shopSceneList.Add(portal2.Scene);
+                    }
                     foundPair = true;
                     break;
                 }
