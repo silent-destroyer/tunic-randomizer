@@ -5187,6 +5187,7 @@ namespace TunicRandomizer {
 
             // get the total number of regions to get before doing dead ends
             int total_nondeadend_count = 0;
+            List<string> nondeadend_regions = new List<string>();
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
                 // if fixed shop is off or decoupled is on, don't add the zig skip exit region to the nondeadend count
                 if (region.Key == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.FixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
@@ -5194,11 +5195,23 @@ namespace TunicRandomizer {
                 }
                 // in decoupled, dead ends aren't real, they can't hurt you
                 if (region.Value.DeadEnd == false || SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                    nondeadend_regions.Add(region.Key);
                     total_nondeadend_count++;
                 }
             }
+            // if you have decoupled on, you add all shop entrance regions, but you only have 6 shops with direction pairs off
+            if (SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+                    // fixed shop only has 1 shop entrance region
+                    total_nondeadend_count -= 7;
+                } else if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
+                    // if fixed shop and direction pairs are both off, there's only 6 shop entrances
+                    total_nondeadend_count -= 2;
+                }
+                
+            }
             // added fairy cave to the non-dead end regions, so it should increase the count here too
-            if (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
+            if (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3 && SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
                 total_nondeadend_count++;
             }
             TunicLogger.LogTesting("step 2 of entrance rando setup done");
@@ -5273,6 +5286,14 @@ namespace TunicRandomizer {
                 if (portal1 == null) {
                     // it will fail after this
                     TunicLogger.LogInfo("something messed up in portal pairing for portal 1");
+                    TunicLogger.LogInfo("current region count is " + (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count).ToString());
+                    TunicLogger.LogInfo("goal region count is " + total_nondeadend_count.ToString());
+                    TunicLogger.LogInfo("if there are regions missing, they are as follows:");
+                    foreach (string region in nondeadend_regions) {
+                        if (!FullInventory.ContainsKey(region)) {
+                            TunicLogger.LogInfo(region);
+                        }
+                    }
                     TunicLogger.LogInfo("remaining portals in twoPlusPortals are:");
                     foreach (Portal debugportal in twoPlusPortals) {
                         TunicLogger.LogInfo(debugportal.Name);
@@ -5312,7 +5333,9 @@ namespace TunicRandomizer {
                 twoPlusPortalDirectionTracker[portal2.Direction]--;
                 comboNumber++;
 
-                FullInventory.Add(portal1.OutletRegion(), 1);
+                if (!FullInventory.ContainsKey(portal1.OutletRegion())) {
+                    FullInventory.Add(portal1.OutletRegion(), 1);
+                }
                 // if laurels is at fairy cave, add it when we connect fairy cave
                 if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                     FullInventory.Add("Hyperdash", 1);
@@ -5351,10 +5374,24 @@ namespace TunicRandomizer {
                     ShuffleList(deadEndPortals, seed);
                 }
             }
-            
+
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
-            while (twoPlusPortals.Count > 1) {
+            int finalPairLoopNumber = 0;
+            while (twoPlusPortals.Count > 0) {
+                finalPairLoopNumber++;
+                if (finalPairLoopNumber > 10000) {
+                    TunicLogger.LogInfo("Failed to pair portals while pairing the final entrances off to each other");
+                    TunicLogger.LogInfo("Remaining portals in twoPlusPortals:");
+                    foreach (Portal portal in twoPlusPortals) {
+                        TunicLogger.LogInfo(portal.Name);
+                    }
+                    TunicLogger.LogInfo("Remaining portals in twoPlusPortals2:");
+                    foreach (Portal portal in twoPlusPortals2) {
+                        TunicLogger.LogInfo(portal.Name);
+                    }
+                    break;
+                }
                 Portal portal1 = twoPlusPortals[0];
                 twoPlusPortals.RemoveAt(0);
                 Portal portal2 = null;
@@ -5376,10 +5413,6 @@ namespace TunicRandomizer {
                 }
                 randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
                 comboNumber++;
-            }
-            if (twoPlusPortals.Count == 1) {
-                // it will fail after this
-                TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
             foreach (KeyValuePair<string, PortalCombo> portalCombo in randomizedPortals) {
                 RandomizedPortals.Add(portalCombo.Key, portalCombo.Value);
