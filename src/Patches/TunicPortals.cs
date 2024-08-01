@@ -2194,6 +2194,7 @@ namespace TunicRandomizer {
                 "Purgatory",
                 new RegionInfo("Purgatory", false)
             },
+            // shops don't get outlet regions because we don't want it to think you can walk from one shop exit to another
             {
                 "Shop Entrance 1",
                 new RegionInfo("Shop", true)
@@ -4861,10 +4862,6 @@ namespace TunicRandomizer {
         }
 
 
-        // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
-        public static List<Portal> deadEndPortals = new List<Portal>();
-        public static List<Portal> twoPlusPortals = new List<Portal>();
-
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
@@ -5089,6 +5086,9 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             Dictionary<string, PortalCombo> randomizedPortals = new Dictionary<string, PortalCombo>();
+            // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
+            List<Portal> deadEndPortals = new List<Portal>();
+            List<Portal> twoPlusPortals = new List<Portal>();
 
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -5103,9 +5103,9 @@ namespace TunicRandomizer {
                     continue;
                 }
                 foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
-                    // if fixed shop is off, don't add zig skip exit to the portal list
+                    // if fixed shop is off or decoupled is on, don't add zig skip exit to the portal list
                     string region_name = region_group.Key;
-                    if (region_name == "Zig Skip Exit" && SaveFile.GetInt(SaveFlags.FixedShop) != 1) {
+                        if (region_name == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.FixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
                         continue;
                     }
                     List<TunicPortal> region_portals = region_group.Value;
@@ -5119,7 +5119,7 @@ namespace TunicRandomizer {
                             twoPlusPortalDirectionTracker[portal.Direction]++;
                         }
                         // need to throw fairy cave into the twoPlus list if laurels is at 10 fairies
-                        if (portal.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
+                        if (portal.Region == "Secret Gathering Place" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                             deadEndPortals.Remove(portal);
                             twoPlusPortals.Add(portal);
                             twoPlusPortalDirectionTracker[portal.Direction]++;
@@ -5188,19 +5188,34 @@ namespace TunicRandomizer {
             // get the total number of regions to get before doing dead ends
             int total_nondeadend_count = 0;
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
-                // if fixed shop is off, don't add the zig skip exit region to the nondeadend count
-                if (region.Key == "Zig Skip Exit" && SaveFile.GetInt(SaveFlags.FixedShop) != 1) {
+                // if fixed shop is off or decoupled is on, don't add the zig skip exit region to the nondeadend count
+                if (region.Key == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.FixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
                     continue;
                 }
-                if (region.Value.DeadEnd == false) {
+                // in decoupled, dead ends aren't real, they can't hurt you
+                if (region.Value.DeadEnd == false || SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
                     total_nondeadend_count++;
                 }
             }
             // added fairy cave to the non-dead end regions, so it should increase the count here too
-            if (SaveFile.GetInt("randomizer laurels location") == 3) {
+            if (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                 total_nondeadend_count++;
             }
             TunicLogger.LogTesting("step 2 of entrance rando setup done");
+
+            // making a second list if we're doing decoupled, a reference to the first list if not
+            List<Portal> twoPlusPortals2;
+            if (SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                // dead ends aren't real in twoPlusPortals
+                twoPlusPortals.AddRange(deadEndPortals);
+                deadEndPortals.Clear();
+                twoPlusPortals2 = new List<Portal>(twoPlusPortals);
+            } else {
+                twoPlusPortals2 = twoPlusPortals;
+            }
+
+            TunicLogger.LogTesting("created the secondary portal lists");
+
             int comboNumber = 0;
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
                 ShuffleList(twoPlusPortals, seed);
@@ -5209,6 +5224,7 @@ namespace TunicRandomizer {
                 foreach (Portal portal in twoPlusPortals) {
                     // find a portal in a region we can't access yet
                     if (!FullInventory.ContainsKey(portal.Region)) {
+                        // todo: edit this too if needed
                         if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
                             // if there's more east dead ends than west two plus, then we'll end up needing to pair dead ends, which isn't viable
                             if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]]
@@ -5263,8 +5279,8 @@ namespace TunicRandomizer {
                     }
                 }
 
-                ShuffleList(twoPlusPortals, seed);
-                foreach (Portal secondPortal in twoPlusPortals) {
+                ShuffleList(twoPlusPortals2, seed);
+                foreach (Portal secondPortal in twoPlusPortals2) {
                     // find a portal in a region we can access
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
                         // for pairing to opposite direction portals, we also want to check if the directions match
@@ -5274,7 +5290,7 @@ namespace TunicRandomizer {
                             }
                         }
                         portal2 = secondPortal;
-                        twoPlusPortals.Remove(secondPortal);
+                        twoPlusPortals2.Remove(secondPortal);
                         break;
                     }
                 }
@@ -5282,6 +5298,7 @@ namespace TunicRandomizer {
                     if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
                         TunicLogger.LogTesting($"portal {portal1.Name} doesn't have any valid directional pairs yet, put it back in and go again");
                         twoPlusPortals.Add(portal1);
+                        // since the seed is just a number and not a Random object, we need to increment it to avoid shuffling the portals the same way
                         seed++;
                         continue;
                     }
@@ -5295,7 +5312,7 @@ namespace TunicRandomizer {
                 twoPlusPortalDirectionTracker[portal2.Direction]--;
                 comboNumber++;
 
-                FullInventory.Add(portal1.Region, 1);
+                FullInventory.Add(portal1.OutletRegion(), 1);
                 // if laurels is at fairy cave, add it when we connect fairy cave
                 if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                     FullInventory.Add("Hyperdash", 1);
@@ -5342,13 +5359,13 @@ namespace TunicRandomizer {
                 twoPlusPortals.RemoveAt(0);
                 Portal portal2 = null;
                 if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
-                    portal2 = twoPlusPortals[0];
-                    twoPlusPortals.RemoveAt(0);
+                    portal2 = twoPlusPortals2[0];
+                    twoPlusPortals2.RemoveAt(0);
                 } else {
-                    foreach (Portal portal in twoPlusPortals) {
+                    foreach (Portal portal in twoPlusPortals2) {
                         if (directionPairs[portal1.Direction] == portal.Direction) {
                             portal2 = portal;
-                            twoPlusPortals.Remove(portal);
+                            twoPlusPortals2.Remove(portal);
                             break;
                         }
                     }
@@ -5364,11 +5381,13 @@ namespace TunicRandomizer {
                 // it will fail after this
                 TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
             }
-            foreach (PortalCombo portalCombo in randomizedPortals.Values) {
-                RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
-                comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
-                comboNumber++;
+            foreach (KeyValuePair<string, PortalCombo> portalCombo in randomizedPortals) {
+                RandomizedPortals.Add(portalCombo.Key, portalCombo.Value);
+                if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                    TunicLogger.LogInfo("decoupled disabled!");
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portalCombo.Value.Portal2, portalCombo.Value.Portal1));
+                    comboNumber++;
+                }
             }
         }
 

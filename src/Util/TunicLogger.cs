@@ -5,7 +5,7 @@ namespace TunicRandomizer {
 
         private static ManualLogSource Logger;
         // set this to true to trigger logging for all log testing messages
-        public static bool Testing = false;
+        public static bool Testing = true;
 
         public static void LogInfo(string message) {
             Logger.LogInfo(message);

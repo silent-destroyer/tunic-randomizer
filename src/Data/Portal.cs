@@ -43,5 +43,10 @@ namespace TunicRandomizer {
                 return false;
             }
         }
+
+        // for portals that lead directly to a different region, ie: appearing at a yellow portal square
+        public string OutletRegion() {
+            return TunicPortals.RegionDict[Region].OutletRegion ?? Region;
+        }
     }
 }
