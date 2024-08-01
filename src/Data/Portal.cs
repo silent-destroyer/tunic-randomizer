@@ -21,6 +21,7 @@ namespace TunicRandomizer {
             DestinationTag = (Destination + Tag);
             SceneDestinationTag = (Scene + ", " + DestinationTag);
             DestinationSceneTag = (Destination + ", " + Scene + Tag);  // for finding the vanilla connection
+            Direction = (int)TunicPortals.PDir.NONE;
         }
 
         public Portal(string name, string destination, string tag, string scene, string region, int direction) {
