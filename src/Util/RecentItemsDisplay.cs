@@ -68,16 +68,17 @@ namespace TunicRandomizer {
                 if (recentItemsQueue.Count >= recentItems.Count) {
                     index = recentItems.Count - 1 - i;
                 }
-                recentItems[i].transform.GetChild(2).gameObject.SetActive(false);
-                recentItems[i].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
-                recentItems[i].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
-                if (recentItems[i].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
-                    recentItems[i].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
-                }
                 if (index >= 0) {
+                    recentItems[index].transform.GetChild(2).gameObject.SetActive(false);
+                    recentItems[index].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
+                    recentItems[index].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
+                    if (recentItems[index].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
+                        recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
+                    }
                     bool isMoney = false;
                     bool isTrap = false;
                     bool isTrinket = false;
+                    bool isSwordUpgrade = false;
                     if (recentItemsQueue.Count > i) {
                         RecentItemData item = recentItemsQueue.ElementAt(i);
                         if (item.check != null) {
@@ -85,6 +86,7 @@ namespace TunicRandomizer {
                             isMoney = itemData.Type == ItemTypes.MONEY;
                             isTrinket = itemData.Type == ItemTypes.TRINKET;
                             isTrap = itemData.Type == ItemTypes.FOOLTRAP;
+                            isSwordUpgrade = itemData.Type == ItemTypes.SWORDUPGRADE;
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[itemData.Name]]);
                             recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = itemData.Name;
                         } else if (item.itemInfo != null) {
@@ -98,6 +100,7 @@ namespace TunicRandomizer {
                                 ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
                                 isMoney = itemData.Type == ItemTypes.MONEY;
                                 isTrinket = itemData.Type == ItemTypes.TRINKET;
+                                isSwordUpgrade = itemData.Type == ItemTypes.SWORDUPGRADE;
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.itemInfo.ItemName]]);
                                 if (item.isForYou) {
                                     recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{item.itemInfo.ItemName}";
@@ -121,6 +124,9 @@ namespace TunicRandomizer {
                         if (isTrinket) {
                             recentItems[index].transform.GetChild(2).gameObject.SetActive(true);
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI-trinket");
+                        }
+                        if (item.isForYou && isSwordUpgrade) {
+                            recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SaveFlags.SwordProgressionLevel))]);
                         }
                     } else {
                         recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = null;
