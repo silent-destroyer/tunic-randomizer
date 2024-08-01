@@ -264,7 +264,7 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo("Error randomizing fox colors!");
                 }
             }
-
+            
             if (PlayerCharacterPatches.IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = false;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = false;
@@ -308,8 +308,9 @@ namespace TunicRandomizer {
                 int denominator = SaveFile.GetInt(GrassRandoEnabled) == 1 ? 325 : 15;
                 PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / denominator;
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                    GameObject.FindObjectOfType<Foxgod>().gameObject.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                    GameObject.FindObjectOfType<Foxgod>().gameObject.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                    Foxgod foxgod = GameObject.FindObjectOfType<Foxgod>();
+                    foxgod.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                    foxgod.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 }
 
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
@@ -337,7 +338,7 @@ namespace TunicRandomizer {
             } else if (SceneName == "Temple") {
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     foreach (GameObject Questagon in Resources.FindObjectsOfTypeAll<GameObject>().Where(Obj => Obj.name == "questagon" && Obj.scene.name == loadingScene.name)) {
-                        Questagon.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                        Questagon.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                         Questagon.GetComponent<MeshRenderer>().receiveShadows = false;
                     }
                 }

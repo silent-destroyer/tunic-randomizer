@@ -20,8 +20,10 @@ namespace TunicRandomizer {
                 GameObject HexagonRoot = ModelSwaps.Items["Hexagon Blue"].transform.parent.gameObject;
                 GameObject GoldHexagon = GameObject.Instantiate(HexagonRoot);
                 GoldHexagon.transform.parent = HexagonRoot.transform.parent;
-                GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().material = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().material;
-                GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().materials[0] = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().material; GoldHexagon.SetActive(false);
+                Material goldMaterial = ModelSwaps.FindMaterial("goldenTrophy light");
+                GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().material = goldMaterial;
+                GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().materials = new Material[] { goldMaterial };
+                GoldHexagon.SetActive(false);
                 GoldHexagon.transform.localPosition = Vector3.zero;
                 GameObject.DontDestroyOnLoad(GoldHexagon);
 

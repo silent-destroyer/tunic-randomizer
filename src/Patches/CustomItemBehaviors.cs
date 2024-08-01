@@ -110,18 +110,18 @@ namespace TunicRandomizer {
                 }
 
                 
-                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 GameObject Hand = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R");
                 if (Hand != null) {
-                    Hand.transform.GetChild(1).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                    Hand.transform.GetChild(1).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                     if (Hand.transform.childCount >= 12) {
-                        Hand.transform.GetChild(12).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                        Hand.transform.GetChild(13).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                        Hand.transform.GetChild(12).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                        Hand.transform.GetChild(13).GetChild(4).GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                     }
                 }
 

@@ -160,6 +160,8 @@ namespace TunicRandomizer {
             Signpost.AddComponent<MeshRenderer>().material = FindMaterial("signpost");
             Signpost.SetActive(false);
             GameObject.DontDestroyOnLoad(Signpost);
+            
+            InitializeExtras();
 
             ItemPresentationPatches.SetupOldHouseKeyItemPresentation();
             Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
@@ -167,7 +169,6 @@ namespace TunicRandomizer {
             ItemPresentationPatches.SetupHexagonQuestItemPresentation();
             ItemPresentationPatches.SetupCapePresentation();
             ItemPresentationPatches.SetupGrassPresentation();
-            InitializeExtras();
 
             // make it so you can pick up money from further away
             List<ItemPickup> coins = Resources.FindObjectsOfTypeAll<ItemPickup>().Where(coin => coin.gameObject.scene.name == "DontDestroyOnLoad").ToList();
@@ -200,7 +201,7 @@ namespace TunicRandomizer {
             Back.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
             GameObject Cube = new GameObject("cube");
             Cube.AddComponent<MeshFilter>().mesh = GameObject.Find("Group/Jelly Cube/Jelly Cube").GetComponent<SkinnedMeshRenderer>().sharedMesh;
-            Cube.AddComponent<MeshRenderer>().materials = Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+            Cube.AddComponent<MeshRenderer>().materials = Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
             Cube.transform.localScale = new Vector3(1.89f, 1.89f, 1.89f);
             Cube.transform.localPosition = new Vector3(0f, -1.9f, 0f);
             Top.transform.parent = Items[$"Other World {ItemFlags.Advancement}"].transform;
@@ -479,7 +480,7 @@ namespace TunicRandomizer {
             } 
             if(flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
                 chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = new Material[] {
-                    ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().material,
+                    ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().material,
                     chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1]
                 };
             }
@@ -569,7 +570,7 @@ namespace TunicRandomizer {
             }
             if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
                 foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
-                    r.material = Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().material;
+                    r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
                     grass.materialForBase = r.material;
                 }
             }
