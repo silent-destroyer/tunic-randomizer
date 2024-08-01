@@ -74,6 +74,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool DecoupledER {
+            get;
+            set;
+        }
+
         public bool Lanternless {
             get;
             set;
@@ -411,6 +416,7 @@ namespace TunicRandomizer {
             EntranceRandoEnabled = false;
             ERFixedShop = false;
             PortalDirectionPairs = false;
+            DecoupledER = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
             FixedLaurelsOption = FixedLaurelsType.RANDOM;
@@ -534,6 +540,7 @@ namespace TunicRandomizer {
                 EntranceRandoEnabled = eval(logic, ENTRANCE_RANDO);
                 ERFixedShop = eval(logic, ER_SHOPS);
                 // todo: add the direction pairs to settings string
+                // todo: add decoupled to the settings string
                 Lanternless = eval(logic, LANTERNLESS);
                 Maskless = eval(logic, MASKLESS);
                 MysterySeed = eval(logic, MYSTERY_SEED);
@@ -605,15 +612,16 @@ namespace TunicRandomizer {
                 return new bool[] {
                     GameMode == GameModes.HEXAGONQUEST,
                     KeysBehindBosses, StartWithSwordEnabled, SwordProgressionEnabled,
-                    ShuffleAbilities, EntranceRandoEnabled, ERFixedShop, PortalDirectionPairs,
+                    ShuffleAbilities, EntranceRandoEnabled, ERFixedShop, PortalDirectionPairs, DecoupledER,
                     Lanternless, Maskless, MysterySeed, ShuffleLadders
                 };
             } else {
                 return new bool[] { 
                     SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1, SaveFile.GetInt(SaveFlags.KeysBehindBosses) == 1,
                     SaveFile.GetInt("randomizer started with sword") == 1, SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 1,
-                    SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1, SaveFile.GetInt(SaveFlags.EntranceRando) == 1,
-                    SaveFile.GetInt(SaveFlags.FixedShop) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
+                    SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1,
+                    SaveFile.GetInt(SaveFlags.EntranceRando) == 1, SaveFile.GetInt(SaveFlags.FixedShop) == 1,
+                    SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1, SaveFile.GetInt(SaveFlags.Decoupled) == 1,
                     SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1, SaveFile.GetInt(SaveFlags.MasklessLogic) == 1,
                     SaveFile.GetInt("randomizer mystery seed") == 1, SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1
                 };

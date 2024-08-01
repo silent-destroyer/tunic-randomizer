@@ -5302,7 +5302,7 @@ namespace TunicRandomizer {
                 }
                 FullInventory = UpdateReachableRegions(FullInventory);
             }
-            TunicLogger.LogTesting("done pairing portals");
+            TunicLogger.LogTesting("done pairing twoplusportals");
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
@@ -5408,6 +5408,8 @@ namespace TunicRandomizer {
                 PortalCombo portalCombo = new PortalCombo(portal1, portal2);
                 PortalCombo reversePortalCombo = new PortalCombo(portal2, portal1);
                 RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
+                comboNumber++;
+                RandomizedPortals.Add(comboNumber.ToString(), reversePortalCombo);
                 comboNumber++;
             }
         }

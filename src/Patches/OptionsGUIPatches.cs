@@ -61,6 +61,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
                 OptionsGUI.addToggle("Entrance Randomizer: Fewer Shops", "Off", "On", TunicRandomizer.Settings.ERFixedShop ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFixedShop);
                 OptionsGUI.addToggle("Entrance Randomizer: Direction Pairs", "Off", "On", TunicRandomizer.Settings.PortalDirectionPairs ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePortalDirectionPairs);
+                OptionsGUI.addToggle("Entrance Randomizer: Decoupled", "Off", "On", TunicRandomizer.Settings.DecoupledER ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDecoupledER);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
                 OptionsGUI.addMultiSelect("Laurels Location", LaurelsLocations, GetLaurelsLocationIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLaurelsLocation).wrap = true;
                 OptionsGUI.addToggle("Lanternless Logic", "Off", "On", TunicRandomizer.Settings.Lanternless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLanternless);
@@ -82,10 +83,10 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Shuffled Abilities", SaveFile.GetInt("randomizer shuffled abilities") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Ladders", SaveFile.GetInt("randomizer ladder rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt("randomizer entrance rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 && IsSinglePlayer()) {
+                if (SaveFile.GetInt(EntranceRando) == 1 && IsSinglePlayer()) {
                     OptionsGUI.addButton("Entrance Randomizer: Fewer Shops", SaveFile.GetInt(FixedShop) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 }
-                OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt("randomizer laurels location")], null);
+                OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt(LaurelsLocation)], null);
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Maskless Logic", SaveFile.GetInt(MasklessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
@@ -372,6 +373,11 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.PortalDirectionPairs == true) {
                 TunicRandomizer.Settings.ERFixedShop = false;
             }
+            SaveSettings();
+        }
+
+        public static void ToggleDecoupledER(int index) {
+            TunicRandomizer.Settings.DecoupledER = !TunicRandomizer.Settings.DecoupledER;
             SaveSettings();
         }
 
