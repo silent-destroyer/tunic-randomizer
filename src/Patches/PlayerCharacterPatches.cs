@@ -275,8 +275,9 @@ namespace TunicRandomizer {
 
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                TunicLogger.LogTesting("modify portals starting from player character patches");
                 TunicPortals.ModifyPortals("Overworld Redux");
-                TunicPortals.ModifyPortals("Overworld Redux", sending:true);
+                TunicPortals.ModifyPortals("Overworld Redux", sending: true);
             } else {
                 TunicPortals.ModifyPortalNames("Overworld Redux");
             }

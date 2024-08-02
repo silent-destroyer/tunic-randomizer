@@ -9,6 +9,7 @@ namespace TunicRandomizer {
     public class TunicPortals {
         
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+        public static GameObject storedPortal = null;
 
         // the direction you move while entering the portal
         public enum PDir {
@@ -5454,6 +5455,10 @@ namespace TunicRandomizer {
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
+            // we turn this off to not let you walk back through before it is modified the second time
+            if (sending == true && storedPortal != null) {
+                storedPortal.GetComponent<BoxCollider>().isTrigger = true;
+            }
             if (sending == false && scene_name == "Shop") {
                 TunicLogger.LogInfo("shop stuff started");
                 var ShopPortals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
@@ -5467,6 +5472,8 @@ namespace TunicRandomizer {
                         // find which portal combo led to this shop, also flip the shop if it should be flipped
                         foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                             if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.Key)) {
+                                TunicLogger.LogTesting("Portal 1 is " + portalCombo.Value.Portal1.Name);
+                                TunicLogger.LogTesting("Portal 2 is " + portalCombo.Value.Portal2.Name);
                                 newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Value.Portal2.Destination;
                                 newPortal.GetComponent<ScenePortal>().id = portalCombo.Value.Portal2.Tag;
                                 if (portalCombo.Value.FlippedShop() == true) {
@@ -5515,15 +5522,12 @@ namespace TunicRandomizer {
                 }
 
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
-                // shops go to Previous Region, so this intentionally skips them
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
 
                     if (sending == false) {
-                        TunicLogger.LogInfo("portal2 destination tag is " + portal2.DestinationTag);
-                        TunicLogger.LogInfo("portal full id is " + portal.FullID);
                         if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
                             TunicLogger.LogInfo("found portal");
                             portal.destinationSceneName = portal1.Scene;
@@ -5534,32 +5538,36 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo("portal id to spawn at is " + PlayerCharacterSpawn.portalIDToSpawnAt);
 
                             if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
-                                TunicLogger.LogInfo("modifying the portal you're spawning at");
-                                GameObject newSpawn = new GameObject("Custom Rando Spawn Point");
-                                newSpawn.AddComponent<PlayerCharacterSpawn>();
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().id = "rando spawn point";
-                                PlayerCharacterSpawn.portalIDToSpawnAt = newSpawn.GetComponent<PlayerCharacterSpawn>().FullID;
-                                newSpawn.transform.position = portal.transform.GetChild(0).transform.position;
-                                newSpawn.transform.rotation = portal.transform.GetChild(0).transform.rotation;
-                                // idk what all we need to copy so let's copy whatever we can
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().labelToPlayOnArrival = portal.GetComponent<PlayerCharacterSpawn>().labelToPlayOnArrival;
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().ladderToArriveOn = portal.GetComponent<PlayerCharacterSpawn>().ladderToArriveOn;
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().playOnArrive = portal.GetComponent<PlayerCharacterSpawn>().playOnArrive;
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().suppressGUI = portal.GetComponent<PlayerCharacterSpawn>().suppressGUI;
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().transitionDuration = portal.GetComponent<PlayerCharacterSpawn>().transitionDuration;
-                                newSpawn.GetComponent<PlayerCharacterSpawn>().whiteout = portal.GetComponent<PlayerCharacterSpawn>().whiteout;
+                                TunicLogger.LogTesting("modifying the portal you're spawning at");
+                                //GameObject newSpawn = new GameObject("Custom Rando Spawn Point");
+                                //newSpawn.AddComponent<PlayerCharacterSpawn>();
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().id = portal.id;
+                                //newSpawn.transform.position = portal.transform.GetChild(0).transform.position;
+                                //newSpawn.transform.rotation = portal.transform.GetChild(0).transform.rotation;
+                                //// idk what all we need to copy so let's copy whatever we can
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().labelToPlayOnArrival = portal.GetComponent<PlayerCharacterSpawn>().labelToPlayOnArrival;
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().ladderToArriveOn = portal.GetComponent<PlayerCharacterSpawn>().ladderToArriveOn;
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().playOnArrive = portal.GetComponent<PlayerCharacterSpawn>().playOnArrive;
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().suppressGUI = portal.GetComponent<PlayerCharacterSpawn>().suppressGUI;
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().transitionDuration = portal.GetComponent<PlayerCharacterSpawn>().transitionDuration;
+                                //newSpawn.GetComponent<PlayerCharacterSpawn>().whiteout = portal.GetComponent<PlayerCharacterSpawn>().whiteout;
+                                storedPortal = portal.gameObject;
+                                storedPortal.GetComponent<BoxCollider>().isTrigger = false;
+
                                 // change the portal qualities to what we would do for sending == true
-                                foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
-                                    if (portalCombo2.Value.Portal1.Name == portal.name) {
-                                        TunicLogger.LogTesting("Found the corresponding portal for the custom spawn point");
-                                        TunicLogger.LogTesting($"Came from {portal1.Name} and now at {portal2.Name}");
-                                        TunicLogger.LogTesting($"Going from {portalCombo2.Value.Portal1.Name} to {portalCombo2.Value.Portal2.Name}");
-                                        portal.destinationSceneName = portalCombo2.Value.Portal2.Scene;
-                                        portal.id = portalCombo2.Key + portalCombo2.Key;
-                                        portal.optionalIDToSpawnAt = portalCombo2.Key;
-                                        break;
-                                    }
-                                }
+                                //foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
+                                //    if (portalCombo2.Value.Portal1.Name == portal.name) {
+                                //        TunicLogger.LogTesting("Found the corresponding portal for the custom spawn point");
+                                //        TunicLogger.LogTesting($"Came from {portal1.Name} and now at {portal2.Name}");
+                                //        TunicLogger.LogTesting($"Going from {portalCombo2.Value.Portal1.Name} to {portalCombo2.Value.Portal2.Name}");
+                                //        portal.destinationSceneName = portalCombo2.Value.Portal2.Scene;
+                                //        portal.id = portalCombo2.Key + portalCombo2.Key;
+                                //        portal.optionalIDToSpawnAt = portalCombo2.Key;
+                                //        newSpawn.GetComponent<PlayerCharacterSpawn>().id = portalCombo2.Key;
+                                //        //PlayerCharacterSpawn.portalIDToSpawnAt = newSpawn.GetComponent<PlayerCharacterSpawn>().FullID;
+                                //        break;
+                                //    }
+                                //}
                             }
                             break;
                         }

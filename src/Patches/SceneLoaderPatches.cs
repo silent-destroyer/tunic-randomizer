@@ -469,6 +469,8 @@ namespace TunicRandomizer {
                 } else if (IsSinglePlayer()) {
                     TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
                 }
+                TunicLogger.LogTesting("modifying portals starting from scene loader patches");
+                TunicLogger.LogTesting("playercharacterspawn portalidtospawnat is " + PlayerCharacterSpawn.portalIDToSpawnAt);
                 TunicPortals.ModifyPortals(loadingScene.name);
             } else {
                 TunicPortals.ModifyPortalNames(loadingScene.name);
