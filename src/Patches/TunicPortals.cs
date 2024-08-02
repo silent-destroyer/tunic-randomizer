@@ -5133,14 +5133,12 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("got through step 1 of entrance rando setup");
 
             // shops get added separately cause they're weird
-            List<string> shopSceneList = new List<string>();
             int shopCount = 6;
             if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
                 shopCount = 0;
                 Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "", scene: "Overworld Redux", region: "Overworld");
                 Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 1");
                 randomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
-                shopSceneList.Add("Overworld Redux");
                 foreach (Portal portal in twoPlusPortals) {
                     if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
                         twoPlusPortals.Remove(portal);
@@ -5354,9 +5352,6 @@ namespace TunicRandomizer {
                 Portal portal1 = deadEndPortals[0];
                 bool foundPair = false;
                 foreach (Portal portal2 in twoPlusPortals) {
-                    if (portal1.Scene == "Shop" && shopSceneList.Contains(portal2.Scene)) {
-                        continue;
-                    }
                     if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && directionPairs[portal1.Direction] != portal2.Direction) {
                         continue;
                     }
@@ -5365,9 +5360,6 @@ namespace TunicRandomizer {
 
                     twoPlusPortals.Remove(portal2);
                     deadEndPortals.RemoveAt(0);
-                    if (portal1.Scene == "Shop") {
-                        shopSceneList.Add(portal2.Scene);
-                    }
                     foundPair = true;
                     break;
                 }
@@ -5469,7 +5461,6 @@ namespace TunicRandomizer {
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
-
             if (sending == false && scene_name == "Shop") {
                 TunicLogger.LogInfo("shop stuff started");
                 var ShopPortals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
@@ -5541,18 +5532,8 @@ namespace TunicRandomizer {
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag;
                             portal.name = portal2.Name;
-                            // todo: figure out why shop portal isnt' getting here
                             TunicLogger.LogInfo("full id is " + portal.FullID);
                             TunicLogger.LogInfo("portal id to spawn at is " + PlayerCharacterSpawn.portalIDToSpawnAt);
-                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID) {
-                                TunicLogger.LogInfo("first was success");
-                            }
-                            if (portal.transform.parent?.name != "FT Platform Animator") {
-                                TunicLogger.LogInfo("second was success");
-                            }
-                            if (portal.transform.parent == null) {
-                                TunicLogger.LogInfo("third was success");
-                            }
 
                             if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
                                 TunicLogger.LogInfo("modifying the portal you're spawning at");
