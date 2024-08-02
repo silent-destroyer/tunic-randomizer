@@ -276,6 +276,7 @@ namespace TunicRandomizer {
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 TunicPortals.ModifyPortals("Overworld Redux");
+                TunicPortals.ModifyPortals("Overworld Redux", sending:true);
             } else {
                 TunicPortals.ModifyPortalNames("Overworld Redux");
             }
@@ -522,6 +523,7 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.ModifyPortals("Overworld Redux");
+                    TunicPortals.ModifyPortals("Overworld Redux", sending:true);
                 } else {
                     TunicPortals.ModifyPortalNames("Overworld Redux");
                 }

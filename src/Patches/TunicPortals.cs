@@ -5237,8 +5237,7 @@ namespace TunicRandomizer {
                 foreach (Portal portal in twoPlusPortals) {
                     // find a portal in a region we can't access yet
                     if (!FullInventory.ContainsKey(portal.Region)) {
-                        // todo: edit this too if needed
-                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
                             // if there's more east dead ends than west two plus, then we'll end up needing to pair dead ends, which isn't viable
                             if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]]
                                 || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction]) {
@@ -5513,6 +5512,32 @@ namespace TunicRandomizer {
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag;
                             portal.name = portal2.Name;
+
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && portal.transform.parent.name != "FT Platform Animator") {
+                                GameObject newSpawn = new GameObject("Custom Rando Spawn Point");
+                                newSpawn.AddComponent<PlayerCharacterSpawn>();
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().id = "rando spawn point";
+                                PlayerCharacterSpawn.portalIDToSpawnAt = newSpawn.GetComponent<PlayerCharacterSpawn>().FullID;
+                                newSpawn.transform.position = portal.transform.GetChild(0).transform.position;
+                                newSpawn.transform.rotation = portal.transform.GetChild(0).transform.rotation;
+                                // idk what all we need to copy so let's copy whatever we can
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().labelToPlayOnArrival = portal.GetComponent<PlayerCharacterSpawn>().labelToPlayOnArrival;
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().ladderToArriveOn = portal.GetComponent<PlayerCharacterSpawn>().ladderToArriveOn;
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().playOnArrive = portal.GetComponent<PlayerCharacterSpawn>().playOnArrive;
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().suppressGUI = portal.GetComponent<PlayerCharacterSpawn>().suppressGUI;
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().transitionDuration = portal.GetComponent<PlayerCharacterSpawn>().transitionDuration;
+                                newSpawn.GetComponent<PlayerCharacterSpawn>().whiteout = portal.GetComponent<PlayerCharacterSpawn>().whiteout;
+                                // change the portal qualities to what we would do for sending == true
+                                foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
+                                    if (portalCombo2.Value.Portal1.Name == portal.name) {
+                                        TunicLogger.LogTesting("Found the corresponding portal for the custom spawn point");
+                                        portal.destinationSceneName = portal2.Scene;
+                                        portal.id = comboTag;
+                                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag;
+                                        break;
+                                    }
+                                }
+                            }
                             break;
                         }
                     } else {
