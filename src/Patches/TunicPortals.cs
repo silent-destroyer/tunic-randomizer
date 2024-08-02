@@ -5410,7 +5410,6 @@ namespace TunicRandomizer {
             foreach (KeyValuePair<string, PortalCombo> portalCombo in randomizedPortals) {
                 RandomizedPortals.Add(portalCombo.Key, portalCombo.Value);
                 if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
-                    TunicLogger.LogInfo("decoupled disabled!");
                     RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portalCombo.Value.Portal2, portalCombo.Value.Portal1));
                     comboNumber++;
                 }
@@ -5481,6 +5480,7 @@ namespace TunicRandomizer {
                                 }
                             }
                         }
+                        // I don't actually know if all of these are necessary, but it does work with all of them so
                         newPortal.transform.position = shopPortal.transform.position;
                         newPortal.transform.localPosition = shopPortal.transform.localPosition;
                         newPortal.transform.rotation = shopPortal.transform.rotation;
