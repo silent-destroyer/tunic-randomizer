@@ -5231,7 +5231,7 @@ namespace TunicRandomizer {
 
             TunicLogger.LogTesting("created the secondary portal lists");
 
-            int comboNumber = 0;
+            int comboNumber = 1000;
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
                 ShuffleList(twoPlusPortals, seed);
                 Portal portal1 = null;
@@ -5429,7 +5429,7 @@ namespace TunicRandomizer {
         public static void CreatePortalPairs(Dictionary<string, string> APPortalStrings) {
             RandomizedPortals.Clear();
             List<Portal> portalsList = new List<Portal>();
-            int comboNumber = 0;
+            int comboNumber = 1000;
 
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
                 string scene_name = scene_group.Key;
@@ -5469,25 +5469,43 @@ namespace TunicRandomizer {
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
+
+            if (scene_name == "Shop") {
+                TunicLogger.LogInfo("shop stuff started");
+                var ShopPortals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+                    && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+                foreach (var shopPortal in ShopPortals) {
+                    if (shopPortal.TryCast<ShopScenePortal>() != null) {
+                        GameObject newPortal = new GameObject("Custom Rando Shop Spawn Point");
+                        newPortal.AddComponent<PlayerCharacterSpawn>();
+                        newPortal.GetComponent<PlayerCharacterSpawn>().id = "rando shop spawn point";
+                        // find which portal combo led to this shop, also flip the shop if it should be flipped
+                        foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.Key)) {
+                                if (portalCombo.Value.FlippedShop()) {
+                                    shopPortal.TryCast<ShopScenePortal>().flippedArrivalScenes.Add(portalCombo.Value.Portal1.Scene);
+                                }
+                            }
+                        }
+                        PlayerCharacterSpawn.portalIDToSpawnAt = newPortal.GetComponent<PlayerCharacterSpawn>().FullID;
+                        newPortal.transform.position = shopPortal.transform.position;
+                        newPortal.transform.rotation = shopPortal.transform.rotation;
+                        newPortal.GetComponent<PlayerCharacterSpawn>().transform.position = shopPortal.transform.GetChild(0).transform.position;
+                        newPortal.GetComponent<PlayerCharacterSpawn>().transform.rotation = shopPortal.transform.GetChild(0).transform.rotation;
+                        // now that we've copied over the relevant info, disable it
+                        shopPortal.gameObject.SetActive(false);
+                    }
+                }
+                TunicLogger.LogInfo("shop stuff ended");
+            }
+
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
-            && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+                && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
                 TunicLogger.LogInfo("checking for portal named " + portal.name);
                 // skips the extra west garden shop portal
                 if (!portal.isActiveAndEnabled) {
                     continue;
-                }
-                // there's only ever 1 ShopScenePortal in a scene, so we can safely break at the end of this if
-                if (scene_name == "Shop" && portal.TryCast<ShopScenePortal>() != null) {
-                    string shop_scene = portal.FullID.Remove(portal.FullID.Length - 1);  // FullID always ends with an underscore, need to remove it
-                    foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
-                        // shop is always portal2
-                        if (portalCombo.FlippedShop() == true && portalCombo.Portal1.Scene == shop_scene) {
-                            portal.TryCast<ShopScenePortal>().flippedArrivalScenes.Add(shop_scene);
-                            break;
-                        }
-                    }
-                    break;
                 }
 
                 if (portal.FullID == "ziggurat2020_3_zig2_skip") {
@@ -5497,22 +5515,26 @@ namespace TunicRandomizer {
                     continue;
                 }
 
-                TunicLogger.LogInfo("looping through randomized portals now");
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
                 // shops go to Previous Region, so this intentionally skips them
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
+                    if (portal2.Name == "Old House Door Entrance") {
+                        TunicLogger.LogInfo("Old house door entrance is at " + portal1.Name);
+                    }
 
                     if (sending == false) {
                         if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
                             portal.destinationSceneName = portal1.Scene;
-                            portal.id = comboTag + comboTag + comboTag + comboTag;
-                            portal.optionalIDToSpawnAt = comboTag;
+                            portal.id = comboTag;
+                            portal.optionalIDToSpawnAt = comboTag + comboTag;
+                            if (portal.name == "Old House Door Entrance") {
+                                TunicLogger.LogInfo($"changing {portal.name} to {portal2.Name}");
+                            }
                             portal.name = portal2.Name;
-                                
-                                
+
                             if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && portal.transform.parent != null && portal.transform.parent.name != "FT Platform Animator") {
                                 GameObject newSpawn = new GameObject("Custom Rando Spawn Point");
                                 newSpawn.AddComponent<PlayerCharacterSpawn>();
@@ -5531,9 +5553,11 @@ namespace TunicRandomizer {
                                 foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
                                     if (portalCombo2.Value.Portal1.Name == portal.name) {
                                         TunicLogger.LogTesting("Found the corresponding portal for the custom spawn point");
-                                        portal.destinationSceneName = portal2.Scene;
-                                        portal.id = comboTag;
-                                        portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag;
+                                        TunicLogger.LogTesting($"Came from {portal1.Name} and now at {portal2.Name}");
+                                        TunicLogger.LogTesting($"Going from {portalCombo2.Value.Portal1.Name} to {portalCombo2.Value.Portal2.Name}");
+                                        portal.destinationSceneName = portalCombo2.Value.Portal2.Scene;
+                                        portal.id = portalCombo2.Key + portalCombo2.Key;
+                                        portal.optionalIDToSpawnAt = portalCombo2.Key;
                                         break;
                                     }
                                 }
@@ -5541,11 +5565,11 @@ namespace TunicRandomizer {
                             break;
                         }
                     } else {
-                        // sending is false on scene load, so the portal names have already been modified, so we can use that
+                        // sending is true, so we want to grab all portals by name (since they were modified on scene load) and change their destinations
                         if (portal1.Name == portal.name) {
                             portal.destinationSceneName = portal2.Scene;
-                            portal.id = comboTag;
-                            portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag;
+                            portal.id = comboTag + comboTag;
+                            portal.optionalIDToSpawnAt = comboTag;
                             break;
                         }
                     }

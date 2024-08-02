@@ -283,12 +283,10 @@ namespace TunicRandomizer {
             {
                 List<string> PortalSpoiler = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
-                foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values)
-                {
-                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " -- " + portalCombo.Portal2.Name);
+                foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " --> " + portalCombo.Portal2.Name);
                 }
-                foreach (string combo in PortalSpoiler)
-                {
+                foreach (string combo in PortalSpoiler) {
                     SpoilerLogLines.Add(combo);
                 }
             }
