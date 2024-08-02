@@ -18,9 +18,9 @@ namespace TunicRandomizer {
             Tag = tag;
             Scene = scene;
             Region = region;
-            DestinationTag = (Destination + Tag);
+            DestinationTag = (Destination + "_" + Tag);
             SceneDestinationTag = (Scene + ", " + DestinationTag);
-            DestinationSceneTag = (Destination + ", " + Scene + Tag);  // for finding the vanilla connection
+            DestinationSceneTag = (Destination + ", " + Scene + "_" + Tag);  // for finding the vanilla connection
             Direction = (int)TunicPortals.PDir.NONE;
         }
 
@@ -30,9 +30,9 @@ namespace TunicRandomizer {
             Tag = tag;
             Scene = scene;
             Region = region;
-            DestinationTag = (Destination + Tag);
+            DestinationTag = (Destination + "_" + Tag);
             SceneDestinationTag = (Scene + ", " + DestinationTag);
-            DestinationSceneTag = (Destination + ", " + Scene + Tag);
+            DestinationSceneTag = (Destination + ", " + Scene + "_" + Tag);
             Direction = direction;
         }
 
