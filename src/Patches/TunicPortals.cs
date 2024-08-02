@@ -9,7 +9,6 @@ namespace TunicRandomizer {
     public class TunicPortals {
         
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
-        public static List<string> FlippedShopScenes = new List<string>();
 
         // the direction you move while entering the portal
         public enum PDir {
@@ -4409,16 +4408,6 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Zig Skip Exit",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Rooted Ziggurat Lower Front",
-                        new List<List<string>> {
-                        }
-                    },
-                }
-            },
-            {
                 "Rooted Ziggurat Lower Back",
                 new Dictionary<string, List<List<string>>> {
                     {  // can't get to checkpoint if enemies aggro, gap too big
@@ -5055,8 +5044,12 @@ namespace TunicRandomizer {
                 Portal portal1 = portalList[0];
                 Portal portal2 = new Portal("placeholder", "placeholder", "placeholder", "placeholder", "placeholder");  // I <3 csharp
                 string portal2_sdt = portal1.DestinationSceneTag;
+                int dir = (int)PDir.SOUTH;
+                if (shop_num > 6) {
+                    dir = (int)PDir.EAST;
+                }
                 if (portal2_sdt.StartsWith("Shop,")) {
-                    portal2 = new Portal(name: "Shop Portal", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}");
+                    portal2 = new Portal(name: "Shop Portal", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
                     shop_num++;
                 }
                 else if (portal2_sdt == "Purgatory, Purgatory_bottom") {
@@ -5187,10 +5180,11 @@ namespace TunicRandomizer {
 
             // get the total number of regions to get before doing dead ends
             int total_nondeadend_count = 0;
+            // used for generating useful error messages
             List<string> nondeadend_regions = new List<string>();
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
-                // if fixed shop is off or decoupled is on, don't add the zig skip exit region to the nondeadend count
-                if (region.Key == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.FixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
+                // the region isn't an actual region anymore, since outlet regions exists now
+                if (region.Key == "Zig Skip Exit") {
                     continue;
                 }
                 // in decoupled, dead ends aren't real, they can't hurt you
@@ -5475,8 +5469,12 @@ namespace TunicRandomizer {
                             if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.Key)) {
                                 newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Value.Portal2.Destination;
                                 newPortal.GetComponent<ScenePortal>().id = portalCombo.Value.Portal2.Tag;
-                                if (portalCombo.Value.FlippedShop()) {
-                                    shopPortal.TryCast<ShopScenePortal>().flippedArrivalScenes.Add(portalCombo.Value.Portal1.Scene);
+                                if (portalCombo.Value.FlippedShop() == true) {
+                                    TunicLogger.LogTesting("Flipped shop true");
+                                    shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = true;
+                                } else {
+                                    TunicLogger.LogTesting("Flipped shop false");
+                                    shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = false;
                                 }
                             }
                         }
