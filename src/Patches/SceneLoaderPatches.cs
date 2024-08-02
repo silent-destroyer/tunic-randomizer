@@ -556,6 +556,7 @@ namespace TunicRandomizer {
             PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
                 TunicLogger.LogInfo("on arrival callback");
                 TunicPortals.ModifyPortals(SceneName, sending:true);
+                PaletteEditor.RandomizeFoxColors();
             });
         }
 

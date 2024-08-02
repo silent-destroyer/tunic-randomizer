@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5505,15 +5507,13 @@ namespace TunicRandomizer {
 
                     if (sending == false) {
                         if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
-                            TunicLogger.LogInfo("sending is false, found match");
-                            TunicLogger.LogInfo("portal1 is " + portal1.Name);
-                            TunicLogger.LogInfo("portal2 is " + portal2.Name);
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = comboTag + comboTag + comboTag + comboTag;
                             portal.optionalIDToSpawnAt = comboTag;
                             portal.name = portal2.Name;
-
-                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && portal.transform.parent.name != "FT Platform Animator") {
+                                
+                                
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && portal.transform.parent != null && portal.transform.parent.name != "FT Platform Animator") {
                                 GameObject newSpawn = new GameObject("Custom Rando Spawn Point");
                                 newSpawn.AddComponent<PlayerCharacterSpawn>();
                                 newSpawn.GetComponent<PlayerCharacterSpawn>().id = "rando spawn point";
@@ -5543,9 +5543,6 @@ namespace TunicRandomizer {
                     } else {
                         // sending is false on scene load, so the portal names have already been modified, so we can use that
                         if (portal1.Name == portal.name) {
-                            TunicLogger.LogInfo("sending is true, found match");
-                            TunicLogger.LogInfo("portal1 is " + portal1.Name);
-                            TunicLogger.LogInfo("portal2 is " + portal2.Name);
                             portal.destinationSceneName = portal2.Scene;
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag;
