@@ -678,5 +678,12 @@ namespace TunicRandomizer {
         public static void copySettings() {
             GUIUtility.systemCopyBuffer = TunicRandomizer.Settings.GetSettingsString();
         }
+
+        public void ReadConnectionSettingsFromSaveFile() {
+            ConnectionSettings.Player = SaveFile.GetString(SaveFlags.ArchipelagoPlayerName);
+            ConnectionSettings.Port = SaveFile.GetInt(SaveFlags.ArchipelagoPort).ToString();
+            ConnectionSettings.Hostname = SaveFile.GetString(SaveFlags.ArchipelagoHostname);
+            ConnectionSettings.Password = SaveFile.GetString(SaveFlags.ArchipelagoPassword);
+        }
     }
 }

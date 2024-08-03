@@ -230,7 +230,7 @@ namespace TunicRandomizer {
             if (IsArchipelago()) {
                 SpoilerLogLines.Add("Major Items");
                 foreach (string MajorItem in ItemLookup.MajorItems) {
-                if(MajorItem == "Gold Questagon") { continue; }
+                    if(MajorItem == "Gold Questagon") { continue; }
                     if(Locations.MajorItemLocations.ContainsKey(MajorItem) && Locations.MajorItemLocations[MajorItem].Count > 0) {
                         foreach (ArchipelagoHint apHint in Locations.MajorItemLocations[MajorItem]) {
                             bool HasItem = false;
@@ -247,7 +247,7 @@ namespace TunicRandomizer {
                 SpoilerLogLines.AddRange(GetMysterySeedSettingsForSpoilerLog());
 
                 SpoilerLogLines.Add("Major Items");
-                List<string> MajorItems = ItemLookup.LegacyMajorItems;
+                List<string> MajorItems = new List<string>(ItemLookup.LegacyMajorItems);
                 if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                     MajorItems.Add("Trinket - Glass Cannon");
                 }

@@ -467,9 +467,11 @@ namespace TunicRandomizer {
                 Archipelago.instance.integration.sentCollect = false;
 
                 Dictionary<string, object> slotData = Archipelago.instance.GetPlayerSlotData();
-                if (SaveFile.GetString("archipelago player name") == "") {
-                    SaveFile.SetString("archipelago player name", Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()));
-                }
+
+                SaveFile.SetString(ArchipelagoPlayerName, Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()));
+                SaveFile.SetString(ArchipelagoPort, TunicRandomizer.Settings.ConnectionSettings.Port);
+                SaveFile.SetString(ArchipelagoHostname, TunicRandomizer.Settings.ConnectionSettings.Hostname);
+                SaveFile.SetString(ArchipelagoPassword, TunicRandomizer.Settings.ConnectionSettings.Password);
 
                 if (slotData.TryGetValue("hexagon_quest", out var hexagonQuest)) {
                     if (SaveFile.GetInt(HexagonQuestEnabled) == 0 && hexagonQuest.ToString() == "1") {

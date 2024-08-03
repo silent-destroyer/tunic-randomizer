@@ -44,6 +44,13 @@
         public const string DiedToHeir = "randomizer died to heir";
         public const string RescuedLostFox = "randomizer sent lost fox home";
 
+        // Archipelago
+        public const string ArchipelagoFlag = "archipelago";
+        public const string ArchipelagoPlayerName = "archipelago player name";
+        public const string ArchipelagoPort = "archipelago port";
+        public const string ArchipelagoHostname = "archipelago hostname";
+        public const string ArchipelagoPassword = "archipelago password";
+
         public static bool IsArchipelago() {
             return SaveFile.GetInt("archipelago") == 1 && (Archipelago.instance != null && Archipelago.instance.IsConnected());
         }

@@ -69,16 +69,14 @@ namespace TunicRandomizer {
 
         }
 
-        public void TryConnect() {
+        public string TryConnect() {
             
             if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)) {
-                return;
+                return "";
             }
 
             TryDisconnect();
 
-            RandomizerSettings settings = JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(TunicRandomizer.SettingsPath));
-            TunicRandomizer.Settings.ConnectionSettings = settings.ConnectionSettings;
             LoginResult LoginResult;
 
             if (session == null) {
@@ -134,15 +132,19 @@ namespace TunicRandomizer {
             } else {
                 LoginFailure loginFailure = (LoginFailure)LoginResult;
                 TunicLogger.LogInfo("Error connecting to Archipelago:");
-                Notifications.Show($"\"Failed to connect to Archipelago!\"", $"\"Check your settings and/or log output.\"");
+                string TopLine = $"\"Failed to connect to Archipelago!\"";
+                string BottomLine = $"\"Check your settings and/or log output.\"";
                 foreach (string Error in loginFailure.Errors) {
-                    TunicLogger.LogInfo(Error);
+                    BottomLine = $"\"{Error}\"";
                 }
+                Notifications.Show(TopLine, BottomLine);
                 foreach (ConnectionRefusedError Error in loginFailure.ErrorCodes) {
                     TunicLogger.LogInfo(Error.ToString());
                 }
                 TryDisconnect();
+                return BottomLine;
             }
+            return "";
         }
 
         public void TryDisconnect() {

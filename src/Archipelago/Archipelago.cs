@@ -19,8 +19,8 @@ namespace TunicRandomizer {
             integration.TryDisconnect();
         }
 
-        public void Connect() {
-            integration.TryConnect();
+        public string Connect() {
+            return integration.TryConnect();
         }
 
         public void Disconnect() {
