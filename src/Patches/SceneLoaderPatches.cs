@@ -43,6 +43,17 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name)) {
+                    string grassId = GrassRandomizer.getGrassGameObjectId(grass);
+                    if (GrassRandomizer.GrassChecks.ContainsKey(grassId)) {
+                        if (SaveFile.GetInt("randomizer picked up " + grassId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[grassId]))) {
+                            grass.goToDeadState();
+                        }
+                    }
+                }
+            }
+
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
 
             return true;

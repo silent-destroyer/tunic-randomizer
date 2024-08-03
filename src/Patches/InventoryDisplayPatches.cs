@@ -412,12 +412,12 @@ namespace TunicRandomizer {
                     bool isGrassRando = SaveFile.GetInt(GrassRandoEnabled) == 1;
                     string sceneName = SceneManager.GetActiveScene().name;
                     if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(SceneLoaderPatches.SceneName)) {
-                        int grassCutInCurrentScene =  GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SceneLoaderPatches.SceneName && Locations.CheckedLocations[check.Key]).Count();
+                        int grassCutInCurrentScene = GrassRandomizer.GrassChecks.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
                         ObtainedItemCountInCurrentScene += grassCutInCurrentScene;
                         TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName];
                         TotalItemCount += GrassRandomizer.GrassChecks.Count;
                         if (GrassText != null) {
-                            int grassCut = GrassRandomizer.GrassChecks.Where(check => Locations.CheckedLocations[check.Value.CheckId]).Count();
+                            int grassCut = GrassRandomizer.GrassChecks.Where(loc => (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
                             GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName]}" +
                                 $"<#ffffff>\n{(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                         }

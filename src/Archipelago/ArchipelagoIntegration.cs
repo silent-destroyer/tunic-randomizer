@@ -157,6 +157,9 @@ namespace TunicRandomizer {
         public void TryDisconnect() {
 
             try {
+                if (connected) {
+                    TunicLogger.LogInfo("Disconnected from Archipelago");
+                }
                 if (session != null) {
                     session.Socket.DisconnectAsync();
                     session = null;
@@ -174,7 +177,6 @@ namespace TunicRandomizer {
                 Locations.CheckedLocations.Clear();
                 ItemLookup.ItemList.Clear();
 
-                TunicLogger.LogInfo("Disconnected from Archipelago");
             } catch (Exception e) {
                 TunicLogger.LogInfo("Encountered an error disconnecting from Archipelago!");
             }

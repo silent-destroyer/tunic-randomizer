@@ -169,9 +169,11 @@ namespace TunicRandomizer {
                             GameObject.Destroy(FairyTarget);
                         }
                     }
-                }
-                if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
-                    __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
+                    if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
+                        __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
+                    }
+                    __instance.GetComponent<Grass>().goToDeadState();
+                    return false;
                 }
             }
             return true;
