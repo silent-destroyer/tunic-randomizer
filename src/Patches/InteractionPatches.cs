@@ -147,7 +147,7 @@ namespace TunicRandomizer {
         public static void SetupDayNightHourglass() {
             GameObject DayNightSwitch = GameObject.Instantiate(GameObject.Find("Trophy Stuff/TROPHY POINT (1)/"));
             DayNightSwitch.name = "day night hourglass";
-            DayNightSwitch.GetComponent<GoldenTrophyRoom>().item = null;
+            GameObject.Destroy(DayNightSwitch.GetComponent<GoldenTrophyRoom>());
             DayNightSwitch.transform.GetChild(0).gameObject.SetActive(true);
             GameObject Hourglass = DayNightSwitch.transform.GetChild(0).GetChild(0).gameObject;
             Hourglass.GetComponent<MeshFilter>().mesh = ModelSwaps.Items["SlowmoItem"].GetComponent<MeshFilter>().mesh;
