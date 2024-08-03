@@ -12,6 +12,7 @@ namespace TunicRandomizer {
         
         public static Dictionary<string, string> LocationIdToDescription = new Dictionary<string, string>();
         public static Dictionary<string, string> LocationDescriptionToId = new Dictionary<string, string>();
+        public static Dictionary<string, long> LocationIdToArchipelagoId = new Dictionary<string, long>();
 
         public static Dictionary<string, Check> VanillaLocations = new Dictionary<string, Check>() { };
         public static Dictionary<string, Check> RandomizedLocations = new Dictionary<string, Check> { };

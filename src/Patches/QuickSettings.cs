@@ -616,9 +616,30 @@ namespace TunicRandomizer {
                     errorMessage = Archipelago.instance.Connect();
                 }
             }
-            if (!Archipelago.instance.integration.connected) {
+            if (!Archipelago.instance.IsConnected()) {
                 GenericMessage.ShowMessage($"<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago:\"\n{errorMessage}\n\"Returning to title screen.\"");
                 return false;
+            } else if (SaveFlags.IsArchipelago()) {
+                PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                    List<long> locationsInLimbo = new List<long>();
+                    foreach (KeyValuePair<string, long> pair in Locations.LocationIdToArchipelagoId) {
+                        if (SaveFile.GetInt("randomizer picked up " + pair.Key) == 1 && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(pair.Value) && Archipelago.instance.integration.session.Locations.AllMissingLocations.Contains(pair.Value)) {
+                            locationsInLimbo.Add(pair.Value);
+                        }
+                    }
+                    if (locationsInLimbo.Count > 0 && !Archipelago.instance.integration.syncPopupShown) {
+                        TunicLogger.LogInfo("here");
+                        LanguageLine line = ScriptableObject.CreateInstance<LanguageLine>();
+                        line.text = $"<#FFFF00>[death] \"<#FFFF00>attention!\" <#FFFF00>[death]\n" +
+                            $"\"Found {locationsInLimbo.Count} location{(locationsInLimbo.Count != 1 ? "s": "")} in the save file\"\n\"that {(locationsInLimbo.Count != 1 ? "were" : "was")} not sent to Archipelago.\"\n" +
+                            $"\"Send {(locationsInLimbo.Count != 1 ? "these" : "this")} location{(locationsInLimbo.Count != 1 ? "s" : "")} now?\"";
+                        if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                            line.text = $"<#FFFF00>[death] <#FFFF00>uhtehn$uhn! <#FFFF00>[death]\nfownd \"{locationsInLimbo.Count}\" lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} in #uh sAv fIl #aht\n{(locationsInLimbo.Count != 1 ? "wur" : "wawz")} nawt sehnt too RkipehluhgO.\nsehnd {(locationsInLimbo.Count != 1 ? "#Ez" : "#is")} lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} now?";
+                        }
+                        GenericPrompt.ShowPrompt(line, (Action)(() => { Archipelago.instance.integration.session.Locations.CompleteLocationChecks(locationsInLimbo.ToArray()); }), (Action)(() => { }));
+                    }
+                    Archipelago.instance.integration.syncPopupShown = true;
+                });
             }
             return true;
         }
