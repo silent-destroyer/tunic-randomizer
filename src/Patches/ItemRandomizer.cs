@@ -341,7 +341,7 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
                         }
                     }
-                    TunicLogger.LogInfo("test ends here");
+                    TunicLogger.LogInfo("test ends here, if you didn't see any locations above this message then there were no unreachable locations");
                     testBool = false;
                 }
 

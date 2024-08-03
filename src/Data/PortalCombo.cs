@@ -15,7 +15,7 @@ namespace TunicRandomizer {
 
         public Dictionary<string, int> AddComboRegion(Dictionary<string, int> inventory) {
             if (inventory.ContainsKey(Portal1.Region)) {
-                string outletRegion = DestinationRegion();
+                string outletRegion = TunicPortals.RegionDict[Portal2.Region].OutletRegion ?? Portal2.Region;
                 if (!inventory.ContainsKey(outletRegion)) {
                     inventory.Add(outletRegion, 1);
                 }
@@ -29,10 +29,6 @@ namespace TunicRandomizer {
                 return true;
             }
             return false;
-        }
-
-        public string DestinationRegion() {
-            return TunicPortals.RegionDict[Portal2.Region].OutletRegion ?? Portal2.Region;
         }
 
     }
