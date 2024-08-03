@@ -279,15 +279,27 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (SaveFile.GetInt(EntranceRando) == 1)
-            {
-                List<string> PortalSpoiler = new List<string>();
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                List<string> portalPairs = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
                 foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                    PortalSpoiler.Add("\t- " + portalCombo.Portal1.Name + " --> " + portalCombo.Portal2.Name);
+                    portalPairs.Add(portalCombo.Portal1.Name + " --> " + portalCombo.Portal2.Name);
                 }
-                foreach (string combo in PortalSpoiler) {
-                    SpoilerLogLines.Add(combo);
+                // list of all portals in order, for the purpose of sorting the portal spoiler
+                List<string> refList = new List<string>();
+                foreach (Dictionary<string, List<TunicPortals.TunicPortal>> portalGroup in TunicPortals.RegionPortalsList.Values) {
+                    foreach (List<TunicPortals.TunicPortal> portalList in portalGroup.Values) {
+                        foreach (TunicPortals.TunicPortal portal in portalList) {
+                            refList.Add(portal.Name);
+                        }
+                    }
+                }
+                refList.AddRange(new List<string> { "Shop Portal 1", "Shop Portal 2", "Shop Portal 3", "Shop Portal 4", "Shop Portal 5", "Shop Portal 6", "Shop Portal 7", "Shop Portal 8" });
+
+                List<string> sortedPairs = portalPairs.OrderBy(pair => refList.IndexOf(pair.Split(new[] { " --> " }, System.StringSplitOptions.None)[0])).ToList();
+
+                foreach (string combo in sortedPairs) {
+                    SpoilerLogLines.Add("\t " + combo);
                 }
             }
             if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {
