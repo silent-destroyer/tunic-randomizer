@@ -5445,11 +5445,13 @@ namespace TunicRandomizer {
                     }
                 }
                 PortalCombo portalCombo = new PortalCombo(portal1, portal2);
-                PortalCombo reversePortalCombo = new PortalCombo(portal2, portal1);
                 RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
                 comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), reversePortalCombo);
-                comboNumber++;
+                if (SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                    PortalCombo reversePortalCombo = new PortalCombo(portal2, portal1);
+                    RandomizedPortals.Add(comboNumber.ToString(), reversePortalCombo);
+                    comboNumber++;
+                }
             }
         }
 
