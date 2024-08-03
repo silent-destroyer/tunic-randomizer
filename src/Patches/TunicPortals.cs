@@ -5460,7 +5460,6 @@ namespace TunicRandomizer {
                 storedPortal.GetComponent<BoxCollider>().isTrigger = true;
             }
             if (sending == false && scene_name == "Shop") {
-                TunicLogger.LogInfo("shop stuff started");
                 var ShopPortals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
                     && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
                 foreach (var shopPortal in ShopPortals) {
@@ -5502,18 +5501,16 @@ namespace TunicRandomizer {
                         shopPortal.gameObject.SetActive(false);
                     }
                 }
-                TunicLogger.LogInfo("shop stuff ended");
             }
 
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
                 && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
-                TunicLogger.LogInfo("checking for portal named " + portal.name);
                 // skips the extra west garden shop portal
                 if (!portal.isActiveAndEnabled) {
                     continue;
                 }
-
+                // portal for stopping you from dying in zig skip
                 if (portal.FullID == "ziggurat2020_3_zig2_skip") {
                     portal.name = "Zig Skip";
                     portal.destinationSceneName = "ziggurat2020_1";
@@ -5529,14 +5526,11 @@ namespace TunicRandomizer {
 
                     if (sending == false) {
                         if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
-                            TunicLogger.LogInfo("found portal");
                             portal.destinationSceneName = portal1.Scene;
                             portal.id = comboTag;
                             portal.optionalIDToSpawnAt = comboTag + comboTag;
                             portal.name = portal2.Name;
-                            TunicLogger.LogInfo("full id is " + portal.FullID);
-                            TunicLogger.LogInfo("portal id to spawn at is " + PlayerCharacterSpawn.portalIDToSpawnAt);
-
+                            // if you're spawning there, we need to make sure you can't walk back out before the arrival callback
                             if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
                                 storedPortal = portal.gameObject;
                                 storedPortal.GetComponent<BoxCollider>().isTrigger = false;

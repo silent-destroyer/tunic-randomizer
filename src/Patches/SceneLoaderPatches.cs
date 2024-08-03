@@ -467,7 +467,9 @@ namespace TunicRandomizer {
                 if (IsArchipelago()) {
                     TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                 } else if (IsSinglePlayer()) {
-                    TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                    if (TunicPortals.RandomizedPortals.Count == 0) {
+                        TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                    }
                 }
                 TunicLogger.LogTesting("modifying portals starting from scene loader patches");
                 TunicLogger.LogTesting("playercharacterspawn portalidtospawnat is " + PlayerCharacterSpawn.portalIDToSpawnAt);
