@@ -315,12 +315,13 @@ namespace TunicRandomizer {
 
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
             } else if (SceneName == "Overworld Interiors") {
-                GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject.SetActive(true);
-
                 GameObject.FindObjectOfType<BedToggle>().canBeUsed = StateVariable.GetStateVariableByName("false");
+                
                 if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
                     InteractionPatches.SetupDayNightHourglass();
                 }
+
+                GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject.SetActive(true);
 
                 SetupOldHouseRelicToggles();
                 if (GameObject.Find("_Offerings/ash group/")) {
@@ -623,6 +624,7 @@ namespace TunicRandomizer {
                     }
                     Offering.AddComponent<VisibleByHavingInventoryItem>().enablingItem = Inventory.GetItemByName(relics[i]);
                     Offering.GetComponent<VisibleByHavingInventoryItem>().renderers = Offering.GetComponentsInChildren<Renderer>().ToArray();
+                    Offering.GetComponent<VisibleByHavingInventoryItem>().lights = new Light[] { };
                     Offering.SetActive(true);
                 }
             }
