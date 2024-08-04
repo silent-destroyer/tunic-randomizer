@@ -35,7 +35,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
-            ClassInjector.RegisterTypeInIl2Cpp<HexagonQuestCutscene>();
+            ClassInjector.RegisterTypeInIl2Cpp<FoxgodCutscenePatch>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
             ClassInjector.RegisterTypeInIl2Cpp<BossEnemy>();
             ClassInjector.RegisterTypeInIl2Cpp<FleemerQuartet>();
