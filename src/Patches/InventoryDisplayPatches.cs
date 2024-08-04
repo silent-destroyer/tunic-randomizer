@@ -134,7 +134,7 @@ namespace TunicRandomizer {
                 GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0\n0/0";
                 GrassText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.TopLeft;
                 GrassText.GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Left;
-                GrassText.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Top;
+                GrassText.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Middle;
                 GrassText.GetComponent<TextMeshProUGUI>().fontSize = 20;
                 GrassText.GetComponent<RectTransform>().sizeDelta = new Vector2(500f, 50f);
                 GrassText.transform.parent = GrassCounter.transform;
@@ -418,8 +418,8 @@ namespace TunicRandomizer {
                         TotalItemCount += GrassRandomizer.GrassChecks.Count;
                         if (GrassText != null) {
                             int grassCut = GrassRandomizer.GrassChecks.Where(loc => (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
-                            GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName]}" +
-                                $"<#ffffff>\n{(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
+                            GrassText.GetComponent<TextMeshProUGUI>().text = InventoryDisplay.InventoryOpen ? "" : $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName]}" +
+                                $"<#ffffff> • {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                         }
                     }
                     Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
