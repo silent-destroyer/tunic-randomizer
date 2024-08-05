@@ -305,9 +305,6 @@ namespace TunicRandomizer {
                     SwordProgression.UpgradeSword(SwordLevel + 1);
                     itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
                 }
-                if (TunicRandomizer.Settings.ShowItemsEnabled) {
-                    ModelSwaps.SwapItemsInScene();
-                }
             }
 
             if (Item.Type == ItemTypes.FAIRY) {
@@ -459,6 +456,10 @@ namespace TunicRandomizer {
                 FairyTargets.UpdateFairyTargetsInLogic(ItemName);
             }
 
+            if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
+                ModelSwaps.SwapItemsInScene();
+            }
+
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
 
             RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
@@ -535,9 +536,6 @@ namespace TunicRandomizer {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                     SwordProgression.UpgradeSword(SwordLevel + 1);
                     itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
-                }
-                if (TunicRandomizer.Settings.ShowItemsEnabled) {
-                    ModelSwaps.SwapItemsInScene();
                 }
             }
 
@@ -689,6 +687,10 @@ namespace TunicRandomizer {
             }
 
             RecentItemsDisplay.instance.EnqueueItem(Check);
+
+            if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
+                ModelSwaps.SwapItemsInScene();
+            }
 
             // todo: set this to only happen if the logic option isn't on
             if (Locations.RandomizedLocations.Keys.Where(key => Locations.RandomizedLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0

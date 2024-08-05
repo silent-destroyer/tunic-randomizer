@@ -16,7 +16,7 @@ namespace TunicRandomizer {
             public RecentItemData(Check Check) {
                 check = Check;
                 itemInfo = null;
-                isForYou = false;
+                isForYou = true;
             }
             public RecentItemData(ItemInfo ItemInfo, bool ForYou) {
                 itemInfo = ItemInfo;

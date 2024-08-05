@@ -368,7 +368,7 @@ namespace TunicRandomizer {
                 CheckCollectedItemFlags();
             }
 
-            if (SceneLoaderPatches.SceneName == "Shop") {
+            if (TunicRandomizer.Settings.ShowItemsEnabled && SceneLoaderPatches.SceneName == "Shop") {
                 SetupShopItems();
             } else {
                 if (TunicRandomizer.Settings.ShowItemsEnabled) {
@@ -376,6 +376,9 @@ namespace TunicRandomizer {
                         if (ItemPickup != null && ItemPickup.itemToGive != null) {
                             string checkId = $"{ItemPickup.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
                             if(ItemLookup.ItemList.ContainsKey(checkId) || Locations.RandomizedLocations.ContainsKey(checkId)) {
+                                if (SwappedThisSceneAlready && !IsSwordCheck(checkId)) {
+                                    continue;
+                                }
                                 if (ItemPickup.itemToGive.name == "Hexagon Red") {
                                     SetupRedHexagonPlinth();
                                 } else if (ItemPickup.itemToGive.name == "Hexagon Blue") {
@@ -390,6 +393,9 @@ namespace TunicRandomizer {
                     foreach (PagePickup PagePickup in Resources.FindObjectsOfTypeAll<PagePickup>()) {
                         string ItemId = $"{PagePickup.pageName} [{SceneLoaderPatches.SceneName}]";
                         if(ItemLookup.ItemList.ContainsKey(ItemId) || Locations.RandomizedLocations.ContainsKey(ItemId)) {
+                            if (SwappedThisSceneAlready && !IsSwordCheck(ItemId)) {
+                                continue;
+                            }
                             SetupPagePickup(PagePickup);
                         }
                     }
@@ -400,12 +406,18 @@ namespace TunicRandomizer {
                 }
                 if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
                     foreach (Chest Chest in Resources.FindObjectsOfTypeAll<Chest>()) {
+                        if (SwappedThisSceneAlready && !IsSwordCheck(ItemPatches.GetChestRewardID(Chest))) {
+                            continue;
+                        }
                         ApplyChestTexture(Chest);
                     }
                     if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                         foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>()) {
-                            string grassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+                            string grassId = GrassRandomizer.getGrassGameObjectId(grass);
                             if (Locations.RandomizedLocations.ContainsKey(grassId) || ItemLookup.ItemList.ContainsKey(grassId)) {
+                                if ((SwappedThisSceneAlready && !IsSwordCheck(grassId)) || Locations.CheckedLocations[grassId]) {
+                                    continue;
+                                }
                                 ApplyGrassTexture(grass);
                             }
                         }
@@ -413,11 +425,24 @@ namespace TunicRandomizer {
                 }
 
                 if (SceneLoaderPatches.SceneName == "Fortress Arena") {
-                    SwapSiegeEngineCrown();
+                    if (!SwappedThisSceneAlready || IsSwordCheck("Vault Key (Red) [Fortress Arena]")) {
+                        SwapSiegeEngineCrown();
+                    }
                 }
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
             SwappedThisSceneAlready = true;
+        }
+
+        private static bool IsSwordCheck(string CheckId) {
+            if (IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId)) {
+                return ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[CheckId]).Type == ItemTypes.SWORDUPGRADE;
+            }
+            if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(CheckId)) {
+                ItemInfo itemInfo = ItemLookup.ItemList[CheckId];
+                return itemInfo.ItemGame == "TUNIC" && ItemLookup.Items[itemInfo.ItemName].Type == ItemTypes.SWORDUPGRADE;
+            }
+            return false;
         }
 
         public static void ApplyChestTexture(Chest Chest) {
