@@ -229,7 +229,7 @@ namespace TunicRandomizer {
                 $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? "*" : "")} " +
                 $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}" +
                 $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}" +
-                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count()}/{GrassRandomizer.GrassChecks.Count} ({Math.Round(((float)GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() / GrassRandomizer.GrassChecks.Count) * 100.0f, 2)}%)" : $"")}";
+                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>{(GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}Grass Cut: {GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count()}/{GrassRandomizer.GrassChecks.Count} ({Math.Round(((float)GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() / GrassRandomizer.GrassChecks.Count) * 100.0f, 2)}%)" : $"")}";
 
             TotalCompletion.GetComponent<TextMeshPro>().horizontalAlignment = HorizontalAlignmentOptions.Center;
             TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
