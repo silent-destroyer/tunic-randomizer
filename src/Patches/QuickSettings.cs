@@ -44,7 +44,7 @@ namespace TunicRandomizer {
                         editingPassword = false;
                         break;
                     case RandomizerSettings.RandomizerType.ARCHIPELAGO:
-                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, 540f * guiScale), new Action<int>(ArchipelagoQuickSettingsWindow), "Archipelago Settings");
+                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, 580f * guiScale), new Action<int>(ArchipelagoQuickSettingsWindow), "Archipelago Settings");
                         break;
                 }
 
@@ -216,17 +216,25 @@ namespace TunicRandomizer {
                 int FoolIndex = int.Parse(slotData["fool_traps"].ToString());
                 GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 60f * guiScale), FoolIndex != 0, $"Fool Traps: {(FoolIndex == 0 ? "Off" : $"<color={FoolColors[FoolIndex]}>{FoolChoices[FoolIndex]}</color>")}");
 
+                y += 40f * guiScale;
+                
                 if (slotData.ContainsKey("entrance_rando")) {
-                    y += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), slotData["entrance_rando"].ToString() == "1", $"Entrance Randomizer");
                 } else {
-                    y += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Entrance Randomizer");
                 }
                 if (slotData.ContainsKey("shuffle_ladders")) {
                     GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 30f * guiScale), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
                 } else {
                     GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Shuffled Ladders");
+                }
+
+                y += 40f * guiScale;
+             
+                if (slotData.ContainsKey("grass_randomizer")) {
+                    GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
+                } else {
+                    GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
                 }
             } else {
                 y += 40f * guiScale;
@@ -241,6 +249,9 @@ namespace TunicRandomizer {
                 y += 40f * guiScale;
                 GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Entrance Randomizer");
                 GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Shuffled Ladders");
+                y += 40f * guiScale;
+                GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
+
             }
             y += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), $"Other Settings <size={(int)(18 * guiScale)}>(more in options menu!)</size>");
