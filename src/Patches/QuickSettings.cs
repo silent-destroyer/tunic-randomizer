@@ -626,7 +626,7 @@ namespace TunicRandomizer {
                                 locationsInLimbo.Add(pair.Value);
                             }
                         }
-                        if (locationsInLimbo.Count > 0 && !Archipelago.instance.integration.syncPopupShown) {
+                        if (locationsInLimbo.Count > 0) {
                             TunicLogger.LogInfo("here");
                             LanguageLine line = ScriptableObject.CreateInstance<LanguageLine>();
                             line.text = $"<#FFFF00>[death] \"<#FFFF00>attention!\" <#FFFF00>[death]\n" +
@@ -636,7 +636,6 @@ namespace TunicRandomizer {
                                 line.text = $"<#FFFF00>[death] <#FFFF00>uhtehn$uhn! <#FFFF00>[death]\nfownd \"{locationsInLimbo.Count}\" lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} in #uh sAv fIl #aht\n{(locationsInLimbo.Count != 1 ? "wur" : "wawz")} nawt sehnt too RkipehluhgO.\nsehnd {(locationsInLimbo.Count != 1 ? "#Ez" : "#is")} lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} now?";
                             }
                             GenericPrompt.ShowPrompt(line, (Action)(() => { Archipelago.instance.integration.session.Locations.CompleteLocationChecks(locationsInLimbo.ToArray()); }), (Action)(() => { }));
-                            Archipelago.instance.integration.syncPopupShown = true;
                         }
                     });
                 }

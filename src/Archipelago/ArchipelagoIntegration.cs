@@ -35,7 +35,6 @@ namespace TunicRandomizer {
         public List<long> locationsToSend = new List<long>();
         public float locationsToSendTimer = 0.0f;
         public float locationsToSendDelay = 5.0f;
-        public bool syncPopupShown = false;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -182,7 +181,6 @@ namespace TunicRandomizer {
                 deathLinkService = null;
                 slotData = null;
                 ItemIndex = 0;
-                syncPopupShown = false;
                 Locations.CheckedLocations.Clear();
                 ItemLookup.ItemList.Clear();
 
