@@ -23,6 +23,10 @@ namespace TunicRandomizer {
             return integration.TryConnect();
         }
 
+        public void SilentReconnect() {
+            integration.TrySilentReconnect();
+        }
+
         public void Disconnect() {
             integration.TryDisconnect();
         }

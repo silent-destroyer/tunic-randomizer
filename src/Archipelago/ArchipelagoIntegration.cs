@@ -154,6 +154,15 @@ namespace TunicRandomizer {
             return "";
         }
 
+        public void TrySilentReconnect() {
+            LoginResult LoginResult;
+            try {
+                LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
+            } catch (Exception e) {
+                LoginResult = new LoginFailure(e.GetBaseException().Message);
+            }
+        }
+
         public void TryDisconnect() {
 
             try {

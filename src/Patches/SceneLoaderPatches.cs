@@ -54,6 +54,11 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (PlayerCharacter.Instanced && SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
+                Archipelago.instance.SilentReconnect();
+            }
+
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
 
             return true;
