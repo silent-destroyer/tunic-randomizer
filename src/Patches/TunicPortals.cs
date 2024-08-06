@@ -5241,10 +5241,10 @@ namespace TunicRandomizer {
                             }
                             bool shouldContinue = false;
                             // we need to ensure the ones that can cause failures have already been paired
-                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 3
-                                || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 3) {
-                                List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
-                                if ((portal.Direction == (int)PDir.SOUTH && !southProblems.Contains(portal.Name)) || portal.Direction == (int)PDir.NORTH) {
+                            List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
+                            if (portal.Direction == (int)PDir.NORTH || (portal.Direction == (int)PDir.SOUTH && !southProblems.Contains(portal.Name))) {
+                                if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 3
+                                        || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 3) {
                                     foreach (Portal testPortal in twoPlusPortals) {
                                         if (testPortal.Name == "Ziggurat Upper to Ziggurat Entry Hallway" 
                                             || testPortal.Name == "Ziggurat Tower to Ziggurat Upper"
@@ -5256,9 +5256,9 @@ namespace TunicRandomizer {
                                     }
                                 }
                             }
-                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 1
-                                || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 1) {
-                                if ((portal.Direction == (int)PDir.LADDER_UP && portal.Name != "Frog's Domain Ladder Exit") || portal.Direction == (int)PDir.LADDER_DOWN) {
+                            if (portal.Direction == (int)PDir.LADDER_DOWN || (portal.Direction == (int)PDir.LADDER_UP && portal.Name != "Frog's Domain Ladder Exit")) {
+                                if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 1
+                                    || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 1) {
                                     foreach (Portal testPortal in twoPlusPortals) {
                                         if (testPortal.Name == "Frog's Domain Ladder Exit") {
                                             TunicLogger.LogTesting($"skipped {portal.Name} because of frog's domain ladder exit not being done yet");
