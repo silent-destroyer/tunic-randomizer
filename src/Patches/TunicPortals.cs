@@ -5299,10 +5299,8 @@ namespace TunicRandomizer {
                     // find a portal in a region we can access
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
                         // for pairing to opposite direction portals, we also want to check if the directions match
-                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
-                            if (directionPairs[secondPortal.Direction] != portal1.Direction) {
-                                continue;
-                            }
+                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && directionPairs[secondPortal.Direction] != portal1.Direction) {
+                            continue;
                         }
                         portal2 = secondPortal;
                         twoPlusPortals2.Remove(secondPortal);
