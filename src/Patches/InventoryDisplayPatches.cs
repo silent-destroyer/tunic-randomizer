@@ -136,12 +136,6 @@ namespace TunicRandomizer {
                 InventoryDisplayPatches.BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;
 
                 yield return true;
-                if (Inventory.GetItemByName("Spear").Quantity == 1) {
-                    InventoryDisplayPatches.EquipmentRoot.transform.GetChild(InventoryDisplayPatches.EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
-                    InventoryDisplayPatches.EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
-                }
-
-                yield return true;
                 if (InventoryDisplayPatches.AbilityShuffle.active) {
                     InventoryDisplayPatches.AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
                     InventoryDisplayPatches.AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
@@ -608,6 +602,13 @@ namespace TunicRandomizer {
 
             if (!GridSetup) {
                 SetupGridLayoutForEquipmentGroup();
+            }
+
+            if (InventoryDisplay.InventoryOpen) {
+                if (Inventory.GetItemByName("Spear").Quantity == 1) {
+                    InventoryDisplayPatches.EquipmentRoot.transform.GetChild(InventoryDisplayPatches.EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
+                    InventoryDisplayPatches.EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
+                }
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1 && SpeedrunData.gameComplete == 0 && !InventoryDisplay.InventoryOpen);

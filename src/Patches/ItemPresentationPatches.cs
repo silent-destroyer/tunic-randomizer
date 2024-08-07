@@ -22,7 +22,7 @@ namespace TunicRandomizer {
                 GoldHexagon.transform.parent = HexagonRoot.transform.parent;
                 Material goldMaterial = ModelSwaps.FindMaterial("goldenTrophy light");
                 GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().material = goldMaterial;
-                GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().materials = new Material[] { goldMaterial };
+                GoldHexagon.transform.GetChild(0).GetComponent<MeshRenderer>().materials = new Material[] { goldMaterial, goldMaterial, goldMaterial };
                 GoldHexagon.SetActive(false);
                 GoldHexagon.transform.localPosition = Vector3.zero;
                 GameObject.DontDestroyOnLoad(GoldHexagon);
