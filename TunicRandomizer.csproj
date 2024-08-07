@@ -35,10 +35,10 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	<Reference Include="Archipelago.MultiClient.Net, Version=6.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <HintPath>packages\Archipelago.MultiClient.Net.6.2.0\lib\net45\Archipelago.MultiClient.Net.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
+    <Reference Include="Archipelago.MultiClient.Net, Version=6.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Archipelago.MultiClient.Net.6.2.0\lib\net45\Archipelago.MultiClient.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -74,6 +74,7 @@
     <Reference Include="InControl">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\InControl.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\core\Mono.Cecil.dll</HintPath>
@@ -195,7 +196,8 @@
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
-    <Compile Include="src\Patches\HexagonQuestCutscene.cs" />
+    <Compile Include="src\Patches\GrassRandomizer.cs" />
+    <Compile Include="src\Patches\FoxgodCutscenePatch.cs" />
     <Compile Include="src\Patches\InteractionPatches.cs" />
     <Compile Include="src\Patches\ItemPresentationPatches.cs" />
     <Compile Include="src\Patches\ItemRandomizer.cs" />
@@ -225,6 +227,7 @@
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />
+    <Compile Include="src\Util\RecentItemsDisplay.cs" />
     <Compile Include="src\Util\ToggleLadderByLadderItem.cs" />
     <Compile Include="src\Util\ToggleObjectByFuse.cs" />
     <Compile Include="src\Util\TunicLogger.cs" />
@@ -237,6 +240,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="src\Data\Grass.json" />
+    <EmbeddedResource Include="src\Data\GrassReqs.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

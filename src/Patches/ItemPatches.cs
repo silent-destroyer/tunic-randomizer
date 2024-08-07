@@ -43,9 +43,16 @@ namespace TunicRandomizer {
                 }
                 TunicLogger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
                 if (IsArchipelago()) {
+                    if (TunicRandomizer.Settings.SkipItemAnimations) {
+                        ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, itemInfo: ItemLookup.ItemList[LocationId]);
+                    }
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
                 } else if (IsSinglePlayer()) {
-                    GiveItem(Locations.RandomizedLocations[LocationId]);
+                    Check check = Locations.RandomizedLocations[LocationId];
+                    if (TunicRandomizer.Settings.SkipItemAnimations) {
+                        ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, check: check);
+                    }
+                    GiveItem(check);
                 }
             }
 
@@ -229,6 +236,12 @@ namespace TunicRandomizer {
                 return ItemResult.PermanentFailure;
             }
 
+            bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
+
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
+
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
@@ -236,6 +249,11 @@ namespace TunicRandomizer {
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
             
+            if (Item.Type == ItemTypes.GRASS) {
+                ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
+                Inventory.GetItemByName("Grass").Quantity += 1;
+            }
+
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Item.QuantityToGive;
 
@@ -286,9 +304,6 @@ namespace TunicRandomizer {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                     SwordProgression.UpgradeSword(SwordLevel + 1);
                     itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
-                }
-                if (TunicRandomizer.Settings.ShowItemsEnabled) {
-                    ModelSwaps.SwapItemsInScene();
                 }
             }
 
@@ -437,19 +452,41 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Tracker.SetCollectedItem(ItemName, true);
 
-            FairyTargets.UpdateFairyTargetsInLogic(ItemName);
+            if (SaveFile.GetInt(GrassRandoEnabled) == 0) {
+                FairyTargets.UpdateFairyTargetsInLogic(ItemName);
+            }
+
+            if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
+                ModelSwaps.SwapItemsInScene();
+            }
+
+            TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
+
+            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
 
             return ItemResult.Success;
         }
 
-        public static void GiveItem(Check Check) {
+        public static void GiveItem(Check Check, bool isGrassCheck = false) {
 
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
 
+            bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
+
+            if (isGrassCheck) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
+
             ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(Item.Name) ? TextBuilderPatches.ItemNameToAbbreviation[Item.Name] : "";
+
+            if (Item.Type == ItemTypes.GRASS) {
+                ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
+                Inventory.GetItemByName("Grass").Quantity += 1;
+            }
+
             if (Item.Type == ItemTypes.MONEY) {
                 int AmountToGive = Check.Reward.Amount;
 
@@ -499,9 +536,6 @@ namespace TunicRandomizer {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                     SwordProgression.UpgradeSword(SwordLevel + 1);
                     itemDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
-                }
-                if (TunicRandomizer.Settings.ShowItemsEnabled) {
-                    ModelSwaps.SwapItemsInScene();
                 }
             }
 
@@ -651,14 +685,23 @@ namespace TunicRandomizer {
             if (FairyTarget != null) {
                 GameObject.Destroy(FairyTarget);
             }
+
+            RecentItemsDisplay.instance.EnqueueItem(Check);
+
+            if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
+                ModelSwaps.SwapItemsInScene();
+            }
+
             // todo: set this to only happen if the logic option isn't on
-            if (Locations.VanillaLocations.Keys.Where(key => Locations.VanillaLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0
+            if (Locations.RandomizedLocations.Keys.Where(key => Locations.RandomizedLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0
                 && !TunicRandomizer.Settings.SeekingSpellLogic) {
                 FairyTargets.CreateLoadZoneTargets();
             }
-            FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
-
-            if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+            if (SaveFile.GetInt(GrassRandoEnabled) == 0) {
+                FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
+            }
+            TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
+            if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
             }
         }

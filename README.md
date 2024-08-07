@@ -105,6 +105,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - For Single Player seeds, this option can be changed mid-run by changing the value and reloading the save file. For Archipelago games, this is a yaml option and cannot be changed after the game starts.
 - Hero Laurels Location
   - Place the Laurels at a predetermined location, currently the options are the 6 coin reward, 10 coin reward, or 10 fairy reward.
+- Grass Randomizer
+  - Shuffles every individual bush and piece of grass into the item pool, allowing you to find items by cutting down grass.
 - Lanternless Logic
   - Removes the Lantern as a requirement for dark areas, allowing it (or items that grant access to it) to be shuffled into places like Dark Tomb, etc.
 - Maskless Logic

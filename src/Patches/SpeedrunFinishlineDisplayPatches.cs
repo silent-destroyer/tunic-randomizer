@@ -86,6 +86,8 @@ namespace TunicRandomizer {
             } else {
                 ManualOrGoldHex.icon = Inventory.GetItemByName("Book").icon;
             }
+            SpeedrunReportItem Grass = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            Grass.icon = Inventory.GetItemByName("Grass").icon;
 
             SpeedrunFinishlineDisplay.instance.reportGroup_secrets = new SpeedrunReportItem[] {
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[0],
@@ -94,7 +96,8 @@ namespace TunicRandomizer {
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[3],
                 ManualOrGoldHex,
                 DathStone,
-                GoldenItem
+                GoldenItem,
+                Grass
             };
 
             Inventory.GetItemByName("Firecracker").Quantity += 1;
@@ -132,6 +135,10 @@ namespace TunicRandomizer {
             if (icon.name == "Inventory items_sword" && Inventory.GetItemByName("Sword").Quantity > 0) {
                 quantity = 1;
                 return true;
+            }
+            if (icon.name == "Randomizer items_grass") {
+                quantity = Inventory.GetItemByName("Grass").Quantity;
+                return SaveFile.GetInt(GrassRandoEnabled) == 1;
             }
             if (TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]] == 0) {
                 return false;
@@ -202,23 +209,29 @@ namespace TunicRandomizer {
             int CheckCount = 0;
             int ChecksCollectedByOthers = 0;
             float CheckPercentage = 0;
+            int TotalCheckCount = Locations.VanillaLocations.Count;
             string Color = "<#FFFFFF>";
 
-
             CheckCount = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                TotalCheckCount += GrassRandomizer.GrassChecks.Count;
+                CheckCount += GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count();    
+            }
             ChecksCollectedByOthers = IsArchipelago() ? Locations.VanillaLocations.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
-            CheckPercentage = ((float)CheckCount / Locations.VanillaLocations.Count) * 100.0f;
-            Color = CheckCount == Locations.VanillaLocations.Count ? $"<#eaa614>" : "<#FFFFFF>";
+            CheckPercentage = ((float)CheckCount / TotalCheckCount) * 100.0f;
+            Color = CheckCount == TotalCheckCount ? $"<#eaa614>" : "<#FFFFFF>";
 
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
-            TotalCompletion.transform.position = new Vector3(-60f, -30f, 55f);
+            TotalCompletion.transform.position = new Vector3(0, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{Locations.VanillaLocations.Count}" +
+            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{TotalCheckCount}" +
                 $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? "*" : "")} " +
                 $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}" +
-                $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? $"\n\t<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}";
+                $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}" +
+                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>{(GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}Grass Cut: {GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count()}/{GrassRandomizer.GrassChecks.Count} ({Math.Round(((float)GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() / GrassRandomizer.GrassChecks.Count) * 100.0f, 2)}%)" : $"")}";
 
+            TotalCompletion.GetComponent<TextMeshPro>().horizontalAlignment = HorizontalAlignmentOptions.Center;
             TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
             TotalCompletion.SetActive(true);
             List<List<string>> Columns = new List<List<string>>() {
@@ -279,6 +292,10 @@ namespace TunicRandomizer {
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
                     TotalAreaChecks += Locations.CheckCountsPerScene[SubArea];
                     AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                        TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
+                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && Locations.CheckedLocations[check.Key]).Count();
+                    }
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }
                 if (TotalAreaChecks > 0) {

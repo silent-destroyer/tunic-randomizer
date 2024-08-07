@@ -148,6 +148,7 @@ namespace TunicRandomizer {
             {"Ladder to Beneath the Vault", "lahdur bEnE% #uh fortruhs"},
             {"Ladders in Lower Quarry", "lahdurz in lOur kworE"},
             {"Ladders in Library", "lahdurz in lIbrArE"},
+            {"Grass", "grahs"},
             {"Overworld", "Ovurwurld"},
             {"West Furnace", "wehst furnis"},
             {"Cube Cave", "kyoob kAv"},

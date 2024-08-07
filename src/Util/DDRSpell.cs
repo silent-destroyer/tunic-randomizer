@@ -8,6 +8,7 @@ namespace TunicRandomizer {
     public class DDRSpell : MagicSpell {
 
         public static GameObject DPADPool;
+        public static GameObject ArrowsRoot;
 
         public ToggleObjectBySpell[] spellToggles;
         public List<GameObject> Arrows;
@@ -20,24 +21,24 @@ namespace TunicRandomizer {
             DPADPool = GameObject.Instantiate(GameObject.FindObjectOfType<DPADTester>().transform.GetChild(0).gameObject);
             GameObject.DontDestroyOnLoad(DPADPool);
             DPADPool.GetComponent<PooledFX>().dontDestroyOnLoad = true;
-            GameObject[] pooledArrows = new GameObject[] { };
-            GameObject ArrowRoot = new GameObject("arrow root");
+            List<GameObject> pooledArrows = new List<GameObject>();
+            ArrowsRoot = new GameObject("arrow root");
             foreach(GameObject arrow in Resources.FindObjectsOfTypeAll<MoveUp>().Where(x => x.name == "game gui_arrow(Clone)").Select(x => x.gameObject)) {
                 GameObject.DontDestroyOnLoad(arrow);
-                arrow.transform.parent = ArrowRoot.transform;
+                arrow.transform.parent = ArrowsRoot.transform;
                 arrow.transform.localEulerAngles = new Vector3(0, 225, arrow.transform.localEulerAngles.z);
-                pooledArrows.AddItem(arrow);
+                pooledArrows.Add(arrow);
             }
-            DPADPool.GetComponent<PooledFX>().pool = pooledArrows;
-            GameObject.DontDestroyOnLoad(ArrowRoot);
+            DPADPool.GetComponent<PooledFX>().pool = pooledArrows.ToArray();
+            DPADPool.GetComponent<PooledFX>().poolsize = pooledArrows.Count;
+            GameObject.DontDestroyOnLoad(ArrowsRoot);
         }
 
         public static void SetupDPADTester(PlayerCharacter instance) {
             instance.gameObject.AddComponent<DPADTester>();
             instance.gameObject.GetComponent<DPADTester>().pool = DPADPool.GetComponent<PooledFX>();
             instance.gameObject.GetComponent<DPADTester>().targetSpell = "";
-            DPADPool.GetComponent<PooledFX>().pool = Resources.FindObjectsOfTypeAll<MoveUp>().Select(x => x.gameObject).ToArray();
-            foreach(GameObject arrow in DPADPool.GetComponent<PooledFX>().pool) {
+            foreach (GameObject arrow in DPADPool.GetComponent<PooledFX>().pool) {
                 arrow.transform.localEulerAngles = Vector3.zero;
             }
         }
