@@ -5400,6 +5400,8 @@ namespace TunicRandomizer {
                 randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
                 comboNumber++;
             }
+
+            // now we add it to the actual, kept portal list, based on whether decoupled is on
             foreach (KeyValuePair<string, PortalCombo> portalCombo in randomizedPortals) {
                 RandomizedPortals.Add(portalCombo.Key, portalCombo.Value);
                 if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
