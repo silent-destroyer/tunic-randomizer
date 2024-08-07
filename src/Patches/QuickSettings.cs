@@ -165,12 +165,12 @@ namespace TunicRandomizer {
                         clearAllEditingFlags();
                         break;
                     case RandomizerSettings.RandomizerType.ARCHIPELAGO:
-                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, 580f * guiScale), new Action<int>(ArchipelagoQuickSettingsWindow), "Archipelago Settings");
+                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, 540f * guiScale), new Action<int>(ArchipelagoQuickSettingsWindow), "Archipelago Settings");
                         break;
                 }
 
                 if (ShowAPSettingsWindow && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
-                    GUI.Window(103, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 350f * guiScale, 490f * guiScale), new Action<int>(ArchipelagoConfigEditorWindow), "Archipelago Config");
+                    GUI.Window(103, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 350f * guiScale, 490f * guiScale), new Action<int>(ArchipelagoConfigEditorWindow), "Archipelago Connection");
                 }
                 if (ShowAdvancedSinglePlayerOptions && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER && !TunicRandomizer.Settings.MysterySeed) {
                     GUI.Window(105, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 405f * guiScale, 565f * guiScale), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
@@ -332,25 +332,16 @@ namespace TunicRandomizer {
             }
             GUI.color = Color.white;
             y += 40f * guiScale;
-            bool Connect = GUI.Button(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "Connect");
-            if (Connect) {
-                Archipelago.instance.Connect();
-            }
-
-            bool Disconnect = GUI.Button(new Rect(220f * guiScale, y, 200f * guiScale, 30f * guiScale), "Disconnect");
-            if (Disconnect) {
-                Archipelago.instance.Disconnect();
-            }
-            y += 40f * guiScale;
-            bool OpenSettings = GUI.Button(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "Open Settings File");
-            if (OpenSettings) {
-                try {
-                    System.Diagnostics.Process.Start(TunicRandomizer.SettingsPath);
-                } catch (Exception e) {
-                    TunicLogger.LogError(e.Message);
+            bool Connection = GUI.Button(new Rect(10f * guiScale, y, 160f * guiScale, 30f * guiScale), Archipelago.instance.IsConnected() ? "Disconnect" : "Connect");
+            if (Connection) {
+                if (Archipelago.instance.IsConnected()) {
+                    Archipelago.instance.Disconnect();
+                } else {
+                    Archipelago.instance.Connect();
                 }
             }
-            bool OpenAPSettings = GUI.Button(new Rect(220f * guiScale, y, 200f * guiScale, 30f * guiScale), ShowAPSettingsWindow ? "Close AP Config" : "Edit AP Config");
+
+            bool OpenAPSettings = GUI.Button(new Rect(180f * guiScale, y, 240f * guiScale, 30f * guiScale), ShowAPSettingsWindow ? "Close Connection Info" : "Edit Connection Info");
             if (OpenAPSettings) {
                 if (ShowAPSettingsWindow) {
                     CloseAPSettingsWindow();
@@ -548,6 +539,11 @@ namespace TunicRandomizer {
             y += 40f * guiScale;
             TunicRandomizer.Settings.ERFixedShop = GUI.Toggle(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ERFixedShop, "Fewer Shop Entrances");
             y += 40f * guiScale;
+            GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
+            y += 40f * guiScale;
+            TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
+            TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(new Rect(195 * guiScale, y, 195f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
+            y += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Fool Traps");
             y += 40f * guiScale;
             bool NoFools = GUI.Toggle(new Rect(10f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NONE, "None");
@@ -585,11 +581,6 @@ namespace TunicRandomizer {
             if (TenFairiesLaurels) {
                 TunicRandomizer.Settings.FixedLaurelsOption = RandomizerSettings.FixedLaurelsType.TENFAIRIES;
             }
-            y += 40f * guiScale;
-            GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
-            y += 40f * guiScale;
-            TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
-            TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(new Rect(195 * guiScale, y, 195f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
             y += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Difficulty Options");
             y += 40f * guiScale;
