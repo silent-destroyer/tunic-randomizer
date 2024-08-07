@@ -63,6 +63,16 @@ namespace TunicRandomizer {
         }
 
         public void UpdateItemDisplay() {
+            for(int i = 0; i < 5; i++) {
+                recentItems[i].transform.GetChild(2).gameObject.SetActive(false);
+                recentItems[i].transform.GetChild(3).transform.localScale = Vector3.one * 0.35f;
+                recentItems[i].transform.GetChild(3).transform.localEulerAngles = Vector3.zero;
+                if (recentItems[i].transform.GetChild(3).GetComponent<Image>().material.name != "UI Add") {
+                    recentItems[i].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
+                }
+                recentItems[i].transform.GetChild(3).GetComponent<Image>().sprite = null;
+                recentItems[i].GetComponentInChildren<TextMeshProUGUI>(true).text = "";
+            }
             for (int i = 0; i < 5; i++) {
                 int index = recentItemsQueue.Count - 1 - i;
                 if (recentItemsQueue.Count >= recentItems.Count) {

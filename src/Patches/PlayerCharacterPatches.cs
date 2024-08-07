@@ -366,8 +366,6 @@ namespace TunicRandomizer {
                 AreaLabel.instance.transform.GetChild(i).position = pos;
             }
 
-            RecentItemsDisplay.instance.ResetQueue();
-
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
@@ -446,6 +444,9 @@ namespace TunicRandomizer {
                 EnemyRandomizer.CreateAreaSeeds();
 
                 SaveFile.SaveToDisk();
+            }
+            if (TunicRandomizer.Tracker != null && seed != TunicRandomizer.Tracker.Seed) {
+                RecentItemsDisplay.instance.ResetQueue();
             }
             TunicRandomizer.Tracker = new ItemTracker();
             TunicRandomizer.Tracker.Seed = seed;
@@ -552,6 +553,9 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("Starting new archipelago file with seed: " + Seed);
                     } else {
                         TunicLogger.LogInfo("Loading archipelago seed: " + SaveFile.GetInt("seed"));
+                    }
+                    if (TunicRandomizer.Tracker != null && Seed.ToString() != TunicRandomizer.Tracker.Seed.ToString()) {
+                        RecentItemsDisplay.instance.ResetQueue();
                     }
                     TunicRandomizer.Tracker = new ItemTracker();
                     TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
