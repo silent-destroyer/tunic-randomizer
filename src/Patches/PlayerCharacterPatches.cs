@@ -276,6 +276,7 @@ namespace TunicRandomizer {
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 TunicPortals.ModifyPortals("Overworld Redux");
+                TunicPortals.ModifyPortals("Overworld Redux", sending: true);
             } else {
                 TunicPortals.ModifyPortalNames("Overworld Redux");
             }
@@ -407,10 +408,16 @@ namespace TunicRandomizer {
 
                     if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                         Inventory.GetItemByName("Torch").Quantity = 1;
-                        SaveFile.SetInt("randomizer entrance rando enabled", 1);
+                        SaveFile.SetInt(EntranceRando, 1);
                     }
                     if (TunicRandomizer.Settings.ERFixedShop) {
-                        SaveFile.SetInt("randomizer ER fixed shop", 1);
+                        SaveFile.SetInt(FixedShop, 1);
+                    }
+                    if (TunicRandomizer.Settings.PortalDirectionPairs) {
+                        SaveFile.SetInt(PortalDirectionPairs, 1);
+                    }
+                    if (TunicRandomizer.Settings.DecoupledER) {
+                        SaveFile.SetInt(Decoupled, 1);
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
@@ -516,6 +523,7 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.ModifyPortals("Overworld Redux");
+                    TunicPortals.ModifyPortals("Overworld Redux", sending:true);
                 } else {
                     TunicPortals.ModifyPortalNames("Overworld Redux");
                 }
@@ -629,7 +637,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Torch").Quantity = 1;
             }
             if (random.Next(2) == 1) {
-                SaveFile.SetInt("randomizer ER fixed shop", 1);
+                SaveFile.SetInt(FixedShop, 1);
             }
             if (random.Next(2) == 1) {
                 SaveFile.SetInt("randomizer shuffled abilities", 1);

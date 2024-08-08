@@ -464,10 +464,12 @@ namespace TunicRandomizer {
             EnemyRandomizer.CheckBossState();
 
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                if (IsArchipelago()) {
-                    TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
-                } else if (IsSinglePlayer()) {
-                    TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                if (TunicPortals.RandomizedPortals.Count == 0) {
+                    if (IsArchipelago()) {
+                        TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
+                    } else if (IsSinglePlayer()) {
+                        TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                    }
                 }
                 TunicPortals.ModifyPortals(loadingScene.name);
             } else {
@@ -552,6 +554,10 @@ namespace TunicRandomizer {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             }
             ItemTracker.SaveTrackerFile();
+
+            PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                TunicPortals.ModifyPortals(SceneName, sending:true);
+            });
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {

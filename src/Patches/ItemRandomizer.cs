@@ -255,7 +255,7 @@ namespace TunicRandomizer {
                         int start_num = FullInventory.Count;
                         FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
                         foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                            FullInventory = portalCombo.AddComboRegions(FullInventory);
+                            FullInventory = portalCombo.AddComboRegion(FullInventory);
                         }
                         if (start_num == FullInventory.Count) {
                             break;
@@ -329,7 +329,7 @@ namespace TunicRandomizer {
                             int start_num = testFullInventory.Count;
                             testFullInventory = TunicPortals.UpdateReachableRegions(testFullInventory);
                             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                                testFullInventory = portalCombo.AddComboRegions(testFullInventory);
+                                testFullInventory = portalCombo.AddComboRegion(testFullInventory);
                             }
                             int end_num = testFullInventory.Count;
                             if (start_num == end_num) {
@@ -344,7 +344,7 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
                         }
                     }
-                    TunicLogger.LogInfo("test ends here");
+                    TunicLogger.LogInfo("test ends here, if you didn't see any locations above this message then there were no unreachable locations");
                     testBool = false;
                 }
 
@@ -528,7 +528,7 @@ namespace TunicRandomizer {
                 int start_num = Inventory.Count;
                 Inventory = TunicPortals.UpdateReachableRegions(Inventory);
                 foreach (PortalCombo portalCombo in vanillaPortals.Values) {
-                    Inventory = portalCombo.AddComboRegions(Inventory);
+                    Inventory = portalCombo.AddComboRegion(Inventory);
                 }
                 int end_num = Inventory.Count;
                 if (start_num == end_num) {
@@ -551,7 +551,7 @@ namespace TunicRandomizer {
                 int start_num = inventory.Count;
                 inventory = TunicPortals.UpdateReachableRegions(inventory);
                 foreach (PortalCombo portalCombo in portalList.Values) {
-                    inventory = portalCombo.AddComboRegions(inventory);
+                    inventory = portalCombo.AddComboRegion(inventory);
                 }
                 int end_num = inventory.Count;
                 if (start_num == end_num) {
