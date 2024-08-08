@@ -546,6 +546,7 @@ namespace TunicRandomizer {
                         ItemData = ItemLookup.GetItemDataFromCheck(Check);
                     }
                     if (Locations.CheckedLocations[ItemId] || SaveFile.GetInt($"{ItemPatches.SaveFileCollectedKey} {ItemId}") == 1) {
+                        GameObject.Destroy(ItemPickup.gameObject);
                         return;
                     }
 
