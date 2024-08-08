@@ -5411,6 +5411,9 @@ namespace TunicRandomizer {
             }
         }
 
+        // todo: update this to properly take shops with numbered names, as well as retaining the current behavior for older games
+        // shops will be formatted like "Shop, 3_" for Shop Portal 3, instead of the current "Shop, Previous Region_"
+        // it also needs to be able to handle an arbitrary number of shops, up to like 500 maybe
         // this is for using the info from Archipelago to pair up the portals
         public static void CreatePortalPairs(Dictionary<string, string> APPortalStrings) {
             RandomizedPortals.Clear();
