@@ -520,6 +520,9 @@ namespace TunicRandomizer {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
+                if (slotData.TryGetValue("decoupled", out var decoupled)) {
+                    SaveFile.SetInt(Decoupled, 1);
+                }
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.ModifyPortals("Overworld Redux");

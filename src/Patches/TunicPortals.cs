@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.TunicPortals;
 
 namespace TunicRandomizer {
     public class TunicPortals {
@@ -5431,7 +5432,8 @@ namespace TunicRandomizer {
                     }
                 }
             }
-
+            // for backwards compatibility, we want to mark all shop portals with a number as we see them
+            int backwards_compat_shop_num = 1;
             // make the PortalCombo dictionary
             foreach (KeyValuePair<string, string> stringPair in APPortalStrings) {
                 string portal1SDT = stringPair.Key;
@@ -5445,6 +5447,28 @@ namespace TunicRandomizer {
                     if (portal2SDT == portal.SceneDestinationTag) {
                         portal2 = portal;
                     }
+                    // for backwards compatibility with older apworlds that don't have numbered shop portals
+                    if (portal2SDT == "Shop, Previous Region_") {
+                        portal2 = new Portal(name: $"Shop Portal {backwards_compat_shop_num}", destination: $"Previous Region {backwards_compat_shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {backwards_compat_shop_num}", direction: (int)PDir.NONE);
+                        backwards_compat_shop_num++;
+                    }
+                }
+                // if it's null still, it's a shop
+                if (portal1 == null) {
+                    string shop_num = new string(portal1SDT.Where(char.IsDigit).ToArray());
+                    int dir = (int)PDir.SOUTH;
+                    if (shop_num == "7" || shop_num == "8") {
+                        dir = (int)PDir.WEST;
+                    }
+                    portal1 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                }
+                if (portal2 == null) {
+                    string shop_num = new string(portal2SDT.Where(char.IsDigit).ToArray());
+                    int dir = (int)PDir.SOUTH;
+                    if (shop_num == "7" || shop_num == "8") {
+                        dir = (int)PDir.WEST;
+                    }
+                    portal2 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
                 }
                 PortalCombo portalCombo = new PortalCombo(portal1, portal2);
                 RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
