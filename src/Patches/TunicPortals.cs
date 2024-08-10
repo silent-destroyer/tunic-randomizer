@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static TunicRandomizer.TunicPortals;
 
 namespace TunicRandomizer {
     public class TunicPortals {
         
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
         public static GameObject storedPortal = null;
+        // just for solving the case where old house door connects to itself in decoupled
+        public static bool OldHouseDoorPairedToItself = false;
 
         // the direction you move while entering the portal
         public enum PDir {
@@ -5485,7 +5484,14 @@ namespace TunicRandomizer {
         public static void ModifyPortals(string scene_name, bool sending = false) {
             // we turn this off to not let you walk back through before it is modified the second time
             if (sending == true && storedPortal != null) {
+                // if the old house door paired itself, move the fox outside the door so they don't get locked in an infinite loop, even though that's kinda funny
+                if (OldHouseDoorPairedToItself == true) {
+                    PlayerCharacter.instance.transform.position = new Vector3(-32, 31, -59);
+                    PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    OldHouseDoorPairedToItself = false;
+                }
                 storedPortal.GetComponent<BoxCollider>().isTrigger = true;
+                storedPortal = null;
             }
             // if we're spawning at a shop, we need to create a custom ScenePortal to receive you
             if (sending == false && scene_name == "Shop") {
@@ -5563,6 +5569,10 @@ namespace TunicRandomizer {
                             if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
                                 storedPortal = portal.gameObject;
                                 storedPortal.GetComponent<BoxCollider>().isTrigger = false;
+                                if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" 
+                                    && portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
+                                    OldHouseDoorPairedToItself = true;
+                                }
                             }
                             break;
                         }
