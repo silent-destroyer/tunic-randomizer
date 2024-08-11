@@ -405,7 +405,7 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(LanternlessLogic, 1);
                     }
 
-                    SaveFile.SetInt("randomizer laurels location", (int)TunicRandomizer.Settings.FixedLaurelsOption);
+                    SaveFile.SetInt(LaurelsLocation, (int)TunicRandomizer.Settings.FixedLaurelsOption);
 
                     if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                         Inventory.GetItemByName("Torch").Quantity = 1;
@@ -422,7 +422,7 @@ namespace TunicRandomizer {
                         }
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
-                        SaveFile.SetInt("randomizer shuffled abilities", 1);
+                        SaveFile.SetInt(AbilityShuffle, 1);
                     }
                     if (TunicRandomizer.Settings.ShuffleLadders) {
                         SaveFile.SetInt(LadderRandoEnabled, 1);
