@@ -218,9 +218,16 @@ namespace TunicRandomizer {
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
             string LocationId = $"Well Reward ({StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue} Coins) [Trinket Well]";
             if (IsArchipelago() && Locations.LocationIdToDescription.ContainsKey(LocationId)) {
+                if (TunicRandomizer.Settings.SkipItemAnimations) {
+                    ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, itemInfo: ItemLookup.ItemList[LocationId]);
+                }
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
-                GiveItem(Locations.RandomizedLocations[LocationId]);
+                Check check = Locations.RandomizedLocations[LocationId];
+                if (TunicRandomizer.Settings.SkipItemAnimations) {
+                    ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, check: check);
+                }
+                GiveItem(check);
             }
             return false;
         }

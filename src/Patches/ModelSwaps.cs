@@ -612,8 +612,7 @@ namespace TunicRandomizer {
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
             if (check == null && itemInfo == null) { return; }
-            string checkId = transform.GetComponent<Grass>() != null ? GrassRandomizer.getGrassGameObjectId(transform.GetComponent<Grass>()) : ItemPatches.GetChestRewardID(transform.GetComponent<Chest>());
-            //if (Locations.CheckedLocations.ContainsKey(checkId) && Locations.CheckedLocations[checkId]) { return; }
+
             if (transform.GetComponentInChildren<MoveUp>(true) != null && !transform.GetComponentInChildren<MoveUp>(true).gameObject.active) {
                 GameObject.Destroy(transform.GetComponentInChildren<MoveUp>(true).gameObject);
             }
@@ -657,7 +656,7 @@ namespace TunicRandomizer {
 
             moveUp.transform.localPosition = TransformData.pos;
             moveUp.transform.localRotation = TransformData.rot;
-            if (transform.GetComponent<Chest>() != null) {
+            if (transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null) {
                 moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
                 if (Item != null) {
                     if (Item.Name == "Just Some Pals") {
@@ -673,7 +672,7 @@ namespace TunicRandomizer {
             moveUp.layer = 0;
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
-            moveUp.SetActive(transform.GetComponent<Chest>() != null);
+            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
         }
 
         public static void CheckCollectedItemFlags() {
