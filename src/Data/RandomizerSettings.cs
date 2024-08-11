@@ -11,6 +11,8 @@ namespace TunicRandomizer {
 
         public ConnectionSettings ConnectionSettings { get; set; }
 
+        public MysterySeedWeights MysterySeedWeights { get; set; }
+
         public enum RandomizerType {
             SINGLEPLAYER,
             ARCHIPELAGO
@@ -395,6 +397,7 @@ namespace TunicRandomizer {
         public RandomizerSettings() {
 
             ConnectionSettings = new ConnectionSettings();
+            MysterySeedWeights = new MysterySeedWeights();
             Mode = RandomizerType.SINGLEPLAYER;
 
             // Single Player
@@ -491,7 +494,8 @@ namespace TunicRandomizer {
                 $":{Convert.ToInt32(sToB(enemySettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(raceSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(otherSettings()), 2)}" +
-                $":{ConvertEnemyToggles()}"));
+                $":{ConvertEnemyToggles()}" +
+                $":{(MysterySeed ? PlayerCharacter.Instanced ? SaveFile.GetString("randomizer mystery seed weights") : MysterySeedWeights.ToSettingsString() : "")}"));
             string seed;
             if (SceneManager.GetActiveScene().name != "TitleScreen") {
                 seed = SaveFile.GetInt("seed").ToString();
@@ -502,7 +506,6 @@ namespace TunicRandomizer {
             string SettingsString = $"tunc:{PluginInfo.VERSION}:{seed}:{EncodedSettings}";
             return SettingsString;
         }
-
         public void ParseSettingsString(string s) {
             try {
                 string[] split = s.Split(':');
@@ -577,6 +580,9 @@ namespace TunicRandomizer {
                     TinierFoxMode = eval(other, TINIER_FOX_MODE);
 
                     ParseEnemyToggles(decodedSplit[10]);
+                }
+                if (MysterySeed) {
+                    MysterySeedWeights.FromSettingsString(decodedSplit[11]);
                 }
 
                 OptionsGUIPatches.SaveSettings();

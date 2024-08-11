@@ -14,6 +14,8 @@ namespace TunicRandomizer {
         public static List<string> FoolColors = new List<string>() { "white", "#4FF5D4", "#E3D457", "#FF3333" };
         private static bool ShowAdvancedSinglePlayerOptions = false;
         private static bool ShowAPSettingsWindow = false;
+        private static bool ShowMysterySeedWindow = false;
+        private static int MysteryWindowPage = 0;
         private static string stringToEdit = "";
         private static int stringCursorPosition = 0;
         private static bool showPort = false;
@@ -160,7 +162,7 @@ namespace TunicRandomizer {
                 Cursor.visible = true;
                 switch (TunicRandomizer.Settings.Mode) {
                     case RandomizerSettings.RandomizerType.SINGLEPLAYER:
-                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, TunicRandomizer.Settings.MysterySeed ? 470f * guiScale : 550f * guiScale), new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
+                        GUI.Window(101, new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, TunicRandomizer.Settings.MysterySeed ? 510f * guiScale : 550f * guiScale), new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
                         ShowAPSettingsWindow = false;
                         clearAllEditingFlags();
                         break;
@@ -175,7 +177,10 @@ namespace TunicRandomizer {
                 if (ShowAdvancedSinglePlayerOptions && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER && !TunicRandomizer.Settings.MysterySeed) {
                     GUI.Window(105, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 405f * guiScale, 485f * guiScale), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
                 }
-                GameObject.Find("elderfox_sword graphic").GetComponent<Renderer>().enabled = !ShowAdvancedSinglePlayerOptions && !ShowAPSettingsWindow;
+                if (ShowMysterySeedWindow && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER && TunicRandomizer.Settings.MysterySeed) {
+                    GUI.Window(106, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 405f * guiScale, 430f * guiScale), new Action<int>(MysterySeedWeightsWindow), "Mystery Seed Settings");
+                }
+                GameObject.Find("elderfox_sword graphic").GetComponent<Renderer>().enabled = !ShowAdvancedSinglePlayerOptions && !ShowAPSettingsWindow && !ShowMysterySeedWindow;
                 if (TitleVersion.TitleButtons != null) {
                     foreach (Button button in TitleVersion.TitleButtons.GetComponentsInChildren<Button>()) {
                         button.enabled = !ShowAPSettingsWindow;
@@ -467,6 +472,12 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
                 TunicRandomizer.Settings.MysterySeed = GUI.Toggle(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
                 y += 40f * guiScale;
+                bool ShowAdvancedOptions = GUI.Button(new Rect(10f * guiScale, y, 410f * guiScale, 30f * guiScale), $"Configure Mystery Seed");
+                if (ShowAdvancedOptions) {
+                    ShowMysterySeedWindow = !ShowMysterySeedWindow;
+                    ShowAdvancedSinglePlayerOptions = false;
+                }
+                y += 40f * guiScale;
             } else {
                 bool ToggleHexagonQuest = GUI.Toggle(new Rect(10f * guiScale, y, 185f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST, $"Hexagon Quest {(TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST ? $"(<color=#E3D457>{TunicRandomizer.Settings.HexagonQuestGoal}</color>)" : "")}");
                 if (ToggleHexagonQuest) {
@@ -489,6 +500,7 @@ namespace TunicRandomizer {
                 bool ShowAdvancedOptions = GUI.Button(new Rect(10f * guiScale, y, 410f * guiScale, 30f * guiScale), $"{(ShowAdvancedSinglePlayerOptions ? "Hide" : "Show")} Advanced Options");
                 if (ShowAdvancedOptions) {
                     ShowAdvancedSinglePlayerOptions = !ShowAdvancedSinglePlayerOptions;
+                    ShowMysterySeedWindow = false;
                 }
                 y += 40f * guiScale;
 
@@ -660,6 +672,110 @@ namespace TunicRandomizer {
                 CloseAPSettingsWindow();
                 Archipelago.instance.Disconnect();
                 Archipelago.instance.Connect();
+            }
+
+        }
+
+        private static void MysterySeedWeightsWindow(int windowID) {
+            GUI.skin.label.fontSize = (int)(20 * guiScale);
+            GUI.skin.button.fontSize = (int)(17 * guiScale);
+            float y = 25f * guiScale;
+            if (MysteryWindowPage == 0) {
+                GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Sword Progression");
+                GUI.Label(new Rect(210f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Hexagon Quest");
+                y += 25f * guiScale;
+                GUI.Label(new Rect(160f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.SwordProgression}%");
+                TunicRandomizer.Settings.MysterySeedWeights.SwordProgression = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.SwordProgression, 0, 100);
+
+                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest}%");
+                TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest, 0, 100);
+
+                y += 40f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Keys Behind Bosses");
+                GUI.Label(new Rect(210f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Shuffle Abilities");
+                y += 25f * guiScale;
+                GUI.Label(new Rect(160f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.KeysBehindBosses}%");
+                TunicRandomizer.Settings.MysterySeedWeights.KeysBehindBosses = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.KeysBehindBosses, 0, 100);
+                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleAbilities}%");
+                TunicRandomizer.Settings.MysterySeedWeights.ShuffleAbilities = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ShuffleAbilities, 0, 100);
+
+                y += 40f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Entrance Randomizer");
+                GUI.Label(new Rect(210f * guiScale, y, 300f * guiScale, 30f * guiScale), $"ER: Fewer Shops");
+                y += 25f * guiScale;
+                GUI.Label(new Rect(160f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.EntranceRando}%");
+                TunicRandomizer.Settings.MysterySeedWeights.EntranceRando = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.EntranceRando, 0, 100);
+                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop}%");
+                TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop, 0, 100);
+
+                y += 40f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Shuffle Ladders");
+                GUI.Label(new Rect(210f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
+                y += 25f * guiScale;
+                GUI.Label(new Rect(160f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders}%");
+                TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders, 0, 100);
+                // Todo add grass randomizer
+                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders}%");
+                TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders, 0, 100);
+
+                y += 40f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Lanternless Logic");
+                GUI.Label(new Rect(210f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Maskless Logic");
+                y += 25f * guiScale;
+                GUI.Label(new Rect(160f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.Lanternless}%");
+                TunicRandomizer.Settings.MysterySeedWeights.Lanternless = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.Lanternless, 0, 100);
+                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.Maskless}%");
+                TunicRandomizer.Settings.MysterySeedWeights.Maskless = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.Maskless, 0, 100);
+            } else if (MysteryWindowPage == 1) {
+                GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), $"Hexagon Quest - Goal Amount");
+                y += 30f * guiScale;
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalRandom = GUI.Toggle(new Rect(10f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalRandom, "Random");
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalLow = GUI.Toggle(new Rect(110f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalLow, " Low");
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalMedium = GUI.Toggle(new Rect(210f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalMedium, "Medium");
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalHigh = GUI.Toggle(new Rect(310f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestGoalHigh, "High");
+
+                y += 35f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), $"Hexagon Quest - # of Extra Hexagons");
+                y += 30f * guiScale;
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasRandom = GUI.Toggle(new Rect(10f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasRandom, "Random");
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasLow = GUI.Toggle(new Rect(110f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasLow, "Low");
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasMedium = GUI.Toggle(new Rect(210f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasMedium, "Medium");
+                TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasHigh = GUI.Toggle(new Rect(310f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.HexQuestExtrasHigh, "High");
+
+                y += 35f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Fool Traps");
+                y += 30f * guiScale;
+                TunicRandomizer.Settings.MysterySeedWeights.FoolTrapNone = GUI.Toggle(new Rect(10f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.FoolTrapNone, $"None");
+                TunicRandomizer.Settings.MysterySeedWeights.FoolTrapNormal = GUI.Toggle(new Rect(110f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.FoolTrapNormal, $"<color={FoolColors[1]}>{FoolChoices[1]}</color>");
+                TunicRandomizer.Settings.MysterySeedWeights.FoolTrapDouble = GUI.Toggle(new Rect(210f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.FoolTrapDouble, $"<color={FoolColors[2]}>{FoolChoices[2]}</color>");
+                TunicRandomizer.Settings.MysterySeedWeights.FoolTrapOnslaught = GUI.Toggle(new Rect(300f * guiScale, y, 100f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.FoolTrapOnslaught, $"<color={FoolColors[3]}>{FoolChoices[3]}</color>");
+
+                y += 35f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), $"Hero's Laurels Location");
+                y += 30f * guiScale;
+                TunicRandomizer.Settings.MysterySeedWeights.LaurelsRandom = GUI.Toggle(new Rect(10f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LaurelsRandom, $"Random");
+                TunicRandomizer.Settings.MysterySeedWeights.LaurelsSixCoins = GUI.Toggle(new Rect(110f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LaurelsSixCoins, $"6 Coins");
+                TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenCoins = GUI.Toggle(new Rect(210f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenCoins, $"10 Coins");
+                TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenFairies = GUI.Toggle(new Rect(310f * guiScale, y, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenFairies, $"10 Fairies");
+            }
+            GUI.skin.button.fontSize = (int)(20 * guiScale);
+            y += 50f;
+            bool Close = GUI.Button(new Rect(10f * guiScale, 350f * guiScale, 187.5f, 30f), "Close");
+            if (Close) {
+                ShowMysterySeedWindow = false;
+                MysteryWindowPage = 0;
+                OptionsGUIPatches.SaveSettings();
+            }
+            bool SwitchPage = GUI.Button(new Rect(207.5f * guiScale, 350f * guiScale, 187.5f, 30f), MysteryWindowPage == 0 ? "Next Page >" : "< Prev Page");
+            if (SwitchPage) {
+                MysteryWindowPage = MysteryWindowPage == 0 ? 1 : 0;
+                OptionsGUIPatches.SaveSettings();
+            }
+            y += 40f;
+            bool ResetToDefault = GUI.Button(new Rect(10f * guiScale, 390f * guiScale, 385f, 30f), "Reset To Defaults");
+            if (ResetToDefault) {
+                TunicRandomizer.Settings.MysterySeedWeights = new MysterySeedWeights();
+                OptionsGUIPatches.SaveSettings();
             }
 
         }
