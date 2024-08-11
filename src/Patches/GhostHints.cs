@@ -651,7 +651,12 @@ namespace TunicRandomizer {
                     break;
                 }
             }
-            HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.";
+            // just thought it would be cute to have a different line if it's vanilla
+            if (heirPortal == "Far Shore to Heir") {
+                HeirHint = $"bI #uh wA, Evin #O #uh dorz R wErd, \"THE HEIR\" iz\nstil aht \"{heirPortal.ToUpper()}\".";
+            } else {
+                HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.";
+            }
         }
 
         public static void CheckForServerHint(string npcName) {
