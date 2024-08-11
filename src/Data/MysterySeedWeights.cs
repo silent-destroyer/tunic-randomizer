@@ -15,6 +15,7 @@ namespace TunicRandomizer {
         public int ERFixedShop;
         public int Maskless;
         public int Lanternless;
+        public int GrassRando;
 
         public bool FoolTrapNone;
         public bool FoolTrapNormal;
@@ -46,6 +47,7 @@ namespace TunicRandomizer {
             ERFixedShop = 50;
             Maskless = 25;
             Lanternless = 25;
+            GrassRando = 50;
 
             FoolTrapNone = true;
             FoolTrapNormal = true;
@@ -78,6 +80,7 @@ namespace TunicRandomizer {
                 $"&{ERFixedShop}" +
                 $"&{Maskless}" +
                 $"&{Lanternless}" +
+                $"&{GrassRando}" +
                 $"&{HexagonQuest}" +
                 $"&{Convert.ToInt32(sToB(new bool[] { FoolTrapNone, FoolTrapNormal, FoolTrapDouble, FoolTrapOnslaught, LaurelsRandom, LaurelsSixCoins, LaurelsTenCoins, LaurelsTenFairies }), 2)}" +
                 $"&{Convert.ToInt32(sToB(new bool[] { HexQuestGoalRandom, HexQuestGoalLow, HexQuestGoalMedium, HexQuestGoalHigh, HexQuestExtrasRandom, HexQuestExtrasLow, HexQuestExtrasMedium, HexQuestExtrasHigh }), 2)}";
@@ -94,8 +97,9 @@ namespace TunicRandomizer {
             ERFixedShop = int.Parse(split[5]);
             Maskless = int.Parse(split[6]);
             Lanternless = int.Parse(split[7]);
-            HexagonQuest = int.Parse(split[8]);
-            int foolLaurels = int.Parse(split[9]);
+            GrassRando = int.Parse(split[8]);
+            HexagonQuest = int.Parse(split[9]);
+            int foolLaurels = int.Parse(split[10]);
             FoolTrapNone = eval(foolLaurels, 1);
             FoolTrapNormal = eval(foolLaurels, 2);
             FoolTrapDouble = eval(foolLaurels, 4);

@@ -655,6 +655,9 @@ namespace TunicRandomizer {
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Lanternless) {
                 SaveFile.SetInt(LanternlessLogic, 1);
             }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.GrassRando) {
+                SaveFile.SetInt(GrassRandoEnabled, 1);
+            }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);
                 bool[] goalOptions = new bool[4] { 
@@ -763,9 +766,7 @@ namespace TunicRandomizer {
                 }
                 SaveFile.SetInt("randomizer laurels location", laurelsIndex);
             }
-            if (random.Next(5) == 1) {
-                SaveFile.SetInt(GrassRandoEnabled, 1);
-            } 
+
             SaveFile.SetString("randomizer mystery seed weights", TunicRandomizer.Settings.MysterySeedWeights.ToSettingsString());
         }
 
