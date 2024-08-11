@@ -473,6 +473,7 @@ namespace TunicRandomizer {
                 }
                 TunicPortals.ModifyPortals(loadingScene.name);
             } else {
+                TunicPortals.RandomizedPortals.Clear();
                 TunicPortals.ModifyPortalNames(loadingScene.name);
             }
             TunicPortals.MarkPortals();

@@ -278,6 +278,7 @@ namespace TunicRandomizer {
                 TunicPortals.ModifyPortals("Overworld Redux");
                 TunicPortals.ModifyPortals("Overworld Redux", sending: true);
             } else {
+                TunicPortals.RandomizedPortals.Clear();
                 TunicPortals.ModifyPortalNames("Overworld Redux");
             }
 
@@ -409,15 +410,16 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                         SaveFile.SetInt(EntranceRando, 1);
-                    }
-                    if (TunicRandomizer.Settings.ERFixedShop) {
-                        SaveFile.SetInt(FixedShop, 1);
-                    }
-                    if (TunicRandomizer.Settings.PortalDirectionPairs) {
-                        SaveFile.SetInt(PortalDirectionPairs, 1);
-                    }
-                    if (TunicRandomizer.Settings.DecoupledER) {
-                        SaveFile.SetInt(Decoupled, 1);
+
+                        if (TunicRandomizer.Settings.ERFixedShop) {
+                            SaveFile.SetInt(FixedShop, 1);
+                        }
+                        if (TunicRandomizer.Settings.PortalDirectionPairs) {
+                            SaveFile.SetInt(PortalDirectionPairs, 1);
+                        }
+                        if (TunicRandomizer.Settings.DecoupledER) {
+                            SaveFile.SetInt(Decoupled, 1);
+                        }
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt("randomizer shuffled abilities", 1);
