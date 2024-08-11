@@ -189,6 +189,7 @@
     <Compile Include="src\Data\LadderToggles.cs" />
     <Compile Include="src\Data\Locations.cs" />
     <Compile Include="src\Data\MeshData.cs" />
+    <Compile Include="src\Data\MysterySeedWeights.cs" />
     <Compile Include="src\Data\Portal.cs" />
     <Compile Include="src\Data\PortalCombo.cs" />
     <Compile Include="src\Data\RandomizerSettings.cs" />

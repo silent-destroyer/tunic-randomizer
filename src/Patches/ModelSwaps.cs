@@ -403,6 +403,11 @@ namespace TunicRandomizer {
                     foreach (HeroRelicPickup HeroRelicPickup in Resources.FindObjectsOfTypeAll<HeroRelicPickup>()) {
                         SetupHeroRelicPickup(HeroRelicPickup);
                     }
+                    if (SceneLoaderPatches.SceneName == "Fortress Arena") {
+                        if (!SwappedThisSceneAlready || IsSwordCheck("Vault Key (Red) [Fortress Arena]")) {
+                            SwapSiegeEngineCrown();
+                        }
+                    }
                 }
                 if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
                     foreach (Chest Chest in Resources.FindObjectsOfTypeAll<Chest>()) {
@@ -421,12 +426,6 @@ namespace TunicRandomizer {
                                 ApplyGrassTexture(grass);
                             }
                         }
-                    }
-                }
-
-                if (SceneLoaderPatches.SceneName == "Fortress Arena") {
-                    if (!SwappedThisSceneAlready || IsSwordCheck("Vault Key (Red) [Fortress Arena]")) {
-                        SwapSiegeEngineCrown();
                     }
                 }
             }
@@ -742,6 +741,7 @@ namespace TunicRandomizer {
                         ItemData = ItemLookup.GetItemDataFromCheck(Check);
                     }
                     if (Locations.CheckedLocations[ItemId] || SaveFile.GetInt($"{ItemPatches.SaveFileCollectedKey} {ItemId}") == 1) {
+                        GameObject.Destroy(ItemPickup.gameObject);
                         return;
                     }
 

@@ -29,6 +29,7 @@
 
         // Entrance Rando Flag
         public const string EntranceRando = "randomizer entrance rando enabled";
+        public const string EntranceRandoFixedShop = "randomizer ER fixed shop";
 
         // Other Logic Flags
         public const string StartWithSword = "randomizer started with sword";
