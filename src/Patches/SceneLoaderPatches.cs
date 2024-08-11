@@ -463,7 +463,7 @@ namespace TunicRandomizer {
 
             EnemyRandomizer.CheckBossState();
 
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+            if (SaveFile.GetInt(EntranceRando) == 1) {
                 if (TunicPortals.RandomizedPortals.Count == 0) {
                     if (IsArchipelago()) {
                         TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
