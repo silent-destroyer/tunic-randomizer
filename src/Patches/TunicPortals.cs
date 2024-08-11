@@ -1056,8 +1056,8 @@ namespace TunicRandomizer {
                     {
                         "Quarry Connector",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry Connector to Overworld", "Overworld Redux", "", PDir.NORTH),  // rotates, but the connecting is south
-                            new TunicPortal("Quarry Connector to Quarry", "Quarry Redux", "", PDir.SOUTH),
+                            new TunicPortal("Quarry Connector to Overworld", "Overworld Redux", "", PDir.SOUTH),
+                            new TunicPortal("Quarry Connector to Quarry", "Quarry Redux", "", PDir.NORTH),  // rotates, but the connecting is south
                         }
                     },
                 }
@@ -5225,8 +5225,9 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("created the secondary portal lists");
 
             int comboNumber = 1000;
+            int seedIncrement = 0;  // for when a specific part fails and needs to load a portal back in
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
-                ShuffleList(twoPlusPortals, seed);
+                ShuffleList(twoPlusPortals, seed + seedIncrement);
                 Portal portal1 = null;
                 Portal portal2 = null;
                 foreach (Portal portal in twoPlusPortals) {
@@ -5294,7 +5295,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                ShuffleList(twoPlusPortals2, seed);
+                ShuffleList(twoPlusPortals2, seed + seedIncrement);
                 foreach (Portal secondPortal in twoPlusPortals2) {
                     // find a portal in a region we can access
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
@@ -5312,7 +5313,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogTesting($"portal {portal1.Name} doesn't have any valid directional pairs yet, put it back in and go again");
                         twoPlusPortals.Add(portal1);
                         // since the seed is just a number and not a Random object, we need to increment it to avoid shuffling the portals the same way
-                        seed++;
+                        seedIncrement++;
                         continue;
                     }
                     // it will fail after this
@@ -5531,6 +5532,8 @@ namespace TunicRandomizer {
                         newSpawn.transform.rotation = shopPortal.transform.GetChild(0).transform.rotation;
                         newSpawn.transform.localRotation = shopPortal.transform.GetChild(0).transform.localRotation;
                         newPortal.GetComponent<ScenePortal>().spawnTransform = newSpawn.transform;
+                        newPortal.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
+                        newPortal.layer = 2;
                         newPortal.GetComponent<BoxCollider>().isTrigger = true;
                         // now that we've copied over the relevant info, disable it
                         shopPortal.gameObject.SetActive(false);
