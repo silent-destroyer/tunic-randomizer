@@ -472,6 +472,9 @@ namespace TunicRandomizer {
                     }
                 }
                 TunicPortals.ModifyPortals(loadingScene.name);
+                PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                    TunicPortals.ModifyPortals(SceneName, sending: true);
+                });
             } else {
                 TunicPortals.RandomizedPortals.Clear();
                 TunicPortals.ModifyPortalNames(loadingScene.name);
@@ -555,10 +558,6 @@ namespace TunicRandomizer {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             }
             ItemTracker.SaveTrackerFile();
-
-            PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
-                TunicPortals.ModifyPortals(SceneName, sending:true);
-            });
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
