@@ -13,24 +13,28 @@ namespace TunicRandomizer {
             public Check check;
             public ItemInfo itemInfo;
             public bool isForYou;
+            public bool isTrinket;
             public RecentItemData(Check Check) {
                 check = Check;
                 itemInfo = null;
                 isForYou = true;
+                isTrinket = false;
             }
             public RecentItemData(ItemInfo ItemInfo, bool ForYou) {
                 itemInfo = ItemInfo;
                 check = null;
                 isForYou = ForYou;
+                isTrinket = false;
             }
         }
 
         public static RecentItemsDisplay instance;
         public static List<GameObject> recentItems = new List<GameObject>();
         public static GameObject title;
-        public static Queue<RecentItemData> recentItemsQueue = new Queue<RecentItemData>();
+        public static List<RecentItemData> recentItemsQueue = new List<RecentItemData>();
         public float itemQueueTimer = 0f;
         public float itemQueueDelay = 2f;
+        List<string> x = new List<string>();
         public void Start() {
         }
         public void Update() {
@@ -45,8 +49,7 @@ namespace TunicRandomizer {
             } else {
                 for(int i = 0; i < recentItems.Count; i++) {
                     for (int j = 0; j < recentItems[i].transform.childCount; j++) {
-                        if (j == 2) { continue; }
-                        recentItems[i].transform.GetChild(j).gameObject.SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen);
+                        recentItems[i].transform.GetChild(j).gameObject.SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen && (j == 2 ? recentItemsQueue.Count >= recentItems.Count ? recentItemsQueue[recentItems.Count - 1 - i].isTrinket : recentItemsQueue[recentItemsQueue.Count - 1 - i].isTrinket : true));
                     }
                 }
             }
@@ -54,7 +57,7 @@ namespace TunicRandomizer {
                 itemQueueTimer += Time.fixedUnscaledDeltaTime;
                 if (itemQueueTimer > (itemQueueDelay)) {
                     if (recentItemsQueue.Count > 5) {
-                        recentItemsQueue.Dequeue();
+                        recentItemsQueue.RemoveAt(0);
                         UpdateItemDisplay();
                     }
                     itemQueueTimer = 0;
@@ -90,7 +93,7 @@ namespace TunicRandomizer {
                     bool isTrinket = false;
                     bool isSwordUpgrade = false;
                     if (recentItemsQueue.Count > i) {
-                        RecentItemData item = recentItemsQueue.ElementAt(i);
+                        RecentItemData item = recentItemsQueue[i];
                         if (item.check != null) {
                             ItemData itemData = ItemLookup.GetItemDataFromCheck(item.check);
                             isMoney = itemData.Type == ItemTypes.MONEY;
@@ -98,27 +101,41 @@ namespace TunicRandomizer {
                             isTrap = itemData.Type == ItemTypes.FOOLTRAP;
                             isSwordUpgrade = itemData.Type == ItemTypes.SWORDUPGRADE;
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[itemData.Name]]);
-                            recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = itemData.Name;
+                            string itemFormatted = itemData.Name;
+                            int split = itemFormatted.LastIndexOf(' ');
+                            if (itemFormatted.Length > 20) {
+                                if (split > 0) {
+                                    itemFormatted = itemFormatted.Substring(0, split) + "\n" + itemFormatted.Substring(split+1);
+                                }
+                            }
+                            recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = itemFormatted;
                         } else if (item.itemInfo != null) {
                             isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
                             if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
                                 string itemFormatted = item.itemInfo.ItemName.Length > 20 ? item.itemInfo.ItemName.Substring(0, 20) + "..." : item.itemInfo.ItemName;
                                 itemFormatted = itemFormatted.Replace("_", " ");
-                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
                             } else {
                                 ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
                                 isMoney = itemData.Type == ItemTypes.MONEY;
                                 isTrinket = itemData.Type == ItemTypes.TRINKET;
                                 isSwordUpgrade = itemData.Type == ItemTypes.SWORDUPGRADE;
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.itemInfo.ItemName]]);
+                                string itemFormatted = item.itemInfo.ItemName;
+                                int split = itemFormatted.LastIndexOf(' ');
+                                if (itemFormatted.Length > 20) {
+                                    if (split > 0) {
+                                        itemFormatted = itemFormatted.Substring(0, split) + "\n" + itemFormatted.Substring(split + 1);
+                                    }
+                                }
                                 if (item.isForYou) {
-                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{item.itemInfo.ItemName}";
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}";
                                     if (item.itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
-                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\nfrom {item.itemInfo.Player.Name}";
+                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\nfrom {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
                                     }
                                 } else {
-                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{item.itemInfo.ItemName}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? "\n" + item.itemInfo.Player.Name : item.itemInfo.Player.Name)}";
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
                                 }
                             }
                         }
@@ -132,12 +149,14 @@ namespace TunicRandomizer {
                             recentItems[index].transform.GetChild(3).transform.localEulerAngles = new Vector3(180, 0, 0);
                         }
                         if (isTrinket) {
+                            item.isTrinket = true;
                             recentItems[index].transform.GetChild(2).gameObject.SetActive(true);
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI-trinket");
                         }
                         if (item.isForYou && isSwordUpgrade) {
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SaveFlags.SwordProgressionLevel))]);
                         }
+                        recentItemsQueue[i] = item;
                     } else {
                         recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = null;
                         recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = "";
@@ -155,7 +174,7 @@ namespace TunicRandomizer {
             if (GrassRandomizer.GrassChecks.ContainsKey(check.CheckId) && check.Reward.Name == "Grass") {
                 return;
             }
-            recentItemsQueue.Enqueue(new RecentItemData(check));
+            recentItemsQueue.Add(new RecentItemData(check));
             UpdateItemDisplay();
         }
 
@@ -163,7 +182,7 @@ namespace TunicRandomizer {
             if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) && itemInfo.ItemName == "Grass") {
                 return;
             }
-            recentItemsQueue.Enqueue(new RecentItemData(itemInfo, forYou));
+            recentItemsQueue.Add(new RecentItemData(itemInfo, forYou));
             UpdateItemDisplay();
         }
 
