@@ -268,6 +268,7 @@ namespace TunicRandomizer {
                 TimeText.transform.position = new Vector3(0, 185f, 210f);
                 TimeText.GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
                 TimeText.transform.GetChild(2).GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+                TimeText.name = "randomizer finish line time text";
             }
 
             ShowCompletionStatsAfterDelay = true;

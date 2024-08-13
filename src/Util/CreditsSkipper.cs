@@ -37,6 +37,7 @@ namespace TunicRandomizer {
                     SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
                     Material outline = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
                     foreach (TextMeshPro tmp in SpeedrunFinishlineDisplayPatches.CompletionCanvas.GetComponentsInChildren<TextMeshPro>(true)) {
+                        if (tmp.name == "randomizer finish line time text") { continue; }
                         tmp.fontMaterial = outline;
                         tmp.material = outline;
                     }
