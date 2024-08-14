@@ -2374,6 +2374,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Heir Sword",
                             },
+                            new List<string> {
+                                "Gun",
+                            },
                         }
                     },
                     {
@@ -2829,6 +2832,9 @@ namespace TunicRandomizer {
                     //        },
                     //        new List<string> {
                     //            "Heir Sword",
+                    //        },
+                    //        new List<string> {
+                    //            "Gun",
                     //        },
                     //    }
                     //},
