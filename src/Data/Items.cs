@@ -143,7 +143,7 @@ namespace TunicRandomizer {
             { "Magic Orb", new ItemData("Magic Orb", "progression", "Wand", ItemTypes.INVENTORY, 1) },
             { "Hero's Laurels", new ItemData("Hero's Laurels", "progression", "Hyperdash", ItemTypes.INVENTORY, 1) },
             { "Lantern", new ItemData("Lantern", "progression", "Lantern", ItemTypes.INVENTORY, 1) },
-            { "Gun", new ItemData("Gun", "useful", "Shotgun", ItemTypes.INVENTORY, 1) },
+            { "Gun", new ItemData("Gun", "progression", "Shotgun", ItemTypes.INVENTORY, 1) },
             { "Shield", new ItemData("Shield", "useful", "Shield", ItemTypes.INVENTORY, 1) },
             { "Dath Stone", new ItemData("Dath Stone", "useful", "Dath Stone", ItemTypes.INVENTORY, 1) },
             { "Hourglass", new ItemData("Hourglass", "useful", "SlowmoItem", ItemTypes.INVENTORY, 1) },

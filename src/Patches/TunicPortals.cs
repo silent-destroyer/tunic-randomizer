@@ -77,7 +77,6 @@ namespace TunicRandomizer {
                             new TunicPortal("Entrance to Furnace under Windmill", "Furnace", "gyro_upper_east", PDir.WEST),
                             new TunicPortal("Ruined Shop Entrance", "Ruined Shop", "", PDir.EAST),
                             new TunicPortal("Changing Room Entrance", "Changing Room", "", PDir.SOUTH),
-                            new TunicPortal("Cube Cave Entrance", "CubeRoom", "", PDir.NORTH),
                             new TunicPortal("Dark Tomb Main Entrance", "Crypt Redux", "", PDir.NORTH),
                             new TunicPortal("Secret Gathering Place Entrance", "Waterfall", "", PDir.NORTH),
                         }
@@ -230,6 +229,12 @@ namespace TunicRandomizer {
                         "Overworld Spawn Portal",
                         new List<TunicPortal> {
                             new TunicPortal("Spawn to Far Shore", "Transit", "teleporter_starting island", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Cube Cave Entrance Region",
+                        new List<TunicPortal> {
+                            new TunicPortal("Cube Cave Entrance", "CubeRoom", "", PDir.NORTH),
                         }
                     },
                 }
@@ -1545,6 +1550,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
+                "Cube Cave Entrance Region",
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
+            },
+            {
                 "Stick House",
                 new RegionInfo("Sword Cave", true)
             },
@@ -2426,6 +2435,17 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Cube Cave Entrance Region",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Gun",
+                            },
+                            new List<string> {
+                                "Sword", "Shop",
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -2875,6 +2895,16 @@ namespace TunicRandomizer {
                     },
                 }
             },
+            //{
+            //    "Cube Cave Entrance Region",
+            //    new Dictionary<string, List<List<string>>> {
+            //        {
+            //            "Overworld",
+            //            new List<List<string>> {
+            //            }
+            //        },
+            //    }
+            //},
             {
                 "Old House Front",
                 new Dictionary<string, List<List<string>>> {
