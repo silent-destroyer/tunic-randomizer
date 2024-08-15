@@ -34,9 +34,7 @@ namespace TunicRandomizer {
         public static List<RecentItemData> recentItemsQueue = new List<RecentItemData>();
         public float itemQueueTimer = 0f;
         public float itemQueueDelay = 2f;
-        List<string> x = new List<string>();
-        public void Start() {
-        }
+
         public void Update() {
             title.SetActive(TunicRandomizer.Settings.ShowRecentItems && !InventoryDisplay.InventoryOpen);
             if (!TunicRandomizer.Settings.ShowRecentItems) {
