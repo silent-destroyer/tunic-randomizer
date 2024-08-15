@@ -5612,6 +5612,7 @@ namespace TunicRandomizer {
 
                                 // there's a few spots where you can get stuck if you ladder storage or ice grapple into the old house door
                                 // so if you manage to get one of these rare combinations, throw the fox out the window
+                                // Defennecstration -hatkirby
                                 if (portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" && SaveFile.GetInt("SV_Overworld_House Door Opened") != 1) {
                                     if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
                                         OldHouseDoorUnstuck = true;
