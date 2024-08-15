@@ -598,6 +598,13 @@ namespace TunicRandomizer {
                     InventoryDisplayPatches.EquipmentRoot.transform.GetChild(InventoryDisplayPatches.EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
                     InventoryDisplayPatches.EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
                 }
+                List<ItemIcon> itemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
+                if (itemIcons.Count == 2) {
+                    itemIcons[1].transform.position = itemIcons[0].transform.position;
+                    itemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
+                    itemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
+                }
+
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1 && SpeedrunData.gameComplete == 0 && !InventoryDisplay.InventoryOpen);
