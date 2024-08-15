@@ -153,8 +153,14 @@ namespace TunicRandomizer {
                         InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
                     }
                 }
-
                 yield return true;
+                InventoryDisplayPatches.ItemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
+                yield return true;
+                if (InventoryDisplayPatches.ItemIcons.Count == 2) {
+                    InventoryDisplayPatches.ItemIcons[1].transform.position = InventoryDisplayPatches.ItemIcons[0].transform.position;
+                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
+                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
+                }
             }
         }
 
@@ -210,6 +216,7 @@ namespace TunicRandomizer {
         public static Color RedMarkerColor = new Color(1f, 0f, 0f, 0.75f);
         public static Color GreenMarkerColor = new Color(0f, 1f, 0f, 0.75f);
 
+        public static List<ItemIcon> ItemIcons = new List<ItemIcon>();
 
         public static void Initialize() {
             if (!Loaded) {
@@ -598,13 +605,6 @@ namespace TunicRandomizer {
                     InventoryDisplayPatches.EquipmentRoot.transform.GetChild(InventoryDisplayPatches.EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
                     InventoryDisplayPatches.EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
                 }
-                List<ItemIcon> itemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
-                if (itemIcons.Count == 2) {
-                    itemIcons[1].transform.position = itemIcons[0].transform.position;
-                    itemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
-                    itemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
-                }
-
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1 && SpeedrunData.gameComplete == 0 && !InventoryDisplay.InventoryOpen);
