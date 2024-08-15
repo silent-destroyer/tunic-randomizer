@@ -480,6 +480,13 @@ namespace TunicRandomizer {
                         AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
                     }
                 }
+                List<ItemIcon> itemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
+                if (itemIcons.Count == 2) {
+                    itemIcons[1].transform.position = itemIcons[0].transform.position;
+                    itemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
+                    itemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
+                }
+
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1);

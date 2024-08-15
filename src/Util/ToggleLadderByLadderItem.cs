@@ -68,7 +68,7 @@ namespace TunicRandomizer {
 
             foreach (TransformData transformData in ladderInfo.ConstructionPlacements) {
                 GameObject barrier = GameObject.Instantiate(ModelSwaps.UnderConstruction, transformData.pos, transformData.rot);
-                barrier.GetComponent<Signpost>().message = new LanguageLine();
+                barrier.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
                 barrier.GetComponent<Signpost>().message.text = $"<#FF0000>[death] uhndur kuhnstruhk$uhn <#FF0000>[death]\n\n\"{ladderItem.name.ToUpper()}\"";
                 barrier.SetActive(true);
                 if (ladderInfo.LargerColliders) {

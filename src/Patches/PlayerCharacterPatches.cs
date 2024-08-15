@@ -227,7 +227,9 @@ namespace TunicRandomizer {
             }
             Inventory.GetItemByName("MoneyLevelItem").Quantity = 1;
             Inventory.GetItemByName("Key (House)").icon = Inventory.GetItemByName("Key Special").icon;
-
+            if (Inventory.GetItemByName("Hyperdash").Quantity == 1) {
+                Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
+            }
             CustomItemBehaviors.SetupTorchItemBehaviour(__instance);
 
             LoadSwords = true;
