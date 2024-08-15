@@ -395,6 +395,9 @@ namespace TunicRandomizer {
                     foreach (HeroRelicPickup HeroRelicPickup in Resources.FindObjectsOfTypeAll<HeroRelicPickup>()) {
                         SetupHeroRelicPickup(HeroRelicPickup);
                     }
+                    if (SceneLoaderPatches.SceneName == "Fortress Arena") {
+                        SwapSiegeEngineCrown();
+                    }
                 }
                 if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
                     foreach (Chest Chest in Resources.FindObjectsOfTypeAll<Chest>()) {
@@ -402,9 +405,6 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (SceneLoaderPatches.SceneName == "Fortress Arena") {
-                    SwapSiegeEngineCrown();
-                }
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
             SwappedThisSceneAlready = true;

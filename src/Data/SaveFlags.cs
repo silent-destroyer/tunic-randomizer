@@ -10,6 +10,7 @@
         public const string HexagonQuestIcebolt = "randomizer hexagon quest icebolt requirement";
         public const string GoldHexagonQuantity = "inventory quantity Hexagon Gold";
         public const string HexagonQuestGoal = "randomizer hexagon quest goal";
+        public const string HexagonQuestRandomizedValues = "randomizer hexagon quest randomized values";
 
         // Ability Shuffle Flags
         public const string AbilityShuffle = "randomizer shuffled abilities";
