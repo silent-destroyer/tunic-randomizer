@@ -60,7 +60,7 @@ namespace TunicRandomizer {
                 bool isGrassRando = SaveFile.GetInt(GrassRandoEnabled) == 1;
                 string sceneName = SceneManager.GetActiveScene().name;
                 yield return true;
-                if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(SceneLoaderPatches.SceneName)) {
+                if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
                     int grassCutInCurrentScene = GrassRandomizer.GrassChecks.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
                     ObtainedItemCountInCurrentScene += grassCutInCurrentScene;
                     TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName];
@@ -347,17 +347,6 @@ namespace TunicRandomizer {
                 GameObject.DontDestroyOnLoad(QuestionMark);
                 CreateAbilitySection();
 
-                GameObject PotionDisplay = Resources.FindObjectsOfTypeAll<PotionDisplay>().First().gameObject;
-                GrassCounter.transform.parent = PotionDisplay.transform;
-                GrassCounter.layer = 5;
-                Vector3 grassPosition = GrassCounter.transform.position;
-                grassPosition.z = -100;
-                GrassCounter.transform.position = grassPosition;
-                HexagonQuest.transform.parent = PotionDisplay.transform;
-                HexagonQuest.layer = 5;
-                Vector3 hexagonPosition = HexagonQuest.transform.position;
-                hexagonPosition.z = -100;
-                HexagonQuest.transform.position = hexagonPosition;
                 Stats.transform.SetAsFirstSibling();
                 if ((float)Screen.width/Screen.height < 1.7f) {
                     Stats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);

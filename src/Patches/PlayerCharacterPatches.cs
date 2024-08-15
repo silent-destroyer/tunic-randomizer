@@ -360,12 +360,6 @@ namespace TunicRandomizer {
             } else {
                 AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.0777f, scale.y, scale.z);
             }
-            for (int i = 0; i < AreaLabel.instance.transform.childCount; i++) {
-                Vector3 pos = AreaLabel.instance.transform.GetChild(i).position;
-                pos.z = 150;
-                AreaLabel.instance.transform.GetChild(i).position = pos;
-            }
-
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
