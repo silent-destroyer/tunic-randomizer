@@ -68,6 +68,13 @@ namespace TunicRandomizer {
             }) {
                 hideFlags = HideFlags.HideAndDontSave
             });
+            ClassInjector.RegisterTypeInIl2Cpp<PlayerPositionDisplay>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("player position display", new Il2CppSystem.Type[]
+            {
+                Il2CppType.Of<PlayerPositionDisplay>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");

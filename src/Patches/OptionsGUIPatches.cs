@@ -290,6 +290,7 @@ namespace TunicRandomizer {
         public static void DebugFunctionsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Debug");
+            OptionsGUI.addToggle("Show Player Position", "Off", "On", TunicRandomizer.Settings.ShowPlayerPosition ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowPlayerPosition = !TunicRandomizer.Settings.ShowPlayerPosition; SaveSettings(); }));
             OptionsGUI.addButton("Open Saves Folder", (Action)(() => { System.Diagnostics.Process.Start(Application.persistentDataPath + "/SAVES"); }));
             OptionsGUI.addButton("Open Log File", (Action)(() => { System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log"); }));
         }
