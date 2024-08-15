@@ -191,16 +191,13 @@ namespace TunicRandomizer {
 
         private IEnumerator<bool> CheckItemsReceived() {
             while (connected) {
-                if (session.Items.AllItemsReceived.Count > ItemIndex) {
+                while (session.Items.AllItemsReceived.Count > ItemIndex) {
                     ItemInfo ItemInfo = session.Items.AllItemsReceived[ItemIndex];
                     TunicLogger.LogInfo("Placing item " + ItemInfo.ItemName + " with index " + ItemIndex + " in queue.");
                     incomingItems.Enqueue((ItemInfo, ItemIndex));
                     ItemIndex++;
-                    yield return true;
-                } else {
-                    yield return true;
-                    continue;
                 }
+                yield return true;
             }
         }
 
@@ -219,6 +216,14 @@ namespace TunicRandomizer {
                 if (itemInfo.ItemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]))) {
                     SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
                     Inventory.GetItemByName("Grass").Quantity += 1;
+                    incomingItems.TryDequeue(out _);
+                    if (incomingItems.TryPeek(out var nextItem)) {
+                        if (nextItem.ItemInfo.ItemName == "Grass") {
+                            continue;
+                        }
+                    }
+                    yield return true;
+                    continue;
                 }
 
                 if (SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 1) {
