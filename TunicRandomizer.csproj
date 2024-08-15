@@ -229,6 +229,7 @@
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />
     <Compile Include="src\Util\RecentItemsDisplay.cs" />
+    <Compile Include="src\Util\PlayerPositionDisplay.cs" />
     <Compile Include="src\Util\ToggleLadderByLadderItem.cs" />
     <Compile Include="src\Util\ToggleObjectByFuse.cs" />
     <Compile Include="src\Util\TunicLogger.cs" />

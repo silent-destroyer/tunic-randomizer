@@ -408,6 +408,12 @@ namespace TunicRandomizer {
             set;
         }
 
+        // Misc/Debug Settings
+        public bool ShowPlayerPosition {
+            get;
+            set;
+        }
+
         public enum GameModes {
             RANDOMIZER,
             HEXAGONQUEST,
@@ -519,6 +525,9 @@ namespace TunicRandomizer {
             RandomFoxColorsEnabled = true;
             RealestAlwaysOn = false;
             UseCustomTexture = false;
+
+            // Misc/Debug
+            ShowPlayerPosition = false;
         }
 
         public string GetSettingsString() {
