@@ -656,7 +656,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Torch").Quantity = 1;
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
-                SaveFile.SetInt(EntranceRandoFixedShop, 1);
+                SaveFile.SetInt(FixedShop, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
                 SaveFile.SetInt(MasklessLogic, 1);
@@ -764,12 +764,12 @@ namespace TunicRandomizer {
             };
             int laurelsIndex = random.Next(laurelsOptions.Length);
             if (laurelsOptions.All(x => !x)) {
-                SaveFile.SetInt("randomizer laurels location", 0);
+                SaveFile.SetInt(LaurelsLocation, 0);
             } else {
                 while (!laurelsOptions[laurelsIndex]) {
                     laurelsIndex = random.Next(laurelsOptions.Length);
                 }
-                SaveFile.SetInt("randomizer laurels location", laurelsIndex);
+                SaveFile.SetInt(LaurelsLocation, laurelsIndex);
             }
             SaveFile.SetString("randomizer mystery seed weights", TunicRandomizer.Settings.MysterySeedWeights.ToSettingsString());
         }

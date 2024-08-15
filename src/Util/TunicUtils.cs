@@ -59,14 +59,16 @@ namespace TunicRandomizer {
                         AddStringToDict(PlayerItemsAndRegions, locationCheck.Reward.Name);
                     }
                 }
-                if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
-                    AddStringToDict(PlayerItemsAndRegions, "12");
-                }
-                if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest holy cross requirement")) {
-                    AddStringToDict(PlayerItemsAndRegions, "21");
-                }
-                if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest icebolt requirement")) {
-                    AddStringToDict(PlayerItemsAndRegions, "26");
+                if (PlayerItemsAndRegions.ContainsKey("Hexagon Gold")) {
+                    if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
+                        AddStringToDict(PlayerItemsAndRegions, "12");
+                    }
+                    if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest holy cross requirement")) {
+                        AddStringToDict(PlayerItemsAndRegions, "21");
+                    }
+                    if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest icebolt requirement")) {
+                        AddStringToDict(PlayerItemsAndRegions, "26");
+                    }
                 }
             }
             UpdateChecksInLogic();

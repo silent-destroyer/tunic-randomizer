@@ -5162,19 +5162,29 @@ namespace TunicRandomizer {
             }
             TunicLogger.LogTesting("got through step 1 of entrance rando setup");
 
+            // for keeping track of which regions and items are in logic during portal pairing
+            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
+            // for the portal combos
+            int comboNumber = 1000;
+
             // shops get added separately cause they're weird
             int shopCount = 6;
             if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
                 shopCount = 0;
-                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "", scene: "Overworld Redux", region: "Overworld");
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 1");
-                randomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
+                Portal windmillPortal = null;
                 foreach (Portal portal in twoPlusPortals) {
                     if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
+                        windmillPortal = portal;
                         twoPlusPortals.Remove(portal);
                         break;
                     }
                 }
+                Portal shopPortal = new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH);
+                randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(windmillPortal, shopPortal));
+                comboNumber++;
+                
+                // manually add the shop region to the inventory since it doesn't get added the normal way
+                FullInventory.Add("Shop Entrance 1", 1);
             }
             if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
                 // need all 8 shops to match up everything nicely
@@ -5198,11 +5208,10 @@ namespace TunicRandomizer {
             string start_region = "Overworld";
 
             Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Gun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
                 { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
 
-            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
             // todo: swap this to use AddDictToDict in a later PR
             foreach (KeyValuePair<string, int> item in MaxItems) {
                 FullInventory.Add(item.Key, item.Value);
@@ -5254,13 +5263,16 @@ namespace TunicRandomizer {
                 twoPlusPortals.AddRange(deadEndPortals);
                 deadEndPortals.Clear();
                 twoPlusPortals2 = new List<Portal>(twoPlusPortals);
+                if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+                    twoPlusPortals.Add(new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH));
+                    twoPlusPortals2.Add(new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "", scene: "Overworld Redux", region: "Overworld", direction: (int)PDir.NORTH));
+                }
             } else {
                 twoPlusPortals2 = twoPlusPortals;
             }
 
             TunicLogger.LogTesting("created the secondary portal lists");
 
-            int comboNumber = 1000;
             int seedIncrement = 0;  // for when a specific part fails and needs to load a portal back in
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
                 ShuffleList(twoPlusPortals, seed + seedIncrement);
