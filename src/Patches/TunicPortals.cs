@@ -9,7 +9,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
         public static GameObject storedPortal = null;
         // just for solving the case where old house door connects to itself in decoupled
-        public static bool OldHouseDoorPairedToItself = false;
+        public static bool OldHouseDoorUnstuck = false;
 
         // the direction you move while entering the portal
         public enum PDir {
@@ -5522,10 +5522,10 @@ namespace TunicRandomizer {
             // we turn this off to not let you walk back through before it is modified the second time
             if (sending == true && storedPortal != null) {
                 // if the old house door paired itself, move the fox outside the door so they don't get locked in an infinite loop, even though that's kinda funny
-                if (OldHouseDoorPairedToItself == true) {
+                if (OldHouseDoorUnstuck == true) {
                     PlayerCharacter.instance.transform.position = new Vector3(-32, 31, -59);
                     PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    OldHouseDoorPairedToItself = false;
+                    OldHouseDoorUnstuck = false;
                 }
                 storedPortal.GetComponent<BoxCollider>().isTrigger = true;
                 storedPortal = null;
@@ -5605,13 +5605,53 @@ namespace TunicRandomizer {
                             portal.optionalIDToSpawnAt = comboTag + comboTag;
                             portal.name = portal2.Name;
                             // if you're spawning there, we need to make sure you can't walk back out before the arrival callback
-                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID 
+                                && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
                                 storedPortal = portal.gameObject;
                                 storedPortal.GetComponent<BoxCollider>().isTrigger = false;
-                                if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" 
-                                    && portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
-                                    OldHouseDoorPairedToItself = true;
+
+                                // there's a few spots where you can get stuck if you ladder storage or ice grapple into the old house door
+                                // so if you manage to get one of these rare combinations, throw the fox out the window
+                                if (portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" && SaveFile.GetInt("SV_Overworld_House Door Opened") != 1) {
+                                    if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
+                                        OldHouseDoorUnstuck = true;
+                                    }
+
+                                    Dictionary<string, List<string>> problemSpots = new Dictionary<string, List<string>> {
+                                        {"Ladders in Library",
+                                            new List<string> { "Library Hall, Library Rotunda_", "Library Rotunda, Library Hall_", "Library Rotunda, Library Lab_",
+                                                "Library Lab, Library Rotunda_", "Library Lab, Library Arena_" } },
+                                        {"Ladders in Well",
+                                            new List<string> { "Overworld Redux, Sewer_entrance", "Sewer, Overworld Redux_entrance" } },
+                                        {"Ladders to Frog's Domain",
+                                            new List<string> {"Frog Stairs, frog cave main_Entrance", "frog cave main, Frog Stairs_Entrance"} },
+                                    };
+                                    if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                                        foreach (KeyValuePair<string, List<string>> problems in problemSpots) {
+                                            string ladderName = problems.Key;
+                                            List<string> ladderPortals = problems.Value;
+                                            // if the old house door connects to a problem spot and you don't have the ladder
+                                            if (ladderPortals.Contains(portal1.SceneDestinationTag)
+                                            && (SaveFile.GetInt($"randomizer picked up {ladderName}") != 1)) {
+                                                // if you're not in decoupled, then we can be sure this is a problem
+                                                if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                                                    OldHouseDoorUnstuck = true;
+                                                } else {
+                                                    // if you're in decoupled, we want to make sure the door leads to a problem spot, not just from a problem spot
+                                                    foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
+                                                        if (portalCombo2.Value.Portal1.Name == "Overworld Redux, Overworld Interiors_house") {
+                                                            if (ladderPortals.Contains(portalCombo2.Value.Portal2.SceneDestinationTag)) {
+                                                                OldHouseDoorUnstuck = true;
+                                                            }
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
+
                             }
                             break;
                         }
