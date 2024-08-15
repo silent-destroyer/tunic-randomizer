@@ -5487,17 +5487,20 @@ namespace TunicRandomizer {
                 string portal2SDT = stringPair.Value;
                 Portal portal1 = null;
                 Portal portal2 = null;
+                // for backwards compatibility with older apworlds that don't have numbered shop portals
+                if (portal2SDT == "Shop, Previous Region_") {
+                    portal2 = new Portal(name: $"Shop Portal {backwards_compat_shop_num}", destination: $"Previous Region {backwards_compat_shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {backwards_compat_shop_num}", direction: (int)PDir.NONE);
+                    backwards_compat_shop_num++;
+                }
                 foreach (Portal portal in portalsList) {
-                    if (portal1SDT == portal.SceneDestinationTag) {
+                    if (portal1 != null && portal2 != null) {
+                        break;
+                    }
+                    if (portal1 == null && portal1SDT == portal.SceneDestinationTag) {
                         portal1 = portal;
                     }
-                    if (portal2SDT == portal.SceneDestinationTag) {
+                    if (portal2 == null && portal2SDT == portal.SceneDestinationTag) {
                         portal2 = portal;
-                    }
-                    // for backwards compatibility with older apworlds that don't have numbered shop portals
-                    if (portal2SDT == "Shop, Previous Region_") {
-                        portal2 = new Portal(name: $"Shop Portal {backwards_compat_shop_num}", destination: $"Previous Region {backwards_compat_shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {backwards_compat_shop_num}", direction: (int)PDir.NONE);
-                        backwards_compat_shop_num++;
                     }
                 }
                 // if it's null still, it's a shop
