@@ -70,7 +70,7 @@ namespace TunicRandomizer {
                 hideFlags = HideFlags.HideAndDontSave
             });
             ClassInjector.RegisterTypeInIl2Cpp<InventoryCounter>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("credits skipper", new Il2CppSystem.Type[]
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("inventory counter", new Il2CppSystem.Type[]
             {
                 Il2CppType.Of<InventoryCounter>()
             }) {
