@@ -293,6 +293,9 @@ namespace TunicRandomizer {
                 if (Item.Name == "Dath Stone") {
                     Inventory.GetItemByName("Torch").Quantity = 1;
                 }
+                if (Item.ItemNameForInventory == "Hyperdash") {
+                    Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
+                }
                 if (Item.Type == ItemTypes.LADDER) {
                     InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
@@ -524,6 +527,9 @@ namespace TunicRandomizer {
                 }
                 if (Item.Name == "Dath Stone") {
                     Inventory.GetItemByName("Torch").Quantity = 1;
+                }
+                if (Item.ItemNameForInventory == "Hyperdash") {
+                    Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
                 }
                 if (Item.Type == ItemTypes.LADDER) {
                     InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
