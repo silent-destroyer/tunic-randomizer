@@ -619,7 +619,7 @@ namespace TunicRandomizer {
             ItemData Item = null;
             if (check != null) {
                 Item = ItemLookup.GetItemDataFromCheck(check);
-            } else if (itemInfo != null && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+            } else if (itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                 Item = ItemLookup.Items[itemInfo.ItemName];
             }
             if (transform.GetComponent<Grass>() != null && Item != null && Item.Type == ItemTypes.GRASS) {
