@@ -54,7 +54,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (PlayerCharacter.Instanced && SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+            if (PlayerCharacter.Instanced && SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected() && SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) {
                 TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
                 Archipelago.instance.SilentReconnect();
             }

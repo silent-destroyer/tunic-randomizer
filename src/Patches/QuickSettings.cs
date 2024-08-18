@@ -858,7 +858,9 @@ namespace TunicRandomizer {
             string errorMessage = "";
             if (SaveFile.GetInt("archipelago") == 1 && SaveFile.GetString("archipelago player name") != "") {
                 if (!Archipelago.instance.IsConnected() || (Archipelago.instance.integration.connected && (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")))) {
-                    TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
+                    if (SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) { 
+                        TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
+                    }
                     Archipelago.instance.Disconnect();
                     errorMessage = Archipelago.instance.Connect();
                 }
@@ -866,6 +868,11 @@ namespace TunicRandomizer {
                     GenericMessage.ShowMessage($"<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago:\"\n{errorMessage}\n\"Returning to title screen.\"");
                     return false;
                 } else if (SaveFlags.IsArchipelago()) {
+                    if (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")) {
+                        TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
+                        GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
+                        return false;
+                    }
                     PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
                         List<long> locationsInLimbo = new List<long>();
                         foreach (KeyValuePair<string, long> pair in Locations.LocationIdToArchipelagoId) {
