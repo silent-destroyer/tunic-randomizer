@@ -226,10 +226,20 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
             OptionsGUI.addToggle("Bigger Head Mode", "Off", "On", TunicRandomizer.Settings.BiggerHeadMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.BiggerHeadMode = !TunicRandomizer.Settings.BiggerHeadMode; SaveSettings(); }));
             OptionsGUI.addToggle("Tinier Fox Mode", "Off", "On", TunicRandomizer.Settings.TinierFoxMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.TinierFoxMode = !TunicRandomizer.Settings.TinierFoxMode; SaveSettings(); }));
+            OptionsGUI.addToggle("Show Player Position", "Off", "On", TunicRandomizer.Settings.ShowPlayerPosition ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowPlayerPosition = !TunicRandomizer.Settings.ShowPlayerPosition; SaveSettings(); }));
+
             if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
                 OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }
-            addPageButton("Debug Menu", DebugFunctionsPage);
+            addPageButton("Debug/Misc Options", DebugFunctionsPage);
+        }
+
+        public static void DebugFunctionsPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Debug/Misc");
+            OptionsGUI.addButton("Open Saves Folder", (Action)(() => { System.Diagnostics.Process.Start(Application.persistentDataPath + "/SAVES"); }));
+            OptionsGUI.addButton("Open Log File", (Action)(() => { System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log"); }));
+            OptionsGUI.addToggle("Deathplane/OOB Patch", "Off", "On", TunicRandomizer.Settings.DeathplanePatch ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.DeathplanePatch = !TunicRandomizer.Settings.DeathplanePatch; SaveSettings(); }));
         }
 
         public static void MusicSettingsPage() {
@@ -290,14 +300,6 @@ namespace TunicRandomizer {
             foreach (KeyValuePair<string, EventReference> pair in MusicShuffler.Tracks) {
                 OptionsGUI.addButton(pair.Key, (Action)(() => { MusicShuffler.PlayTrack(pair.Key, pair.Value); }));
             }
-        }
-
-        public static void DebugFunctionsPage() {
-            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.setHeading("Debug");
-            OptionsGUI.addToggle("Show Player Position", "Off", "On", TunicRandomizer.Settings.ShowPlayerPosition ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowPlayerPosition = !TunicRandomizer.Settings.ShowPlayerPosition; SaveSettings(); }));
-            OptionsGUI.addButton("Open Saves Folder", (Action)(() => { System.Diagnostics.Process.Start(Application.persistentDataPath + "/SAVES"); }));
-            OptionsGUI.addButton("Open Log File", (Action)(() => { System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log"); }));
         }
 
         public static void addPageButton(string pageName, Action pageMethod) {

@@ -414,6 +414,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool DeathplanePatch {
+            get;
+            set;
+        }
+
         public enum GameModes {
             RANDOMIZER,
             HEXAGONQUEST,
@@ -528,6 +533,7 @@ namespace TunicRandomizer {
 
             // Misc/Debug
             ShowPlayerPosition = false;
+            DeathplanePatch = true;
         }
 
         public string GetSettingsString() {
