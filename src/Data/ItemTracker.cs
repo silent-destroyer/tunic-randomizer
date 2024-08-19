@@ -327,15 +327,16 @@ namespace TunicRandomizer {
             string displayText = title;
             int TotalAreaChecks = 0;
             int AreaChecksFound = 0;
-            foreach(string Area in Locations.MainAreasToSubAreas.Keys) {
+            bool IncludeCollected = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
+            foreach (string Area in Locations.MainAreasToSubAreas.Keys) {
                 TotalAreaChecks = 0;
                 AreaChecksFound = 0;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
                     TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
-                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
                     if (SaveFile.GetInt(GrassRandoEnabled) == 1 ) {
                         TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
-                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && Locations.CheckedLocations[check.Key]).Count();
+                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && (Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1))).Count();
                     }
                 }
                 displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(24, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(9, '.')}\"\n";
@@ -343,15 +344,15 @@ namespace TunicRandomizer {
                     displayText += "---" + title;
                 }
             }
-            int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
             int TotalChecks = Locations.VanillaLocations.Count;
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                TotalChecksFound += GrassRandomizer.GrassChecks.Where(grass => Locations.CheckedLocations[grass.Key]).Count();
+                TotalChecksFound += GrassRandomizer.GrassChecks.Where(check => Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1)).Count();
                 TotalChecks += GrassRandomizer.GrassChecks.Count;
             }
             displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(24, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(9, '.')}\"";
             if (TotalChecksFound == TotalChecks) {
-                displayText += "---\"<#eaa614>- - - - - -  302/302  - - - - - -\"\n\n    ";
+                displayText += $"---\"<#eaa614>- - - - - - {TotalChecksFound.ToString().PadLeft(4)}/{TotalChecks.ToString().PadRight(4)} - - - - - -\"\n\n    ";
                 int i = 0;
                 foreach(string s in WaveSpell.CustomInputs.Select(input => $"[arrow_{input.ToString().ToLower()}]")) {
                     displayText += $"  <#eaa614>{s}  ";

@@ -208,16 +208,22 @@ namespace TunicRandomizer {
 
             int CheckCount = 0;
             int ChecksCollectedByOthers = 0;
+            bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
             float CheckPercentage = 0;
+            int GrassCount = 0;
+            float GrassPercentage = 0f;
             int TotalCheckCount = Locations.VanillaLocations.Count;
             string Color = "<#FFFFFF>";
 
-            CheckCount = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            CheckCount = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            ChecksCollectedByOthers = IsArchipelago() ? Locations.VanillaLocations.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                 TotalCheckCount += GrassRandomizer.GrassChecks.Count;
-                CheckCount += GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count();    
+                GrassCount = GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key] || (IncludeCollected && SaveFile.GetInt($"randomizer {key} was collected") == 1)).Count();
+                CheckCount += GrassCount;
+                ChecksCollectedByOthers += IsArchipelago() ? GrassRandomizer.GrassChecks.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
+                GrassPercentage = ((float)GrassCount / GrassRandomizer.GrassChecks.Count) * 100.0f;
             }
-            ChecksCollectedByOthers = IsArchipelago() ? Locations.VanillaLocations.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
             CheckPercentage = ((float)CheckCount / TotalCheckCount) * 100.0f;
             Color = CheckCount == TotalCheckCount ? $"<#eaa614>" : "<#FFFFFF>";
 
@@ -226,10 +232,10 @@ namespace TunicRandomizer {
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 
             TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{TotalCheckCount}" +
-                $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? "*" : "")} " +
-                $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}" +
-                $"{(SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}" +
-                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>{(GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}Grass Cut: {GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count()}/{GrassRandomizer.GrassChecks.Count} ({Math.Round(((float)GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key]).Count() / GrassRandomizer.GrassChecks.Count) * 100.0f, 2)}%)" : $"")}";
+                $"{(IncludeCollected ? "*" : "")} " +
+                $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}<#FFFFFF>" +
+                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {(GrassCount == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}{GrassCount}/{GrassRandomizer.GrassChecks.Count}{(IncludeCollected ? "*" : "")} ({Math.Round(GrassPercentage, 2)}%)" : $"")}" +
+                $"<#FFFFFF>{(IncludeCollected ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}";
 
             TotalCompletion.GetComponent<TextMeshPro>().horizontalAlignment = HorizontalAlignmentOptions.Center;
             TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
@@ -290,12 +296,13 @@ namespace TunicRandomizer {
                 int TotalAreaChecks = 0;
                 int AreaChecksFound = 0;
                 float Percentage = 0;
+                bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
                     TotalAreaChecks += Locations.CheckCountsPerScene[SubArea];
-                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
                     if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                         TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
-                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && Locations.CheckedLocations[check.Key]).Count();
+                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && (Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1))).Count();
                     }
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }

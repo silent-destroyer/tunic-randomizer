@@ -526,7 +526,7 @@ namespace TunicRandomizer {
                     ItemInfo itemInfo = ItemLookup.ItemList[GrassId];
                     SetupItemMoveUp(grass.transform, itemInfo: itemInfo);
                     if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
-                        ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId]);
+                        ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {GrassId} was collected") == 1));
                         return;
                     }
                     Item = ItemLookup.Items[itemInfo.ItemName];
@@ -619,7 +619,7 @@ namespace TunicRandomizer {
             ItemData Item = null;
             if (check != null) {
                 Item = ItemLookup.GetItemDataFromCheck(check);
-            } else if (itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+            } else if (itemInfo != null && Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                 Item = ItemLookup.Items[itemInfo.ItemName];
             }
             if (transform.GetComponent<Grass>() != null && Item != null && Item.Type == ItemTypes.GRASS) {
@@ -630,7 +630,7 @@ namespace TunicRandomizer {
             }
             GameObject moveUp = SetupItemBase(transform, itemInfo, check);
             TransformData TransformData;
-            if (IsArchipelago() && Item == null && (itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName))) {
+            if (IsArchipelago() && Item == null && itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player)) {
                 TransformData = ItemPositions.Techbow["Other World"];
             } else {
                 if (Item.Type == ItemTypes.TRINKET) {
