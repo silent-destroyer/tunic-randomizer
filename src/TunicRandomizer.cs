@@ -68,6 +68,13 @@ namespace TunicRandomizer {
             }) {
                 hideFlags = HideFlags.HideAndDontSave
             });
+            ClassInjector.RegisterTypeInIl2Cpp<PlayerPositionDisplay>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("player position display", new Il2CppSystem.Type[]
+            {
+                Il2CppType.Of<PlayerPositionDisplay>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");
@@ -109,6 +116,8 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(PlayerCharacter._Die_d__481), "MoveNext"), null, new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_Die_MoveNext_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
+            
+            Harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_OnTouchKillbox_PrefixPatch")));
 
             // Scene Loader
             Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PostfixPatch")));

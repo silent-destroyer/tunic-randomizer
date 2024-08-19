@@ -78,6 +78,7 @@ namespace TunicRandomizer {
         public static GameObject FoxCape;
         public static List<Renderer> HyperdashRenderers = new List<Renderer>();
         public static Font OdinRounded;
+        private static string errorMessage = "";
 
         private void OnGUI() {
 
@@ -85,7 +86,7 @@ namespace TunicRandomizer {
                 GUI.skin.font = OdinRounded;
                 GUI.backgroundColor = Color.black;
                 Cursor.visible = true;
-                GUI.Window(102, new Rect(10f, 230f, 800f, 400f), new Action<int>(PaletteEditorWindow), "Palette Editor");
+                GUI.Window(102, new Rect(10f, 230f, 800f, 440f), new Action<int>(PaletteEditorWindow), "Palette Editor");
                 GUI.backgroundColor = Color.white;
             } else if (SceneLoaderPatches.SceneName != "TitleScreen") {
                 Cursor.visible = false;
@@ -111,23 +112,40 @@ namespace TunicRandomizer {
             }
             GUI.skin.button.fontSize = 20;
             bool PaletteSelected = SelectedIndex >= 0 && SelectedIndex < 16;
+            float y = 35f;
             if (PaletteSelected) {
 
                 SelectedColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
 
-
                 GUI.skin.label.fontSize = 25;
-                GUI.Label(new Rect(350f, 35, 400f, 30f), "Selected: " + ColorNames[SelectedIndex].Replace("\n", " "));
-                SelectedColor = RGBSlider(new Rect(350f, 85f, 400f, 10f), SelectedColor);
-                bool RandomizeSelected = GUI.Button(new Rect(350f, 235f, 200f, 30f), "Randomize selected");
+                GUI.Label(new Rect(350f, y, 400f, 30f), "Selected: " + ColorNames[SelectedIndex].Replace("\n", " "));
+                string hex = string.Format("#{0:X2}{1:X2}{2:X2}", ToByte(SelectedColor.r), ToByte(SelectedColor.g), ToByte(SelectedColor.b));
+                GUI.Label(new Rect(650f, y, 125f, 30f), hex);
+
+                y += 40f;
+                bool CopyHexCode = GUI.Button(new Rect(350f, y, 200f, 30f), "Copy Hex Code");
+                if (CopyHexCode) {
+                    CopyHexValue();
+                }
+                bool PasteHexCode = GUI.Button(new Rect(555f, y, 200f, 30f), "Paste Hex Code");
+                if (PasteHexCode) {
+                    errorMessage = PasteHexValue(GUIUtility.systemCopyBuffer);
+                }
+                GUI.skin.label.fontSize = 15;
+                GUI.Label(new Rect(555f, y+30f, 200f, 30f), $"{errorMessage}");
+                y += 40f;
+                SelectedColor = RGBSlider(new Rect(350f, y, 400f, 10f), SelectedColor);
+                y += 150f;
+                bool RandomizeSelected = GUI.Button(new Rect(350f, y, 200f, 30f), "Randomize Selected");
                 if (RandomizeSelected) {
+                    errorMessage = "";
                     SelectedColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1f);
                 }
 
                 PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], SelectedColor);
                 PlayerPalette.runtimePalette.Apply();
                 Color SetColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
-                if (SelectedIndex == 2 && (SelectedColor.r != SetColor.r || SelectedColor.g != SetColor.g || SelectedColor.b != SetColor.b)) {
+                if (SelectedIndex == 2 && (PasteHexCode || SelectedColor.r != SetColor.r || SelectedColor.g != SetColor.g || SelectedColor.b != SetColor.b)) {
                     ChangeHyperdashColors(SelectedColor);
                 }
                 if (SelectedIndex == 14) {
@@ -137,55 +155,89 @@ namespace TunicRandomizer {
                     ChangeCapeColor(SelectedColor);
                 }
             }
-            bool RandomizeAll = GUI.Button(new Rect(555f, 235f, 200f, 30f), "Randomize all");
+            bool RandomizeAll = GUI.Button(new Rect(555f, y, 200f, 30f), "Randomize All");
             if (RandomizeAll) {
                 RandomizeFoxColors();
             }
-            bool ResetSelected = GUI.Button(new Rect(350f, 285f, 200f, 30f), "Reset Selected");
+            y += 50f;
+            bool ResetSelected = GUI.Button(new Rect(350f, y, 200f, 30f), "Reset Selected");
             if (ResetSelected) {
                 if (PaletteSelected) {
                     PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], DefaultColors[SelectedIndex]);
                 }
             }
-            bool ResetAll = GUI.Button(new Rect(555f, 285f, 200f, 30f), "Reset All");
+            bool ResetAll = GUI.Button(new Rect(555f, y, 200f, 30f), "Reset All");
             if (ResetAll) {
                 RevertFoxColors();
             }
-            bool Save = GUI.Button(new Rect(350f, 335f, 200f, 30f), "Save Texture");
+            y += 50f;
+            bool Save = GUI.Button(new Rect(350f, y, 200f, 30f), "Save Texture");
             if (Save) {
                 SaveTexture();
             }
-            bool Load = GUI.Button(new Rect(555f, 335f, 200f, 30f), "Load Texture");
+            bool Load = GUI.Button(new Rect(555f, y, 200f, 30f), "Load Texture");
             if (Load) {
                 LoadCustomTexture();
             }
-            bool Close = GUI.Button(new Rect(60f, 350f, 200f, 30f), "Close Editor");
+            bool CloseAndSave = GUI.Button(new Rect(30f, 350f, 260f, 30f), "Save Texture & Close");
+            if (CloseAndSave) {
+                SaveTexture();
+                EditorOpen = false;
+                CameraController.DerekZoom = 1f;
+            }
+            bool Close = GUI.Button(new Rect(30f, 390f, 260f, 30f), "Close Without Saving");
             if (Close) {
                 EditorOpen = false;
                 CameraController.DerekZoom = 1f;
             }
-            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, 370f, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Always Apply Saved Texture");
+            if (Save || Load || RandomizeAll || ResetSelected || ResetAll || Close || CloseAndSave) {
+                errorMessage = "";
+            }
+            y += 35f;
+            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Apply Saved Texture On Load");
             TunicRandomizer.Settings.UseCustomTexture = ToggleCustomTextureUse;
 
+        }
+        private static void CopyHexValue() {
+            GUIUtility.systemCopyBuffer = string.Format("#{0:X2}{1:X2}{2:X2}", ToByte(SelectedColor.r), ToByte(SelectedColor.g), ToByte(SelectedColor.b));
+        }
+
+        private static byte ToByte(float f) {
+            f = Mathf.Clamp01(f);
+            return (byte)(f * 255);
+        }
+
+        private static string PasteHexValue(string hexValue) {
+
+            try {
+                if (ColorUtility.TryParseHtmlString(hexValue, out var parsedColor)) {
+                    SelectedColor = parsedColor;
+                    PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], parsedColor);
+                    PlayerPalette.runtimePalette.Apply();
+                    return "<color=#00FF00>Success!</color>";
+                }
+                return "<color=#FF0000>Error parsing hex code.</color>";
+            } catch (Exception e) {
+                return "<color=#FF0000>Error parsing hex code.</color>";
+            }
         }
 
         private static Color RGBSlider(Rect screenRect, Color rgb) {
             GUI.skin.label.fontSize = 16;
-            GUI.Label(screenRect, $"Red: {(rgb.r.ToString().Length < 5 ? rgb.r.ToString() : rgb.r.ToString().Substring(0, 5))}");
+            GUI.Label(screenRect, $"Red:\t{255 * rgb.r} ({(rgb.r.ToString().Length < 5 ? rgb.r.ToString() : rgb.r.ToString().Substring(0, 5))})");
             screenRect.y += 25f;
             rgb.r = GUI.HorizontalSlider(screenRect, rgb.r, 0f, 1f);
             screenRect.y += 20f;
-            GUI.Label(screenRect, $"Green: {(rgb.g.ToString().Length < 5 ? rgb.g.ToString() : rgb.g.ToString().Substring(0, 5))}");
+            GUI.Label(screenRect, $"Green:\t{255 * rgb.g} ({(rgb.g.ToString().Length < 5 ? rgb.g.ToString() : rgb.g.ToString().Substring(0, 5))})");
             screenRect.y += 25f;
             rgb.g = GUI.HorizontalSlider(screenRect, rgb.g, 0f, 1f);
             screenRect.y += 20f;
-            GUI.Label(screenRect, $"Blue: {(rgb.b.ToString().Length < 5 ? rgb.b.ToString() : rgb.b.ToString().Substring(0, 5))}");
+            GUI.Label(screenRect, $"Blue:\t{255 * rgb.b} ({(rgb.b.ToString().Length < 5 ? rgb.b.ToString() : rgb.b.ToString().Substring(0, 5))})");
             screenRect.y += 25f;
             rgb.b = GUI.HorizontalSlider(screenRect, rgb.b, 0f, 1f);
             GUI.skin.label.fontSize = 20;
             Color oldcolor = GUI.backgroundColor;
             GUI.backgroundColor = rgb;
-            //GUI.Button(new Rect(10f, 330f, 100f, 30f), "Color Preview");
             GUI.backgroundColor = oldcolor;
             return rgb;
         }
@@ -198,6 +250,7 @@ namespace TunicRandomizer {
                 PlayerPalette.runtimePalette.SetPixel(2, 3, new Color(0.8577f, 0.5044f, 1.7513f, 1f));
                 PlayerPalette.runtimePalette.SetPixel(2, 0, PlayerPalette.runtimePalette.GetPixel(3, 0));
             }
+            errorMessage = "";
 
             File.WriteAllBytes(TexturePath, ImageConversion.EncodeToPNG(PlayerPalette.runtimePalette));
             TunicLogger.LogInfo("Saved Custom Texture to " + TexturePath);
