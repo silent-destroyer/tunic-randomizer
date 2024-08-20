@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class TunicPortals {
-        
+        // todo: split the data stuff out to a different file from the scripts
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
         public static GameObject storedPortal = null;
         // just for solving the case where old house door connects to itself in decoupled
