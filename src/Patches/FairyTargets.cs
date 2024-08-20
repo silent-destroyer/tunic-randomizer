@@ -14,7 +14,7 @@ namespace TunicRandomizer {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         
         public static void CreateFairyTargets() {
-
+            // todo: fix bug -- probably has to do with an area having no checks in logic, but still has checks out of logic, so fairy spell with logic seeks out entrances that lead to the current scene (in ER)
             foreach (FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
                 GameObject.Destroy(FairyTarget);
             }
