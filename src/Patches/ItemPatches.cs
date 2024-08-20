@@ -268,8 +268,11 @@ namespace TunicRandomizer {
                 if (Item.Name == "Dath Stone") {
                     Inventory.GetItemByName("Torch").Quantity = 1;
                 }
+                if (Item.ItemNameForInventory == "Hyperdash") {
+                    Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
+                }
                 if (Item.Type == ItemTypes.LADDER) {
-                    InventoryItem.collectionMessage = new LanguageLine();
+                    InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
@@ -366,7 +369,7 @@ namespace TunicRandomizer {
                 }
 
                 // Apply custom pickup text
-                RelicItem.collectionMessage = new LanguageLine();
+                RelicItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                 RelicItem.collectionMessage.text = Translations.Translate(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
                 
                 ItemPresentation.PresentItem(RelicItem);
@@ -481,8 +484,11 @@ namespace TunicRandomizer {
                 if (Item.Name == "Dath Stone") {
                     Inventory.GetItemByName("Torch").Quantity = 1;
                 }
+                if (Item.ItemNameForInventory == "Hyperdash") {
+                    Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
+                }
                 if (Item.Type == ItemTypes.LADDER) {
-                    InventoryItem.collectionMessage = new LanguageLine();
+                    InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
@@ -579,7 +585,7 @@ namespace TunicRandomizer {
                 }
 
                 // Apply custom pickup text
-                RelicItem.collectionMessage = new LanguageLine();
+                RelicItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                 RelicItem.collectionMessage.text = Translations.Translate(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
 
                 ItemPresentation.PresentItem(RelicItem);

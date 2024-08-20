@@ -20,15 +20,16 @@ namespace TunicRandomizer {
             Item GoldQuestagon = ScriptableObject.CreateInstance<Item>();
             ButtonAssignableItem DathStone = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             ButtonAssignableItem Cape = ScriptableObject.CreateInstance<ButtonAssignableItem>();
+            ButtonAssignableItem LaurelsToggle = ScriptableObject.CreateInstance<ButtonAssignableItem>();
 
             LibrarianSword.name = "Librarian Sword";
-            LibrarianSword.collectionMessage = new LanguageLine();
+            LibrarianSword.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
             LibrarianSword.collectionMessage.text = $"\"        ? ? ? (<#ca7be4>Lv. 3<#FFFFFF>)\"";
             LibrarianSword.controlAction = "";
             LibrarianSword.suppressQuantity = true;
 
             HeirSword.name = "Heir Sword";
-            HeirSword.collectionMessage = new LanguageLine();
+            HeirSword.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
             HeirSword.collectionMessage.text = $"\"        ! ! ! (<#5de7cf>Lv. 4<#FFFFFF>)\"";
             HeirSword.controlAction = "";
             HeirSword.suppressQuantity = true;
@@ -56,6 +57,12 @@ namespace TunicRandomizer {
             StateVariable.stateVariableList.Add(GrantedCape);
             Cape.freeItemCountStateVar = GrantedCape;
 
+            LaurelsToggle.name = "Hyperdash Toggle";
+            LaurelsToggle.collectionMessage = null;
+            LaurelsToggle.controlAction = "";
+            LaurelsToggle.icon = Inventory.GetItemByName("Hyperdash").icon;
+            LaurelsToggle.suppressQuantity = true;
+
             StateVariable GraveHintStateVar = ScriptableObject.CreateInstance<StateVariable>();
             GraveHintStateVar.name = "randomizer got all 6 grave items";
             StateVariable.stateVariableList.Add(GraveHintStateVar);
@@ -79,6 +86,7 @@ namespace TunicRandomizer {
                     Inventory.itemList.Add(Torch);
                 }
             }
+            Inventory.itemList.Add(LaurelsToggle);
             Item Spear = Inventory.GetItemByName("Spear");
             Inventory.itemList.Remove(Spear);
             Inventory.itemList.Add(Spear);
@@ -130,6 +138,10 @@ namespace TunicRandomizer {
         }
 
         public static bool BoneItemBehavior_onActionButtonDown_PrefixPatch(BoneItemBehaviour __instance) {
+            if (__instance.item.name == "Hyperdash Toggle") {
+                Inventory.GetItemByName("Hyperdash").Quantity = Inventory.GetItemByName("Hyperdash").Quantity == 1 ? 0 : 1;
+                return false;
+            }
             if (__instance.item.name == "Torch") {
                 if (StateVariable.GetStateVariableByName("Is Night").BoolValue) {
                     __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Old House\"?";
@@ -211,6 +223,10 @@ namespace TunicRandomizer {
             bone.confirmationPromptLine = instance.gameObject.GetComponent<BoneItemBehaviour>().confirmationPromptLine;
             bone.item = Inventory.GetItemByName("Torch").TryCast<ButtonAssignableItem>();
             itemBehaviours.Add(bone);
+            BoneItemBehaviour bone2 = instance.gameObject.AddComponent<BoneItemBehaviour>();
+            bone2.confirmationPromptLine = instance.gameObject.GetComponent<BoneItemBehaviour>().confirmationPromptLine;
+            bone2.item = Inventory.GetItemByName("Hyperdash Toggle").TryCast<ButtonAssignableItem>();
+            itemBehaviours.Add(bone2);
             instance.itemBehaviours = itemBehaviours.ToArray();
         }
 

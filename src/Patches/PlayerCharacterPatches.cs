@@ -227,7 +227,9 @@ namespace TunicRandomizer {
             }
             Inventory.GetItemByName("MoneyLevelItem").Quantity = 1;
             Inventory.GetItemByName("Key (House)").icon = Inventory.GetItemByName("Key Special").icon;
-
+            if (Inventory.GetItemByName("Hyperdash").Quantity == 1) {
+                Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
+            }
             CustomItemBehaviors.SetupTorchItemBehaviour(__instance);
 
             LoadSwords = true;
@@ -786,6 +788,15 @@ namespace TunicRandomizer {
                 }
                 DiedToDeathLink = false;
             }
+        }
+
+        public static bool PlayerCharacter_OnTouchKillbox_PrefixPatch(PlayerCharacter __instance) {
+            if (__instance.GetComponent<PlayerCharacter>() != null && SceneManager.GetActiveScene().name != "Library Arena" && TunicRandomizer.Settings.DeathplanePatch) {
+                TunicLogger.LogInfo("rescuing the fox from a deathplane");
+                __instance.transform.position = __instance.lastValidNavmeshPosition;
+                return false;
+            }
+            return true;
         }
 
         public static bool Ladder_ClimbOn_PrefixPatch(Ladder __instance, LadderEnd ladderEnd) {
