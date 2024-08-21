@@ -323,7 +323,7 @@ namespace TunicRandomizer {
                 $"\t- Shuffled Abilities: {SaveFile.GetInt(AbilityShuffle) == 1}",
                 $"\t- Shuffled Ladders: {SaveFile.GetInt(LadderRandoEnabled) == 1}",
                 $"\t- Entrance Randomizer: {SaveFile.GetInt(EntranceRando) == 1}",
-                SaveFile.GetInt(EntranceRando) == 1 ? $"\t- Entrance Randomizer (Fewer Shops): {SaveFile.GetInt(FixedShop) == 1}" : "",
+                SaveFile.GetInt(EntranceRando) == 1 ? $"\t- Entrance Randomizer (Fewer Shops): {SaveFile.GetInt(ERFixedShop) == 1}" : "",
                 $"\t- Maskless Logic: {SaveFile.GetInt(MasklessLogic) == 1}",
                 $"\t- Lanternless Logic: {SaveFile.GetInt(LanternlessLogic) == 1}",
                 $"\t- Laurels Location: {((RandomizerSettings.FixedLaurelsType)SaveFile.GetInt("randomizer laurels location")).ToString()}\n",

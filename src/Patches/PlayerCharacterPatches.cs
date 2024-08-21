@@ -458,7 +458,7 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(EntranceRando, 1);
 
                         if (TunicRandomizer.Settings.ERFixedShop) {
-                            SaveFile.SetInt(FixedShop, 1);
+                            SaveFile.SetInt(ERFixedShop, 1);
                         }
                         if (TunicRandomizer.Settings.PortalDirectionPairs) {
                             SaveFile.SetInt(PortalDirectionPairs, 1);
@@ -694,7 +694,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Torch").Quantity = 1;
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
-                SaveFile.SetInt(FixedShop, 1);
+                SaveFile.SetInt(ERFixedShop, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
                 SaveFile.SetInt(MasklessLogic, 1);

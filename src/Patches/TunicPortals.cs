@@ -5137,7 +5137,7 @@ namespace TunicRandomizer {
                 foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
                     // if fixed shop is off or decoupled is on, don't add zig skip exit to the portal list
                     string region_name = region_group.Key;
-                        if (region_name == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.FixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
+                        if (region_name == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.ERFixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
                         continue;
                     }
                     List<TunicPortal> region_portals = region_group.Value;
@@ -5169,7 +5169,7 @@ namespace TunicRandomizer {
 
             // shops get added separately cause they're weird
             int shopCount = 6;
-            if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+            if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
                 shopCount = 0;
                 Portal windmillPortal = null;
                 foreach (Portal portal in twoPlusPortals) {
@@ -5241,7 +5241,7 @@ namespace TunicRandomizer {
             }
             // if you have decoupled on, you add all shop entrance regions, but you only have 6 shops with direction pairs off
             if (SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
-                if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+                if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
                     // fixed shop only has 1 shop entrance region
                     total_nondeadend_count -= 7;
                 } else if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
@@ -5263,7 +5263,7 @@ namespace TunicRandomizer {
                 twoPlusPortals.AddRange(deadEndPortals);
                 deadEndPortals.Clear();
                 twoPlusPortals2 = new List<Portal>(twoPlusPortals);
-                if (SaveFile.GetInt(SaveFlags.FixedShop) == 1) {
+                if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
                     twoPlusPortals.Add(new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH));
                     twoPlusPortals2.Add(new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "", scene: "Overworld Redux", region: "Overworld", direction: (int)PDir.NORTH));
                 }

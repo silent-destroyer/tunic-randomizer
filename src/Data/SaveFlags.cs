@@ -30,7 +30,7 @@
 
         // Entrance Rando Flags
         public const string EntranceRando = "randomizer entrance rando enabled";
-        public const string FixedShop = "randomizer ER fixed shop enabled";
+        public const string ERFixedShop = "randomizer ER fixed shop enabled";
         public const string PortalDirectionPairs = "randomizer paired portal directions enabled";
         public const string Decoupled = "randomizer decoupled ER enabled";
 

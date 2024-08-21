@@ -59,7 +59,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
                 OptionsGUI.addToggle("Shuffle Ladders", "Off", "On", TunicRandomizer.Settings.ShuffleLadders ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLadderShuffle);
                 OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
-                OptionsGUI.addToggle("Entrance Randomizer: Fewer Shops", "Off", "On", TunicRandomizer.Settings.FixedShop ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFixedShop);
+                OptionsGUI.addToggle("Entrance Randomizer: Fewer Shops", "Off", "On", TunicRandomizer.Settings.ERFixedShop ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleERFixedShop);
                 OptionsGUI.addToggle("Entrance Randomizer: Direction Pairs", "Off", "On", TunicRandomizer.Settings.PortalDirectionPairs ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePortalDirectionPairs);
                 OptionsGUI.addToggle("Entrance Randomizer: Decoupled", "Off", "On", TunicRandomizer.Settings.DecoupledER ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDecoupledER);
                 OptionsGUI.addToggle("Grass Randomizer", "Off", "On", TunicRandomizer.Settings.GrassRandomizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
@@ -88,7 +88,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Shuffled Ladders", SaveFile.GetInt("randomizer ladder rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt("randomizer entrance rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 if (SaveFile.GetInt(EntranceRando) == 1 && IsSinglePlayer()) {
-                    OptionsGUI.addButton("Entrance Randomizer: Fewer Shops", SaveFile.GetInt(FixedShop) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                    OptionsGUI.addButton("Entrance Randomizer: Fewer Shops", SaveFile.GetInt(ERFixedShop) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 }
                 OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt(LaurelsLocation)], null);
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
@@ -368,9 +368,9 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        public static void ToggleFixedShop(int index) {
-            TunicRandomizer.Settings.FixedShop = !TunicRandomizer.Settings.FixedShop;
-            if (TunicRandomizer.Settings.FixedShop == true) {
+        public static void ToggleERFixedShop(int index) {
+            TunicRandomizer.Settings.ERFixedShop = !TunicRandomizer.Settings.ERFixedShop;
+            if (TunicRandomizer.Settings.ERFixedShop == true) {
                 TunicRandomizer.Settings.PortalDirectionPairs = false;
             }
             SaveSettings();
@@ -379,7 +379,7 @@ namespace TunicRandomizer {
         public static void TogglePortalDirectionPairs(int index) {
             TunicRandomizer.Settings.PortalDirectionPairs = !TunicRandomizer.Settings.PortalDirectionPairs;
             if (TunicRandomizer.Settings.PortalDirectionPairs == true) {
-                TunicRandomizer.Settings.FixedShop = false;
+                TunicRandomizer.Settings.ERFixedShop = false;
             }
             SaveSettings();
         }
