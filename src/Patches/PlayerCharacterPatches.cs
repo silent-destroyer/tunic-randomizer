@@ -188,8 +188,8 @@ namespace TunicRandomizer {
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().UseSpecialGhostMat = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().UseSpecialGhostMat;
             }
 
-            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<HexagonQuestCutscene>() == null && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                new GameObject("hex quest cutscene").gameObject.AddComponent<HexagonQuestCutscene>();
+            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<FoxgodCutscenePatch>() == null) {
+                new GameObject("foxgod cutscene patcher").gameObject.AddComponent<FoxgodCutscenePatch>();
             }
 
             foreach (string Key in EnemyRandomizer.Enemies.Keys.ToList()) {
@@ -353,9 +353,17 @@ namespace TunicRandomizer {
             if (PaletteEditor.PartyHatEnabled) {
                 WearHat = true;
             }
+
             List<MagicSpell> spells = __instance.spells.ToList();
             spells.Reverse();
             __instance.spells = spells.ToArray();
+
+            Vector3 scale = AreaLabel.instance.transform.GetChild(0).localScale;
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1 && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.5f, scale.y, scale.z);
+            } else {
+                AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.0777f, scale.y, scale.z);
+            }
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {
@@ -465,6 +473,9 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ShuffleLadders) {
                         SaveFile.SetInt(LadderRandoEnabled, 1);
                     }
+                    if (TunicRandomizer.Settings.GrassRandomizer) {
+                        SaveFile.SetInt(GrassRandoEnabled, 1);
+                    }
                 }
 
                 foreach (string Scene in Locations.AllScenes) {
@@ -474,6 +485,9 @@ namespace TunicRandomizer {
                 EnemyRandomizer.CreateAreaSeeds();
 
                 SaveFile.SaveToDisk();
+            }
+            if (TunicRandomizer.Tracker != null && seed != TunicRandomizer.Tracker.Seed) {
+                RecentItemsDisplay.instance.ResetQueue();
             }
             TunicRandomizer.Tracker = new ItemTracker();
             TunicRandomizer.Tracker.Seed = seed;
@@ -500,9 +514,11 @@ namespace TunicRandomizer {
                 Archipelago.instance.integration.sentCollect = false;
 
                 Dictionary<string, object> slotData = Archipelago.instance.GetPlayerSlotData();
-                if (SaveFile.GetString("archipelago player name") == "") {
-                    SaveFile.SetString("archipelago player name", Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()));
-                }
+
+                SaveFile.SetString(ArchipelagoPlayerName, Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()));
+                SaveFile.SetString(ArchipelagoPort, TunicRandomizer.Settings.ConnectionSettings.Port);
+                SaveFile.SetString(ArchipelagoHostname, TunicRandomizer.Settings.ConnectionSettings.Hostname);
+                SaveFile.SetString(ArchipelagoPassword, TunicRandomizer.Settings.ConnectionSettings.Password);
 
                 if (slotData.TryGetValue("hexagon_quest", out var hexagonQuest)) {
                     if (SaveFile.GetInt(HexagonQuestEnabled) == 0 && hexagonQuest.ToString() == "1") {
@@ -585,6 +601,9 @@ namespace TunicRandomizer {
                     } else {
                         TunicLogger.LogInfo("Loading archipelago seed: " + SaveFile.GetInt("seed"));
                     }
+                    if (TunicRandomizer.Tracker != null && Seed.ToString() != TunicRandomizer.Tracker.Seed.ToString()) {
+                        RecentItemsDisplay.instance.ResetQueue();
+                    }
                     TunicRandomizer.Tracker = new ItemTracker();
                     TunicRandomizer.Tracker.Seed = int.Parse(Seed.ToString());
                     TunicRandomizer.Tracker.PopulateTrackerForAP();
@@ -604,6 +623,11 @@ namespace TunicRandomizer {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
+                if (slotData.TryGetValue("grass_randomizer", out var grassRandomizer)) {
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 0 && grassRandomizer.ToString() != "0") {
+                        SaveFile.SetInt(GrassRandoEnabled, 1);
+                    }
+                }
                 SaveFile.SaveToDisk();
 
                 Locations.RandomizedLocations.Clear();
@@ -613,6 +637,16 @@ namespace TunicRandomizer {
                 foreach (string Key in Locations.VanillaLocations.Keys) {
                     Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
                     LocationIDs.Add(Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]));
+                }
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    foreach (string Key in GrassRandomizer.GrassChecks.Keys) {
+                        Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
+                        long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]);
+                        LocationIDs.Add(id);
+                        if (Locations.CheckedLocations[Key] && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(id)) {
+                            TunicLogger.LogInfo("Checked in save file but not on AP: " + id + " " + Key + "[" + Locations.LocationIdToDescription[Key] + "]");
+                        }
+                    }
                 }
                 if (LocationIDs.Contains(-1L)) {
                     Notifications.Show($"\"An error has occurred!\"", $"\"Connected slot is incompatible with this client version.\"");
@@ -667,6 +701,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Lanternless) {
                 SaveFile.SetInt(LanternlessLogic, 1);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.GrassRando) {
+                SaveFile.SetInt(GrassRandoEnabled, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);
@@ -775,6 +812,7 @@ namespace TunicRandomizer {
                 }
                 SaveFile.SetInt(LaurelsLocation, laurelsIndex);
             }
+
             SaveFile.SetString("randomizer mystery seed weights", TunicRandomizer.Settings.MysterySeedWeights.ToSettingsString());
         }
 

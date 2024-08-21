@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TunicRandomizer {
     public class TunicUtils {
@@ -78,7 +79,11 @@ namespace TunicRandomizer {
         // updates PlayerItemsAndRegions based on which items the player has received, then updates ChecksInLogic based on the player's items/accessible regions
         public static void UpdateChecksInLogic() {
             ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
-            foreach (Check check in Locations.VanillaLocations.Values) {
+            List<Check> checks = Locations.VanillaLocations.Values.ToList();
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                checks.AddRange(GrassRandomizer.GrassChecks.Values);
+            }
+            foreach (Check check in checks) {
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && Locations.CheckedLocations[check.CheckId] == false) {
                     ChecksInLogic.Add(check.CheckId);
                 }

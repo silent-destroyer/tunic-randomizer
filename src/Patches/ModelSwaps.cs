@@ -160,13 +160,15 @@ namespace TunicRandomizer {
             Signpost.AddComponent<MeshRenderer>().material = FindMaterial("signpost");
             Signpost.SetActive(false);
             GameObject.DontDestroyOnLoad(Signpost);
+            
+            InitializeExtras();
 
             ItemPresentationPatches.SetupOldHouseKeyItemPresentation();
             Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
             ItemPresentationPatches.SetupDathStoneItemPresentation();
             ItemPresentationPatches.SetupHexagonQuestItemPresentation();
             ItemPresentationPatches.SetupCapePresentation();
-            InitializeExtras();
+            ItemPresentationPatches.SetupGrassPresentation();
 
             // make it so you can pick up money from further away
             List<ItemPickup> coins = Resources.FindObjectsOfTypeAll<ItemPickup>().Where(coin => coin.gameObject.scene.name == "DontDestroyOnLoad").ToList();
@@ -199,7 +201,7 @@ namespace TunicRandomizer {
             Back.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
             GameObject Cube = new GameObject("cube");
             Cube.AddComponent<MeshFilter>().mesh = GameObject.Find("Group/Jelly Cube/Jelly Cube").GetComponent<SkinnedMeshRenderer>().sharedMesh;
-            Cube.AddComponent<MeshRenderer>().materials = Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+            Cube.AddComponent<MeshRenderer>().materials = Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
             Cube.transform.localScale = new Vector3(1.89f, 1.89f, 1.89f);
             Cube.transform.localPosition = new Vector3(0f, -1.9f, 0f);
             Top.transform.parent = Items[$"Other World {ItemFlags.Advancement}"].transform;
@@ -366,7 +368,7 @@ namespace TunicRandomizer {
                 CheckCollectedItemFlags();
             }
 
-            if (SceneLoaderPatches.SceneName == "Shop") {
+            if (TunicRandomizer.Settings.ShowItemsEnabled && SceneLoaderPatches.SceneName == "Shop") {
                 SetupShopItems();
             } else {
                 if (TunicRandomizer.Settings.ShowItemsEnabled) {
@@ -374,6 +376,9 @@ namespace TunicRandomizer {
                         if (ItemPickup != null && ItemPickup.itemToGive != null) {
                             string checkId = $"{ItemPickup.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
                             if(ItemLookup.ItemList.ContainsKey(checkId) || Locations.RandomizedLocations.ContainsKey(checkId)) {
+                                if (SwappedThisSceneAlready && !IsSwordCheck(checkId)) {
+                                    continue;
+                                }
                                 if (ItemPickup.itemToGive.name == "Hexagon Red") {
                                     SetupRedHexagonPlinth();
                                 } else if (ItemPickup.itemToGive.name == "Hexagon Blue") {
@@ -388,6 +393,9 @@ namespace TunicRandomizer {
                     foreach (PagePickup PagePickup in Resources.FindObjectsOfTypeAll<PagePickup>()) {
                         string ItemId = $"{PagePickup.pageName} [{SceneLoaderPatches.SceneName}]";
                         if(ItemLookup.ItemList.ContainsKey(ItemId) || Locations.RandomizedLocations.ContainsKey(ItemId)) {
+                            if (SwappedThisSceneAlready && !IsSwordCheck(ItemId)) {
+                                continue;
+                            }
                             SetupPagePickup(PagePickup);
                         }
                     }
@@ -396,24 +404,49 @@ namespace TunicRandomizer {
                         SetupHeroRelicPickup(HeroRelicPickup);
                     }
                     if (SceneLoaderPatches.SceneName == "Fortress Arena") {
-                        SwapSiegeEngineCrown();
+                        if (!SwappedThisSceneAlready || IsSwordCheck("Vault Key (Red) [Fortress Arena]")) {
+                            SwapSiegeEngineCrown();
+                        }
                     }
                 }
                 if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
                     foreach (Chest Chest in Resources.FindObjectsOfTypeAll<Chest>()) {
+                        if (SwappedThisSceneAlready && !IsSwordCheck(ItemPatches.GetChestRewardID(Chest))) {
+                            continue;
+                        }
                         ApplyChestTexture(Chest);
                     }
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                        foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>()) {
+                            string grassId = GrassRandomizer.getGrassGameObjectId(grass);
+                            if (Locations.RandomizedLocations.ContainsKey(grassId) || ItemLookup.ItemList.ContainsKey(grassId)) {
+                                if ((SwappedThisSceneAlready && !IsSwordCheck(grassId)) || Locations.CheckedLocations[grassId]) {
+                                    continue;
+                                }
+                                ApplyGrassTexture(grass);
+                            }
+                        }
+                    }
                 }
-
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
             SwappedThisSceneAlready = true;
         }
 
+        private static bool IsSwordCheck(string CheckId) {
+            if (IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId)) {
+                return ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[CheckId]).Type == ItemTypes.SWORDUPGRADE;
+            }
+            if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(CheckId)) {
+                ItemInfo itemInfo = ItemLookup.ItemList[CheckId];
+                return itemInfo.ItemGame == "TUNIC" && ItemLookup.Items[itemInfo.ItemName].Type == ItemTypes.SWORDUPGRADE;
+            }
+            return false;
+        }
+
         public static void ApplyChestTexture(Chest Chest) {
             if (Chest != null) {
-
-                string ItemId = Chest.chestID == 0 ? $"{SceneLoaderPatches.SceneName}-{Chest.transform.position.ToString()} [{SceneLoaderPatches.SceneName}]" : $"{Chest.chestID} [{SceneLoaderPatches.SceneName}]";
+                string ItemId = ItemPatches.GetChestRewardID(Chest);
                 string ItemName = "Stick";
                 if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(ItemId)) {
                     ItemInfo APItem = ItemLookup.ItemList[ItemId];
@@ -471,7 +504,7 @@ namespace TunicRandomizer {
             } 
             if(flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
                 chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = new Material[] {
-                    ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().material,
+                    ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().material,
                     chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1]
                 };
             }
@@ -479,6 +512,167 @@ namespace TunicRandomizer {
             if(APItem.Flags.HasFlag(ItemFlags.Trap)) {
                 ChestTop.transform.localEulerAngles = new Vector3(57f, 180f, 180f);
             }
+        }
+
+        public static void ApplyGrassTexture(Grass grass) {
+            string GrassId = $"{grass.name}~{grass.transform.position.ToString()} [{grass.gameObject.scene.name}]";
+            if(Locations.RandomizedLocations.ContainsKey(GrassId) || ItemLookup.ItemList.ContainsKey(GrassId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[GrassId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    SetupItemMoveUp(grass.transform, check: check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[GrassId];
+                    SetupItemMoveUp(grass.transform, itemInfo: itemInfo);
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {GrassId} was collected") == 1));
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+                if (Item.Type == ItemTypes.GRASS) {
+                    return;
+                }
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+
+                if (Item.Name == "Fool Trap") {
+                    foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
+                        if (child.name == grass.name) { continue; }
+                        child.localEulerAngles = new Vector3(180, 0, 0);
+                        child.position += new Vector3(0, 2, 0);
+                    }
+                }
+
+                if (material != null) {
+                    foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                        r.material = material;
+                    }
+                }
+            }
+        }
+
+        public static void ApplyAPGrassTexture(Grass grass, ItemInfo itemInfo, bool Checked) {
+            GameObject questionMark = new GameObject("question mark");
+            for(int i = 0; i < grass.transform.GetChild(1).childCount; i++) {
+                GameObject.Destroy(grass.transform.GetChild(1).GetChild(i).gameObject);
+            }
+            questionMark.transform.parent = grass.transform.GetChild(1);
+            questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
+            if (grass.name.Contains("bush")) {
+                questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
+                questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+                questionMark.transform.localScale = new Vector3(0.33f, 0.33f, 0.33f);
+            } else {
+                questionMark.transform.localPosition = new Vector3(0f, 1.9f, 0f);
+                questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+                questionMark.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            }
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            UnityEngine.Color color;
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    r.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
+                    grass.materialForBase = r.material;
+                }
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                    grass.materialForBase = r.material;
+                }
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                    grass.materialForBase = r.material;
+                }
+            }
+
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
+                    if (child.name == grass.name) { continue; }
+                    child.localEulerAngles = new Vector3(180, 0, 0);
+                    child.position += new Vector3(0, 2, 0);
+                }
+                questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
+            }
+            questionMark.SetActive(!Checked);
+        }
+
+        public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
+            if (check == null && itemInfo == null) { return; }
+
+            if (transform.GetComponentInChildren<MoveUp>(true) != null && !transform.GetComponentInChildren<MoveUp>(true).gameObject.active) {
+                GameObject.Destroy(transform.GetComponentInChildren<MoveUp>(true).gameObject);
+            }
+            ItemData Item = null;
+            if (check != null) {
+                Item = ItemLookup.GetItemDataFromCheck(check);
+            } else if (itemInfo != null && Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                Item = ItemLookup.Items[itemInfo.ItemName];
+            }
+            if (transform.GetComponent<Grass>() != null && Item != null && Item.Type == ItemTypes.GRASS) {
+                return;
+            }
+            if (transform.GetComponent<Chest>() != null && Item != null && Item.Type == ItemTypes.FAIRY) {
+                return;
+            }
+            GameObject moveUp = SetupItemBase(transform, itemInfo, check);
+            TransformData TransformData;
+            if (IsArchipelago() && Item == null && itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player)) {
+                TransformData = ItemPositions.Techbow["Other World"];
+            } else {
+                if (Item.Type == ItemTypes.TRINKET) {
+                    TransformData = ItemPositions.Techbow["Trinket Card"];
+                } else if (Item.Type == ItemTypes.MONEY || Item.Type == ItemTypes.FOOLTRAP) {
+                    if (Item.QuantityToGive < 30) {
+                        TransformData = ItemPositions.Techbow["money small"];
+                    } else if (Item.QuantityToGive >= 30 && Item.QuantityToGive < 100) {
+                        TransformData = ItemPositions.Techbow["money medium"];
+                    } else {
+                        TransformData = ItemPositions.Techbow["money large"];
+                    }
+                } else if (Item.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
+                    int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                    TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.ItemNameForInventory];
+                } else {
+                    TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
+                    if (transform.GetComponent<Grass>() != null) {
+                        TransformData.rot = new Quaternion(0, 0.9239f, 0, -0.3827f);
+                    }
+                }
+            }
+
+            moveUp.transform.localPosition = TransformData.pos;
+            moveUp.transform.localRotation = TransformData.rot;
+            if (transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null) {
+                moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
+                if (Item != null) {
+                    if (Item.Name == "Just Some Pals") {
+                        moveUp.transform.localEulerAngles += new Vector3(0, 90, 0);
+                    } else if (Item.Type == ItemTypes.TRINKET) {
+                        moveUp.transform.localEulerAngles += new Vector3(0, 135, 0);
+                    }
+                }
+            }
+            moveUp.transform.localScale = TransformData.scale;
+            moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
+
+            moveUp.layer = 0;
+            moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
+            moveUp.AddComponent<MoveUp>().speed = 0.5f;
+            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
         }
 
         public static void CheckCollectedItemFlags() {
@@ -1300,12 +1494,14 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Dath Stone Texture", CreateSprite(ImageData.DathSteneTexture, ImageMaterial, 200, 100, SpriteName: "Randomizer dath stone texture"));
             CustomItemImages.Add("Ladder", CreateSprite(ImageData.Ladder, ImageMaterial, 160, 160, SpriteName: "Randomizer items_ladder"));
             CustomItemImages.Add("Secret Mayor", CreateSprite(ImageData.SecretMayor, ImageMaterial, 1400, 675, SpriteName: "Randomizer secret_mayor"));
+            CustomItemImages.Add("Grass", CreateSprite(ImageData.Grass, ImageMaterial, 160, 160, SpriteName: "Randomizer items_grass"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Dath Stone").icon = Inventory.GetItemByName("Dash Stone").icon;
             Inventory.GetItemByName("Hexagon Gold").icon = CustomItemImages["Gold Questagon"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Torch").icon = CustomItemImages["Torch Redux"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
         }
 
         public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {

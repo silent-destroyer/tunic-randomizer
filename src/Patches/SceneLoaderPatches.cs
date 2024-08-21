@@ -43,6 +43,22 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name)) {
+                    string grassId = GrassRandomizer.getGrassGameObjectId(grass);
+                    if (GrassRandomizer.GrassChecks.ContainsKey(grassId)) {
+                        if (SaveFile.GetInt("randomizer picked up " + grassId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[grassId]))) {
+                            grass.goToDeadState();
+                        }
+                    }
+                }
+            }
+
+            if (PlayerCharacter.Instanced && SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected() && SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) {
+                TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
+                Archipelago.instance.SilentReconnect();
+            }
+
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
 
             return true;
@@ -223,7 +239,6 @@ namespace TunicRandomizer {
                 return;
             }
             if (ModelSwaps.Chests.Count == 0 && loadingScene.name == "TitleScreen") {
-
                 CustomItemBehaviors.CreateCustomItems();
                 GameObject ArchipelagoObject = new GameObject("archipelago");
                 Archipelago.instance = ArchipelagoObject.AddComponent<Archipelago>();
@@ -231,6 +246,7 @@ namespace TunicRandomizer {
                 if (Locations.VanillaLocations.Count == 0) {
                     Locations.CreateLocationLookups();
                 }
+                GrassRandomizer.LoadGrassChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
                 SceneLoader.LoadScene("Overworld Redux");
                 return;
@@ -264,7 +280,7 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo("Error randomizing fox colors!");
                 }
             }
-
+            
             if (PlayerCharacterPatches.IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = false;
                 PlayerCharacter.instance.damageBoostParticleSystemEmission.enabled = false;
@@ -305,20 +321,23 @@ namespace TunicRandomizer {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-                PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / 15;
+                int denominator = SaveFile.GetInt(GrassRandoEnabled) == 1 ? 325 : 15;
+                PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / denominator;
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                    GameObject.FindObjectOfType<Foxgod>().gameObject.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
-                    GameObject.FindObjectOfType<Foxgod>().gameObject.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                    Foxgod foxgod = GameObject.FindObjectOfType<Foxgod>();
+                    foxgod.transform.GetChild(0).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                    foxgod.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 }
 
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
             } else if (SceneName == "Overworld Interiors") {
-                GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject.SetActive(true);
-
                 GameObject.FindObjectOfType<BedToggle>().canBeUsed = StateVariable.GetStateVariableByName("false");
+                
                 if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
                     InteractionPatches.SetupDayNightHourglass();
                 }
+
+                GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject.SetActive(true);
 
                 SetupOldHouseRelicToggles();
                 if (GameObject.Find("_Offerings/ash group/")) {
@@ -329,13 +348,14 @@ namespace TunicRandomizer {
             } else if (SceneName == "TitleScreen") {
                 InitialLoadDone = true;
                 TitleVersion.Initialize();
+                RecentItemsDisplay.SetupRecentItemsDisplay();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                     Archipelago.instance.Connect();
                 }
             } else if (SceneName == "Temple") {
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     foreach (GameObject Questagon in Resources.FindObjectsOfTypeAll<GameObject>().Where(Obj => Obj.name == "questagon" && Obj.scene.name == loadingScene.name)) {
-                        Questagon.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["GoldenTrophy_2"].GetComponent<MeshRenderer>().materials;
+                        Questagon.GetComponent<MeshRenderer>().materials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                         Questagon.GetComponent<MeshRenderer>().receiveShadows = false;
                     }
                 }
@@ -374,8 +394,10 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.ClearEarlyBushes) {
                     int[] bushesToClear = new int[] { 7, 2, 16, 9, 23, 26, 47, 42, 58, 62, 64 };
                     foreach (int bush in bushesToClear) {
-                        if (GameObject.Find($"_Bush and Grass/bush ({bush})/") != null) {
-                            GameObject.Find($"_Bush and Grass/bush ({bush})/").SetActive(false);
+                        GameObject bushObj = GameObject.Find($"_Bush and Grass/bush ({bush})/");
+                        if (bushObj != null) {
+                            bushObj.GetComponent<Grass>().onKilled();
+                            bushObj.GetComponent<Grass>().doClippingAnimation();
                         }
                     }
                 }
@@ -456,6 +478,26 @@ namespace TunicRandomizer {
                 GameObject Bush = GameObject.Find("_Grass/bush (70)");
                 if (Bush != null) {
                     Bush.SetActive(false);
+                }
+            } else if (SceneName == "Fortress Courtyard") {
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    GameObject sign = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+                    sign.GetComponent<MeshFilter>().mesh = ModelSwaps.Signpost.GetComponent<MeshFilter>().mesh;
+                    sign.GetComponent<MeshRenderer>().materials = ModelSwaps.Signpost.GetComponent<MeshRenderer>().materials;
+                    sign.transform.position = new Vector3(72.7274f, 8.0417f, -7.0365f);
+                    sign.transform.localEulerAngles = new Vector3(0, 270, 0);
+                    sign.transform.localScale = Vector3.one * 1.25f;
+                    sign.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+                    sign.GetComponent<Signpost>().message.text = $"[grass]  [arrow_right]\n\n[wand]  rehkuhmehndid.";
+                    sign.SetActive(true);
+                }
+            } else if (SceneName == "Atoll Redux") {
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    // Hide thw two unbreakable pieces of grass in grass rando
+                    if (GameObject.Find("_GRASS/grass beach (154)/grass base (1)") != null && GameObject.Find("_GRASS/grass beach (154)/grass base (2)") != null) {
+                        GameObject.Find("_GRASS/grass beach (154)/grass base (1)").SetActive(false);
+                        GameObject.Find("_GRASS/grass beach (154)/grass base (2)").SetActive(false);
+                    }
                 }
             } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
                 SpawnZigSkipRecovery();
@@ -553,11 +595,16 @@ namespace TunicRandomizer {
 
             if (IsArchipelago()) {
                 Archipelago.instance.integration.UpdateDataStorageOnLoad();
+                Archipelago.instance.integration.SendQueuedLocations();
             }
             if (GameObject.FindObjectOfType<DDRSpell>() != null) {
                 GameObject.FindObjectOfType<DDRSpell>().spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             }
             ItemTracker.SaveTrackerFile();
+
+            if (SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                ItemTracker.PopulateSpoilerLog();
+            }
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
@@ -599,6 +646,7 @@ namespace TunicRandomizer {
                     }
                     Offering.AddComponent<VisibleByHavingInventoryItem>().enablingItem = Inventory.GetItemByName(relics[i]);
                     Offering.GetComponent<VisibleByHavingInventoryItem>().renderers = Offering.GetComponentsInChildren<Renderer>().ToArray();
+                    Offering.GetComponent<VisibleByHavingInventoryItem>().lights = new Light[] { };
                     Offering.SetActive(true);
                 }
             }
@@ -662,6 +710,12 @@ namespace TunicRandomizer {
 
             if (InventoryDisplayPatches.HexagonQuest != null) {
                 InventoryDisplayPatches.HexagonQuest.SetActive(false);
+            }
+            if (InventoryDisplayPatches.GrassCounter != null) {
+                InventoryDisplayPatches.GrassCounter.SetActive(false);
+            }
+            if (IsArchipelago()) {
+                Archipelago.instance.integration.SendQueuedLocations();
             }
             SceneName = "TitleScreen";
         }

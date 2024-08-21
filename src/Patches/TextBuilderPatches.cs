@@ -91,6 +91,7 @@ namespace TunicRandomizer {
             { "[fooltrap]", "Randomizer items_Fool Trap" },
             { "[archipelago]", "Randomizer items_Archipelago Item" },
             { "[ladder]", "Randomizer items_ladder" },
+            { "[grass]", "Randomizer items_grass" },
         };
 
         public static Dictionary<string, string> SpriteNameToAbbreviation = new Dictionary<string, string>();
@@ -262,6 +263,8 @@ namespace TunicRandomizer {
             { "Ladder to Beneath the Vault", "[ladder]" },
             { "Ladders in Lower Quarry", "[ladder]"},
             { "Ladders in Library", "[ladder]"},
+            // Grass
+            { "Grass", "[grass]"},
             // Non-Tunic Item
             { "Archipelago Item", "[archipelago]"}
         };

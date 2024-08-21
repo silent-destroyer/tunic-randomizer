@@ -35,10 +35,11 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
-            ClassInjector.RegisterTypeInIl2Cpp<HexagonQuestCutscene>();
+            ClassInjector.RegisterTypeInIl2Cpp<FoxgodCutscenePatch>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
             ClassInjector.RegisterTypeInIl2Cpp<BossEnemy>();
             ClassInjector.RegisterTypeInIl2Cpp<FleemerQuartet>();
+            ClassInjector.RegisterTypeInIl2Cpp<RecentItemsDisplay>();
 
             ClassInjector.RegisterTypeInIl2Cpp<MusicShuffler>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("music shuffler", new Il2CppSystem.Type[]
@@ -65,6 +66,13 @@ namespace TunicRandomizer {
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("credits skipper", new Il2CppSystem.Type[]
             {
                 Il2CppType.Of<CreditsSkipper>()
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
+            ClassInjector.RegisterTypeInIl2Cpp<InventoryCounter>();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("inventory counter", new Il2CppSystem.Type[]
+            {
+                Il2CppType.Of<InventoryCounter>()
             }) {
                 hideFlags = HideFlags.HideAndDontSave
             });
@@ -219,13 +227,15 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(InventoryDisplay), "Update"), new HarmonyMethod(AccessTools.Method(typeof(InventoryDisplayPatches), "InventoryDisplay_Update_PrefixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), null, new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(PauseMenu), "__button_ReturnToTitle"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "PauseMenu___button_ReturnToTitle_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "PauseMenu___button_ReturnToTitle_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(InteractionTrigger), "Interact"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "InteractionTrigger_Interact_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(BloodstainChest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "BloodstainChest_IInteractionReceiver_Interact_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(SwordProgression), "HitReceiver_ReceiveHit_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "HitReceiver_ReceiveHit_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(ToggleObjectAnimation), "SetToggle"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "ToggleObjectAnimation_SetToggle_PostfixPatch")));
 
@@ -265,6 +275,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(MusicManager), "SetParam"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "MusicManager_PlayCuedTrack_PostfixPatch")));
             
+            Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "PermanentStateByPosition_onKilled_PrefixPatch")));
+
         }
     }
 }

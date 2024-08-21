@@ -19,8 +19,12 @@ namespace TunicRandomizer {
             integration.TryDisconnect();
         }
 
-        public void Connect() {
-            integration.TryConnect();
+        public string Connect() {
+            return integration.TryConnect();
+        }
+
+        public void SilentReconnect() {
+            integration.TrySilentReconnect();
         }
 
         public void Disconnect() {
@@ -29,6 +33,10 @@ namespace TunicRandomizer {
 
         public void ActivateCheck(string LocationName) {
             integration.ActivateCheck(LocationName);
+        }
+
+        public void CompleteLocationCheck(string LocationName) {
+            integration.CompleteLocationCheck(LocationName);
         }
 
         public void UpdateDataStorage(string Key, object Value) {

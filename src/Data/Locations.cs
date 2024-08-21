@@ -12,6 +12,7 @@ namespace TunicRandomizer {
         
         public static Dictionary<string, string> LocationIdToDescription = new Dictionary<string, string>();
         public static Dictionary<string, string> LocationDescriptionToId = new Dictionary<string, string>();
+        public static Dictionary<string, long> LocationIdToArchipelagoId = new Dictionary<string, long>();
 
         public static Dictionary<string, Check> VanillaLocations = new Dictionary<string, Check>() { };
         public static Dictionary<string, Check> RandomizedLocations = new Dictionary<string, Check> { };
@@ -30,6 +31,7 @@ namespace TunicRandomizer {
                 string SceneName = Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
                 AllScenes.Add(SceneName);
                 CheckCountsPerScene.Add(SceneName, 0);
+                GrassRandomizer.GrassChecksPerScene.Add(SceneName, 0);
             }
             foreach (Check info in JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList)) {
                 string locationId = info.CheckId;
@@ -178,6 +180,7 @@ namespace TunicRandomizer {
             {"archipelagos_house", "West Garden (Ice Dagger Cave)"},
             {"Atoll Redux", "Ruined Atoll"},
             {"frog cave main", "Frog's Domain"},
+            {"Frog Stairs", "Frog Stairway"},
             {"Library Hall", "Library (Hall)"},
             {"Library Lab", "Library (Lab)"},
             {"Library Arena", "Library (Librarian)"},

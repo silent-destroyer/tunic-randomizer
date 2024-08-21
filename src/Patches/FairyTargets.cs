@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Archipelago.MultiClient.Net.Enums;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace TunicRandomizer {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> EntranceTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargets = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
-        
+
         public static void CreateFairyTargets() {
             // todo: fix bug -- probably has to do with an area having no checks in logic, but still has checks out of logic, so fairy spell with logic seeks out entrances that lead to the current scene (in ER)
             foreach (FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
@@ -22,13 +23,18 @@ namespace TunicRandomizer {
             if (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) {
 
                 bool hasChecksInLogicInScene = false;
-                List<string> ItemIdsInScene = Locations.VanillaLocations.Keys.Where(ItemId => Locations.VanillaLocations[ItemId].Location.SceneName == SceneManager.GetActiveScene().name
-                && SaveFile.GetInt($"randomizer picked up {ItemId}") == 0 &&
-                ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {ItemId} was collected") == 0 : true)).ToList();
+
+                List<string> ItemIdsInScene = Locations.VanillaLocations.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
+                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList();
+
+                if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                    ItemIdsInScene.AddRange(GrassRandomizer.GrassChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
+                        ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
+                }
 
                 if (ItemIdsInScene.Count > 0) {
                     foreach (string ItemId in ItemIdsInScene) {
-                        Location Location = Locations.VanillaLocations[ItemId].Location;
+                        Location Location = GrassRandomizer.GrassChecks.ContainsKey(ItemId) ? GrassRandomizer.GrassChecks[ItemId].Location : Locations.VanillaLocations[ItemId].Location;
 
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
@@ -70,10 +76,14 @@ namespace TunicRandomizer {
             foreach (FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
                 FairyTarget.enabled = false;
             }
-
-            foreach (string ItemId in Locations.VanillaLocations.Keys.Where(itemId => Locations.VanillaLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
-            ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true)))) {
-                ScenesWithItems.Add(Locations.VanillaLocations[ItemId].Location.SceneName);
+            List<string> ItemIds = Locations.VanillaLocations.Keys.Where(itemId => Locations.VanillaLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
+                ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList();
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                ItemIds.AddRange(GrassRandomizer.GrassChecks.Keys.Where(itemId => GrassRandomizer.GrassChecks[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
+                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList());
+            }
+            foreach (string ItemId in ItemIds) {
+                ScenesWithItems.Add(GrassRandomizer.GrassChecks.ContainsKey(ItemId) ? GrassRandomizer.GrassChecks[ItemId].Location.SceneName : Locations.VanillaLocations[ItemId].Location.SceneName);
             }
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
@@ -181,42 +191,46 @@ namespace TunicRandomizer {
                     newItem = namePair.Key;
                 }
             }
-            // add the new item received to the items the player has
-            TunicUtils.AddStringToDict(TunicUtils.PlayerItemsAndRegions, newItem);
-            TunicUtils.UpdateChecksInLogic();
-            // loop through the regular ItemTargets, find ones that are newly in logic
-            foreach (FairyTarget fairyTarget in ItemTargets) {
-                if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
-                string targetName = fairyTarget.name.Replace("fairy target ", "");
-                if (!ItemTargetsInLogic.Contains(fairyTarget)) {
-                    if (TunicUtils.ChecksInLogic.Contains(targetName)) {
-                        ItemTargetsInLogic.Add(fairyTarget);
-                    } else {
-                        // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
-                        string regionName = TunicPortals.FindPortalRegionFromName(targetName);
-                        string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
-                        if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
-                            foreach (string checkId in TunicUtils.ChecksInLogic) {
-                                if (checkId.Contains(destSceneName)) {
-                                    ItemTargetsInLogic.Add(fairyTarget);
-                                    break;
+            if (ItemLookup.LegacyMajorItems.Contains(newItem) || newItem.StartsWith("Ladder")) {
+                // add the new item received to the items the player has
+                TunicUtils.AddStringToDict(TunicUtils.PlayerItemsAndRegions, newItem);
+                TunicUtils.UpdateChecksInLogic();
+                // loop through the regular ItemTargets, find ones that are newly in logic
+                foreach (FairyTarget fairyTarget in ItemTargets) {
+                    if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
+                    string targetName = fairyTarget.name.Replace("fairy target ", "");
+                    if (!ItemTargetsInLogic.Contains(fairyTarget)) {
+                        if (TunicUtils.ChecksInLogic.Contains(targetName)) {
+                            ItemTargetsInLogic.Add(fairyTarget);
+                        } else {
+                            // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
+                            string regionName = TunicPortals.FindPortalRegionFromName(targetName);
+                            string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
+                            if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
+                                foreach (string checkId in TunicUtils.ChecksInLogic) {
+                                    if (checkId.Contains(destSceneName)) {
+                                        ItemTargetsInLogic.Add(fairyTarget);
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            // loop through the regular EntranceTargets, find ones that are newly in logic
-            foreach (FairyTarget fairyTarget in EntranceTargets) {
-                if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
-                if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
-                        && !EntranceTargetsInLogic.Contains(fairyTarget)) {
-                    EntranceTargetsInLogic.Add(fairyTarget);
+                // loop through the regular EntranceTargets, find ones that are newly in logic
+                foreach (FairyTarget fairyTarget in EntranceTargets) {
+                    if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
+                    if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
+                            && !EntranceTargetsInLogic.Contains(fairyTarget)) {
+                        EntranceTargetsInLogic.Add(fairyTarget);
+                    }
                 }
             }
-            // if it is still empty, check if there's locations in logic in adjacent regions
+            
+            // if there are no item targets in logic, check if there's locations in logic in adjacent regions
             if (ItemTargetsInLogic.Count == 0) {
                 CreateLogicLoadZoneTargets(addImmediately:true);
+                FairyTarget.registered = ItemTargetsInLogic;
             }
         }
 
