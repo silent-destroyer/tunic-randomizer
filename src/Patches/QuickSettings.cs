@@ -173,7 +173,7 @@ namespace TunicRandomizer {
                 }
 
                 if (ShowAPSettingsWindow && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
-                    GUI.Window(103, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 350f * guiScale, 490f * guiScale), new Action<int>(ArchipelagoConfigEditorWindow), "Archipelago Config");
+                    GUI.Window(103, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 350f * guiScale, 490f * guiScale), new Action<int>(ArchipelagoConfigEditorWindow), "Archipelago Connection");
                 }
                 if (ShowAdvancedSinglePlayerOptions && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER && !TunicRandomizer.Settings.MysterySeed) {
                     GUI.Window(105, new Rect(460f * guiScale, (float)Screen.height * 0.12f, 405f * guiScale, advHeight * guiScale), new Action<int>(AdvancedLogicOptionsWindow), "Advanced Logic Options");
@@ -338,25 +338,16 @@ namespace TunicRandomizer {
             }
             GUI.color = Color.white;
             y += 40f * guiScale;
-            bool Connect = GUI.Button(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "Connect");
-            if (Connect) {
-                Archipelago.instance.Connect();
-            }
-
-            bool Disconnect = GUI.Button(new Rect(220f * guiScale, y, 200f * guiScale, 30f * guiScale), "Disconnect");
-            if (Disconnect) {
-                Archipelago.instance.Disconnect();
-            }
-            y += 40f * guiScale;
-            bool OpenSettings = GUI.Button(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "Open Settings File");
-            if (OpenSettings) {
-                try {
-                    System.Diagnostics.Process.Start(TunicRandomizer.SettingsPath);
-                } catch (Exception e) {
-                    TunicLogger.LogError(e.Message);
+            bool Connection = GUI.Button(new Rect(10f * guiScale, y, 160f * guiScale, 30f * guiScale), Archipelago.instance.IsConnected() ? "Disconnect" : "Connect");
+            if (Connection) {
+                if (Archipelago.instance.IsConnected()) {
+                    Archipelago.instance.Disconnect();
+                } else {
+                    Archipelago.instance.Connect();
                 }
             }
-            bool OpenAPSettings = GUI.Button(new Rect(220f * guiScale, y, 200f * guiScale, 30f * guiScale), ShowAPSettingsWindow ? "Close AP Config" : "Edit AP Config");
+
+            bool OpenAPSettings = GUI.Button(new Rect(180f * guiScale, y, 240f * guiScale, 30f * guiScale), ShowAPSettingsWindow ? "Close Connection Info" : "Edit Connection Info");
             if (OpenAPSettings) {
                 if (ShowAPSettingsWindow) {
                     CloseAPSettingsWindow();
@@ -382,17 +373,25 @@ namespace TunicRandomizer {
                 int FoolIndex = int.Parse(slotData["fool_traps"].ToString());
                 GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 60f * guiScale), FoolIndex != 0, $"Fool Traps: {(FoolIndex == 0 ? "Off" : $"<color={FoolColors[FoolIndex]}>{FoolChoices[FoolIndex]}</color>")}");
 
+                y += 40f * guiScale;
+                
                 if (slotData.ContainsKey("entrance_rando")) {
-                    y += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), slotData["entrance_rando"].ToString() == "1", $"Entrance Randomizer");
                 } else {
-                    y += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Entrance Randomizer");
                 }
                 if (slotData.ContainsKey("shuffle_ladders")) {
                     GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 30f * guiScale), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
                 } else {
                     GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Shuffled Ladders");
+                }
+
+                y += 40f * guiScale;
+             
+                if (slotData.ContainsKey("grass_randomizer")) {
+                    GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
+                } else {
+                    GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
                 }
             } else {
                 y += 40f * guiScale;
@@ -407,6 +406,9 @@ namespace TunicRandomizer {
                 y += 40f * guiScale;
                 GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Entrance Randomizer");
                 GUI.Toggle(new Rect(220f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Shuffled Ladders");
+                y += 40f * guiScale;
+                GUI.Toggle(new Rect(10f * guiScale, y, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
+
             }
             y += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), $"Other Settings <size={(int)(18 * guiScale)}>(more in options menu!)</size>");
@@ -592,6 +594,11 @@ namespace TunicRandomizer {
             advHeight += 40f * guiScale;
             TunicRandomizer.Settings.ERFixedShop = GUI.Toggle(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ERFixedShop, "Fewer Shop Entrances");
             advHeight += 40f * guiScale;
+            GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
+            advHeight += 40f * guiScale;
+            TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(new Rect(10f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
+            TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(new Rect(195f * guiScale, advHeight, 195f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
+            advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Fool Traps");
             advHeight += 40f * guiScale;
             bool NoFools = GUI.Toggle(new Rect(10f * guiScale, advHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NONE, "None");
@@ -760,8 +767,8 @@ namespace TunicRandomizer {
                 GUI.Label(new Rect(160f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders}%");
                 TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders, 0, 100);
                 // Todo add grass randomizer
-                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders}%");
-                TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders, 0, 100);
+                GUI.Label(new Rect(360f * guiScale, y + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.GrassRando}%");
+                TunicRandomizer.Settings.MysterySeedWeights.GrassRando = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, y + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.GrassRando, 0, 100);
 
                 y += 40f * guiScale;
                 GUI.Label(new Rect(10f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Lanternless Logic");
@@ -848,16 +855,43 @@ namespace TunicRandomizer {
                 GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Non-Randomizer file selected.\"\n\"Returning to menu.\"");
                 return false;
             }
-            if (SaveFile.GetString("archipelago player name") != "") {
-                if (SaveFile.GetString("archipelago player name") != TunicRandomizer.Settings.ConnectionSettings.Player || (Archipelago.instance.integration.connected && int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed"))) {
-                    TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
-                    GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
-                    return false;
+            string errorMessage = "";
+            if (SaveFile.GetInt("archipelago") == 1 && SaveFile.GetString("archipelago player name") != "") {
+                if (!Archipelago.instance.IsConnected() || (Archipelago.instance.integration.connected && (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")))) {
+                    if (SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) { 
+                        TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
+                    }
+                    Archipelago.instance.Disconnect();
+                    errorMessage = Archipelago.instance.Connect();
                 }
-                Archipelago.instance.Connect();
-                if (!Archipelago.instance.integration.connected) {
-                    GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago.\"\n\"Returning to menu.\"");
+                if (!Archipelago.instance.IsConnected()) {
+                    GenericMessage.ShowMessage($"<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago:\"\n{errorMessage}\n\"Returning to title screen.\"");
                     return false;
+                } else if (SaveFlags.IsArchipelago()) {
+                    if (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")) {
+                        TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
+                        GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
+                        return false;
+                    }
+                    PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                        List<long> locationsInLimbo = new List<long>();
+                        foreach (KeyValuePair<string, long> pair in Locations.LocationIdToArchipelagoId) {
+                            if (SaveFile.GetInt("randomizer picked up " + pair.Key) == 1 && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(pair.Value) && Archipelago.instance.integration.session.Locations.AllMissingLocations.Contains(pair.Value)) {
+                                locationsInLimbo.Add(pair.Value);
+                            }
+                        }
+                        if (locationsInLimbo.Count > 0) {
+                            TunicLogger.LogInfo("here");
+                            LanguageLine line = ScriptableObject.CreateInstance<LanguageLine>();
+                            line.text = $"<#FFFF00>[death] \"<#FFFF00>attention!\" <#FFFF00>[death]\n" +
+                                $"\"Found {locationsInLimbo.Count} location{(locationsInLimbo.Count != 1 ? "s": "")} in the save file\"\n\"that {(locationsInLimbo.Count != 1 ? "were" : "was")} not sent to Archipelago.\"\n" +
+                                $"\"Send {(locationsInLimbo.Count != 1 ? "these" : "this")} location{(locationsInLimbo.Count != 1 ? "s" : "")} now?\"";
+                            if (TunicRandomizer.Settings.UseTrunicTranslations) {
+                                line.text = $"<#FFFF00>[death] <#FFFF00>uhtehn$uhn! <#FFFF00>[death]\nfownd \"{locationsInLimbo.Count}\" lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} in #uh sAv fIl #aht\n{(locationsInLimbo.Count != 1 ? "wur" : "wawz")} nawt sehnt too RkipehluhgO.\nsehnd {(locationsInLimbo.Count != 1 ? "#Ez" : "#is")} lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} now?";
+                            }
+                            GenericPrompt.ShowPrompt(line, (Action)(() => { Archipelago.instance.integration.session.Locations.CompleteLocationChecks(locationsInLimbo.ToArray()); }), (Action)(() => { }));
+                        }
+                    });
                 }
             }
             return true;

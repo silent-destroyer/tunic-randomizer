@@ -33,10 +33,12 @@
         public const string EntranceRandoFixedShop = "randomizer ER fixed shop";
 
         // Other Logic Flags
+        public const string StartWithSword = "randomizer started with sword";
         public const string MasklessLogic = "randomizer maskless logic enabled";
         public const string LanternlessLogic = "randomizer lanternless logic enabled";
         public const string LadderRandoEnabled = "randomizer ladder rando enabled";
         public const string LaurelsLocation = "randomizer laurels location";
+        public const string GrassRandoEnabled = "randomizer grass rando enabled";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";
@@ -44,8 +46,15 @@
         public const string DiedToHeir = "randomizer died to heir";
         public const string RescuedLostFox = "randomizer sent lost fox home";
 
+        // Archipelago
+        public const string ArchipelagoFlag = "archipelago";
+        public const string ArchipelagoPlayerName = "archipelago player name";
+        public const string ArchipelagoPort = "archipelago port";
+        public const string ArchipelagoHostname = "archipelago hostname";
+        public const string ArchipelagoPassword = "archipelago password";
+
         public static bool IsArchipelago() {
-            return SaveFile.GetInt("archipelago") == 1 && (Archipelago.instance != null && Archipelago.instance.integration != null && Archipelago.instance.integration.connected);
+            return SaveFile.GetInt("archipelago") == 1 && (Archipelago.instance != null && Archipelago.instance.IsConnected());
         }
 
         public static bool IsSinglePlayer() {

@@ -482,6 +482,14 @@ namespace TunicRandomizer {
 
             string Hint = "";
 
+            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
+            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+
             List<string> HintableItems = new List<string>(HintableItemNames);
             List<string> HintableItemsSolo = new List<string>(HintableItemNamesSinglePlayer);
             if (SaveFile.GetInt(AbilityShuffle) == 1) {
@@ -494,7 +502,7 @@ namespace TunicRandomizer {
                     List<ArchipelagoHint> ItemLocations = Locations.MajorItemLocations[Item];
                     foreach(ArchipelagoHint HintLocation in ItemLocations) {
                         if (HintLocation.Player == Archipelago.instance.GetPlayerSlot()) {
-                            string Scene = HintLocation.Location == "Your Pocket" ? HintLocation.Location : Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[HintLocation.Location]].Location.SceneName];
+                            string Scene = HintLocation.Location == "Your Pocket" ? HintLocation.Location : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HintLocation.Location]].Location.SceneName];
                             string ScenePrefix = Scene == "Trinket Well" ? "%rOi^" : "aht #uh";
                             string ItemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(HintLocation.Item) ? TextBuilderPatches.ItemNameToAbbreviation[HintLocation.Item] : "";
                             Hint = $"bI #uh wA, I saw A  {ItemToDisplay}  \"{Item.ToUpper().Replace(" ", "\" \"")}\" #uh lahst tIm I wuhs {ScenePrefix} \"{Scene.ToUpper().Replace(" ", "\" \"")}.\"";
@@ -566,6 +574,15 @@ namespace TunicRandomizer {
 
         public static void GenerateBarrenAndMoneySceneHints() {
             BarrenAndTreasureHints.Clear();
+
+            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
+            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+
             foreach (string Key in Locations.SimplifiedSceneNames.Keys) { 
                 HashSet<string> ItemsInScene = new HashSet<string>();
                 List<ItemInfo> APItemsInScene = new List<ItemInfo>();
@@ -573,7 +590,7 @@ namespace TunicRandomizer {
                 int SceneItemCount = 0;
                 int MoneyInScene = 0;
                 if (IsArchipelago()) {
-                    foreach (string ItemKey in ItemLookup.ItemList.Keys.Where(item => Locations.VanillaLocations[item].Location.SceneName == Key).ToList()) {
+                    foreach (string ItemKey in ItemLookup.ItemList.Keys.Where(item => AllLocations[item].Location.SceneName == Key).ToList()) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[ItemKey];
                         ItemsInScene.Add(ItemInfo.ItemName);
                         APItemsInScene.Add(ItemInfo);

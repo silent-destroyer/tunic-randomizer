@@ -69,6 +69,7 @@ namespace TunicRandomizer {
             {"Hexagon Green", 0},
             {"Hexagon Blue", 0},
             {"Hexagon Gold", 0},
+            {"Grass", 0}
         };
 
         public List<ItemData> ItemsCollected = new List<ItemData>();
@@ -211,7 +212,7 @@ namespace TunicRandomizer {
 
                     string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Item.Player.Name})";
 
-                    SpoilerLog[Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
+                    SpoilerLog[GrassRandomizer.GrassChecks.ContainsKey(Key) ? GrassRandomizer.GrassChecks[Key].Location.SceneName : Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
                 }
             }
             if (IsSinglePlayer()) {
@@ -219,7 +220,7 @@ namespace TunicRandomizer {
                     Check Check = Locations.RandomizedLocations[Key];
                     ItemData Item = ItemLookup.GetItemDataFromCheck(Check);
                     string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.Name}";
-                    SpoilerLog[Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
+                    SpoilerLog[Check.Location.SceneName].Add(Spoiler);
                 }
             }
             List<string> SpoilerLogLines = new List<string>() {
@@ -229,7 +230,7 @@ namespace TunicRandomizer {
             if (IsArchipelago()) {
                 SpoilerLogLines.Add("Major Items");
                 foreach (string MajorItem in ItemLookup.MajorItems) {
-                if(MajorItem == "Gold Questagon") { continue; }
+                    if(MajorItem == "Gold Questagon") { continue; }
                     if(Locations.MajorItemLocations.ContainsKey(MajorItem) && Locations.MajorItemLocations[MajorItem].Count > 0) {
                         foreach (ArchipelagoHint apHint in Locations.MajorItemLocations[MajorItem]) {
                             bool HasItem = false;
@@ -246,17 +247,15 @@ namespace TunicRandomizer {
                 SpoilerLogLines.AddRange(GetMysterySeedSettingsForSpoilerLog());
 
                 SpoilerLogLines.Add("Major Items");
-                foreach (string MajorItem in ItemLookup.LegacyMajorItems) {
-                    foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {
-                        ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
-                        string Key = Check.CheckId;
-                        string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
-                        SpoilerLogLines.Add(Spoiler);
-                    }
+                List<string> MajorItems = new List<string>(ItemLookup.LegacyMajorItems);
+                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                    MajorItems.Add("Trinket - Glass Cannon");
                 }
-                if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
-                    foreach(string LadderItem in ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name)) {
-                        Check Check = ItemRandomizer.FindRandomizedItemByName(LadderItem);
+                if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
+                    MajorItems.AddRange(ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name));
+                }
+                foreach (string MajorItem in MajorItems) {
+                    foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);
                         string Key = Check.CheckId;
                         string Spoiler = $"\t{(Locations.CheckedLocations[Key] ? "x" : "-")} {ItemData.Name}: {Locations.SceneNamesForSpoilerLog[Check.Location.SceneName]} - {Locations.LocationIdToDescription[Key]}";
@@ -328,23 +327,32 @@ namespace TunicRandomizer {
             string displayText = title;
             int TotalAreaChecks = 0;
             int AreaChecksFound = 0;
-            foreach(string Area in Locations.MainAreasToSubAreas.Keys) {
+            bool IncludeCollected = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
+            foreach (string Area in Locations.MainAreasToSubAreas.Keys) {
                 TotalAreaChecks = 0;
                 AreaChecksFound = 0;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
                     TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
-                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1 ) {
+                        TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
+                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && (Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1))).Count();
+                    }
                 }
-                displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(26, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(7, '.')}\"\n";
+                displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(24, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(9, '.')}\"\n";
                 if (Area == "Rooted Ziggurat") {
                     displayText += "---" + title;
                 }
             }
-            int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
+            int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
             int TotalChecks = Locations.VanillaLocations.Count;
-            displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(26, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(7, '.')}\"";
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                TotalChecksFound += GrassRandomizer.GrassChecks.Where(check => Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1)).Count();
+                TotalChecks += GrassRandomizer.GrassChecks.Count;
+            }
+            displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(24, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(9, '.')}\"";
             if (TotalChecksFound == TotalChecks) {
-                displayText += "---\"<#eaa614>- - - - - -  302/302  - - - - - -\"\n\n    ";
+                displayText += $"---\"<#eaa614>- - - - - - {TotalChecksFound.ToString().PadLeft(4)}/{TotalChecks.ToString().PadRight(4)} - - - - - -\"\n\n    ";
                 int i = 0;
                 foreach(string s in WaveSpell.CustomInputs.Select(input => $"[arrow_{input.ToString().ToLower()}]")) {
                     displayText += $"  <#eaa614>{s}  ";

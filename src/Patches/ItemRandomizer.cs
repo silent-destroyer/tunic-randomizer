@@ -33,6 +33,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
                 PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
             }
+            if (SaveFile.GetInt(SaveFlags.StartWithSword) == 1) {
+                PrecollectedItems.Add("Sword");
+            }
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
@@ -50,8 +53,9 @@ namespace TunicRandomizer {
             Locations.CheckedLocations.Clear();
 
             PopulatePrecollected();
-            List<string> ProgressionNames = new List<string>{ "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
+            List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
             List<string> Ladders = new List<string>(LadderItems);
+            List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                 if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1) {
                     ProgressionNames.Add("Hexagon Gold");
@@ -74,6 +78,10 @@ namespace TunicRandomizer {
             }
 
             List<Check> InitialItems = JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList);
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                InitialItems.AddRange(GrassRandomizer.GrassChecks.Values.Where(check => !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)));
+                ProgressionNames.AddRange(GrassCutters);
+            }
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
             List<Check> Hexagons = new List<Check>();
@@ -133,7 +141,7 @@ namespace TunicRandomizer {
                             GoldHexagonsAdded++;
                         }
 
-                        // todo: rewrite this to not modify the itemlistjson, and instead remove abilities as hexes get placed
+                        // can probably be removed now that Check.reachable got updated to check hex counts
                         if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
                             if (Item.Location.Requirements.Count > 0) {
                                 for (int i = 0; i < Item.Location.Requirements.Count; i++) {
@@ -402,6 +410,13 @@ namespace TunicRandomizer {
                     }
                     string DictionaryId = Hexagon.CheckId;
                     Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
+                }
+            }
+
+            // Add grass checks back in that shouldn't be randomized (ones that are affected by clear early bushes)
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                foreach(KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks.Where(grass => GrassRandomizer.ExcludedGrassChecks.Contains(grass.Key))) {
+                    Locations.RandomizedLocations.Add(pair.Key, pair.Value);
                 }
             }
 

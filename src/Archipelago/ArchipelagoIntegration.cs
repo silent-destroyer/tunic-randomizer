@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
@@ -22,10 +23,8 @@ namespace TunicRandomizer {
 
         public ArchipelagoSession session;
         private IEnumerator<bool> incomingItemHandler;
-        private IEnumerator<bool> outgoingItemHandler;
         private IEnumerator<bool> checkItemsReceived;
         private ConcurrentQueue<(ItemInfo ItemInfo, int index)> incomingItems;
-        private ConcurrentQueue<ItemInfo> outgoingItems;
         private DeathLinkService deathLinkService;
         public Dictionary<string, object> slotData;
         public bool disableSpoilerLog = false;
@@ -33,6 +32,9 @@ namespace TunicRandomizer {
         public bool sentRelease = false;
         public bool sentCollect = false;
         public int ItemIndex = 0;
+        public List<long> locationsToSend = new List<long>();
+        public float locationsToSendTimer = 0.0f;
+        public float locationsToSendDelay = 5.0f;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -53,10 +55,11 @@ namespace TunicRandomizer {
                     incomingItemHandler.MoveNext();
                 }
 
-                if (outgoingItemHandler != null) {
-                    outgoingItemHandler.MoveNext();
+                if ((locationsToSendTimer > locationsToSendDelay && locationsToSend.Count > 0) || locationsToSend.Count >= 10) {
+                    SendQueuedLocations();
+                    locationsToSendTimer = 0.0f;
                 }
-
+                locationsToSendTimer += Time.fixedUnscaledDeltaTime;
             }
 
             if (SpeedrunData.gameComplete != 0 && !sentCompletion) {
@@ -66,16 +69,14 @@ namespace TunicRandomizer {
 
         }
 
-        public void TryConnect() {
+        public string TryConnect() {
             
             if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)) {
-                return;
+                return "";
             }
 
             TryDisconnect();
 
-            RandomizerSettings settings = JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(TunicRandomizer.SettingsPath));
-            TunicRandomizer.Settings.ConnectionSettings = settings.ConnectionSettings;
             LoginResult LoginResult;
 
             if (session == null) {
@@ -86,10 +87,9 @@ namespace TunicRandomizer {
                 }
             }
             incomingItemHandler = IncomingItemHandler();
-            outgoingItemHandler = OutgoingItemHandler();
             checkItemsReceived = CheckItemsReceived();
             incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int index)>();
-            outgoingItems = new ConcurrentQueue<ItemInfo>();
+            locationsToSend = new List<long>();
 
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
@@ -127,44 +127,63 @@ namespace TunicRandomizer {
                     disableSpoilerLog = false;
                 }
 
+                if (Locations.LocationIdToArchipelagoId.Count == 0) {
+                    foreach (string Key in Locations.LocationDescriptionToId.Keys) {
+                        Locations.LocationIdToArchipelagoId.Add(Locations.LocationDescriptionToId[Key], Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Key));
+                    }
+                }
+
                 SetupDataStorage();
 
             } else {
                 LoginFailure loginFailure = (LoginFailure)LoginResult;
                 TunicLogger.LogInfo("Error connecting to Archipelago:");
-                Notifications.Show($"\"Failed to connect to Archipelago!\"", $"\"Check your settings and/or log output.\"");
+                string TopLine = $"\"Failed to connect to Archipelago!\"";
+                string BottomLine = $"\"Check your settings and/or log output.\"";
                 foreach (string Error in loginFailure.Errors) {
-                    TunicLogger.LogInfo(Error);
+                    BottomLine = $"\"{Error}\"";
                 }
+                Notifications.Show(TopLine, BottomLine);
                 foreach (ConnectionRefusedError Error in loginFailure.ErrorCodes) {
                     TunicLogger.LogInfo(Error.ToString());
                 }
                 TryDisconnect();
+                return BottomLine;
+            }
+            return "";
+        }
+
+        public void TrySilentReconnect() {
+            LoginResult LoginResult;
+            try {
+                LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
+            } catch (Exception e) {
+                LoginResult = new LoginFailure(e.GetBaseException().Message);
             }
         }
 
         public void TryDisconnect() {
 
             try {
-                
+                if (connected) {
+                    TunicLogger.LogInfo("Disconnected from Archipelago");
+                }
                 if (session != null) {
                     session.Socket.DisconnectAsync();
                     session = null;
                 }
 
                 incomingItemHandler = null;
-                outgoingItemHandler = null;
                 checkItemsReceived = null;
                 disableSpoilerLog = false;
                 incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
-                outgoingItems = new ConcurrentQueue<ItemInfo>();
+                locationsToSend = new List<long>();
                 deathLinkService = null;
                 slotData = null;
                 ItemIndex = 0;
                 Locations.CheckedLocations.Clear();
                 ItemLookup.ItemList.Clear();
 
-                TunicLogger.LogInfo("Disconnected from Archipelago");
             } catch (Exception e) {
                 TunicLogger.LogInfo("Encountered an error disconnecting from Archipelago!");
             }
@@ -172,16 +191,13 @@ namespace TunicRandomizer {
 
         private IEnumerator<bool> CheckItemsReceived() {
             while (connected) {
-                if (session.Items.AllItemsReceived.Count > ItemIndex) {
+                while (session.Items.AllItemsReceived.Count > ItemIndex) {
                     ItemInfo ItemInfo = session.Items.AllItemsReceived[ItemIndex];
                     TunicLogger.LogInfo("Placing item " + ItemInfo.ItemName + " with index " + ItemIndex + " in queue.");
                     incomingItems.Enqueue((ItemInfo, ItemIndex));
                     ItemIndex++;
-                    yield return true;
-                } else {
-                    yield return true;
-                    continue;
                 }
+                yield return true;
             }
         }
 
@@ -196,6 +212,19 @@ namespace TunicRandomizer {
                 var itemInfo = pendingItem.ItemInfo;
                 var itemName = itemInfo.ItemName;
                 var itemDisplayName = itemName + " (" + itemInfo.ItemId + ") at index " + pendingItem.index;
+
+                if (itemInfo.ItemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]))) {
+                    SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
+                    Inventory.GetItemByName("Grass").Quantity += 1;
+                    incomingItems.TryDequeue(out _);
+                    if (incomingItems.TryPeek(out var nextItem)) {
+                        if (nextItem.ItemInfo.ItemName == "Grass") {
+                            continue;
+                        }
+                    }
+                    yield return true;
+                    continue;
+                }
 
                 if (SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 1) {
                     incomingItems.TryDequeue(out _);
@@ -212,7 +241,7 @@ namespace TunicRandomizer {
                 var handleResult = ItemPatches.GiveItem(itemName, itemInfo);
                 switch (handleResult) {
                     case ItemPatches.ItemResult.Success:
-                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + session.Players.GetPlayerName(itemInfo.Player) + " at " + itemInfo.LocationName);
+                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + itemInfo.Player.Name + " at " + itemInfo.LocationName);
 
                         incomingItems.TryDequeue(out _);
                         SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
@@ -229,9 +258,11 @@ namespace TunicRandomizer {
                         }
 
                         // Pause before processing next item
-                        DateTime postInteractionStart = DateTime.Now;
-                        while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
-                            yield return true;
+                        if (itemInfo.ItemName != "Grass") {
+                            DateTime postInteractionStart = DateTime.Now;
+                            while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
+                                yield return true;
+                            }
                         }
 
                         break;
@@ -251,37 +282,15 @@ namespace TunicRandomizer {
             }
         }
 
-        private IEnumerator<bool> OutgoingItemHandler() {
-            while (connected) {
-                if (!outgoingItems.TryDequeue(out var itemInfo)) {
-                    yield return true;
-                    continue;
-                }
-
-                var itemName = itemInfo.ItemName;
-                var location = itemInfo.LocationName;
-                var receiver = itemInfo.Player.Name;
-
-                TunicLogger.LogInfo("Sent " + itemName + " at " + location + " to " + receiver);
-
-                if (itemInfo.Player != session.ConnectionInfo.Slot) {
-                    SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players")+1);
-                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
-                }
-                
-                yield return true;
-            }
-        }
-
         public void ActivateCheck(string LocationName) {
             var sceneName = SceneManager.GetActiveScene().name;
             if (LocationName != null) {
                 TunicLogger.LogInfo("Checked location " + LocationName);
-                var location = session.Locations.GetLocationIdFromName(session.ConnectionInfo.Game, LocationName);
+                string GameObjectId = Locations.LocationDescriptionToId[LocationName];
+                var location = ItemLookup.ItemList[GameObjectId].LocationId;
 
                 session.Locations.CompleteLocationChecks(location);
 
-                string GameObjectId = Locations.LocationDescriptionToId[LocationName];
                 SaveFile.SetInt(ItemCollectedKey + GameObjectId, 1);
 
                 Locations.CheckedLocations[GameObjectId] = true;
@@ -292,24 +301,42 @@ namespace TunicRandomizer {
                     FairyTargets.CreateLoadZoneTargets();
                 }
 
-                if (TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
+                if (SaveFile.GetInt(GrassRandoEnabled) != 1 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                     ItemTracker.PopulateSpoilerLog();
                 }
 
-                session.Locations.ScoutLocationsAsync(location)
-                .ContinueWith(locationInfoPacket => {
-                    foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                        outgoingItems.Enqueue(ItemInfo);
-                    }
-                });
+                ItemInfo itemInfo = ItemLookup.ItemList[GameObjectId];
+                string receiver = itemInfo.Player.Name;
+                string itemName = itemInfo.ItemName;
+                TunicLogger.LogInfo("Sent " + itemInfo.ItemName + " at " + location + " to " + receiver);
+                if (itemInfo.Player != session.ConnectionInfo.Slot) {
+                    SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
+                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
+                    RecentItemsDisplay.instance.EnqueueItem(itemInfo, false);
+                }
 
                 if (FairyTargets.ItemTargetsInLogic.Count == 0) {
                     FairyTargets.CreateLogicLoadZoneTargets(addImmediately: true);
                 }
 
+
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
+            }
+        }
+
+        public void SendQueuedLocations() {
+            TunicLogger.LogInfo("Sending queued grass checks: " + string.Join(", ", locationsToSend));
+            session.Locations.CompleteLocationChecks(locationsToSend.ToArray());
+            locationsToSend.Clear();
+        }
+
+        public void CompleteLocationCheck(string LocationName) {
+            if (LocationName != null) {
+                var location = session.Locations.GetLocationIdFromName(session.ConnectionInfo.Game, LocationName);
+                session.Locations.CompleteLocationChecks(location);
+
             }
         }
 

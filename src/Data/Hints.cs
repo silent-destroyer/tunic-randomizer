@@ -72,6 +72,14 @@ namespace TunicRandomizer {
                 mailboxItem = CreateSinglePlayerMailboxHint(random);
             }
 
+            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
+            foreach(KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+
             Hint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE<#FFFFFF>  [laurels] ";
             if (IsArchipelago()) {
                 int Player = Archipelago.instance.GetPlayerSlot();
@@ -80,11 +88,11 @@ namespace TunicRandomizer {
                 } else {
                     ArchipelagoHint Hyperdash = Locations.MajorItemLocations["Hero's Laurels"][0];
                     if (Hyperdash.Player == Player) {
-                        Scene = Hyperdash.Location == "Your Pocket" ? Hyperdash.Location.ToUpper() : Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[Hyperdash.Location]].Location.SceneName].ToUpper();
+                        Scene = Hyperdash.Location == "Your Pocket" ? Hyperdash.Location.ToUpper() : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[Hyperdash.Location]].Location.SceneName].ToUpper();
                         Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                         Hint += $"\nuhwAts yoo in {Prefix} \"{Scene}...\"";
                     } else if (Archipelago.instance.IsTunicPlayer((int)Hyperdash.Player)) {
-                        Scene = Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[Hyperdash.Location]].Location.SceneName].ToUpper();
+                        Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[Hyperdash.Location]].Location.SceneName].ToUpper();
                         Hint += $"\nuhwAts yoo in \"{Archipelago.instance.GetPlayerName((int)Hyperdash.Player).ToUpper()}'S\"\n\"{Scene}...\"";
                     } else {
                         Hint += $" uhwAts yoo aht\n{WordWrapString($"\"{Hyperdash.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}\nin\"{Archipelago.instance.GetPlayerName((int)Hyperdash.Player).ToUpper()}'S WORLD...\"";
@@ -125,11 +133,11 @@ namespace TunicRandomizer {
                     } else {
                         ArchipelagoHint ItemHint = Locations.MajorItemLocations[HintItem][0];
                         if (ItemHint.Player == Player) {
-                            Scene = ItemHint.Location == "Your Pocket" ? ItemHint.Location : Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[ItemHint.Location]].Location.SceneName];
+                            Scene = ItemHint.Location == "Your Pocket" ? ItemHint.Location : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[ItemHint.Location]].Location.SceneName];
                             Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                             Hint += $"{Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}";
                         } else if (Archipelago.instance.IsTunicPlayer((int)ItemHint.Player)) {
-                            Scene = Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[ItemHint.Location]].Location.SceneName];
+                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[ItemHint.Location]].Location.SceneName];
                             Hint += $"\"{Archipelago.instance.GetPlayerName((int)ItemHint.Player).ToUpper()}'S\"\n{(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}";
                         } else {
                             Hint += $"\"{Archipelago.instance.GetPlayerName((int)ItemHint.Player).ToUpper()}'S WORLD\" aht\n{WordWrapString($"\"{ItemHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}";
@@ -180,11 +188,11 @@ namespace TunicRandomizer {
                         ArchipelagoHint HexHint = Hexagon == "Gold Questagon" ? Locations.MajorItemLocations[Hexagon][i] : Locations.MajorItemLocations[Hexagon][0];
                         int Player = Archipelago.instance.GetPlayerSlot();
                         if (HexHint.Player == Player) {
-                            Scene = HexHint.Location == "Your Pocket" ? HexHint.Location : Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
+                            Scene = HexHint.Location == "Your Pocket" ? HexHint.Location : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
                             Prefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
                             Hint = $"#A sA {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                         } else if (Archipelago.instance.IsTunicPlayer((int)HexHint.Player)) {
-                            Scene = Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
+                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
                             Prefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
                             Hint = $"#A sA \"{Archipelago.instance.GetPlayerName((int)HexHint.Player).ToUpper()}'S\"\n{(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}\niz wAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                         } else {
@@ -273,6 +281,15 @@ namespace TunicRandomizer {
             string Scene = "";
             string Prefix = "";
             string RelicHint = "";
+
+            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
+            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+
             foreach (ItemData Relic in Relics) {
                 string itemDisplayText = $"{TextBuilderPatches.ItemNameToAbbreviation[Relic.Name]}  {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(ItemLookup.BonusUpgrades[Relic.ItemNameForInventory].CustomPickupMessage, false) : ItemLookup.BonusUpgrades[Relic.ItemNameForInventory].CustomPickupMessage.ToUpper())}";
 
@@ -285,12 +302,12 @@ namespace TunicRandomizer {
                         ArchipelagoHint RelicItemHint = Locations.MajorItemLocations[Relic.Name][0];
 
                         if (RelicItemHint.Player == Player) {
-                            Scene = RelicItemHint.Location == "Your Pocket" ? RelicItemHint.Location : Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[RelicItemHint.Location]].Location.SceneName];
+                            Scene = RelicItemHint.Location == "Your Pocket" ? RelicItemHint.Location : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[RelicItemHint.Location]].Location.SceneName];
 
                             Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                             RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) + "." : $"\"{Scene.ToUpper()}.\"")}";
                         } else if (Archipelago.instance.IsTunicPlayer((int)RelicItemHint.Player)) {
-                            Scene = Locations.SimplifiedSceneNames[Locations.VanillaLocations[Locations.LocationDescriptionToId[RelicItemHint.Location]].Location.SceneName];
+                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[RelicItemHint.Location]].Location.SceneName];
                             Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                             RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}\nin \"{Archipelago.instance.GetPlayerName((int)RelicItemHint.Player).ToUpper()}'S WORLD.\"";
                         } else {
@@ -320,6 +337,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt(HexagonQuestEnabled) != 1) {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
+            }
+            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                MailboxItems.Add("Trinket - Glass Cannon");
             }
             // if in single player with ladder shuffle, these ladders are probably the most useful for getting you out of sphere 1. Well ladder isn't included because of the weapon requirement for Well
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
@@ -394,6 +414,15 @@ namespace TunicRandomizer {
             string Prefix = "";
             string Hint = "";
             int Player = Archipelago.instance.GetPlayerSlot();
+
+            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
+            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+
             List<string> MailboxItems = new List<string>() { "Stick", "Sword", "Sword Upgrade", "Magic Dagger", "Magic Wand", "Magic Orb", "Lantern", "Gun", "Scavenger Mask", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)" };
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
                 MailboxItems.AddRange(new List<string> { "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to Swamp" });
@@ -416,7 +445,7 @@ namespace TunicRandomizer {
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ItemInfo item = ItemLookup.ItemList[itemkey];
                 if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
-                    var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
+                    var requirements = AllLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
                         int checkCount = 0;
                         if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
@@ -433,7 +462,7 @@ namespace TunicRandomizer {
                         }
                     }
                 } else if (item.Player != Archipelago.instance.GetPlayerSlot() && item.Flags.HasFlag(ItemFlags.Advancement)) {
-                    var requirements = Locations.VanillaLocations[itemkey].Location.Requirements[0];
+                    var requirements = AllLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
                         int checkCount = 0;
                         if (ItemRandomizer.SphereZero.Keys.Contains(req.Key) && ItemRandomizer.SphereZero[req.Key] >= req.Value) {
@@ -460,7 +489,7 @@ namespace TunicRandomizer {
                 mailboxitem = SphereOneOthers[key];
             }
             if (mailboxitem != null) {
-                Scene = Locations.SimplifiedSceneNames[Locations.VanillaLocations[key].Location.SceneName];
+                Scene = Locations.SimplifiedSceneNames[AllLocations[key].Location.SceneName];
                 Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                 SaveFile.SetString("randomizer mailbox hint location", key);
                 Hint = $"lehjehnd sehz {Prefix} \"{Scene.ToUpper()}\"\nkuhntAnz wuhn uhv mehnE \"<#00FFFF>FIRST STEPS<#ffffff>\" ahn yor jurnE.";

@@ -1,4 +1,5 @@
 ﻿using FMODUnity;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,6 +35,12 @@ namespace TunicRandomizer {
                 if (CompletionTimer > 6.0f) {
                     CompletionTimer = 0.0f;
                     SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
+                    Material outline = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
+                    foreach (TextMeshPro tmp in SpeedrunFinishlineDisplayPatches.CompletionCanvas.GetComponentsInChildren<TextMeshPro>(true)) {
+                        if (tmp.name == "randomizer finish line time text") { continue; }
+                        tmp.fontMaterial = outline;
+                        tmp.material = outline;
+                    }
                     SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = false;
                 }
             }
