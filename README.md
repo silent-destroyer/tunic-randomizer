@@ -106,7 +106,7 @@ With the exception of the Logic settings (which are determined in your Archipela
 - Hero Laurels Location
   - Place the Laurels at a predetermined location, currently the options are the 6 coin reward, 10 coin reward, or 10 fairy reward.
 - Grass Randomizer
-  - Shuffles every individual bush and piece of grass into the item pool, allowing you to find items by cutting down grass.
+  - Turns every bush and piece of grass in the game into a potential item location, for a total of over 6500 checks.
 - Lanternless Logic
   - Removes the Lantern as a requirement for dark areas, allowing it (or items that grant access to it) to be shuffled into places like Dark Tomb, etc.
 - Maskless Logic
@@ -134,6 +134,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Note: Bonus upgrades will not be retroactively awarded if this setting is turned on after obtaining Golden Trophies with it disabled. The +2 Attack Levels from Sword Progression are always awarded and are not affected by this setting.
 - Disable Chest Interruption
   - Enemies will not be able to interrupt you while opening chests if this option is turned on.
+- Recent Items Display
+  - Enables a UI element showing the most recent items that were found.
 - Skip Item Popups
   - Turns off the item/page popups when receiving items.
 - Skip Upgrade Animations
@@ -208,9 +210,13 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Beeg
 - Tinier Fox Mode
   - Smol
+- Show Player Position
+  - Shows the position of the player in the lower right corner. Useful for finding missing grass in grass rando as they are denoted by position.
+- Deathplane/OOB Patch
+  - Enables a patch to save the fox from dying if they accidentally fall out of bounds.
   
 ## Credits
-- Glace and RisingStar111 for helping research how to mod this game, and Jabberrock for creating an initial Archipelago integration.
-- Scipio for helping out with the entrance randomizer and Archipelago implementation.
-- Radicoon, Glace, RisingStar111, kingsamps0n, Landie, JimTheEternal, SapphireSapphic, ScoutJD, and many others for playtesting and helping to improve the mod.
+- Scipio for creating the Entrance Randomizer and maintaining the Archipelago logic.
+- RadRingtail, Glace, RisingStar111, kingsamps0n, Landie, JimTheEternal, Jabberrocky, Ekkosangen, FletchIsAFurry, and many others for playtesting and helping to improve the mod.
+- SapphireSapphic, ScoutJD, and Br00ty for creating/maintaining the emo/poptracker maps.
 - Andrew Shouldice, Kevin Regamey, Finji, and everyone else involved in making this wonderful game.
