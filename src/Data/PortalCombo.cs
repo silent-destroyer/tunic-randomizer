@@ -17,12 +17,11 @@ namespace TunicRandomizer {
             if (inventory.ContainsKey(Portal1.Region)) {
                 // for shop portals that are not in standalone
                 if (!TunicPortals.RegionDict.ContainsKey(Portal2.Region)) {
+                    inventory[Portal2.Region] = 1;
                     return inventory;
                 }
                 string outletRegion = TunicPortals.RegionDict[Portal2.Region].OutletRegion ?? Portal2.Region;
-                if (!inventory.ContainsKey(outletRegion)) {
-                    inventory.Add(outletRegion, 1);
-                }
+                inventory[outletRegion] = 1;
             }
             return inventory;
         }

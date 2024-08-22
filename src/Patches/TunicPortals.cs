@@ -7,6 +7,7 @@ namespace TunicRandomizer {
     public class TunicPortals {
         // todo: split the data stuff out to a different file from the scripts
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
         public static GameObject storedPortal = null;
         // just for solving the case where old house door connects to itself in decoupled
         public static bool OldHouseDoorUnstuck = false;
@@ -4894,7 +4895,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // for each origin region
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TraversalReqs) {
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
                 string origin = traversal_group.Key;
                 if (!inventory.ContainsKey(origin)) {
                     continue;
@@ -5007,7 +5008,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> FirstStepsUpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // add all regions in Overworld that you can currently reach to the inventory
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
                 string origin_region = traversal_group.Key;
                 if (!inventory.ContainsKey(origin_region)) {
                     continue;
@@ -5121,6 +5122,7 @@ namespace TunicRandomizer {
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
             List<Portal> twoPlusPortals = new List<Portal>();
+            ModifiedTraversalReqs = TraversalReqs;
 
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -5466,6 +5468,8 @@ namespace TunicRandomizer {
         public static void CreatePortalPairs(Dictionary<string, string> APPortalStrings) {
             RandomizedPortals.Clear();
             List<Portal> portalsList = new List<Portal>();
+            // equivalent of doing TraversalReqs.copy() in python
+            ModifiedTraversalReqs = TraversalReqs.ToDictionary(entry => entry.Key, entry => entry.Value);
             int comboNumber = 1000;
 
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
@@ -5511,6 +5515,9 @@ namespace TunicRandomizer {
                         dir = (int)PDir.WEST;
                     }
                     portal1 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                    if (!ModifiedTraversalReqs.ContainsKey($"Shop Entrance {shop_num}")) {
+                        ModifiedTraversalReqs.Add($"Shop Entrance {shop_num}", new Dictionary<string, List<List<string>>> { { "Shop", new List<List<string>> { } } });
+                    }
                 }
                 if (portal2 == null) {
                     string shop_num = new string(portal2SDT.Where(char.IsDigit).ToArray());
@@ -5519,6 +5526,9 @@ namespace TunicRandomizer {
                         dir = (int)PDir.WEST;
                     }
                     portal2 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                    if (!ModifiedTraversalReqs.ContainsKey($"Shop Entrance {shop_num}")) {
+                        ModifiedTraversalReqs.Add($"Shop Entrance {shop_num}", new Dictionary<string, List<List<string>>> { { "Shop", new List<List<string>> { } } });
+                    }
                 }
                 PortalCombo portalCombo = new PortalCombo(portal1, portal2);
                 RandomizedPortals.Add(comboNumber.ToString(), portalCombo);

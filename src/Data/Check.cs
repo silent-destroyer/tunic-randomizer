@@ -24,7 +24,7 @@ namespace TunicRandomizer {
                 //check if this requirement is fully met, otherwise move to the next requirement
                 int met = 0;
                 foreach (string item in req.Keys) {
-                    //TunicLogger.LogInfo(item);
+                    TunicLogger.LogInfo(item);
                     // don't need to check if ability shuffle is on since the abilities are precollected if ability shuffle is off
                     if (!inventory.ContainsKey(item)) {
                         if (item == "Sword") {
@@ -51,6 +51,8 @@ namespace TunicRandomizer {
                                 met++;
                             }
                         }
+                        TunicLogger.LogInfo("LocationID is " + this.LocationId);
+                        TunicLogger.LogInfo("inventory does not contain " + item);
                         if (ItemRandomizer.testBool) {
                             TunicLogger.LogInfo("LocationID is " + this.LocationId);
                             TunicLogger.LogInfo("inventory does not contain " + item);
@@ -61,7 +63,10 @@ namespace TunicRandomizer {
                     }
                 }
                 if (met == req.Count) {
+                    TunicLogger.LogInfo("met is true");
                     return true;
+                } else {
+                    TunicLogger.LogInfo("met is false");
                 }
             }
             //if no requirements are met, the location isn't reachable

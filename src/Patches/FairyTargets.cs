@@ -39,7 +39,7 @@ namespace TunicRandomizer {
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
                         }
-
+                        
                         if (TunicUtils.ChecksInLogic.Contains(ItemId)) {
                             hasChecksInLogicInScene = true;
                         }
