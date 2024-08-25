@@ -896,7 +896,6 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hyperdash").Quantity = 1;
             Inventory.GetItemByName("Key (House)").Quantity = 1;
             Inventory.GetItemByName("Vault Key (Red)").Quantity = 1;
-            Inventory.GetItemByName("Upgrade Offering - PotionEfficiency Swig - Ash").Quantity = 8;
         }
     }
 }
