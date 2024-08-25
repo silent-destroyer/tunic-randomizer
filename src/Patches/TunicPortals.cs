@@ -4900,20 +4900,20 @@ namespace TunicRandomizer {
                 if (!inventory.ContainsKey(origin)) {
                     continue;
                 }
-                //TunicLogger.LogInfo("checking traversal for " + origin);
+                TunicLogger.LogTesting("checking traversal for " + origin);
                 // for each destination in an origin's group
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    //TunicLogger.LogInfo("checking traversal to " + destination);
+                    TunicLogger.LogTesting("checking traversal to " + destination);
                     // if we can already reach this region, skip it
                     if (inventory.ContainsKey(destination)) {
-                        //TunicLogger.LogInfo("we already have it");
+                        TunicLogger.LogTesting("we already have it");
                         continue;
                     }
                     // met is whether you meet any of the requirement lists for a destination
                     bool met = false;
                     if (destination_group.Value.Count == 0) {
-                        //TunicLogger.LogInfo("no requirement groups, met is true");
+                        TunicLogger.LogTesting("no requirement groups, met is true");
                         met = true;
                     }
                     // check through each list of requirements
@@ -4922,12 +4922,12 @@ namespace TunicRandomizer {
                         if (reqs.Count == 0) {
                             // if a group is empty, you can just walk there
                             met = true;
-                            //TunicLogger.LogInfo("group is empty, so met is true");
+                            TunicLogger.LogTesting("group is empty, so met is true");
                         } else {
                             // check if we have the items in our inventory to traverse this path
                             met_count = 0;
                             foreach (string req in reqs) {
-                                //TunicLogger.LogInfo("req is " + req);
+                                TunicLogger.LogTesting("req is " + req);
                                 // if sword progression is on, check for this too
                                 if (req == "Sword") {
                                     if ((inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) || inventory.ContainsKey("Sword")) {
@@ -4974,14 +4974,14 @@ namespace TunicRandomizer {
                                     }
                                 } else if (inventory.ContainsKey(req)) {
                                     met_count++;
-                                    //TunicLogger.LogInfo("met_count is " + met_count);
-                                    //TunicLogger.LogInfo("reqs.count is " + reqs.Count);
-                                    //TunicLogger.LogInfo("we met this requirement");
+                                    TunicLogger.LogTesting("met_count is " + met_count);
+                                    TunicLogger.LogTesting("reqs.count is " + reqs.Count);
+                                    TunicLogger.LogTesting("we met this requirement");
                                 }
                             }
                             // if you have all the requirements, you can traverse this path
                             if (met_count == reqs.Count) {
-                                //TunicLogger.LogInfo("met is true");
+                                TunicLogger.LogTesting("met is true");
                                 met = true;
                             }
                         }
@@ -4991,10 +4991,10 @@ namespace TunicRandomizer {
                         }
                     }
                     if (met == true) {
-                        //TunicLogger.LogInfo("adding " + destination + " to inventory");
+                        TunicLogger.LogTesting("adding " + destination + " to inventory");
                         inventory.Add(destination, 1);
                     } else {
-                        //TunicLogger.LogInfo("did not add " + destination + ", we did not meet the requirements");
+                        TunicLogger.LogTesting("did not add " + destination + ", we did not meet the requirements");
                     }
                 }
             }
@@ -5056,6 +5056,7 @@ namespace TunicRandomizer {
         }
 
         public static Dictionary<string, PortalCombo> VanillaPortals() {
+            ModifiedTraversalReqs = TraversalReqs;
             Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
             List<Portal> portalList = new List<Portal>();

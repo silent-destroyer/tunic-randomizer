@@ -368,7 +368,16 @@ namespace TunicRandomizer {
                     // If it fails to place an item, start over with the current seed progress
                     // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
                     if (counter >= InitialLocations.Count) {
-                        PopulatePrecollected();
+                        TunicLogger.LogInfo("Failed to find more spots to place items. Debug info below. It will attempt to re-randomize afterwards. If you see this, please report it to the TUNIC devs along with the seed paste.");
+                        TunicLogger.LogInfo("item being placed is " + item.Name);
+                        TunicLogger.LogInfo("unplaced inventory contents:");
+                        foreach (KeyValuePair<string, int> itemgroup in UnplacedInventory) {
+                            TunicLogger.LogInfo($"{itemgroup.Key}, {itemgroup.Value}");
+                        }
+                        TunicLogger.LogInfo("full inventory contents:");
+                        foreach (KeyValuePair<string, int> itemgroup in FullInventory) {
+                            TunicLogger.LogInfo($"{itemgroup.Key}, {itemgroup.Value}");
+                        }
                         RandomizeAndPlaceItems(random);
                         return;
                     }
