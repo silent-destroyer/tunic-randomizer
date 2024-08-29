@@ -58,10 +58,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Start With Sword", "Off", "On", TunicRandomizer.Settings.StartWithSwordEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleStartWithSword);
                 OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
                 OptionsGUI.addToggle("Shuffle Ladders", "Off", "On", TunicRandomizer.Settings.ShuffleLadders ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLadderShuffle);
-                OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
-                OptionsGUI.addToggle("Entrance Randomizer: Fewer Shops", "Off", "On", TunicRandomizer.Settings.ERFixedShop ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleERFixedShop);
-                OptionsGUI.addToggle("Entrance Randomizer: Direction Pairs", "Off", "On", TunicRandomizer.Settings.PortalDirectionPairs ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePortalDirectionPairs);
-                OptionsGUI.addToggle("Entrance Randomizer: Decoupled", "Off", "On", TunicRandomizer.Settings.DecoupledER ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDecoupledER);
+                addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addToggle("Grass Randomizer", "Off", "On", TunicRandomizer.Settings.GrassRandomizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
                     TunicRandomizer.Settings.GrassRandomizer = !TunicRandomizer.Settings.GrassRandomizer;
                     SaveSettings();
@@ -86,16 +83,63 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Started With Sword", SaveFile.GetInt("randomizer started with sword") == 1 ? "<#00ff00>Yes" : "<#ff0000>No", null);
                 OptionsGUI.addButton("Shuffled Abilities", SaveFile.GetInt("randomizer shuffled abilities") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Ladders", SaveFile.GetInt("randomizer ladder rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
-                OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt("randomizer entrance rando enabled") == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
-                if (SaveFile.GetInt(EntranceRando) == 1 && IsSinglePlayer()) {
-                    OptionsGUI.addButton("Entrance Randomizer: Fewer Shops", SaveFile.GetInt(ERFixedShop) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
-                }
+                addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt(LaurelsLocation)], null);
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Maskless Logic", SaveFile.GetInt(MasklessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
                 OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
             }
+        }
+
+        public static void EntranceRandomizerPage() {
+            Il2CppStringArray EntranceLayoutOptions = (Il2CppStringArray)new string[] { "Standard", "Fewer Shops", "Matching Directions" };
+
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Entrance Randomizer");
+            if (SceneManager.GetActiveScene().name == "TitleScreen") {
+                OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
+                OptionsGUI.addMultiSelect("Entrance Layout", EntranceLayoutOptions, GetEntranceLayoutIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEntranceLayout).wrap = true;
+                OptionsGUI.addToggle("Decoupled Entrances", "Off", "On", TunicRandomizer.Settings.DecoupledER ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDecoupledER);
+            } else {
+                OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
+                    OptionsGUI.addButton("Entrance Layout", "Standard", null);
+                } else if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                    OptionsGUI.addButton("Entrance Layout", "Fewer Shops", null);
+                } else {
+                    OptionsGUI.addButton("Entrance Layout", "Matching Directions", null);
+                }
+                OptionsGUI.addButton("Decoupled Entrances", SaveFile.GetInt(SaveFlags.Decoupled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+            }
+        }
+
+        public static int GetEntranceLayoutIndex() {
+            if (TunicRandomizer.Settings.ERFixedShop) {
+                return 1;
+            }
+            if (TunicRandomizer.Settings.PortalDirectionPairs) {
+                return 2;
+            }
+            return 0;
+        }
+
+        public static void ChangeEntranceLayout(int index) {
+            TunicRandomizer.Settings.ERFixedShop = false;
+            TunicRandomizer.Settings.PortalDirectionPairs = false;
+            switch (index) {
+                case 0:
+                    break;
+                case 1:
+                    TunicRandomizer.Settings.ERFixedShop = true;
+                    break;
+                case 2:
+                    TunicRandomizer.Settings.PortalDirectionPairs = true;
+                    break;
+                default:
+                    break;
+            }
+            SaveSettings();
         }
 
         public static void HintsSettingsPage() {

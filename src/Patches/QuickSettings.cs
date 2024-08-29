@@ -592,8 +592,20 @@ namespace TunicRandomizer {
             advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Entrance Randomizer");
             advHeight += 40f * guiScale;
-            TunicRandomizer.Settings.ERFixedShop = GUI.Toggle(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ERFixedShop, "Fewer Shop Entrances");
+            bool fixedShopToggle = GUI.Toggle(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ERFixedShop && !TunicRandomizer.Settings.PortalDirectionPairs, "Fewer Shops");
+            if (fixedShopToggle) {
+                TunicRandomizer.Settings.ERFixedShop = true;
+                TunicRandomizer.Settings.PortalDirectionPairs = false;
+            }
+            bool directionToggle = GUI.Toggle(new Rect(195f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.PortalDirectionPairs && !TunicRandomizer.Settings.ERFixedShop, "Matching Directions");
+            if (directionToggle) {
+                TunicRandomizer.Settings.PortalDirectionPairs = true;
+                TunicRandomizer.Settings.ERFixedShop = false;
+            }
             advHeight += 40f * guiScale;
+            TunicRandomizer.Settings.DecoupledER = GUI.Toggle(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
+            advHeight += 40f * guiScale;
+            GUI.skin.label.fontSize = (int)(25 * guiScale);
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
             advHeight += 40f * guiScale;
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(new Rect(10f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
