@@ -233,7 +233,7 @@ namespace TunicRandomizer {
             text.transform.parent = item.transform;
 
             backing.AddComponent<Image>().sprite = ModelSwaps.FindSprite("UI_offeringBacking");
-            backing.GetComponent<Image>().color = new UnityEngine.Color(1, 1, 1, 0.6f);
+            backing.GetComponent<Image>().color = new UnityEngine.Color(1, 1, 1, 0.5f);
             backing.transform.localScale = new Vector3(2, 1, 1);
             backing.transform.localPosition = Vector3.zero;
 
