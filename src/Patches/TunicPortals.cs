@@ -5,9 +5,12 @@ using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class TunicPortals {
-        
+        // todo: split the data stuff out to a different file from the scripts
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
-        public static List<string> FlippedShopScenes = new List<string>();
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
+        public static GameObject storedPortal = null;
+        // just for solving the case where old house door connects to itself in decoupled
+        public static bool OldHouseDoorUnstuck = false;
 
         // the direction you move while entering the portal
         public enum PDir {
@@ -45,11 +48,21 @@ namespace TunicRandomizer {
         public class RegionInfo {
             public string Scene;
             public bool DeadEnd;
+            public string OutletRegion;  // for where a portal forces you to another region immediately
+            // example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
 
             public RegionInfo(string scene, bool deadEnd) {
                 Scene = scene;
                 DeadEnd = deadEnd;
+                OutletRegion = null;
             }
+
+            public RegionInfo(string scene, bool deadEnd, string outletRegion) {
+                Scene = scene;
+                DeadEnd = deadEnd;
+                OutletRegion = outletRegion;
+            }
+
         }
 
         public static Dictionary<string, Dictionary<string, List<TunicPortal>>> RegionPortalsList = new Dictionary<string, Dictionary<string, List<TunicPortal>>> {
@@ -59,165 +72,170 @@ namespace TunicRandomizer {
                     {
                         "Overworld",
                         new List<TunicPortal> {
-                            new TunicPortal("Stick House Entrance", "Sword Cave", "_", PDir.NORTH),
-                            new TunicPortal("Windmill Entrance", "Windmill", "_", PDir.NORTH),
-                            new TunicPortal("Old House Waterfall Entrance", "Overworld Interiors", "_under_checkpoint", PDir.EAST),
-                            new TunicPortal("Entrance to Furnace under Windmill", "Furnace", "_gyro_upper_east", PDir.WEST),
-                            new TunicPortal("Ruined Shop Entrance", "Ruined Shop", "_", PDir.EAST),
-                            new TunicPortal("Changing Room Entrance", "Changing Room", "_", PDir.SOUTH),
-                            new TunicPortal("Cube Cave Entrance", "CubeRoom", "_", PDir.NORTH),
-                            new TunicPortal("Dark Tomb Main Entrance", "Crypt Redux", "_", PDir.NORTH),
-                            new TunicPortal("Secret Gathering Place Entrance", "Waterfall", "_", PDir.NORTH),
+                            new TunicPortal("Stick House Entrance", "Sword Cave", "", PDir.NORTH),
+                            new TunicPortal("Windmill Entrance", "Windmill", "", PDir.NORTH),
+                            new TunicPortal("Old House Waterfall Entrance", "Overworld Interiors", "under_checkpoint", PDir.EAST),
+                            new TunicPortal("Entrance to Furnace under Windmill", "Furnace", "gyro_upper_east", PDir.WEST),
+                            new TunicPortal("Ruined Shop Entrance", "Ruined Shop", "", PDir.EAST),
+                            new TunicPortal("Changing Room Entrance", "Changing Room", "", PDir.SOUTH),
+                            new TunicPortal("Dark Tomb Main Entrance", "Crypt Redux", "", PDir.NORTH),
+                            new TunicPortal("Secret Gathering Place Entrance", "Waterfall", "", PDir.NORTH),
                         }
                     },
                     {
                         "East Overworld",
                         new List<TunicPortal> {
-                            new TunicPortal("Overworld to Forest Belltower", "Forest Belltower", "_", PDir.EAST),
-                            new TunicPortal("Overworld to Fortress", "Fortress Courtyard", "_", PDir.EAST),
+                            new TunicPortal("Overworld to Forest Belltower", "Forest Belltower", "", PDir.EAST),
+                            new TunicPortal("Overworld to Fortress", "Fortress Courtyard", "", PDir.EAST),
                         }
                     },
                     {
                         "Overworld at Patrol Cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Patrol Cave Entrance", "PatrolCave", "_", PDir.NORTH),
+                            new TunicPortal("Patrol Cave Entrance", "PatrolCave", "", PDir.NORTH),
                         }
                     },
                     {
                         "Upper Overworld",
                         new List<TunicPortal> {
-                            new TunicPortal("Stairs from Overworld to Mountain", "Mountain", "_", PDir.NORTH),
+                            new TunicPortal("Stairs from Overworld to Mountain", "Mountain", "", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld after Temple Rafters",
                         new List<TunicPortal> {
-                            new TunicPortal("Temple Rafters Entrance", "Temple", "_rafters", PDir.EAST),
+                            new TunicPortal("Temple Rafters Entrance", "Temple", "rafters", PDir.EAST),
                         }
                     },
                     {
                         "Overworld Quarry Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Overworld to Quarry Connector", "Darkwoods Tunnel", "_", PDir.NORTH),
+                            new TunicPortal("Overworld to Quarry Connector", "Darkwoods Tunnel", "", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld Beach",
                         new List<TunicPortal> {
-                            new TunicPortal("Atoll Lower Entrance", "Atoll Redux", "_lower", PDir.SOUTH),
-                            new TunicPortal("Hourglass Cave Entrance", "Town Basement", "_beach", PDir.NORTH),
-                            new TunicPortal("Maze Cave Entrance", "Maze Room", "_", PDir.NORTH),
+                            new TunicPortal("Atoll Lower Entrance", "Atoll Redux", "lower", PDir.SOUTH),
+                            new TunicPortal("Hourglass Cave Entrance", "Town Basement", "beach", PDir.NORTH),
+                            new TunicPortal("Maze Cave Entrance", "Maze Room", "", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld Tunnel Turret",
                         new List<TunicPortal> {
-                            new TunicPortal("Entrance to Furnace from Beach", "Furnace", "_gyro_lower", PDir.NORTH),
+                            new TunicPortal("Entrance to Furnace from Beach", "Furnace", "gyro_lower", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld to Atoll Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Atoll Upper Entrance", "Atoll Redux", "_upper", PDir.SOUTH),
+                            new TunicPortal("Atoll Upper Entrance", "Atoll Redux", "upper", PDir.SOUTH),
                         }
                     },
                     {
                         "Overworld Well Ladder",
                         new List<TunicPortal> {
-                            new TunicPortal("Well Ladder Entrance", "Sewer", "_entrance", PDir.LADDER_DOWN),
+                            new TunicPortal("Well Ladder Entrance", "Sewer", "entrance", PDir.LADDER_DOWN),
                         }
                     },
                     {
                         "Overworld Well to Furnace Rail",
                         new List<TunicPortal> {
-                            new TunicPortal("Entrance to Well from Well Rail", "Sewer", "_west_aqueduct", PDir.NORTH),
-                            new TunicPortal("Entrance to Furnace from Well Rail", "Furnace", "_gyro_upper_north", PDir.SOUTH),
+                            new TunicPortal("Entrance to Well from Well Rail", "Sewer", "west_aqueduct", PDir.NORTH),
+                            new TunicPortal("Entrance to Furnace from Well Rail", "Furnace", "gyro_upper_north", PDir.SOUTH),
                         }
                     },
                     {
                         "Overworld Old House Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Old House Door Entrance", "Overworld Interiors", "_house", PDir.EAST),
+                            new TunicPortal("Old House Door Entrance", "Overworld Interiors", "house", PDir.EAST),
                         }
                     },
                     {
                         "Overworld to West Garden Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Entrance near Belltower", "Archipelagos Redux", "_upper", PDir.WEST),
+                            new TunicPortal("West Garden Entrance near Belltower", "Archipelagos Redux", "upper", PDir.WEST),
                         }
                     },
                     {
                         "Overworld to West Garden from Furnace",
                         new List<TunicPortal> {
-                            new TunicPortal("Entrance to Furnace near West Garden", "Furnace", "_gyro_west", PDir.EAST),
-                            new TunicPortal("West Garden Entrance from Furnace", "Archipelagos Redux", "_lower", PDir.WEST),
+                            new TunicPortal("Entrance to Furnace near West Garden", "Furnace", "gyro_west", PDir.EAST),
+                            new TunicPortal("West Garden Entrance from Furnace", "Archipelagos Redux", "lower", PDir.WEST),
                         }
                     },
                     {
                         "Overworld Swamp Lower Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "_", PDir.SOUTH),
-                            new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2", "_conduit", PDir.SOUTH),
+                            new TunicPortal("Caustic Light Cave Entrance", "Overworld Cave", "", PDir.NORTH),
+                            new TunicPortal("Swamp Lower Entrance", "Swamp Redux 2", "conduit", PDir.SOUTH),
                         }
                     },
                     {
                         "Overworld Swamp Upper Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp Upper Entrance", "Swamp Redux 2", "_wall", PDir.SOUTH),
+                            new TunicPortal("Swamp Upper Entrance", "Swamp Redux 2", "wall", PDir.SOUTH),
                         }
                     },
                     {
                         "Overworld Ruined Passage Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Ruined Passage Door Entrance", "Ruins Passage", "_west", PDir.EAST),
+                            new TunicPortal("Ruined Passage Door Entrance", "Ruins Passage", "west", PDir.EAST),
                         }
                     },
                     {
                         "After Ruined Passage",
                         new List<TunicPortal> {
-                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "_east", PDir.WEST),
+                            new TunicPortal("Ruined Passage Not-Door Entrance", "Ruins Passage", "east", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld Special Shop Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Special Shop Entrance", "ShopSpecial", "_", PDir.EAST),
+                            new TunicPortal("Special Shop Entrance", "ShopSpecial", "", PDir.EAST),
                         }
                     },
                     {
                         "Overworld West Garden Laurels Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Laurels Entrance", "Archipelagos Redux", "_lowest", PDir.WEST),
+                            new TunicPortal("West Garden Laurels Entrance", "Archipelagos Redux", "lowest", PDir.WEST),
                         }
                     },
                     {
                         "Overworld Temple Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Temple Door Entrance", "Temple", "_main", PDir.NORTH),
+                            new TunicPortal("Temple Door Entrance", "Temple", "main", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld Fountain Cross Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Fountain HC Door Entrance", "Town_FiligreeRoom", "_", PDir.NORTH),
+                            new TunicPortal("Fountain HC Door Entrance", "Town_FiligreeRoom", "", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld Southeast Cross Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Southeast HC Door Entrance", "EastFiligreeCache", "_", PDir.NORTH),
+                            new TunicPortal("Southeast HC Door Entrance", "EastFiligreeCache", "", PDir.NORTH),
                         }
                     },
                     {
                         "Overworld Town Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Town to Far Shore", "Transit", "_teleporter_town", PDir.FLOOR),
+                            new TunicPortal("Town to Far Shore", "Transit", "teleporter_town", PDir.FLOOR),
                         }
                     },
                     {
                         "Overworld Spawn Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Spawn to Far Shore", "Transit", "_teleporter_starting island", PDir.FLOOR),
+                            new TunicPortal("Spawn to Far Shore", "Transit", "teleporter_starting island", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Cube Cave Entrance Region",
+                        new List<TunicPortal> {
+                            new TunicPortal("Cube Cave Entrance", "CubeRoom", "", PDir.NORTH),
                         }
                     },
                 }
@@ -228,7 +246,7 @@ namespace TunicRandomizer {
                     {
                         "Secret Gathering Place",
                         new List<TunicPortal> {
-                            new TunicPortal("Secret Gathering Place Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Secret Gathering Place Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -239,8 +257,8 @@ namespace TunicRandomizer {
                     {
                         "Windmill",
                         new List<TunicPortal> {
-                            new TunicPortal("Windmill Exit", "Overworld Redux", "_", PDir.SOUTH),
-                            new TunicPortal("Windmill Shop", "Shop", "_", PDir.NORTH),
+                            new TunicPortal("Windmill Exit", "Overworld Redux", "", PDir.SOUTH),
+                            new TunicPortal("Windmill Shop", "Shop", "", PDir.NORTH),
                         }
                     },
                 }
@@ -251,14 +269,14 @@ namespace TunicRandomizer {
                     {
                         "Old House Front",
                         new List<TunicPortal> {
-                            new TunicPortal("Old House Door Exit", "Overworld Redux", "_house", PDir.WEST),
-                            new TunicPortal("Old House to Glyph Tower", "g_elements", "_", PDir.SOUTH),  // weird case, going off of the connecting
+                            new TunicPortal("Old House Door Exit", "Overworld Redux", "house", PDir.WEST),
+                            new TunicPortal("Old House to Glyph Tower", "g_elements", "", PDir.SOUTH),  // weird case, going off of the connecting
                         }
                     },
                     {
                         "Old House Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Old House Waterfall Exit", "Overworld Redux", "_under_checkpoint", PDir.WEST),
+                            new TunicPortal("Old House Waterfall Exit", "Overworld Redux", "under_checkpoint", PDir.WEST),
                         }
                     },
                 }
@@ -269,7 +287,7 @@ namespace TunicRandomizer {
                     {
                         "Relic Tower",
                         new List<TunicPortal> {
-                            new TunicPortal("Glyph Tower Exit", "Overworld Interiors", "_", PDir.NORTH),
+                            new TunicPortal("Glyph Tower Exit", "Overworld Interiors", "", PDir.NORTH),
                         }
                     },
                 }
@@ -280,7 +298,7 @@ namespace TunicRandomizer {
                     {
                         "Changing Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Changing Room Exit", "Overworld Redux", "_", PDir.NORTH),
+                            new TunicPortal("Changing Room Exit", "Overworld Redux", "", PDir.NORTH),
                         }
                     },
                 }
@@ -291,7 +309,7 @@ namespace TunicRandomizer {
                     {
                         "Fountain Cross Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Fountain HC Room Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Fountain HC Room Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -302,7 +320,7 @@ namespace TunicRandomizer {
                     {
                         "Cube Cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Cube Cave Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Cube Cave Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -313,7 +331,7 @@ namespace TunicRandomizer {
                     {
                         "Patrol Cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard Patrol Cave Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Guard Patrol Cave Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -324,7 +342,7 @@ namespace TunicRandomizer {
                     {
                         "Ruined Shop",
                         new List<TunicPortal> {
-                            new TunicPortal("Ruined Shop Exit", "Overworld Redux", "_", PDir.WEST),
+                            new TunicPortal("Ruined Shop Exit", "Overworld Redux", "", PDir.WEST),
                         }
                     },
                 }
@@ -335,21 +353,21 @@ namespace TunicRandomizer {
                     {
                         "Furnace Fuse",
                         new List<TunicPortal> {
-                            new TunicPortal("Furnace Exit towards Well", "Overworld Redux", "_gyro_upper_north", PDir.NORTH),
+                            new TunicPortal("Furnace Exit towards Well", "Overworld Redux", "gyro_upper_north", PDir.NORTH),
                         }
                     },
                     {
                         "Furnace Walking Path",
                         new List<TunicPortal> {
-                            new TunicPortal("Furnace Exit to Dark Tomb", "Crypt Redux", "_", PDir.EAST),
-                            new TunicPortal("Furnace Exit towards West Garden", "Overworld Redux", "_gyro_west", PDir.WEST),
+                            new TunicPortal("Furnace Exit to Dark Tomb", "Crypt Redux", "", PDir.EAST),
+                            new TunicPortal("Furnace Exit towards West Garden", "Overworld Redux", "gyro_west", PDir.WEST),
                         }
                     },
                     {
                         "Furnace Ladder Area",
                         new List<TunicPortal> {
-                            new TunicPortal("Furnace Exit to Beach", "Overworld Redux", "_gyro_lower", PDir.SOUTH),
-                            new TunicPortal("Furnace Exit under Windmill", "Overworld Redux", "_gyro_upper_east", PDir.EAST),
+                            new TunicPortal("Furnace Exit to Beach", "Overworld Redux", "gyro_lower", PDir.SOUTH),
+                            new TunicPortal("Furnace Exit under Windmill", "Overworld Redux", "gyro_upper_east", PDir.EAST),
                         }
                     },
                 }
@@ -360,7 +378,7 @@ namespace TunicRandomizer {
                     {
                         "Stick House",
                         new List<TunicPortal> {
-                            new TunicPortal("Stick House Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Stick House Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -371,8 +389,8 @@ namespace TunicRandomizer {
                     {
                         "Ruined Passage",
                         new List<TunicPortal> {
-                            new TunicPortal("Ruined Passage Not-Door Exit", "Overworld Redux", "_east", PDir.EAST),
-                            new TunicPortal("Ruined Passage Door Exit", "Overworld Redux", "_west", PDir.WEST),
+                            new TunicPortal("Ruined Passage Not-Door Exit", "Overworld Redux", "east", PDir.SOUTH),
+                            new TunicPortal("Ruined Passage Door Exit", "Overworld Redux", "west", PDir.WEST),
                         }
                     },
                 }
@@ -383,7 +401,7 @@ namespace TunicRandomizer {
                     {
                         "Southeast Cross Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Southeast HC Room Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Southeast HC Room Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -394,7 +412,7 @@ namespace TunicRandomizer {
                     {
                         "Caustic Light Cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Caustic Light Cave Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Caustic Light Cave Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -405,7 +423,7 @@ namespace TunicRandomizer {
                     {
                         "Maze Cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Maze Cave Exit", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Maze Cave Exit", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -416,7 +434,7 @@ namespace TunicRandomizer {
                     {
                         "Hourglass Cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Hourglass Cave Exit", "Overworld Redux", "_beach", PDir.SOUTH),
+                            new TunicPortal("Hourglass Cave Exit", "Overworld Redux", "beach", PDir.SOUTH),
                         }
                     },
                 }
@@ -427,7 +445,7 @@ namespace TunicRandomizer {
                     {
                         "Special Shop",
                         new List<TunicPortal> {
-                            new TunicPortal("Special Shop Exit", "Overworld Redux", "_", PDir.WEST),
+                            new TunicPortal("Special Shop Exit", "Overworld Redux", "", PDir.WEST),
                         }
                     },
                 }
@@ -438,13 +456,13 @@ namespace TunicRandomizer {
                     {
                         "Sealed Temple Rafters",
                         new List<TunicPortal> {
-                            new TunicPortal("Temple Rafters Exit", "Overworld Redux", "_rafters", PDir.WEST),
+                            new TunicPortal("Temple Rafters Exit", "Overworld Redux", "rafters", PDir.WEST),
                         }
                     },
                     {
                         "Sealed Temple",
                         new List<TunicPortal> {
-                            new TunicPortal("Temple Door Exit", "Overworld Redux", "_main", PDir.SOUTH),
+                            new TunicPortal("Temple Door Exit", "Overworld Redux", "main", PDir.SOUTH),
                         }
                     },
                 }
@@ -455,14 +473,14 @@ namespace TunicRandomizer {
                     {
                         "Beneath the Well Ladder Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Well Ladder Exit", "Overworld Redux", "_entrance", PDir.LADDER_UP),
+                            new TunicPortal("Well Ladder Exit", "Overworld Redux", "entrance", PDir.LADDER_UP),
                         }
                     },
                     {
                         "Beneath the Well Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Well to Well Boss", "Sewer_Boss", "_", PDir.EAST),
-                            new TunicPortal("Well Exit towards Furnace", "Overworld Redux", "_west_aqueduct", PDir.SOUTH),
+                            new TunicPortal("Well to Well Boss", "Sewer_Boss", "", PDir.EAST),
+                            new TunicPortal("Well Exit towards Furnace", "Overworld Redux", "west_aqueduct", PDir.SOUTH),
                         }
                     },
                 }
@@ -473,13 +491,13 @@ namespace TunicRandomizer {
                     {
                         "Well Boss",
                         new List<TunicPortal> {
-                            new TunicPortal("Well Boss to Well", "Sewer", "_", PDir.WEST),
+                            new TunicPortal("Well Boss to Well", "Sewer", "", PDir.WEST),
                         }
                     },
                     {
                         "Dark Tomb Checkpoint",
                         new List<TunicPortal> {
-                            new TunicPortal("Checkpoint to Dark Tomb", "Crypt Redux", "_", PDir.LADDER_UP),
+                            new TunicPortal("Checkpoint to Dark Tomb", "Crypt Redux", "", PDir.LADDER_UP),
                         }
                     },
                 }
@@ -490,14 +508,14 @@ namespace TunicRandomizer {
                     {
                         "Dark Tomb Entry Point",
                         new List<TunicPortal> {
-                            new TunicPortal("Dark Tomb to Overworld", "Overworld Redux", "_", PDir.SOUTH),
-                            new TunicPortal("Dark Tomb to Checkpoint", "Sewer_Boss", "_", PDir.LADDER_DOWN),
+                            new TunicPortal("Dark Tomb to Overworld", "Overworld Redux", "", PDir.SOUTH),
+                            new TunicPortal("Dark Tomb to Checkpoint", "Sewer_Boss", "", PDir.LADDER_DOWN),
                         }
                     },
                     {
                         "Dark Tomb Dark Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Dark Tomb to Furnace", "Furnace", "_", PDir.WEST),
+                            new TunicPortal("Dark Tomb to Furnace", "Furnace", "", PDir.WEST),
                         }
                     },
                 }
@@ -508,33 +526,33 @@ namespace TunicRandomizer {
                     {
                         "West Garden",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Exit near Hero's Grave", "Overworld Redux", "_lower", PDir.EAST),
-                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house", "_", PDir.EAST),
-                            new TunicPortal("West Garden Shop", "Shop", "_", PDir.EAST),
+                            new TunicPortal("West Garden Exit near Hero's Grave", "Overworld Redux", "lower", PDir.EAST),
+                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house", "", PDir.EAST),
+                            new TunicPortal("West Garden Shop", "Shop", "", PDir.EAST),
                         }
                     },
                     {
                         "West Garden after Boss",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Exit after Boss", "Overworld Redux", "_upper", PDir.EAST),
+                            new TunicPortal("West Garden Exit after Boss", "Overworld Redux", "upper", PDir.EAST),
                         }
                     },
                     {
                         "West Garden Laurels Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Laurels Exit", "Overworld Redux", "_lowest", PDir.EAST),
+                            new TunicPortal("West Garden Laurels Exit", "Overworld Redux", "lowest", PDir.EAST),
                         }
                     },
                     {
                         "West Garden Hero's Grave",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("West Garden Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "West Garden Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("West Garden to Far Shore", "Transit", "_teleporter_archipelagos_teleporter", PDir.FLOOR),
+                            new TunicPortal("West Garden to Far Shore", "Transit", "teleporter_archipelagos_teleporter", PDir.FLOOR),
                         }
                     },
                 }
@@ -545,7 +563,7 @@ namespace TunicRandomizer {
                     {
                         "Magic Dagger House",
                         new List<TunicPortal> {
-                            new TunicPortal("Magic Dagger House Exit", "Archipelagos Redux", "_", PDir.WEST),
+                            new TunicPortal("Magic Dagger House Exit", "Archipelagos Redux", "", PDir.WEST),
                         }
                     },
                 }
@@ -556,38 +574,38 @@ namespace TunicRandomizer {
                     {
                         "Ruined Atoll",
                         new List<TunicPortal> {
-                            new TunicPortal("Atoll Upper Exit", "Overworld Redux", "_upper", PDir.NORTH),
-                            new TunicPortal("Atoll Shop", "Shop", "_", PDir.NORTH),
+                            new TunicPortal("Atoll Upper Exit", "Overworld Redux", "upper", PDir.NORTH),
+                            new TunicPortal("Atoll Shop", "Shop", "", PDir.NORTH),
                         }
                     },
                     {
                         "Ruined Atoll Lower Entry Area",
                         new List<TunicPortal> {
-                            new TunicPortal("Atoll Lower Exit", "Overworld Redux", "_lower", PDir.NORTH),
+                            new TunicPortal("Atoll Lower Exit", "Overworld Redux", "lower", PDir.NORTH),
                         }
                     },
                     {
                         "Ruined Atoll Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Atoll to Far Shore", "Transit", "_teleporter_atoll", PDir.FLOOR),
+                            new TunicPortal("Atoll to Far Shore", "Transit", "teleporter_atoll", PDir.FLOOR),
                         }
                     },
                     {
                         "Ruined Atoll Statue",
                         new List<TunicPortal> {
-                            new TunicPortal("Atoll Statue Teleporter", "Library Exterior", "_", PDir.FLOOR),
+                            new TunicPortal("Atoll Statue Teleporter", "Library Exterior", "", PDir.FLOOR),
                         }
                     },
                     {
                         "Ruined Atoll Frog Eye",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs", "_eye", PDir.SOUTH),  // camera rotates to be north
+                            new TunicPortal("Frog Stairs Eye Entrance", "Frog Stairs", "eye", PDir.SOUTH),  // camera rotates to be north
                         }
                     },
                     {
                         "Ruined Atoll Frog Mouth",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog Stairs Mouth Entrance", "Frog Stairs", "_mouth", PDir.EAST),
+                            new TunicPortal("Frog Stairs Mouth Entrance", "Frog Stairs", "mouth", PDir.EAST),
                         }
                     },
                 }
@@ -598,25 +616,25 @@ namespace TunicRandomizer {
                     {
                         "Frog Stairs Eye Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog Stairs Eye Exit", "Atoll Redux", "_eye", PDir.NORTH),
+                            new TunicPortal("Frog Stairs Eye Exit", "Atoll Redux", "eye", PDir.NORTH),
                         }
                     },
                     {
                         "Frog Stairs Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog Stairs Mouth Exit", "Atoll Redux", "_mouth", PDir.WEST),
+                            new TunicPortal("Frog Stairs Mouth Exit", "Atoll Redux", "mouth", PDir.WEST),
                         }
                     },
                     {
                         "Frog Stairs Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog Stairs to Frog's Domain's Exit", "frog cave main", "_Exit", PDir.EAST),
+                            new TunicPortal("Frog Stairs to Frog's Domain's Exit", "frog cave main", "Exit", PDir.EAST),
                         }
                     },
                     {
                         "Frog Stairs to Frog's Domain",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog Stairs to Frog's Domain's Entrance", "frog cave main", "_Entrance", PDir.LADDER_DOWN),
+                            new TunicPortal("Frog Stairs to Frog's Domain's Entrance", "frog cave main", "Entrance", PDir.LADDER_DOWN),
                         }
                     },
                 }
@@ -627,13 +645,13 @@ namespace TunicRandomizer {
                     {
                         "Frog's Domain Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog's Domain Ladder Exit", "Frog Stairs", "_Entrance", PDir.LADDER_UP),
+                            new TunicPortal("Frog's Domain Ladder Exit", "Frog Stairs", "Entrance", PDir.LADDER_UP),
                         }
                     },
                     {
                         "Frog's Domain Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Frog's Domain Orb Exit", "Frog Stairs", "_Exit", PDir.WEST),
+                            new TunicPortal("Frog's Domain Orb Exit", "Frog Stairs", "Exit", PDir.WEST),
                         }
                     },
                 }
@@ -644,13 +662,13 @@ namespace TunicRandomizer {
                     {
                         "Library Exterior Tree",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Exterior Tree", "Atoll Redux", "_", PDir.FLOOR),
+                            new TunicPortal("Library Exterior Tree", "Atoll Redux", "", PDir.FLOOR),
                         }
                     },
                     {
                         "Library Exterior Ladder",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Exterior Ladder", "Library Hall", "_", PDir.WEST),  // camera rotates to appear north
+                            new TunicPortal("Library Exterior Ladder", "Library Hall", "", PDir.WEST),  // camera rotates to appear north
                         }
                     },
                 }
@@ -661,19 +679,19 @@ namespace TunicRandomizer {
                     {
                         "Library Hall Bookshelf",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Hall Bookshelf Exit", "Library Exterior", "_", PDir.EAST),
+                            new TunicPortal("Library Hall Bookshelf Exit", "Library Exterior", "", PDir.EAST),
                         }
                     },
                     {
                         "Library Hero's Grave",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Library Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Library Hall to Rotunda",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Hall to Rotunda", "Library Rotunda", "_", PDir.LADDER_UP),
+                            new TunicPortal("Library Hall to Rotunda", "Library Rotunda", "", PDir.LADDER_UP),
                         }
                     },
                 }
@@ -684,13 +702,13 @@ namespace TunicRandomizer {
                     {
                         "Library Rotunda to Hall",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Rotunda Lower Exit", "Library Hall", "_", PDir.LADDER_DOWN),
+                            new TunicPortal("Library Rotunda Lower Exit", "Library Hall", "", PDir.LADDER_DOWN),
                         }
                     },
                     {
                         "Library Rotunda to Lab",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Rotunda Upper Exit", "Library Lab", "_", PDir.LADDER_UP),
+                            new TunicPortal("Library Rotunda Upper Exit", "Library Lab", "", PDir.LADDER_UP),
                         }
                     },
                 }
@@ -701,19 +719,19 @@ namespace TunicRandomizer {
                     {
                         "Library Lab Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Lab to Rotunda", "Library Rotunda", "_", PDir.LADDER_DOWN),
+                            new TunicPortal("Library Lab to Rotunda", "Library Rotunda", "", PDir.LADDER_DOWN),
                         }
                     },
                     {
                         "Library Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Library to Far Shore", "Transit", "_teleporter_library teleporter", PDir.FLOOR),
+                            new TunicPortal("Library to Far Shore", "Transit", "teleporter_library teleporter", PDir.FLOOR),
                         }
                     },
                     {
                         "Library Lab to Librarian",
                         new List<TunicPortal> {
-                            new TunicPortal("Library Lab to Librarian Arena", "Library Arena", "_", PDir.LADDER_UP),
+                            new TunicPortal("Library Lab to Librarian Arena", "Library Arena", "", PDir.LADDER_UP),
                         }
                     },
                 }
@@ -724,7 +742,7 @@ namespace TunicRandomizer {
                     {
                         "Library Arena",
                         new List<TunicPortal> {
-                            new TunicPortal("Librarian Arena Exit", "Library Lab", "_", PDir.LADDER_DOWN),
+                            new TunicPortal("Librarian Arena Exit", "Library Lab", "", PDir.LADDER_DOWN),
                         }
                     },
                 }
@@ -735,30 +753,30 @@ namespace TunicRandomizer {
                     {
                         "East Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest to Belltower", "Forest Belltower", "_", PDir.NORTH),
-                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "_lower", PDir.NORTH),
-                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "_gate", PDir.NORTH),
-                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "_upper", PDir.EAST),
-                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "_lower", PDir.EAST),
-                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "_upper", PDir.EAST),
+                            new TunicPortal("Forest to Belltower", "Forest Belltower", "", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "lower", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "gate", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "upper", PDir.EAST),
+                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "lower", PDir.EAST),
+                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "upper", PDir.EAST),
                         }
                     },
                     {
                         "East Forest Dance Fox Spot",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave", "_upper", PDir.EAST),
+                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave", "upper", PDir.EAST),
                         }
                     },
                     {
                         "East Forest Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest to Far Shore", "Transit", "_teleporter_forest teleporter", PDir.FLOOR),
+                            new TunicPortal("Forest to Far Shore", "Transit", "teleporter_forest teleporter", PDir.FLOOR),
                         }
                     },
                     {
                         "Lower Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "_lower", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "lower", PDir.NORTH),
                         }
                     },
                 }
@@ -769,15 +787,15 @@ namespace TunicRandomizer {
                     {
                         "Guard House 1 West",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux", "_upper", PDir.WEST),
-                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux", "_lower", PDir.SOUTH),
+                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux", "upper", PDir.WEST),
+                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux", "lower", PDir.SOUTH),
                         }
                     },
                     {
                         "Guard House 1 East",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux", "_gate", PDir.SOUTH),
-                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room", "_", PDir.NORTH),
+                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux", "gate", PDir.SOUTH),
+                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room", "", PDir.NORTH),
                         }
                     },
                 }
@@ -788,19 +806,19 @@ namespace TunicRandomizer {
                     {
                         "Forest Grave Path Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux", "_upper", PDir.WEST),
+                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux", "upper", PDir.WEST),
                         }
                     },
                     {
                         "Forest Grave Path Main",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux", "_lower", PDir.WEST),
+                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux", "lower", PDir.WEST),
                         }
                     },
                     {
                         "Forest Hero's Grave",
                         new List<TunicPortal> {
-                            new TunicPortal("East Forest Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("East Forest Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                 }
@@ -811,13 +829,13 @@ namespace TunicRandomizer {
                     {
                         "Guard House 2 Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "_upper", PDir.WEST),
+                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "upper", PDir.WEST),
                         }
                     },
                     {
                         "Guard House 2 Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "_lower", PDir.SOUTH),
+                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "lower", PDir.SOUTH),
                         }
                     },
                 }
@@ -828,8 +846,8 @@ namespace TunicRandomizer {
                     {
                         "Forest Boss Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave", "_", PDir.SOUTH),
-                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower", "_", PDir.NORTH),
+                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave", "", PDir.SOUTH),
+                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower", "", PDir.NORTH),
                         }
                     },
                 }
@@ -840,20 +858,20 @@ namespace TunicRandomizer {
                     {
                         "Forest Belltower Main",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "_", PDir.NORTH),
-                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "_", PDir.WEST),
+                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "", PDir.NORTH),
+                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "", PDir.WEST),
                         }
                     },
                     {
                         "Forest Belltower Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Forest Belltower Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "_", PDir.SOUTH),
+                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -864,39 +882,39 @@ namespace TunicRandomizer {
                     {
                         "Fortress Courtyard",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary", "_Lower", PDir.EAST),
-                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main", "_Big Door", PDir.NORTH),
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary", "Lower", PDir.EAST),
+                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main", "Big Door", PDir.NORTH),
                         }
                     },
                     {
                         "Fortress Courtyard Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary", "_Upper", PDir.EAST),
-                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East", "_", PDir.NORTH),
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary", "Upper", PDir.EAST),
+                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East", "", PDir.NORTH),
                         }
                     },
                     {
                         "Fortress Exterior near cave",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard Shop", "Shop", "_", PDir.NORTH),
+                            new TunicPortal("Fortress Courtyard Shop", "Shop", "", PDir.NORTH),
                         }
                     },
                     {
                         "Beneath the Vault Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "_", PDir.LADDER_DOWN),
+                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "", PDir.LADDER_DOWN),
                         }
                     },
                     {
                         "Fortress Exterior from East Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower", "_", PDir.SOUTH),
+                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Fortress Exterior from Overworld",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux", "_", PDir.WEST),
+                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux", "", PDir.WEST),
                         }
                     },
                 }
@@ -907,13 +925,13 @@ namespace TunicRandomizer {
                     {
                         "Beneath the Vault Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main", "_", PDir.EAST),
+                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main", "", PDir.EAST),
                         }
                     },
                     {
                         "Beneath the Vault Ladder Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "_", PDir.LADDER_UP),
+                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "", PDir.LADDER_UP),
                         }
                     },
                 }
@@ -924,17 +942,17 @@ namespace TunicRandomizer {
                     {
                         "Eastern Vault Fortress",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard", "_Big Door", PDir.SOUTH),
-                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement", "_", PDir.WEST),
-                            new TunicPortal("Fortress Interior Shop", "Shop", "_", PDir.NORTH),
-                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East", "_upper", PDir.EAST),
-                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East", "_lower", PDir.EAST),
+                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard", "Big Door", PDir.SOUTH),
+                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement", "", PDir.WEST),
+                            new TunicPortal("Fortress Interior Shop", "Shop", "", PDir.NORTH),
+                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East", "upper", PDir.EAST),
+                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East", "lower", PDir.EAST),
                         }
                     },
                     {
                         "Eastern Vault Fortress Gold Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena", "_", PDir.NORTH),
+                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena", "", PDir.NORTH),
                         }
                     },
                 }
@@ -945,14 +963,14 @@ namespace TunicRandomizer {
                     {
                         "Fortress East Shortcut Lower",
                         new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main", "_lower", PDir.WEST),
+                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main", "lower", PDir.WEST),
                         }
                     },
                     {
                         "Fortress East Shortcut Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "_", PDir.WEST),
-                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "_upper", PDir.SOUTH),
+                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "", PDir.SOUTH),
+                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "upper", PDir.WEST),
                         }
                     },
                 }
@@ -963,20 +981,20 @@ namespace TunicRandomizer {
                     {
                         "Fortress Grave Path",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "_Lower", PDir.WEST),
-                            new TunicPortal("Fortress Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "Lower", PDir.WEST),
+                            new TunicPortal("Fortress Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Fortress Grave Path Upper",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard", "_Upper", PDir.WEST),
+                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard", "Upper", PDir.WEST),
                         }
                     },
                     {
                         "Fortress Grave Path Dusty Entrance",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Dusty Entrance", "Dusty", "_", PDir.NORTH),
+                            new TunicPortal("Fortress Grave Path Dusty Entrance", "Dusty", "", PDir.NORTH),
                         }
                     },
                 }
@@ -987,7 +1005,7 @@ namespace TunicRandomizer {
                     {
                         "Fortress Leaf Piles",
                         new List<TunicPortal> {
-                            new TunicPortal("Dusty Exit", "Fortress Reliquary", "_", PDir.SOUTH),
+                            new TunicPortal("Dusty Exit", "Fortress Reliquary", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -998,13 +1016,13 @@ namespace TunicRandomizer {
                     {
                         "Fortress Arena",
                         new List<TunicPortal> {
-                            new TunicPortal("Siege Engine Arena to Fortress", "Fortress Main", "_", PDir.SOUTH),
+                            new TunicPortal("Siege Engine Arena to Fortress", "Fortress Main", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Fortress Arena Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Fortress to Far Shore", "Transit", "_teleporter_spidertank", PDir.FLOOR),
+                            new TunicPortal("Fortress to Far Shore", "Transit", "teleporter_spidertank", PDir.FLOOR),
                         }
                     },
                 }
@@ -1015,14 +1033,14 @@ namespace TunicRandomizer {
                     {
                         "Lower Mountain Stairs",
                         new List<TunicPortal> {
-                            new TunicPortal("Stairs to Top of the Mountain", "Mountaintop", "_", PDir.NORTH),
+                            new TunicPortal("Stairs to Top of the Mountain", "Mountaintop", "", PDir.NORTH),
                         }
                     },
                     {
                         "Lower Mountain",
                         new List<TunicPortal> {
-                            new TunicPortal("Mountain to Quarry", "Quarry Redux", "_", PDir.SOUTH),  // starts north, rotates to be east, but the connecting one is north so it's south
-                            new TunicPortal("Mountain to Overworld", "Overworld Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Mountain to Quarry", "Quarry Redux", "", PDir.SOUTH),  // starts north, rotates to be east, but the connecting one is north so it's south
+                            new TunicPortal("Mountain to Overworld", "Overworld Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -1033,7 +1051,7 @@ namespace TunicRandomizer {
                     {
                         "Top of the Mountain",
                         new List<TunicPortal> {
-                            new TunicPortal("Top of the Mountain Exit", "Mountain", "_", PDir.SOUTH),
+                            new TunicPortal("Top of the Mountain Exit", "Mountain", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -1044,8 +1062,8 @@ namespace TunicRandomizer {
                     {
                         "Quarry Connector",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry Connector to Overworld", "Overworld Redux", "_", PDir.NORTH),  // rotates, but the connecting is south
-                            new TunicPortal("Quarry Connector to Quarry", "Quarry Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Quarry Connector to Overworld", "Overworld Redux", "", PDir.SOUTH),
+                            new TunicPortal("Quarry Connector to Quarry", "Quarry Redux", "", PDir.NORTH),  // rotates, but the connecting is south
                         }
                     },
                 }
@@ -1056,38 +1074,38 @@ namespace TunicRandomizer {
                     {
                         "Quarry Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry to Overworld Exit", "Darkwoods Tunnel", "_", PDir.SOUTH),
-                            new TunicPortal("Quarry Shop", "Shop", "_", PDir.NORTH),
+                            new TunicPortal("Quarry to Overworld Exit", "Darkwoods Tunnel", "", PDir.SOUTH),
+                            new TunicPortal("Quarry Shop", "Shop", "", PDir.NORTH),
                         }
                     },
                     {
                         "Quarry Monastery Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry to Monastery Front", "Monastery", "_front", PDir.NORTH),
+                            new TunicPortal("Quarry to Monastery Front", "Monastery", "front", PDir.NORTH),
                         }
                     },
                     {
                         "Monastery Rope",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry to Monastery Back", "Monastery", "_back", PDir.EAST),
+                            new TunicPortal("Quarry to Monastery Back", "Monastery", "back", PDir.EAST),
                         }
                     },
                     {
                         "Quarry Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry to Mountain", "Mountain", "_", PDir.NORTH),
+                            new TunicPortal("Quarry to Mountain", "Mountain", "", PDir.NORTH),
                         }
                     },
                     {
                         "Lower Quarry Zig Door",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry to Ziggurat", "ziggurat2020_0", "_", PDir.NORTH),
+                            new TunicPortal("Quarry to Ziggurat", "ziggurat2020_0", "", PDir.NORTH),
                         }
                     },
                     {
                         "Quarry Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Quarry to Far Shore", "Transit", "_teleporter_quarry teleporter", PDir.FLOOR),
+                            new TunicPortal("Quarry to Far Shore", "Transit", "teleporter_quarry teleporter", PDir.FLOOR),
                         }
                     },
                 }
@@ -1098,19 +1116,19 @@ namespace TunicRandomizer {
                     {
                         "Monastery Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Monastery Rear Exit", "Quarry Redux", "_back", PDir.WEST),
+                            new TunicPortal("Monastery Rear Exit", "Quarry Redux", "back", PDir.WEST),
                         }
                     },
                     {
                         "Monastery Front",
                         new List<TunicPortal> {
-                            new TunicPortal("Monastery Front Exit", "Quarry Redux", "_front", PDir.SOUTH),
+                            new TunicPortal("Monastery Front Exit", "Quarry Redux", "front", PDir.SOUTH),
                         }
                     },
                     {
                         "Monastery Hero's Grave",
                         new List<TunicPortal> {
-                            new TunicPortal("Monastery Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Monastery Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                 }
@@ -1121,8 +1139,8 @@ namespace TunicRandomizer {
                     {
                         "Rooted Ziggurat Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Entry Hallway to Ziggurat Upper", "ziggurat2020_1", "_", PDir.NORTH),
-                            new TunicPortal("Ziggurat Entry Hallway to Quarry", "Quarry Redux", "_", PDir.SOUTH),
+                            new TunicPortal("Ziggurat Entry Hallway to Ziggurat Upper", "ziggurat2020_1", "", PDir.NORTH),
+                            new TunicPortal("Ziggurat Entry Hallway to Quarry", "Quarry Redux", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -1133,13 +1151,13 @@ namespace TunicRandomizer {
                     {
                         "Rooted Ziggurat Upper Entry",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Upper to Ziggurat Entry Hallway", "ziggurat2020_0", "_", PDir.SOUTH),
+                            new TunicPortal("Ziggurat Upper to Ziggurat Entry Hallway", "ziggurat2020_0", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Rooted Ziggurat Upper Back",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Upper to Ziggurat Tower", "ziggurat2020_2", "_", PDir.NORTH),  // lots of rotation, connecting is south
+                            new TunicPortal("Ziggurat Upper to Ziggurat Tower", "ziggurat2020_2", "", PDir.NORTH),  // lots of rotation, connecting is south
                         }
                     },
                 }
@@ -1150,13 +1168,13 @@ namespace TunicRandomizer {
                     {
                         "Rooted Ziggurat Middle Top",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Tower to Ziggurat Upper", "ziggurat2020_1", "_", PDir.SOUTH),
+                            new TunicPortal("Ziggurat Tower to Ziggurat Upper", "ziggurat2020_1", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Rooted Ziggurat Middle Bottom",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Tower to Ziggurat Lower", "ziggurat2020_3", "_", PDir.SOUTH),
+                            new TunicPortal("Ziggurat Tower to Ziggurat Lower", "ziggurat2020_3", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -1167,19 +1185,19 @@ namespace TunicRandomizer {
                     {
                         "Rooted Ziggurat Lower Front",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Lower to Ziggurat Tower", "ziggurat2020_2", "_", PDir.NORTH),
+                            new TunicPortal("Ziggurat Lower to Ziggurat Tower", "ziggurat2020_2", "", PDir.NORTH),
                         }
                     },
                     {
                         "Rooted Ziggurat Portal Room Entrance",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Portal Room Entrance", "ziggurat2020_FTRoom", "_", PDir.NORTH),
+                            new TunicPortal("Ziggurat Portal Room Entrance", "ziggurat2020_FTRoom", "", PDir.NORTH),
                         }
                     },
                     {
                         "Zig Skip Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1", "_zig2_skip", PDir.FLOOR),  // floor is weird but oh well
+                            new TunicPortal("Ziggurat Lower Falling Entrance", "ziggurat2020_1", "zig2_skip", PDir.FLOOR),  // floor is weird but oh well
                         }
                     },
                 }
@@ -1190,13 +1208,13 @@ namespace TunicRandomizer {
                     {
                         "Rooted Ziggurat Portal Room Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat Portal Room Exit", "ziggurat2020_3", "_", PDir.SOUTH),
+                            new TunicPortal("Ziggurat Portal Room Exit", "ziggurat2020_3", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Rooted Ziggurat Portal",
                         new List<TunicPortal> {
-                            new TunicPortal("Ziggurat to Far Shore", "Transit", "_teleporter_ziggurat teleporter", PDir.FLOOR),
+                            new TunicPortal("Ziggurat to Far Shore", "Transit", "teleporter_ziggurat teleporter", PDir.FLOOR),
                         }
                     },
                 }
@@ -1207,38 +1225,38 @@ namespace TunicRandomizer {
                     {
                         "Swamp Front",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp Lower Exit", "Overworld Redux", "_conduit", PDir.NORTH),
-                            new TunicPortal("Swamp Shop", "Shop", "_", PDir.NORTH),
+                            new TunicPortal("Swamp Lower Exit", "Overworld Redux", "conduit", PDir.NORTH),
+                            new TunicPortal("Swamp Shop", "Shop", "", PDir.NORTH),
                         }
                     },
                     {
                         "Swamp to Cathedral Main Entrance",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp to Cathedral Main Entrance", "Cathedral Redux", "_main", PDir.NORTH),
+                            new TunicPortal("Swamp to Cathedral Main Entrance", "Cathedral Redux", "main", PDir.NORTH),
                         }
                     },
                     {
                         "Swamp to Cathedral Treasure Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp to Cathedral Secret Legend Room Entrance", "Cathedral Redux", "_secret", PDir.SOUTH),
+                            new TunicPortal("Swamp to Cathedral Secret Legend Room Entrance", "Cathedral Redux", "secret", PDir.SOUTH),
                         }
                     },
                     {
                         "Back of Swamp",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp to Gauntlet", "Cathedral Arena", "_", PDir.NORTH),
+                            new TunicPortal("Swamp to Gauntlet", "Cathedral Arena", "", PDir.NORTH),
                         }
                     },
                     {
                         "Back of Swamp Laurels Area",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp Upper Exit", "Overworld Redux", "_wall", PDir.NORTH),
+                            new TunicPortal("Swamp Upper Exit", "Overworld Redux", "wall", PDir.NORTH),
                         }
                     },
                     {
                         "Swamp Hero's Grave",
                         new List<TunicPortal> {
-                            new TunicPortal("Swamp Hero's Grave", "RelicVoid", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Swamp Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                 }
@@ -1249,14 +1267,14 @@ namespace TunicRandomizer {
                     {
                         "Cathedral",
                         new List<TunicPortal> {
-                            new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "_main", PDir.SOUTH),
-                            new TunicPortal("Cathedral Elevator", "Cathedral Arena", "_", PDir.FLOOR),
+                            new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "main", PDir.SOUTH),
+                            new TunicPortal("Cathedral Elevator", "Cathedral Arena", "", PDir.LADDER_DOWN),
                         }
                     },
                     {
                         "Cathedral Secret Legend Room",
                         new List<TunicPortal> {
-                            new TunicPortal("Cathedral Secret Legend Room Exit", "Swamp Redux 2", "_secret", PDir.NORTH),
+                            new TunicPortal("Cathedral Secret Legend Room Exit", "Swamp Redux 2", "secret", PDir.NORTH),
                         }
                     },
                 }
@@ -1267,14 +1285,14 @@ namespace TunicRandomizer {
                     {
                         "Cathedral Gauntlet Exit",
                         new List<TunicPortal> {
-                            new TunicPortal("Gauntlet to Swamp", "Swamp Redux 2", "_", PDir.SOUTH),
+                            new TunicPortal("Gauntlet to Swamp", "Swamp Redux 2", "", PDir.SOUTH),
                         }
                     },
                     {
                         "Cathedral Gauntlet Checkpoint",
                         new List<TunicPortal> {
-                            new TunicPortal("Gauntlet Elevator", "Cathedral Redux", "_", PDir.FLOOR),
-                            new TunicPortal("Gauntlet Shop", "Shop", "_", PDir.EAST),
+                            new TunicPortal("Gauntlet Elevator", "Cathedral Redux", "", PDir.LADDER_UP),
+                            new TunicPortal("Gauntlet Shop", "Shop", "", PDir.EAST),
                         }
                     },
                 }
@@ -1285,37 +1303,37 @@ namespace TunicRandomizer {
                     {
                         "Hero Relic - Fortress",
                         new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Fortress", "Fortress Reliquary", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Hero's Grave to Fortress", "Fortress Reliquary", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Hero Relic - Quarry",
                         new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Monastery", "Monastery", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Hero's Grave to Monastery", "Monastery", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Hero Relic - West Garden",
                         new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to West Garden", "Archipelagos Redux", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Hero's Grave to West Garden", "Archipelagos Redux", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Hero Relic - East Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to East Forest", "Sword Access", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Hero's Grave to East Forest", "Sword Access", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Hero Relic - Library",
                         new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Library", "Library Hall", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Hero's Grave to Library", "Library Hall", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
                         "Hero Relic - Swamp",
                         new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Swamp", "Swamp Redux 2", "_teleporter_relic plinth", PDir.FLOOR),
+                            new TunicPortal("Hero's Grave to Swamp", "Swamp Redux 2", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                 }
@@ -1326,46 +1344,46 @@ namespace TunicRandomizer {
                     {
                         "Far Shore to West Garden",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to West Garden", "Archipelagos Redux", "_teleporter_archipelagos_teleporter", PDir.FLOOR),
+                            new TunicPortal("Far Shore to West Garden", "Archipelagos Redux", "teleporter_archipelagos_teleporter", PDir.FLOOR),
                         }
                     },
                     {
                         "Far Shore to Library",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to Library", "Library Lab", "_teleporter_library teleporter", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Library", "Library Lab", "teleporter_library teleporter", PDir.FLOOR),
                         }
                     },
                     {
                         "Far Shore to Quarry",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to Quarry", "Quarry Redux", "_teleporter_quarry teleporter", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Quarry", "Quarry Redux", "teleporter_quarry teleporter", PDir.FLOOR),
                         }
                     },
                     {
                         "Far Shore to East Forest",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to East Forest", "East Forest Redux", "_teleporter_forest teleporter", PDir.FLOOR),
+                            new TunicPortal("Far Shore to East Forest", "East Forest Redux", "teleporter_forest teleporter", PDir.FLOOR),
                         }
                     },
                     {
                         "Far Shore to Fortress",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to Fortress", "Fortress Arena", "_teleporter_spidertank", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Fortress", "Fortress Arena", "teleporter_spidertank", PDir.FLOOR),
                         }
                     },
                     {
                         "Far Shore",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to Atoll", "Atoll Redux", "_teleporter_atoll", PDir.FLOOR),
-                            new TunicPortal("Far Shore to Ziggurat", "ziggurat2020_FTRoom", "_teleporter_ziggurat teleporter", PDir.FLOOR),
-                            new TunicPortal("Far Shore to Heir", "Spirit Arena", "_teleporter_spirit arena", PDir.FLOOR),
-                            new TunicPortal("Far Shore to Town", "Overworld Redux", "_teleporter_town", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Atoll", "Atoll Redux", "teleporter_atoll", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Ziggurat", "ziggurat2020_FTRoom", "teleporter_ziggurat teleporter", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Heir", "Spirit Arena", "teleporter_spirit arena", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Town", "Overworld Redux", "teleporter_town", PDir.FLOOR),
                         }
                     },
                     {
                         "Far Shore to Spawn",
                         new List<TunicPortal> {
-                            new TunicPortal("Far Shore to Spawn", "Overworld Redux", "_teleporter_starting island", PDir.FLOOR),
+                            new TunicPortal("Far Shore to Spawn", "Overworld Redux", "teleporter_starting island", PDir.FLOOR),
                         }
                     },
                 }
@@ -1376,7 +1394,7 @@ namespace TunicRandomizer {
                     {
                         "Spirit Arena",
                         new List<TunicPortal> {
-                            new TunicPortal("Heir Arena Exit", "Transit", "_teleporter_spirit arena", PDir.FLOOR),
+                            new TunicPortal("Heir Arena Exit", "Transit", "teleporter_spirit arena", PDir.FLOOR),
                         }
                     },
                 }
@@ -1387,8 +1405,8 @@ namespace TunicRandomizer {
                     {
                         "Purgatory",  // requires special handling for vanilla portals
                         new List<TunicPortal> {
-                            new TunicPortal("Purgatory Bottom Exit", "Purgatory", "_bottom", PDir.SOUTH),  // inaccurate but eh
-                            new TunicPortal("Purgatory Top Exit", "Purgatory", "_top", PDir.NORTH),
+                            new TunicPortal("Purgatory Bottom Exit", "Purgatory", "bottom", PDir.SOUTH),  // inaccurate but eh
+                            new TunicPortal("Purgatory Top Exit", "Purgatory", "top", PDir.NORTH),
                         }
                     },
                 }
@@ -1399,7 +1417,7 @@ namespace TunicRandomizer {
                     {
                         "Shop",
                         new List<TunicPortal> {
-                            new TunicPortal("Shop Portal", "Previous Region", "_"),  // "Previous Region" is just a placeholder
+                            new TunicPortal("Shop Portal", "Previous Region", ""),  // "Previous Region" is just a placeholder
                             // 6 shops connect to a north portal, 2 shops connect to an east portal (West Garden and Gauntlet)
                         }
                     },
@@ -1499,7 +1517,7 @@ namespace TunicRandomizer {
             {
                 "Overworld to Atoll Upper",
                 new RegionInfo("Overworld Redux", false)
-            }, 
+            },
             {
                 "Overworld Well to Furnace Rail",
                 new RegionInfo("Overworld Redux", false)
@@ -1518,7 +1536,7 @@ namespace TunicRandomizer {
             },
             {
                 "Overworld Fountain Cross Door",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
                 "Overworld Temple Door",
@@ -1526,11 +1544,15 @@ namespace TunicRandomizer {
             },
             {
                 "Overworld Town Portal",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
                 "Overworld Spawn Portal",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
+            },
+            {
+                "Cube Cave Entrance Region",
+                new RegionInfo("Overworld Redux", false, outletRegion:"Overworld")
             },
             {
                 "Stick House",
@@ -1646,7 +1668,7 @@ namespace TunicRandomizer {
             },
             {
                 "East Forest Portal",
-                new RegionInfo("East Forest Redux", false)
+                new RegionInfo("East Forest Redux", false, outletRegion:"East Forest")
             },
             {
                 "Lower Forest",
@@ -1686,7 +1708,7 @@ namespace TunicRandomizer {
             },
             {
                 "Forest Hero's Grave",
-                new RegionInfo("Sword Access", false)
+                new RegionInfo("Sword Access", false, outletRegion:"Forest Grave Path by Grave")
             },
             {
                 "Dark Tomb Entry Point",
@@ -1734,6 +1756,10 @@ namespace TunicRandomizer {
             },
             {
                 "West Garden Portal",
+                new RegionInfo("Archipelagos Redux", true, outletRegion:"West Garden by Portal")
+            },
+            {
+                "West Garden by Portal",
                 new RegionInfo("Archipelagos Redux", true)
             },
             {
@@ -1750,7 +1776,7 @@ namespace TunicRandomizer {
             },
             {
                 "West Garden Hero's Grave",
-                new RegionInfo("Archipelagos Redux", false)
+                new RegionInfo("Archipelagos Redux", false, outletRegion:"West Garden")
             },
             {
                 "Magic Dagger House",
@@ -1778,11 +1804,11 @@ namespace TunicRandomizer {
             },
             {
                 "Ruined Atoll Portal",
-                new RegionInfo("Atoll Redux", false)
+                new RegionInfo("Atoll Redux", false, outletRegion:"Ruined Atoll")
             },
             {
                 "Ruined Atoll Statue",
-                new RegionInfo("Atoll Redux", false)
+                new RegionInfo("Atoll Redux", false, outletRegion:"Ruined Atoll")
             },
             {
                 "Frog Stairs Eye Exit",
@@ -1814,6 +1840,10 @@ namespace TunicRandomizer {
             },
             {
                 "Library Exterior Tree",
+                new RegionInfo("Library Exterior", false, outletRegion:"Library Exterior by Tree")
+            },
+            {
+                "Library Exterior by Tree",
                 new RegionInfo("Library Exterior", false)
             },
             {
@@ -1830,7 +1860,7 @@ namespace TunicRandomizer {
             },
             {
                 "Library Hero's Grave",
-                new RegionInfo("Library Hall", false)
+                new RegionInfo("Library Hall", false, outletRegion:"Library Hall")
             },
             {
                 "Library Hall to Rotunda",
@@ -1857,8 +1887,12 @@ namespace TunicRandomizer {
                 new RegionInfo("Library Lab", false)
             },
             {
-                "Library Portal",
+                "Library Lab on Portal Pad",
                 new RegionInfo("Library Lab", false)
+            },
+            {
+                "Library Portal",
+                new RegionInfo("Library Lab", false, outletRegion:"Library Lab on Portal Pad")
             },
             {
                 "Library Lab to Librarian",
@@ -1934,7 +1968,7 @@ namespace TunicRandomizer {
             },
             {
                 "Fortress Hero's Grave",
-                new RegionInfo("Fortress Reliquary", false)
+                new RegionInfo("Fortress Reliquary", false, outletRegion:"Fortress Grave Path")
             },
             {
                 "Fortress Leaf Piles",
@@ -1946,7 +1980,7 @@ namespace TunicRandomizer {
             },
             {
                 "Fortress Arena Portal",
-                new RegionInfo("Fortress Arena", false)
+                new RegionInfo("Fortress Arena", false, outletRegion:"Fortress Arena")
             },
             {
                 "Lower Mountain",
@@ -1974,7 +2008,7 @@ namespace TunicRandomizer {
             },
             {
                 "Quarry Portal",
-                new RegionInfo("Quarry Redux", false)
+                new RegionInfo("Quarry Redux", false, outletRegion:"Quarry Entry")
             },
             {
                 "Quarry Back",
@@ -1994,7 +2028,7 @@ namespace TunicRandomizer {
             },
             {
                 "Monastery Hero's Grave",
-                new RegionInfo("Monastery", false)
+                new RegionInfo("Monastery", false, outletRegion:"Monastery Back")
             },
             {
                 "Monastery Rope",
@@ -2046,7 +2080,7 @@ namespace TunicRandomizer {
             },
             {
                 "Zig Skip Exit",
-                new RegionInfo("ziggurat2020_3", false)
+                new RegionInfo("ziggurat2020_3", false, outletRegion:"Rooted Ziggurat Lower Front")
             },
             {
                 "Rooted Ziggurat Portal Room Entrance",
@@ -2054,11 +2088,15 @@ namespace TunicRandomizer {
             },
             {
                 "Rooted Ziggurat Portal",
+                new RegionInfo("ziggurat2020_FTRoom", false, outletRegion:"Rooted Ziggurat Portal Room")
+            },
+            {
+                "Rooted Ziggurat Portal Room",
                 new RegionInfo("ziggurat2020_FTRoom", false)
             },
             {
                 "Rooted Ziggurat Portal Room Exit",
-                new RegionInfo("ziggurat2020_FTRoom", false)
+                new RegionInfo("ziggurat2020_FTRoom", false, outletRegion:"Rooted Ziggurat Portal Room")
             },
             {
                 "Swamp Front",
@@ -2074,7 +2112,7 @@ namespace TunicRandomizer {
             },
             {
                 "Swamp to Cathedral Treasure Room",
-                new RegionInfo("Swamp Redux 2", false)
+                new RegionInfo("Swamp Redux 2", false, outletRegion:"Swamp Ledge under Cathedral Door")
             },
             {
                 "Swamp to Cathedral Main Entrance",
@@ -2086,7 +2124,7 @@ namespace TunicRandomizer {
             },
             {
                 "Swamp Hero's Grave",
-                new RegionInfo("Swamp Redux 2", false)
+                new RegionInfo("Swamp Redux 2", false, outletRegion:"Back of Swamp")
             },
             {
                 "Back of Swamp Laurels Area",
@@ -2126,19 +2164,19 @@ namespace TunicRandomizer {
             },
             {
                 "Far Shore to Quarry",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Far Shore to Fortress",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Far Shore to Library",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Far Shore to West Garden",
-                new RegionInfo("Transit", false)
+                new RegionInfo("Transit", false, outletRegion:"Far Shore")
             },
             {
                 "Hero Relic - Fortress",
@@ -2168,6 +2206,7 @@ namespace TunicRandomizer {
                 "Purgatory",
                 new RegionInfo("Purgatory", false)
             },
+            // shops don't get outlet regions because we don't want it to think you can walk from one shop exit to another
             {
                 "Shop Entrance 1",
                 new RegionInfo("Shop", true)
@@ -2336,6 +2375,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Heir Sword",
                             },
+                            new List<string> {
+                                "Gun",
+                            },
                         }
                     },
                     {
@@ -2394,6 +2436,17 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Key (House)",
+                            },
+                        }
+                    },
+                    {
+                        "Cube Cave Entrance Region",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Gun",
+                            },
+                            new List<string> {
+                                "Sword", "Shop",
                             },
                         }
                     },
@@ -2781,6 +2834,9 @@ namespace TunicRandomizer {
                     //        new List<string> {
                     //            "Heir Sword",
                     //        },
+                    //        new List<string> {
+                    //            "Gun",
+                    //        },
                     //    }
                     //},
                     {
@@ -2846,6 +2902,16 @@ namespace TunicRandomizer {
                     },
                 }
             },
+            //{
+            //    "Cube Cave Entrance Region",
+            //    new Dictionary<string, List<List<string>>> {
+            //        {
+            //            "Overworld",
+            //            new List<List<string>> {
+            //            }
+            //        },
+            //    }
+            //},
             {
                 "Old House Front",
                 new Dictionary<string, List<List<string>>> {
@@ -3335,10 +3401,31 @@ namespace TunicRandomizer {
                 "West Garden Portal Item",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "West Garden by Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden by Portal",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden Portal Item",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                    {
                         "West Garden Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "12", "West Garden"
+                                "12", "West Garden",
                             },
                         }
                     },
@@ -3348,11 +3435,8 @@ namespace TunicRandomizer {
                 "West Garden Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "West Garden Portal Item",
+                        "West Garden by Portal",
                         new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash"
-                            },
                         }
                     },
                 }
@@ -3588,6 +3672,24 @@ namespace TunicRandomizer {
                 "Library Exterior Tree",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "Library Exterior by Tree",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Library Exterior by Tree",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Exterior Tree",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            },
+                        }
+                    },
+                    {
                         "Library Exterior Ladder",
                         new List<List<string>> {
                             new List<string> {
@@ -3604,13 +3706,13 @@ namespace TunicRandomizer {
                 "Library Exterior Ladder",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Library Exterior Tree",
+                        "Library Exterior by Tree",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "12", "Ladders in Library",
+                                "Hyperdash", "Ladders in Library",
                             },
                             new List<string> {
-                                "Wand", "12",
+                                "Wand",
                             },
                         }
                     },
@@ -3756,7 +3858,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Library Portal",
+                        "Library Lab on Portal Pad",
                         new List<List<string>> {
                             new List<string> {
                                 "12",
@@ -3774,10 +3876,34 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Library Lab on Portal Pad",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Library Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12",
+                            }
+                        }
+                    },
+                    {
+                        "Library Lab",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders in Library",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
                 "Library Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Library Lab",
+                        "Library Lab on Portal Pad",
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders in Library",
@@ -4320,16 +4446,6 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Zig Skip Exit",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Rooted Ziggurat Lower Front",
-                        new List<List<string>> {
-                        }
-                    },
-                }
-            },
-            {
                 "Rooted Ziggurat Lower Back",
                 new Dictionary<string, List<List<string>>> {
                     {  // can't get to checkpoint if enemies aggro, gap too big
@@ -4364,6 +4480,24 @@ namespace TunicRandomizer {
                 "Rooted Ziggurat Portal Room Exit",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "Rooted Ziggurat Portal Room",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Rooted Ziggurat Portal Room",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Portal Room Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "12", "Rooted Ziggurat Lower Back",
+                            },
+                        }
+                    },
+                    {
                         "Rooted Ziggurat Portal",
                         new List<List<string>> {
                             new List<string> {
@@ -4377,11 +4511,8 @@ namespace TunicRandomizer {
                 "Rooted Ziggurat Portal",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Rooted Ziggurat Portal Room Exit",
+                        "Rooted Ziggurat Portal Room",
                         new List<List<string>> {
-                            new List<string> {
-                                "12", "Rooted Ziggurat Lower Back",
-                            },
                         }
                     },
                 }
@@ -4760,33 +4891,29 @@ namespace TunicRandomizer {
         }
 
 
-        // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
-        public static List<Portal> deadEndPortals = new List<Portal>();
-        public static List<Portal> twoPlusPortals = new List<Portal>();
-
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // for each origin region
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TraversalReqs) {
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
                 string origin = traversal_group.Key;
                 if (!inventory.ContainsKey(origin)) {
                     continue;
                 }
-                //TunicLogger.LogInfo("checking traversal for " + origin);
+                TunicLogger.LogTesting("checking traversal for " + origin);
                 // for each destination in an origin's group
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    //TunicLogger.LogInfo("checking traversal to " + destination);
+                    TunicLogger.LogTesting("checking traversal to " + destination);
                     // if we can already reach this region, skip it
                     if (inventory.ContainsKey(destination)) {
-                        //TunicLogger.LogInfo("we already have it");
+                        TunicLogger.LogTesting("we already have it");
                         continue;
                     }
                     // met is whether you meet any of the requirement lists for a destination
                     bool met = false;
                     if (destination_group.Value.Count == 0) {
-                        //TunicLogger.LogInfo("no requirement groups, met is true");
+                        TunicLogger.LogTesting("no requirement groups, met is true");
                         met = true;
                     }
                     // check through each list of requirements
@@ -4795,12 +4922,12 @@ namespace TunicRandomizer {
                         if (reqs.Count == 0) {
                             // if a group is empty, you can just walk there
                             met = true;
-                            //TunicLogger.LogInfo("group is empty, so met is true");
+                            TunicLogger.LogTesting("group is empty, so met is true");
                         } else {
                             // check if we have the items in our inventory to traverse this path
                             met_count = 0;
                             foreach (string req in reqs) {
-                                //TunicLogger.LogInfo("req is " + req);
+                                TunicLogger.LogTesting("req is " + req);
                                 // if sword progression is on, check for this too
                                 if (req == "Sword") {
                                     if ((inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) || inventory.ContainsKey("Sword")) {
@@ -4847,14 +4974,14 @@ namespace TunicRandomizer {
                                     }
                                 } else if (inventory.ContainsKey(req)) {
                                     met_count++;
-                                    //TunicLogger.LogInfo("met_count is " + met_count);
-                                    //TunicLogger.LogInfo("reqs.count is " + reqs.Count);
-                                    //TunicLogger.LogInfo("we met this requirement");
+                                    TunicLogger.LogTesting("met_count is " + met_count);
+                                    TunicLogger.LogTesting("reqs.count is " + reqs.Count);
+                                    TunicLogger.LogTesting("we met this requirement");
                                 }
                             }
                             // if you have all the requirements, you can traverse this path
                             if (met_count == reqs.Count) {
-                                //TunicLogger.LogInfo("met is true");
+                                TunicLogger.LogTesting("met is true");
                                 met = true;
                             }
                         }
@@ -4864,10 +4991,10 @@ namespace TunicRandomizer {
                         }
                     }
                     if (met == true) {
-                        //TunicLogger.LogInfo("adding " + destination + " to inventory");
+                        TunicLogger.LogTesting("adding " + destination + " to inventory");
                         inventory.Add(destination, 1);
                     } else {
-                        //TunicLogger.LogInfo("did not add " + destination + ", we did not meet the requirements");
+                        TunicLogger.LogTesting("did not add " + destination + ", we did not meet the requirements");
                     }
                 }
             }
@@ -4881,7 +5008,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> FirstStepsUpdateReachableRegions(Dictionary<string, int> inventory) {
             int inv_count = inventory.Count;
             // add all regions in Overworld that you can currently reach to the inventory
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in TunicPortals.TraversalReqs) {
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
                 string origin_region = traversal_group.Key;
                 if (!inventory.ContainsKey(origin_region)) {
                     continue;
@@ -4929,6 +5056,7 @@ namespace TunicRandomizer {
         }
 
         public static Dictionary<string, PortalCombo> VanillaPortals() {
+            ModifiedTraversalReqs = TraversalReqs;
             Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
             List<Portal> portalList = new List<Portal>();
@@ -4955,8 +5083,12 @@ namespace TunicRandomizer {
                 Portal portal1 = portalList[0];
                 Portal portal2 = new Portal("placeholder", "placeholder", "placeholder", "placeholder", "placeholder");  // I <3 csharp
                 string portal2_sdt = portal1.DestinationSceneTag;
+                int dir = (int)PDir.SOUTH;
+                if (shop_num > 6) {
+                    dir = (int)PDir.EAST;
+                }
                 if (portal2_sdt.StartsWith("Shop,")) {
-                    portal2 = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}");
+                    portal2 = new Portal(name: "Shop Portal", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
                     shop_num++;
                 }
                 else if (portal2_sdt == "Purgatory, Purgatory_bottom") {
@@ -4976,13 +5108,28 @@ namespace TunicRandomizer {
                 }
                 portalCombos.Add(count.ToString(), new PortalCombo(portal1, portal2));
                 count++;
+                portalCombos.Add(count.ToString(), new PortalCombo(portal2, portal1));
+                count++;
             }
+            // we don't need vanilla portals to be split into two dictionaries, since we aren't modifying the Portals themselves
             return portalCombos;
         }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static void RandomizePortals(int seed) {
+            TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
+            Dictionary<string, PortalCombo> randomizedPortals = new Dictionary<string, PortalCombo>();
+            // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
+            List<Portal> deadEndPortals = new List<Portal>();
+            List<Portal> twoPlusPortals = new List<Portal>();
+            ModifiedTraversalReqs = TraversalReqs;
+
+            // keeping track of how many portals of each are left while pairing portals
+            Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
+            Dictionary<int, int> deadEndPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
+            // quick reference for which directions you can pair to which
+            Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH}, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
 
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
@@ -4991,9 +5138,9 @@ namespace TunicRandomizer {
                     continue;
                 }
                 foreach (KeyValuePair<string, List<TunicPortal>> region_group in scene_group.Value) {
-                    // if fixed shop is off, don't add zig skip exit to the portal list
+                    // if fixed shop is off or decoupled is on, don't add zig skip exit to the portal list
                     string region_name = region_group.Key;
-                    if (region_name == "Zig Skip Exit" && SaveFile.GetInt("randomizer ER fixed shop") != 1) {
+                        if (region_name == "Zig Skip Exit" && (SaveFile.GetInt(SaveFlags.ERFixedShop) != 1 || SaveFile.GetInt(SaveFlags.Decoupled) == 1)) {
                         continue;
                     }
                     List<TunicPortal> region_portals = region_group.Value;
@@ -5001,35 +5148,73 @@ namespace TunicRandomizer {
                         Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name, direction: tunicPortal.Direction);
                         if (RegionDict[region_name].DeadEnd == true) {
                             deadEndPortals.Add(portal);
+                            deadEndPortalDirectionTracker[portal.Direction]++;
                         } else {
                             twoPlusPortals.Add(portal);
+                            twoPlusPortalDirectionTracker[portal.Direction]++;
                         }
                         // need to throw fairy cave into the twoPlus list if laurels is at 10 fairies
-                        if (portal.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
+                        if (portal.Region == "Secret Gathering Place" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                             deadEndPortals.Remove(portal);
                             twoPlusPortals.Add(portal);
+                            twoPlusPortalDirectionTracker[portal.Direction]++;
+                            deadEndPortalDirectionTracker[portal.Direction]--;
                         }
                     }
                 }
             }
-            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
+            TunicLogger.LogTesting("got through step 1 of entrance rando setup");
+
+            // for keeping track of which regions and items are in logic during portal pairing
+            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
+            // for the portal combos
+            int comboNumber = 1000;
+
+            // shops get added separately cause they're weird
+            int shopCount = 6;
+            if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
+                shopCount = 0;
+                Portal windmillPortal = null;
                 foreach (Portal portal in twoPlusPortals) {
                     if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
+                        windmillPortal = portal;
                         twoPlusPortals.Remove(portal);
                         break;
                     }
                 }
+                Portal shopPortal = new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH);
+                randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(windmillPortal, shopPortal));
+                comboNumber++;
+                
+                // manually add the shop region to the inventory since it doesn't get added the normal way
+                FullInventory.Add("Shop Entrance 1", 1);
+            }
+            if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                // need all 8 shops to match up everything nicely
+                shopCount = 8;
+            }
+            int i = 1;
+            while (i <= shopCount) {
+                // 6 of the shops south, 2 of them are west in vanilla
+                int dir = (int)PDir.SOUTH;
+                if (i > 6) {
+                    dir = (int)PDir.WEST;
+                }
+                // manually making a portal for the shop, because it has some special properties
+                Portal shopPortal = new Portal(name: $"Shop Portal {i}", destination: $"Previous Region {i}", tag: "", scene: "Shop", region: $"Shop Entrance {i}", direction: dir);
+                deadEndPortals.Add(shopPortal);
+                i++;
+                deadEndPortalDirectionTracker[dir]++;
             }
 
             // modify later if we ever do random start location
             string start_region = "Overworld";
 
             Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Gun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
                 { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
 
-            Dictionary<string, int> FullInventory = new Dictionary<string, int>();
             // todo: swap this to use AddDictToDict in a later PR
             foreach (KeyValuePair<string, int> item in MaxItems) {
                 FullInventory.Add(item.Key, item.Value);
@@ -5044,119 +5229,249 @@ namespace TunicRandomizer {
 
             // get the total number of regions to get before doing dead ends
             int total_nondeadend_count = 0;
+            // used for generating useful error messages
+            List<string> nondeadend_regions = new List<string>();
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
-                // if fixed shop is off, don't add the zig skip exit region to the nondeadend count
-                if (region.Key == "Zig Skip Exit" && SaveFile.GetInt("randomizer ER fixed shop") != 1) {
+                // the region isn't an actual region anymore, since outlet regions exists now
+                if (region.Key == "Zig Skip Exit") {
                     continue;
                 }
-                if (region.Value.DeadEnd == false) {
+                // in decoupled, dead ends aren't real, they can't hurt you
+                if (region.Value.DeadEnd == false || SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                    nondeadend_regions.Add(region.Key);
                     total_nondeadend_count++;
                 }
             }
+            // if you have decoupled on, you add all shop entrance regions, but you only have 6 shops with direction pairs off
+            if (SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
+                    // fixed shop only has 1 shop entrance region
+                    total_nondeadend_count -= 7;
+                } else if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
+                    // if fixed shop and direction pairs are both off, there's only 6 shop entrances
+                    total_nondeadend_count -= 2;
+                }
+                
+            }
             // added fairy cave to the non-dead end regions, so it should increase the count here too
-            if (SaveFile.GetInt("randomizer laurels location") == 3) {
+            if (SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3 && SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
                 total_nondeadend_count++;
             }
+            TunicLogger.LogTesting("step 2 of entrance rando setup done");
 
-            int comboNumber = 0;
+            // making a second list if we're doing decoupled, a reference to the first list if not
+            List<Portal> twoPlusPortals2;
+            if (SaveFile.GetInt(SaveFlags.Decoupled) == 1) {
+                // dead ends aren't real in twoPlusPortals
+                twoPlusPortals.AddRange(deadEndPortals);
+                deadEndPortals.Clear();
+                twoPlusPortals2 = new List<Portal>(twoPlusPortals);
+                if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
+                    twoPlusPortals.Add(new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH));
+                    twoPlusPortals2.Add(new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "", scene: "Overworld Redux", region: "Overworld", direction: (int)PDir.NORTH));
+                }
+            } else {
+                twoPlusPortals2 = twoPlusPortals;
+            }
+
+            TunicLogger.LogTesting("created the secondary portal lists");
+
+            int seedIncrement = 0;  // for when a specific part fails and needs to load a portal back in
             while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
-                ShuffleList(twoPlusPortals, seed);
+                ShuffleList(twoPlusPortals, seed + seedIncrement);
                 Portal portal1 = null;
                 Portal portal2 = null;
                 foreach (Portal portal in twoPlusPortals) {
                     // find a portal in a region we can't access yet
                     if (!FullInventory.ContainsKey(portal.Region)) {
+                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                            // if there's more east dead ends than west two plus, then we'll end up needing to pair dead ends, which isn't viable
+                            if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]]
+                                || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction]) {
+                                TunicLogger.LogTesting($"Not pairing {portal.Name} because {portal.Direction} is out of spots in twoPlus");
+                                continue;
+                            }
+                            bool shouldContinue = false;
+                            // we need to ensure the ones that can cause failures have already been paired
+                            List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
+                            if (portal.Direction == (int)PDir.NORTH || (portal.Direction == (int)PDir.SOUTH && !southProblems.Contains(portal.Name))) {
+                                if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 3
+                                        || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 3) {
+                                    foreach (Portal testPortal in twoPlusPortals) {
+                                        if (testPortal.Name == "Ziggurat Upper to Ziggurat Entry Hallway" 
+                                            || testPortal.Name == "Ziggurat Tower to Ziggurat Upper"
+                                            || testPortal.Name == "Forest Belltower to Guard Captain Room") {
+                                            TunicLogger.LogTesting($"skipped {portal.Name} because of zig upper, zig mid, or forest belltower not being done yet");
+                                            shouldContinue = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (portal.Direction == (int)PDir.LADDER_DOWN || (portal.Direction == (int)PDir.LADDER_UP && portal.Name != "Frog's Domain Ladder Exit")) {
+                                if (twoPlusPortalDirectionTracker[portal.Direction] <= deadEndPortalDirectionTracker[directionPairs[portal.Direction]] + 1
+                                    || twoPlusPortalDirectionTracker[directionPairs[portal.Direction]] <= deadEndPortalDirectionTracker[portal.Direction] + 1) {
+                                    foreach (Portal testPortal in twoPlusPortals) {
+                                        if (testPortal.Name == "Frog's Domain Ladder Exit") {
+                                            TunicLogger.LogTesting($"skipped {portal.Name} because of frog's domain ladder exit not being done yet");
+                                            shouldContinue = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (shouldContinue == true) {
+                                continue;
+                            }
+                        }
                         portal1 = portal;
                         twoPlusPortals.Remove(portal1);
                         break;
                     }
                 }
                 if (portal1 == null) {
-                    TunicLogger.LogInfo("something messed up in portal pairing for portal 1");
+                    // it will fail after this
+                    TunicLogger.LogError("something messed up in portal pairing for portal 1");
+                    TunicLogger.LogInfo("current region count is " + (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count).ToString());
+                    TunicLogger.LogInfo("goal region count is " + total_nondeadend_count.ToString());
+                    TunicLogger.LogInfo("if there are regions missing, they are as follows:");
+                    foreach (string region in nondeadend_regions) {
+                        if (!FullInventory.ContainsKey(region)) {
+                            TunicLogger.LogInfo(region);
+                        }
+                    }
+                    TunicLogger.LogInfo("remaining portals in twoPlusPortals are:");
+                    foreach (Portal debugportal in twoPlusPortals) {
+                        TunicLogger.LogInfo(debugportal.Name);
+                    }
                 }
 
-                ShuffleList(twoPlusPortals, seed);
-                foreach (Portal secondPortal in twoPlusPortals) {
+                ShuffleList(twoPlusPortals2, seed + seedIncrement);
+                foreach (Portal secondPortal in twoPlusPortals2) {
+                    // find a portal in a region we can access
                     if (FullInventory.ContainsKey(secondPortal.Region)) {
+                        // for pairing to opposite direction portals, we also want to check if the directions match
+                        if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && directionPairs[secondPortal.Direction] != portal1.Direction) {
+                            continue;
+                        }
                         portal2 = secondPortal;
-                        twoPlusPortals.Remove(secondPortal);
+                        twoPlusPortals2.Remove(secondPortal);
                         break;
                     }
                 }
-                if (portal2 == null) { 
+                if (portal2 == null) {
+                    if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1) {
+                        TunicLogger.LogTesting($"portal {portal1.Name} doesn't have any valid directional pairs yet, put it back in and go again");
+                        twoPlusPortals.Add(portal1);
+                        // since the seed is just a number and not a Random object, we need to increment it to avoid shuffling the portals the same way
+                        seedIncrement++;
+                        continue;
+                    }
+                    // it will fail after this
                     TunicLogger.LogInfo("something messed up in portal pairing for portal 2");
                 }
 
                 // add the portal combo to the randomized portals list
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                twoPlusPortalDirectionTracker[portal1.Direction]--;
+                twoPlusPortalDirectionTracker[portal2.Direction]--;
+                comboNumber++;
 
-                FullInventory.Add(portal1.Region, 1);
+                if (!FullInventory.ContainsKey(portal1.OutletRegion())) {
+                    FullInventory.Add(portal1.OutletRegion(), 1);
+                }
                 // if laurels is at fairy cave, add it when we connect fairy cave
-                if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt("randomizer laurels location") == 3) {
+                if (portal1.Region == "Secret Gathering Place" && SaveFile.GetInt(SaveFlags.LaurelsLocation) == 3) {
                     FullInventory.Add("Hyperdash", 1);
                 }
                 FullInventory = UpdateReachableRegions(FullInventory);
-                comboNumber++;
             }
+            TunicLogger.LogTesting("done pairing twoplusportals");
 
             // since the dead ends only have one exit, we just append them 1 to 1 to a random portal in the two plus list
             ShuffleList(deadEndPortals, seed);
             ShuffleList(twoPlusPortals, seed);
+
+            // pair dead end portals to non-dead end portals
             while (deadEndPortals.Count > 0) {
-                comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(deadEndPortals[0], twoPlusPortals[0]));
-                deadEndPortals.RemoveAt(0);
-                twoPlusPortals.RemoveAt(0);
+                Portal portal1 = deadEndPortals[0];
+                bool foundPair = false;
+                foreach (Portal portal2 in twoPlusPortals) {
+                    if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1 && directionPairs[portal1.Direction] != portal2.Direction) {
+                        continue;
+                    }
+                    randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                    comboNumber++;
+
+                    twoPlusPortals.Remove(portal2);
+                    deadEndPortals.RemoveAt(0);
+                    foundPair = true;
+                    break;
+                }
+                if (foundPair == false) {
+                    ShuffleList(deadEndPortals, seed);
+                }
             }
 
-            // shops get added separately cause they're weird
-            List<string> shopSceneList = new List<string>();
-            int shopCount = 6;
-            if (SaveFile.GetInt("randomizer ER fixed shop") == 1) {
-                shopCount = 0;
-                Portal windmillPortal = new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "_", scene: "Overworld Redux", region: "Overworld");
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: "Shop Entrance 2");
-                RandomizedPortals.Add("fixedshop", new PortalCombo(windmillPortal, shopPortal));
-                shopSceneList.Add("Overworld Redux");
-            }
-            int regionNumber = 0;
-            while (shopCount > 0) {
-                // manually making a portal for the shop, because it has some special properties
-                Portal shopPortal = new Portal(name: "Shop Portal", destination: "Previous Region", tag: "", scene: "Shop", region: $"Shop Entrance {shopCount}");
-                // check that a shop has not already been added to this region, since two shops in the same region causes problems
-                if (!shopSceneList.Contains(twoPlusPortals[regionNumber].Scene)) {
-                    comboNumber++;
-                    shopSceneList.Add(twoPlusPortals[regionNumber].Scene);
-                    //TunicLogger.LogInfo("adding scene " + twoPlusPortals[regionNumber].Scene + " to shop scene list");
-                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[regionNumber], shopPortal));
-                    twoPlusPortals.RemoveAt(regionNumber);
-                    shopCount--;
-                } else {
-                    regionNumber++;
-                }
-                if (regionNumber == twoPlusPortals.Count - 1) {
-                    TunicLogger.LogInfo("too many shops, not enough regions, add more shops");
-                }
-            }
             // now we have every region accessible
             // the twoPlusPortals list still has items left in it, so now we pair them off
-            while (twoPlusPortals.Count > 1) {
-                comboNumber++;
-                RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(twoPlusPortals[0], twoPlusPortals[1]));
-                twoPlusPortals.RemoveAt(1); // I could do removeat0 twice, but I don't like how that looks
+            int finalPairLoopNumber = 0;
+            while (twoPlusPortals.Count > 0) {
+                finalPairLoopNumber++;
+                if (finalPairLoopNumber > 10000) {
+                    TunicLogger.LogError("Failed to pair portals while pairing the final entrances off to each other");
+                    TunicLogger.LogInfo("Remaining portals in twoPlusPortals:");
+                    foreach (Portal portal in twoPlusPortals) {
+                        TunicLogger.LogInfo(portal.Name);
+                    }
+                    TunicLogger.LogInfo("Remaining portals in twoPlusPortals2:");
+                    foreach (Portal portal in twoPlusPortals2) {
+                        TunicLogger.LogInfo(portal.Name);
+                    }
+                    break;
+                }
+                Portal portal1 = twoPlusPortals[0];
                 twoPlusPortals.RemoveAt(0);
+                Portal portal2 = null;
+                if (SaveFile.GetInt(SaveFlags.PortalDirectionPairs) != 1) {
+                    portal2 = twoPlusPortals2[0];
+                    twoPlusPortals2.RemoveAt(0);
+                } else {
+                    foreach (Portal portal in twoPlusPortals2) {
+                        if (directionPairs[portal1.Direction] == portal.Direction) {
+                            portal2 = portal;
+                            twoPlusPortals2.Remove(portal);
+                            break;
+                        }
+                    }
+                }
+                if (portal2 == null) {
+                    // it will fail after this
+                    TunicLogger.LogError("something went wrong with the remaining two plus portals");
+                }
+                randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                comboNumber++;
             }
-            if (twoPlusPortals.Count == 1) {
-                // if this triggers, there's an odd number of portals total
-                TunicLogger.LogInfo("one extra dead end remaining alone, rip. It's " + twoPlusPortals[0].Name);
+
+            // now we add it to the actual, kept portal list, based on whether decoupled is on
+            foreach (KeyValuePair<string, PortalCombo> portalCombo in randomizedPortals) {
+                RandomizedPortals.Add(portalCombo.Key, portalCombo.Value);
+                if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portalCombo.Value.Portal2, portalCombo.Value.Portal1));
+                    comboNumber++;
+                }
             }
         }
 
+        // shops will be formatted like "Shop, 3_" for Shop Portal 3, instead of the current "Shop, Previous Region_"
+        // it also needs to be able to handle an arbitrary number of shops, up to like 500 maybe
         // this is for using the info from Archipelago to pair up the portals
         public static void CreatePortalPairs(Dictionary<string, string> APPortalStrings) {
             RandomizedPortals.Clear();
             List<Portal> portalsList = new List<Portal>();
-            int comboNumber = 0;
+            // equivalent of doing TraversalReqs.copy() in python
+            ModifiedTraversalReqs = TraversalReqs.ToDictionary(entry => entry.Key, entry => entry.Value);
+            int comboNumber = 1000;
 
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
                 string scene_name = scene_group.Key;
@@ -5169,90 +5484,212 @@ namespace TunicRandomizer {
                     }
                 }
             }
-
+            // for backwards compatibility, we want to mark all shop portals with a number as we see them
+            int backwards_compat_shop_num = 1;
             // make the PortalCombo dictionary
             foreach (KeyValuePair<string, string> stringPair in APPortalStrings) {
                 string portal1SDT = stringPair.Key;
                 string portal2SDT = stringPair.Value;
                 Portal portal1 = null;
                 Portal portal2 = null;
-
+                // for backwards compatibility with older apworlds that don't have numbered shop portals
+                if (portal2SDT == "Shop, Previous Region_") {
+                    portal2 = new Portal(name: $"Shop Portal {backwards_compat_shop_num}", destination: $"Previous Region {backwards_compat_shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {backwards_compat_shop_num}", direction: (int)PDir.NONE);
+                    backwards_compat_shop_num++;
+                }
                 foreach (Portal portal in portalsList) {
-                    if (portal1SDT == portal.SceneDestinationTag) {
+                    if (portal1 != null && portal2 != null) {
+                        break;
+                    }
+                    if (portal1 == null && portal1SDT == portal.SceneDestinationTag) {
                         portal1 = portal;
                     }
-                    if (portal2SDT == portal.SceneDestinationTag) {
+                    if (portal2 == null && portal2SDT == portal.SceneDestinationTag) {
                         portal2 = portal;
+                    }
+                }
+                // if it's null still, it's a shop
+                if (portal1 == null) {
+                    string shop_num = new string(portal1SDT.Where(char.IsDigit).ToArray());
+                    int dir = (int)PDir.SOUTH;
+                    if (shop_num == "7" || shop_num == "8") {
+                        dir = (int)PDir.WEST;
+                    }
+                    portal1 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                    if (!ModifiedTraversalReqs.ContainsKey($"Shop Entrance {shop_num}")) {
+                        ModifiedTraversalReqs.Add($"Shop Entrance {shop_num}", new Dictionary<string, List<List<string>>> { { "Shop", new List<List<string>> { } } });
+                    }
+                }
+                if (portal2 == null) {
+                    string shop_num = new string(portal2SDT.Where(char.IsDigit).ToArray());
+                    int dir = (int)PDir.SOUTH;
+                    if (shop_num == "7" || shop_num == "8") {
+                        dir = (int)PDir.WEST;
+                    }
+                    portal2 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                    if (!ModifiedTraversalReqs.ContainsKey($"Shop Entrance {shop_num}")) {
+                        ModifiedTraversalReqs.Add($"Shop Entrance {shop_num}", new Dictionary<string, List<List<string>>> { { "Shop", new List<List<string>> { } } });
                     }
                 }
                 PortalCombo portalCombo = new PortalCombo(portal1, portal2);
                 RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
                 comboNumber++;
+                // if decoupled is off, we want to make reverse pairs
+                if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                    PortalCombo reversePortalCombo = new PortalCombo(portal2, portal1);
+                    RandomizedPortals.Add(comboNumber.ToString(), reversePortalCombo);
+                    comboNumber++;
+                }
             }
         }
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
-        public static void ModifyPortals(string scene_name) {
+        public static void ModifyPortals(string scene_name, bool sending = false) {
+            // we turn this off to not let you walk back through before it is modified the second time
+            if (sending == true && storedPortal != null) {
+                // if the old house door paired itself, move the fox outside the door so they don't get locked in an infinite loop, even though that's kinda funny
+                if (OldHouseDoorUnstuck == true) {
+                    PlayerCharacter.instance.transform.position = new Vector3(-32, 31, -59);
+                    PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    OldHouseDoorUnstuck = false;
+                }
+                storedPortal.GetComponent<BoxCollider>().isTrigger = true;
+                storedPortal = null;
+            }
+            // if we're spawning at a shop, we need to create a custom ScenePortal to receive you
+            if (sending == false && scene_name == "Shop") {
+                var ShopPortals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
+                    && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+                foreach (var shopPortal in ShopPortals) {
+                    if (shopPortal.TryCast<ShopScenePortal>() != null) {
+                        GameObject newPortal = new GameObject("Custom Rando Shop Portal");
+                        GameObject newSpawn = new GameObject("Spawn point");
+                        newSpawn.transform.parent = newPortal.transform;
+                        newPortal.AddComponent<ScenePortal>();
+                        // find which portal combo led to this shop, also flip the shop if it should be flipped
+                        foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.Key)) {
+                                TunicLogger.LogTesting("Portal 1 is " + portalCombo.Value.Portal1.Name);
+                                TunicLogger.LogTesting("Portal 2 is " + portalCombo.Value.Portal2.Name);
+                                newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Value.Portal2.Destination;
+                                newPortal.GetComponent<ScenePortal>().id = portalCombo.Value.Portal2.Tag;
+                                if (portalCombo.Value.FlippedShop() == true) {
+                                    TunicLogger.LogTesting("Flipped shop true");
+                                    shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = true;
+                                } else {
+                                    TunicLogger.LogTesting("Flipped shop false");
+                                    shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = false;
+                                }
+                            }
+                        }
+                        // I don't actually know if all of these are necessary, but it does work with all of them so
+                        newPortal.transform.position = shopPortal.transform.position;
+                        newPortal.transform.localPosition = shopPortal.transform.localPosition;
+                        newPortal.transform.rotation = shopPortal.transform.rotation;
+                        newPortal.transform.localRotation = shopPortal.transform.localRotation;
+                        newPortal.transform.localScale = shopPortal.transform.localScale;
+
+                        newSpawn.transform.position = shopPortal.transform.GetChild(0).transform.position;
+                        newSpawn.transform.localPosition = shopPortal.transform.GetChild(0).transform.localPosition;
+                        newSpawn.transform.rotation = shopPortal.transform.GetChild(0).transform.rotation;
+                        newSpawn.transform.localRotation = shopPortal.transform.GetChild(0).transform.localRotation;
+                        newPortal.GetComponent<ScenePortal>().spawnTransform = newSpawn.transform;
+                        newPortal.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
+                        newPortal.layer = 2;
+                        newPortal.GetComponent<BoxCollider>().isTrigger = true;
+                        // now that we've copied over the relevant info, disable it
+                        shopPortal.gameObject.SetActive(false);
+                    }
+                }
+            }
+
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
-            && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+                && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
                 // skips the extra west garden shop portal
                 if (!portal.isActiveAndEnabled) {
                     continue;
                 }
-                // there's only ever 1 ShopScenePortal in a scene, so we can safely break at the end of this if
-                if (scene_name == "Shop" && portal.TryCast<ShopScenePortal>() != null) {
-                    string shop_scene = portal.FullID.Remove(portal.FullID.Length - 1);  // FullID always ends with an underscore, need to remove it
-                    foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
-                        // shop is always portal2
-                        if (portalCombo.FlippedShop() == true && portalCombo.Portal1.Scene == shop_scene) {
-                            portal.TryCast<ShopScenePortal>().flippedArrivalScenes.Add(shop_scene);
-                            break;
-                        }
-                    }
-                    break;
-                }
+                // portal for stopping you from dying in zig skip
                 if (portal.FullID == "ziggurat2020_3_zig2_skip") {
                     portal.name = "Zig Skip";
                     portal.destinationSceneName = "ziggurat2020_1";
                     portal.optionalIDToSpawnAt = "zig_skip_recovery";
                     continue;
                 }
-                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
-                // shops go to Previous Region, so this intentionally skips them
+
+                // go through the list of randomized portals and see if the first portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
 
-                    if (portal1.Scene == scene_name && portal1.DestinationTag == portal.FullID) {
-                        if (portal2.Scene == "Shop") {
-                            portal.destinationSceneName = portal2.Scene;
-                            portal.id = "";
-                            portal.optionalIDToSpawnAt = "";
-                            portal.name = portal1.Name;
-                        } else {
-                            portal.destinationSceneName = portal2.Scene;
+                    if (sending == false) {
+                        if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
+                            portal.destinationSceneName = portal1.Scene;
                             portal.id = comboTag;
-                            portal.optionalIDToSpawnAt = comboTag + comboTag + comboTag + comboTag; // quadrupling since doubling and tripling can have overlaps
-                            portal.name = portal1.Name;
-                        }
-                        break;
-                    }
+                            portal.optionalIDToSpawnAt = comboTag + comboTag;
+                            portal.name = portal2.Name;
+                            // if you're spawning there, we need to make sure you can't walk back out before the arrival callback
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID 
+                                && (portal.transform.parent?.name != "FT Platform Animator" || portal.transform.parent == null)) {
+                                storedPortal = portal.gameObject;
+                                storedPortal.GetComponent<BoxCollider>().isTrigger = false;
 
-                    if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
-                        if (portal1.Scene == "Shop") {
-                            portal.destinationSceneName = portal1.Scene;
-                            portal.id = "";
-                            portal.optionalIDToSpawnAt = "";
-                            portal.name = portal2.Name;
-                        } else {
-                            portal.destinationSceneName = portal1.Scene;
-                            portal.id = comboTag + comboTag + comboTag + comboTag;
-                            portal.optionalIDToSpawnAt = comboTag; // quadrupling since doubling and tripling can have overlaps
-                            portal.name = portal2.Name;
+                                // there's a few spots where you can get stuck if you ladder storage or ice grapple into the old house door
+                                // so if you manage to get one of these rare combinations, throw the fox out the window
+                                // Defennecstration -hatkirby
+                                if (portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" && SaveFile.GetInt("SV_Overworld_House Door Opened") != 1) {
+                                    if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
+                                        OldHouseDoorUnstuck = true;
+                                    }
+
+                                    Dictionary<string, List<string>> problemSpots = new Dictionary<string, List<string>> {
+                                        {"Ladders in Library",
+                                            new List<string> { "Library Hall, Library Rotunda_", "Library Rotunda, Library Hall_", "Library Rotunda, Library Lab_",
+                                                "Library Lab, Library Rotunda_", "Library Lab, Library Arena_" } },
+                                        {"Ladders in Well",
+                                            new List<string> { "Overworld Redux, Sewer_entrance", "Sewer, Overworld Redux_entrance" } },
+                                        {"Ladders to Frog's Domain",
+                                            new List<string> {"Frog Stairs, frog cave main_Entrance", "frog cave main, Frog Stairs_Entrance"} },
+                                    };
+                                    if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {
+                                        foreach (KeyValuePair<string, List<string>> problems in problemSpots) {
+                                            string ladderName = problems.Key;
+                                            List<string> ladderPortals = problems.Value;
+                                            // if the old house door connects to a problem spot and you don't have the ladder
+                                            if (ladderPortals.Contains(portal1.SceneDestinationTag)
+                                            && (SaveFile.GetInt($"randomizer picked up {ladderName}") != 1)) {
+                                                // if you're not in decoupled, then we can be sure this is a problem
+                                                if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                                                    OldHouseDoorUnstuck = true;
+                                                } else {
+                                                    // if you're in decoupled, we want to make sure the door leads to a problem spot, not just from a problem spot
+                                                    foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
+                                                        if (portalCombo2.Value.Portal1.Name == "Overworld Redux, Overworld Interiors_house") {
+                                                            if (ladderPortals.Contains(portalCombo2.Value.Portal2.SceneDestinationTag)) {
+                                                                OldHouseDoorUnstuck = true;
+                                                            }
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            break;
                         }
-                        break;
+                    } else {
+                        // sending is true, so we want to grab all portals by name (since they were modified when sending == false) and change their destinations
+                        if (portal1.Name == portal.name) {
+                            portal.destinationSceneName = portal2.Scene;
+                            portal.id = comboTag + comboTag;
+                            portal.optionalIDToSpawnAt = comboTag;
+                            break;
+                        }
                     }
                 }
             }
@@ -5267,7 +5704,7 @@ namespace TunicRandomizer {
                 if (!portal.isActiveAndEnabled) {
                     continue;
                 }
-                // go through the list of randomized portals and see if either the first or second portal matches the one we're looking at
+                // go through the list of randomized portals and see if the first portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in VanillaPortals()) {
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
@@ -5276,15 +5713,11 @@ namespace TunicRandomizer {
                         portal.name = portal1.Name;
                         break;
                     }
-
-                    if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
-                        portal.name = portal2.Name;
-                        break;
-                    }
                 }
             }
         }
 
+        // this marks a portal as checked, for the entrance seeking spell and for datastorage for the eventual poptracker update
         public static void MarkPortals() {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
@@ -5295,21 +5728,7 @@ namespace TunicRandomizer {
                     continue;
                 }
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
-                    foreach (KeyValuePair<string, PortalCombo> portalCombo in TunicPortals.RandomizedPortals) {
-                        if (portal.name == portalCombo.Value.Portal1.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal2.Scene == SceneManager.GetActiveScene().name))) {
-                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
-                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
-                                if (SaveFlags.IsArchipelago()) {
-                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}{portalCombo.Value.Portal1.Tag}", true);
-                                }
-                            }
-                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
-                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
-                                if (SaveFlags.IsArchipelago()) {
-                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
-                                }
-                            }
-                        }
+                    foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                         if (portal.name == portalCombo.Value.Portal2.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal1.Scene == SceneManager.GetActiveScene().name))) {
                             if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
                                 SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
@@ -5317,10 +5736,13 @@ namespace TunicRandomizer {
                                     Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}{portalCombo.Value.Portal1.Tag}", true);
                                 }
                             }
-                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
-                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
-                                if (SaveFlags.IsArchipelago()) {
-                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
+                            // if decoupled is off, we can just mark the other side of the portal too
+                            if (SaveFile.GetInt(SaveFlags.Decoupled) != 1) {
+                                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
+                                    SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                                    if (SaveFlags.IsArchipelago()) {
+                                        Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
+                                    }
                                 }
                             }
                         }

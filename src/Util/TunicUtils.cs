@@ -61,6 +61,18 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            if (PlayerItemsAndRegions.ContainsKey("Hexagon Gold")) {
+                if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
+                    AddStringToDict(PlayerItemsAndRegions, "12");
+                }
+                if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest holy cross requirement")) {
+                    AddStringToDict(PlayerItemsAndRegions, "21");
+                }
+                if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest icebolt requirement")) {
+                    AddStringToDict(PlayerItemsAndRegions, "26");
+                }
+            }
+
             UpdateChecksInLogic();
         }
 
@@ -73,7 +85,9 @@ namespace TunicRandomizer {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values);
             }
             foreach (Check check in checks) {
-                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && Locations.CheckedLocations[check.CheckId] == false) {
+                // only put in unchecked locations
+                if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && !Locations.CheckedLocations[check.CheckId] 
+                    && ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 0 : true)) {
                     ChecksInLogic.Add(check.CheckId);
                 }
             }

@@ -28,9 +28,11 @@
         public const string SwordProgressionEnabled = "randomizer sword progression enabled";
         public const string SwordProgressionLevel = "randomizer sword progression level";
 
-        // Entrance Rando Flag
+        // Entrance Rando Flags
         public const string EntranceRando = "randomizer entrance rando enabled";
-        public const string EntranceRandoFixedShop = "randomizer ER fixed shop";
+        public const string ERFixedShop = "randomizer ER fixed shop enabled";
+        public const string PortalDirectionPairs = "randomizer paired portal directions enabled";
+        public const string Decoupled = "randomizer decoupled ER enabled";
 
         // Other Logic Flags
         public const string StartWithSword = "randomizer started with sword";

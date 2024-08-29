@@ -24,7 +24,6 @@ namespace TunicRandomizer {
                 //check if this requirement is fully met, otherwise move to the next requirement
                 int met = 0;
                 foreach (string item in req.Keys) {
-                    //TunicLogger.LogInfo(item);
                     // don't need to check if ability shuffle is on since the abilities are precollected if ability shuffle is off
                     if (!inventory.ContainsKey(item)) {
                         if (item == "Sword") {

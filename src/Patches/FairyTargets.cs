@@ -15,7 +15,6 @@ namespace TunicRandomizer {
         public static Il2CppSystem.Collections.Generic.List<FairyTarget> ItemTargetsInLogic = new Il2CppSystem.Collections.Generic.List<FairyTarget> { };
 
         public static void CreateFairyTargets() {
-
             foreach (FairyTarget FairyTarget in Resources.FindObjectsOfTypeAll<FairyTarget>()) {
                 GameObject.Destroy(FairyTarget);
             }
@@ -39,7 +38,7 @@ namespace TunicRandomizer {
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
                         }
-
+                        
                         if (TunicUtils.ChecksInLogic.Contains(ItemId)) {
                             hasChecksInLogicInScene = true;
                         }

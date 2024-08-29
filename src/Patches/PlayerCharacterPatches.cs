@@ -278,7 +278,9 @@ namespace TunicRandomizer {
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
                 TunicPortals.ModifyPortals("Overworld Redux");
+                TunicPortals.ModifyPortals("Overworld Redux", sending: true);
             } else {
+                TunicPortals.RandomizedPortals.Clear();
                 TunicPortals.ModifyPortalNames("Overworld Redux");
             }
 
@@ -449,17 +451,24 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(LanternlessLogic, 1);
                     }
 
-                    SaveFile.SetInt("randomizer laurels location", (int)TunicRandomizer.Settings.FixedLaurelsOption);
+                    SaveFile.SetInt(LaurelsLocation, (int)TunicRandomizer.Settings.FixedLaurelsOption);
 
                     if (TunicRandomizer.Settings.EntranceRandoEnabled) {
                         Inventory.GetItemByName("Torch").Quantity = 1;
-                        SaveFile.SetInt("randomizer entrance rando enabled", 1);
-                    }
-                    if (TunicRandomizer.Settings.ERFixedShop) {
-                        SaveFile.SetInt("randomizer ER fixed shop", 1);
+                        SaveFile.SetInt(EntranceRando, 1);
+
+                        if (TunicRandomizer.Settings.ERFixedShop) {
+                            SaveFile.SetInt(ERFixedShop, 1);
+                        }
+                        if (TunicRandomizer.Settings.PortalDirectionPairs) {
+                            SaveFile.SetInt(PortalDirectionPairs, 1);
+                        }
+                        if (TunicRandomizer.Settings.DecoupledER) {
+                            SaveFile.SetInt(Decoupled, 1);
+                        }
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
-                        SaveFile.SetInt("randomizer shuffled abilities", 1);
+                        SaveFile.SetInt(AbilityShuffle, 1);
                     }
                     if (TunicRandomizer.Settings.ShuffleLadders) {
                         SaveFile.SetInt(LadderRandoEnabled, 1);
@@ -567,9 +576,15 @@ namespace TunicRandomizer {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
+                if (slotData.TryGetValue("decoupled", out var decoupled)) {
+                    if (SaveFile.GetInt(Decoupled) == 0 && decoupled.ToString() == "1") {
+                        SaveFile.SetInt(Decoupled, 1);
+                    }
+                }
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
                     TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     TunicPortals.ModifyPortals("Overworld Redux");
+                    TunicPortals.ModifyPortals("Overworld Redux", sending:true);
                 } else {
                     TunicPortals.ModifyPortalNames("Overworld Redux");
                 }
@@ -679,7 +694,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Torch").Quantity = 1;
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
-                SaveFile.SetInt(EntranceRandoFixedShop, 1);
+                SaveFile.SetInt(ERFixedShop, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
                 SaveFile.SetInt(MasklessLogic, 1);
@@ -782,7 +797,6 @@ namespace TunicRandomizer {
                 }
                 TunicRandomizer.Settings.FoolTrapIntensity = (RandomizerSettings.FoolTrapOption)foolIndex;
             }
-
             bool[] laurelsOptions = new bool[4] {
                 TunicRandomizer.Settings.MysterySeedWeights.LaurelsRandom,
                 TunicRandomizer.Settings.MysterySeedWeights.LaurelsSixCoins,
@@ -791,12 +805,12 @@ namespace TunicRandomizer {
             };
             int laurelsIndex = random.Next(laurelsOptions.Length);
             if (laurelsOptions.All(x => !x)) {
-                SaveFile.SetInt("randomizer laurels location", 0);
+                SaveFile.SetInt(LaurelsLocation, 0);
             } else {
                 while (!laurelsOptions[laurelsIndex]) {
                     laurelsIndex = random.Next(laurelsOptions.Length);
                 }
-                SaveFile.SetInt("randomizer laurels location", laurelsIndex);
+                SaveFile.SetInt(LaurelsLocation, laurelsIndex);
             }
 
             SaveFile.SetString("randomizer mystery seed weights", TunicRandomizer.Settings.MysterySeedWeights.ToSettingsString());

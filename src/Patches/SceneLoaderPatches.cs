@@ -505,14 +505,20 @@ namespace TunicRandomizer {
 
             EnemyRandomizer.CheckBossState();
 
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                if (IsArchipelago()) {
-                    TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
-                } else if (IsSinglePlayer()) {
-                    TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                if (TunicPortals.RandomizedPortals.Count == 0) {
+                    if (IsArchipelago()) {
+                        TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
+                    } else if (IsSinglePlayer()) {
+                        TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                    }
                 }
                 TunicPortals.ModifyPortals(loadingScene.name);
+                PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                    TunicPortals.ModifyPortals(SceneName, sending: true);
+                });
             } else {
+                TunicPortals.RandomizedPortals.Clear();
                 TunicPortals.ModifyPortalNames(loadingScene.name);
             }
             TunicPortals.MarkPortals();

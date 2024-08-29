@@ -53,7 +53,7 @@ namespace TunicRandomizer {
             Locations.CheckedLocations.Clear();
 
             PopulatePrecollected();
-            List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)" };
+            List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Gun" };
             List<string> Ladders = new List<string>(LadderItems);
             List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             if (SaveFile.GetInt("randomizer shuffled abilities") == 1) {
@@ -263,7 +263,7 @@ namespace TunicRandomizer {
                         int start_num = FullInventory.Count;
                         FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
                         foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                            FullInventory = portalCombo.AddComboRegions(FullInventory);
+                            FullInventory = portalCombo.AddComboRegion(FullInventory);
                         }
                         if (start_num == FullInventory.Count) {
                             break;
@@ -337,7 +337,7 @@ namespace TunicRandomizer {
                             int start_num = testFullInventory.Count;
                             testFullInventory = TunicPortals.UpdateReachableRegions(testFullInventory);
                             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                                testFullInventory = portalCombo.AddComboRegions(testFullInventory);
+                                testFullInventory = portalCombo.AddComboRegion(testFullInventory);
                             }
                             int end_num = testFullInventory.Count;
                             if (start_num == end_num) {
@@ -352,7 +352,7 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
                         }
                     }
-                    TunicLogger.LogInfo("test ends here");
+                    TunicLogger.LogInfo("test ends here, if you didn't see any locations above this message then there were no unreachable locations");
                     testBool = false;
                 }
 
@@ -368,7 +368,16 @@ namespace TunicRandomizer {
                     // If it fails to place an item, start over with the current seed progress
                     // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
                     if (counter >= InitialLocations.Count) {
-                        PopulatePrecollected();
+                        TunicLogger.LogInfo("Failed to find more spots to place items. Debug info below. It will attempt to re-randomize afterwards. If you see this, please report it to the TUNIC devs along with the seed paste.");
+                        TunicLogger.LogInfo("item being placed is " + item.Name);
+                        TunicLogger.LogInfo("unplaced inventory contents:");
+                        foreach (KeyValuePair<string, int> itemgroup in UnplacedInventory) {
+                            TunicLogger.LogInfo($"{itemgroup.Key}, {itemgroup.Value}");
+                        }
+                        TunicLogger.LogInfo("full inventory contents:");
+                        foreach (KeyValuePair<string, int> itemgroup in FullInventory) {
+                            TunicLogger.LogInfo($"{itemgroup.Key}, {itemgroup.Value}");
+                        }
                         RandomizeAndPlaceItems(random);
                         return;
                     }
@@ -543,7 +552,7 @@ namespace TunicRandomizer {
                 int start_num = Inventory.Count;
                 Inventory = TunicPortals.UpdateReachableRegions(Inventory);
                 foreach (PortalCombo portalCombo in vanillaPortals.Values) {
-                    Inventory = portalCombo.AddComboRegions(Inventory);
+                    Inventory = portalCombo.AddComboRegion(Inventory);
                 }
                 int end_num = Inventory.Count;
                 if (start_num == end_num) {
@@ -566,7 +575,7 @@ namespace TunicRandomizer {
                 int start_num = inventory.Count;
                 inventory = TunicPortals.UpdateReachableRegions(inventory);
                 foreach (PortalCombo portalCombo in portalList.Values) {
-                    inventory = portalCombo.AddComboRegions(inventory);
+                    inventory = portalCombo.AddComboRegion(inventory);
                 }
                 int end_num = inventory.Count;
                 if (start_num == end_num) {

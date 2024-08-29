@@ -217,8 +217,14 @@
                     ""Position"": ""(25.0, 36.0, -110.0)"",
                     ""Requirements"": [
                         {
-                            ""Overworld"": 1
-                        }
+                            ""Overworld"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },
@@ -472,8 +478,14 @@
                     ""Position"": ""(91.0, 8.0, 67.5)"",
                     ""Requirements"": [
                         {
-                            ""East Forest"": 1
-                        }
+                            ""East Forest"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""East Forest"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },
@@ -1692,8 +1704,14 @@
                     ""Position"": ""(-56.0, 24.0, -95.2)"",
                     ""Requirements"": [
                         {
-                            ""Overworld"": 1
-                        }
+                            ""Overworld"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },
@@ -1910,8 +1928,14 @@
                     ""Position"": ""(-77.0, 3.5, 40.5)"",
                     ""Requirements"": [
                         {
-                            ""Ruined Atoll"": 1
-                        }
+                            ""Ruined Atoll"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""Ruined Atoll"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },
@@ -3786,8 +3810,14 @@
                     ""Position"": ""(31.0, 11.0, 50.7)"",
                     ""Requirements"": [
                         {
-                            ""Eastern Vault Fortress"": 1
-                        }
+                            ""Eastern Vault Fortress"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""Eastern Vault Fortress"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },
@@ -4095,8 +4125,14 @@
                     ""Position"": ""(-49.5, -12.0, 21.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry Back"": 1
-                        }
+                            ""Quarry Back"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""Quarry Back"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },
@@ -4357,8 +4393,14 @@
                     ""Position"": ""(52.0, 0.0, 2.5)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1
-                        }
+                            ""Quarry"": 1,
+                            ""Gun"": 1,
+                        },
+                        {
+                            ""Quarry"": 1,
+                            ""Sword"": 1,
+                            ""Shop"": 1,
+                        },
                     ]
                 }
             },

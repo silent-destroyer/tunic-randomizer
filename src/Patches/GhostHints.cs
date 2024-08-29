@@ -663,16 +663,17 @@ namespace TunicRandomizer {
         public static void GenerateHeirHint() {
             string heirPortal = "error finding heir";
             foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
-                if (portalCombo.Portal1.Scene == "Spirit Arena") {
-                    heirPortal = portalCombo.Portal2.Name;
-                    break;
-                }
                 if (portalCombo.Portal2.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal1.Name;
                     break;
                 }
             }
-            HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.";
+            // just thought it would be cute to have a different line if it's vanilla
+            if (heirPortal == "Far Shore to Heir") {
+                HeirHint = $"bI #uh wA, Evin #O #uh dorz R wErd, \"THE HEIR\" iz\nstil aht \"{heirPortal.ToUpper()}\".";
+            } else {
+                HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.";
+            }
         }
 
         public static void CheckForServerHint(string npcName) {

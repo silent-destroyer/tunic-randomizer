@@ -18,9 +18,10 @@ namespace TunicRandomizer {
             Tag = tag;
             Scene = scene;
             Region = region;
-            DestinationTag = (Destination + Tag);
+            DestinationTag = (Destination + "_" + Tag);
             SceneDestinationTag = (Scene + ", " + DestinationTag);
-            DestinationSceneTag = (Destination + ", " + Scene + Tag);  // for finding the vanilla connection
+            DestinationSceneTag = (Destination + ", " + Scene + "_" + Tag);  // for finding the vanilla connection
+            Direction = (int)TunicPortals.PDir.NONE;
         }
 
         public Portal(string name, string destination, string tag, string scene, string region, int direction) {
@@ -29,9 +30,9 @@ namespace TunicRandomizer {
             Tag = tag;
             Scene = scene;
             Region = region;
-            DestinationTag = (Destination + Tag);
+            DestinationTag = (Destination + "_" + Tag);
             SceneDestinationTag = (Scene + ", " + DestinationTag);
-            DestinationSceneTag = (Destination + ", " + Scene + Tag);
+            DestinationSceneTag = (Destination + ", " + Scene + "_" + Tag);
             Direction = direction;
         }
 
@@ -41,6 +42,11 @@ namespace TunicRandomizer {
             } else {
                 return false;
             }
+        }
+
+        // for portals that lead directly to a different region, ie: appearing at a yellow portal square
+        public string OutletRegion() {
+            return TunicPortals.RegionDict[Region].OutletRegion ?? Region;
         }
     }
 }
