@@ -862,7 +862,14 @@ namespace TunicRandomizer {
         }
 
         public static void OfferingItem_PriceForNext_PostfixPatch(OfferingItem __instance, ref int __result) {
-            __result -= Mathf.RoundToInt(__instance.priceIncreasePerLevelup * (float)ItemLookup.BonusUpgrades.Where(bonus => Inventory.GetItemByName(bonus.Key).Quantity > 0 && bonus.Value.LevelUp == __instance.upgradeItemReceived.name).Count());
+            int free_upgrade_count = ItemLookup.BonusUpgrades.Where(bonus => Inventory.GetItemByName(bonus.Key).Quantity > 0 && bonus.Value.LevelUp == __instance.upgradeItemReceived.name).Count();
+            // potion upgrades cost 100 for the first, 300 for the second, 1000 for the third, and +200 for each one after the third
+            if (__instance.name == "Upgrade Offering - PotionEfficiency Swig - Ash" 
+                && __result >= 1000 && free_upgrade_count >= (__result - 800) / 200) {
+                __result -= Mathf.RoundToInt(500 + 200 * free_upgrade_count);
+            } else {
+                __result -= Mathf.RoundToInt(__instance.priceIncreasePerLevelup * (float)free_upgrade_count);
+            }
         }
 
         public static bool FairyCollection_getFairyCount_PrefixPatch(FairyCollection __instance, ref int __result) {
