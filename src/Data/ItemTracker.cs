@@ -291,8 +291,8 @@ namespace TunicRandomizer {
                         foreach (ERData.TunicPortal portal in portalList) {
                             refList.Add(portal.Name);
                         }
+                    }
                 }
-            }
                 refList.AddRange(new List<string> { "Shop Portal 1", "Shop Portal 2", "Shop Portal 3", "Shop Portal 4", "Shop Portal 5", "Shop Portal 6", "Shop Portal 7", "Shop Portal 8" });
 
                 List<string> sortedPairs = portalPairs.OrderBy(pair => refList.IndexOf(pair.Split(new[] { " --> " }, System.StringSplitOptions.None)[0])).ToList();
