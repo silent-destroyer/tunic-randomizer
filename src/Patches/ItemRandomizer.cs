@@ -214,9 +214,9 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
-                TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
             } else {
-                TunicPortals.RandomizedPortals = TunicPortals.VanillaPortals();
+                ERData.RandomizedPortals = ERScripts.VanillaPortals();
             }
 
             // used in fill to keep checks that you've re-collected items from from being collected again
@@ -261,8 +261,8 @@ namespace TunicRandomizer {
                     while (true) {
                         // since regions always have a count of 1, we can just use .count instead of counting up all the values
                         int start_num = FullInventory.Count;
-                        FullInventory = TunicPortals.UpdateReachableRegions(FullInventory);
-                        foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                        FullInventory = ERScripts.UpdateReachableRegions(FullInventory);
+                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
                             FullInventory = portalCombo.AddComboRegion(FullInventory);
                         }
                         if (start_num == FullInventory.Count) {
@@ -335,8 +335,8 @@ namespace TunicRandomizer {
                         // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
                         while (true) {
                             int start_num = testFullInventory.Count;
-                            testFullInventory = TunicPortals.UpdateReachableRegions(testFullInventory);
-                            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+                            testFullInventory = ERScripts.UpdateReachableRegions(testFullInventory);
+                            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
                                 testFullInventory = portalCombo.AddComboRegion(testFullInventory);
                             }
                             int end_num = testFullInventory.Count;
@@ -541,7 +541,7 @@ namespace TunicRandomizer {
         // in non-ER, we want the actual sphere 1
         public static Dictionary<string, int> GetSphereOne(Dictionary<string, int> startInventory = null) {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
-            Dictionary<string, PortalCombo> vanillaPortals = TunicPortals.VanillaPortals();
+            Dictionary<string, PortalCombo> vanillaPortals = ERScripts.VanillaPortals();
             if (startInventory == null) {
                 TunicUtils.AddListToDict(Inventory, PrecollectedItems);
             } else {
@@ -550,7 +550,7 @@ namespace TunicRandomizer {
 
             while (true) {
                 int start_num = Inventory.Count;
-                Inventory = TunicPortals.UpdateReachableRegions(Inventory);
+                Inventory = ERScripts.UpdateReachableRegions(Inventory);
                 foreach (PortalCombo portalCombo in vanillaPortals.Values) {
                     Inventory = portalCombo.AddComboRegion(Inventory);
                 }
@@ -566,14 +566,14 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> GetReachableRegions(Dictionary<string, int> inventory = null) {
             Dictionary<string, PortalCombo> portalList;
             if (SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
-                portalList = TunicPortals.RandomizedPortals;
+                portalList = ERData.RandomizedPortals;
             } else {
-                portalList = TunicPortals.VanillaPortals();
+                portalList = ERScripts.VanillaPortals();
             }
 
             while (true) {
                 int start_num = inventory.Count;
-                inventory = TunicPortals.UpdateReachableRegions(inventory);
+                inventory = ERScripts.UpdateReachableRegions(inventory);
                 foreach (PortalCombo portalCombo in portalList.Values) {
                     inventory = portalCombo.AddComboRegion(inventory);
                 }
@@ -596,10 +596,10 @@ namespace TunicRandomizer {
                 TunicUtils.AddDictToDict(Inventory, startInventory);
             }
             
-            Inventory = TunicPortals.FirstStepsUpdateReachableRegions(Inventory);
+            Inventory = ERScripts.FirstStepsUpdateReachableRegions(Inventory);
             
             // find which portals you can reach from spawn without additional progression
-            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
                 if (Inventory.ContainsKey(portalCombo.Portal1.Region)) {
                     PortalInventory.Add(portalCombo.Portal2);
                 }
@@ -614,7 +614,7 @@ namespace TunicRandomizer {
                     Inventory.Add(portal.Region, 1);
                 }
             }
-            Inventory = TunicPortals.FirstStepsUpdateReachableRegions(Inventory);
+            Inventory = ERScripts.FirstStepsUpdateReachableRegions(Inventory);
             return Inventory;
         }
     }
