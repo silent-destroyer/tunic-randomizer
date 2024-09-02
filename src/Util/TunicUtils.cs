@@ -8,6 +8,19 @@ namespace TunicRandomizer {
         // items the player has received
         public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int>();
 
+        public static void ShuffleList<T>(IList<T> list, int seed) {
+            var rng = new System.Random(seed);
+            int n = list.Count;
+
+            while (n > 1) {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+
         // add keys if they don't exist, otherwise increment their values by 1
         public static Dictionary<string, int> AddListToDict(Dictionary<string, int> dictionary, List<string> list) {
             foreach (string item in list) {

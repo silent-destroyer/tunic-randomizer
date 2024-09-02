@@ -662,7 +662,7 @@ namespace TunicRandomizer {
 
         public static void GenerateHeirHint() {
             string heirPortal = "error finding heir";
-            foreach (PortalCombo portalCombo in TunicPortals.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
                 if (portalCombo.Portal2.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal1.Name;
                     break;
@@ -673,6 +673,9 @@ namespace TunicRandomizer {
                 HeirHint = $"bI #uh wA, Evin #O #uh dorz R wErd, \"THE HEIR\" iz\nstil aht \"{heirPortal.ToUpper()}\".";
             } else {
                 HeirHint = $"bI #uh wA, I hurd #aht \"THE HEIR\" moovd, #A liv \naht \"{heirPortal.ToUpper()}\" now.";
+            }
+            if (SecretMayor.shouldBeActive) {
+                HeirHint = HeirHint.Replace("THE HEIR", "THE MAYOR");
             }
         }
 
