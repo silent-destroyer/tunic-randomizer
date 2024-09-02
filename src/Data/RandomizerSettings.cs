@@ -107,6 +107,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool HexQuestAbilitiesUnlockedByPages {
+            get;
+            set;
+        }
+
         public int HexagonQuestGoal {
             get;
             set;
@@ -475,6 +480,7 @@ namespace TunicRandomizer {
             ShuffleLadders = false;
             GrassRandomizer = false;
             RandomizeHexQuest = false;
+            HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
             HexagonQuestRandomExtras = HexQuestValue.RANDOM;
 

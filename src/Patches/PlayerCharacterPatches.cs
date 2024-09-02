@@ -387,16 +387,16 @@ namespace TunicRandomizer {
                             switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
                                 default:
                                 case RandomizerSettings.HexQuestValue.RANDOM:
-                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(15, 51));
+                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(10, 51));
                                     break;
                                 case RandomizerSettings.HexQuestValue.LOW:
-                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(15, 26));
+                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(10, 24));
                                     break;
                                 case RandomizerSettings.HexQuestValue.MEDIUM:
-                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(26, 39));
+                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(24, 38));
                                     break;
                                 case RandomizerSettings.HexQuestValue.HIGH:
-                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(39, 51));
+                                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(38, 51));
                                     break;
                             }
                             switch (TunicRandomizer.Settings.HexagonQuestRandomExtras) {
@@ -721,26 +721,24 @@ namespace TunicRandomizer {
                 };
                 int goalIndex = random.Next(goalOptions.Length);
                 if (goalOptions.All(x => !x)) {
-                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(15, 51));
+                    SaveFile.SetInt("randomizer hexagon quest goal", random.Next(10, 51));
                 } else {
                     while (!goalOptions[goalIndex]) {
                         goalIndex = random.Next(goalOptions.Length);
                     }
                     switch (goalIndex) {
+                        default:
                         case 0:
-                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(15, 51));
+                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(10, 51));
                             break;
                         case 1:
-                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(15, 26));
+                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(10, 24));
                             break;
                         case 2:
-                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(26, 39));
+                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(24, 38));
                             break;
                         case 3:
-                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(39, 51));
-                            break;
-                        default:
-                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(15, 51));
+                            SaveFile.SetInt("randomizer hexagon quest goal", random.Next(38, 51));
                             break;
                     }
                 }
@@ -752,6 +750,7 @@ namespace TunicRandomizer {
                         extrasIndex = random.Next(extrasOptions.Length);
                     }
                     switch (extrasIndex) {
+                        default:
                         case 0:
                             SaveFile.SetInt("randomizer hexagon quest extras", random.Next(101));
                             break;
@@ -763,9 +762,6 @@ namespace TunicRandomizer {
                             break;
                         case 3:
                             SaveFile.SetInt("randomizer hexagon quest extras", random.Next(67, 101));
-                            break;
-                        default:
-                            SaveFile.SetInt("randomizer hexagon quest extras", random.Next(101));
                             break;
                     }
                 }
@@ -814,6 +810,10 @@ namespace TunicRandomizer {
             }
 
             SaveFile.SetString("randomizer mystery seed weights", TunicRandomizer.Settings.MysterySeedWeights.ToSettingsString());
+        }
+
+        public static void RandomizeHexQuestAmounts(int goalSetting, int extraSetting) {
+
         }
 
         public static void PlayerCharacter_Die_MoveNext_PostfixPatch(PlayerCharacter._Die_d__481 __instance, ref bool __result) {

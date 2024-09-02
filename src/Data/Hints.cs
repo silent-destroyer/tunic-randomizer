@@ -202,7 +202,8 @@ namespace TunicRandomizer {
                     }
                 } else if (IsSinglePlayer()) {
                     ItemData Hex = ItemLookup.Items[Hexagon];
-                    Check HexCheck = Hex.Name == "Gold Questagon" ? ItemRandomizer.FindAllRandomizedItemsByName(Hex.ItemNameForInventory)[i] : ItemRandomizer.FindRandomizedItemByName(Hex.ItemNameForInventory);
+                    List<Check> Hexes = ItemRandomizer.FindAllRandomizedItemsByName(Hex.ItemNameForInventory);
+                    Check HexCheck = Hex.Name == "Gold Questagon" && Hexes.Count > i ? Hexes[i] : Hexes[0];
                     Scene = Locations.SimplifiedSceneNames[HexCheck.Location.SceneName];
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                     Hint = $"#A sA {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";

@@ -502,7 +502,7 @@ namespace TunicRandomizer {
             bool HasIcebolt = SaveFile.GetInt(IceBoltUnlocked) == 1;
             Color Full = new Color(1, 1, 1, 1);
             Color Faded = new Color(1, 1, 1, 0.5f);
-            bool isHexQuest = SaveFile.GetInt(HexagonQuestEnabled) == 1;
+            bool isHexQuest = SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(HexagonQuestPageAbilities) == 0;
 
             if (isHexQuest) {
                 SortedDictionary<int, string> HexUnlocks = new SortedDictionary<int, string>() {

@@ -580,16 +580,24 @@ namespace TunicRandomizer {
             } else {
                 GUI.Label(new Rect(10f * guiScale, advHeight, 220f * guiScale, 20f * guiScale), $"<size={(int)(18 * guiScale)}>Hexagons Required:</size>");
                 GUI.Label(new Rect(190f * guiScale, advHeight, 30f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>{(TunicRandomizer.Settings.HexagonQuestGoal)}</size>");
-                TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(220f * guiScale, advHeight + 15, 175f * guiScale, 20f * guiScale), TunicRandomizer.Settings.HexagonQuestGoal, 15, 50);
+                TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(220f * guiScale, advHeight + 15, 175f * guiScale, 20f * guiScale), TunicRandomizer.Settings.HexagonQuestGoal, 1, 50);
                 advHeight += 30f * guiScale;
                 GUI.Label(new Rect(10f * guiScale, advHeight, 220f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>Hexagons in Item Pool:</size>");
                 GUI.Label(new Rect(190f * guiScale, advHeight, 30f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>{((int)Math.Round((100f + TunicRandomizer.Settings.HexagonQuestExtraPercentage) / 100f * TunicRandomizer.Settings.HexagonQuestGoal))}</size>");
                 TunicRandomizer.Settings.HexagonQuestExtraPercentage = (int)GUI.HorizontalSlider(new Rect(220f * guiScale, advHeight + 15, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.HexagonQuestExtraPercentage, 0, 100);
             }
-            advHeight += 40f;
+            advHeight += 30f;
             GUI.skin.toggle.fontSize = (int)(20 * guiScale);
             TunicRandomizer.Settings.RandomizeHexQuest = GUI.Toggle(new Rect(10f * guiScale, advHeight, 300f, 30f), TunicRandomizer.Settings.RandomizeHexQuest, $"Randomize # of Gold Hexagons");
-            advHeight += 40f * guiScale;
+            advHeight += 30f * guiScale;
+            if (TunicRandomizer.Settings.ShuffleAbilities) {
+                GUI.skin.label.fontSize = (int)(20 * guiScale);
+                GUI.Label(new Rect(10f, advHeight, 200f * guiScale, 30f * guiScale), "Abilities Unlocked By:");
+                TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages = GUI.Toggle(new Rect(200f, advHeight, 120f, 30f), TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages, "Hexagons");
+                TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages = !GUI.Toggle(new Rect(310f, advHeight, 90f, 30f), !TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages, "Pages");
+                advHeight += 40f * guiScale;
+            }
+            GUI.skin.label.fontSize = (int)(25 * guiScale);
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Entrance Randomizer");
             advHeight += 40f * guiScale;
             bool fixedShopToggle = GUI.Toggle(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), TunicRandomizer.Settings.ERFixedShop && !TunicRandomizer.Settings.PortalDirectionPairs, "Fewer Shops");
