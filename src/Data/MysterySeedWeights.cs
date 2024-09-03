@@ -13,6 +13,8 @@ namespace TunicRandomizer {
         public int ShuffleLadders;
         public int EntranceRando;
         public int ERFixedShop;
+        public int ERDecoupled;
+        public int ERDirectionPairs;
         public int Maskless;
         public int Lanternless;
         public int GrassRando;
@@ -45,6 +47,8 @@ namespace TunicRandomizer {
             ShuffleLadders = 50;
             EntranceRando = 50;
             ERFixedShop = 50;
+            ERDirectionPairs = 50;
+            ERDecoupled = 50;
             Maskless = 25;
             Lanternless = 25;
             GrassRando = 50;
@@ -78,6 +82,8 @@ namespace TunicRandomizer {
                 $"&{ShuffleLadders}" +
                 $"&{EntranceRando}" +
                 $"&{ERFixedShop}" +
+                $"&{ERDecoupled}" +
+                $"&{ERDirectionPairs}" +
                 $"&{Maskless}" +
                 $"&{Lanternless}" +
                 $"&{GrassRando}" +
@@ -89,17 +95,20 @@ namespace TunicRandomizer {
 
         public void FromSettingsString(string s) {
             string[] split = s.Split('&');
-            SwordProgression = int.Parse(split[0]);
-            KeysBehindBosses = int.Parse(split[1]);
-            ShuffleAbilities = int.Parse(split[2]);
-            ShuffleLadders = int.Parse(split[3]);
-            EntranceRando = int.Parse(split[4]);
-            ERFixedShop = int.Parse(split[5]);
-            Maskless = int.Parse(split[6]);
-            Lanternless = int.Parse(split[7]);
-            GrassRando = int.Parse(split[8]);
-            HexagonQuest = int.Parse(split[9]);
-            int foolLaurels = int.Parse(split[10]);
+            int i = 0;
+            SwordProgression = int.Parse(split[i++]);
+            KeysBehindBosses = int.Parse(split[i++]);
+            ShuffleAbilities = int.Parse(split[i++]);
+            ShuffleLadders = int.Parse(split[i++]);
+            EntranceRando = int.Parse(split[i++]);
+            ERFixedShop = int.Parse(split[i++]);
+            ERDecoupled = int.Parse(split[i++]);
+            ERDirectionPairs = int.Parse(split[i++]);
+            Maskless = int.Parse(split[i++]);
+            Lanternless = int.Parse(split[i++]);
+            GrassRando = int.Parse(split[i++]);
+            HexagonQuest = int.Parse(split[i++]);
+            int foolLaurels = int.Parse(split[i++]);
             FoolTrapNone = eval(foolLaurels, 1);
             FoolTrapNormal = eval(foolLaurels, 2);
             FoolTrapDouble = eval(foolLaurels, 4);
@@ -108,7 +117,7 @@ namespace TunicRandomizer {
             LaurelsSixCoins = eval(foolLaurels, 32);
             LaurelsTenCoins = eval(foolLaurels, 64);
             LaurelsTenFairies = eval(foolLaurels, 128);
-            int hexQuest = int.Parse(split[10]);
+            int hexQuest = int.Parse(split[i++]);
             HexQuestGoalRandom = eval(hexQuest, 1);
             HexQuestGoalLow = eval(hexQuest, 2);
             HexQuestGoalMedium = eval(hexQuest, 4);

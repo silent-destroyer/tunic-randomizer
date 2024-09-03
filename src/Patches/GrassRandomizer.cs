@@ -48,8 +48,8 @@ namespace TunicRandomizer {
                         check.Reward.Type = "Grass";
                         check.Reward.Amount = 1;
                         
-                        check.Location.SceneName = TunicPortals.RegionDict[pair.Key].Scene;
-                        check.Location.SceneId = 0; // Update this if sceneid ever actually gets used for anything
+                        check.Location.SceneName = ERData.RegionDict[pair.Key].Scene;
+                        check.Location.SceneId = 0;  // Update this if sceneid ever actually gets used for anything
                         check.Location.LocationId = grass;
                         check.Location.Position = grass.Split('~')[1];
                         check.Location.Requirements = new List<Dictionary<string, int>>();

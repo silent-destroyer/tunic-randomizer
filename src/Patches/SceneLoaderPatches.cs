@@ -506,22 +506,22 @@ namespace TunicRandomizer {
             EnemyRandomizer.CheckBossState();
 
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                if (TunicPortals.RandomizedPortals.Count == 0) {
+                if (ERData.RandomizedPortals.Count == 0) {
                     if (IsArchipelago()) {
-                        TunicPortals.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
+                        ERScripts.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     } else if (IsSinglePlayer()) {
-                        TunicPortals.RandomizePortals(SaveFile.GetInt("seed"));
+                        ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
                     }
                 }
-                TunicPortals.ModifyPortals(loadingScene.name);
+                ERScripts.ModifyPortals(loadingScene.name);
                 PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
-                    TunicPortals.ModifyPortals(SceneName, sending: true);
+                    ERScripts.ModifyPortals(SceneName, sending: true);
                 });
             } else {
-                TunicPortals.RandomizedPortals.Clear();
-                TunicPortals.ModifyPortalNames(loadingScene.name);
+                ERData.RandomizedPortals.Clear();
+                ERScripts.ModifyPortalNames(loadingScene.name);
             }
-            TunicPortals.MarkPortals();
+            ERScripts.MarkPortals();
 
             if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();

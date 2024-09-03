@@ -277,11 +277,11 @@ namespace TunicRandomizer {
 
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
-                TunicPortals.ModifyPortals("Overworld Redux");
-                TunicPortals.ModifyPortals("Overworld Redux", sending: true);
+                ERScripts.ModifyPortals("Overworld Redux");
+                ERScripts.ModifyPortals("Overworld Redux", sending: true);
             } else {
-                TunicPortals.RandomizedPortals.Clear();
-                TunicPortals.ModifyPortalNames("Overworld Redux");
+                ERData.RandomizedPortals.Clear();
+                ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
             try {
@@ -582,11 +582,11 @@ namespace TunicRandomizer {
                     }
                 }
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
-                    TunicPortals.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
-                    TunicPortals.ModifyPortals("Overworld Redux");
-                    TunicPortals.ModifyPortals("Overworld Redux", sending:true);
+                    ERScripts.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
+                    ERScripts.ModifyPortals("Overworld Redux");
+                    ERScripts.ModifyPortals("Overworld Redux", sending:true);
                 } else {
-                    TunicPortals.ModifyPortalNames("Overworld Redux");
+                    ERScripts.ModifyPortalNames("Overworld Redux");
                 }
                 if (slotData.TryGetValue("shuffle_ladders", out var ladderRando)) {
                     if (SaveFile.GetInt(LadderRandoEnabled) == 0 && ladderRando.ToString() == "1") {
@@ -695,6 +695,17 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
                 SaveFile.SetInt(ERFixedShop, 1);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs) {
+                SaveFile.SetInt(PortalDirectionPairs, 1);
+            }
+            if (SaveFile.GetInt(ERFixedShop) == 1 && SaveFile.GetInt(PortalDirectionPairs) == 1) {
+                bool chooseOne = random.Next(2) == 1;
+                SaveFile.SetInt(ERFixedShop, chooseOne ? 1 : 0);
+                SaveFile.SetInt(PortalDirectionPairs, !chooseOne ? 1 : 0);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled) {
+                SaveFile.SetInt(Decoupled, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
                 SaveFile.SetInt(MasklessLogic, 1);

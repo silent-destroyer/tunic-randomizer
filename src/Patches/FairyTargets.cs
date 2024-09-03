@@ -87,7 +87,7 @@ namespace TunicRandomizer {
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 if (ScenePortal.id.Contains("customfasttravel")) { continue; }
-                if (ScenesWithItems.Contains(TunicPortals.FindPairedPortalSceneFromName(ScenePortal.name))) {
+                if (ScenesWithItems.Contains(ERScripts.FindPairedPortalSceneFromName(ScenePortal.name))) {
                     CreateFairyTarget($"fairy target {ScenePortal.name}", ScenePortal.transform.position);
                 }
             }
@@ -96,8 +96,8 @@ namespace TunicRandomizer {
         // specifically for fairy seeking spell with logic
         public static void CreateLogicLoadZoneTargets(bool addImmediately = false) {
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
-                string portalRegion = TunicPortals.FindPortalRegionFromName(ScenePortal.name);
-                string destScene = TunicPortals.FindPairedPortalSceneFromName(ScenePortal.name);
+                string portalRegion = ERScripts.FindPortalRegionFromName(ScenePortal.name);
+                string destScene = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
                 // check if the entrance is logically accessible first
                 if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion)) {
                     // then check if the scene it leads to has checks in logic
@@ -142,7 +142,7 @@ namespace TunicRandomizer {
                 if (fairyTarget != null && fairyTarget.isActiveAndEnabled) {
                     if (fairyTarget.name.StartsWith("entrance")) {
                         EntranceTargets.Add(fairyTarget);
-                        if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))) {
+                        if (TunicUtils.PlayerItemsAndRegions.ContainsKey(ERScripts.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))) {
                             EntranceTargetsInLogic.Add(fairyTarget);
                         }
                     } else if (fairyTarget.name.StartsWith("fairy")) {
@@ -152,8 +152,8 @@ namespace TunicRandomizer {
                             ItemTargetsInLogic.Add(fairyTarget);
                         } else {
                             // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
-                            string regionName = TunicPortals.FindPortalRegionFromName(targetName);
-                            string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
+                            string regionName = ERScripts.FindPortalRegionFromName(targetName);
+                            string destSceneName = ERScripts.FindPairedPortalSceneFromName(targetName);
                             if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
                                 foreach (string checkId in TunicUtils.ChecksInLogic) {
                                     if (checkId.Contains(destSceneName)) {
@@ -203,8 +203,8 @@ namespace TunicRandomizer {
                             ItemTargetsInLogic.Add(fairyTarget);
                         } else {
                             // for adjacent scenes, check if the region the portal leads to is in logic, and check if the scene has items in logic
-                            string regionName = TunicPortals.FindPortalRegionFromName(targetName);
-                            string destSceneName = TunicPortals.FindPairedPortalSceneFromName(targetName);
+                            string regionName = ERScripts.FindPortalRegionFromName(targetName);
+                            string destSceneName = ERScripts.FindPairedPortalSceneFromName(targetName);
                             if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
                                 foreach (string checkId in TunicUtils.ChecksInLogic) {
                                     if (checkId.Contains(destSceneName)) {
@@ -219,7 +219,7 @@ namespace TunicRandomizer {
                 // loop through the regular EntranceTargets, find ones that are newly in logic
                 foreach (FairyTarget fairyTarget in EntranceTargets) {
                     if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
-                    if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicPortals.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
+                    if (TunicUtils.PlayerItemsAndRegions.ContainsKey(ERScripts.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))
                             && !EntranceTargetsInLogic.Contains(fairyTarget)) {
                         EntranceTargetsInLogic.Add(fairyTarget);
                     }

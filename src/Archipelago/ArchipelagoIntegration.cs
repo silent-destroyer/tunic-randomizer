@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
-using static TunicRandomizer.TunicPortals;
+using static TunicRandomizer.ERData;
 
 namespace TunicRandomizer {
     public class ArchipelagoIntegration {
