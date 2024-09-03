@@ -37,6 +37,8 @@ namespace TunicRandomizer {
         private const int SHUFFLE_LADDERS = 1024;
         private const int GRASS_RANDOMIZER = 2048;
         private const int RANDOMIZE_HEX_QUEST = 4096;
+        private const int ER_DIRECTION_PAIRS = 8192;
+        private const int ER_DECOUPLED = 16384;
 
         public GameModes GameMode {
             get;
@@ -603,14 +605,14 @@ namespace TunicRandomizer {
                 ShuffleAbilities = eval(logic, SHUFFLE_ABILITIES);
                 EntranceRandoEnabled = eval(logic, ENTRANCE_RANDO);
                 ERFixedShop = eval(logic, ER_SHOPS);
-                // todo: add the direction pairs to settings string
-                // todo: add decoupled to the settings string
                 Lanternless = eval(logic, LANTERNLESS);
                 Maskless = eval(logic, MASKLESS);
                 MysterySeed = eval(logic, MYSTERY_SEED);
                 ShuffleLadders = eval(logic, SHUFFLE_LADDERS);
                 GrassRandomizer = eval(logic, GRASS_RANDOMIZER);
                 RandomizeHexQuest = eval(logic, RANDOMIZE_HEX_QUEST);
+                PortalDirectionPairs = eval(logic, ER_DIRECTION_PAIRS);
+                DecoupledER = eval(logic, ER_DECOUPLED);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -681,20 +683,21 @@ namespace TunicRandomizer {
                 return new bool[] {
                     GameMode == GameModes.HEXAGONQUEST,
                     KeysBehindBosses, StartWithSwordEnabled, SwordProgressionEnabled,
-                    ShuffleAbilities, EntranceRandoEnabled, ERFixedShop, PortalDirectionPairs, DecoupledER,
+                    ShuffleAbilities, EntranceRandoEnabled, ERFixedShop,
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
-                    GrassRandomizer, RandomizeHexQuest
+                    GrassRandomizer, RandomizeHexQuest,
+                    PortalDirectionPairs, DecoupledER,
                 };
             } else {
                 return new bool[] { 
                     SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1, SaveFile.GetInt(SaveFlags.KeysBehindBosses) == 1,
                     SaveFile.GetInt("randomizer started with sword") == 1, SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1, SaveFile.GetInt(SaveFlags.EntranceRando) == 1,
-                    SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1, SaveFile.GetInt(SaveFlags.Decoupled) == 1,
                     SaveFile.GetInt("randomizer ER fixed shop") == 1, SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1,
                     SaveFile.GetInt(SaveFlags.MasklessLogic) == 1, SaveFile.GetInt("randomizer mystery seed") == 1, 
                     SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
-                    SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1
+                    SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
+                    SaveFile.GetInt(SaveFlags.Decoupled) == 1,
                 };
             }
         }

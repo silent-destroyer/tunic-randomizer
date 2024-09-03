@@ -696,6 +696,17 @@ namespace TunicRandomizer {
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
                 SaveFile.SetInt(ERFixedShop, 1);
             }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs) {
+                SaveFile.SetInt(PortalDirectionPairs, 1);
+            }
+            if (SaveFile.GetInt(ERFixedShop) == 1 && SaveFile.GetInt(PortalDirectionPairs) == 1) {
+                bool chooseOne = random.Next(2) == 1;
+                SaveFile.SetInt(ERFixedShop, chooseOne ? 1 : 0);
+                SaveFile.SetInt(PortalDirectionPairs, !chooseOne ? 1 : 0);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled) {
+                SaveFile.SetInt(Decoupled, 1);
+            }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
                 SaveFile.SetInt(MasklessLogic, 1);
             }
