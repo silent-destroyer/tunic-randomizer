@@ -50,11 +50,6 @@ namespace TunicRandomizer {
                                 met++;
                             }
                         }
-                        if (ItemRandomizer.testBool) {
-                            TunicLogger.LogInfo("LocationID is " + this.LocationId);
-                            TunicLogger.LogInfo("inventory does not contain " + item);
-                        }
-                        break;
                     } else if (inventory[item] >= req[item]) {
                         met += 1;
                     }
