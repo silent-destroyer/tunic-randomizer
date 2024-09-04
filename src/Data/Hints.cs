@@ -110,7 +110,7 @@ namespace TunicRandomizer {
 
             List<string> secondaryHintItems = new List<string>() { SaveFile.GetInt(SwordProgressionEnabled) == 1 ? "Sword Upgrade" : "Sword" };
 
-            if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
+            if (SaveFile.GetInt(AbilityShuffle) == 1 && !IsHexQuestWithHexAbilities()) {
                 HintItems = new List<string>() { "Magic Orb", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)" };
                 secondaryHintItems.Add("Magic Wand");
                 secondaryHintItems.Add("Magic Dagger");
@@ -316,7 +316,7 @@ namespace TunicRandomizer {
             string Prefix = "";
             string HintMessage = "";
             List<string> MailboxItems = new List<string>() { "Stick", "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Lantern", "Shotgun", "Mask" };
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt(HexagonQuestEnabled) != 1) {
+            if (SaveFile.GetInt(AbilityShuffle) == 1 && !IsHexQuestWithHexAbilities()) {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
             }

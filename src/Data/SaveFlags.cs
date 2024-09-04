@@ -10,6 +10,7 @@
         public const string HexagonQuestIcebolt = "randomizer hexagon quest icebolt requirement";
         public const string GoldHexagonQuantity = "inventory quantity Hexagon Gold";
         public const string HexagonQuestGoal = "randomizer hexagon quest goal";
+        public const string HexagonQuestExtras = "randomizer hexagon quest extras";
         public const string HexagonQuestRandomizedValues = "randomizer hexagon quest randomized values";
         public const string HexagonQuestPageAbilities = "randomizer hexagon quest ability pages";
 
@@ -62,6 +63,18 @@
 
         public static bool IsSinglePlayer() {
             return SaveFile.GetInt("randomizer") == 1;
+        }
+
+        public static bool IsHexQuestWithPageAbilities() {
+            return GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && GetBool(HexagonQuestPageAbilities);
+        }
+
+        public static bool IsHexQuestWithHexAbilities() {
+            return GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities);
+        }
+
+        public static bool GetBool(string value) {
+            return SaveFile.GetInt(value) == 1;
         }
     }
 }

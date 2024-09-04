@@ -561,7 +561,7 @@ namespace TunicRandomizer {
         public string GetSettingsString() {
             string EncodedSettings = Convert.ToBase64String(Encoding.UTF8.GetBytes(
                 $"{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.HexagonQuestGoal) : HexagonQuestGoal)}" +
-                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt("randomizer hexagon quest extras") : HexagonQuestExtraPercentage)}" +
+                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.HexagonQuestExtras) : HexagonQuestExtraPercentage)}" +
                 $":{(int)FoolTrapIntensity}" +
                 $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.LaurelsLocation) : (int)FixedLaurelsOption)}" +
                 $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt("randomizer hexagon quest random goal") : (int)HexagonQuestRandomGoal)}" +

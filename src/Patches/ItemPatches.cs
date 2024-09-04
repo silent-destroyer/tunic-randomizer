@@ -641,7 +641,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Hexagon Gold").Quantity += 1;
                 int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
 
-                if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HexagonQuestPageAbilities) == 0) {
+                if (IsHexQuestWithHexAbilities()) {
                     Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
                         { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
                         { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },

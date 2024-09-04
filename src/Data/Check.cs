@@ -35,17 +35,17 @@ namespace TunicRandomizer {
                                 met++;
                             }
                         } else if (item == "12") {
-                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && inventory.ContainsKey("Hexagon Gold")
+                            if (SaveFlags.IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold")
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestPrayer)) {
                                 met++;
                             }
                         } else if (item == "21") {
-                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && inventory.ContainsKey("Hexagon Gold")
+                            if (SaveFlags.IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold")
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestHolyCross)) {
                                 met++;
                             }
                         } else if (item == "26") {
-                            if (SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && inventory.ContainsKey("Hexagon Gold")
+                            if (SaveFlags.IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold")
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
                                 met++;
                             }
