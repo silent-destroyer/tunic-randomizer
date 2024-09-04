@@ -504,15 +504,9 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
-        public static void SaveSettings() {
-            if (!File.Exists(TunicRandomizer.SettingsPath)) {
-                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
-            } else {
-                File.Delete(TunicRandomizer.SettingsPath);
-                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
-            }
+        private static void SaveSettings() {
+            RandomizerSettings.SaveSettings();
         }
-
         // Hints
         public static void TogglePathOfHeroHints(int index) {
             TunicRandomizer.Settings.HeroPathHintsEnabled = !TunicRandomizer.Settings.HeroPathHintsEnabled;

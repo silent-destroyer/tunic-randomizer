@@ -139,5 +139,43 @@ namespace TunicRandomizer {
         private bool eval(int a, int b) {
             return (a & b) != 0;
         }
+
+        public void Randomize() {
+            Random random = new System.Random();
+            SwordProgression = random.Next(101);
+            KeysBehindBosses = random.Next(101);
+            ShuffleAbilities = random.Next(101);
+            ShuffleLadders = random.Next(101);
+            EntranceRando = random.Next(101);
+            ERFixedShop = random.Next(101);
+            ERDecoupled = random.Next(101);
+            ERDirectionPairs = random.Next(101);
+            Maskless = random.Next(101);
+            Lanternless = random.Next(101);
+            GrassRando = random.Next(101);
+            HexagonQuest = random.Next(101);
+            HexQuestAbilityShufflePages = random.Next(101);
+
+            FoolTrapNone = random.Next(2) == 1;
+            FoolTrapNormal = random.Next(2) == 1;
+            FoolTrapDouble = random.Next(2) == 1;
+            FoolTrapOnslaught = random.Next(2) == 1;
+
+            LaurelsRandom = random.Next(2) == 1;
+            LaurelsSixCoins = random.Next(2) == 1;
+            LaurelsTenCoins = random.Next(2) == 1;
+            LaurelsTenFairies = random.Next(2) == 1;
+
+            HexQuestGoalRandom = random.Next(2) == 1;
+            HexQuestGoalLow = random.Next(2) == 1;
+            HexQuestGoalMedium = random.Next(2) == 1;
+            HexQuestGoalHigh = random.Next(2) == 1;
+
+            HexQuestExtrasRandom = random.Next(2) == 1;
+            HexQuestExtrasLow = random.Next(2) == 1;
+            HexQuestExtrasMedium = random.Next(2) == 1;
+            HexQuestExtrasHigh = random.Next(2) == 1;
+            RandomizerSettings.SaveSettings();
+        }
     }
 }

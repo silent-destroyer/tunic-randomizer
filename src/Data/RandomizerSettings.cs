@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 namespace TunicRandomizer {
 
@@ -670,7 +672,7 @@ namespace TunicRandomizer {
                     MysterySeedWeights.FromSettingsString(decodedSplit[13]);
                 }
 
-                OptionsGUIPatches.SaveSettings();
+                RandomizerSettings.SaveSettings();
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error parsing settings string!" + e.Message + " " + e.Source + " " + e.StackTrace);
             }
@@ -764,6 +766,15 @@ namespace TunicRandomizer {
             ConnectionSettings.Port = SaveFile.GetInt(SaveFlags.ArchipelagoPort).ToString();
             ConnectionSettings.Hostname = SaveFile.GetString(SaveFlags.ArchipelagoHostname);
             ConnectionSettings.Password = SaveFile.GetString(SaveFlags.ArchipelagoPassword);
+        }
+
+        public static void SaveSettings() {
+            if (!File.Exists(TunicRandomizer.SettingsPath)) {
+                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
+            } else {
+                File.Delete(TunicRandomizer.SettingsPath);
+                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
+            }
         }
     }
 }

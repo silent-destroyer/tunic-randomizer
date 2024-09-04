@@ -300,7 +300,7 @@ namespace TunicRandomizer {
 
             InventoryDisplayPatches.UpdateAbilitySection();
 
-            OptionsGUIPatches.SaveSettings();
+            RandomizerSettings.SaveSettings();
 
             if (!ModelSwaps.SwappedThisSceneAlready) {
                 ModelSwaps.SwapItemsInScene();
