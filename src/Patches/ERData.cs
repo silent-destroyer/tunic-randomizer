@@ -3826,6 +3826,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Library Lab Lower",
                 new Dictionary<string, List<List<string>>> {
@@ -3857,7 +3858,7 @@ namespace TunicRandomizer {
                         "Library Lab on Portal Pad",
                         new List<List<string>> {
                             new List<string> {
-                                "12",
+                                "Ladders in Library",
                             },
                         }
                     },
@@ -3901,12 +3902,6 @@ namespace TunicRandomizer {
                     {
                         "Library Lab on Portal Pad",
                         new List<List<string>> {
-                            new List<string> {
-                                "Ladders in Library",
-                            },
-                            new List<string> {
-                                "Hyperdash",
-                            },
                         }
                     },
                 }
@@ -3924,6 +3919,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Fortress Exterior from East Forest",
                 new Dictionary<string, List<List<string>>> {
