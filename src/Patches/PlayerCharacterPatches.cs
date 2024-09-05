@@ -526,6 +526,11 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("hexagon_quest", out var hexagonQuest)) {
                     if (SaveFile.GetInt(HexagonQuestEnabled) == 0 && hexagonQuest.ToString() == "1") {
                         SaveFile.SetInt(HexagonQuestEnabled, 1);
+                        if (slotData.TryGetValue("hexagon_quest_page_abilities", out var hexagonQuestPageAbilities)) {
+                            if (hexagonQuestPageAbilities.ToString() == "1") {
+                                SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+                            }
+                        }
                         for (int i = 0; i < 28; i++) {
                             SaveFile.SetInt($"randomizer obtained page {i}", 1);
                         }
@@ -549,7 +554,7 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("ability_shuffling", out var abilityShuffling)) {
                     if (SaveFile.GetInt(AbilityShuffle) == 0 && abilityShuffling.ToString() == "1") {
                         SaveFile.SetInt(AbilityShuffle, 1);
-                        if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                        if (IsHexQuestWithHexAbilities()) {
                             SaveFile.SetInt(HexagonQuestPrayer, int.Parse(slotData["Hexagon Quest Prayer"].ToString(), CultureInfo.InvariantCulture));
                             SaveFile.SetInt(HexagonQuestHolyCross, int.Parse(slotData["Hexagon Quest Holy Cross"].ToString(), CultureInfo.InvariantCulture));
                             SaveFile.SetInt(HexagonQuestIcebolt, int.Parse(slotData["Hexagon Quest Icebolt"].ToString(), CultureInfo.InvariantCulture));

@@ -581,10 +581,10 @@ namespace TunicRandomizer {
             } else {
                 GUI.Label(new Rect(10f * guiScale, advHeight, 220f * guiScale, 20f * guiScale), $"<size={(int)(18 * guiScale)}>Hexagons Required:</size>");
                 GUI.Label(new Rect(190f * guiScale, advHeight, 30f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>{(TunicRandomizer.Settings.HexagonQuestGoal)}</size>");
-                TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(220f * guiScale, advHeight + 15, 175f * guiScale, 20f * guiScale), TunicRandomizer.Settings.HexagonQuestGoal, 1, 50);
+                TunicRandomizer.Settings.HexagonQuestGoal = (int)GUI.HorizontalSlider(new Rect(220f * guiScale, advHeight + 15, 175f * guiScale, 20f * guiScale), TunicRandomizer.Settings.HexagonQuestGoal, 1, 100);
                 advHeight += 30f * guiScale;
                 GUI.Label(new Rect(10f * guiScale, advHeight, 220f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>Hexagons in Item Pool:</size>");
-                GUI.Label(new Rect(190f * guiScale, advHeight, 30f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>{((int)Math.Round((100f + TunicRandomizer.Settings.HexagonQuestExtraPercentage) / 100f * TunicRandomizer.Settings.HexagonQuestGoal))}</size>");
+                GUI.Label(new Rect(190f * guiScale, advHeight, 30f * guiScale, 30f * guiScale), $"<size={(int)(18 * guiScale)}>{(Math.Min((int)Math.Round((100f + TunicRandomizer.Settings.HexagonQuestExtraPercentage) / 100f * TunicRandomizer.Settings.HexagonQuestGoal), 100))}</size>");
                 TunicRandomizer.Settings.HexagonQuestExtraPercentage = (int)GUI.HorizontalSlider(new Rect(220f * guiScale, advHeight + 15, 175f * guiScale, 30f * guiScale), TunicRandomizer.Settings.HexagonQuestExtraPercentage, 0, 100);
             }
             advHeight += 30f;

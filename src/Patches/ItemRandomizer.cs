@@ -84,7 +84,6 @@ namespace TunicRandomizer {
             }
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
-            List<Check> Hexagons = new List<Check>();
             // the list of progression items
             List<Reward> ProgressionRewards = new List<Reward>();
             // inventory of progression items that have not been placed yet
@@ -93,10 +92,8 @@ namespace TunicRandomizer {
             Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
 
             int GoldHexagonsAdded = 0;
-            int HexagonsToAdd = (int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal));
-            if (SaveFile.GetInt(KeysBehindBosses) == 1) {
-                HexagonsToAdd -= 3;
-            }
+            int HexagonsToAdd = Math.Min((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal)), 100);
+
             if (IsHexQuestWithHexAbilities()) {
                 int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
                 List<string> abilities = new List<string>() { "prayer", "holy cross", "icebolt" }.OrderBy(r => random.Next()).ToList();
@@ -111,98 +108,118 @@ namespace TunicRandomizer {
             }
             Shuffle(InitialItems, random);
             foreach (Check Item in InitialItems) {
-                if (SaveFile.GetInt("randomizer keys behind bosses") != 0 && (Item.Reward.Name.Contains("Hexagon") || Item.Reward.Name == "Vault Key (Red)")) {
-                    if (Item.Reward.Name == "Hexagon Green" || Item.Reward.Name == "Hexagon Blue") {
-                        Hexagons.Add(Item);
-                    } else if (Item.Reward.Name == "Vault Key (Red)") {
+                if (SaveFile.GetInt(KeysBehindBosses) != 0) {
+                    if (Item.Reward.Name == "Vault Key (Red)") {
                         Item.Reward.Name = "Hexagon Red";
-                        Hexagons.Add(Item);
                     } else if (Item.Reward.Name == "Hexagon Red") {
                         Item.Reward.Name = "Vault Key (Red)";
-                        ProgressionRewards.Add(Item.Reward);
-                        InitialLocations.Add(Item.Location);
                     }
-                } else {
-                    if (SaveFile.GetInt("randomizer sword progression enabled") != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
-                        Item.Reward.Name = "Sword Progression";
-                        Item.Reward.Type = "SPECIAL";
-                    }
-                    if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                        if (Item.Reward.Type == "PAGE" || Item.Reward.Name.Contains("Hexagon")) {
-                            if (IsHexQuestWithPageAbilities() && abilityPages.Contains(Item.Reward.Name)) {
-
-                            } else {
-                                string FillerItem = ItemLookup.FillerItems.Keys.ToList()[random.Next(ItemLookup.FillerItems.Count)];
-                                Item.Reward.Name = FillerItem;
-                                Item.Reward.Type = FillerItem == "money" ? "MONEY" : "INVENTORY";
-                                Item.Reward.Amount = ItemLookup.FillerItems[FillerItem][random.Next(ItemLookup.FillerItems[FillerItem].Count)];
-                            }
+                } 
+                if (SaveFile.GetInt(SwordProgressionEnabled) != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
+                    Item.Reward.Name = "Sword Progression";
+                    Item.Reward.Type = "SPECIAL";
+                }
+                if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                    if (Item.Reward.Type == "PAGE") {
+                        if (IsHexQuestWithHexAbilities() || (IsHexQuestWithPageAbilities() && !abilityPages.Contains(Item.Reward.Name))) {
+                            string FillerItem = ItemLookup.FillerItems.Keys.ToList()[random.Next(ItemLookup.FillerItems.Count)];
+                            Item.Reward.Name = FillerItem;
+                            Item.Reward.Type = FillerItem == "money" ? "MONEY" : "INVENTORY";
+                            Item.Reward.Amount = ItemLookup.FillerItems[FillerItem][random.Next(ItemLookup.FillerItems[FillerItem].Count)];
                         }
-                        if (ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && ItemLookup.FillerItems[Item.Reward.Name].Contains(Item.Reward.Amount) && GoldHexagonsAdded < HexagonsToAdd) {
+                    }
+                    if (Item.Reward.Name.Contains("Hexagon")) {
+                        if (SaveFile.GetInt(KeysBehindBosses) == 1 && GoldHexagonsAdded < HexagonsToAdd) {
                             Item.Reward.Name = "Hexagon Gold";
                             Item.Reward.Type = "SPECIAL";
                             Item.Reward.Amount = 1;
                             GoldHexagonsAdded++;
+                        } else {
+                            string FillerItem = ItemLookup.FillerItems.Keys.ToList()[random.Next(ItemLookup.FillerItems.Count)];
+                            Item.Reward.Name = FillerItem;
+                            Item.Reward.Type = FillerItem == "money" ? "MONEY" : "INVENTORY";
+                            Item.Reward.Amount = ItemLookup.FillerItems[FillerItem][random.Next(ItemLookup.FillerItems[FillerItem].Count)];
                         }
+                    }
+                    if (ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && ItemLookup.FillerItems[Item.Reward.Name].Contains(Item.Reward.Amount) && GoldHexagonsAdded < HexagonsToAdd) {
+                        Item.Reward.Name = "Hexagon Gold";
+                        Item.Reward.Type = "SPECIAL";
+                        Item.Reward.Amount = 1;
+                        GoldHexagonsAdded++;
+                    }
 
-                        // can probably be removed now that Check.reachable got updated to check hex counts
-                        if (IsHexQuestWithHexAbilities()) {
-                            if (Item.Location.Requirements.Count > 0) {
-                                for (int i = 0; i < Item.Location.Requirements.Count; i++) {
-                                    if (Item.Location.Requirements[i].ContainsKey("12") && Item.Location.Requirements[i].ContainsKey("21")) {
-                                        int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
-                                        Item.Location.Requirements[i].Remove("12");
-                                        Item.Location.Requirements[i].Remove("21");
-                                        Item.Location.Requirements[i].Add("Hexagon Gold", amt);
-                                    }
-                                    if (Item.Location.Requirements[i].ContainsKey("12")) {
-                                        Item.Location.Requirements[i].Remove("12");
-                                        Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
-                                    }
-                                    if (Item.Location.Requirements[i].ContainsKey("21")) {
-                                        Item.Location.Requirements[i].Remove("21");
-                                        Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
-                                    }
-                                    if (Item.Location.Requirements[i].ContainsKey("26")) {
-                                        Item.Location.Requirements[i].Remove("26");
-                                        Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest icebolt requirement"));
-                                    }
+                    // can probably be removed now that Check.reachable got updated to check hex counts
+                    if (IsHexQuestWithHexAbilities()) {
+                        if (Item.Location.Requirements.Count > 0) {
+                            for (int i = 0; i < Item.Location.Requirements.Count; i++) {
+                                if (Item.Location.Requirements[i].ContainsKey("12") && Item.Location.Requirements[i].ContainsKey("21")) {
+                                    int amt = Math.Max(SaveFile.GetInt($"randomizer hexagon quest prayer requirement"), SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
+                                    Item.Location.Requirements[i].Remove("12");
+                                    Item.Location.Requirements[i].Remove("21");
+                                    Item.Location.Requirements[i].Add("Hexagon Gold", amt);
+                                }
+                                if (Item.Location.Requirements[i].ContainsKey("12")) {
+                                    Item.Location.Requirements[i].Remove("12");
+                                    Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest prayer requirement"));
+                                }
+                                if (Item.Location.Requirements[i].ContainsKey("21")) {
+                                    Item.Location.Requirements[i].Remove("21");
+                                    Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest holy cross requirement"));
+                                }
+                                if (Item.Location.Requirements[i].ContainsKey("26")) {
+                                    Item.Location.Requirements[i].Remove("26");
+                                    Item.Location.Requirements[i].Add("Hexagon Gold", SaveFile.GetInt($"randomizer hexagon quest icebolt requirement"));
                                 }
                             }
                         }
                     }
-                    if (SaveFile.GetInt(LadderRandoEnabled) == 1 && ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && Ladders.Count > 0) {
-                        Item.Reward.Name = Ladders[random.Next(Ladders.Count)];
-                        Item.Reward.Amount = 1;
-                        Item.Reward.Type = "INVENTORY";
-                        Ladders.Remove(Item.Reward.Name);
-                    }
-                    if (ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) {
-                        ProgressionRewards.Add(Item.Reward);
-                    } else {
-                        InitialRewards.Add(Item.Reward);
-                    }
-                    InitialLocations.Add(Item.Location);
                 }
+                if (SaveFile.GetInt(LadderRandoEnabled) == 1 && ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && Ladders.Count > 0) {
+                    Item.Reward.Name = Ladders[random.Next(Ladders.Count)];
+                    Item.Reward.Amount = 1;
+                    Item.Reward.Type = "INVENTORY";
+                    Ladders.Remove(Item.Reward.Name);
+                }
+
+                if (ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) {
+                    ProgressionRewards.Add(Item.Reward);
+                } else {
+                    InitialRewards.Add(Item.Reward);
+                }
+                InitialLocations.Add(Item.Location);
             }
 
             // pre-place laurels in ProgressionLocations, so that fill can collect it as needed
-            if (SaveFile.GetInt(LaurelsLocation) != 0) {
-                foreach (Reward item in ProgressionRewards) {
-                    if (item.Name == "Hyperdash") {
-                        foreach (Location location in InitialLocations) {
-                            if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(LaurelsLocation) == 1)
-                                || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(LaurelsLocation) == 2)
-                                || (location.LocationId == "waterfall" && SaveFile.GetInt(LaurelsLocation) == 3)) {
-                                Check Check = new Check(item, location);
-                                string DictionaryId = Check.CheckId;
-                                ProgressionLocations.Add(DictionaryId, Check);
-                                InitialLocations.Remove(location);
-                                ProgressionRewards.Remove(item);
-                                break;
-                            }
+            foreach (Reward item in ProgressionRewards.ToList()) {
+                if (item.Name == "Hyperdash" && SaveFile.GetInt(LaurelsLocation) != 0) {
+                    foreach (Location location in InitialLocations.ToList()) {
+                        if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(LaurelsLocation) == 1)
+                            || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(LaurelsLocation) == 2)
+                            || (location.LocationId == "waterfall" && SaveFile.GetInt(LaurelsLocation) == 3)) {
+                            Check Check = new Check(item, location);
+                            string DictionaryId = Check.CheckId;
+                            ProgressionLocations.Add(DictionaryId, Check);
+                            InitialLocations.Remove(location);
+                            ProgressionRewards.Remove(item);
+                            break;
                         }
-                        break;
+                    }
+                }
+            }
+
+            // pre-place hexagons if keys behind bosses is on
+            foreach (Reward item in InitialRewards.ToList()) {
+                if (item.Name.Contains("Hexagon") && SaveFile.GetInt(KeysBehindBosses) == 1) {
+                    foreach (Location location in InitialLocations.ToList()) {
+                        Check Check = new Check(item, location);
+                        if (Check.CheckId == "Vault Key (Red) [Fortress Arena]"
+                            || Check.CheckId == "Hexagon Green [Library Arena]"
+                            || Check.CheckId == "Hexagon Blue [ziggurat2020_3]") {
+                            ProgressionLocations.Add(Check.CheckId, Check);
+                            InitialLocations.Remove(location);
+                            InitialRewards.Remove(item);
+                            break;
+                        }
                     }
                 }
             }
@@ -232,6 +249,7 @@ namespace TunicRandomizer {
             // put progression items in locations
             foreach (Reward item in ProgressionRewards.OrderBy(r => random.Next())) {
                 iteration_number++;
+
                 // pick an item
                 string itemName = ItemLookup.FairyLookup.Keys.Contains(item.Name) ? "Fairy" : item.Name;
                 // remove item from inventory for reachability checks
@@ -415,16 +433,16 @@ namespace TunicRandomizer {
                 Locations.RandomizedLocations.Add(key, ProgressionLocations[key]);
             }
 
-            if (SaveFile.GetInt("randomizer keys behind bosses") != 0) {
+/*            if (SaveFile.GetInt(KeysBehindBosses) != 0) {
                 foreach (Check Hexagon in Hexagons) {
-                    if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                        Hexagon.Reward.Name = "Hexagon Gold";
-                        Hexagon.Reward.Type = "SPECIAL";
-                    }
                     string DictionaryId = Hexagon.CheckId;
+                    if (Locations.RandomizedLocations.ContainsKey(DictionaryId)) {
+                        TunicLogger.LogInfo("item on " + DictionaryId);
+                        TunicLogger.LogInfo(Locations.RandomizedLocations[DictionaryId].Reward.Name);
+                    }
                     Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
                 }
-            }
+            }*/
 
             // Add grass checks back in that shouldn't be randomized (ones that are affected by clear early bushes)
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {

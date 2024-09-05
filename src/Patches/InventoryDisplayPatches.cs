@@ -304,7 +304,7 @@ namespace TunicRandomizer {
                 GrassIcon.SetActive(true);
                 GrassBacking.transform.GetChild(0).localScale = new Vector3(0.75f, 0.75f, 0.75f);
                 GrassText = SetupText("grass counter", new Vector3(-160f, 209f, 0f), GrassCounter.transform, 24f, FontAsset, FontMaterial);
-                GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0\n0/0";
+                GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0 • 0/0";
                 GrassText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.TopLeft;
                 GrassText.GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Left;
                 GrassText.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Middle;
