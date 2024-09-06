@@ -503,7 +503,6 @@ namespace TunicRandomizer {
             Color Full = new Color(1, 1, 1, 1);
             Color Faded = new Color(1, 1, 1, 0.5f);
             bool isHexQuest = SaveFlags.IsHexQuestWithHexAbilities();
-            TunicLogger.LogInfo("is hex quest " + isHexQuest);
 
             if (isHexQuest) {
                 SortedDictionary<int, string> HexUnlocks = new SortedDictionary<int, string>() {

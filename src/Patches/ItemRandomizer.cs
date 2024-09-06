@@ -433,17 +433,6 @@ namespace TunicRandomizer {
                 Locations.RandomizedLocations.Add(key, ProgressionLocations[key]);
             }
 
-/*            if (SaveFile.GetInt(KeysBehindBosses) != 0) {
-                foreach (Check Hexagon in Hexagons) {
-                    string DictionaryId = Hexagon.CheckId;
-                    if (Locations.RandomizedLocations.ContainsKey(DictionaryId)) {
-                        TunicLogger.LogInfo("item on " + DictionaryId);
-                        TunicLogger.LogInfo(Locations.RandomizedLocations[DictionaryId].Reward.Name);
-                    }
-                    Locations.RandomizedLocations.Add(DictionaryId, Hexagon);
-                }
-            }*/
-
             // Add grass checks back in that shouldn't be randomized (ones that are affected by clear early bushes)
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                 foreach(KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks.Where(grass => GrassRandomizer.ExcludedGrassChecks.Contains(grass.Key))) {

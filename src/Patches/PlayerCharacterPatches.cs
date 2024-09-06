@@ -383,9 +383,6 @@ namespace TunicRandomizer {
                     SaveFile.SetString("randomizer game mode", System.Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode));
                     if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
                         SaveFile.SetInt(HexagonQuestEnabled, 1);
-                        if (TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages) {
-                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
-                        }
                         if (TunicRandomizer.Settings.RandomizeHexQuest) {
                             switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
                                 default:
@@ -422,6 +419,10 @@ namespace TunicRandomizer {
                         } else {
                             SaveFile.SetInt(HexagonQuestGoal, TunicRandomizer.Settings.HexagonQuestGoal);
                             SaveFile.SetInt(HexagonQuestExtras, TunicRandomizer.Settings.HexagonQuestExtraPercentage);
+                        }
+
+                        if (TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages || SaveFile.GetInt(HexagonQuestGoal) < 3) {
+                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
                         }
 
                         for (int i = 0; i < 28; i++) {
