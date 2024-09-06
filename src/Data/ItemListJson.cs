@@ -2340,16 +2340,16 @@
                     ""Requirements"": [
                         {
                             ""Library Lab"": 1,
-                            ""Stick"": 1,
+                            ""Stick"": 1
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Techbow"": 1,
+                            ""Techbow"": 1
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Gun"": 1,
-                        },
+                            ""Gun"": 1
+                        }
                     ]
                 }
             },
@@ -2367,16 +2367,16 @@
                     ""Requirements"": [
                         {
                             ""Library Lab"": 1,
-                            ""Stick"": 1,
+                            ""Stick"": 1
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Techbow"": 1,
+                            ""Techbow"": 1
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Gun"": 1,
-                        },
+                            ""Gun"": 1
+                        }
                     ]
                 }
             },
@@ -2394,16 +2394,16 @@
                     ""Requirements"": [
                         {
                             ""Library Lab"": 1,
-                            ""Stick"": 1,
+                            ""Stick"": 1
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Techbow"": 1,
+                            ""Techbow"": 1
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Gun"": 1,
-                        },
+                            ""Gun"": 1
+                        }
                     ]
                 }
             },
@@ -3916,12 +3916,12 @@
                     ""Requirements"": [
                         {
                             ""Fortress Leaf Piles"": 1,
-                            ""Stick"",
+                            ""Stick"": 1
                         },
                         {
                             ""Fortress Leaf Piles"": 1,
-                            ""Stundagger"",
-                        },
+                            ""Stundagger"": 1
+                        }
                     ]
                 }
             },
