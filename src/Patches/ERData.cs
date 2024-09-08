@@ -463,6 +463,137 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
+            {
+                "Forest Belltower",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Forest Belltower Main",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "", PDir.NORTH),
+                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Forest Belltower Lower",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "", PDir.SOUTH),
+                        }
+                    },
+                    {
+                        "Forest Belltower Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "", PDir.SOUTH),
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest Redux",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest to Belltower", "Forest Belltower", "", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "lower", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "gate", PDir.NORTH),
+                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "upper", PDir.EAST),
+                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "lower", PDir.EAST),
+                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "upper", PDir.EAST),
+                        }
+                    },
+                    {
+                        "East Forest Dance Fox Spot",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave", "upper", PDir.EAST),
+                        }
+                    },
+                    {
+                        "East Forest Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest to Far Shore", "Transit", "teleporter_forest teleporter", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Lower Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "lower", PDir.NORTH),
+                        }
+                    },
+                }
+            },
+            {
+                "Sword Access",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Forest Grave Path Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux", "upper", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Forest Grave Path Main",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux", "lower", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Forest Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("East Forest Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest Redux Laddercave",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Guard House 1 West",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux", "upper", PDir.WEST),
+                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux", "lower", PDir.SOUTH),
+                        }
+                    },
+                    {
+                        "Guard House 1 East",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux", "gate", PDir.SOUTH),
+                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room", "", PDir.NORTH),
+                        }
+                    },
+                }
+            },
+            {
+                "East Forest Redux Interior",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Guard House 2 Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "upper", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Guard House 2 Lower",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "lower", PDir.SOUTH),
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Boss Room",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Forest Boss Room",
+                        new List<TunicPortal> {
+                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave", "", PDir.SOUTH),
+                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower", "", PDir.NORTH),
+                        }
+                    },
+                }
+            },
+
             {
                 "Sewer",
                 new Dictionary<string, List<TunicPortal>> {
@@ -498,6 +629,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Crypt Redux",
                 new Dictionary<string, List<TunicPortal>> {
@@ -516,6 +648,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Archipelagos Redux",
                 new Dictionary<string, List<TunicPortal>> {
@@ -564,6 +697,159 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
+            {
+                "Fortress Courtyard",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Courtyard",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary", "Lower", PDir.EAST),
+                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main", "Big Door", PDir.NORTH),
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary", "Upper", PDir.EAST),
+                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East", "", PDir.NORTH),
+                        }
+                    },
+                    {
+                        "Fortress Exterior near cave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard Shop", "Shop", "", PDir.NORTH),
+                        }
+                    },
+                    {
+                        "Beneath the Vault Entry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "", PDir.LADDER_DOWN),
+                        }
+                    },
+                    {
+                        "Fortress Exterior from East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower", "", PDir.SOUTH),
+                        }
+                    },
+                    {
+                        "Fortress Exterior from Overworld",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux", "", PDir.WEST),
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Basement",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Beneath the Vault Back",
+                        new List<TunicPortal> {
+                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main", "", PDir.EAST),
+                        }
+                    },
+                    {
+                        "Beneath the Vault Ladder Exit",
+                        new List<TunicPortal> {
+                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "", PDir.LADDER_UP),
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Main",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Eastern Vault Fortress",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard", "Big Door", PDir.SOUTH),
+                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement", "", PDir.WEST),
+                            new TunicPortal("Fortress Interior Shop", "Shop", "", PDir.NORTH),
+                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East", "upper", PDir.EAST),
+                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East", "lower", PDir.EAST),
+                        }
+                    },
+                    {
+                        "Eastern Vault Fortress Gold Door",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena", "", PDir.NORTH),
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress East",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress East Shortcut Lower",
+                        new List<TunicPortal> {
+                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main", "lower", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Fortress East Shortcut Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "", PDir.SOUTH),
+                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "upper", PDir.WEST),
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Reliquary",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Grave Path",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "Lower", PDir.WEST),
+                            new TunicPortal("Fortress Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Fortress Grave Path Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard", "Upper", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Fortress Grave Path Dusty Entrance",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Grave Path Dusty Entrance", "Dusty", "", PDir.NORTH),
+                        }
+                    },
+                }
+            },
+            {
+                "Dusty",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Leaf Piles",
+                        new List<TunicPortal> {
+                            new TunicPortal("Dusty Exit", "Fortress Reliquary", "", PDir.SOUTH),
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Arena",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Fortress Arena",
+                        new List<TunicPortal> {
+                            new TunicPortal("Siege Engine Arena to Fortress", "Fortress Main", "", PDir.SOUTH),
+                        }
+                    },
+                    {
+                        "Fortress Arena Portal",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress to Far Shore", "Transit", "teleporter_spidertank", PDir.FLOOR),
+                        }
+                    },
+                }
+            },
+
             {
                 "Atoll Redux",
                 new Dictionary<string, List<TunicPortal>> {
@@ -743,286 +1029,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
-            {
-                "East Forest Redux",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "East Forest",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest to Belltower", "Forest Belltower", "", PDir.NORTH),
-                            new TunicPortal("Forest Guard House 1 Lower Entrance", "East Forest Redux Laddercave", "lower", PDir.NORTH),
-                            new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "gate", PDir.NORTH),
-                            new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "upper", PDir.EAST),
-                            new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "lower", PDir.EAST),
-                            new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "upper", PDir.EAST),
-                        }
-                    },
-                    {
-                        "East Forest Dance Fox Spot",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Dance Fox Outside Doorway", "East Forest Redux Laddercave", "upper", PDir.EAST),
-                        }
-                    },
-                    {
-                        "East Forest Portal",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest to Far Shore", "Transit", "teleporter_forest teleporter", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Lower Forest",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Guard House 2 Lower Entrance", "East Forest Redux Interior", "lower", PDir.NORTH),
-                        }
-                    },
-                }
-            },
-            {
-                "East Forest Redux Laddercave",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Guard House 1 West",
-                        new List<TunicPortal> {
-                            new TunicPortal("Guard House 1 Dance Fox Exit", "East Forest Redux", "upper", PDir.WEST),
-                            new TunicPortal("Guard House 1 Lower Exit", "East Forest Redux", "lower", PDir.SOUTH),
-                        }
-                    },
-                    {
-                        "Guard House 1 East",
-                        new List<TunicPortal> {
-                            new TunicPortal("Guard House 1 Upper Forest Exit", "East Forest Redux", "gate", PDir.SOUTH),
-                            new TunicPortal("Guard House 1 to Guard Captain Room", "Forest Boss Room", "", PDir.NORTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Sword Access",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Forest Grave Path Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Grave Path Upper Exit", "East Forest Redux", "upper", PDir.WEST),
-                        }
-                    },
-                    {
-                        "Forest Grave Path Main",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Grave Path Lower Exit", "East Forest Redux", "lower", PDir.WEST),
-                        }
-                    },
-                    {
-                        "Forest Hero's Grave",
-                        new List<TunicPortal> {
-                            new TunicPortal("East Forest Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                }
-            },
-            {
-                "East Forest Redux Interior",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Guard House 2 Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "upper", PDir.WEST),
-                        }
-                    },
-                    {
-                        "Guard House 2 Lower",
-                        new List<TunicPortal> {
-                            new TunicPortal("Guard House 2 Lower Exit", "East Forest Redux", "lower", PDir.SOUTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Forest Boss Room",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Forest Boss Room",
-                        new List<TunicPortal> {
-                            new TunicPortal("Guard Captain Room Non-Gate Exit", "East Forest Redux Laddercave", "", PDir.SOUTH),
-                            new TunicPortal("Guard Captain Room Gate Exit", "Forest Belltower", "", PDir.NORTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Forest Belltower",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Forest Belltower Main",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "", PDir.NORTH),
-                            new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "", PDir.WEST),
-                        }
-                    },
-                    {
-                        "Forest Belltower Lower",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "", PDir.SOUTH),
-                        }
-                    },
-                    {
-                        "Forest Belltower Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "", PDir.SOUTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress Courtyard",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Fortress Courtyard",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Lower", "Fortress Reliquary", "Lower", PDir.EAST),
-                            new TunicPortal("Fortress Courtyard to Fortress Interior", "Fortress Main", "Big Door", PDir.NORTH),
-                        }
-                    },
-                    {
-                        "Fortress Courtyard Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Fortress Grave Path Upper", "Fortress Reliquary", "Upper", PDir.EAST),
-                            new TunicPortal("Fortress Courtyard to East Fortress", "Fortress East", "", PDir.NORTH),
-                        }
-                    },
-                    {
-                        "Fortress Exterior near cave",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard Shop", "Shop", "", PDir.NORTH),
-                        }
-                    },
-                    {
-                        "Beneath the Vault Entry",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Beneath the Earth", "Fortress Basement", "", PDir.LADDER_DOWN),
-                        }
-                    },
-                    {
-                        "Fortress Exterior from East Forest",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Forest Belltower", "Forest Belltower", "", PDir.SOUTH),
-                        }
-                    },
-                    {
-                        "Fortress Exterior from Overworld",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Courtyard to Overworld", "Overworld Redux", "", PDir.WEST),
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress Basement",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Beneath the Vault Back",
-                        new List<TunicPortal> {
-                            new TunicPortal("Beneath the Earth to Fortress Interior", "Fortress Main", "", PDir.EAST),
-                        }
-                    },
-                    {
-                        "Beneath the Vault Ladder Exit",
-                        new List<TunicPortal> {
-                            new TunicPortal("Beneath the Earth to Fortress Courtyard", "Fortress Courtyard", "", PDir.LADDER_UP),
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress Main",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Eastern Vault Fortress",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Interior Main Exit", "Fortress Courtyard", "Big Door", PDir.SOUTH),
-                            new TunicPortal("Fortress Interior to Beneath the Earth", "Fortress Basement", "", PDir.WEST),
-                            new TunicPortal("Fortress Interior Shop", "Shop", "", PDir.NORTH),
-                            new TunicPortal("Fortress Interior to East Fortress Upper", "Fortress East", "upper", PDir.EAST),
-                            new TunicPortal("Fortress Interior to East Fortress Lower", "Fortress East", "lower", PDir.EAST),
-                        }
-                    },
-                    {
-                        "Eastern Vault Fortress Gold Door",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Interior to Siege Engine Arena", "Fortress Arena", "", PDir.NORTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress East",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Fortress East Shortcut Lower",
-                        new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Interior Lower", "Fortress Main", "lower", PDir.WEST),
-                        }
-                    },
-                    {
-                        "Fortress East Shortcut Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("East Fortress to Courtyard", "Fortress Courtyard", "", PDir.SOUTH),
-                            new TunicPortal("East Fortress to Interior Upper", "Fortress Main", "upper", PDir.WEST),
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress Reliquary",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Fortress Grave Path",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "Lower", PDir.WEST),
-                            new TunicPortal("Fortress Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Fortress Grave Path Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Upper Exit", "Fortress Courtyard", "Upper", PDir.WEST),
-                        }
-                    },
-                    {
-                        "Fortress Grave Path Dusty Entrance",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress Grave Path Dusty Entrance", "Dusty", "", PDir.NORTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Dusty",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Fortress Leaf Piles",
-                        new List<TunicPortal> {
-                            new TunicPortal("Dusty Exit", "Fortress Reliquary", "", PDir.SOUTH),
-                        }
-                    },
-                }
-            },
-            {
-                "Fortress Arena",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Fortress Arena",
-                        new List<TunicPortal> {
-                            new TunicPortal("Siege Engine Arena to Fortress", "Fortress Main", "", PDir.SOUTH),
-                        }
-                    },
-                    {
-                        "Fortress Arena Portal",
-                        new List<TunicPortal> {
-                            new TunicPortal("Fortress to Far Shore", "Transit", "teleporter_spidertank", PDir.FLOOR),
-                        }
-                    },
-                }
-            },
+
             {
                 "Mountain",
                 new Dictionary<string, List<TunicPortal>> {
@@ -1129,6 +1136,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "ziggurat2020_0",
                 new Dictionary<string, List<TunicPortal>> {
@@ -1215,6 +1223,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Swamp Redux 2",
                 new Dictionary<string, List<TunicPortal>> {
@@ -1293,47 +1302,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
-            {
-                "RelicVoid",
-                new Dictionary<string, List<TunicPortal>> {
-                    {
-                        "Hero Relic - Fortress",
-                        new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Fortress", "Fortress Reliquary", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Hero Relic - Quarry",
-                        new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Monastery", "Monastery", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Hero Relic - West Garden",
-                        new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to West Garden", "Archipelagos Redux", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Hero Relic - East Forest",
-                        new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to East Forest", "Sword Access", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Hero Relic - Library",
-                        new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Library", "Library Hall", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                    {
-                        "Hero Relic - Swamp",
-                        new List<TunicPortal> {
-                            new TunicPortal("Hero's Grave to Swamp", "Swamp Redux 2", "teleporter_relic plinth", PDir.FLOOR),
-                        }
-                    },
-                }
-            },
+
             {
                 "Transit",
                 new Dictionary<string, List<TunicPortal>> {
@@ -1385,6 +1354,47 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "RelicVoid",
+                new Dictionary<string, List<TunicPortal>> {
+                    {
+                        "Hero Relic - Fortress",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Fortress", "Fortress Reliquary", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Hero Relic - Quarry",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Monastery", "Monastery", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Hero Relic - West Garden",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to West Garden", "Archipelagos Redux", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Hero Relic - East Forest",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to East Forest", "Sword Access", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Hero Relic - Library",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Library", "Library Hall", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "Hero Relic - Swamp",
+                        new List<TunicPortal> {
+                            new TunicPortal("Hero's Grave to Swamp", "Swamp Redux 2", "teleporter_relic plinth", PDir.FLOOR),
+                        }
+                    },
+                }
+            },
+            {
                 "Spirit Arena",
                 new Dictionary<string, List<TunicPortal>> {
                     {
@@ -1407,6 +1417,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Shop",
                 new Dictionary<string, List<TunicPortal>> {
