@@ -2339,7 +2339,16 @@
                     ""Position"": ""(119.7, 92.8, -84.0)"",
                     ""Requirements"": [
                         {
-                            ""Library Lab"": 1
+                            ""Library Lab"": 1,
+                            ""Stick"": 1
+                        },
+                        {
+                            ""Library Lab"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""Library Lab"": 1,
+                            ""Gun"": 1
                         }
                     ]
                 }
@@ -2357,7 +2366,16 @@
                     ""Position"": ""(129.1, 92.8, -68.7)"",
                     ""Requirements"": [
                         {
-                            ""Library Lab"": 1
+                            ""Library Lab"": 1,
+                            ""Stick"": 1
+                        },
+                        {
+                            ""Library Lab"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""Library Lab"": 1,
+                            ""Gun"": 1
                         }
                     ]
                 }
@@ -2375,7 +2393,16 @@
                     ""Position"": ""(160.1, 92.8, -74.9)"",
                     ""Requirements"": [
                         {
-                            ""Library Lab"": 1
+                            ""Library Lab"": 1,
+                            ""Stick"": 1
+                        },
+                        {
+                            ""Library Lab"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""Library Lab"": 1,
+                            ""Gun"": 1
                         }
                     ]
                 }
@@ -3888,7 +3915,12 @@
                     ""Position"": ""(57.5, 26.0, 43.8)"",
                     ""Requirements"": [
                         {
-                            ""Fortress Leaf Piles"": 1
+                            ""Fortress Leaf Piles"": 1,
+                            ""Stick"": 1
+                        },
+                        {
+                            ""Fortress Leaf Piles"": 1,
+                            ""Stundagger"": 1
                         }
                     ]
                 }
