@@ -185,7 +185,7 @@ namespace TunicRandomizer {
                     if (Locations.MajorItemLocations[Hexagon].Count == 0) {
                         Hint = $"#A sA #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd aht\n{HINT_NOT_FOUND_ERROR}";
                     } else {
-                        ArchipelagoHint HexHint = Hexagon == "Gold Questagon" ? Locations.MajorItemLocations[Hexagon][i] : Locations.MajorItemLocations[Hexagon][0];
+                        ArchipelagoHint HexHint = Hexagon == "Gold Questagon" && Locations.MajorItemLocations[Hexagon].Count > i ? Locations.MajorItemLocations[Hexagon][i] : Locations.MajorItemLocations[Hexagon][0];
                         int Player = Archipelago.instance.GetPlayerSlot();
                         if (HexHint.Player == Player) {
                             Scene = HexHint.Location == "Your Pocket" ? HexHint.Location : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];

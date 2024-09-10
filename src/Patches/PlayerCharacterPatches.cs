@@ -527,8 +527,8 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("hexagon_quest", out var hexagonQuest)) {
                     if (SaveFile.GetInt(HexagonQuestEnabled) == 0 && hexagonQuest.ToString() == "1") {
                         SaveFile.SetInt(HexagonQuestEnabled, 1);
-                        if (slotData.TryGetValue("hexagon_quest_page_abilities", out var hexagonQuestPageAbilities)) {
-                            if (hexagonQuestPageAbilities.ToString() == "1") {
+                        if (slotData.TryGetValue("hexagon_quest_ability_type", out var hexagonQuestAbilityType)) {
+                            if (hexagonQuestAbilityType.ToString() == "1") {
                                 SaveFile.SetInt(HexagonQuestPageAbilities, 1);
                             }
                         }
