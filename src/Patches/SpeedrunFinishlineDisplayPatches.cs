@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Archipelago.MultiClient.Net.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -234,7 +235,7 @@ namespace TunicRandomizer {
             TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{TotalCheckCount}" +
                 $"{(IncludeCollected ? "*" : "")} " +
                 $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}<#FFFFFF>" +
-                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {(GrassCount == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}{GrassCount}/{GrassRandomizer.GrassChecks.Count}{(IncludeCollected ? "*" : "")} ({Math.Round(GrassPercentage, 2)}%)" : $"")}" +
+                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {(GrassCount == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}{GrassCount}/{GrassRandomizer.GrassChecks.Count}{(IncludeCollected ? "*" : "")} ({Math.Round(GrassPercentage, 2)}%) {((int)GrassPercentage == 69 ? "<size=40%>nice</size>" : "")} {((int)GrassPercentage == 69 && (int)CheckPercentage == 69 ? "<size=40%>x2</size>" : "")} " : $"")}" +
                 $"<#FFFFFF>{(IncludeCollected ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}";
 
             TotalCompletion.GetComponent<TextMeshPro>().horizontalAlignment = HorizontalAlignmentOptions.Center;
@@ -316,7 +317,16 @@ namespace TunicRandomizer {
                 if (Area == "Swamp") {
                     AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>Press 1 to hide stats.";
                     if (IsArchipelago()) {
-                        AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.\nPress C to collect items.";
+                        if (Archipelago.instance.integration.session.RoomState.ReleasePermissions == Permissions.Disabled) {
+                            AreaCount.GetComponent<TextMeshPro>().text += "\nReleasing is disabled by host.";
+                        } else {
+                            AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.";
+                        }
+                        if (Archipelago.instance.integration.session.RoomState.CollectPermissions == Permissions.Disabled) {
+                            AreaCount.GetComponent<TextMeshPro>().text += "\nCollecting disabled by host.";
+                        } else {
+                            AreaCount.GetComponent<TextMeshPro>().text += "\nPress C to collect items.";
+                        }
                     }
                     AreaCount.GetComponent<TextMeshPro>().text += "\nHold S to skip credits.";
                 }
