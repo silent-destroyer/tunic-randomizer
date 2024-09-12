@@ -223,7 +223,8 @@ namespace TunicRandomizer {
             },
             { "Inside Temple", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Inside Temple 1", "Temple", new Vector3(7.067f, -0.224f, 59.9285f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.IDLE, $"yur naht uh \"RUIN SEEKER,\" R yoo? mAbE yoo $oud gO\nsuhmwAr ehls.", $"yur naht uh rooin sEkur, R yoo? mAbE yoo $oud gO suhmwAr ehls."),
-                new HintGhost("Hint Ghost Inside Temple 2", "Temple", new Vector3(0.9350182f, 4.076f, 133.7965f), new Quaternion(0f, 0.8660254f, 0f, 0.5f), NPC.NPCAnimState.GAZE_UP, $"yur guhnuh frE \"THE HEIR?\" iznt #aht... bahd?", $"yur guhnuh frE #uh Ar? iznt #aht... bahd?") }
+                new HintGhost("Hint Ghost Inside Temple 2", "Temple", new Vector3(0.9350182f, 4.076f, 133.7965f), new Quaternion(0f, 0.8660254f, 0f, 0.5f), NPC.NPCAnimState.GAZE_UP, $"yur guhnuh frE \"THE HEIR?\" iznt #aht... bahd?", $"yur guhnuh frE #uh Ar? iznt #aht... bahd?"),
+                new HintGhost("Hint Ghost Inside Temple 2", "Temple", new Vector3(21.0f, 0.076f, 42.5f), new Quaternion(0f, 0.5736f, 0f, -0.8192f), NPC.NPCAnimState.IDLE, $"hahv yoo trId #uh witnis? itz lIk #is ehksehpt\nwi% uh dawt."), }
             },
             { "Ruined Shop", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Ruined Shop 1", "Ruined Shop", new Vector3(16.5333f, 8.983299f, -45.60382f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"hehlO. wuht iz yor nAm?---...tuhnk? wuht A strAnj nAm."),
