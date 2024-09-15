@@ -739,7 +739,7 @@ namespace TunicRandomizer {
                                 // Central swamp ladder
                                 "Wooden Ladder (8 unit) (28.0, 0.0, -32.0)",
                                 new List<TransformData>(){
-                                    new TransformData(new Vector3(29.88001f, 8.118482f, -33.28009f), new Quaternion(0f, 0.9999996f, 0f, 0.0009153643f), Vector3.one),
+                                    new TransformData(new Vector3(28.85f, 8.1174f, -31.9f), new Quaternion(0f, 0.7071f, 0f, 0.7071f), Vector3.one),
                                     new TransformData(new Vector3(26.94685f, -0.03708649f, -31.93066f), new Quaternion(0f, 0.7071068f, 0f, 0.7071068f), Vector3.one),
                                 }
                             ),

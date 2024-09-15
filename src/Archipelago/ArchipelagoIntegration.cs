@@ -380,7 +380,7 @@ namespace TunicRandomizer {
         }
 
         public void SendDeathLink() {
-            string Player = TunicRandomizer.Settings.ConnectionSettings.Player;
+            string Player = SaveFile.GetString(SaveFlags.ArchipelagoPlayerName);
             string AreaDiedIn = "";
             if (DeathLinkMessages.Causes.ContainsKey(SceneLoaderPatches.SceneName)) {
                 AreaDiedIn = SceneLoaderPatches.SceneName;

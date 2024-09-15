@@ -174,6 +174,16 @@ namespace TunicRandomizer {
             set;
         }
 
+        public DeathLinkType DeathLinkEffect {
+            get;
+            set;
+        }
+
+        public enum DeathLinkType {
+            DEATH,
+            FOOLTRAP,
+        }
+
         // Hint Settings
         private const int PATH_OF_HERO = 1;
         private const int GHOST_FOXES = 2;
@@ -493,6 +503,7 @@ namespace TunicRandomizer {
             CollectReflectsInWorld = false;
             SkipItemAnimations = false;
             SendHintsToServer = false;
+            DeathLinkEffect = DeathLinkType.DEATH;
 
             // Hints
             HeroPathHintsEnabled = true;

@@ -45,7 +45,12 @@ namespace TunicRandomizer {
                     Notifications.Show(DeathLinkMessage, DeathLinkMessages.SecondaryMessages[new System.Random().Next(DeathLinkMessages.SecondaryMessages.Count)]);
                     DeathLinkMessage = "";
                 }
-                __instance.hp = -1;
+                if (TunicRandomizer.Settings.DeathLinkEffect == RandomizerSettings.DeathLinkType.DEATH) {
+                    __instance.hp = -1;
+                } else if (TunicRandomizer.Settings.DeathLinkEffect == RandomizerSettings.DeathLinkType.FOOLTRAP) {
+                    ItemPatches.ApplyFoolEffect(Archipelago.instance.GetPlayerSlot(), true);
+                    DiedToDeathLink = false;
+                }
             }
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
                 if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null) {

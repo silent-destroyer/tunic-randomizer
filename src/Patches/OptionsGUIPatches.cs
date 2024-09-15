@@ -38,9 +38,17 @@ namespace TunicRandomizer {
         public static void ArchipelagoSettingsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Archipelago");
+
+            Il2CppStringArray DeathLinkTypes = (Il2CppStringArray)new string[] { "Death", "Fool Trap" };
             OptionsGUI.addToggle("Death Link", "Off", "On", TunicRandomizer.Settings.DeathLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDeathLink);
+            OptionsGUI.addMultiSelect("Death Link Effect", DeathLinkTypes, (int)TunicRandomizer.Settings.DeathLinkEffect, (OptionsGUIMultiSelect.MultiSelectAction)ChangeDeathLinkType).wrap = true;
             OptionsGUI.addToggle("Auto-open !collect-ed Checks", "Off", "On", TunicRandomizer.Settings.CollectReflectsInWorld ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUpdateOnCollect);
             OptionsGUI.addToggle("Send Hints to Server", "Off", "On", TunicRandomizer.Settings.SendHintsToServer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSendHintsToServer);
+        }
+
+        private static void ChangeDeathLinkType(int index) {
+            TunicRandomizer.Settings.DeathLinkEffect = (RandomizerSettings.DeathLinkType)index;
+            SaveSettings();
         }
 
         public static void LogicSettingsPage() {
@@ -453,7 +461,6 @@ namespace TunicRandomizer {
         }
 
         public static void ChangeFoolTrapFrequency(int index) {
-
             TunicRandomizer.Settings.FoolTrapIntensity = (RandomizerSettings.FoolTrapOption)index;
             SaveSettings();
         }
