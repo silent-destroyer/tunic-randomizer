@@ -719,7 +719,7 @@ namespace TunicRandomizer {
             }
         }
 
-        private static (string, string) ApplyFoolEffect(int Player) {
+        public static (string, string) ApplyFoolEffect(int Player, bool fromDeathLink = false) {
             System.Random Random = new System.Random();
             int FoolType = Random.Next(100);
             string FoolMessageTop = $"";
@@ -772,7 +772,9 @@ namespace TunicRandomizer {
             } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
                 FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
             }
-            Notifications.Show(FoolMessageTop, FoolMessageBottom);
+            if (!fromDeathLink) {
+                Notifications.Show(FoolMessageTop, FoolMessageBottom);
+            }
             return (FoolMessageTop, FoolMessageBottom);
         }
 
