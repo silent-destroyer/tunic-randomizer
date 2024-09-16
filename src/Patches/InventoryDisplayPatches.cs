@@ -58,7 +58,7 @@ namespace TunicRandomizer {
 
                 int TotalItemCount = Locations.VanillaLocations.Count;
                 bool isGrassRando = SaveFile.GetInt(GrassRandoEnabled) == 1;
-                string sceneName = SceneManager.GetActiveScene().name;
+                string sceneName = SceneLoaderPatches.SceneName;
                 yield return true;
                 if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
                     int grassCutInCurrentScene = GrassRandomizer.GrassChecks.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
@@ -68,7 +68,7 @@ namespace TunicRandomizer {
                     yield return true;
                     if (InventoryDisplayPatches.GrassText != null) {
                         int grassCut = GrassRandomizer.GrassChecks.Where(loc => (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
-                        InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName]}" +
+                        InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
                             $"<#ffffff> • {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                     }
                 }
@@ -304,7 +304,7 @@ namespace TunicRandomizer {
                 GrassIcon.SetActive(true);
                 GrassBacking.transform.GetChild(0).localScale = new Vector3(0.75f, 0.75f, 0.75f);
                 GrassText = SetupText("grass counter", new Vector3(-160f, 209f, 0f), GrassCounter.transform, 24f, FontAsset, FontMaterial);
-                GrassText.GetComponent<TextMeshProUGUI>().text = $"0/0\n0/0";
+                GrassText.GetComponent<TextMeshProUGUI>().text = $"";
                 GrassText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.TopLeft;
                 GrassText.GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Left;
                 GrassText.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Middle;
