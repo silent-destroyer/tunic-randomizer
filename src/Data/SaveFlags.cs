@@ -73,6 +73,10 @@
             return GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities);
         }
 
+        public static bool IsHexagonAbilityQuestWithKeysOnBosses() {
+            return IsHexQuestWithHexAbilities() && GetBool(KeysBehindBosses);
+        }
+
         public static bool GetBool(string value) {
             return SaveFile.GetInt(value) == 1;
         }

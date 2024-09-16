@@ -67,12 +67,12 @@ namespace TunicRandomizer {
                 } else {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
-                    $"\"Game Mode............{SaveFile.GetString("randomizer game mode").PadLeft(12, '.')}\"\n" +
-                    $"\"Keys Behind Bosses...{(SaveFile.GetInt("randomizer keys behind bosses") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Sword Progression....{(SaveFile.GetInt("randomizer sword progression enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Abilities...{(SaveFile.GetInt("randomizer shuffled abilities") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Ladders.....{(SaveFile.GetInt("randomizer ladder rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Entrance Randomizer..{(SaveFile.GetInt("randomizer entrance rando enabled") == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
+                    $"\"Hexagon Quest........{(SaveFile.GetInt(HexagonQuestEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Keys Behind Bosses...{(SaveFile.GetInt(KeysBehindBosses) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Sword Progression....{(SaveFile.GetInt(SwordProgressionEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Shuffled Abilities...{(SaveFile.GetInt(AbilityShuffle) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Shuffled Ladders.....{(SaveFile.GetInt(LadderRandoEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                    $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
                     (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 }
             }
@@ -385,9 +385,13 @@ namespace TunicRandomizer {
                     GenerateMysterySettings();
                 } else {
                     System.Random random = new System.Random(seed);
+
                     SaveFile.SetString("randomizer game mode", System.Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode));
                     if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
                         SaveFile.SetInt(HexagonQuestEnabled, 1);
+                        if (TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages) {
+                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+                        }
                         if (TunicRandomizer.Settings.RandomizeHexQuest) {
                             switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
                                 default:
@@ -424,10 +428,6 @@ namespace TunicRandomizer {
                         } else {
                             SaveFile.SetInt(HexagonQuestGoal, TunicRandomizer.Settings.HexagonQuestGoal);
                             SaveFile.SetInt(HexagonQuestExtras, TunicRandomizer.Settings.HexagonQuestExtraPercentage);
-                        }
-
-                        if (TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages || SaveFile.GetInt(HexagonQuestGoal) < 3) {
-                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
                         }
 
                         for (int i = 0; i < 28; i++) {
@@ -484,6 +484,18 @@ namespace TunicRandomizer {
                     }
                     if (TunicRandomizer.Settings.GrassRandomizer) {
                         SaveFile.SetInt(GrassRandoEnabled, 1);
+                    }
+
+                    if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
+                        int goldHexagons = TunicUtils.GetMaxGoldHexagons();
+                        int minHexes = 3;
+                        if (GetBool(KeysBehindBosses)) {
+                            minHexes = 15;
+                        }
+                        if (goldHexagons < minHexes) {
+                            TunicLogger.LogWarning("Gold Hexagon amount is too low for hexagon ability unlocks, switching to page unlocks.");
+                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+                        }
                     }
                 }
 
@@ -837,11 +849,19 @@ namespace TunicRandomizer {
                 SaveFile.SetInt(LaurelsLocation, laurelsIndex);
             }
 
+            if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
+                int goldHexagons = TunicUtils.GetMaxGoldHexagons();
+                int minHexes = 3;
+                if (GetBool(KeysBehindBosses)) {
+                    minHexes = 15;
+                }
+                if (goldHexagons < minHexes) {
+                    TunicLogger.LogWarning("Gold Hexagon amount is too low for hexagon ability unlocks, switching to page unlocks.");
+                    SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+                }
+            }
+
             SaveFile.SetString("randomizer mystery seed weights", TunicRandomizer.Settings.MysterySeedWeights.ToSettingsString());
-        }
-
-        public static void RandomizeHexQuestAmounts(int goalSetting, int extraSetting) {
-
         }
 
         public static void PlayerCharacter_Die_MoveNext_PostfixPatch(PlayerCharacter._Die_d__481 __instance, ref bool __result) {

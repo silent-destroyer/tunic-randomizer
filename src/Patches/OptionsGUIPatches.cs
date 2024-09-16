@@ -84,7 +84,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Game Mode", SaveFile.GetString("randomizer game mode"), null);
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     OptionsGUI.addButton("Hexagon Quest Goal", SaveFile.GetInt(HexagonQuestGoal).ToString(), null);
-                    OptionsGUI.addButton("Hexagons in Item Pool", ((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal))).ToString(), null);
+                    OptionsGUI.addButton("Hexagons in Item Pool", TunicUtils.GetMaxGoldHexagons().ToString(), null);
                 }
                 OptionsGUI.addButton("Keys Behind Bosses", SaveFile.GetInt(KeysBehindBosses) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Sword Progression", SaveFile.GetInt(SwordProgressionEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);

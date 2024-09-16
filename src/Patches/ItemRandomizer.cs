@@ -92,12 +92,15 @@ namespace TunicRandomizer {
             Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
 
             int GoldHexagonsAdded = 0;
-            int HexagonsToAdd = Math.Min((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal)), 100);
+            int HexagonsToAdd = TunicUtils.GetMaxGoldHexagons();
 
             if (IsHexQuestWithHexAbilities()) {
                 int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
                 List<string> abilities = new List<string>() { "prayer", "holy cross", "icebolt" }.OrderBy(r => random.Next()).ToList();
                 List<int> ability_unlocks = new List<int>() { (int)(HexGoal / 4f), (int)((HexGoal / 4f) * 2), (int)((HexGoal / 4f) * 3) }.OrderBy(r => random.Next()).ToList();
+                if (HexGoal == 3 || HexagonsToAdd == 3 || ability_unlocks.Any(req => req == 0)) {
+                    ability_unlocks = new List<int>() { 1, 2, 3 };
+                }
                 for (int i = 0; i < 3; i++) {
                     int index = random.Next(abilities.Count);
                     int index2 = random.Next(ability_unlocks.Count);
@@ -107,7 +110,22 @@ namespace TunicRandomizer {
                 }
             }
             Shuffle(InitialItems, random);
+
+            if (GetBool(KeysBehindBosses)) {
+                List<Check> bossChecks = new List<Check>();
+                for (int i = 0; i < InitialItems.Count; i++) {
+                    if (InitialItems[i].Reward.Name.Contains("Hexagon") || InitialItems[i].Reward.Name == "Vault Key (Red)") {
+                        bossChecks.Add(InitialItems[i]);
+                        InitialItems.RemoveAt(i);
+                    }
+                }
+                InitialItems.AddRange(bossChecks);
+                InitialItems.Reverse();
+            }
+
             foreach (Check Item in InitialItems) {
+                bool lockedItem = false;
+
                 if (SaveFile.GetInt(KeysBehindBosses) != 0) {
                     if (Item.Reward.Name == "Vault Key (Red)") {
                         Item.Reward.Name = "Hexagon Red";
@@ -130,6 +148,7 @@ namespace TunicRandomizer {
                     }
                     if (Item.Reward.Name.Contains("Hexagon")) {
                         if (SaveFile.GetInt(KeysBehindBosses) == 1 && GoldHexagonsAdded < HexagonsToAdd) {
+                            lockedItem = true;
                             Item.Reward.Name = "Hexagon Gold";
                             Item.Reward.Type = "SPECIAL";
                             Item.Reward.Amount = 1;
@@ -181,7 +200,7 @@ namespace TunicRandomizer {
                     Ladders.Remove(Item.Reward.Name);
                 }
 
-                if (ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) {
+                if ((ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) && !lockedItem) {
                     ProgressionRewards.Add(Item.Reward);
                 } else {
                     InitialRewards.Add(Item.Reward);
