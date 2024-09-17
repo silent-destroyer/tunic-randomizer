@@ -594,13 +594,8 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ShuffleAbilities) {
                 GUI.skin.label.fontSize = (int)(20 * guiScale);
                 GUI.Label(new Rect(10f, advHeight, 200f * guiScale, 30f * guiScale), "Abilities Unlocked By:");
-                if (TunicRandomizer.Settings.HexagonQuestGoal < 3) {
-                    GUI.Toggle(new Rect(200f, advHeight, 90f, 30f), true, "Pages");
-                } else {
-                    TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages = !GUI.Toggle(new Rect(200f, advHeight, 120f, 30f), !TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages, "Hexagons");
-                    TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages = GUI.Toggle(new Rect(310f, advHeight, 90f, 30f), TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages, "Pages");
-                }
-
+                TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages = !GUI.Toggle(new Rect(200f, advHeight, 120f, 30f), !TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages, "Hexagons");
+                TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages = GUI.Toggle(new Rect(310f, advHeight, 90f, 30f), TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages, "Pages");
                 advHeight += 40f * guiScale;
             }
             GUI.skin.label.fontSize = (int)(25 * guiScale);
