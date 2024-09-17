@@ -139,7 +139,7 @@ namespace TunicRandomizer {
                 }
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     if (Item.Reward.Type == "PAGE") {
-                        if (IsHexQuestWithHexAbilities() || (IsHexQuestWithPageAbilities() && !abilityPages.Contains(Item.Reward.Name))) {
+                        if (!(IsHexQuestWithPageAbilities() && abilityPages.Contains(Item.Reward.Name))) {
                             string FillerItem = ItemLookup.FillerItems.Keys.ToList()[random.Next(ItemLookup.FillerItems.Count)];
                             Item.Reward.Name = FillerItem;
                             Item.Reward.Type = FillerItem == "money" ? "MONEY" : "INVENTORY";
