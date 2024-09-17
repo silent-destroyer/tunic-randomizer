@@ -218,7 +218,7 @@ namespace TunicRandomizer {
         public static GameObject SetupItemTextAndSprite(Transform parent, int i) {
             TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
             Material FontMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(Material => Material.name == "Latin Rounded - Quantity Outline").ToList()[0];
-            GameObject item = new GameObject("item");
+            GameObject item = new GameObject("item " + i);
             item.transform.parent = parent.transform;
             item.AddComponent<LayoutElement>();
             GameObject backing = new GameObject("backing");
@@ -239,15 +239,15 @@ namespace TunicRandomizer {
 
             sprite.AddComponent<Image>().sprite = ModelSwaps.FindSprite("UI_soft");
             sprite.GetComponent<Image>().material = ModelSwaps.FindMaterial("UI Add");
-            sprite.transform.localPosition = new Vector3(-53, 0, 0);
+            sprite.transform.localPosition = new Vector3(-53, -5, 0);
             sprite.transform.localScale = Vector3.one * 0.35f;
 
             spriteBacking.AddComponent<Image>().sprite = ModelSwaps.FindSprite("UI_soft");
-            spriteBacking.transform.localPosition = new Vector3(-53, 0, 0);
+            spriteBacking.transform.localPosition = new Vector3(-53, -5, 0);
             spriteBacking.transform.localScale = Vector3.one * 0.5f;
 
             trinketBacking.AddComponent<Image>().sprite = ModelSwaps.FindSprite("trinkets 2_backing");
-            trinketBacking.transform.localPosition = new Vector3(-53, 0, 0);
+            trinketBacking.transform.localPosition = new Vector3(-53, -5, 0);
             trinketBacking.transform.localScale = Vector3.one * 0.35f;
 
             text.AddComponent<TextMeshProUGUI>().text = "";
@@ -257,7 +257,7 @@ namespace TunicRandomizer {
             text.GetComponent<TextMeshProUGUI>().autoSizeTextContainer = true;
             text.GetComponent<TextMeshProUGUI>().verticalAlignment = VerticalAlignmentOptions.Middle;
             text.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 50);
-            text.transform.localPosition = new Vector3(22f, 0, 0f);
+            text.transform.localPosition = new Vector3(22f, -5, 0f);
             //item.transform.localPosition += new Vector3(0, 40-(i*50), 0);
             item.SetActive(true);
             backing.SetActive(false);

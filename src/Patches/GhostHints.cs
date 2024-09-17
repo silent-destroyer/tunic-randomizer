@@ -445,6 +445,9 @@ namespace TunicRandomizer {
                 HintableLocations.Remove("1011 [Dusty]");
                 HintableLocations.Remove("final [Mountaintop]");
             }
+            if (SaveFile.GetInt(LaurelsLocation) == 2) {
+                HintableLocations.Remove("Well Reward (10 Coins) [Trinket Well]");
+            }
             foreach (string Key in HintableLocations) {
                 string Location = HintableLocationIds[Key];
                 string LocationSuffix = Location[Location.Length - 1] == 'S' ? "R" : "iz";
