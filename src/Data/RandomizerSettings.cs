@@ -41,6 +41,7 @@ namespace TunicRandomizer {
         private const int RANDOMIZE_HEX_QUEST = 4096;
         private const int ER_DIRECTION_PAIRS = 8192;
         private const int ER_DECOUPLED = 16384;
+        private const int HEXAGON_QUEST_ABILITY_PAGES = 32768;
 
         public GameModes GameMode {
             get;
@@ -632,6 +633,7 @@ namespace TunicRandomizer {
                 RandomizeHexQuest = eval(logic, RANDOMIZE_HEX_QUEST);
                 PortalDirectionPairs = eval(logic, ER_DIRECTION_PAIRS);
                 DecoupledER = eval(logic, ER_DECOUPLED);
+                HexQuestAbilitiesUnlockedByPages = eval(logic, HEXAGON_QUEST_ABILITY_PAGES);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -705,7 +707,7 @@ namespace TunicRandomizer {
                     ShuffleAbilities, EntranceRandoEnabled, ERFixedShop,
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
                     GrassRandomizer, RandomizeHexQuest,
-                    PortalDirectionPairs, DecoupledER,
+                    PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                 };
             } else {
                 return new bool[] { 
@@ -716,7 +718,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.MasklessLogic) == 1, SaveFile.GetInt("randomizer mystery seed") == 1, 
                     SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
-                    SaveFile.GetInt(SaveFlags.Decoupled) == 1,
+                    SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
                 };
             }
         }
