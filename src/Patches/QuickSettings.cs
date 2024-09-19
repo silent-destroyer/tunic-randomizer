@@ -885,8 +885,9 @@ namespace TunicRandomizer {
         public static bool TitleScreen___NewGame_PrefixPatch(TitleScreen __instance) {
             CloseAPSettingsWindow();
             RecentItemsDisplay.instance.ResetQueue();
-            if (Archipelago.instance != null && Archipelago.instance.integration != null) {
+            if (SaveFlags.IsArchipelago()) {
                 Archipelago.instance.integration.ItemIndex = 0;
+                Archipelago.instance.integration.ClearQueue();
             }
             return true;
         }

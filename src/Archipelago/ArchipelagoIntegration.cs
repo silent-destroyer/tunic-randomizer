@@ -189,6 +189,12 @@ namespace TunicRandomizer {
             }
         }
 
+        public void ClearQueue() {
+            if (incomingItems != null) {
+                incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
+            }
+        }
+
         private IEnumerator<bool> CheckItemsReceived() {
             while (connected) {
                 while (session.Items.AllItemsReceived.Count > ItemIndex) {
