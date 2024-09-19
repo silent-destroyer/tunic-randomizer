@@ -11,7 +11,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, int> SphereZero = new Dictionary<string, int>();
 
         // set this to true to test location access
-        public static bool testLocations = true;
+        public static bool testLocations = false;
         // leave these ones alone
         public static bool testBool = false;
         public static bool testBool2 = false;
