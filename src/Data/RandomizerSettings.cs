@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 namespace TunicRandomizer {
 
@@ -39,6 +41,7 @@ namespace TunicRandomizer {
         private const int RANDOMIZE_HEX_QUEST = 4096;
         private const int ER_DIRECTION_PAIRS = 8192;
         private const int ER_DECOUPLED = 16384;
+        private const int HEXAGON_QUEST_ABILITY_PAGES = 32768;
 
         public GameModes GameMode {
             get;
@@ -105,6 +108,11 @@ namespace TunicRandomizer {
         }
 
         public bool MysterySeed {
+            get;
+            set;
+        }
+
+        public bool HexQuestAbilitiesUnlockedByPages {
             get;
             set;
         }
@@ -487,6 +495,7 @@ namespace TunicRandomizer {
             ShuffleLadders = false;
             GrassRandomizer = false;
             RandomizeHexQuest = false;
+            HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
             HexagonQuestRandomExtras = HexQuestValue.RANDOM;
 
@@ -564,7 +573,7 @@ namespace TunicRandomizer {
         public string GetSettingsString() {
             string EncodedSettings = Convert.ToBase64String(Encoding.UTF8.GetBytes(
                 $"{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.HexagonQuestGoal) : HexagonQuestGoal)}" +
-                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt("randomizer hexagon quest extras") : HexagonQuestExtraPercentage)}" +
+                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.HexagonQuestExtras) : HexagonQuestExtraPercentage)}" +
                 $":{(int)FoolTrapIntensity}" +
                 $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.LaurelsLocation) : (int)FixedLaurelsOption)}" +
                 $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt("randomizer hexagon quest random goal") : (int)HexagonQuestRandomGoal)}" +
@@ -624,6 +633,7 @@ namespace TunicRandomizer {
                 RandomizeHexQuest = eval(logic, RANDOMIZE_HEX_QUEST);
                 PortalDirectionPairs = eval(logic, ER_DIRECTION_PAIRS);
                 DecoupledER = eval(logic, ER_DECOUPLED);
+                HexQuestAbilitiesUnlockedByPages = eval(logic, HEXAGON_QUEST_ABILITY_PAGES);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -675,7 +685,7 @@ namespace TunicRandomizer {
                     MysterySeedWeights.FromSettingsString(decodedSplit[13]);
                 }
 
-                OptionsGUIPatches.SaveSettings();
+                RandomizerSettings.SaveSettings();
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error parsing settings string!" + e.Message + " " + e.Source + " " + e.StackTrace);
             }
@@ -697,7 +707,7 @@ namespace TunicRandomizer {
                     ShuffleAbilities, EntranceRandoEnabled, ERFixedShop,
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
                     GrassRandomizer, RandomizeHexQuest,
-                    PortalDirectionPairs, DecoupledER,
+                    PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                 };
             } else {
                 return new bool[] { 
@@ -708,7 +718,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.MasklessLogic) == 1, SaveFile.GetInt("randomizer mystery seed") == 1, 
                     SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
-                    SaveFile.GetInt(SaveFlags.Decoupled) == 1,
+                    SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
                 };
             }
         }
@@ -769,6 +779,15 @@ namespace TunicRandomizer {
             ConnectionSettings.Port = SaveFile.GetInt(SaveFlags.ArchipelagoPort).ToString();
             ConnectionSettings.Hostname = SaveFile.GetString(SaveFlags.ArchipelagoHostname);
             ConnectionSettings.Password = SaveFile.GetString(SaveFlags.ArchipelagoPassword);
+        }
+
+        public static void SaveSettings() {
+            if (!File.Exists(TunicRandomizer.SettingsPath)) {
+                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
+            } else {
+                File.Delete(TunicRandomizer.SettingsPath);
+                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
+            }
         }
     }
 }

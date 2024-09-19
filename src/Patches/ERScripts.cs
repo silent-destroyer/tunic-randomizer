@@ -60,7 +60,7 @@ namespace TunicRandomizer {
                                     if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 4) {
                                         met_count++;
                                     }
-                                } else if (req == "12" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
+                                } else if (req == "12" && SaveFlags.IsHexQuestWithHexAbilities()) {
                                     foreach (KeyValuePair<string, int> item in inventory) {
                                         if (item.Key == "Hexagon Gold") {
                                             if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest prayer requirement")) {
@@ -69,7 +69,7 @@ namespace TunicRandomizer {
                                             break;
                                         }
                                     }
-                                } else if (req == "21" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
+                                } else if (req == "21" && SaveFlags.IsHexQuestWithHexAbilities()) {
                                     foreach (KeyValuePair<string, int> item in inventory) {
                                         if (item.Key == "Hexagon Gold") {
                                             if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest holy cross requirement")) {
@@ -78,7 +78,7 @@ namespace TunicRandomizer {
                                             break;
                                         }
                                     }
-                                } else if (req == "26" && SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1) {
+                                } else if (req == "26" && SaveFlags.IsHexQuestWithHexAbilities()) {
                                     foreach (KeyValuePair<string, int> item in inventory) {
                                         if (item.Key == "Hexagon Gold") {
                                             if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest icebolt requirement")) {

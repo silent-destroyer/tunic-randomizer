@@ -110,7 +110,7 @@ namespace TunicRandomizer {
 
             List<string> secondaryHintItems = new List<string>() { SaveFile.GetInt(SwordProgressionEnabled) == 1 ? "Sword Upgrade" : "Sword" };
 
-            if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
+            if (SaveFile.GetInt(AbilityShuffle) == 1 && !IsHexQuestWithHexAbilities()) {
                 HintItems = new List<string>() { "Magic Orb", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)" };
                 secondaryHintItems.Add("Magic Wand");
                 secondaryHintItems.Add("Magic Dagger");
@@ -185,7 +185,7 @@ namespace TunicRandomizer {
                     if (Locations.MajorItemLocations[Hexagon].Count == 0) {
                         Hint = $"#A sA #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd aht\n{HINT_NOT_FOUND_ERROR}";
                     } else {
-                        ArchipelagoHint HexHint = Hexagon == "Gold Questagon" ? Locations.MajorItemLocations[Hexagon][i] : Locations.MajorItemLocations[Hexagon][0];
+                        ArchipelagoHint HexHint = Hexagon == "Gold Questagon" && Locations.MajorItemLocations[Hexagon].Count > i ? Locations.MajorItemLocations[Hexagon][i] : Locations.MajorItemLocations[Hexagon][0];
                         int Player = Archipelago.instance.GetPlayerSlot();
                         if (HexHint.Player == Player) {
                             Scene = HexHint.Location == "Your Pocket" ? HexHint.Location : Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
@@ -202,7 +202,8 @@ namespace TunicRandomizer {
                     }
                 } else if (IsSinglePlayer()) {
                     ItemData Hex = ItemLookup.Items[Hexagon];
-                    Check HexCheck = Hex.Name == "Gold Questagon" ? ItemRandomizer.FindAllRandomizedItemsByName(Hex.ItemNameForInventory)[i] : ItemRandomizer.FindRandomizedItemByName(Hex.ItemNameForInventory);
+                    List<Check> Hexes = ItemRandomizer.FindAllRandomizedItemsByName(Hex.ItemNameForInventory);
+                    Check HexCheck = Hex.Name == "Gold Questagon" && Hexes.Count > i ? Hexes[i] : Hexes[0];
                     Scene = Locations.SimplifiedSceneNames[HexCheck.Location.SceneName];
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                     Hint = $"#A sA {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
@@ -315,7 +316,7 @@ namespace TunicRandomizer {
             string Prefix = "";
             string HintMessage = "";
             List<string> MailboxItems = new List<string>() { "Stick", "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Lantern", "Shotgun", "Mask" };
-            if (SaveFile.GetInt("randomizer shuffled abilities") == 1 && SaveFile.GetInt(HexagonQuestEnabled) != 1) {
+            if (SaveFile.GetInt(AbilityShuffle) == 1 && !IsHexQuestWithHexAbilities()) {
                 MailboxItems.Add("12");
                 MailboxItems.Add("21");
             }

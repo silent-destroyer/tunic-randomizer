@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class TunicUtils {
@@ -104,6 +106,10 @@ namespace TunicRandomizer {
                     ChecksInLogic.Add(check.CheckId);
                 }
             }
+        }
+
+        public static int GetMaxGoldHexagons() {
+            return Math.Min((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal)), 100);
         }
 
     }

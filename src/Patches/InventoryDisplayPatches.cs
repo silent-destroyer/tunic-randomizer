@@ -140,7 +140,7 @@ namespace TunicRandomizer {
                     InventoryDisplayPatches.AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
                     InventoryDisplayPatches.AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
                     yield return true;
-                    bool hexQuest = SaveFile.GetInt(HexagonQuestEnabled) == 1;
+                    bool hexQuest = IsHexQuestWithHexAbilities();
                     for (int i = 16; i < 19; i++) {
                         InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
                         InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(!hexQuest);
@@ -502,7 +502,7 @@ namespace TunicRandomizer {
             bool HasIcebolt = SaveFile.GetInt(IceBoltUnlocked) == 1;
             Color Full = new Color(1, 1, 1, 1);
             Color Faded = new Color(1, 1, 1, 0.5f);
-            bool isHexQuest = SaveFile.GetInt(HexagonQuestEnabled) == 1;
+            bool isHexQuest = SaveFlags.IsHexQuestWithHexAbilities();
 
             if (isHexQuest) {
                 SortedDictionary<int, string> HexUnlocks = new SortedDictionary<int, string>() {

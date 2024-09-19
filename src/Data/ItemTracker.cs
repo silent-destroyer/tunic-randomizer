@@ -129,7 +129,9 @@ namespace TunicRandomizer {
             }
             
             if (Item.Type == ItemTypes.PAGE) {
-                ImportantItems["Pages"]++;
+                if (!IsHexQuestWithPageAbilities()) {
+                    ImportantItems["Pages"]++;
+                }
 
                 if (Item.Name == "Pages 24-25 (Prayer)") { ImportantItems["Prayer"]++; }
                 if (Item.Name == "Pages 42-43 (Holy Cross)") { ImportantItems["Holy Cross"]++; }
@@ -144,7 +146,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Item.Type == ItemTypes.HEXAGONQUEST && SaveFile.GetInt(AbilityShuffle) == 1) {
+            if (IsHexQuestWithHexAbilities()) {
                 if (Inventory.GetItemByName("Hexagon Gold").Quantity == SaveFile.GetInt(HexagonQuestPrayer)) { ImportantItems["Prayer"]++; }
                 if (Inventory.GetItemByName("Hexagon Gold").Quantity == SaveFile.GetInt(HexagonQuestHolyCross)) { ImportantItems["Holy Cross"]++; }
                 if (Inventory.GetItemByName("Hexagon Gold").Quantity == SaveFile.GetInt(HexagonQuestIcebolt)) { ImportantItems["Icebolt"]++; }
@@ -264,7 +266,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(AbilityShuffle) == 1) {
+            if (IsHexQuestWithHexAbilities()) {
                 SpoilerLogLines.Add($"\t{(SaveFile.GetInt(PrayerUnlocked) == 1 ? "x" : "-")} Prayer: {SaveFile.GetInt(HexagonQuestPrayer)} Gold Questagons");
                 SpoilerLogLines.Add($"\t{(SaveFile.GetInt(HolyCrossUnlocked) == 1 ? "x" : "-")} Holy Cross: {SaveFile.GetInt(HexagonQuestHolyCross)} Gold Questagons");
                 SpoilerLogLines.Add($"\t{(SaveFile.GetInt(IceBoltUnlocked) == 1 ? "x" : "-")} Icebolt: {SaveFile.GetInt(HexagonQuestIcebolt)} Gold Questagons");
@@ -315,11 +317,11 @@ namespace TunicRandomizer {
             List<string> MysterySettings = new List<string>() {
                 "Mystery Seed Settings:",
                 $"\t- Hexagon Quest: {SaveFile.GetInt(HexagonQuestEnabled) == 1}",
-                SaveFile.GetInt(HexagonQuestEnabled) == 1 ? $"\t- Hexagon Quest Goal: {SaveFile.GetInt("randomizer hexagon quest goal")}" : "",
-                SaveFile.GetInt(HexagonQuestEnabled) == 1 ? $"\t- Extra Hexagons: {SaveFile.GetInt("randomizer hexagon quest extras")}%" : "",
+                SaveFile.GetInt(HexagonQuestEnabled) == 1 ? $"\t- Hexagon Quest Goal: {SaveFile.GetInt(HexagonQuestGoal)}" : "",
+                SaveFile.GetInt(HexagonQuestEnabled) == 1 ? $"\t- Extra Hexagons: {SaveFile.GetInt(HexagonQuestExtras)}%" : "",
                 $"\t- Sword Progression: {SaveFile.GetInt(SwordProgressionEnabled) == 1}",
                 $"\t- Keys Behind Bosses: {SaveFile.GetInt(KeysBehindBosses) == 1}",
-                $"\t- Start with Sword: {SaveFile.GetInt("randomizer started with sword") == 1}",
+                $"\t- Start with Sword: {SaveFile.GetInt(StartWithSword) == 1}",
                 $"\t- Shuffled Abilities: {SaveFile.GetInt(AbilityShuffle) == 1}",
                 $"\t- Shuffled Ladders: {SaveFile.GetInt(LadderRandoEnabled) == 1}",
                 $"\t- Grass Randomizer: {SaveFile.GetInt(GrassRandoEnabled) == 1}",
@@ -329,7 +331,7 @@ namespace TunicRandomizer {
                 SaveFile.GetInt(EntranceRando) == 1 ? $"\t- Entrance Randomizer (Decoupled): {SaveFile.GetInt(Decoupled) == 1}" : "",
                 $"\t- Maskless Logic: {SaveFile.GetInt(MasklessLogic) == 1}",
                 $"\t- Lanternless Logic: {SaveFile.GetInt(LanternlessLogic) == 1}",
-                $"\t- Laurels Location: {((RandomizerSettings.FixedLaurelsType)SaveFile.GetInt("randomizer laurels location")).ToString()}\n",
+                $"\t- Laurels Location: {((RandomizerSettings.FixedLaurelsType)SaveFile.GetInt(LaurelsLocation)).ToString()}\n",
             };
             MysterySettings.RemoveAll(x => x == "");
             return MysterySettings;
