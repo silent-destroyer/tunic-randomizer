@@ -397,13 +397,6 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1 || (SaveFile.GetInt("seed") == 0 && 
-                    ((TunicRandomizer.Settings.EntranceRandoEnabled && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER) || 
-                    (TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO && Archipelago.instance.integration.connected 
-                    && Archipelago.instance.integration.slotData.ContainsKey("entrance_rando") && Archipelago.instance.integration.slotData["entrance_rando"].ToString() == "1")))) {
-                    GhostHints.SpawnTorchHintGhost();
-                }
-
                 if (TunicRandomizer.Settings.ClearEarlyBushes) {
                     int[] bushesToClear = new int[] { 7, 2, 16, 9, 23, 26, 47, 42, 58, 62, 64 };
                     foreach (int bush in bushesToClear) {
@@ -530,6 +523,7 @@ namespace TunicRandomizer {
                 PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
                     ERScripts.ModifyPortals(SceneName, sending: true);
                 });
+                GhostHints.SpawnTorchHintGhost();
             } else {
                 ERData.RandomizedPortals.Clear();
                 ERScripts.ModifyPortalNames(loadingScene.name);

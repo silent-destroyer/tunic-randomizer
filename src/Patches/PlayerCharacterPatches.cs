@@ -281,9 +281,10 @@ namespace TunicRandomizer {
             }
 
             // this is here for the first time you're loading in, assumes you're in Overworld
-            if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+            if (SaveFile.GetInt(EntranceRando) == 1) {
                 ERScripts.ModifyPortals("Overworld Redux");
                 ERScripts.ModifyPortals("Overworld Redux", sending: true);
+                GhostHints.SpawnTorchHintGhost();
             } else {
                 ERData.RandomizedPortals.Clear();
                 ERScripts.ModifyPortalNames("Overworld Redux");
