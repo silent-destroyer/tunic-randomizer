@@ -316,8 +316,14 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Frog's Domain 1", "frog cave main", new Vector3(19.7682f, 9.1943f, -23.3269f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"I wuhndur wAr #uh kwehstuhgawn iz?"),
                 new HintGhost("Hint Ghost Frog's Domain 2", "frog cave main", new Vector3(27.09619f, 9.2581f, -37.28336f), new Quaternion(0f, 0.5000001f, 0f, -0.8660254f), NPC.NPCAnimState.FISHING, $"$hhh. Im hIdi^ fruhm #uh frawgs.") }
             },
+        };
+
+        public static Dictionary<string, List<HintGhost>> EntranceRandoGhostLocations = new Dictionary<string, List<HintGhost>>() {
             { "Purgatory", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
+            },
+            { "Library Lab", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Library Lab", "Library Lab", new Vector3(139.3969f, 93.5073f, -74.8239f), new Quaternion(0f, 1f, 0f, 0.0089f), NPC.NPCAnimState.SIT, $"Im #uh lIbrArEuhn!---... juhst kidi^, I kahnt rEd.") }
             },
         };
 
@@ -360,10 +366,13 @@ namespace TunicRandomizer {
         public static void GenerateHints() {
             HintGhosts.Clear();
             HexQuestHintLookup.Clear();
-            List<string> GhostSpawns = GhostLocations.Keys.ToList();
-            if (SaveFile.GetInt(EntranceRando) == 0) { 
-                GhostSpawns.Remove("Purgatory"); 
+            Dictionary<string, List<HintGhost>> Ghosts = new Dictionary<string, List<HintGhost>>(GhostLocations);
+            if (GetBool(EntranceRando)) { 
+                foreach(KeyValuePair<string, List<HintGhost>> pair in EntranceRandoGhostLocations) {
+                    Ghosts.Add(pair.Key, pair.Value);
+                } 
             }
+            List<string> GhostSpawns = Ghosts.Keys.ToList();
             List<string> SelectedSpawns = new List<string>();
             System.Random random = new System.Random(SaveFile.GetInt("seed"));
             for (int i = 0; i < 15; i++) {
@@ -372,7 +381,7 @@ namespace TunicRandomizer {
                 GhostSpawns.Remove(Location);
             }
             foreach (string Location in SelectedSpawns) {
-                HintGhost HintGhost = GhostLocations[Location][random.Next(GhostLocations[Location].Count)];
+                HintGhost HintGhost = Ghosts[Location][random.Next(Ghosts[Location].Count)];
                 HintGhosts.Add(HintGhost.Name, HintGhost);
             }
 
@@ -422,6 +431,7 @@ namespace TunicRandomizer {
                 HintGhosts = HintGhosts.Take(Hints.Count).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             foreach (HintGhost HintGhost in HintGhosts.Values) {
+                TunicLogger.LogInfo(HintGhost.Name + " " + HintGhost.SceneName);
                 (string, string, string, string) Hint = Hints[random.Next(Hints.Count)];
                 HintGhost.Hint = Hint.Item1;
                 HintGhost.HintedItem = Hint.Item2;
