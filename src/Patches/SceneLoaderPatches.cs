@@ -329,6 +329,19 @@ namespace TunicRandomizer {
                     foxgod.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 }
 
+                if (GetBool(Decoupled) && GetBool("Placed Hexagons ALL")) {
+                    GameObject teleporter = null;
+                    foreach(FoxgodArenaCutscenes c in Resources.FindObjectsOfTypeAll<FoxgodArenaCutscenes>().Where(c => c.teleporterCollider != null)) {
+                        teleporter = c.teleporterCollider.gameObject;
+                    }
+                    if (teleporter != null) {
+                        GameObject tpClone = GameObject.Instantiate(teleporter);
+                        PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => { teleporter.SetActive(false); });
+                        tpClone.transform.position = teleporter.transform.position;
+                        tpClone.AddComponent<FoxgodDecoupledTeleporter>();
+                    }
+                }
+
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
             } else if (SceneName == "Overworld Interiors") {
                 GameObject.FindObjectOfType<BedToggle>().canBeUsed = StateVariable.GetStateVariableByName("false");

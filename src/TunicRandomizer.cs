@@ -40,6 +40,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<BossEnemy>();
             ClassInjector.RegisterTypeInIl2Cpp<FleemerQuartet>();
             ClassInjector.RegisterTypeInIl2Cpp<RecentItemsDisplay>();
+            ClassInjector.RegisterTypeInIl2Cpp<FoxgodDecoupledTeleporter>();
 
             ClassInjector.RegisterTypeInIl2Cpp<MusicShuffler>();
             UnityEngine.Object.DontDestroyOnLoad(new GameObject("music shuffler", new Il2CppSystem.Type[]

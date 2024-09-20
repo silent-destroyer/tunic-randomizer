@@ -899,4 +899,21 @@ namespace TunicRandomizer {
         }
         
     }
+
+    public class FoxgodDecoupledTeleporter : MonoBehaviour {
+
+        public Foxgod foxgod;
+
+        public void Awake() {
+            foxgod = Resources.FindObjectsOfTypeAll<Foxgod>().Where(foxgod => foxgod.gameObject.scene.name == "Spirit Arena").ToList()[0];
+        }
+
+        public void Update() {
+            if (foxgod != null && foxgod.monsterAggroed) {
+                if (foxgod.hp < foxgod.maxhp) {
+                    Destroy(this.gameObject);
+                }
+            }
+        }
+    }
 }
