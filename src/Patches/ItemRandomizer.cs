@@ -496,8 +496,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.SetCollectedItem(itemData.Name, false);
                 }
                 ItemTracker.SaveTrackerFile();
-                TunicRandomizer.Tracker.ImportantItems["Flask Container"] += TunicRandomizer.Tracker.ItemsCollected.Where(Item => Item.Name == "Flask Shard").Count() / 3;
-                if (SaveFile.GetInt("randomizer started with sword") == 1) {
+                if (SaveFile.GetInt(StartWithSword) == 1) {
                     TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
                 }
             }
