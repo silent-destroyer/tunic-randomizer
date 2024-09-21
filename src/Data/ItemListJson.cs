@@ -218,7 +218,7 @@
                     ""Requirements"": [
                         {
                             ""Overworld"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""Overworld"": 1,
@@ -479,7 +479,7 @@
                     ""Requirements"": [
                         {
                             ""East Forest"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""East Forest"": 1,
@@ -1705,7 +1705,7 @@
                     ""Requirements"": [
                         {
                             ""Overworld"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""Overworld"": 1,
@@ -1929,7 +1929,7 @@
                     ""Requirements"": [
                         {
                             ""Ruined Atoll"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""Ruined Atoll"": 1,
@@ -2348,7 +2348,7 @@
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Gun"": 1
+                            ""Shotgun"": 1
                         }
                     ]
                 }
@@ -2375,7 +2375,7 @@
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Gun"": 1
+                            ""Shotgun"": 1
                         }
                     ]
                 }
@@ -2402,7 +2402,7 @@
                         },
                         {
                             ""Library Lab"": 1,
-                            ""Gun"": 1
+                            ""Shotgun"": 1
                         }
                     ]
                 }
@@ -3838,7 +3838,7 @@
                     ""Requirements"": [
                         {
                             ""Eastern Vault Fortress"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""Eastern Vault Fortress"": 1,
@@ -4158,7 +4158,7 @@
                     ""Requirements"": [
                         {
                             ""Quarry Back"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""Quarry Back"": 1,
@@ -4426,7 +4426,7 @@
                     ""Requirements"": [
                         {
                             ""Quarry"": 1,
-                            ""Gun"": 1,
+                            ""Shotgun"": 1,
                         },
                         {
                             ""Quarry"": 1,

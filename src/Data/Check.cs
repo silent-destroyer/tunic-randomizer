@@ -19,11 +19,18 @@ namespace TunicRandomizer {
                 return true;
             }
 
+            //if (ItemRandomizer.testBool) {
+            //    TunicLogger.LogInfo("Location is " + this.LocationId);
+            //}
+
             //if there are requirements, loop through each requirement to see if any are fully met
             foreach (Dictionary<string, int> req in itemsRequired) {
                 //check if this requirement is fully met, otherwise move to the next requirement
                 int met = 0;
                 foreach (string item in req.Keys) {
+                    //if (ItemRandomizer.testBool) {
+                    //    TunicLogger.LogInfo("Item is " + item);
+                    //}
                     // don't need to check if ability shuffle is on since the abilities are precollected if ability shuffle is off
                     if (!inventory.ContainsKey(item)) {
                         if (item == "Sword") {
@@ -49,9 +56,17 @@ namespace TunicRandomizer {
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
                                 met++;
                             }
+                        //} else {
+                        //    if (ItemRandomizer.testBool) {
+                        //        TunicLogger.LogInfo("Failed: " + item + " not in inventory");
+                        //    }
                         }
                     } else if (inventory[item] >= req[item]) {
                         met += 1;
+                    //} else if (inventory[item] < req[item]) {
+                    //    if (ItemRandomizer.testBool) {
+                    //        TunicLogger.LogInfo("Failed: Not enough of " + item);
+                    //    }
                     }
                 }
                 if (met == req.Count) {
