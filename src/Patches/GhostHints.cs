@@ -326,7 +326,8 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Library Hall 1", "Library Hall", new Vector3(153.8f, 13.1f, -40.6f), new Quaternion(0f, .9754f, 0f, -.2203f), NPC.NPCAnimState.SIT, $"I kehnt rEJ mI kuhp.") }
             },
             { "Library Rotunda", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Library Rotunda 1", "Library Rotunda", new Vector3(-25.3f, -7.9f, 38.7f), new Quaternion(0f, .9973f, 0f, .0738f), NPC.NPCAnimState.IDLE, $"how duhz #uh lIbrArEuhn Evehn fit %roo #aht?") }
+                new HintGhost("Hint Ghost Library Rotunda 1", "Library Rotunda", new Vector3(-25.3f, -7.9f, 38.7f), new Quaternion(0f, .9973f, 0f, .0738f), NPC.NPCAnimState.IDLE, $"how duhz #uh lIbrArEuhn Evehn fit %roo #aht?"),
+                new HintGhost("Hint Ghost Library Rotunda 2", "Library Rotunda", new Vector3(-8.5f, -7f, 1.5f), new Quaternion(0f, .9973f, 0f, .0738f), NPC.NPCAnimState.IDLE, $"#is yoosd too bE uh bAbE slorm rAstrahk bahk in %uh dA, good tImz...") }
             },
             { "Library Lab", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Lab 1", "Library Lab", new Vector3(139.3969f, 93.5073f, -74.8239f), new Quaternion(0f, 1f, 0f, 0.0089f), NPC.NPCAnimState.SIT, $"Im #uh lIbrArEuhn!---... juhst kidi^, I kahnt rEd."),
