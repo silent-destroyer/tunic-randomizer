@@ -671,7 +671,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(ShowTooltip(new Rect(195f * guiScale, advHeight, 195f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Clear Early Bushes"), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
             advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Fool Traps");
-            ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 100f * guiScale), "advancedSinglePlayer", "Fool Traps");
+            ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 80f * guiScale), "advancedSinglePlayer", "Fool Traps");
             advHeight += 40f * guiScale;
             bool NoFools = GUI.Toggle(new Rect(10f * guiScale, advHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NONE, "None");
             if (NoFools) {
@@ -691,7 +691,7 @@ namespace TunicRandomizer {
             }
             advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Hero's Laurels Location");
-            ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 100f * guiScale), "advancedSinglePlayer", "Hero's Laurels Location");
+            ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 80f * guiScale), "advancedSinglePlayer", "Hero's Laurels Location");
             advHeight += 40f * guiScale;
             bool RandomLaurels = GUI.Toggle(new Rect(10f * guiScale, advHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.FixedLaurelsOption == RandomizerSettings.FixedLaurelsType.RANDOM, "Random");
             if (RandomLaurels) {

@@ -13,8 +13,7 @@ namespace TunicRandomizer {
             { "Shuffle Ladders", "Turns several ladders in the game into items that must be found before they can be climbed on, blocking off several paths early on and adding more layers of progression.\n\"Ladders were a mistake.\" —Andrew Shouldice" },
             { "Start With Sword", "Start with a sword in the player's inventory. Does not replace finding the first two upgrades if Sword Progression is on." },
             { "Mystery Seed", "Settings will be randomly selected on New Game. See the Mystery Seed Configuration menu to configure option weights." },
-            { "Hexagons Required", "How many Gold Questagons are required to beat the game for Hexagon Quest. Can be set to any number 1-100, or randomized within certain ranges." },
-            { "Extra Hexagons", "How many additional Gold Questagons are put in the item pool beyond the required amount." },
+            { "Hexagons Required", "How many Gold Questagons are required to beat the game for Hexagon Quest. Can be set to any number 1-100, or randomized within certain ranges. Default is 20 required with 30 total in the item pool." },
             { "Hexagons in Item Pool", "How many Gold Questagons are put into the item pool. The max amount is twice the required amount or 100, whichever is lower." },
             { "Randomize Hexagon Quest Amounts", "Randomly choose the amount required to win, and how many extras.\n" +
                 "Required amounts: Random (10-50), Low (10-23), Medium (24-37), High (38-50)\n" +
