@@ -322,6 +322,9 @@ namespace TunicRandomizer {
             { "Purgatory", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
             },
+            { "Library Exterior", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Library Exterior", "Library Exterior", new Vector3(27.5f, 44f, 10.2f), new Quaternion(0f, 1f, 0f, .1f), NPC.NPCAnimState.SIT, $"stuhk? nO, I juhst wawkd Ovur hEr. I gehs yoo\nkahnt geht hEr wi% #Oz lituhl lehgz, kahn yoo?") }
+            },
             { "Library Hall", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Hall 1", "Library Hall", new Vector3(153.8f, 13.1f, -40.6f), new Quaternion(0f, .9754f, 0f, -.2203f), NPC.NPCAnimState.SIT, $"I kehnt rEJ mI kuhp.") }
             },
