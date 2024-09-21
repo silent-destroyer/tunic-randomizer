@@ -338,29 +338,43 @@ namespace TunicRandomizer {
         }
 
         public static void SpawnHintGhosts(string SceneName) {
+            bool spawnAllTest = true;
+            if (spawnAllTest) {
+                foreach(List<HintGhost> list in GhostLocations.Values) {
+                    list.ForEach(ghost => SpawnHintGhost(ghost));
+                }
+                foreach (List<HintGhost> list in EntranceRandoGhostLocations.Values) {
+                    list.ForEach(ghost => SpawnHintGhost(ghost));
+                }
+                return;
+            } 
             foreach (HintGhost HintGhost in HintGhosts.Values) {
                 if (HintGhost.SceneName == SceneName) {
-                    GhostFox.GetComponent<NPC>().nPCAnimState = HintGhost.AnimState;
-                    GameObject NewGhostFox = GameObject.Instantiate(GhostFox);
-                    NewGhostFox.name = HintGhost.Name;
-                    NewGhostFox.transform.position = HintGhost.Position;
-                    NewGhostFox.transform.rotation = HintGhost.Rotation;
-                    LanguageLine HintText = ScriptableObject.CreateInstance<LanguageLine>();
-                    HintText.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? HintGhost.TrunicDialogue : HintGhost.Dialogue)}---{HintGhost.Hint}";
-                    NewGhostFox.GetComponent<NPC>().script = HintText;
-
-                    if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
-                        NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
-                    }
-                    
-                    if (HintGhost.FishingPole) {
-                        GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod, HintGhost.FishingRodPos.pos, HintGhost.FishingRodPos.rot);
-                        fishingRod.SetActive(true);
-                    }
-
-                    NewGhostFox.SetActive(true);
+                    SpawnHintGhost(HintGhost);
                 }
             }
+        }
+
+        private static void SpawnHintGhost(HintGhost hintGhost) {
+            GhostFox.GetComponent<NPC>().nPCAnimState = hintGhost.AnimState;
+            GameObject NewGhostFox = GameObject.Instantiate(GhostFox);
+            NewGhostFox.name = hintGhost.Name;
+            NewGhostFox.transform.position = hintGhost.Position;
+            NewGhostFox.transform.rotation = hintGhost.Rotation;
+            LanguageLine HintText = ScriptableObject.CreateInstance<LanguageLine>();
+            HintText.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.TrunicDialogue : hintGhost.Dialogue)}---{hintGhost.Hint}";
+            NewGhostFox.GetComponent<NPC>().script = HintText;
+
+            if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
+                NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
+            }
+
+            if (hintGhost.FishingPole) {
+                GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod, hintGhost.FishingRodPos.pos, hintGhost.FishingRodPos.rot);
+                fishingRod.SetActive(true);
+            }
+
+            NewGhostFox.SetActive(true);
         }
 
         public static void GenerateHints() {
