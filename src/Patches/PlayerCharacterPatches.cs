@@ -290,6 +290,8 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
+            TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
+
             try {
                 TunicUtils.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();

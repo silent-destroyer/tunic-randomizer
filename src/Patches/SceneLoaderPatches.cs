@@ -529,6 +529,7 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();
+            TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
 
             if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();
