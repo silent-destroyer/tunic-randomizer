@@ -341,6 +341,7 @@ namespace TunicRandomizer {
             { "Library Exterior", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Exterior 1", "Library Exterior", new Vector3(27.4042f, 44f, 9.9574f), new Quaternion(0f, 0.9912f, 0f, 0.1326f), NPC.NPCAnimState.SIT, $"wuht R yoo dooi^ awl #uh wA uhp hEr?---... wuht ahm I dooi^ awl #uh wA uhp hEr?\nriturni^ ahn Ovurdoo lIbrArE bouk...", interactRadiusOverride: 4.2f, cameraYOverride: 310),
                 new HintGhost("Hint Ghost Library Exterior 2", "Library Exterior", new Vector3(-8.2745f, 44.0645f, -36.2473f), new Quaternion(0.018f, -0.2001f, -0.0037f, -0.9796f), NPC.NPCAnimState.SIT, $"#uh lIbrArEuhn iz uhp #Ar... $oud bE A tehkstbouk\nfIt for yoo #O!"),
+                // Todo: Needs a SphereCollider radius of 4 and for the camera not to rotate
                 new HintGhost("Hint Ghost Library Exterior 3", "Library Exterior", new Vector3(27.6f, 44f, 9.3f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"stuhk? nO, I juhst wawkd Ovur hEr. I gehs yoo\nkahnt geht hEr wi% #Oz lituhl lehgz, kahn yoo?") }
             },
             { "Library Hall", new List<HintGhost>() {
@@ -354,7 +355,6 @@ namespace TunicRandomizer {
             { "Library Lab", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Lab 1", "Library Lab", new Vector3(139.3969f, 93.5073f, -74.8239f), new Quaternion(0f, 1f, 0f, 0.0089f), NPC.NPCAnimState.SIT, $"Im #uh lIbrArEuhn!---... juhst kidi^, I kahnt rEd."),
                 new HintGhost("Hint Ghost Library Lab 2", "Library Lab", new Vector3(131.3964f, 107.4616f, -37.7488f), new Quaternion(0f, 0.7272f, 0f, 0.6864f), NPC.NPCAnimState.FISHING, $"awl #is rEsurj ahnd #A stil dOnt nO wuht A\ndE pahd iz..."),
-                // Todo: Needs a SphereCollider radius of 4 and for the camera not to rotate
                 new HintGhost("Hint Ghost Library Lab 3", "Library Lab", new Vector3(145.05f, 87f, -111.35f), new Quaternion(0f, .8829f, 0f, -.4695f), NPC.NPCAnimState.SIT, $"O, yoo wawnt too nO wuht Im rEdi^? itz kawld\nfawks bEhAvyur: intrO too yahpi^ ehnd %EvurE.") }
             },
             { "Cathedral", new List<HintGhost>() {
