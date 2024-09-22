@@ -37,10 +37,12 @@ namespace TunicRandomizer {
             public string HexQuestAbilityHint;
             public bool FishingPole;
             public TransformData FishingRodPos;
+            public int CameraOverride;
+            public float InteractRadiusOverride;
 
             public HintGhost() { }
 
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData()) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1) {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -54,8 +56,10 @@ namespace TunicRandomizer {
                 CheckId = "";
                 FishingPole = fishingPole;
                 FishingRodPos = fishingRodPos;
+                CameraOverride = cameraYOverride;
+                InteractRadiusOverride = interactRadiusOverride;
             }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData()) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1) {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -69,6 +73,8 @@ namespace TunicRandomizer {
                 CheckId = "";
                 FishingPole = fishingPole;
                 FishingRodPos = fishingRodPos;
+                CameraOverride = cameraYOverride;
+                InteractRadiusOverride = interactRadiusOverride;
             }
         }
 
@@ -228,7 +234,7 @@ namespace TunicRandomizer {
             },
             { "Ruined Shop", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Ruined Shop 1", "Ruined Shop", new Vector3(16.5333f, 8.983299f, -45.60382f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"hehlO. wuht iz yor nAm?---...tuhnk? wuht A strAnj nAm."),
-                new HintGhost("Hint Ghost Ruined Shop 2", "Ruined Shop", new Vector3(9.8111f, 8.0833f, -37.52119f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.IDLE, $"wehl, if yur nawt bIi^ ehnE%i^..." ) }
+                new HintGhost("Hint Ghost Ruined Shop 2", "Ruined Shop", new Vector3(9.8111f, 8.0833f, -37.52119f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.IDLE, $"wehl, if yur nawt bIi^ ehnE%i^...", interactRadiusOverride: 4 ) }
             },
             { "West Filigree", new List<HintGhost>() {
                 new HintGhost("Hint Ghost West Filigree", "Town_FiligreeRoom", new Vector3(-79.4348f, 22.0379f, -59.8104f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.PRAY, $"wow, yoo hahv #uh powur uhv #uh \"Holy Cross!\"", $"wow, yoo hahv #uh powur uhv #uh hOlE kraws!") }
@@ -317,8 +323,32 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Frog's Domain 1", "frog cave main", new Vector3(19.7682f, 9.1943f, -23.3269f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.FISHING, $"I wuhndur wAr #uh kwehstuhgawn iz?"),
                 new HintGhost("Hint Ghost Frog's Domain 2", "frog cave main", new Vector3(27.09619f, 9.2581f, -37.28336f), new Quaternion(0f, 0.5000001f, 0f, -0.8660254f), NPC.NPCAnimState.FISHING, $"$hhh. Im hIdi^ fruhm #uh frawgs.") }
             },
+            { "Quarry Entrance", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Quarry Entrance", "Darkwoods Tunnel", new Vector3(102.7876f, 11.8391f, 9.2092f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.GAZE, $"I kahnt juhmp fR inuhf too rEj #aht %i^...", cameraYOverride: 150), }
+            },
+        };
+
+        public static Dictionary<string, List<HintGhost>> EntranceRandoGhostLocations = new Dictionary<string, List<HintGhost>>() {
             { "Purgatory", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Purgatory", "Purgatory", new Vector3(27.1514f, 38.018f, 74.7217f), new Quaternion(0f, 0.9585385f, 0f, -0.2849632f), NPC.NPCAnimState.DANCE, $"doo yoo nO skipEO? hE brOk awl uhv #uh dorz.") }
+            },
+            { "Library Lab", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Library Lab 1", "Library Lab", new Vector3(139.3969f, 93.5073f, -74.8239f), new Quaternion(0f, 1f, 0f, 0.0089f), NPC.NPCAnimState.SIT, $"Im #uh lIbrArEuhn!---... juhst kidi^, I kahnt rEd."),
+                new HintGhost("Hint Ghost Library Lab 2", "Library Lab", new Vector3(131.3964f, 107.4616f, -37.7488f), new Quaternion(0f, 0.7272f, 0f, 0.6864f), NPC.NPCAnimState.FISHING, $"awl #is rEsurj ahnd #A stil dOnt nO wuht A\ndE pahd iz...") }
+            },
+            { "Library Hall", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Library Hall 1", "Library Hall", new Vector3(113.4677f, 12.4772f, -69.9041f), new Quaternion(0f, 0.8486f, 0f, -0.529f), NPC.NPCAnimState.SIT, $"hehlO... R yoo frehnds wi% #uh lIbrArEuhn?"),
+                new HintGhost("Hint Ghost Library Hall 2", "Library Hall", new Vector3(154.6941f, 12.5768f, -39.4832f), new Quaternion(0f, 0.9531f, 0f, -0.3025f), NPC.NPCAnimState.SIT, $"I kahnt rEj mI kawfE... wAr R #Oz wawki^ rObawt tAbuhlz\nwehn yoo nEd #ehm?") }
+            },
+            { "Library Exterior", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Library Exterior 1", "Library Exterior", new Vector3(27.4042f, 44f, 9.9574f), new Quaternion(0f, 0.9912f, 0f, 0.1326f), NPC.NPCAnimState.SIT, $"wuht R yoo dooi^ awl #uh wA uhp hEr?---... wuht ahm I dooi^ awl #uh wA uhp hEr?\nriturni^ ahn Ovurdoo lIbrArE bouk...", interactRadiusOverride: 4.2f, cameraYOverride: 310),
+                new HintGhost("Hint Ghost Library Exterior 2", "Library Exterior", new Vector3(-8.2745f, 44.0645f, -36.2473f), new Quaternion(0.018f, -0.2001f, -0.0037f, -0.9796f), NPC.NPCAnimState.SIT, $"#uh lIbrArEuhn iz uhp #Ar... $oud bE A tehkstbouk\nfIt for yoo #O!") }
+            },
+            { "Dusty", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Dusty", "Dusty", new Vector3(64.3287f, 26.058f, 46.5875f), new Quaternion(0f, 0.9282f, 0f, -0.372f), NPC.NPCAnimState.IDLE, $"R yoo goi^ too klEn uhp #is mehs? wuht A rilEf!", cameraYOverride: 50), }
+            },
+            { "Cathedral", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Cathedral", "Cathedral Redux", new Vector3(-14.5132f, -0.2167f, -64.2287f), new Quaternion(0f, 0.9629f, 0f, -0.2699f), NPC.NPCAnimState.IDLE, $"hahv yoo hurd uhbowt owur lord ahnd sAvyur ahndroo $OldIs?"), }
             },
         };
 
@@ -335,36 +365,61 @@ namespace TunicRandomizer {
         public static void SpawnHintGhosts(string SceneName) {
             foreach (HintGhost HintGhost in HintGhosts.Values) {
                 if (HintGhost.SceneName == SceneName) {
-                    GhostFox.GetComponent<NPC>().nPCAnimState = HintGhost.AnimState;
-                    GameObject NewGhostFox = GameObject.Instantiate(GhostFox);
-                    NewGhostFox.name = HintGhost.Name;
-                    NewGhostFox.transform.position = HintGhost.Position;
-                    NewGhostFox.transform.rotation = HintGhost.Rotation;
-                    LanguageLine HintText = ScriptableObject.CreateInstance<LanguageLine>();
-                    HintText.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? HintGhost.TrunicDialogue : HintGhost.Dialogue)}---{HintGhost.Hint}";
-                    NewGhostFox.GetComponent<NPC>().script = HintText;
-
-                    if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
-                        NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
-                    }
-                    
-                    if (HintGhost.FishingPole) {
-                        GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod, HintGhost.FishingRodPos.pos, HintGhost.FishingRodPos.rot);
-                        fishingRod.SetActive(true);
-                    }
-
-                    NewGhostFox.SetActive(true);
+                    SpawnHintGhost(HintGhost);
                 }
             }
+        }
+
+        private static void SpawnHintGhost(HintGhost hintGhost) {
+            if (hintGhost.SceneName != SceneManager.GetActiveScene().name) {
+                return;
+            }
+            GhostFox.GetComponent<NPC>().nPCAnimState = hintGhost.AnimState;
+            GameObject NewGhostFox = GameObject.Instantiate(GhostFox);
+            NewGhostFox.name = hintGhost.Name;
+            NewGhostFox.transform.position = hintGhost.Position;
+            NewGhostFox.transform.rotation = hintGhost.Rotation;
+            LanguageLine HintText = ScriptableObject.CreateInstance<LanguageLine>();
+            HintText.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.TrunicDialogue : hintGhost.Dialogue)}---{hintGhost.Hint}";
+            NewGhostFox.GetComponent<NPC>().script = HintText;
+
+            if (PaletteEditor.CelShadingEnabled && PaletteEditor.ToonFox != null) {
+                NewGhostFox.transform.GetChild(2).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = PaletteEditor.ToonFox.GetComponent<MeshRenderer>().material;
+            }
+
+            if (hintGhost.FishingPole) {
+                GameObject fishingRod = GameObject.Instantiate(ModelSwaps.FishingRod, hintGhost.FishingRodPos.pos, hintGhost.FishingRodPos.rot);
+                fishingRod.SetActive(true);
+            }
+
+            if (hintGhost.InteractRadiusOverride != -1) {
+                NewGhostFox.GetComponent<SphereCollider>().radius = hintGhost.InteractRadiusOverride;
+            }
+
+            if (hintGhost.CameraOverride != -1 && NewGhostFox.GetComponent<NPC>().cameraOverrideTrigger != null) {
+                NewGhostFox.GetComponent<NPC>().cameraOverrideTrigger.data.eulerY = hintGhost.CameraOverride;
+            }
+
+            if (hintGhost.SceneName == "Library Lab") {
+                if (StateVariable.GetStateVariableByName("Is Night").BoolValue) {
+                    NewGhostFox.SetActive(false);
+                    return;
+                }
+            }
+
+            NewGhostFox.SetActive(true);
         }
 
         public static void GenerateHints() {
             HintGhosts.Clear();
             HexQuestHintLookup.Clear();
-            List<string> GhostSpawns = GhostLocations.Keys.ToList();
-            if (SaveFile.GetInt(EntranceRando) == 0) { 
-                GhostSpawns.Remove("Purgatory"); 
+            Dictionary<string, List<HintGhost>> Ghosts = new Dictionary<string, List<HintGhost>>(GhostLocations);
+            if (GetBool(EntranceRando)) { 
+                foreach(KeyValuePair<string, List<HintGhost>> pair in EntranceRandoGhostLocations) {
+                    Ghosts.Add(pair.Key, pair.Value);
+                } 
             }
+            List<string> GhostSpawns = Ghosts.Keys.ToList();
             List<string> SelectedSpawns = new List<string>();
             System.Random random = new System.Random(SaveFile.GetInt("seed"));
             for (int i = 0; i < 15; i++) {
@@ -373,7 +428,7 @@ namespace TunicRandomizer {
                 GhostSpawns.Remove(Location);
             }
             foreach (string Location in SelectedSpawns) {
-                HintGhost HintGhost = GhostLocations[Location][random.Next(GhostLocations[Location].Count)];
+                HintGhost HintGhost = Ghosts[Location][random.Next(Ghosts[Location].Count)];
                 HintGhosts.Add(HintGhost.Name, HintGhost);
             }
 
