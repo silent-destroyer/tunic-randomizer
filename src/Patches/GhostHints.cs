@@ -478,7 +478,6 @@ namespace TunicRandomizer {
                 HintGhosts = HintGhosts.Take(Hints.Count).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             foreach (HintGhost HintGhost in HintGhosts.Values) {
-                TunicLogger.LogInfo(HintGhost.Name + " " + HintGhost.SceneName);
                 (string, string, string, string) Hint = Hints[random.Next(Hints.Count)];
                 HintGhost.Hint = Hint.Item1;
                 HintGhost.HintedItem = Hint.Item2;
