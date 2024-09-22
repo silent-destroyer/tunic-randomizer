@@ -33,7 +33,7 @@ namespace TunicRandomizer {
         public static GameObject title;
         public static List<RecentItemData> recentItemsQueue = new List<RecentItemData>();
         public float itemQueueTimer = 0f;
-        public float itemQueueDelay = 2f;
+        public float itemQueueDelay = 1f;
 
         public void Update() {
             title.SetActive(TunicRandomizer.Settings.ShowRecentItems && !InventoryDisplay.InventoryOpen);
