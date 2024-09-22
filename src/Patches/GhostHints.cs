@@ -373,7 +373,7 @@ namespace TunicRandomizer {
         }
 
         public static void SpawnHintGhosts(string SceneName) {
-            bool spawnAllTest = true;
+            bool spawnAllTest = false;
             if (spawnAllTest) {
                 foreach (List<HintGhost> list in GhostLocations.Values) {
                     list.ForEach(ghost => SpawnHintGhost(ghost));
