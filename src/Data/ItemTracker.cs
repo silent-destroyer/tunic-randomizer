@@ -72,13 +72,14 @@ namespace TunicRandomizer {
             {"Grass", 0}
         };
 
+        public Dictionary<string, string> DiscoveredEntrances = new Dictionary<string, string>();
+
         public List<ItemData> ItemsCollected = new List<ItemData>();
 
         public ItemTracker() {
             CurrentScene = new SceneInfo();
 
             Seed = 0;
-           
             foreach (string Key in ImportantItems.Keys.ToList()) {
                 ImportantItems[Key] = 0;
             }
@@ -88,11 +89,14 @@ namespace TunicRandomizer {
             ImportantItems["Trinket Slot"] = 1;
             ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
             ItemsCollected = new List<ItemData>();
+            DiscoveredEntrances = new Dictionary<string, string>();
         }
 
         public ItemTracker(int seed) {
             CurrentScene = new SceneInfo();
             Seed = seed;
+            ItemsCollected = new List<ItemData>();
+            DiscoveredEntrances = new Dictionary<string, string>();
         }
 
         public void ResetTracker() {
@@ -106,6 +110,7 @@ namespace TunicRandomizer {
             ImportantItems["Trinket Slot"] = 1;
             ImportantItems["Coins Tossed"] = StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue;
             ItemsCollected = new List<ItemData>();
+            DiscoveredEntrances = new Dictionary<string, string>();
         }
 
         public void SetCollectedItem(string ItemName, bool WriteToDisk) {
@@ -184,6 +189,20 @@ namespace TunicRandomizer {
                 }
                 SaveTrackerFile();
             }
+        }
+
+        public void PopulateDiscoveredEntrances() {
+            foreach (KeyValuePair<string, PortalCombo> portalCombo in ERData.RandomizedPortals) {
+                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 1) {
+                    TunicRandomizer.Tracker.DiscoveredEntrances[portalCombo.Value.Portal1.SceneDestinationTag] = portalCombo.Value.Portal2.SceneDestinationTag;
+                }
+                if (!GetBool(Decoupled)) {
+                    if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 1) {
+                        TunicRandomizer.Tracker.DiscoveredEntrances[portalCombo.Value.Portal2.SceneDestinationTag] = portalCombo.Value.Portal1.SceneDestinationTag;
+                    }
+                }
+            }
+            SaveTrackerFile();
         }
 
         public static void SaveTrackerFile() {

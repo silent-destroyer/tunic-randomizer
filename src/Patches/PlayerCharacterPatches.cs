@@ -290,6 +290,8 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
+            TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
+
             try {
                 TunicUtils.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();
@@ -388,114 +390,119 @@ namespace TunicRandomizer {
                     System.Random random = new System.Random(seed);
 
                     SaveFile.SetString("randomizer game mode", System.Enum.GetName(typeof(RandomizerSettings.GameModes), TunicRandomizer.Settings.GameMode));
-                    if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
-                        SaveFile.SetInt(HexagonQuestEnabled, 1);
-                        if (TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages) {
-                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
-                        }
-                        if (TunicRandomizer.Settings.RandomizeHexQuest) {
-                            switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
-                                default:
-                                case RandomizerSettings.HexQuestValue.RANDOM:
-                                    SaveFile.SetInt(HexagonQuestGoal, random.Next(10, 51));
-                                    break;
-                                case RandomizerSettings.HexQuestValue.LOW:
-                                    SaveFile.SetInt(HexagonQuestGoal, random.Next(10, 24));
-                                    break;
-                                case RandomizerSettings.HexQuestValue.MEDIUM:
-                                    SaveFile.SetInt(HexagonQuestGoal, random.Next(24, 38));
-                                    break;
-                                case RandomizerSettings.HexQuestValue.HIGH:
-                                    SaveFile.SetInt(HexagonQuestGoal, random.Next(38, 51));
-                                    break;
-                            }
-                            switch (TunicRandomizer.Settings.HexagonQuestRandomExtras) {
-                                default:
-                                case RandomizerSettings.HexQuestValue.RANDOM:
-                                    SaveFile.SetInt(HexagonQuestExtras, random.Next(101));
-                                    break;
-                                case RandomizerSettings.HexQuestValue.LOW:
-                                    SaveFile.SetInt(HexagonQuestExtras, random.Next(0, 34));
-                                    break;
-                                case RandomizerSettings.HexQuestValue.MEDIUM:
-                                    SaveFile.SetInt(HexagonQuestExtras, random.Next(34, 67));
-                                    break;
-                                case RandomizerSettings.HexQuestValue.HIGH:
-                                    SaveFile.SetInt(HexagonQuestExtras, random.Next(67, 101));
-                                    break;
-                            }
-                            SaveFile.SetInt("randomizer hexagon quest random goal", (int)TunicRandomizer.Settings.HexagonQuestRandomGoal);
-                            SaveFile.SetInt("randomizer hexagon quest random extras", (int)TunicRandomizer.Settings.HexagonQuestRandomExtras);
-                        } else {
-                            SaveFile.SetInt(HexagonQuestGoal, TunicRandomizer.Settings.HexagonQuestGoal);
-                            SaveFile.SetInt(HexagonQuestExtras, TunicRandomizer.Settings.HexagonQuestExtraPercentage);
-                        }
 
-                        for (int i = 0; i < 28; i++) {
-                            SaveFile.SetInt($"randomizer obtained page {i}", 1);
-                        }
-
-                        StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue = true;
-                        StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue = true;
-                        StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue = true;
-                        StateVariable.GetStateVariableByName("Placed Hexagons ALL").BoolValue = true;
-                        StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue = true;
-                        StateVariable.GetStateVariableByName("Has Died To God").BoolValue = true;
-                    }
                     if (TunicRandomizer.Settings.SwordProgressionEnabled) {
-                        SaveFile.SetInt("randomizer sword progression enabled", 1);
-                        SaveFile.SetInt("randomizer sword progression level", 0);
-                    }
-                    if (TunicRandomizer.Settings.KeysBehindBosses) {
-                        SaveFile.SetInt("randomizer keys behind bosses", 1);
+                        SaveFile.SetInt(SwordProgressionEnabled, 1);
+                        SaveFile.SetInt(SwordProgressionLevel, 0);
                     }
                     if (TunicRandomizer.Settings.StartWithSwordEnabled) {
                         Inventory.GetItemByName("Sword").Quantity = 1;
-                        SaveFile.SetInt("randomizer started with sword", 1);
-                    }
-
-                    if (TunicRandomizer.Settings.Maskless) {
-                        SaveFile.SetInt(MasklessLogic, 1);
-                    }
-                    if (TunicRandomizer.Settings.Lanternless) {
-                        SaveFile.SetInt(LanternlessLogic, 1);
-                    }
-
-                    SaveFile.SetInt(LaurelsLocation, (int)TunicRandomizer.Settings.FixedLaurelsOption);
-
-                    if (TunicRandomizer.Settings.EntranceRandoEnabled) {
-                        Inventory.GetItemByName("Torch").Quantity = 1;
-                        SaveFile.SetInt(EntranceRando, 1);
-
-                        if (TunicRandomizer.Settings.ERFixedShop) {
-                            SaveFile.SetInt(ERFixedShop, 1);
-                        }
-                        if (TunicRandomizer.Settings.PortalDirectionPairs) {
-                            SaveFile.SetInt(PortalDirectionPairs, 1);
-                        }
-                        if (TunicRandomizer.Settings.DecoupledER) {
-                            SaveFile.SetInt(Decoupled, 1);
-                        }
+                        SaveFile.SetInt(StartWithSword, 1);
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt(AbilityShuffle, 1);
                     }
-                    if (TunicRandomizer.Settings.ShuffleLadders) {
-                        SaveFile.SetInt(LadderRandoEnabled, 1);
-                    }
-                    if (TunicRandomizer.Settings.GrassRandomizer) {
-                        SaveFile.SetInt(GrassRandoEnabled, 1);
-                    }
 
-                    if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
-                        int goldHexagons = TunicUtils.GetMaxGoldHexagons();
-                        int minHexes = 3;
-                        if (GetBool(KeysBehindBosses)) {
-                            minHexes = 15;
+                    if (SaveFile.GetString("randomizer game mode") != "VANILLA") {
+                        if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.HEXAGONQUEST) {
+                            SaveFile.SetInt(HexagonQuestEnabled, 1);
+                            if (TunicRandomizer.Settings.HexQuestAbilitiesUnlockedByPages) {
+                                SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+                            }
+                            if (TunicRandomizer.Settings.RandomizeHexQuest) {
+                                switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
+                                    default:
+                                    case RandomizerSettings.HexQuestValue.RANDOM:
+                                        SaveFile.SetInt(HexagonQuestGoal, random.Next(10, 51));
+                                        break;
+                                    case RandomizerSettings.HexQuestValue.LOW:
+                                        SaveFile.SetInt(HexagonQuestGoal, random.Next(10, 24));
+                                        break;
+                                    case RandomizerSettings.HexQuestValue.MEDIUM:
+                                        SaveFile.SetInt(HexagonQuestGoal, random.Next(24, 38));
+                                        break;
+                                    case RandomizerSettings.HexQuestValue.HIGH:
+                                        SaveFile.SetInt(HexagonQuestGoal, random.Next(38, 51));
+                                        break;
+                                }
+                                switch (TunicRandomizer.Settings.HexagonQuestRandomExtras) {
+                                    default:
+                                    case RandomizerSettings.HexQuestValue.RANDOM:
+                                        SaveFile.SetInt(HexagonQuestExtras, random.Next(101));
+                                        break;
+                                    case RandomizerSettings.HexQuestValue.LOW:
+                                        SaveFile.SetInt(HexagonQuestExtras, random.Next(0, 34));
+                                        break;
+                                    case RandomizerSettings.HexQuestValue.MEDIUM:
+                                        SaveFile.SetInt(HexagonQuestExtras, random.Next(34, 67));
+                                        break;
+                                    case RandomizerSettings.HexQuestValue.HIGH:
+                                        SaveFile.SetInt(HexagonQuestExtras, random.Next(67, 101));
+                                        break;
+                                }
+                                SaveFile.SetInt("randomizer hexagon quest random goal", (int)TunicRandomizer.Settings.HexagonQuestRandomGoal);
+                                SaveFile.SetInt("randomizer hexagon quest random extras", (int)TunicRandomizer.Settings.HexagonQuestRandomExtras);
+                            } else {
+                                SaveFile.SetInt(HexagonQuestGoal, TunicRandomizer.Settings.HexagonQuestGoal);
+                                SaveFile.SetInt(HexagonQuestExtras, TunicRandomizer.Settings.HexagonQuestExtraPercentage);
+                            }
+
+                            for (int i = 0; i < 28; i++) {
+                                SaveFile.SetInt($"randomizer obtained page {i}", 1);
+                            }
+
+                            StateVariable.GetStateVariableByName("Placed Hexagon 1 Red").BoolValue = true;
+                            StateVariable.GetStateVariableByName("Placed Hexagon 2 Green").BoolValue = true;
+                            StateVariable.GetStateVariableByName("Placed Hexagon 3 Blue").BoolValue = true;
+                            StateVariable.GetStateVariableByName("Placed Hexagons ALL").BoolValue = true;
+                            StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue = true;
+                            StateVariable.GetStateVariableByName("Has Died To God").BoolValue = true;
                         }
-                        if (goldHexagons < minHexes) {
-                            TunicLogger.LogWarning("Gold Hexagon amount is too low for hexagon ability unlocks, switching to page unlocks.");
-                            SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+
+                        if (TunicRandomizer.Settings.KeysBehindBosses) {
+                            SaveFile.SetInt(KeysBehindBosses, 1);
+                        }
+
+                        if (TunicRandomizer.Settings.Maskless) {
+                            SaveFile.SetInt(MasklessLogic, 1);
+                        }
+                        if (TunicRandomizer.Settings.Lanternless) {
+                            SaveFile.SetInt(LanternlessLogic, 1);
+                        }
+
+                        SaveFile.SetInt(LaurelsLocation, (int)TunicRandomizer.Settings.FixedLaurelsOption);
+
+                        if (TunicRandomizer.Settings.EntranceRandoEnabled) {
+                            Inventory.GetItemByName("Torch").Quantity = 1;
+                            SaveFile.SetInt(EntranceRando, 1);
+
+                            if (TunicRandomizer.Settings.ERFixedShop) {
+                                SaveFile.SetInt(ERFixedShop, 1);
+                            }
+                            if (TunicRandomizer.Settings.PortalDirectionPairs) {
+                                SaveFile.SetInt(PortalDirectionPairs, 1);
+                            }
+                            if (TunicRandomizer.Settings.DecoupledER) {
+                                SaveFile.SetInt(Decoupled, 1);
+                            }
+                        }
+                        if (TunicRandomizer.Settings.ShuffleLadders) {
+                            SaveFile.SetInt(LadderRandoEnabled, 1);
+                        }
+                        if (TunicRandomizer.Settings.GrassRandomizer) {
+                            SaveFile.SetInt(GrassRandoEnabled, 1);
+                        }
+
+                        if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
+                            int goldHexagons = TunicUtils.GetMaxGoldHexagons();
+                            int minHexes = 3;
+                            if (GetBool(KeysBehindBosses)) {
+                                minHexes = 15;
+                            }
+                            if (goldHexagons < minHexes) {
+                                TunicLogger.LogWarning("Gold Hexagon amount is too low for hexagon ability unlocks, switching to page unlocks.");
+                                SaveFile.SetInt(HexagonQuestPageAbilities, 1);
+                            }
                         }
                     }
                 }
@@ -870,7 +877,7 @@ namespace TunicRandomizer {
             if (!__result) {
                 int Deaths = SaveFile.GetInt(PlayerDeathCount);
                 SaveFile.SetInt(PlayerDeathCount, Deaths + 1);
-                if (TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
+                if (IsArchipelago() && TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
                     Archipelago.instance.integration.SendDeathLink();
                 }
                 DiedToDeathLink = false;

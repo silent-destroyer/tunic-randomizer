@@ -12,8 +12,9 @@ namespace TunicRandomizer {
 
         // set this to true to test location access
         public static bool testLocations = false;
-        // leave this one alone
+        // leave these ones alone
         public static bool testBool = false;
+        public static bool testBool2 = false;
         
         // essentially fake items for the purpose of logic
         public static List<string> PrecollectedItems = new List<string>();
@@ -43,7 +44,7 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("randomize and place items starting");
 
             if (testLocations) {
-                testBool = true;
+                testBool2 = true;
             }
 
             if (random == null) {
@@ -54,7 +55,7 @@ namespace TunicRandomizer {
             Locations.CheckedLocations.Clear();
 
             PopulatePrecollected();
-            List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Gun" };
+            List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
             List<string> Ladders = new List<string>(LadderItems);
             List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             List<string> abilityPages = new List<string>() { "12", "21", "26" };
@@ -345,49 +346,51 @@ namespace TunicRandomizer {
                 // this is for testing fill, ignore if not testing
                 // using a full inventory of items, checks whether each location is reachable, and prints an error if any aren't
                 // change the testLocations bool to true to have it to test whether all locations can be reached
-                if (testBool) {
+                if (testBool2) {
                     TunicLogger.LogInfo("test starts here");
                     Dictionary<string, int> testUnplacedInventory = new Dictionary<string, int>();
                     Dictionary<string, int> testFullInventory = new Dictionary<string, int>();
-                    foreach (KeyValuePair<string, int> kvp in UnplacedInventory) {
-                        testUnplacedInventory.Add(kvp.Key, kvp.Value);
-                    }
-                    if (testUnplacedInventory.ContainsKey(itemName)) {
-                        testUnplacedInventory[itemName] += 1;
-                    } else {
-                        testUnplacedInventory.Add(itemName, 1);
-                    }
+                    List<Check> testChecksAlreadyAdded = new List<Check>();
 
-                    foreach (KeyValuePair<string, int> testUnplacedItem in testUnplacedInventory) {
-                        testFullInventory.Add(testUnplacedItem.Key, testUnplacedItem.Value);
-                    }
+                    TunicUtils.AddDictToDict(testUnplacedInventory, UnplacedInventory);
+                    TunicUtils.AddStringToDict(testUnplacedInventory, itemName);
 
+                    // this should keep looping until every portal either doesn't give a reward, or has already given its reward
+                    testFullInventory.Clear();
+                    testFullInventory.Add("Overworld", 1);
+                    TunicUtils.AddDictToDict(testFullInventory, testUnplacedInventory);
                     TunicUtils.AddListToDict(testFullInventory, PrecollectedItems);
 
-                    if (SaveFile.GetInt(EntranceRando) == 1) {
-                        // this should keep looping until every portal either doesn't give a reward, or has already given its reward
-                        testFullInventory.Clear();
-                        testFullInventory.Add("Overworld", 1);
-                        foreach (KeyValuePair<string, int> unplacedItem in testUnplacedInventory) {
-                            testFullInventory.Add(unplacedItem.Key, unplacedItem.Value);
+                    // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
+                    while (true) {
+                        int start_num = 0;
+                        foreach (int count in testFullInventory.Values) {
+                            start_num += count;
                         }
-                        TunicUtils.AddListToDict(testFullInventory, PrecollectedItems);
+                        testFullInventory = ERScripts.UpdateReachableRegions(testFullInventory);
+                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                            testFullInventory = portalCombo.AddComboRegion(testFullInventory);
+                        }
 
-                        // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
-                        while (true) {
-                            int start_num = testFullInventory.Count;
-                            testFullInventory = ERScripts.UpdateReachableRegions(testFullInventory);
-                            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
-                                testFullInventory = portalCombo.AddComboRegion(testFullInventory);
+                        foreach (Check placedLocation in ProgressionLocations.Values) {
+                            if (placedLocation.Location.reachable(testFullInventory) && !testChecksAlreadyAdded.Contains(placedLocation)) {
+                                string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
+                                TunicUtils.AddStringToDict(testFullInventory, item_name);
+                                testChecksAlreadyAdded.Add(placedLocation);
                             }
-                            int end_num = testFullInventory.Count;
-                            if (start_num == end_num) {
-                                break;
-                            }
+                        }
+
+                        int end_num = 0;
+                        foreach (int count in testFullInventory.Values) {
+                            end_num += count;
+                        }
+                        if (start_num == end_num) {
+                            break;
                         }
                     }
 
                     TunicLogger.LogInfo("testing location accessibility now");
+                    testBool = true;
                     foreach (Location loc in InitialLocations) {
                         if (!loc.reachable(testFullInventory)) {
                             TunicLogger.LogInfo("Location " + loc.LocationId + " is not reachable, investigate");
@@ -395,6 +398,7 @@ namespace TunicRandomizer {
                     }
                     TunicLogger.LogInfo("test ends here, if you didn't see any locations above this message then there were no unreachable locations");
                     testBool = false;
+                    testBool2 = false;
                 }
 
 

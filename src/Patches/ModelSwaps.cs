@@ -507,6 +507,10 @@ namespace TunicRandomizer {
                     ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().material,
                     chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1]
                 };
+                if (flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                    ChestTop.GetComponent<SpriteRenderer>().color = UnityEngine.Color.cyan;
+                    ChestTop.GetComponent<SpriteRenderer>().material.color = UnityEngine.Color.cyan;
+                }
             }
             
             if(APItem.Flags.HasFlag(ItemFlags.Trap)) {
@@ -596,6 +600,10 @@ namespace TunicRandomizer {
                 foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
                     r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
                     grass.materialForBase = r.material;
+                }
+                if (flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                    questionMark.GetComponent<SpriteRenderer>().color = UnityEngine.Color.cyan;
+                    questionMark.GetComponent<SpriteRenderer>().material.color = UnityEngine.Color.cyan;
                 }
             }
 
@@ -908,6 +916,12 @@ namespace TunicRandomizer {
                     for (int i = 2; i < 6; i++) {
                         Vector3 flipped = NewItem.transform.GetChild(i).localEulerAngles;
                         NewItem.transform.GetChild(i).gameObject.transform.localEulerAngles = new Vector3(180, flipped.y, flipped.z);
+                    }
+                }
+                if (APItem.Flags.HasFlag(ItemFlags.Advancement) && APItem.Flags.HasFlag(ItemFlags.NeverExclude)) {
+                    foreach(SpriteRenderer sp in NewItem.GetComponentsInChildren<SpriteRenderer>()) {
+                        sp.color = UnityEngine.Color.cyan;
+                        sp.material.color = UnityEngine.Color.cyan;
                     }
                 }
             } else {

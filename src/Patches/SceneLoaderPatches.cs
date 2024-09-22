@@ -261,7 +261,7 @@ namespace TunicRandomizer {
             SceneId = loadingScene.buildIndex;
 
             if (SceneName == "Overworld Redux" && (StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue &&
-                StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(DiedToHeir) != 1 && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
+                StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(DiedToHeir) != 1 && SaveFile.GetInt(HexagonQuestEnabled) == 0 && SaveFile.GetString("randomizer game mode") != "VANILLA") {
                 PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");
                 SaveFile.SetString("last campfire id", "checkpoint");
@@ -389,7 +389,7 @@ namespace TunicRandomizer {
                 GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>().updateActiveness();
                 GameObject.Destroy(GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>());
 
-                if (SaveFile.GetInt("seed") != 0 && (SaveFile.GetInt(LadderRandoEnabled) == 0 || Inventory.GetItemByName("Ladder to Swamp").Quantity == 1)) {
+                if (SaveFile.GetInt("seed") != 0 && (SaveFile.GetInt(LadderRandoEnabled) == 0 || Inventory.GetItemByName("Ladder to Swamp").Quantity == 1) && SaveFile.GetString("randomizer game mode") != "VANILLA") {
                     for(int i = 0; i < 3; i++) {
                         GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.AddComponent<ToggleObjectByFuse>().fuseId = 1096;
                         GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.GetComponent<ToggleObjectByFuse>().stateWhenClosed = i != 0;
@@ -529,6 +529,7 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();
+            TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
 
             if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneName)) {
                 EnemyRandomizer.SpawnNewEnemies();
