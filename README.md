@@ -91,7 +91,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - The player will spawn with a Sword in the inventory on New Game. Does not count towards Sword Progression.
 - Shuffle Abilities
   - Locks the ability to use Prayer, most Holy Cross codes*, and the Icebolt combo technique until the respective manual page for each ability is found.
-  - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and the Icebolt technique is unlocked by Page 53. If playing Hexagon Quest, abilities are unlocked when reaching 25%, 50%, and 75% of the required amount of Gold Hexagons.
+  - Prayer is unlocked by Page 24, Holy Cross is unlocked by Page 43, and the Icebolt technique is unlocked by Page 53. 
+  - If playing Hexagon Quest, abilities can be set to unlock by pages or when reaching 25%, 50%, and 75% of the required amount of Gold Hexagons.
   - *This option only locks Holy Cross codes that block access to checks in the randomizer. The free bomb codes and other player-facing codes like Big Head Mode, Sunglasses, Fairy Seeker, etc. are still usable from the start.
 - Shuffle Ladders
   - Turns several ladders in the game into items that must be found before they can be climbed on, blocking off several paths early on and adding more layers of progression.
@@ -100,6 +101,10 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Shuffles all the connections between doors, teleporters, portals, and more. Where will the fox end up?
 - Entrance Randomizer: Fewer Shop Entrances
   - Reduces the amount of possible shops that can be found, and places a guaranteed shop entrance at the Overworld Windmill entrance.
+- Entrance Randomizer: Matching Directions
+  - Pairs each entrance up with one that matches the expected direction on the other side (i.e. North/South, East/West, Teleporters, Ladders Up/Down)
+- Entrance Randomizer: Decoupled Entrances
+  - Turns every entrance into a one-way. Leaving from where you came will take you somewhere else.
 - Fool Traps
   - Enables fool traps, which replace low-value money rewards when enabled and apply damage/other negative effects to the player. Turning the setting up increases the amount of traps in the item pool.
   - For Single Player seeds, this option can be changed mid-run by changing the value and reloading the save file. For Archipelago games, this is a yaml option and cannot be changed after the game starts.
