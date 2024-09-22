@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -692,16 +693,18 @@ namespace TunicRandomizer {
         }
 
         public static void SpawnTorchHintGhost() {
-            GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
-            GameObject TorchFox = GameObject.Instantiate(GhostFox);
-            TorchFox.transform.position = new Vector3(-12.3128f, 11.9833f, -145.3333f);
-            TorchFox.transform.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+            if (SceneManager.GetActiveScene().name == "Overworld Redux") {
+                GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
+                GameObject TorchFox = GameObject.Instantiate(GhostFox);
+                TorchFox.transform.position = new Vector3(-12.3128f, 11.9833f, -145.3333f);
+                TorchFox.transform.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
 
-            LanguageLine TorchFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
-            TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm.---I sE yoo hahv A torJ [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
-            TorchFox.GetComponent<NPC>().script = TorchFoxScript;
+                LanguageLine TorchFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
+                TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm.---I sE yoo hahv A torJ [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
+                TorchFox.GetComponent<NPC>().script = TorchFoxScript;
 
-            TorchFox.SetActive(true);
+                TorchFox.SetActive(true);
+            }
         }
 
         public static void SpawnLostGhostFox() {

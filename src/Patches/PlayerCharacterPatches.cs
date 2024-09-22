@@ -875,7 +875,7 @@ namespace TunicRandomizer {
             if (!__result) {
                 int Deaths = SaveFile.GetInt(PlayerDeathCount);
                 SaveFile.SetInt(PlayerDeathCount, Deaths + 1);
-                if (TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
+                if (IsArchipelago() && TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
                     Archipelago.instance.integration.SendDeathLink();
                 }
                 DiedToDeathLink = false;
