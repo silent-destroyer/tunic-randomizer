@@ -341,8 +341,7 @@ namespace TunicRandomizer {
             { "Library Exterior", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Exterior 1", "Library Exterior", new Vector3(27.4042f, 44f, 9.9574f), new Quaternion(0f, 0.9912f, 0f, 0.1326f), NPC.NPCAnimState.SIT, $"wuht R yoo dooi^ awl #uh wA uhp hEr?---... wuht ahm I dooi^ awl #uh wA uhp hEr?\nriturni^ ahn Ovurdoo lIbrArE bouk...", interactRadiusOverride: 4.2f, cameraYOverride: 310),
                 new HintGhost("Hint Ghost Library Exterior 2", "Library Exterior", new Vector3(-8.2745f, 44.0645f, -36.2473f), new Quaternion(0.018f, -0.2001f, -0.0037f, -0.9796f), NPC.NPCAnimState.SIT, $"#uh lIbrArEuhn iz uhp #Ar... $oud bE A tehkstbouk\nfIt for yoo #O!"),
-                // Todo: Needs a SphereCollider radius of 4 and for the camera not to rotate
-                new HintGhost("Hint Ghost Library Exterior 3", "Library Exterior", new Vector3(27.6f, 44f, 9.3f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"stuhk? nO, I juhst wawkd Ovur hEr. I gehs yoo\nkahnt geht hEr wi% #Oz lituhl lehgz, kahn yoo?") }
+                new HintGhost("Hint Ghost Library Exterior 3", "Library Exterior", new Vector3(27.6f, 44f, 9.3f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"stuhk? nO, I juhst wawkd Ovur hEr. I gehs yoo\nkahnt geht hEr wi% #Oz lituhl lehgz, kahn yoo?", interactRadiusOverride: 4.2f, cameraYOverride: 310) }
             },
             { "Library Hall", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Hall 1", "Library Hall", new Vector3(113.4677f, 12.4772f, -69.9041f), new Quaternion(0f, 0.8486f, 0f, -0.529f), NPC.NPCAnimState.SIT, $"hehlO... R yoo frehnds wi% #uh lIbrArEuhn?"),
@@ -374,7 +373,7 @@ namespace TunicRandomizer {
         }
 
         public static void SpawnHintGhosts(string SceneName) {
-            bool spawnAllTest = false;
+            bool spawnAllTest = true;
             if (spawnAllTest) {
                 foreach (List<HintGhost> list in GhostLocations.Values) {
                     list.ForEach(ghost => SpawnHintGhost(ghost));
