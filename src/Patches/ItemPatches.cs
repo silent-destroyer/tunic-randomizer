@@ -158,7 +158,7 @@ namespace TunicRandomizer {
                     if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
                         itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;
                     }
-                    __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemName.ToUpper().Replace($" ", $"\" \"")}\"");
+                    __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemName.ToUpper().Replace("_", " ").Replace($" ", $"\" \"")}\"");
                 } else if (IsSinglePlayer()) {
                     ItemData itemData = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[LocationId]);
                     itemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[itemData.Name] : "";
