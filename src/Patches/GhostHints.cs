@@ -354,11 +354,11 @@ namespace TunicRandomizer {
             { "Library Lab", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Lab 1", "Library Lab", new Vector3(139.3969f, 93.5073f, -74.8239f), new Quaternion(0f, 1f, 0f, 0.0089f), NPC.NPCAnimState.SIT, $"Im #uh lIbrArEuhn!---... juhst kidi^, I kahnt rEd."),
                 new HintGhost("Hint Ghost Library Lab 2", "Library Lab", new Vector3(131.3964f, 107.4616f, -37.7488f), new Quaternion(0f, 0.7272f, 0f, 0.6864f), NPC.NPCAnimState.FISHING, $"awl #is rEsurj ahnd #A stil dOnt nO wuht A\ndE pahd iz..."),
-                new HintGhost("Hint Ghost Library Lab 3", "Library Lab", new Vector3(145.05f, 87f, -111.35f), new Quaternion(0f, .8829f, 0f, -.4695f), NPC.NPCAnimState.SIT, $"O, yoo wawnt too nO wuht Im rEdi^? itz kawld\nfawks bEhAvyur: intrO too yahpi^ ehnd %EvurE.") }
+                new HintGhost("Hint Ghost Library Lab 3", "Library Lab", new Vector3(145.05f, 87f, -111.35f), new Quaternion(0f, .8829f, 0f, -.4695f), NPC.NPCAnimState.SIT, $"O, yoo wawnt too nO wuht Im rEdi^? its kawld\nfawks bEhAvyur: intrO too yahpi^ ahnd %EvurE.") }
             },
             { "Cathedral", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Cathedral", "Cathedral Redux", new Vector3(-14.5132f, -0.2167f, -64.2287f), new Quaternion(0f, 0.9629f, 0f, -0.2699f), NPC.NPCAnimState.IDLE, $"hahv yoo hurd uhbowt owur lord ahnd sAvyur ahndroo $OldIs?"),
-                new HintGhost("Hint Ghost Cathedral 2", "Cathedral Redux", new Vector3(-10.9f, 1.45f, -65.2f), new Quaternion(0f, .9238f, 0f, -.3829f), NPC.NPCAnimState.SIT, $"hI, Im #uh wuhn hoo rEsehts awl uhv #uh buhtehn wawlz.") }
+                new HintGhost("Hint Ghost Cathedral 2", "Cathedral Redux", new Vector3(-10.9f, 1.45f, -65.2f), new Quaternion(0f, .9238f, 0f, -.3829f), NPC.NPCAnimState.SIT, $"hI, Im #uh wuhn hoo rEsehts awl uhv #uh buhtin wawlz.") }
             },
         };
 
