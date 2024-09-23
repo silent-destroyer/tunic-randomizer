@@ -336,9 +336,10 @@ namespace TunicRandomizer {
                     }
                     if (teleporter != null) {
                         GameObject tpClone = GameObject.Instantiate(teleporter);
-                        PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => { teleporter.SetActive(false); });
                         tpClone.transform.position = teleporter.transform.position;
                         tpClone.AddComponent<FoxgodDecoupledTeleporter>();
+                        teleporter.transform.position = new Vector3(-10000f, -10000f, -10000f);
+                        teleporter.GetComponentInChildren<ScenePortal>().spawnTransform.position = new Vector3(0, 0, -17);
                     }
                 }
 
