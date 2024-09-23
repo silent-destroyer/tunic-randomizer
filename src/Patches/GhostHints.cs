@@ -336,7 +336,7 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Dusty", "Dusty", new Vector3(64.3287f, 26.058f, 46.5875f), new Quaternion(0f, 0.9282f, 0f, -0.372f), NPC.NPCAnimState.IDLE, $"R yoo goi^ too klEn uhp #is mehs? wuht A rilEf!", cameraYOverride: 50), }
             },
             { "Fortress Arena", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Fortress Arena", "Fortress Arena", new Vector3(7.2f, .1f, 127.9f), new Quaternion(0f, .0872f, 0f, -.9962f), NPC.NPCAnimState.GAZE, $"I luhv #aht big spIdur gI, #A ahlwAz wAr suhJ\nfuhnE hahtz.") }
+                new HintGhost("Hint Ghost Fortress Arena", "Fortress Arena", new Vector3(7.2f, .1f, 127.9f), new Quaternion(0f, .0872f, 0f, -.9962f), NPC.NPCAnimState.GAZE, $"I luhv #aht big spIdur gI, #A awlwAz wAr suhJ\nfuhnE hahtz.") }
             },
             { "Library Exterior", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Exterior 1", "Library Exterior", new Vector3(27.4042f, 44f, 9.9574f), new Quaternion(0f, 0.9912f, 0f, 0.1326f), NPC.NPCAnimState.SIT, $"wuht R yoo dooi^ awl #uh wA uhp hEr?---... wuht ahm I dooi^ awl #uh wA uhp hEr?\nriturni^ ahn Ovurdoo lIbrArE bouk...", interactRadiusOverride: 4.2f, cameraYOverride: 310),
