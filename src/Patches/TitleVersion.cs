@@ -26,8 +26,8 @@ namespace TunicRandomizer {
                 StreamReader Reader = new StreamReader(response.GetResponseStream());
                 string JsonResponse = Reader.ReadToEnd();
                 dynamic Releases = JsonConvert.DeserializeObject<dynamic>(JsonResponse);
-                UpdateAvailable = Releases[0]["tag_name"].ToString() != PluginInfo.VERSION && !DevBuild;
                 UpdateVersion = Releases[0]["tag_name"].ToString();
+                UpdateAvailable = isNewerVersion(UpdateVersion);
             } catch (Exception e) {
                 TunicLogger.LogInfo(e.Message);
             }
@@ -62,6 +62,21 @@ namespace TunicRandomizer {
                 Logo.GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer secret_mayor");
             }
             TitleButtons = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Button Group/");
+        }
+
+        private static bool isNewerVersion(string newVersion) {
+            string currentVersion = PluginInfo.VERSION;
+            if (currentVersion == newVersion && DevBuild) {
+                return true;
+            }
+            string[] newSplit = newVersion.Split('.');
+            string[] currentSplit = currentVersion.Split('.');
+            for(int i = 0; i < currentSplit.Length; i++) {
+                if (int.Parse(newSplit[i]) > int.Parse(currentSplit[i])) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }
