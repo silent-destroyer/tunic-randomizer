@@ -43,7 +43,7 @@ namespace TunicRandomizer {
                 }
                 TunicLogger.LogInfo("Checking Location: " + LocationId + " - " + Locations.LocationIdToDescription[LocationId]);
                 if (IsArchipelago()) {
-                    if (TunicRandomizer.Settings.SkipItemAnimations) {
+                    if (TunicRandomizer.Settings.SkipItemAnimations || ItemLookup.ItemList[LocationId].Player != Archipelago.instance.GetPlayerSlot()) {
                         ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, itemInfo: ItemLookup.ItemList[LocationId]);
                     }
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
@@ -233,7 +233,7 @@ namespace TunicRandomizer {
         }
 
         public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
-            if(ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || 
+            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || 
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
                 GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
                 return ItemResult.TemporaryFailure;
@@ -245,7 +245,7 @@ namespace TunicRandomizer {
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
-            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationName != "Cheat Console" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 
