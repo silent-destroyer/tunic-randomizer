@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Archipelago.MultiClient.Net.Helpers;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TunicRandomizer {
@@ -70,7 +72,7 @@ namespace TunicRandomizer {
         }
 
         public bool IsTunicPlayer(int Slot) {
-            return GetPlayerGame(Slot) == "TUNIC";
+            return GetPlayerGame(Slot) == "TUNIC" && integration.session.Players.GetPlayerInfo(Slot).GetGroupMembers(integration.session.Players) == null;
         }
 
         public string GetItemName(long id, string game) {
