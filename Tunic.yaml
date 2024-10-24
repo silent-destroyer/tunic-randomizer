@@ -1,81 +1,317 @@
-﻿# _________  ___  ___  ________   ________     
-#|\___   ___\\  \|\  \|\   ___  \|\   ____\    
-#\|___ \  \_\ \  \\\  \ \  \\ \  \ \  \___|    
-#     \ \  \ \ \  \\\  \ \  \\ \  \ \  \       
-#      \ \  \ \ \  \\\  \ \  \\ \  \ \  \____  
-#       \ \__\ \ \_______\ \__\\ \__\ \_______\
-#        \|__|  \|_______|\|__| \|__|\|_______|
+﻿# Q. What is this file?
+# A. This file contains options which allow you to configure your multiworld experience while allowing
+#    others to play how they want as well.
 #
-name: Ruin Seeker
-description: tunc
+# Q. How do I use it?
+# A. The options in this file are weighted. This means the higher number you assign to a value, the
+#    more chances you have for that option to be chosen. For example, an option like this:
+#
+#    map_shuffle:
+#      on: 5
+#      off: 15
+#
+#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
+#    off.
+#
+# Q. I've never seen a file like this before. What characters am I allowed to use?
+# A. This is a .yaml file. You are allowed to use most characters.
+#    To test if your yaml is valid or not, you can use this website:
+#        http://www.yamllint.com/
+#    You can also verify that your Archipelago options are valid at this site:
+#        https://archipelago.gg/check
+
+# Your name in-game, limited to 16 characters.
+#     {player} will be replaced with the player's slot number.
+#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
+#     {number} will be replaced with the counter value of the name.
+#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.
+name: Player{number}
+
+# Used to describe your yaml. Useful if you have multiple files.
+description: Default TUNIC Template
+
 game: TUNIC
 requires:
-  version: 0.4.4
+  version: 0.5.0 # Version of Archipelago required for this yaml to work as expected.
+
 TUNIC:
-  # Play with sword upgrades enabled.
-  sword_progression: 'true'
-  # Start with a sword.
-  start_with_sword: 'false'
-  # Place the three hexagons behind their respective bosses in your world.
-  keys_behind_bosses: 'false'
-  # Lock the ability to use prayer, holy cross, and ice rod until their corresponding manual page is found.
-  # If playing with Hexagon Quest, abilities are instead unlocked after finding 25%, 50%, and 75% of your required Gold Hexagons.
-  ability_shuffling: 'false'
-  # Alternate goal akin to Triforce Hunt. Find the required amount of Gold Hexagons to win.
-  hexagon_quest: 'false'
-  # The required amount of Gold Hexagons needed to win Hexagon Quest. Goal can be anywhere between 15 and 50.
-  hexagon_goal: 20
-  # The amount of extra Gold Hexagons in the item pool in Hexagon Quest.
-  # Calculated as a percentage of the required goal amount (50 = 50%, so if hexagon_goal is 20 and extra_hexagon_percentage = 50, there will be 30 hexagons total in the item pool)
-  extra_hexagon_percentage: 50
-  progression_balancing: 50
-  # Replaces low-to-medium value money rewards in the item pool with fool traps, which cause random negative
-  # effects to the player. Options are off (0), normal (15), double (32), and onslaught (50).
-  fool_traps: normal
-
-  # Randomize the connections between scenes.
-  # A small, very lost fox on a big adventure.
-  entrance_rando: 'false'
-  # Forces the Windmill entrance to lead to a shop, and places only one other shop in the pool.
-  # Has no effect if Entrance Rando is not enabled.
-  fixed_shop: 'false'
-  
-  # Set which logic rules to use for your world.
-  # Restricted: Standard logic, no glitches.
-  # No Major Glitches: Ice grapples through doors, shooting the west bell, and boss quick kills are included in logic.
-  # Unrestricted: Logic in No Major Glitches, as well as ladder storage to get to certain places early.
-  # *Special Shop is not in logic without the Hero's Laurels in Unrestricted due to soft lock potential.
-  # *Using Ladder Storage to get to individual chests is not in logic to avoid tedium.
-  # *Getting knocked out of the air by enemies during Ladder Storage to reach places is not in logic, except for in
-  # Rooted Ziggurat Lower. This is so you're not punished for playing with enemy rando on.
-  # Options are restricted, no_major_glitches, unrestricted
-  logic_rules: restricted
-  # Force the Hero's Laurels to be placed at a location in your world.
-  # For if you want to avoid or specify early or late Laurels.
-  # If you use the 10 Fairies option in Entrance Rando, Secret Gathering Place will be at its vanilla entrance.
-  # Options are anywhere, 6_coins, 10_coins, 10_fairies
-  laurels_location: anywhere
-  # Choose whether you require the Scavenger's Mask for Lower Quarry.
-  # When enabled, the Scavenger's Mask is marked as Useful instead of Progression.
-  maskless: 'false'
-  # Choose whether you require the Lantern for dark areas.
-  # When enabled, the Lantern is marked as Useful instead of Progression.
-  lanternless: 'false'
-
-  # Turns several ladders in the game into items that must be found before they can be climbed on.
-  # Adds more layers of progression to the game by blocking access to many areas early on.
-  # "Ladders were a mistake." —Andrew Shouldice
-  shuffle_ladders: 'false'
+  # Game Options
+  progression_balancing:
+    # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
+    # 
+    # A lower setting means more getting stuck. A higher setting means less getting stuck.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 99
+    random: 0
+    random-low: 0
+    random-high: 0
+    disabled: 0 # equivalent to 0
+    normal: 50 # equivalent to 50
+    extreme: 0 # equivalent to 99
 
   accessibility:
+    # Set rules for reachability of your items/locations.
+    # 
+    # - **Locations:** ensure everything can be reached and acquired.
+    # - **Items:** ensure all logically relevant items can be acquired.
+    # - **Minimal:** ensure what is needed to reach your goal can be acquired.
     locations: 0
     items: 50
     minimal: 0
-  local_items: []
-  non_local_items: []
-  start_inventory: {}
-  start_inventory_from_pool: {}
-  start_hints: []
-  start_location_hints: []
-  exclude_locations: []
-  priority_locations: []
+
+  sword_progression:
+    # Adds four sword upgrades to the item pool that will progressively grant stronger melee weapons, including two new swords with increased range and attack power.
+    'false': 0
+    'true': 50
+
+  start_with_sword:
+    # Start with a sword in the player's inventory. Does not count towards Sword Progression.
+    'false': 50
+    'true': 0
+
+  keys_behind_bosses:
+    # Places the three hexagon keys behind their respective boss fight in your world.
+    # If playing Hexagon Quest, it will place three gold hexagons at the boss locations.
+    'false': 50
+    'true': 0
+
+  ability_shuffling:
+    # Locks the usage of Prayer, Holy Cross*, and the Icebolt combo until the relevant pages of the manual have been found.
+    # If playing Hexagon Quest, abilities are instead randomly unlocked after obtaining 25%, 50%, and 75% of the required
+    # Hexagon goal amount, unless the option is set to have them unlock via pages instead.
+    # * Certain Holy Cross usages are still allowed, such as the free bomb codes, the seeking spell, and other player-facing codes.
+    'false': 50
+    'true': 0
+
+  shuffle_ladders:
+    # Turns several ladders in the game into items that must be found before they can be climbed on.
+    # Adds more layers of progression to the game by blocking access to many areas early on.
+    # "Ladders were a mistake."
+    # —Andrew Shouldice
+    'false': 50
+    'true': 0
+
+  fool_traps:
+    # Replaces low-to-medium value money rewards in the item pool with fool traps, which cause random negative effects to the player.
+    'off': 0
+    normal: 50
+    double: 0
+    onslaught: 0
+
+  laurels_location:
+    # Force the Hero's Laurels to be placed at a location in your world.
+    # For if you want to avoid or specify early or late Laurels.
+    anywhere: 50
+    6_coins: 0
+    10_coins: 0
+    10_fairies: 0
+
+  grass_randomizer:
+    # Turns all 6,227 pieces of grass and bushes in the game into checks.
+    'false': 50
+    'true': 0
+
+  grass_fill:
+    # Choose what percentage of your filler/trap items are distributed to TUNIC players with Grass Randomizer enabled.
+    # Vanilla TUNIC has 302 locations. Grass randomizer adds 6,227 locations. Therefore, grass makes up ~95% of your items with Grass Randomizer on.
+    # If you are playing with people who don't have ridiculous options like Grass Randomizer, we recommend you set this option to at least 95.
+    # Setting this to 95 gives you approximately 500 checks (actual amount depends on your other options) that can have progression or useful items.
+    # If there are other TUNIC players with Grass Randomizer enabled, this filler will be shuffled among their checks as well.
+    # This option ignores items placed in your local_items or non_local_items.
+    # There is a host.yaml setting that must be enabled to use values below 95.
+    # This option does nothing if Grass Randomizer is not enabled.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 100
+    95: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  # Hexagon Quest
+  hexagon_quest:
+    # An alternate goal that shuffles Gold "Questagon" items into the item pool and allows the game to be completed after collecting the required number of them.
+    'false': 50
+    'true': 0
+
+  hexagon_goal:
+    # How many Gold Questagons are required to complete the game on Hexagon Quest.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 100
+    20: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  extra_hexagon_percentage:
+    # How many extra Gold Questagons are shuffled into the item pool, taken as a percentage of the goal amount.
+    # The max number of Gold Questagons that can be in the item pool is 100, so this option may be overridden and/or
+    # reduced if the Hexagon Goal amount is greater than 50.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 100
+    50: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  hexagon_quest_ability_type:
+    # Determines how abilities are unlocked when playing Hexagon Quest with Shuffled Abilities enabled.
+    # 
+    # Hexagons: A new ability is randomly unlocked after obtaining 25%, 50%, and 75% of the required Hexagon goal amount. Requires at least 3 Gold Hexagons in the item pool, or 15 if Keys Behind Bosses is enabled.
+    # Pages: Abilities are unlocked by finding specific pages in the manual.
+    # 
+    # This option does nothing if Shuffled Abilities is not enabled.
+    hexagons: 50
+    pages: 0
+
+  # Logic
+  combat_logic:
+    # If enabled, the player will logically require a combination of stat upgrade items and equipment to get some checks or navigate to some areas, with a goal of matching the vanilla combat difficulty.
+    # The player may still be expected to run past enemies, reset aggro (by using a checkpoint or doing a scene transition), or find sneaky paths to checks.
+    # This option marks many more items as progression and may force weapons much earlier than normal.
+    # Bosses Only makes it so that additional combat logic is only added to the boss fights and the Gauntlet.
+    # If disabled, the standard, looser logic is used. The standard logic does not include stat upgrades, just minimal weapon requirements, such as requiring a Sword or Magic Wand for Quarry, or not requiring a weapon for Swamp.
+    'off': 50
+    bosses_only: 0
+    'on': 0
+
+  lanternless:
+    # Choose whether you require the Lantern for dark areas.
+    # When enabled, the Lantern is marked as Useful instead of Progression.
+    'false': 50
+    'true': 0
+
+  maskless:
+    # Choose whether you require the Scavenger's Mask for Lower Quarry.
+    # When enabled, the Scavenger's Mask is marked as Useful instead of Progression.
+    'false': 50
+    'true': 0
+
+  laurels_zips:
+    # Choose whether to include using the Hero's Laurels to zip through gates, doors, and tricky spots.
+    # Notable inclusions are the Monastery gate, Ruined Passage door, Old House gate, Forest Grave Path gate, and getting from the Back of Swamp to the Middle of Swamp.
+    'false': 50
+    'true': 0
+
+  ice_grappling:
+    # Choose whether grappling frozen enemies is in logic.
+    # Easy includes ice grappling enemies that are in range without luring them. May include clips through terrain.
+    # Medium includes using ice grapples to push enemies through doors or off ledges without luring them. Also includes bringing an enemy over to the Temple Door to grapple through it.
+    # Hard includes luring or grappling enemies to get to where you want to go.
+    # The Medium and Hard options will give the player the Torch to return to the Overworld checkpoint to avoid softlocks. Using the Torch is considered in logic.
+    # Note: You will still be expected to ice grapple to the slime in East Forest from below with this option off.
+    'off': 50
+    easy: 0
+    medium: 0
+    hard: 0
+
+  ladder_storage:
+    # Choose whether Ladder Storage is in logic.
+    # Easy includes uses of Ladder Storage to get to open doors over a long distance without too much difficulty. May include convenient elevation changes (going up Mountain stairs, stairs in front of Special Shop, etc.).
+    # Medium includes the above as well as changing your elevation using the environment and getting knocked down by melee enemies mid-LS.
+    # Hard includes the above as well as going behind the map to enter closed doors from behind, shooting a fuse with the magic wand to knock yourself down at close range, and getting into the Cathedral Secret Legend room mid-LS.
+    # Enabling any of these difficulty options will give the player the Torch item to return to the Overworld checkpoint to avoid softlocks. Using the Torch is considered in logic.
+    # Opening individual chests while doing ladder storage is excluded due to tedium.
+    # Knocking yourself out of LS with a bomb is excluded due to the problematic nature of consumables in logic.
+    'off': 50
+    easy: 0
+    medium: 0
+    hard: 0
+
+  ladder_storage_without_items:
+    # If disabled, you logically require Stick, Sword, or Magic Orb to perform Ladder Storage.
+    # If enabled, you will be expected to perform Ladder Storage without progression items.
+    # This can be done with the plushie code, a Golden Coin, Prayer, and many other options.
+    # 
+    # This option has no effect if you do not have Ladder Storage Logic enabled.
+    'false': 50
+    'true': 0
+
+  # Entrance Randomizer
+  entrance_rando:
+    # Randomize the connections between scenes.
+    # A small, very lost fox on a big adventure.
+    # 
+    # If you set this option's value to a string, it will be used as a custom seed.
+    # Every player who uses the same custom seed will have the same entrances, choosing the most restrictive settings among these players for the purpose of pairing entrances.
+    'no': 50
+    'yes': 0
+
+  entrance_layout:
+    # Decide how the Entrance Randomizer chooses how to pair the entrances.
+    # Standard: Entrances are randomly connected. There are 6 shops in the pool with this option.
+    # Fixed Shop: Forces the Windmill entrance to lead to a shop, and removes the other shops from the pool.
+    # Adds another entrance in Rooted Ziggurat Lower to keep an even number of entrances.
+    # Direction Pairs: Entrances facing opposite directions are paired together. There are 8 shops in the pool with this option.
+    # Note: For seed groups, if one player in a group chooses Fixed Shop and another chooses Direction Pairs, it will error out.
+    # Either of these options will override Standard within a seed group.
+    standard: 50
+    fixed_shop: 0
+    direction_pairs: 0
+
+  decoupled:
+    # Decouple the entrances, so that when you go from one entrance to another, the return trip won't necessarily bring you back to the same place.
+    # Note: For seed groups, all players in the group must have this option enabled or disabled.
+    'false': 50
+    'true': 0
+
+  plando_connections:
+    # Generic connection plando. Format is:
+    # - entrance: Entrance Name
+    #   exit: Exit Name
+    #   direction: Direction
+    #   percentage: 100
+    # Direction must be one of entrance, exit, or both, and defaults to both if omitted.
+    # Direction entrance means the entrance leads to the exit. Direction exit means the exit leads to the entrance.
+    # If you do not have Decoupled enabled, you do not need the direction line, as it will only use both.
+    # Percentage is an integer from 0 to 100 which determines whether that connection will be made. Defaults to 100 if omitted.
+    # If the Entrance Layout option is set to Standard or Fixed Shop, you can plando multiple shops.
+    # If the Entrance Layout option is set to Direction Pairs, your plando connections must be facing opposite directions.
+    # Shop Portal 1-6 are South portals, and Shop Portal 7-8 are West portals.
+    []
+
+  # Item & Location Options
+  local_items:
+    # Forces these items to be in their native world.
+    []
+
+  non_local_items:
+    # Forces these items to be outside their native world.
+    []
+
+  start_inventory:
+    # Start with these items.
+    {}
+
+  start_hints:
+    # Start with these item's locations prefilled into the ``!hint`` command.
+    []
+
+  start_location_hints:
+    # Start with these locations and their item prefilled into the ``!hint`` command.
+    []
+
+  exclude_locations:
+    # Prevent these locations from having an important item.
+    []
+
+  priority_locations:
+    # Prevent these locations from having an unimportant item.
+    []
+
+  item_links:
+    # Share part of your item pool with other players.
+    []
+
+  start_inventory_from_pool:
+    # Start with these items and don't place them in the world.
+    # 
+    # The game decides what the replacement items will be.
+    {}
