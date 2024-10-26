@@ -1,6 +1,4 @@
-﻿using Archipelago.MultiClient.Net.Helpers;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace TunicRandomizer {

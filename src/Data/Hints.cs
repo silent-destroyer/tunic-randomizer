@@ -1,6 +1,5 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
