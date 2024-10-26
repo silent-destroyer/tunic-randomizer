@@ -1,5 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -92,8 +93,13 @@ namespace TunicRandomizer {
                         Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                         Hint += $"\nuhwAts yoo in {Prefix} \"{Scene}...\"";
                     } else if (Archipelago.instance.IsTunicPlayer((int)Hyperdash.Player)) {
-                        Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[Hyperdash.Location]].Location.SceneName].ToUpper();
-                        Hint += $"\nuhwAts yoo in \"{Archipelago.instance.GetPlayerName((int)Hyperdash.Player).ToUpper()}'S\"\n\"{Scene}...\"";
+                        // the try catch is for backwards compat -- can safely remove it when AP 0.5.2 is out
+                        try {
+                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[Hyperdash.Location]].Location.SceneName].ToUpper();
+                            Hint += $"\nuhwAts yoo in \"{Archipelago.instance.GetPlayerName((int)Hyperdash.Player).ToUpper()}'S\"\n\"{Scene}...\"";
+                        } catch {
+                            Hint += $" uhwAts yoo aht\n{WordWrapString($"\"{Hyperdash.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}\nin\"{Archipelago.instance.GetPlayerName((int)Hyperdash.Player).ToUpper()}'S WORLD...\"";
+                        }
                     } else {
                         Hint += $" uhwAts yoo aht\n{WordWrapString($"\"{Hyperdash.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}\nin\"{Archipelago.instance.GetPlayerName((int)Hyperdash.Player).ToUpper()}'S WORLD...\"";
                     }
@@ -137,8 +143,13 @@ namespace TunicRandomizer {
                             Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                             Hint += $"{Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}";
                         } else if (Archipelago.instance.IsTunicPlayer((int)ItemHint.Player)) {
-                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[ItemHint.Location]].Location.SceneName];
-                            Hint += $"\"{Archipelago.instance.GetPlayerName((int)ItemHint.Player).ToUpper()}'S\"\n{(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}";
+                            // the try catch is for backwards compat -- can safely remove it when AP 0.5.2 is out
+                            try {
+                                Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[ItemHint.Location]].Location.SceneName];
+                                Hint += $"\"{Archipelago.instance.GetPlayerName((int)ItemHint.Player).ToUpper()}'S\"\n{(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}";
+                            } catch {
+                                Hint += $"\"{Archipelago.instance.GetPlayerName((int)ItemHint.Player).ToUpper()}'S WORLD\" aht\n{WordWrapString($"\"{ItemHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}";
+                            }
                         } else {
                             Hint += $"\"{Archipelago.instance.GetPlayerName((int)ItemHint.Player).ToUpper()}'S WORLD\" aht\n{WordWrapString($"\"{ItemHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}";
                         }
@@ -192,9 +203,13 @@ namespace TunicRandomizer {
                             Prefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
                             Hint = $"#A sA {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")} iz \nwAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
                         } else if (Archipelago.instance.IsTunicPlayer((int)HexHint.Player)) {
-                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
-                            Prefix = Vowels.Contains(Scene.ToUpper()[0]) ? "#E" : "#uh";
-                            Hint = $"#A sA \"{Archipelago.instance.GetPlayerName((int)HexHint.Player).ToUpper()}'S\"\n{(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}\niz wAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
+                            // the try catch is for backwards compat -- can safely remove it when AP 0.5.2 is out
+                            try {
+                                Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[HexHint.Location]].Location.SceneName];
+                                Hint = $"#A sA \"{Archipelago.instance.GetPlayerName((int)HexHint.Player).ToUpper()}'S\"\n{(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}\niz wAr #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd\"...\"";
+                            } catch {
+                                Hint = $"#A sA #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd aht\n{WordWrapString($"\"{HexHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}\nin \"{Archipelago.instance.GetPlayerName((int)HexHint.Player).ToUpper()}'S WORLD...\"";
+                            }
                         } else {
                             Hint = $"#A sA #uh {HexagonColors[Hexagon]}kwehstuhgawn [hexagram]<#FFFFFF> iz fownd aht\n{WordWrapString($"\"{HexHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}\nin \"{Archipelago.instance.GetPlayerName((int)HexHint.Player).ToUpper()}'S WORLD...\"";
                         }
@@ -289,9 +304,14 @@ namespace TunicRandomizer {
                             Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
                             RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) + "." : $"\"{Scene.ToUpper()}.\"")}";
                         } else if (Archipelago.instance.IsTunicPlayer((int)RelicItemHint.Player)) {
-                            Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[RelicItemHint.Location]].Location.SceneName];
-                            Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
-                            RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}\nin \"{Archipelago.instance.GetPlayerName((int)RelicItemHint.Player).ToUpper()}'S WORLD.\"";
+                            // the try catch is for backwards compat -- can safely remove it when AP 0.5.2 is out
+                            try {
+                                Scene = Locations.SimplifiedSceneNames[AllLocations[Locations.LocationDescriptionToId[RelicItemHint.Location]].Location.SceneName];
+                                Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
+                                RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) : $"\"{Scene.ToUpper()}\"")}\nin \"{Archipelago.instance.GetPlayerName((int)RelicItemHint.Player).ToUpper()}'S WORLD.\"";
+                            } catch {
+                                RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd in \"{Archipelago.instance.GetPlayerName((int)RelicItemHint.Player).ToUpper()}'S WORLD\"\naht {WordWrapString($"\"{RelicItemHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}.";
+                            }
                         } else {
                             RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd in \"{Archipelago.instance.GetPlayerName((int)RelicItemHint.Player).ToUpper()}'S WORLD\"\naht {WordWrapString($"\"{RelicItemHint.Location.Replace("_", " ").Replace(" ", "\" \"").ToUpper()}\"").Replace("\" \"", " ")}.";
                         }

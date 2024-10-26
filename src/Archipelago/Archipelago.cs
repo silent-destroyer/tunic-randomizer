@@ -72,7 +72,7 @@ namespace TunicRandomizer {
         }
 
         public bool IsTunicPlayer(int Slot) {
-            return GetPlayerGame(Slot) == "TUNIC" && integration.session.Players.GetPlayerInfo(Slot).GetGroupMembers(integration.session.Players) == null;
+            return GetPlayerGame(Slot) == "TUNIC";
         }
 
         public string GetItemName(long id, string game) {
