@@ -246,19 +246,20 @@ namespace TunicRandomizer {
 
         public static string region_name = "Overworld";
         public static string file_path = "C:\\Users\\josep\\Downloads\\TunicPots.txt";
-        public static Dictionary<string, Dictionary<string, List<string>>> breakableLocation = new Dictionary<string, Dictionary<string, List<string>>>();
+        public static Dictionary<string, Dictionary<string, List<string>>> breakableLocation = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(File.ReadAllText(file_path));
 
         public static void SmashableObject_smash_PostfixPatch(Vector3 physicsForce, SmashableObject __instance) {
             string breakableName = __instance.name;
-            TunicLogger.LogInfo(breakableName);
-            string breakablePosition = __instance.transform.position.ToString();
-            TunicLogger.LogInfo(breakablePosition);
+            string breakablePosition = __instance.initialPosition.ToString();
 
             breakableName = breakableName.Split('(')[0];
             if (breakableName.EndsWith(" ")) {
                 breakableName = breakableName.Remove(breakableName.Length - 1);
             }
-            TunicLogger.LogInfo(breakableName);
+
+            if (breakableLocation == null) {
+                breakableLocation = new Dictionary<string, Dictionary<string, List<string>>>();
+            }
 
             if (!breakableLocation.ContainsKey(region_name)) {
                 breakableLocation.Add(region_name, new Dictionary<string, List<string>>());
@@ -269,8 +270,8 @@ namespace TunicRandomizer {
             if (!breakableLocation[region_name][breakableName].Contains(breakablePosition)) {
                 breakableLocation[region_name][breakableName].Add(breakablePosition);
             }
-            
             File.WriteAllText(file_path, JsonConvert.SerializeObject(breakableLocation, Formatting.Indented));
+            GameObject.Destroy(__instance.gameObject);
         }
 
     }
