@@ -3,23 +3,8 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;
-using FMOD;
-using System;
-using Archipelago.MultiClient.Net;
-using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
-using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using static TunicRandomizer.SaveFlags;
-using static TunicRandomizer.ERData;
 
 
 namespace TunicRandomizer {
@@ -260,14 +245,32 @@ namespace TunicRandomizer {
         }
 
         public static string region_name = "Overworld";
-        public static string file_path = "test";
-        public static Dictionary<string, List<string>> pot_list = new Dictionary<string, List<string>>();
+        public static string file_path = "C:\\Users\\josep\\Downloads\\TunicPots.txt";
+        public static Dictionary<string, Dictionary<string, List<string>>> breakableLocation = new Dictionary<string, Dictionary<string, List<string>>>();
 
         public static void SmashableObject_smash_PostfixPatch(Vector3 physicsForce, SmashableObject __instance) {
-            if (!pot_list.ContainsKey(region_name)) {
-                pot_list.Add(region_name, new List<string>());
+            string breakableName = __instance.name;
+            TunicLogger.LogInfo(breakableName);
+            string breakablePosition = __instance.transform.position.ToString();
+            TunicLogger.LogInfo(breakablePosition);
+
+            breakableName = breakableName.Split('(')[0];
+            if (breakableName.EndsWith(" ")) {
+                breakableName = breakableName.Remove(breakableName.Length - 1);
             }
-            File.WriteAllText(file_path, JsonConvert.SerializeObject(pot_list, Formatting.Indented));
+            TunicLogger.LogInfo(breakableName);
+
+            if (!breakableLocation.ContainsKey(region_name)) {
+                breakableLocation.Add(region_name, new Dictionary<string, List<string>>());
+            }
+            if (!breakableLocation[region_name].ContainsKey(breakableName)) {
+                breakableLocation[region_name].Add(breakableName, new List<string>());
+            }
+            if (!breakableLocation[region_name][breakableName].Contains(breakablePosition)) {
+                breakableLocation[region_name][breakableName].Add(breakablePosition);
+            }
+            
+            File.WriteAllText(file_path, JsonConvert.SerializeObject(breakableLocation, Formatting.Indented));
         }
 
     }
