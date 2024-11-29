@@ -247,6 +247,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="src\Data\Grass.json" />
     <EmbeddedResource Include="src\Data\GrassReqs.json" />
+    <None Include="src\Data\Breakables.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
