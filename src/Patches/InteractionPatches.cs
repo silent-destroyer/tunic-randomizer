@@ -5,7 +5,7 @@ using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;
 using Newtonsoft.Json;
 using System.IO;
-
+using JetBrains.Annotations;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
@@ -246,32 +246,58 @@ namespace TunicRandomizer {
 
         public static string region_name = "Overworld";
         public static string file_path = "C:\\Users\\josep\\Downloads\\TunicPots.txt";
+        public static string file_path2 = "C:\\Users\\josep\\Downloads\\TunicPots2.txt";
         public static Dictionary<string, Dictionary<string, List<string>>> breakableLocation = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(File.ReadAllText(file_path));
+        public static bool hasChanged = false;
 
         public static void SmashableObject_smash_PostfixPatch(Vector3 physicsForce, SmashableObject __instance) {
-            string breakableName = __instance.name;
-            string breakablePosition = __instance.initialPosition.ToString();
+            //string breakableName = __instance.name;
+            //string breakablePosition = __instance.initialPosition.ToString();
 
-            breakableName = breakableName.Split('(')[0];
-            if (breakableName.EndsWith(" ")) {
-                breakableName = breakableName.Remove(breakableName.Length - 1);
-            }
+            //breakableName = breakableName.Split('(')[0];
+            //if (breakableName.EndsWith(" ")) {
+            //    breakableName = breakableName.Remove(breakableName.Length - 1);
+            //}
 
-            if (breakableLocation == null) {
-                breakableLocation = new Dictionary<string, Dictionary<string, List<string>>>();
-            }
+            //if (breakableLocation == null) {
+            //    breakableLocation = new Dictionary<string, Dictionary<string, List<string>>>();
+            //}
 
-            if (!breakableLocation.ContainsKey(region_name)) {
-                breakableLocation.Add(region_name, new Dictionary<string, List<string>>());
+            //if (!breakableLocation.ContainsKey(region_name)) {
+            //    breakableLocation.Add(region_name, new Dictionary<string, List<string>>());
+            //}
+            //if (!breakableLocation[region_name].ContainsKey(breakableName)) {
+            //    breakableLocation[region_name].Add(breakableName, new List<string>());
+            //}
+            //if (!breakableLocation[region_name][breakableName].Contains(breakablePosition)) {
+            //    breakableLocation[region_name][breakableName].Add(breakablePosition);
+            //}
+            if (!hasChanged) {
+                Dictionary<string, Dictionary<string, Dictionary<string, List<string>>>> newDict = new Dictionary<string, Dictionary<string, Dictionary<string, List<string>>>>();
+
+                foreach (KeyValuePair<string, Dictionary<string, List<string>>> kvp in breakableLocation) {
+                    string breakableRegion = kvp.Key;
+                    bool success = false;
+
+                    foreach (KeyValuePair<string, ERData.RegionInfo> regionInfo in ERData.RegionDict) {
+                        string sceneName = regionInfo.Value.Scene;
+                        string regionName = regionInfo.Key;
+                        if (regionName == breakableRegion) {
+                            if (!newDict.ContainsKey(sceneName)) {
+                                newDict.Add(sceneName, new Dictionary<string, Dictionary<string, List<string>>>());
+                            }
+                            newDict[sceneName].Add(kvp.Key, kvp.Value);
+                            success = true;
+                            break;
+                        }
+                    }
+                    if (!success) {
+                        TunicLogger.LogInfo("Could not find it for " + breakableRegion);
+                    }
+                }
+                File.WriteAllText(file_path2, JsonConvert.SerializeObject(newDict, Formatting.Indented));
+                hasChanged = true;
             }
-            if (!breakableLocation[region_name].ContainsKey(breakableName)) {
-                breakableLocation[region_name].Add(breakableName, new List<string>());
-            }
-            if (!breakableLocation[region_name][breakableName].Contains(breakablePosition)) {
-                breakableLocation[region_name][breakableName].Add(breakablePosition);
-            }
-            File.WriteAllText(file_path, JsonConvert.SerializeObject(breakableLocation, Formatting.Indented));
-            GameObject.Destroy(__instance.gameObject);
         }
 
     }
