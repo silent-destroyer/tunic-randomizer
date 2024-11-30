@@ -132,6 +132,11 @@ namespace TunicRandomizer {
                                 breakableNumber++;
                                 Locations.LocationIdToDescription.Add(check.CheckId, description);
                                 Locations.LocationDescriptionToId.Add(description, check.CheckId);
+                                BreakableChecks.Add(check.CheckId, check);
+                                if (!BreakableChecksPerScene.ContainsKey(check.Location.SceneName)) {
+                                    BreakableChecksPerScene.Add(check.Location.SceneName, 0);
+                                }
+                                BreakableChecksPerScene[check.Location.SceneName]++;
                             }
                         }
                     }

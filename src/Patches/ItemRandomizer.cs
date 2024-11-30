@@ -83,6 +83,9 @@ namespace TunicRandomizer {
                 InitialItems.AddRange(GrassRandomizer.GrassChecks.Values.Where(check => !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)));
                 ProgressionNames.AddRange(GrassCutters);
             }
+            if (true) {  // todo: breakable shuffle option checking
+                InitialItems.AddRange(BreakableShuffle.BreakableChecks.Values);
+            }
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
             // the list of progression items
