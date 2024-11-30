@@ -280,6 +280,8 @@ namespace TunicRandomizer {
             
             Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "PermanentStateByPosition_onKilled_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(BreakableShuffle), "PermanentStateByPosition_onKilled_PrefixPatch")));
+
         }
     }
 }
