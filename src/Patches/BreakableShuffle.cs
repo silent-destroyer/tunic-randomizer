@@ -28,6 +28,7 @@ namespace TunicRandomizer {
             List<int> moneyAmounts = new List<int> { 1, 1, 1, 5, 5, 10 };
             var assembly = Assembly.GetExecutingAssembly();
             var breakableJson = "TunicRandomizer.src.Data.Breakables.json";
+            var breakableReqsJson = "TunicRandomizer.src.Data.BreakableReqs.json";
             //List<string> breakers = new List<string>() { "Stick", "Sword", "Techbow", "Gun" };
             List<string> breakers = new List<string>() { "Stick", "Sword" };
 
@@ -37,9 +38,10 @@ namespace TunicRandomizer {
 
             using (Stream stream = assembly.GetManifestResourceStream(breakableJson))
             using (StreamReader reader = new StreamReader(stream)) {
-
                 Dictionary<string, Dictionary<string, Dictionary<string, List<string>>>> BreakableData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, List<string>>>>>(reader.ReadToEnd());
-             
+                StreamReader extraReader = new StreamReader(assembly.GetManifestResourceStream(breakableReqsJson));
+                Dictionary<string, List<List<string>>> extraBreakableReqs = JsonConvert.DeserializeObject<Dictionary<string, List<List<string>>>>(extraReader.ReadToEnd());
+
                 foreach (KeyValuePair<string, Dictionary<string, Dictionary<string, List<string>>>> sceneGroup in BreakableData) {
                     string sceneName = sceneGroup.Key;
                     foreach (KeyValuePair<string, Dictionary<string, List<string>>> regionGroup in sceneGroup.Value) {
@@ -58,19 +60,27 @@ namespace TunicRandomizer {
                                 check.Location.LocationId = breakableFullName;
                                 check.Location.Position = breakablePosition;
                                 check.Location.Requirements = new List<Dictionary<string, int>>();
-                                // check extra reqs
 
                                 // add each breaker and the region to the rules
                                 foreach (string breaker in breakers) {
                                     check.Location.Requirements.Add(new Dictionary<string, int> { { breaker, 1 }, { regionName, 1 } });
                                 }
+                                if (extraBreakableReqs.ContainsKey(breakableFullName)) {
+                                    foreach (List<string> req in extraBreakableReqs[breakableFullName]) {
+                                        Dictionary<string, int> reqDict = new Dictionary<string, int>();
+                                        TunicUtils.AddListToDict(reqDict, req);
+                                        check.Location.Requirements.Add(reqDict);
+                                    }
+                                }
                                 // todo: consider having actual location names instead of just coordinates
                                 string description = $"{Locations.SimplifiedSceneNames[sceneName]} - {BreakableBetterNames[breakableName]} ({breakablePosition})";
-                                
+                                Locations.LocationIdToDescription.Add(check.CheckId, description);
+                                Locations.LocationDescriptionToId.Add(description, check.CheckId);
                             }
                         }
                     }
                 }
+                extraReader.Close();
             }
             
         }
