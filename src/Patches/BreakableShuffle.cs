@@ -60,7 +60,7 @@ namespace TunicRandomizer {
                                 check.Location.Requirements = new List<Dictionary<string, int>>();
                                 // check extra reqs
 
-                                // add a breaker and the region to the rules
+                                // add each breaker and the region to the rules
                                 foreach (string breaker in breakers) {
                                     check.Location.Requirements.Add(new Dictionary<string, int> { { breaker, 1 }, { regionName, 1 } });
                                 }
