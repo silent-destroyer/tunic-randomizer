@@ -32,10 +32,7 @@ namespace TunicRandomizer {
             var breakableReqsJson = "TunicRandomizer.src.Data.BreakableReqs.json";
             //List<string> breakers = new List<string>() { "Stick", "Sword", "Techbow", "Gun" };
             List<string> breakers = new List<string>() { "Stick", "Sword" };
-
-            // todo: make reqs json, with assumption that it'll auto-generate combinations of breakers and the region it is already in
-            // account for shooting across regions, especially to fire pots
-            // todo: finish copying from GrassRandomizer.cs
+            // todo: add more to the breakable reqs
 
             using (Stream stream = assembly.GetManifestResourceStream(breakableJson))
             using (StreamReader reader = new StreamReader(stream)) {
