@@ -428,12 +428,17 @@ namespace TunicRandomizer {
                         }
                     }
                     if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
+                        TunicLogger.LogInfo("started pot shuffle check");
                         foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
+                            TunicLogger.LogInfo("found breakable: " + breakableObject.name);
                             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
                             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                                TunicLogger.LogInfo("succeeded if statement");
                                 if ((SwappedThisSceneAlready && !IsSwordCheck(breakableId)) || Locations.CheckedLocations[breakableId]) {
+                                    TunicLogger.LogInfo("swapped already or something");
                                     continue;
                                 }
+                                TunicLogger.LogInfo("applying texture");
                                 ApplyBreakableTexture(breakableObject);
                             }
                         }
@@ -640,9 +645,12 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
+        // todo: apply texture to the pieces of breakables too
         public static void ApplyBreakableTexture(SmashableObject breakableObject) {
-            string breakableId = $"{breakableObject.name}~{breakableObject.transform.position.ToString()} [{breakableObject.gameObject.scene.name}]";
+            TunicLogger.LogInfo("apply breakable texture started");
+            string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                TunicLogger.LogInfo("breakable texture continuing");
                 ItemData Item = ItemLookup.Items["Money x1"];
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[breakableId];
@@ -672,15 +680,17 @@ namespace TunicRandomizer {
                 }
 
                 if (Item.Name == "Fool Trap") {
-                    foreach (Transform child in breakableObject.GetComponentsInChildren<Transform>()) {
+                    foreach (Transform child in breakableObject.gameObject.GetComponentsInChildren<Transform>()) {
                         if (child.name == breakableObject.name) { continue; }
                         child.localEulerAngles = new Vector3(180, 0, 0);
                         child.position += new Vector3(0, 2, 0);
                     }
                 }
-
+                TunicLogger.LogInfo(breakableId);
                 if (material != null) {
-                    foreach (MeshRenderer r in breakableObject.GetComponentsInChildren<MeshRenderer>()) {
+                    TunicLogger.LogInfo("material is not null");
+                    foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>()) {
+                        TunicLogger.LogInfo("found a material");
                         r.material = material;
                     }
                 }

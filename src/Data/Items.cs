@@ -211,6 +211,10 @@ namespace TunicRandomizer {
 
             // Money
             { "Money x1", new ItemData("Money x1", "useful", "money", ItemTypes.MONEY, 1) },
+            { "Money x2", new ItemData("Money x2", "useful", "money", ItemTypes.MONEY, 2) },
+            { "Money x3", new ItemData("Money x3", "useful", "money", ItemTypes.MONEY, 3) },
+            { "Money x4", new ItemData("Money x4", "useful", "money", ItemTypes.MONEY, 4) },
+            { "Money x5", new ItemData("Money x5", "useful", "money", ItemTypes.MONEY, 5) },
             { "Money x10", new ItemData("Money x10", "useful", "money", ItemTypes.MONEY, 10) },
             { "Money x15", new ItemData("Money x15", "useful", "money", ItemTypes.MONEY, 15) },
             { "Money x16", new ItemData("Money x16", "useful", "money", ItemTypes.MONEY, 16) },

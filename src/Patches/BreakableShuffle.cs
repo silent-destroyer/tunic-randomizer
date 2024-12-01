@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-
+// todo: make it not respawn the breakables when you leave and reenter the scene
+// todo: make sure that dusty doesn't break from that
 namespace TunicRandomizer {
     public class BreakableShuffle {
 
@@ -26,7 +27,7 @@ namespace TunicRandomizer {
 
         public static void LoadBreakableChecks() {
             System.Random random = new System.Random(SaveFile.GetInt("seed"));
-            List<int> moneyAmounts = new List<int> { 1, 1, 1, 5, 5, 10 };
+            List<int> moneyAmounts = new List<int> { 1, 2, 3, 4, 5 };  // change this later
             var assembly = Assembly.GetExecutingAssembly();
             var breakableJson = "TunicRandomizer.src.Data.Breakables.json";
             var breakableReqsJson = "TunicRandomizer.src.Data.BreakableReqs.json";
