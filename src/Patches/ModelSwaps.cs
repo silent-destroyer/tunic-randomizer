@@ -647,10 +647,8 @@ namespace TunicRandomizer {
 
         // todo: apply texture to the pieces of breakables too
         public static void ApplyBreakableTexture(SmashableObject breakableObject) {
-            TunicLogger.LogInfo("apply breakable texture started");
             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
-                TunicLogger.LogInfo("breakable texture continuing");
                 ItemData Item = ItemLookup.Items["Money x1"];
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[breakableId];
@@ -689,9 +687,7 @@ namespace TunicRandomizer {
                 }
                 TunicLogger.LogInfo(breakableId);
                 if (material != null) {
-                    TunicLogger.LogInfo("material is not null");
                     foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
-                        TunicLogger.LogInfo("found a material");
                         r.material = material;
                     }
                 }
@@ -699,10 +695,8 @@ namespace TunicRandomizer {
         }
 
         public static void ApplyDustyTexture(DustyPile leafPile) {
-            TunicLogger.LogInfo("apply breakable texture started");
             string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
-                TunicLogger.LogInfo("breakable texture continuing");
                 ItemData Item = ItemLookup.Items["Money x1"];
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[breakableId];
@@ -741,9 +735,7 @@ namespace TunicRandomizer {
                 }
                 TunicLogger.LogInfo(breakableId);
                 if (material != null) {
-                    TunicLogger.LogInfo("material is not null");
                     foreach (MeshRenderer r in leafPile.gameObject.GetComponentsInChildren<MeshRenderer>()) {
-                        TunicLogger.LogInfo("found a material");
                         r.material = material;
                     }
                 }

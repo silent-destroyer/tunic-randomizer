@@ -69,6 +69,10 @@ namespace TunicRandomizer {
 
                                 // add each breaker and the region to the rules
                                 foreach (string breaker in breakers) {
+                                    // can't break the signs with the stick
+                                    if (breakableName == "Physical Post" && breaker == "Stick") {
+                                        continue;
+                                    }
                                     check.Location.Requirements.Add(new Dictionary<string, int> { { breaker, 1 }, { regionName, 1 } });
                                 }
                                 if (extraBreakableReqs.ContainsKey(breakableId)) {

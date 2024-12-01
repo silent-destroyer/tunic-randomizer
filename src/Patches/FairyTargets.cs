@@ -31,9 +31,21 @@ namespace TunicRandomizer {
                         ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
                 }
 
+                if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                    ItemIdsInScene.AddRange(BreakableShuffle.BreakableChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
+                        ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
+                }
+
                 if (ItemIdsInScene.Count > 0) {
                     foreach (string ItemId in ItemIdsInScene) {
-                        Location Location = GrassRandomizer.GrassChecks.ContainsKey(ItemId) ? GrassRandomizer.GrassChecks[ItemId].Location : Locations.VanillaLocations[ItemId].Location;
+                        Location Location;
+                        if (GrassRandomizer.GrassChecks.ContainsKey(ItemId)) {
+                            Location = GrassRandomizer.GrassChecks[ItemId].Location;
+                        } else if (BreakableShuffle.BreakableChecks.ContainsKey(ItemId)) {
+                            Location = BreakableShuffle.BreakableChecks[ItemId].Location;
+                        } else {
+                            Location = Locations.VanillaLocations[ItemId].Location;
+                        }
 
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
