@@ -222,8 +222,6 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(GameOverDecision), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "GameOverDecision_Start_PostfixPatch")));
 
             // Misc
-            Harmony.Patch(AccessTools.Method(typeof(SmashableObject), "smash"), null, new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "SmashableObject_smash_PostfixPatch")));
-
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(SaveFile), "GetNewSaveFileName"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "SaveFile_GetNewSaveFileName_PostfixPatch")));

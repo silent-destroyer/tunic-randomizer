@@ -734,6 +734,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
                     SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
+                    SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1,
                 };
             }
         }

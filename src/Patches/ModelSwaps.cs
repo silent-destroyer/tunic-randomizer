@@ -427,6 +427,28 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
+                        foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
+                            string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
+                            if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                                if ((SwappedThisSceneAlready && !IsSwordCheck(breakableId)) || Locations.CheckedLocations[breakableId]) {
+                                    continue;
+                                }
+                                ApplyBreakableTexture(breakableObject);
+                            }
+                        }
+                        //if (SceneManager.GetActiveScene().name == "Dusty") {
+                        //    foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
+                        //        string leafId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                        //        if (Locations.RandomizedLocations.ContainsKey(leafId) || ItemLookup.ItemList.ContainsKey(leafId)) {
+                        //            if ((SwappedThisSceneAlready && !IsSwordCheck(leafId)) || Locations.CheckedLocations[leafId]) {
+                        //                continue;
+                        //            }
+                        //            ApplyLeafPileTexture(leafId);
+                        //        }
+                        //    }
+                        //}
+                    }
                 }
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
@@ -616,6 +638,53 @@ namespace TunicRandomizer {
                 questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
             }
             questionMark.SetActive(!Checked);
+        }
+
+        public static void ApplyBreakableTexture(SmashableObject breakableObject) {
+            string breakableId = $"{breakableObject.name}~{breakableObject.transform.position.ToString()} [{breakableObject.gameObject.scene.name}]";
+            if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[breakableId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    SetupItemMoveUp(breakableObject.transform, check: check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[breakableId];
+                    SetupItemMoveUp(breakableObject.transform, itemInfo: itemInfo);
+                    //if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                    //    ApplyAPSmashableTexture(breakableObject, itemInfo, Locations.CheckedLocations[breakableId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {breakableId} was collected") == 1));
+                    //    return;
+                    //}
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+                if (Item.Type == ItemTypes.GRASS) {
+                    return;
+                }
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+
+                if (Item.Name == "Fool Trap") {
+                    foreach (Transform child in breakableObject.GetComponentsInChildren<Transform>()) {
+                        if (child.name == breakableObject.name) { continue; }
+                        child.localEulerAngles = new Vector3(180, 0, 0);
+                        child.position += new Vector3(0, 2, 0);
+                    }
+                }
+
+                if (material != null) {
+                    foreach (MeshRenderer r in breakableObject.GetComponentsInChildren<MeshRenderer>()) {
+                        r.material = material;
+                    }
+                }
+            }
         }
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
