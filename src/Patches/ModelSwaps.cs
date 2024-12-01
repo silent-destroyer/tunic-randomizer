@@ -442,17 +442,17 @@ namespace TunicRandomizer {
                                 ApplyBreakableTexture(breakableObject);
                             }
                         }
-                        //if (SceneManager.GetActiveScene().name == "Dusty") {
-                        //    foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
-                        //        string leafId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
-                        //        if (Locations.RandomizedLocations.ContainsKey(leafId) || ItemLookup.ItemList.ContainsKey(leafId)) {
-                        //            if ((SwappedThisSceneAlready && !IsSwordCheck(leafId)) || Locations.CheckedLocations[leafId]) {
-                        //                continue;
-                        //            }
-                        //            ApplyLeafPileTexture(leafId);
-                        //        }
-                        //    }
-                        //}
+                        if (SceneManager.GetActiveScene().name == "Dusty") {
+                            foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
+                                string leafId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                                if (Locations.RandomizedLocations.ContainsKey(leafId) || ItemLookup.ItemList.ContainsKey(leafId)) {
+                                    if ((SwappedThisSceneAlready && !IsSwordCheck(leafId)) || Locations.CheckedLocations[leafId]) {
+                                        continue;
+                                    }
+                                    ApplyDustyTexture(leafPile);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -669,7 +669,8 @@ namespace TunicRandomizer {
                     return;
                 }
                 Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
+                // todo: change this back later
+                if (Item.Type == ItemTypes.FAIRY || Item.Type == ItemTypes.MONEY) {
                     material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
                 } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
                     material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
@@ -689,7 +690,59 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo(breakableId);
                 if (material != null) {
                     TunicLogger.LogInfo("material is not null");
-                    foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>()) {
+                    foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                        TunicLogger.LogInfo("found a material");
+                        r.material = material;
+                    }
+                }
+            }
+        }
+
+        public static void ApplyDustyTexture(DustyPile leafPile) {
+            TunicLogger.LogInfo("apply breakable texture started");
+            string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+            if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                TunicLogger.LogInfo("breakable texture continuing");
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[breakableId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    SetupItemMoveUp(leafPile.transform, check: check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[breakableId];
+                    SetupItemMoveUp(leafPile.transform, itemInfo: itemInfo);
+                    //if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                    //    ApplyAPSmashableTexture(breakableObject, itemInfo, Locations.CheckedLocations[breakableId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {breakableId} was collected") == 1));
+                    //    return;
+                    //}
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+                if (Item.Type == ItemTypes.GRASS) {
+                    return;
+                }
+                Material material = null;
+                // todo: change this back later
+                if (Item.Type == ItemTypes.FAIRY || Item.Type == ItemTypes.MONEY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+
+                if (Item.Name == "Fool Trap") {
+                    foreach (Transform child in leafPile.gameObject.GetComponentsInChildren<Transform>()) {
+                        if (child.name == leafPile.name) { continue; }
+                        child.localEulerAngles = new Vector3(180, 0, 0);
+                        child.position += new Vector3(0, 2, 0);
+                    }
+                }
+                TunicLogger.LogInfo(breakableId);
+                if (material != null) {
+                    TunicLogger.LogInfo("material is not null");
+                    foreach (MeshRenderer r in leafPile.gameObject.GetComponentsInChildren<MeshRenderer>()) {
                         TunicLogger.LogInfo("found a material");
                         r.material = material;
                     }
