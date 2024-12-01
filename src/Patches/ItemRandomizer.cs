@@ -83,7 +83,7 @@ namespace TunicRandomizer {
                 InitialItems.AddRange(GrassRandomizer.GrassChecks.Values.Where(check => !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)));
                 ProgressionNames.AddRange(GrassCutters);
             }
-            if (true) {  // todo: breakable shuffle option checking
+            if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
                 InitialItems.AddRange(BreakableShuffle.BreakableChecks.Values);
             }
             List<Reward> InitialRewards = new List<Reward>();

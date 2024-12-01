@@ -164,7 +164,7 @@ namespace TunicRandomizer {
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             SmashableObject smashComp = __instance.GetComponent<SmashableObject>();
-            if (smashComp != null && true) {  // todo: option check for breakable shuffle here
+            if (smashComp != null && SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
@@ -190,7 +190,7 @@ namespace TunicRandomizer {
 
 
         public static bool DustyPile_scatter_PrefixPatch(DustyPile __instance) {
-            if (true) {  // todo: option check here
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
