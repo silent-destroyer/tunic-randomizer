@@ -21,7 +21,7 @@ namespace TunicRandomizer {
             { "crate quarry", "Crate" },
             { "table", "Table" },
             { "library_lab_pageBottle", "Library Glass" },  // probably rename this one
-            { "Leaf Pile", "Leaf Pile" },  // actually go find this one
+            { "leaf pile", "Leaf Pile" },
         };
 
         public static void LoadBreakableChecks() {
@@ -145,27 +145,33 @@ namespace TunicRandomizer {
             }
         }
 
-        public static string getBreakableGameObjectId(GameObject gameObject) {
+        public static string getBreakableGameObjectId(GameObject gameObject, bool isLeafPile = false) {
             string name = gameObject.name;
             name = name.Split('(')[0];
             if (name.EndsWith(" ")) {
                 name = name.Remove(name.Length - 1);
             }
             string scene = gameObject.scene.name;
-            string position = gameObject.GetComponent<SmashableObject>().initialPosition.ToString();
+            string position;
+            if (isLeafPile) {
+                position = gameObject.transform.position.ToString();
+            } else {
+                position = gameObject.GetComponent<SmashableObject>().initialPosition.ToString();
+            }
+            
             return $"{scene}~{name}~{position} [{scene}]";
         }
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             SmashableObject smashComp = __instance.GetComponent<SmashableObject>();
             if (smashComp != null && true) {  // todo: option check for breakable shuffle here
-                string breakableId = getBreakableGameObjectId(__instance.gameObject);
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
+                string breakableId = getBreakableGameObjectId(__instance.gameObject);
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Check check = Locations.RandomizedLocations[breakableId];
-                    ItemData item = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[breakableId]);
+
                     // grass rando messes with it if it's a fool trap, figure out what it is and do that too here if we should
                     ItemPatches.GiveItem(check, alwaysSkip: true);
 
@@ -177,12 +183,34 @@ namespace TunicRandomizer {
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
                 }
-                // see if we need to do anything here, might not?
                 return false;
-
             }
-            // something for the leaf piles
+            return true;
+        }
 
+
+        public static bool DustyPile_scatter_PrefixPatch(DustyPile __instance) {
+            if (true) {  // todo: option check here
+                if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                    return false;
+                }
+                string breakableId = getBreakableGameObjectId(__instance.gameObject, isLeafPile: true);
+
+                if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
+                    Check check = Locations.RandomizedLocations[breakableId];
+
+                    // grass rando messes with it if it's a fool trap, figure out what it is and do that too here if we should
+                    ItemPatches.GiveItem(check, alwaysSkip: true);
+
+                    GameObject fairyTarget = GameObject.Find($"fairy target {check.CheckId}");
+                    if (fairyTarget != null) {
+                        GameObject.Destroy(fairyTarget);
+                    }
+                }
+                if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
+                    __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
+                }
+            }
             return true;
         }
 

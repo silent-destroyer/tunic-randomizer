@@ -282,6 +282,7 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(BreakableShuffle), "PermanentStateByPosition_onKilled_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(DustyPile), "scatter"), new HarmonyMethod(AccessTools.Method(typeof(BreakableShuffle), "DustyPile_scatter_PrefixPatch")));
         }
     }
 }
