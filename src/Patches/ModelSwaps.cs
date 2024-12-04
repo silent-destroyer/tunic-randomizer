@@ -432,6 +432,9 @@ namespace TunicRandomizer {
                         foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
                             TunicLogger.LogInfo("found breakable: " + breakableObject.name);
                             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
+                            TunicLogger.LogInfo(breakableObject.initialPosition.ToString());
+                            TunicLogger.LogInfo(breakableObject.transform.position.ToString());
+                            TunicLogger.LogInfo(breakableId);
                             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
                                 TunicLogger.LogInfo("succeeded if statement");
                                 if ((SwappedThisSceneAlready && !IsSwordCheck(breakableId)) || Locations.CheckedLocations[breakableId]) {

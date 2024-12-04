@@ -59,7 +59,7 @@ namespace TunicRandomizer {
                                 Check check = new Check(new Reward(), new Location());
                                 check.Reward.Name = "money";
                                 check.Reward.Type = "MONEY";
-                                check.Reward.Amount = moneyAmounts[random.Next(moneyAmounts.Count)];  // todo: maybe change later
+                                check.Reward.Amount = moneyAmounts[random.Next(moneyAmounts.Count)];
 
                                 check.Location.SceneName = sceneName;
                                 check.Location.SceneId = 0;  // Update this if sceneid ever actually gets used for anything
@@ -128,7 +128,13 @@ namespace TunicRandomizer {
                                     } else {
                                         regionName = $"{regionName} by Door";
                                     }
-                                }  // todo: continue from fortress
+                                } else if (regionName == "Ruined Atoll") {
+                                    if (breakableName == "Urn Explosive") {
+                                        regionName = "Atoll Near Birds";
+                                    } else {
+                                        regionName = "Southwest Atoll";
+                                    }
+                                }
                                 string description = $"{regionName} - {BreakableBetterNames[breakableName]} {breakableNumber}";
                                 if (customDescription != null) {
                                     description = customDescription;
@@ -162,6 +168,10 @@ namespace TunicRandomizer {
                 position = gameObject.transform.position.ToString();
             } else {
                 position = gameObject.GetComponent<SmashableObject>().initialPosition.ToString();
+                // if we're looking too early, initial position hasn't been set yet, but then the actual position is the one we want
+                if (position == "(0.0, 0.0, 0.0)") {
+                    position = gameObject.transform.position.ToString();
+                }
             }
             
             return $"{scene}~{name}~{position} [{scene}]";
