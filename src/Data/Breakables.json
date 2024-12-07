@@ -211,10 +211,13 @@
     "Fortress Courtyard": {
         "Fortress Courtyard": {
             "Urn Firey": [
+                // can shoot from beneath the vault ladder spot with gun or wand
                 "(-28.9, 0.0, -32.9)",
                 "(-29.4, 0.0, -35.3)",
+                // same as above but wand only
                 "(-19.0, 0.0, -25.0)",
                 "(-20.3, 0.0, -27.7)",
+                // can shoot from upper with wand or gun, not logically relevant though
                 "(4.0, 0.0, -26.6)",
                 "(20.4, 0.0, -15.1)",
                 "(17.3, 0.0, -14.2)",
@@ -223,6 +226,7 @@
         },
         "Fortress Courtyard Upper": {
             "Urn Firey": [
+                // can wand or gun from below
                 "(37.0, 8.0, -41.0)"
             ]
         }
@@ -232,6 +236,7 @@
             "Urn": [
                 "(123.0, 0.0, -31.0)",
                 "(127.5, 0.0, -31.0)",
+                // can shoot all 6 of these with wand from the dusty entrance spot
                 "(174.0, 0.0, -43.0)",
                 "(176.0, 0.0, -43.0)",
                 "(178.0, 0.0, -43.0)",
@@ -240,7 +245,9 @@
                 "(178.0, 0.0, -37.0)"
             ],
             "Urn Firey": [
+                // closest to upper exit, can shoot with wand and gun
                 "(135.7, 0.0, -31.0)",
+                // out of logic: if chest isn't open, can laurels behind chest and shoot with wand
                 "(151.5, 0.0, -31.5)"
             ]
         }
@@ -420,10 +427,6 @@
     "Quarry Redux": {
         "Quarry": {
             "Urn Explosive": [
-                // near shortcut ladder
-                "(-29.0, 0.0, -13.0)",
-                "(-27.0, 0.0, -15.0)",
-
                 // all in a row on east side
                 "(84.6, 8.0, 1.4)",
                 "(86.6, 8.0, 1.4)",
@@ -431,13 +434,6 @@
                 
                 // little alcove
                 "(37.0, 24.0, 19.0)"
-            ],
-            "crate quarry": [
-                "(-18.0, 0.0, -5.7)",
-                "(-21.0, 0.0, -5.7)",
-                "(-20.0, 3.0, -5.7)",
-                "(-22.0, 0.0, 2.0)",
-                "(-28.0, 0.0, 4.0)"
             ]
         },
         "Quarry Monastery Entry": {
@@ -452,7 +448,17 @@
                 "(-42.7, 28.0, 56.0)",
                 "(-42.9, 28.0, 54.1)",
                 "(-39.5, 28.0, 55.5)",
-                "(-39.5, 28.0, 57.5)"
+                "(-39.5, 28.0, 57.5)",
+                // near shortcut ladder, technically called quarry back
+                "(-29.0, 0.0, -13.0)",
+                "(-27.0, 0.0, -15.0)"
+            ],
+            "crate quarry": [
+                "(-18.0, 0.0, -5.7)",
+                "(-21.0, 0.0, -5.7)",
+                "(-20.0, 3.0, -5.7)",
+                "(-22.0, 0.0, 2.0)",
+                "(-28.0, 0.0, 4.0)"
             ]
         },
         "Lower Quarry": {

@@ -83,89 +83,95 @@ namespace TunicRandomizer {
                                 if (regionName == "Forest Belltower Upper" && breakableName == "Urn") {
                                     regionName = "Forest Belltower after Boss";
                                 } else if (regionName == "East Forest" && breakablePosition.Contains("8.0,")) {
-                                    customDescription = $"East Forest by Envoy {breakableName} {customNumber}";
+                                    customDescription = $"East Forest by Envoy - {BreakableBetterNames[breakableName]} {customNumber}";
                                     customNumber++;
                                 } else if (regionName == "Beneath the Well Main") {
                                     if (breakableName == "Urn" || breakablePosition.StartsWith("(37")) {
-                                        customDescription = $"Beneath the Well East {breakableName} {customNumber}";
+                                        customDescription = $"Beneath the Well East - {BreakableBetterNames[breakableName]} {customNumber}";
                                         customNumber++;
                                     } else {
                                         regionName = "Beneath the Well West";
                                     }
                                 } else if (regionName == "Dark Tomb Main") {
                                     if (breakablePosition.Contains("17.0,")) {
-                                        customDescription = $"Dark Tomb Final Chamber {breakableName} {customNumber}";
+                                        customDescription = $"Dark Tomb Final Chamber - {BreakableBetterNames[breakableName]} {customNumber}";
                                         customNumber++;
                                     } else {
                                         regionName = "Dark Tomb Pot Hallway";
                                     }
                                 } else if (regionName == "Fortress Grave Path" && breakablePosition.StartsWith("(17")) {
-                                    customDescription = $"Fortress Grave Path by Grave {breakableName} {customNumber}";
+                                    customDescription = $"Fortress Grave Path by Grave - {BreakableBetterNames[breakableName]} {customNumber}";
                                     customNumber++;
                                 } else if (regionName == "Eastern Vault Fortress") {
                                     if (breakablePosition.StartsWith("(3")) {
-                                        customDescription = $"{regionName} by Broken Checkpoint {breakableName} {customNumber}";
+                                        customDescription = $"{regionName} by Broken Checkpoint - {BreakableBetterNames[breakableName]} {customNumber}";
                                         customNumber++;
                                     } else if (breakablePosition.StartsWith("(-22.5")) {
-                                        customDescription = $"{regionName} by Checkpoint {breakableName} {customNumber2}";
+                                        customDescription = $"{regionName} by Checkpoint - {BreakableBetterNames[breakableName]} {customNumber2}";
                                         customNumber2++;
                                     } else if (breakablePosition.Contains(", 15.0, ")) {
-                                        customDescription = $"{regionName} by Overlook {breakableName} {customNumber3}";
+                                        customDescription = $"{regionName} by Overlook - {BreakableBetterNames[breakableName]} {customNumber3}";
                                         customNumber3++;
                                     } else if (breakablePosition.StartsWith("(-4")) {
-                                        customDescription = $"{regionName} Slorm Room {breakableName} {customNumber4}";
+                                        customDescription = $"{regionName} Slorm Room - {BreakableBetterNames[breakableName]} {customNumber4}";
                                         customNumber4++;
                                     } else if (breakablePosition.EndsWith("58.9)")) {
-                                        customDescription = $"{regionName} Chest Room {breakableName} {customNumber5}";
+                                        customDescription = $"{regionName} Chest Room - {BreakableBetterNames[breakableName]} {customNumber5}";
                                         customNumber5++;
                                     } else if (breakablePosition.StartsWith("(-5")) {
-                                        customDescription = $"{regionName} by Stairs to Basement {breakableName} {customNumber6}";
+                                        customDescription = $"{regionName} by Stairs to Basement - {BreakableBetterNames[breakableName]} {customNumber6}";
                                         customNumber6++;
                                     } else {
                                         regionName = $"{regionName} by Door";
                                     }
                                 } else if (regionName == "Ruined Atoll") {
                                     if (breakableName == "Urn Explosive") {
-                                        regionName = "Atoll Near Birds";
+                                        customDescription = $"Atoll Near Birds - {BreakableBetterNames[breakableName]}";
                                     } else {
-                                        regionName = "Southwest Atoll";
+                                        regionName = "Atoll Southwest";
                                     }
                                 } else if (regionName == "Frog's Domain") {
                                     if (breakableName == "Urn Explosive") {
                                         regionName = "Frog's Domain Orb Room";
                                     } else if (breakablePosition.EndsWith("-3.0)")) {
-                                        customDescription = $"{regionName} above Orb Altar {breakableName} {customNumber}";
+                                        customDescription = $"{regionName} above Orb Altar - {BreakableBetterNames[breakableName]} {customNumber}";
                                         customNumber++;
                                     } else if (breakablePosition.StartsWith("(-35")) {
-                                        customDescription = $"{regionName} after Gate {breakableName} {customNumber2}";
+                                        customDescription = $"{regionName} after Gate - {BreakableBetterNames[breakableName]} {customNumber2}";
                                         customNumber2++;
                                     } else if (breakablePosition.Contains(", 8")) {
-                                        customDescription = $"{regionName} Main Room {breakableName} {customNumber3}";
+                                        customDescription = $"{regionName} Main Room - {BreakableBetterNames[breakableName]} {customNumber3}";
                                         customNumber3++;
                                     } else if (breakablePosition == "(44.3, 0.0, -70.5") {
-                                        customDescription = $"{regionName} after Slorm Room {breakableName}";
+                                        customDescription = $"{regionName} after Slorm Room - {BreakableBetterNames[breakableName]}";
                                     } else {
-                                        customDescription = $"{regionName} Side Room {breakableName} {customNumber4}";
+                                        customDescription = $"{regionName} Side Room - {BreakableBetterNames[breakableName]} {customNumber4}";
                                         customNumber4++;
                                     }
                                 } else if (regionName == "Quarry") {
-                                    if (breakableName == "crate quarry" || breakablePosition.StartsWith("(-2")) {
-                                        regionName = $"Quarry near Shortcut Ladder";
-                                    } else if (breakablePosition.EndsWith("1.4)")) {
-                                        customDescription = $"{regionName} East {breakableName} {customNumber}";
+                                    if (breakablePosition.EndsWith("1.4)")) {
+                                        customDescription = $"{regionName} East - {BreakableBetterNames[breakableName]} {customNumber}";
                                         customNumber++;
-                                    } else if (breakablePosition.StartsWith("(37")) {
-                                        customDescription = $"{regionName} East beneath Scaffolding {breakableName}";
+                                    } else {
+                                        customDescription = $"{regionName} East beneath Scaffolding - {BreakableBetterNames[breakableName]}";
+                                    }
+                                } else if (regionName == "Quarry Back") {
+                                    if (breakableName == "crate quarry" || breakablePosition.StartsWith("(-2")) {
+                                        customDescription = $"Quarry near Shortcut Ladder - {BreakableBetterNames[breakableName]} {customNumber}";
+                                        customNumber++;
                                     }
                                 } else if (regionName == "Lower Quarry") {
                                     if (breakablePosition.StartsWith("(-15") || breakablePosition.StartsWith("(-12") || breakablePosition.StartsWith("(-6")) {
-                                        customDescription = $"{regionName} on Scaffolding {breakableName} {customNumber}";
+                                        customDescription = $"{regionName} on Scaffolding - {BreakableBetterNames[breakableName]} {customNumber}";
                                         customNumber++;
                                     } else if (breakableName == "crate quarry") {
                                         regionName = "Lower Quarry Shooting Range";
                                     }
                                 }
                                 string description = $"{regionName} - {BreakableBetterNames[breakableName]} {breakableNumber}";
+                                if (breakableGroup.Value.Count == 1) {
+                                    description = $"{regionName} - {BreakableBetterNames[breakableName]}";
+                                }
                                 if (customDescription != null) {
                                     description = customDescription;
                                     breakableNumber--;
