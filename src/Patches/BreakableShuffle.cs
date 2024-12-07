@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-// todo: make it not respawn the breakables when you leave and reenter the scene
-// todo: make sure that dusty doesn't break from that
+
 namespace TunicRandomizer {
     public class BreakableShuffle {
 
@@ -44,17 +43,14 @@ namespace TunicRandomizer {
                 foreach (KeyValuePair<string, Dictionary<string, Dictionary<string, List<string>>>> sceneGroup in BreakableData) {
                     string sceneName = sceneGroup.Key;
                     foreach (KeyValuePair<string, Dictionary<string, List<string>>> regionGroup in sceneGroup.Value) {
-                        string regionName = regionGroup.Key;
                         foreach (KeyValuePair<string, List<string>> breakableGroup in regionGroup.Value) {
                             string breakableName = breakableGroup.Key;
                             int breakableNumber = 1;
                             int customNumber = 1;  // for breakables that get a unique description
-                            int customNumber2 = 1;  // for places that need more unique numbers
-                            int customNumber3 = 1;  // for fortress
-                            int customNumber4 = 1;  // for fortress
-                            int customNumber5 = 1;  // for fortress
-                            int customNumber6 = 1;  // for fortress
+                            // for places that need more unique numbers, mostly fortress and frog's domain
+                            int customNumber2 = 1; int customNumber3 = 1; int customNumber4 = 1; int customNumber5 = 1; int customNumber6 = 1;
                             foreach (string breakablePosition in breakableGroup.Value) {
+                                string regionName = regionGroup.Key;  // assigned here so specific name overrides can happen
                                 string breakableId = $"{sceneName}~{breakableName}~{breakablePosition}";  // also used for checkId, and checkId has scene name in it already
                                 Check check = new Check(new Reward(), new Location());
                                 check.Reward.Name = "money";
@@ -133,6 +129,40 @@ namespace TunicRandomizer {
                                         regionName = "Atoll Near Birds";
                                     } else {
                                         regionName = "Southwest Atoll";
+                                    }
+                                } else if (regionName == "Frog's Domain") {
+                                    if (breakableName == "Urn Explosive") {
+                                        regionName = "Frog's Domain Orb Room";
+                                    } else if (breakablePosition.EndsWith("-3.0)")) {
+                                        customDescription = $"{regionName} above Orb Altar {breakableName} {customNumber}";
+                                        customNumber++;
+                                    } else if (breakablePosition.StartsWith("(-35")) {
+                                        customDescription = $"{regionName} after Gate {breakableName} {customNumber2}";
+                                        customNumber2++;
+                                    } else if (breakablePosition.Contains(", 8")) {
+                                        customDescription = $"{regionName} Main Room {breakableName} {customNumber3}";
+                                        customNumber3++;
+                                    } else if (breakablePosition == "(44.3, 0.0, -70.5") {
+                                        customDescription = $"{regionName} after Slorm Room {breakableName}";
+                                    } else {
+                                        customDescription = $"{regionName} Side Room {breakableName} {customNumber4}";
+                                        customNumber4++;
+                                    }
+                                } else if (regionName == "Quarry") {
+                                    if (breakableName == "crate quarry" || breakablePosition.StartsWith("(-2")) {
+                                        regionName = $"Quarry near Shortcut Ladder";
+                                    } else if (breakablePosition.EndsWith("1.4)")) {
+                                        customDescription = $"{regionName} East {breakableName} {customNumber}";
+                                        customNumber++;
+                                    } else if (breakablePosition.StartsWith("(37")) {
+                                        customDescription = $"{regionName} East beneath Scaffolding {breakableName}";
+                                    }
+                                } else if (regionName == "Lower Quarry") {
+                                    if (breakablePosition.StartsWith("(-15") || breakablePosition.StartsWith("(-12") || breakablePosition.StartsWith("(-6")) {
+                                        customDescription = $"{regionName} on Scaffolding {breakableName} {customNumber}";
+                                        customNumber++;
+                                    } else if (breakableName == "crate quarry") {
+                                        regionName = "Lower Quarry Shooting Range";
                                     }
                                 }
                                 string description = $"{regionName} - {BreakableBetterNames[breakableName]} {breakableNumber}";
