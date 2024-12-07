@@ -68,6 +68,10 @@ namespace TunicRandomizer {
                                     if (breakableName == "Physical Post" && breaker == "Stick") {
                                         continue;
                                     }
+                                    // we're just doing this separately in BreakableReqs cause it'll be a mess if done here
+                                    if (breakableName == "leaf pile") {
+                                        continue;
+                                    }
                                     check.Location.Requirements.Add(new Dictionary<string, int> { { breaker, 1 }, { regionName, 1 } });
                                 }
                                 if (extraBreakableReqs.ContainsKey(breakableId)) {
