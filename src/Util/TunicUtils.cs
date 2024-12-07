@@ -48,6 +48,19 @@ namespace TunicRandomizer {
             return primaryDictionary;
         }
 
+        // for changing lists of requirements into dictionaries of them
+        public static Dictionary<string, int> ChangeListToDict(List<string> list) {
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            foreach (string item in list) {
+                if (dictionary.ContainsKey(item)) {
+                    dictionary[item]++;
+                } else {
+                    dictionary[item] = 1;
+                }
+            }
+            return dictionary;
+        }
+
         // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
         public static void FindChecksInLogic() {
             PlayerItemsAndRegions.Clear();

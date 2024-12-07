@@ -30,9 +30,8 @@ namespace TunicRandomizer {
             var assembly = Assembly.GetExecutingAssembly();
             var breakableJson = "TunicRandomizer.src.Data.Breakables.json";
             var breakableReqsJson = "TunicRandomizer.src.Data.BreakableReqs.json";
-            //List<string> breakers = new List<string>() { "Stick", "Sword", "Techbow", "Gun" };
-            List<string> breakers = new List<string>() { "Stick", "Sword" };
-            // todo: add more to the breakable reqs
+            List<string> breakers = new List<string>() { "Stick", "Sword", "Techbow", "Shotgun" };
+            //List<string> breakers = new List<string>() { "Stick", "Sword" };
 
             using (Stream stream = assembly.GetManifestResourceStream(breakableJson))
             using (StreamReader reader = new StreamReader(stream)) {
@@ -73,8 +72,7 @@ namespace TunicRandomizer {
                                 }
                                 if (extraBreakableReqs.ContainsKey(breakableId)) {
                                     foreach (List<string> req in extraBreakableReqs[breakableId]) {
-                                        Dictionary<string, int> reqDict = new Dictionary<string, int>();
-                                        TunicUtils.AddListToDict(reqDict, req);
+                                        Dictionary<string, int> reqDict = TunicUtils.ChangeListToDict(req);
                                         check.Location.Requirements.Add(reqDict);
                                     }
                                 }
