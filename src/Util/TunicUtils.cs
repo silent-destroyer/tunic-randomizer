@@ -125,5 +125,13 @@ namespace TunicRandomizer {
             return Math.Min((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal)), 100);
         }
 
+        public static string RemoveParenNumber(string name) {
+            name = name.Split('(')[0];
+            if (name.EndsWith(" ")) {
+                name = name.Remove(name.Length - 1);
+            }
+            return name;
+        }
+
     }
 }

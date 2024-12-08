@@ -195,11 +195,7 @@ namespace TunicRandomizer {
         }
 
         public static string getBreakableGameObjectId(GameObject gameObject, bool isLeafPile = false) {
-            string name = gameObject.name;
-            name = name.Split('(')[0];
-            if (name.EndsWith(" ")) {
-                name = name.Remove(name.Length - 1);
-            }
+            string name = TunicUtils.RemoveParenNumber(gameObject.name);
             string scene = gameObject.scene.name;
             string position;
             if (isLeafPile) {

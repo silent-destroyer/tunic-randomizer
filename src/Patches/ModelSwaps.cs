@@ -428,20 +428,12 @@ namespace TunicRandomizer {
                         }
                     }
                     if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
-                        TunicLogger.LogInfo("started pot shuffle check");
                         foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
-                            TunicLogger.LogInfo("found breakable: " + breakableObject.name);
                             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
-                            TunicLogger.LogInfo(breakableObject.initialPosition.ToString());
-                            TunicLogger.LogInfo(breakableObject.transform.position.ToString());
-                            TunicLogger.LogInfo(breakableId);
                             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
-                                TunicLogger.LogInfo("succeeded if statement");
                                 if ((SwappedThisSceneAlready && !IsSwordCheck(breakableId)) || Locations.CheckedLocations[breakableId]) {
-                                    TunicLogger.LogInfo("swapped already or something");
                                     continue;
                                 }
-                                TunicLogger.LogInfo("applying texture");
                                 ApplyBreakableTexture(breakableObject);
                             }
                         }
@@ -688,7 +680,6 @@ namespace TunicRandomizer {
                         child.position += new Vector3(0, 2, 0);
                     }
                 }
-                TunicLogger.LogInfo(breakableId);
                 if (material != null) {
                     foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                         r.material = material;
@@ -736,7 +727,6 @@ namespace TunicRandomizer {
                         child.position += new Vector3(0, 2, 0);
                     }
                 }
-                TunicLogger.LogInfo(breakableId);
                 if (material != null) {
                     foreach (MeshRenderer r in leafPile.gameObject.GetComponentsInChildren<MeshRenderer>()) {
                         r.material = material;

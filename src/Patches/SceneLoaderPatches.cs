@@ -61,7 +61,11 @@ namespace TunicRandomizer {
                         breakable.maxCoinDrop = 0;
                         breakable.minCoinDrop = 0;
                         if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
-                            GameObject.Destroy(breakable.gameObject);
+                            if (breakable.name == "Physical Post") {
+                                GameObject.Destroy(breakable.gameObject.transform.parent.gameObject);
+                            } else {
+                                GameObject.Destroy(breakable.gameObject);
+                            }
                         }
                     }
                 }
