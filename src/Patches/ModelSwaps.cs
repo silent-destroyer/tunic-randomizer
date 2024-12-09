@@ -640,7 +640,6 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
-        // todo: apply texture to the pieces of breakables too
         public static void ApplyBreakableTexture(SmashableObject breakableObject) {
             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
@@ -682,6 +681,7 @@ namespace TunicRandomizer {
                 }
                 if (material != null) {
                     foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                        if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame") { continue; }
                         r.material = material;
                     }
                 }
@@ -798,6 +798,9 @@ namespace TunicRandomizer {
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
             moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
+            if (transform.GetComponent<SmashableObject>() != null) {
+                moveUp.transform.parent = transform;
+            }
         }
 
         public static void CheckCollectedItemFlags() {

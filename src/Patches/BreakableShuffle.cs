@@ -230,7 +230,10 @@ namespace TunicRandomizer {
                     }
                 }
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
-                    __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
+                    GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
+                    moveUp.transform.parent = __instance.transform.parent;
+                    moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 180f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    moveUp.SetActive(true);
                 }
                 return false;
             }
