@@ -673,15 +673,9 @@ namespace TunicRandomizer {
                 } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
                     material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
                 }
-
-                if (Item.Name == "Fool Trap" || Item.Type == ItemTypes.MONEY) {
-                    breakableObject.transform.localEulerAngles = new Vector3(0f, 180f, 180f);
-                    Vector3 pos = breakableObject.transform.position;
-                    breakableObject.transform.position = new Vector3(pos.x, pos.y + 1, pos.z);
-                }
                 if (material != null) {
                     foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
-                        if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame") { continue; }
+                        if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
                         r.material = material;
                     }
                 }
