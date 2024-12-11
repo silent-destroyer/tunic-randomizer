@@ -435,6 +435,8 @@ namespace TunicRandomizer {
                                     continue;
                                 }
                                 ApplyBreakableTexture(breakableObject);
+                                breakableObject.maxCoinDrop = 0;
+                                breakableObject.minCoinDrop = 0;
                             }
                         }
                         if (SceneManager.GetActiveScene().name == "Dusty") {
@@ -672,12 +674,10 @@ namespace TunicRandomizer {
                     material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
                 }
 
-                if (Item.Name == "Fool Trap") {
-                    foreach (Transform child in breakableObject.gameObject.GetComponentsInChildren<Transform>()) {
-                        if (child.name == breakableObject.name) { continue; }
-                        child.localEulerAngles = new Vector3(180, 0, 0);
-                        child.position += new Vector3(0, 2, 0);
-                    }
+                if (Item.Name == "Fool Trap" || Item.Type == ItemTypes.MONEY) {
+                    breakableObject.transform.localEulerAngles = new Vector3(0f, 180f, 180f);
+                    Vector3 pos = breakableObject.transform.position;
+                    breakableObject.transform.position = new Vector3(pos.x, pos.y + 1, pos.z);
                 }
                 if (material != null) {
                     foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {

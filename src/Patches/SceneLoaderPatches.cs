@@ -58,8 +58,6 @@ namespace TunicRandomizer {
                 foreach (SmashableObject breakable in Resources.FindObjectsOfTypeAll<SmashableObject>().Where(pot => pot.gameObject.scene.name == loadingScene.name)) {
                     string breakableId = BreakableShuffle.getBreakableGameObjectId(breakable.gameObject);
                     if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
-                        breakable.maxCoinDrop = 0;
-                        breakable.minCoinDrop = 0;
                         if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
                             if (breakable.name == "Physical Post") {
                                 GameObject.Destroy(breakable.gameObject.transform.parent.gameObject);
