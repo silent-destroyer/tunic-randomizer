@@ -875,8 +875,12 @@ namespace TunicRandomizer {
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
             moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
-            if (transform.GetComponent<SmashableObject>() != null) {
+            if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null) {
                 moveUp.transform.parent = transform;
+                // so we can rotate it properly
+                if (Item.Type == ItemTypes.TRINKET) {
+                    moveUp.name = "Card";
+                }
             }
         }
 

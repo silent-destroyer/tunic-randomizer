@@ -212,16 +212,19 @@ namespace TunicRandomizer {
         }
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
+            TunicLogger.LogInfo(__instance.name);
             SmashableObject smashComp = __instance.GetComponent<SmashableObject>();
             if (smashComp != null && SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
                 string breakableId = getBreakableGameObjectId(__instance.gameObject);
+                TunicLogger.LogInfo(breakableId);
+                foreach (string test in Locations.RandomizedLocations.Keys) {
+                    TunicLogger.LogInfo(test);
+                }
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Check check = Locations.RandomizedLocations[breakableId];
-
-                    // grass rando messes with it if it's a fool trap, figure out what it is and do that too here if we should
                     ItemPatches.GiveItem(check, alwaysSkip: true);
 
                     GameObject fairyTarget = GameObject.Find($"fairy target {check.CheckId}");
@@ -233,6 +236,9 @@ namespace TunicRandomizer {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
                     moveUp.transform.parent = __instance.transform.parent;
                     moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 180f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    if (moveUp.name == "Card") {
+                        moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 0f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    }
                     moveUp.SetActive(true);
                 }
                 return false;
