@@ -112,6 +112,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values);
             }
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                checks.AddRange(BreakableShuffle.BreakableChecks.Values);
+            }
             foreach (Check check in checks) {
                 // only put in unchecked locations
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && !Locations.CheckedLocations[check.CheckId] 
