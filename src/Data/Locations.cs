@@ -41,6 +41,18 @@ namespace TunicRandomizer {
                 }
                 CheckCountsPerScene[info.Location.SceneName]++;
             }
+            // idk if you want this here or somewhere else so just commenting it out for now
+            //if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+            //    foreach (KeyValuePair<string, Check> pair in BreakableShuffle.BreakableChecks) {
+            //        VanillaLocations.Add(pair.Key, pair.Value);
+            //    }
+            //    foreach (KeyValuePair<string, int> scenePair in BreakableShuffle.BreakableChecksPerScene) {
+            //        if (!CheckCountsPerScene.ContainsKey(scenePair.Key)) {
+            //            CheckCountsPerScene[scenePair.Key] = 0;
+            //        }
+            //        CheckCountsPerScene[scenePair.Key] += scenePair.Value;
+            //    }
+            //}
             LocationIdToDescription = JsonConvert.DeserializeObject<Dictionary<string, string>>(LocationNamesJson);
             foreach (string Key in LocationIdToDescription.Keys) {
                 LocationDescriptionToId.Add(LocationIdToDescription[Key], Key);

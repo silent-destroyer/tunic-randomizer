@@ -572,6 +572,9 @@ namespace TunicRandomizer {
             foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
                 AllLocations.Add(pair.Key, pair.Value);
             }
+            foreach (KeyValuePair<string, Check> pair in BreakableShuffle.BreakableChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
 
             List<string> HintableItems = new List<string>(HintableItemNames);
             List<string> HintableItemsSolo = new List<string>(HintableItemNamesSinglePlayer);
@@ -663,6 +666,9 @@ namespace TunicRandomizer {
                 AllLocations.Add(pair.Key, pair.Value);
             }
             foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
+                AllLocations.Add(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, Check> pair in BreakableShuffle.BreakableChecks) {
                 AllLocations.Add(pair.Key, pair.Value);
             }
 

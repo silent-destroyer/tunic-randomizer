@@ -212,17 +212,12 @@ namespace TunicRandomizer {
         }
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
-            TunicLogger.LogInfo(__instance.name);
             SmashableObject smashComp = __instance.GetComponent<SmashableObject>();
             if (smashComp != null && SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
                 string breakableId = getBreakableGameObjectId(__instance.gameObject);
-                TunicLogger.LogInfo(breakableId);
-                foreach (string test in Locations.RandomizedLocations.Keys) {
-                    TunicLogger.LogInfo(test);
-                }
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Check check = Locations.RandomizedLocations[breakableId];
                     ItemPatches.GiveItem(check, alwaysSkip: true);
@@ -266,7 +261,13 @@ namespace TunicRandomizer {
                     }
                 }
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
-                    __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);
+                    GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
+                    moveUp.transform.parent = __instance.transform.parent;
+                    moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 180f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    if (moveUp.name == "Card") {
+                        moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 0f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    }
+                    moveUp.SetActive(true);
                 }
             }
             return true;
