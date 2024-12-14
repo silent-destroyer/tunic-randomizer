@@ -118,19 +118,14 @@ namespace TunicRandomizer {
 
         // specifically for fairy seeking spell with logic
         public static void CreateLogicLoadZoneTargets(bool addImmediately = false) {
-            TunicLogger.LogInfo("create logic load zone targets started");
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 string portalRegion = ERScripts.FindPortalRegionFromName(ScenePortal.name);
                 string destScene = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
-                TunicLogger.LogInfo(portalRegion + " ----- " + destScene);
                 // check if the entrance is logically accessible first
                 if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion)) {
-                    TunicLogger.LogInfo("contains key");
                     // then check if the scene it leads to has checks in logic
                     foreach (string CheckId in TunicUtils.ChecksInLogic) {
-                        TunicLogger.LogInfo("checkid: " + CheckId);
                         if (CheckId.Contains($"[{destScene}]")) {
-                            TunicLogger.LogInfo("checkid contains destscene");
                             FairyTarget newFairyTarget = CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position);
                             if (addImmediately == true) {
                                 ItemTargetsInLogic.Add(newFairyTarget);
