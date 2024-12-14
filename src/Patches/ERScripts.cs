@@ -174,7 +174,7 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        public static Dictionary<string, PortalCombo> VanillaPortals() {
+        public static void SetupVanillaPortals() {
             ModifiedTraversalReqs = TraversalReqs;
             Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
@@ -230,8 +230,7 @@ namespace TunicRandomizer {
                 portalCombos.Add(count.ToString(), new PortalCombo(portal2, portal1));
                 count++;
             }
-            // we don't need vanilla portals to be split into two dictionaries, since we aren't modifying the Portals themselves
-            return portalCombos;
+            ERData.VanillaPortals = portalCombos;
         }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
@@ -824,7 +823,7 @@ namespace TunicRandomizer {
                     continue;
                 }
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in VanillaPortals()) {
+                foreach (KeyValuePair<string, PortalCombo> portalCombo in ERData.VanillaPortals) {
                     Portal portal1 = portalCombo.Value.Portal1;
                     Portal portal2 = portalCombo.Value.Portal2;
 
