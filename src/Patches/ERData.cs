@@ -468,22 +468,27 @@ namespace TunicRandomizer {
                 "Forest Belltower",
                 new Dictionary<string, List<TunicPortal>> {
                     {
+                        "Forest Belltower Upper",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "", PDir.SOUTH),
+                        }
+                    },
+                    {
                         "Forest Belltower Main",
                         new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "", PDir.NORTH),
                             new TunicPortal("Forest Belltower to Overworld", "Overworld Redux", "", PDir.WEST),
+                        }
+                    },
+                    {
+                        "Forest Belltower Main behind bushes",
+                        new List<TunicPortal> {
+                            new TunicPortal("Forest Belltower to Fortress", "Fortress Courtyard", "", PDir.NORTH),
                         }
                     },
                     {
                         "Forest Belltower Lower",
                         new List<TunicPortal> {
                             new TunicPortal("Forest Belltower to Forest", "East Forest Redux", "", PDir.SOUTH),
-                        }
-                    },
-                    {
-                        "Forest Belltower Upper",
-                        new List<TunicPortal> {
-                            new TunicPortal("Forest Belltower to Guard Captain Room", "Forest Boss Room", "", PDir.SOUTH),
                         }
                     },
                 }
@@ -1659,6 +1664,10 @@ namespace TunicRandomizer {
             },
             {
                 "Forest Belltower Main",
+                new RegionInfo("Forest Belltower", false)
+            },
+            {
+                "Forest Belltower Main behind bushes",
                 new RegionInfo("Forest Belltower", false)
             },
             {
@@ -3019,7 +3028,7 @@ namespace TunicRandomizer {
             {
                 "Forest Belltower Upper",
                 new Dictionary<string, List<List<string>>> {
-                        {
+                    {
                         "Forest Belltower Main",
                         new List<List<string>> {
                         }
@@ -3029,11 +3038,41 @@ namespace TunicRandomizer {
             {
                 "Forest Belltower Main",
                 new Dictionary<string, List<List<string>>> {
-                        {
+                    {
                         "Forest Belltower Lower",
                         new List<List<string>> {
                             new List<string> {
                                 "Ladder to East Forest",
+                            },
+                        }
+                    },
+                    {
+                        "Forest Belltower Main behind bushes",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Forest Belltower Main behind bushes",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Forest Belltower Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
                             },
                         }
                     },
