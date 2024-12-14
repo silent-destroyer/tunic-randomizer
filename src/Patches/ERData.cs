@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 namespace TunicRandomizer {
     public class ERData {
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
+        public static Dictionary<string, PortalCombo> VanillaPortals = new Dictionary<string, PortalCombo>();
         public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
 
         // the direction you move while entering the portal
