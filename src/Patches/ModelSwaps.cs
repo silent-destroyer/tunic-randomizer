@@ -675,6 +675,7 @@ namespace TunicRandomizer {
                 if (material != null) {
                     foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null) { continue; }
                         r.material = material;
                     }
                 }

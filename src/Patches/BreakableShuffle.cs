@@ -64,8 +64,8 @@ namespace TunicRandomizer {
 
                                 // add each breaker and the region to the rules
                                 foreach (string breaker in breakers) {
-                                    // can't break the signs with the stick
-                                    if (breakableName == "Physical Post" && breaker == "Stick") {
+                                    // can't break the signs or the table with the stick
+                                    if (breaker == "Stick" && (breakableName == "Physical Post" || breakableName == "table")) {
                                         continue;
                                     }
                                     // we're just doing this separately in BreakableReqs cause it'll be a mess if done here
