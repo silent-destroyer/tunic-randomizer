@@ -84,7 +84,6 @@ namespace TunicRandomizer {
                 ProgressionNames.AddRange(GrassCutters);
             }
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
-                TunicLogger.LogInfo("breakable shuffle is on");
                 InitialItems.AddRange(BreakableShuffle.BreakableChecks.Values);
             }
             List<Reward> InitialRewards = new List<Reward>();

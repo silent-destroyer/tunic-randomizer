@@ -886,6 +886,8 @@ namespace TunicRandomizer {
         }
 
         public static string FindPairedPortalSceneFromName(string portalName) {
+            TunicLogger.LogInfo("findpaired started");
+            TunicLogger.LogInfo("portal name is " + portalName);
             foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
                 if (portalCombo.Portal1.Name == portalName) {
                     return portalCombo.Portal2.Scene;

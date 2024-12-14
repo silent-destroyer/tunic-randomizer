@@ -552,7 +552,7 @@ namespace TunicRandomizer {
                 });
                 GhostHints.SpawnTorchHintGhost();
             } else {
-                ERData.RandomizedPortals.Clear();
+                ERData.RandomizedPortals = ERScripts.VanillaPortals();
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();
