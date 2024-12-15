@@ -9,6 +9,7 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Check> BreakableChecks = new Dictionary<string, Check>();
         public static Dictionary<string, int> BreakableChecksPerScene = new Dictionary<string, int>();
+        //public static List<string> APConvertedLines = new List<string>();
 
         // keys are the auto-genned name, values are the nicer name (or the key if the key is already a nice name)
         public static Dictionary<string, string> BreakableBetterNames = new Dictionary<string, string>() {
@@ -87,6 +88,10 @@ namespace TunicRandomizer {
                                 } else if (regionName == "East Forest" && breakablePosition.Contains("8.0,")) {
                                     customDescription = $"East Forest by Envoy - {BreakableBetterNames[breakableName]} {customNumber}";
                                     customNumber++;
+                                } else if (regionName == "Guard House 1 East") {
+                                    regionName = "Guard House 1";
+                                } else if (regionName == "Guard House 2 Lower") {
+                                    regionName = "Guard House 2";
                                 } else if (regionName == "Beneath the Well Main") {
                                     if (breakableName == "Urn" || breakablePosition.StartsWith("(37")) {
                                         customDescription = $"Beneath the Well East - {BreakableBetterNames[breakableName]} {customNumber}";
@@ -128,7 +133,7 @@ namespace TunicRandomizer {
                                     }
                                 } else if (regionName == "Ruined Atoll") {
                                     if (breakableName == "Urn Explosive") {
-                                        customDescription = $"Atoll Near Birds - {BreakableBetterNames[breakableName]}";
+                                        customDescription = $"Atoll near Birds - {BreakableBetterNames[breakableName]}";
                                     } else {
                                         regionName = "Atoll Southwest";
                                     }
@@ -186,12 +191,32 @@ namespace TunicRandomizer {
                                     BreakableChecksPerScene.Add(check.Location.SceneName, 0);
                                 }
                                 BreakableChecksPerScene[check.Location.SceneName]++;
+                                //APConvertedLines.Add(ConvertToAPLine(description, regionGroup.Key, BreakableBetterNames[breakableName]));
                             }
                         }
                     }
                 }
                 extraReader.Close();
             }
+            //string convertedBlock = "";
+            //foreach (string APLine in APConvertedLines) {
+            //    convertedBlock += APLine;
+            //    convertedBlock += "\n";
+            //}
+            //TunicLogger.LogInfo(convertedBlock);
+        }
+
+        public static string ConvertToAPLine(string description, string region, string breakableName) {
+            string converted = "    ";
+            converted += "\"";
+            converted += description;
+            converted += "\": TunicLocationData(\"";
+            converted += region;
+            converted += "\", breakable=\"";
+            converted += breakableName;
+            converted += "\"),";
+
+            return converted;
         }
 
         public static string getBreakableGameObjectId(GameObject gameObject, bool isLeafPile = false) {
