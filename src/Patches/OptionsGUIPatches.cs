@@ -71,7 +71,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Settings.GrassRandomizer = !TunicRandomizer.Settings.GrassRandomizer;
                     SaveSettings();
                 }));
-                OptionsGUI.addToggle("Shuffle Breakables", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
+                OptionsGUI.addToggle("Shuffle Breakable Objects", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
                 OptionsGUI.addMultiSelect("Laurels Location", LaurelsLocations, GetLaurelsLocationIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLaurelsLocation).wrap = true;
                 OptionsGUI.addToggle("Lanternless Logic", "Off", "On", TunicRandomizer.Settings.Lanternless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLanternless);

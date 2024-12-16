@@ -665,10 +665,12 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
             advHeight += 40f * guiScale;
             GUI.skin.label.fontSize = (int)(25 * guiScale);
-            GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Grass Randomizer");
+            GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Grass Randomizer & More");
             advHeight += 40f * guiScale;
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Grass Randomizer"), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
             TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(ShowTooltip(new Rect(195f * guiScale, advHeight, 195f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Clear Early Bushes"), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
+            advHeight += 40f * guiScale;
+            TunicRandomizer.Settings.BreakableShuffle = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 250f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Breakable Objects"), TunicRandomizer.Settings.BreakableShuffle, "Shuffle Breakable Objects");
             advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Fool Traps");
             ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 80f * guiScale), "advancedSinglePlayer", "Fool Traps");
