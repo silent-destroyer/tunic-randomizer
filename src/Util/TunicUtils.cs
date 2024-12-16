@@ -108,13 +108,7 @@ namespace TunicRandomizer {
         // updates PlayerItemsAndRegions based on which items the player has received, then updates ChecksInLogic based on the player's items/accessible regions
         public static void UpdateChecksInLogic() {
             ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
-            List<Check> checks = Locations.VanillaLocations.Values.ToList();
-            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                checks.AddRange(GrassRandomizer.GrassChecks.Values);
-            }
-            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
-                checks.AddRange(BreakableShuffle.BreakableChecks.Values);
-            }
+            List<Check> checks = GetAllInUseChecks();
             foreach (Check check in checks) {
                 // only put in unchecked locations
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && !Locations.CheckedLocations[check.CheckId] 
@@ -122,6 +116,34 @@ namespace TunicRandomizer {
                     ChecksInLogic.Add(check.CheckId);
                 }
             }
+        }
+
+        public static List<Check> GetAllInUseChecks() {
+            // Get a list of all default checks based on settings
+            List<Check> checks = Locations.VanillaLocations.Values.ToList();
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
+            }
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList());
+            }
+            return checks;
+        }
+
+        public static int GetCompletedChecksCountByScene(List<Check> checks) {
+            return checks.Where(check => check.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[check.CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 1))).ToList().Count;
+        }
+
+        public static int GetCompletedChecksCount(List<Check> checks) {
+            return checks.Where(check => (Locations.CheckedLocations[check.CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 1))).ToList().Count;
+        }
+
+        public static int GetCheckCountInCurrentScene() {
+            return GetCheckCountInScene(SceneLoaderPatches.SceneName);
+        }
+
+        public static int GetCheckCountInScene(string scene) {
+            return GetAllInUseChecks().Where(check => check.Location.SceneName == scene).Count();
         }
 
         public static int GetMaxGoldHexagons() {
