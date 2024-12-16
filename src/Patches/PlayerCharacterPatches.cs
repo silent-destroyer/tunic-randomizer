@@ -671,18 +671,13 @@ namespace TunicRandomizer {
                 Locations.CheckedLocations.Clear();
                 ItemLookup.ItemList.Clear();
                 List<long> LocationIDs = new List<long>();
-                foreach (string Key in Locations.VanillaLocations.Keys) {
-                    Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
-                    LocationIDs.Add(Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]));
-                }
-                if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                    foreach (string Key in GrassRandomizer.GrassChecks.Keys) {
-                        Locations.CheckedLocations.Add(Key, SaveFile.GetInt($"randomizer picked up {Key}") == 1);
-                        long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Key]);
-                        LocationIDs.Add(id);
-                        if (Locations.CheckedLocations[Key] && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(id)) {
-                            TunicLogger.LogInfo("Checked in save file but not on AP: " + id + " " + Key + "[" + Locations.LocationIdToDescription[Key] + "]");
-                        }
+                List<Check> ChecksInUse = TunicUtils.GetAllInUseChecks();
+                foreach (Check Check in ChecksInUse) {
+                    Locations.CheckedLocations.Add(Check.CheckId, SaveFile.GetInt($"randomizer picked up {Check.CheckId}") == 1);
+                    long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Check.CheckId]);
+                    LocationIDs.Add(id);
+                    if (Locations.CheckedLocations[Check.CheckId] && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(id)) {
+                        TunicLogger.LogInfo("Checked in save file but not on AP: " + id + " " + Check.CheckId + "[" + Locations.LocationIdToDescription[Check.CheckId] + "]");
                     }
                 }
                 if (LocationIDs.Contains(-1L)) {
