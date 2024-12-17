@@ -479,15 +479,17 @@ namespace TunicRandomizer {
                     Locations.RandomizedLocations.Add(DictionaryId, item);
                 }
             }
-
+            int foolTrapsAdded = 0;
             foreach (string key in Locations.RandomizedLocations.Keys.ToList()) {
                 Check check = Locations.RandomizedLocations[key];
                 if (check.Reward.Type == "MONEY") {
-                    if ((TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NORMAL && check.Reward.Amount < 20)
+                    if (((TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NORMAL && check.Reward.Amount < 20)
                     || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.DOUBLE && check.Reward.Amount <= 20)
-                    || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT && check.Reward.Amount <= 30)) {
+                    || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT && check.Reward.Amount <= 30))
+                    && foolTrapsAdded < ItemLookup.FoolTrapAmounts[TunicRandomizer.Settings.FoolTrapIntensity]) {
                         check.Reward.Name = "Fool Trap";
                         check.Reward.Type = "FOOL";
+                        foolTrapsAdded++;
                     }
                 }
             }

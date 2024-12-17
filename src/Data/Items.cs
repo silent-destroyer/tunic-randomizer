@@ -545,6 +545,13 @@ namespace TunicRandomizer {
             { "Berry_MP", new List<int>() { 1, 2, 3 } },
             { "money", new List<int>() { 20, 25, 30, 32, 40, 48, 50 } },
         };
+
+        public static Dictionary<RandomizerSettings.FoolTrapOption, int> FoolTrapAmounts = new Dictionary<RandomizerSettings.FoolTrapOption, int> {
+            { RandomizerSettings.FoolTrapOption.NONE, 0 },
+            { RandomizerSettings.FoolTrapOption.NORMAL, 15 },
+            { RandomizerSettings.FoolTrapOption.DOUBLE, 32 },
+            { RandomizerSettings.FoolTrapOption.ONSLAUGHT, 50 },
+        };
     }
 
 }
