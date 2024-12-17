@@ -91,7 +91,16 @@ namespace TunicRandomizer {
         public string CheckId {
             get => $"{Location.LocationId} [{Location.SceneName}]";
         }
-
+        public bool IsCompletedOrCollected {
+            get {
+                return Locations.CheckedLocations[CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
+            }
+        }
+        public bool IsCollectedInAP {
+            get {
+                return SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1;
+            }
+        }
         public Check() { }
 
         public Check(Location location, Reward reward) {

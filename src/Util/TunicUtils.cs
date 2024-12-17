@@ -129,13 +129,17 @@ namespace TunicRandomizer {
             }
             return checks;
         }
+        
+        public static int GetCompletedChecksCountInCurrentScene() {
+            return GetCompletedChecksCountByScene(GetAllInUseChecks(), SceneLoaderPatches.SceneName);
+        }
 
-        public static int GetCompletedChecksCountByScene(List<Check> checks) {
-            return checks.Where(check => check.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[check.CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 1))).ToList().Count;
+        public static int GetCompletedChecksCountByScene(List<Check> checks, string scene) {
+            return checks.Where(check => check.Location.SceneName == scene && check.IsCompletedOrCollected).ToList().Count;
         }
 
         public static int GetCompletedChecksCount(List<Check> checks) {
-            return checks.Where(check => (Locations.CheckedLocations[check.CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 1))).ToList().Count;
+            return checks.Where(check => check.IsCompletedOrCollected).ToList().Count;
         }
 
         public static int GetCheckCountInCurrentScene() {

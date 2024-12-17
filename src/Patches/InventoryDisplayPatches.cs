@@ -50,28 +50,24 @@ namespace TunicRandomizer {
                 int ObtainedItemCount = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? Archipelago.instance.integration.session.Locations.AllLocationsChecked.Count : Locations.CheckedLocations.Where(loc => loc.Value).Count();
                 yield return true;
 
-                int ObtainedItemCountInCurrentScene = TunicUtils.GetCompletedChecksCountByScene(TunicUtils.GetAllInUseChecks());
+                int ObtainedItemCountInCurrentScene = TunicUtils.GetCompletedChecksCountInCurrentScene();
                 yield return true;
 
                 int TotalItemCountInCurrentScene = TunicUtils.GetCheckCountInCurrentScene();
                 yield return true;
 
-                int TotalItemCount = Locations.VanillaLocations.Count;
+                int TotalItemCount = TunicUtils.GetAllInUseChecks().Count;
+                TunicLogger.LogInfo(TotalItemCount.ToString());
                 string sceneName = SceneLoaderPatches.SceneName;
                 yield return true;
                 if (GetBool(GrassRandoEnabled) && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
-                    int grassCutInCurrentScene = TunicUtils.GetCompletedChecksCountByScene(GrassRandomizer.GrassChecks.Values.ToList());
-                    TotalItemCount += GrassRandomizer.GrassChecks.Count;
+                    int grassCutInCurrentScene = TunicUtils.GetCompletedChecksCountByScene(GrassRandomizer.GrassChecks.Values.ToList(), sceneName);
                     yield return true;
                     if (InventoryDisplayPatches.GrassText != null) {
                         int grassCut = TunicUtils.GetCompletedChecksCount(GrassRandomizer.GrassChecks.Values.ToList());
                         InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
                             $"<#ffffff> • {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                     }
-                }
-                yield return true;
-                if (GetBool(BreakableShuffleEnabled) && BreakableShuffle.BreakableChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
-                    TotalItemCount += BreakableShuffle.BreakableChecks.Count;
                 }
                 yield return true;
                 InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:{(TotalItemCountInCurrentScene >= 1000 ? $"  {ObtainedItemCountInCurrentScene.ToString().PadLeft(4)}" : $"\t{ObtainedItemCountInCurrentScene}")}/{TotalItemCountInCurrentScene}";
