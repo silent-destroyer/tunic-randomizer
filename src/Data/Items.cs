@@ -18,7 +18,8 @@ namespace TunicRandomizer {
         FOOLTRAP,
         HEXAGONQUEST,
         LADDER,
-        GRASS
+        GRASS,
+        FUSE,
     }
 
     public struct BonusUpgrade {
@@ -280,19 +281,44 @@ namespace TunicRandomizer {
             { "Ladders in Lower Quarry", new ItemData("Ladders in Lower Quarry", "progression", "Ladders in Lower Quarry", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders in Library", new ItemData("Ladders in Library", "progression", "Ladders in Library", ItemTypes.LADDER, 1) }, // DONE
 
+            // Fuses
+            { "Swamp Fuse 1", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 1", ItemTypes.FUSE, 1) },
+            { "Swamp Fuse 2", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 2", ItemTypes.FUSE, 1) },
+            { "Swamp Fuse 3", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 3", ItemTypes.FUSE, 1) },
+            { "Cathedral Elevator Fuse", new ItemData("Cathedral Elevator Fuse", "progression", "Cathedral Elevator Fuse", ItemTypes.FUSE, 1) },
+            { "Furnace to Well Fuse", new ItemData("Furnace to Well Fuse", "progression", "Furnace to Well Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Northeast Fuse", new ItemData("Atoll Northeast Fuse", "progression", "Atoll Northeast Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Northwest Fuse", new ItemData("Atoll Northwest Fuse", "progression", "Atoll Northwest Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Southeast Fuse", new ItemData("Atoll Southeast Fuse", "progression", "Atoll Southeast Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Southwest Fuse", new ItemData("Atoll Southwest Fuse", "progression", "Atoll Southwest Fuse", ItemTypes.FUSE, 1) },
+            { "Library Lab Fuse", new ItemData("Library Lab Fuse", "progression", "Library Lab Fuse", ItemTypes.FUSE, 1) },
+            { "Quarry Fuse 1", new ItemData("Quarry Fuse 1", "progression", "Quarry Fuse 1", ItemTypes.FUSE, 1) },
+            { "Quarry Fuse 2", new ItemData("Quarry Fuse 2", "progression", "Quarry Fuse 2", ItemTypes.FUSE, 1) },
+            { "Ziggurat Miniboss Fuse", new ItemData("Ziggurat Miniboss Fuse", "progression", "Ziggurat Miniboss Fuse", ItemTypes.FUSE, 1) },
+            { "Ziggurat Teleporter Fuse", new ItemData("Ziggurat Teleporter Fuse", "progression", "Ziggurat Teleporter Fuse", ItemTypes.FUSE, 1) },
+            { "West Garden Fuse", new ItemData("West Garden Fuse", "progression", "West Garden Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Exterior Fuse 1", new ItemData("Fortress Exterior Fuse 1", "progression", "Fortress Exterior Fuse 1", ItemTypes.FUSE, 1) },
+            { "Fortress Exterior Fuse 2", new ItemData("Fortress Exterior Fuse 2", "progression", "Fortress Exterior Fuse 2", ItemTypes.FUSE, 1) },
+            { "Fortress Courtyard Upper Fuse", new ItemData("Fortress Courtyard Upper Fuse", "progression", "Fortress Courtyard Upper Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Courtyard Fuse", new ItemData("Fortress Courtyard Fuse", "progression", "Fortress Courtyard Fuse", ItemTypes.FUSE, 1) },
+            { "Beneath the Vault Fuse", new ItemData("Beneath the Vault Fuse", "progression", "Beneath the Vault Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Candles Fuse", new ItemData("Fortress Candles Fuse", "progression", "Fortress Candles Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Door Left Fuse", new ItemData("Fortress Door Left Fuse", "progression", "Fortress Door Left Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Door Right Fuse", new ItemData("Fortress Door Right Fuse", "progression", "Fortress Door Right Fuse", ItemTypes.FUSE, 1) },
+
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {
-            if (ItemLookup.FairyLookup.ContainsKey(Check.Reward.Name)) {
+            if (FairyLookup.ContainsKey(Check.Reward.Name)) {
                 return Items["Fairy"];
             } else if (Check.Reward.Name == "Sword Progression") {
                 return Items["Sword Upgrade"];
             } else if (Check.Reward.Name == "Fool Trap") {
                 return Items["Fool Trap"];
             } else {
-                string itemName = ItemLookup.Items.Values.Where(itemdata => itemdata.ItemNameForInventory == Check.Reward.Name && itemdata.QuantityToGive == Check.Reward.Amount).FirstOrDefault().Name;
+                string itemName = Items.Values.Where(itemdata => itemdata.ItemNameForInventory == Check.Reward.Name && itemdata.QuantityToGive == Check.Reward.Amount).FirstOrDefault().Name;
                 return Items.ContainsKey(itemName) ? Items[itemName] : Items["Money x1"];
             }
         }

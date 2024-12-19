@@ -197,6 +197,7 @@
     <Compile Include="src\Data\Tooltips.cs" />
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
+    <Compile Include="src\Patches\FuseRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
     <Compile Include="src\Patches\GrassRandomizer.cs" />
     <Compile Include="src\Patches\FoxgodCutscenePatch.cs" />
@@ -246,6 +247,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="src\Data\Grass.json" />
     <EmbeddedResource Include="src\Data\GrassReqs.json" />
+    <EmbeddedResource Include="src\Data\Fuses.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

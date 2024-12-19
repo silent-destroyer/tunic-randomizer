@@ -247,6 +247,7 @@ namespace TunicRandomizer {
                     Locations.CreateLocationLookups();
                 }
                 GrassRandomizer.LoadGrassChecks();
+                FuseRandomizer.LoadFuseChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
                 SceneLoader.LoadScene("Overworld Redux");
                 return;

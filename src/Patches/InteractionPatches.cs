@@ -216,30 +216,5 @@ namespace TunicRandomizer {
 
             return true;
         }
-
-        public static bool ConduitNode_CheckConnectedToPower_PrefixPatch(ConduitNode __instance, ref bool __result) {
-            if (TunicRandomizer.Settings.EnableAllCheckpoints && __instance != null && __instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
-                __result = true;
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool ConduitData_CheckConnectedToPower_PrefixPatch(ConduitData __instance, ref int guid, ref bool __result) {
-            if (SceneManager.GetActiveScene().name == "Quarry") {
-                __result = true;
-                return false;
-            }
-            return true;
-        }
-
-        public static bool ConduitData_IsFuseClosedByID_PrefixPatch(ConduitData __instance, ref int guid, ref bool __result) {
-            if (SceneManager.GetActiveScene().name == "Quarry") {
-                __result = true;
-                return false;
-            }
-            return true;
-        }
     }
 }
