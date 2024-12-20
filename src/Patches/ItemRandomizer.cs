@@ -75,17 +75,20 @@ namespace TunicRandomizer {
                 ProgressionNames.Remove("Mask");
             }
             if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
-                ProgressionNames.AddRange(LadderItems);
+                ProgressionNames.AddRange(Ladders);
             }
 
-            List<Check> InitialItems = JsonConvert.DeserializeObject<List<Check>>(ItemListJson.ItemList);
+            List<Check> InitialItems = TunicUtils.GetAllInUseChecks();
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                InitialItems.AddRange(GrassRandomizer.GrassChecks.Values.Where(check => !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)));
                 ProgressionNames.AddRange(GrassCutters);
             }
+            
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
-                InitialItems.AddRange(BreakableShuffle.BreakableChecks.Values);
+                foreach (Check check in InitialItems.Where(check => BreakableShuffle.BreakableChecks.ContainsKey(check.CheckId))) {
+                    check.Reward.Amount = random.Next(1, 6);
+                }
             }
+
             List<Reward> InitialRewards = new List<Reward>();
             List<Location> InitialLocations = new List<Location>();
             // the list of progression items
@@ -461,7 +464,7 @@ namespace TunicRandomizer {
 
             // Add grass checks back in that shouldn't be randomized (ones that are affected by clear early bushes)
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                foreach(KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks.Where(grass => GrassRandomizer.ExcludedGrassChecks.Contains(grass.Key))) {
+                foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks.Where(grass => GrassRandomizer.ExcludedGrassChecks.Contains(grass.Key))) {
                     Locations.RandomizedLocations.Add(pair.Key, pair.Value);
                 }
             }

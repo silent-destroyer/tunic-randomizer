@@ -27,7 +27,6 @@ namespace TunicRandomizer {
         };
 
         public static void LoadBreakableChecks() {
-            System.Random random = new System.Random(SaveFile.GetInt("seed"));
             List<int> moneyAmounts = new List<int> { 1, 2, 3, 4, 5 };  // change this later
             var assembly = Assembly.GetExecutingAssembly();
             var breakableJson = "TunicRandomizer.src.Data.Breakables.json";
@@ -51,17 +50,13 @@ namespace TunicRandomizer {
                     foreach (KeyValuePair<string, Dictionary<string, List<string>>> regionGroup in sceneGroup.Value) {
                         foreach (KeyValuePair<string, List<string>> breakableGroup in regionGroup.Value) {
                             string breakableName = breakableGroup.Key;
-                            int breakableNumber = 1;
-                            int customNumber = 1;  // for breakables that get a unique description
-                            // for places that need more unique numbers, mostly fortress and frog's domain
-                            int customNumber2 = 1; int customNumber3 = 1; int customNumber4 = 1; int customNumber5 = 1; int customNumber6 = 1;
                             foreach (string breakablePosition in breakableGroup.Value) {
                                 string regionName = regionGroup.Key;  // assigned here so specific name overrides can happen
                                 string breakableId = $"{breakableName}~{breakablePosition}";  // also used for checkId, and checkId has scene name in it already
                                 Check check = new Check(new Reward(), new Location());
                                 check.Reward.Name = "money";
                                 check.Reward.Type = "MONEY";
-                                check.Reward.Amount = moneyAmounts[random.Next(moneyAmounts.Count)];
+                                check.Reward.Amount = 1;
 
                                 check.Location.SceneName = sceneName;
                                 check.Location.SceneId = 0;  // Update this if sceneid ever actually gets used for anything

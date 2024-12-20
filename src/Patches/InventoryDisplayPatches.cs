@@ -57,7 +57,6 @@ namespace TunicRandomizer {
                 yield return true;
 
                 int TotalItemCount = TunicUtils.GetAllInUseChecks().Count;
-                TunicLogger.LogInfo(TotalItemCount.ToString());
                 string sceneName = SceneLoaderPatches.SceneName;
                 yield return true;
                 if (GetBool(GrassRandoEnabled) && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {

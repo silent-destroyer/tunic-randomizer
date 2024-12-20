@@ -103,6 +103,11 @@ namespace TunicRandomizer {
         }
         public Check() { }
 
+        public Check(Check check) {
+            Location = check.Location;
+            Reward = check.Reward;
+        }
+
         public Check(Location location, Reward reward) {
             Location = location;
             Reward = reward;

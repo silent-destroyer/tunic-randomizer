@@ -127,7 +127,11 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList());
             }
-            return checks;
+            return CopyListOfChecks(checks);
+        }
+
+        public static List<Check> CopyListOfChecks(List<Check> Checks) {
+            return Checks.Select(Check => new Check(Check)).ToList();
         }
         
         public static int GetCompletedChecksCountInCurrentScene() {
