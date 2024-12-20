@@ -558,7 +558,7 @@ namespace TunicRandomizer {
                 }
 
                 if (material != null) {
-                    foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                    foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                         r.material = material;
                     }
                 }
@@ -585,19 +585,19 @@ namespace TunicRandomizer {
             int randomFlag = new System.Random().Next(3);
             UnityEngine.Color color;
             if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
-                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                     r.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
                     grass.materialForBase = r.material;
                 }
             }
             if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
-                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                     r.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
                     grass.materialForBase = r.material;
                 }
             }
             if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
-                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>()) {
+                foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                     r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
                     grass.materialForBase = r.material;
                 }
