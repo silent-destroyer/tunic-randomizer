@@ -379,7 +379,13 @@ namespace TunicRandomizer {
                 GUI.color = Color.green;
                 GUI.Label(new Rect(95f * guiScale, y, 150f * guiScale, 30f * guiScale), $"Connected!");
                 GUI.color = Color.white;
-                GUI.Label(new Rect(250f * guiScale, y, 300f * guiScale, 30f * guiScale), $"(world {Archipelago.instance.integration.session.ConnectionInfo.Slot} of {Archipelago.instance.integration.session.Players.Players[0].Count-1})");
+                int playerCount = 0;
+                foreach (var player in Archipelago.instance.integration.session.Players.AllPlayers) {
+                    if (player.Slot > 0 && player.GetGroupMembers(Archipelago.instance.integration.session.Players) == null) {
+                        playerCount++;
+                    }
+                }
+                GUI.Label(new Rect(250f * guiScale, y, 300f * guiScale, 30f * guiScale), $"(world {Archipelago.instance.integration.session.ConnectionInfo.Slot} of {playerCount})");
             } else {
                 GUI.color = Color.red;
                 GUI.Label(new Rect(95f * guiScale, y, 300f * guiScale, 30f * guiScale), $"Disconnected");
