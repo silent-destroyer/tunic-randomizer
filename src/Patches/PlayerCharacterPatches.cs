@@ -648,7 +648,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (slotData.TryGetValue("ice_grappling", out var iceGrappling)) {
-                    if (iceGrappling.ToString() == "2" || iceGrappling.ToString() == "3") {
+                    if (iceGrappling.ToString() != "0") {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }
