@@ -882,6 +882,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.TRINKET) {
                     moveUp.name = "Card";
                 }
+                if (transform.name == "Physical Post") {
+                    moveUp.transform.localScale *= 0.85f;
+                }
             }
         }
 
