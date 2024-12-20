@@ -243,7 +243,59 @@ namespace TunicRandomizer {
                 RegisterNewItemPresentation(GrassPresentation.GetComponent<ItemPresentationGraphic>());
             } catch (Exception e) {
                 TunicLogger.LogError("Grass presentation error: " + e.Message);
+            }
+        }
 
+        public static void SetupFusePresentation() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "VaultKey").First().gameObject;
+                GameObject FusePresentation = GameObject.Instantiate(PresentationBase);
+                GameObject FuseObject = GameObject.Instantiate(FuseRandomizer.FusePrefab);
+
+                if (FusePresentation.GetComponent<MeshFilter>() != null && FusePresentation.GetComponent<MeshRenderer>() != null) {
+                    GameObject.Destroy(FusePresentation.GetComponent<MeshFilter>());
+                    GameObject.Destroy(FusePresentation.GetComponent<MeshRenderer>());
+                }
+
+                FusePresentation.transform.parent = PresentationBase.transform.parent;
+                FusePresentation.transform.localPosition = Vector3.zero;
+                FusePresentation.transform.localScale = Vector3.one;
+                FuseObject.transform.parent = FusePresentation.transform;
+                FuseObject.transform.localScale = Vector3.one * 0.125f;
+                FuseObject.transform.localPosition = Vector3.zero;
+                FuseObject.transform.localEulerAngles = new Vector3(15f, 180f, 330f);
+                FuseObject.layer = 5;
+                FuseObject.transform.localPosition = new Vector3(0.3f, -0.3f, 0f);
+                FuseObject.transform.GetChild(0).transform.localPosition = new Vector3(0f, 5f, 0f);
+                foreach (Transform transform in FuseObject.GetComponentsInChildren<Transform>(true)) {
+                    transform.gameObject.layer = 5;
+                }
+
+                FuseObject.GetComponent<Fuse>().Start();
+                GameObject.Destroy(FuseObject.GetComponent<Fuse>());
+                GameObject.Destroy(FuseObject.GetComponent<ConduitNode>());
+
+                FusePresentation.name = "fuse";
+                FusePresentation.layer = 5;
+                
+                FusePresentation.GetComponent<ItemPresentationGraphic>().items = ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.FUSE).Select(item => Inventory.GetItemByName(item.Name)).ToArray();
+
+                FusePresentation.SetActive(false);
+                FuseObject.SetActive(true);
+
+                // change the appearance of the default textured box covering the bottom of the fuse
+                GameObject underside = FuseObject.transform.GetChild(2).gameObject;
+                underside.GetComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("omnifuse");
+                underside.transform.localPosition = new Vector3(-1.3f, -0.3f, 1.3f);
+                underside.transform.localScale = new Vector3(0.65f, 1f, 0.65f);
+                FuseObject.transform.GetChild(0).GetChild(0).GetChild(12).GetChild(8).gameObject.SetActive(false);
+
+                RegisterNewItemPresentation(FusePresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Fuse"] = FuseObject;
+
+            } catch (Exception e) {
+                TunicLogger.LogError("Fuse presentation error: " + e.Message);
             }
         }
 

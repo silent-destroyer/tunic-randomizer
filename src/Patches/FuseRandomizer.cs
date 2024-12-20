@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Reflection;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 namespace TunicRandomizer {
     public struct FuseInformation {
@@ -17,7 +18,8 @@ namespace TunicRandomizer {
 
     public class FuseRandomizer {
 
-        public const string fusePrefabRoot = "_Checkpoints, Fuses, Platform/TUNIC_Fuse_Big/omnifuse animator/root/";
+        public const string fusePrefabRoot = "_Checkpoints, Fuses, Platform/TUNIC_Fuse_Big";
+
         public static List<FuseInformation> Fuses = new List<FuseInformation>();
         public static string fuseFilePath = $"{Application.persistentDataPath}/Randomizer/Fuses.json";
         public static GameObject FusePrefab;
@@ -25,6 +27,12 @@ namespace TunicRandomizer {
         
         public static Dictionary<string, Check> FuseChecks = new Dictionary<string, Check>();
 
+        public static void Setup() {
+            LoadFuseChecks();
+            CreateFuseItems();
+            InstantiateFusePrefab();
+            ItemPresentationPatches.SetupFusePresentation();
+        }
         public static void LoadFuseChecks() {
             FuseChecks.Clear();
             var assembly = Assembly.GetExecutingAssembly();
@@ -39,14 +47,32 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void CreateFuseItems() {
+            foreach (ItemData FuseItem in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.FUSE)) {
+                CreateFuseItem(FuseItem.Name);
+            }
+        }
+
+        private static void CreateFuseItem(string name) {
+
+            SpecialItem Fuse = ScriptableObject.CreateInstance<SpecialItem>();
+
+            Fuse.name = name;
+            Fuse.collectionMessage = TunicUtils.CreateLanguageLine("A fyooz?");
+            Fuse.controlAction = "";
+
+            Inventory.itemList.Add(Fuse);
+        }
+
         public static void InstantiateFusePrefab() {
             if (FusePrefab == null) {
                 GameObject fuse = GameObject.Find(fusePrefabRoot);
                 if (fuse != null) {
                     FusePrefab = GameObject.Instantiate(fuse);
-                    FusePrefab.GetComponent<ConduitNode>().Guid = -1;
+                    //FusePrefab.GetComponent<ConduitNode>().Guid = -1;
                     FusePrefab.SetActive(false);
                     FusePrefab.transform.position = new Vector3(-30000, -30000, -30000);
+                    GameObject.DontDestroyOnLoad(FusePrefab);
                 }
             }
         }

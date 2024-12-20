@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -91,6 +92,11 @@ namespace TunicRandomizer {
             UpdateChecksInLogic();
         }
 
+        public static LanguageLine CreateLanguageLine(string text) {
+            LanguageLine languageLine = ScriptableObject.CreateInstance<LanguageLine>();
+            languageLine.text = text;
+            return languageLine;
+        }
 
         // updates PlayerItemsAndRegions based on which items the player has received, then updates ChecksInLogic based on the player's items/accessible regions
         public static void UpdateChecksInLogic() {
