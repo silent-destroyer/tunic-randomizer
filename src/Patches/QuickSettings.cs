@@ -1017,6 +1017,7 @@ namespace TunicRandomizer {
                     });
                 }
             }
+            ERData.RandomizedPortals.Clear();
             return true;
         }
 
