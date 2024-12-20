@@ -257,7 +257,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
             } else {
-                ERData.RandomizedPortals = ERScripts.VanillaPortals();
+                ERData.RandomizedPortals = ERData.VanillaPortals;
             }
 
             // used in fill to keep checks that you've re-collected items from from being collected again
@@ -574,7 +574,7 @@ namespace TunicRandomizer {
         // in non-ER, we want the actual sphere 1
         public static Dictionary<string, int> GetSphereOne(Dictionary<string, int> startInventory = null) {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
-            Dictionary<string, PortalCombo> vanillaPortals = ERScripts.VanillaPortals();
+            Dictionary<string, PortalCombo> vanillaPortals = ERData.VanillaPortals;
             if (startInventory == null) {
                 TunicUtils.AddListToDict(Inventory, PrecollectedItems);
             } else {
@@ -601,7 +601,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 portalList = ERData.RandomizedPortals;
             } else {
-                portalList = ERScripts.VanillaPortals();
+                portalList = ERData.VanillaPortals;
             }
 
             while (true) {
