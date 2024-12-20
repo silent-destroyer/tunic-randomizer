@@ -666,7 +666,7 @@
                     ""Position"": ""(162.2, 0.1, -8.5)"",
                     ""Requirements"": [
                         {
-                            ""Guard House 2 Upper"": 1
+                            ""Guard House 2 Upper after bushes"": 1
                         }
                     ]
                 }

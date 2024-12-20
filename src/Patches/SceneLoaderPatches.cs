@@ -527,7 +527,10 @@ namespace TunicRandomizer {
                 });
                 GhostHints.SpawnTorchHintGhost();
             } else {
-                ERData.RandomizedPortals.Clear();
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
+                ERData.RandomizedPortals = ERData.VanillaPortals;
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();
