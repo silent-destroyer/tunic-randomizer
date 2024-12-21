@@ -3,7 +3,9 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;
-using FMOD;
+using Newtonsoft.Json;
+using System.IO;
+using JetBrains.Annotations;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
@@ -241,5 +243,6 @@ namespace TunicRandomizer {
             }
             return true;
         }
+
     }
 }

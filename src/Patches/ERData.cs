@@ -1851,7 +1851,7 @@ namespace TunicRandomizer {
                 "Frog's Domain Entry",
                 new RegionInfo("frog cave main", false)
             },
-            {
+            {  // for breakable shuffle, need combat logic or wand for the pots in the orb room
                 "Frog's Domain",
                 new RegionInfo("frog cave main", false)
             },
@@ -1949,6 +1949,10 @@ namespace TunicRandomizer {
             },
             {
                 "Beneath the Vault Ladder Exit",
+                new RegionInfo("Fortress Basement", false)
+            },
+            {  // at the bottom of the ladder, added for breakable shuffle
+                "Beneath the Vault Entry Spot",
                 new RegionInfo("Fortress Basement", false)
             },
             {
@@ -4129,10 +4133,31 @@ namespace TunicRandomizer {
                 "Beneath the Vault Ladder Exit",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "Beneath the Vault Entry Spot",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Beneath the Vault",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Beneath the Vault Entry Spot",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Beneath the Vault Ladder Exit",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladder to Beneath the Vault",
+                            },
+                        }
+                    },
+                    {  // todo: ap logic says you need a weapon or a way to get a bomb to do this, decide whether to put it here too
                         "Beneath the Vault Main",
                         new List<List<string>> {
                             new List<string> {
-                                "Lantern", "Ladder to Beneath the Vault",
+                                "Lantern",
                             },
                         }
                     },
@@ -4142,11 +4167,8 @@ namespace TunicRandomizer {
                 "Beneath the Vault Main",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Beneath the Vault Ladder Exit",
+                        "Beneath the Vault Entry Spot",
                         new List<List<string>> {
-                            new List<string> {
-                                "Ladder to Beneath the Vault",
-                            },
                         }
                     },
                     {

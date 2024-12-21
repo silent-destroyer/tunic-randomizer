@@ -18,6 +18,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> RandomizedLocations = new Dictionary<string, Check> { };
         public static Dictionary<string, bool> CheckedLocations = new Dictionary<string, bool>();
 
+        // For vanilla checks only
         public static Dictionary<string, int> CheckCountsPerScene = new Dictionary<string, int>();
 
         public static Dictionary<string, List<ArchipelagoHint>> MajorItemLocations = new Dictionary<string, List<ArchipelagoHint>>();

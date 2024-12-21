@@ -427,6 +427,30 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
+                        foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
+                            string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
+                            if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                                if ((SwappedThisSceneAlready && !IsSwordCheck(breakableId)) || Locations.CheckedLocations[breakableId]) {
+                                    continue;
+                                }
+                                ApplyBreakableTexture(breakableObject);
+                                breakableObject.maxCoinDrop = 0;
+                                breakableObject.minCoinDrop = 0;
+                            }
+                        }
+                        if (SceneManager.GetActiveScene().name == "Dusty") {
+                            foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
+                                string leafId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                                if (Locations.RandomizedLocations.ContainsKey(leafId) || ItemLookup.ItemList.ContainsKey(leafId)) {
+                                    if ((SwappedThisSceneAlready && !IsSwordCheck(leafId)) || Locations.CheckedLocations[leafId]) {
+                                        continue;
+                                    }
+                                    ApplyDustyTexture(leafPile);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
@@ -618,6 +642,177 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
+        public static void ApplyBreakableTexture(SmashableObject breakableObject) {
+            string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
+            if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[breakableId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    SetupItemMoveUp(breakableObject.transform, check: check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[breakableId];
+                    SetupItemMoveUp(breakableObject.transform, itemInfo: itemInfo);
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPBreakableTexture(breakableObject, itemInfo, Locations.CheckedLocations[breakableId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {breakableId} was collected") == 1));
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+                if (Item.Type == ItemTypes.GRASS) {
+                    return;
+                }
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+                if (material != null) {
+                    foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                        if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null) { continue; }
+                        r.material = material;
+                    }
+                }
+            }
+        }
+
+        public static void ApplyAPBreakableTexture(SmashableObject breakableObject, ItemInfo itemInfo, bool Checked) {
+            GameObject questionMark = new GameObject("question mark");
+            //for (int i = 0; i < leafPile.transform.GetChild(1).childCount; i++) {
+            //    GameObject.Destroy(leafPile.transform.GetChild(1).GetChild(i).gameObject);
+            //}
+            questionMark.transform.parent = breakableObject.transform;
+            questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
+            questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
+            questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+            questionMark.transform.localScale = new Vector3(0.33f, 0.33f, 0.33f);
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            UnityEngine.Color color = new UnityEngine.Color();
+            bool customColor = false;
+
+            MeshRenderer mesh = breakableObject.GetComponentInChildren<MeshRenderer>();
+            mesh.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
+                customColor = true;
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                customColor = true;
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                    if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
+                    r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                }
+                if (flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                    questionMark.GetComponent<SpriteRenderer>().color = UnityEngine.Color.cyan;
+                    questionMark.GetComponent<SpriteRenderer>().material.color = UnityEngine.Color.cyan;
+                }
+            } else if (customColor) {
+                foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                    if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
+                    r.material.color = color;
+                }
+            }
+
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
+            }
+            questionMark.SetActive(!Checked);
+        }
+
+        public static void ApplyDustyTexture(DustyPile leafPile) {
+            string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+            if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[breakableId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    SetupItemMoveUp(leafPile.transform, check: check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[breakableId];
+                    SetupItemMoveUp(leafPile.transform, itemInfo: itemInfo);
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPDustyTexture(leafPile, itemInfo, Locations.CheckedLocations[breakableId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {breakableId} was collected") == 1));
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+                if (Item.Type == ItemTypes.GRASS) {
+                    return;
+                }
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+
+                if (Item.Name == "Fool Trap") {
+                    foreach (Transform child in leafPile.gameObject.GetComponentsInChildren<Transform>()) {
+                        if (child.name == leafPile.name) { continue; }
+                        child.localEulerAngles = new Vector3(180, 0, 0);
+                        child.position += new Vector3(0, 2, 0);
+                    }
+                }
+                if (material != null) {
+                    foreach (MeshRenderer r in leafPile.gameObject.GetComponentsInChildren<MeshRenderer>()) {
+                        r.material = material;
+                    }
+                }
+            }
+        }
+
+        public static void ApplyAPDustyTexture(DustyPile leafPile, ItemInfo itemInfo, bool Checked) {
+            GameObject questionMark = new GameObject("question mark");
+            //for (int i = 0; i < leafPile.transform.GetChild(1).childCount; i++) {
+            //    GameObject.Destroy(leafPile.transform.GetChild(1).GetChild(i).gameObject);
+            //}
+            questionMark.transform.parent = leafPile.transform;
+            questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
+            questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
+            questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+            questionMark.transform.localScale = new Vector3(0.33f, 0.33f, 0.33f);
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            UnityEngine.Color color;
+
+            MeshRenderer mesh = leafPile.GetComponentInChildren<MeshRenderer>();
+            mesh.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+            
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                mesh.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                mesh.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                mesh.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                if (flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                    questionMark.GetComponent<SpriteRenderer>().color = UnityEngine.Color.cyan;
+                    questionMark.GetComponent<SpriteRenderer>().material.color = UnityEngine.Color.cyan;
+                }
+            }
+
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
+            }
+            questionMark.SetActive(!Checked);
+        }
+
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
             if (check == null && itemInfo == null) { return; }
 
@@ -681,6 +876,16 @@ namespace TunicRandomizer {
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
             moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
+            if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null) {
+                moveUp.transform.parent = transform;
+                // so we can rotate it properly
+                if (Item.Type == ItemTypes.TRINKET) {
+                    moveUp.name = "Card";
+                }
+                if (transform.name == "Physical Post") {
+                    moveUp.transform.localScale *= 0.66f;
+                }
+            }
         }
 
         public static void CheckCollectedItemFlags() {
