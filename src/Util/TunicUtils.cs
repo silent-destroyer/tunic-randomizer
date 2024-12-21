@@ -130,6 +130,15 @@ namespace TunicRandomizer {
             return CopyListOfChecks(checks);
         }
 
+        public static Dictionary<string, Check> GetAllInUseChecksDictionary() {
+            // Get a list of all default checks based on settings
+            Dictionary<string, Check> Checks = new Dictionary<string, Check>();
+            foreach (Check check in GetAllInUseChecks()) {
+                Checks.Add(check.CheckId, check);
+            }
+            return Checks;
+        }
+
         public static List<Check> CopyListOfChecks(List<Check> Checks) {
             return Checks.Select(Check => new Check(Check)).ToList();
         }
