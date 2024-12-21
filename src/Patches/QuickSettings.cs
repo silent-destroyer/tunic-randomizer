@@ -1017,6 +1017,7 @@ namespace TunicRandomizer {
                     });
                 }
             }
+            // if this isn't here then it'll fail to place you at an entrance when you hit load
             ERData.RandomizedPortals.Clear();
             return true;
         }

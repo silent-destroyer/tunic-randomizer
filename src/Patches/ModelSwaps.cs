@@ -883,7 +883,7 @@ namespace TunicRandomizer {
                     moveUp.name = "Card";
                 }
                 if (transform.name == "Physical Post") {
-                    moveUp.transform.localScale *= 0.85f;
+                    moveUp.transform.localScale *= 0.66f;
                 }
             }
         }
