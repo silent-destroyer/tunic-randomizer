@@ -58,7 +58,7 @@ namespace TunicRandomizer {
             SpecialItem Fuse = ScriptableObject.CreateInstance<SpecialItem>();
 
             Fuse.name = name;
-            Fuse.collectionMessage = TunicUtils.CreateLanguageLine("A fyooz?");
+            Fuse.collectionMessage = TunicUtils.CreateLanguageLine($"\"{Fuse.name.Replace("Fuse", "")}\"");
             Fuse.controlAction = "";
 
             Inventory.itemList.Add(Fuse);
