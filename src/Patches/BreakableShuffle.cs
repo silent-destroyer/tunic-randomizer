@@ -76,8 +76,8 @@ namespace TunicRandomizer {
                                     }
                                     check.Location.Requirements.Add(new Dictionary<string, int> { { breaker, 1 }, { regionName, 1 } });
                                 }
-                                if (extraBreakableReqs.ContainsKey(breakableId)) {
-                                    foreach (List<string> req in extraBreakableReqs[breakableId]) {
+                                if (extraBreakableReqs.ContainsKey($"{sceneName}~{breakableId}")) {
+                                    foreach (List<string> req in extraBreakableReqs[$"{sceneName}~{breakableId}"]) {
                                         Dictionary<string, int> reqDict = TunicUtils.ChangeListToDict(req);
                                         check.Location.Requirements.Add(reqDict);
                                     }
