@@ -1,5 +1,5 @@
 {
-    "Fortress Courtyard~Urn Firey~(-28.9, 0.0, -32.9)": [
+    "Urn Firey~(-28.9, 0.0, -32.9)": [
         [
             "Fortress Exterior near cave",
             "Techbow"
@@ -9,7 +9,7 @@
             "Shotgun"
         ]
     ],
-    "Fortress Courtyard~Urn Firey~(-29.4, 0.0, -35.3)": [
+    "Urn Firey~(-29.4, 0.0, -35.3)": [
         [
             "Fortress Exterior near cave",
             "Techbow"
@@ -19,19 +19,19 @@
             "Shotgun"
         ]
     ],
-    "Fortress Courtyard~Urn Firey~(-19.0, 0.0, -25.0)": [
+    "Urn Firey~(-19.0, 0.0, -25.0)": [
         [
             "Fortress Exterior near cave",
             "Techbow"
         ]
     ],
-    "Fortress Courtyard~Urn Firey~(-20.3, 0.0, -27.7)": [
+    "Urn Firey~(-20.3, 0.0, -27.7)": [
         [
             "Fortress Exterior near cave",
             "Techbow"
         ]
     ],
-    "Fortress Courtyard~Urn Firey~(37.0, 8.0, -41.0)": [
+    "Urn Firey~(37.0, 8.0, -41.0)": [
         [
             "Fortress Courtyard",
             "Techbow"
@@ -41,7 +41,7 @@
             "Shotgun"
         ]
     ],
-    "Fortress Reliquary~Urn Firey~(135.7, 0.0, -31.0)": [
+    "Urn Firey~(135.7, 0.0, -31.0)": [
         [
             "Fortress Grave Path Upper",
             "Techbow"
@@ -51,43 +51,43 @@
             "Shotgun"
         ]
     ],
-    "Fortress Reliquary~Urn~(174.0, 0.0, -43.0)": [
+    "Urn~(174.0, 0.0, -43.0)": [
         [
             "Fortress Grave Path Dusty Entrance",
             "Techbow"
         ]
     ],
-    "Fortress Reliquary~Urn~(176.0, 0.0, -43.0)": [
+    "Urn~(176.0, 0.0, -43.0)": [
         [
             "Fortress Grave Path Dusty Entrance",
             "Techbow"
         ]
     ],
-    "Fortress Reliquary~Urn~(178.0, 0.0, -43.0)": [
+    "Urn~(178.0, 0.0, -43.0)": [
         [
             "Fortress Grave Path Dusty Entrance",
             "Techbow"
         ]
     ],
-    "Fortress Reliquary~Urn~(174.0, 0.0, -37.0)": [
+    "Urn~(174.0, 0.0, -37.0)": [
         [
             "Fortress Grave Path Dusty Entrance",
             "Techbow"
         ]
     ],
-    "Fortress Reliquary~Urn~(176.0, 0.0, -37.0)": [
+    "Urn~(176.0, 0.0, -37.0)": [
         [
             "Fortress Grave Path Dusty Entrance",
             "Techbow"
         ]
     ],
-    "Fortress Reliquary~Urn~(178.0, 0.0, -37.0)": [
+    "Urn~(178.0, 0.0, -37.0)": [
         [
             "Fortress Grave Path Dusty Entrance",
             "Techbow"
         ]
     ],
-    "Dusty~leaf pile~(53.0, 26.0, 46.8)": [
+    "leaf pile~(53.0, 26.0, 46.8)": [
         [
             "Fortress Leaf Piles",
             "Stick"
@@ -105,7 +105,7 @@
             "Shotgun"
         ]
     ],
-    "Dusty~leaf pile~(55.3, 26.0, 40.4)": [
+    "leaf pile~(55.3, 26.0, 40.4)": [
         [
             "Fortress Leaf Piles",
             "Stick"
@@ -123,7 +123,7 @@
             "Shotgun"
         ]
     ],
-    "Dusty~leaf pile~(59.7, 26.0, 46.3)": [
+    "leaf pile~(59.7, 26.0, 46.3)": [
         [
             "Fortress Leaf Piles",
             "Stick"
@@ -141,7 +141,7 @@
             "Shotgun"
         ]
     ],
-    "Dusty~leaf pile~(60.7, 26.0, 41.6)": [
+    "leaf pile~(60.7, 26.0, 41.6)": [
         [
             "Fortress Leaf Piles",
             "Stick"
@@ -159,7 +159,7 @@
             "Shotgun"
         ]
     ],
-    "Quarry Redux~Urn Explosive~(-53.0, -20.0, -6.0)": [
+    "Urn Explosive~(-53.0, -20.0, -6.0)": [
         [
             "Quarry Back",
             "Techbow"
@@ -169,7 +169,7 @@
             "Shotgun"
         ]
     ],
-    "Quarry Redux~Urn Explosive~(-56.0, -20.0, -6.0)": [
+    "Urn Explosive~(-56.0, -20.0, -6.0)": [
         [
             "Quarry Back",
             "Techbow"
