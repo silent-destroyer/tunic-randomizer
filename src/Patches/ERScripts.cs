@@ -414,9 +414,7 @@ namespace TunicRandomizer {
             bool decoupledEnabled = SaveFile.GetInt(SaveFlags.Decoupled) == 1;
             bool dirPairsEnabled = SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1;
 
-            int seedIncrement = 0;  // for when a specific part fails and needs to load a portal back in
-
-            TunicUtils.ShuffleList(twoPlusPortals, seed + seedIncrement);
+            TunicUtils.ShuffleList(twoPlusPortals, seed);
             List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
             int failCount = 0;
             int previousConnNum = 0;
@@ -445,7 +443,10 @@ namespace TunicRandomizer {
                         foreach (string thing in FullInventory.Keys) {
                             TunicLogger.LogInfo(thing);
                         }
-                        throw new System.Exception("Failed to pair portals.");
+                        //throw new System.Exception("Failed to pair portals.");
+                        // reroll, hopefully this shouldn't be common at all
+                        RandomizePortals(seed + 1);
+                        return;
                     }
                 } else {
                     failCount = 0;
@@ -482,6 +483,9 @@ namespace TunicRandomizer {
                     foreach (Portal debugportal in twoPlusPortals) {
                         TunicLogger.LogInfo(debugportal.Name);
                     }
+                    // reroll, hopefully this shouldn't be common at all
+                    RandomizePortals(seed + 1);
+                    return;
                 }
 
                 foreach (Portal portal in twoPlusPortals2) {
@@ -534,6 +538,9 @@ namespace TunicRandomizer {
                     } else {
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogError("something messed up in portal pairing for portal 2");
+                        // reroll, hopefully this shouldn't be common at all
+                        RandomizePortals(seed + 1);
+                        return;
                     }
                 }
 
@@ -554,9 +561,9 @@ namespace TunicRandomizer {
                     FullInventory.Add("Hyperdash", 1);
                 }
                 
-                TunicUtils.ShuffleList(twoPlusPortals, seed + seedIncrement);
+                TunicUtils.ShuffleList(twoPlusPortals, seed);
                 if (twoPlusPortals != twoPlusPortals2) {
-                    TunicUtils.ShuffleList(twoPlusPortals2, seed + seedIncrement);
+                    TunicUtils.ShuffleList(twoPlusPortals2, seed);
                 }
             }
             TunicLogger.LogTesting("done pairing twoplusportals");
@@ -613,7 +620,9 @@ namespace TunicRandomizer {
                     foreach (Portal portal in twoPlusPortals2) {
                         TunicLogger.LogInfo(portal.Name);
                     }
-                    break;
+                    // reroll, hopefully this shouldn't be common at all
+                    RandomizePortals(seed + 1);
+                    return;
                 }
                 Portal portal1 = twoPlusPortals[0];
                 twoPlusPortals.RemoveAt(0);
@@ -644,7 +653,10 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo("Possible error combo: " + combo.Portal1.Name + " and " + combo.Portal2.Name);
                         }
                     }
-                    throw new System.Exception("Failed to pair portals in the end step");
+                    //throw new System.Exception("Failed to pair portals in the end step");
+                    // reroll, hopefully this shouldn't be common at all
+                    RandomizePortals(seed + 1);
+                    return;
                 }
                 randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
                 comboNumber++;
