@@ -630,6 +630,11 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(LadderRandoEnabled, 1);
                     }
                 }
+                if (slotData.TryGetValue("breakable_shuffle", out var breakableShuffle)) {
+                    if (SaveFile.GetInt(BreakableShuffleEnabled) == 0 && breakableShuffle.ToString() == "1") {
+                        SaveFile.SetInt(BreakableShuffleEnabled, 1);
+                    }
+                }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));

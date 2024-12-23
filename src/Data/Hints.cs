@@ -72,13 +72,7 @@ namespace TunicRandomizer {
                 mailboxItem = CreateSinglePlayerMailboxHint(random);
             }
 
-            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
-            foreach(KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
-            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
 
             Hint = $"lehjehnd sehz <#FF00FF>suhm%i^ ehkstruhordinArE<#FFFFFF>  [laurels] ";
             if (IsArchipelago()) {
@@ -278,13 +272,7 @@ namespace TunicRandomizer {
             string Prefix = "";
             string RelicHint = "";
 
-            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
-            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
-            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
 
             foreach (ItemData Relic in Relics) {
                 string itemDisplayText = $"{TextBuilderPatches.ItemNameToAbbreviation[Relic.Name]}  {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(ItemLookup.BonusUpgrades[Relic.ItemNameForInventory].CustomPickupMessage, false) : ItemLookup.BonusUpgrades[Relic.ItemNameForInventory].CustomPickupMessage.ToUpper())}";
@@ -416,13 +404,7 @@ namespace TunicRandomizer {
             string Hint = "";
             int Player = Archipelago.instance.GetPlayerSlot();
 
-            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
-            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
-            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
 
             List<string> MailboxItems = new List<string>() { "Stick", "Sword", "Sword Upgrade", "Magic Dagger", "Magic Wand", "Magic Orb", "Lantern", "Gun", "Scavenger Mask", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)" };
             if (SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1) {

@@ -819,7 +819,9 @@ namespace TunicRandomizer {
             if (transform.GetComponentInChildren<MoveUp>(true) != null && !transform.GetComponentInChildren<MoveUp>(true).gameObject.active) {
                 GameObject.Destroy(transform.GetComponentInChildren<MoveUp>(true).gameObject);
             }
+
             ItemData Item = null;
+
             if (check != null) {
                 Item = ItemLookup.GetItemDataFromCheck(check);
             } else if (itemInfo != null && Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
@@ -831,6 +833,7 @@ namespace TunicRandomizer {
             if (transform.GetComponent<Chest>() != null && Item != null && Item.Type == ItemTypes.FAIRY) {
                 return;
             }
+
             GameObject moveUp = SetupItemBase(transform, itemInfo, check);
             TransformData TransformData;
             if (IsArchipelago() && Item == null && itemInfo != null && !Archipelago.instance.IsTunicPlayer(itemInfo.Player)) {
@@ -869,6 +872,18 @@ namespace TunicRandomizer {
                     }
                 }
             }
+
+            if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null) {
+                moveUp.transform.parent = transform;
+                // so we can rotate it properly
+                if (Item != null && Item.Type == ItemTypes.TRINKET) {
+                    moveUp.name = "Card";
+                }
+                if (transform.name == "Physical Post") {
+                    moveUp.transform.localScale *= 0.66f;
+                }
+            }
+
             moveUp.transform.localScale = TransformData.scale;
             moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
 
@@ -876,16 +891,6 @@ namespace TunicRandomizer {
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
             moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
-            if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null) {
-                moveUp.transform.parent = transform;
-                // so we can rotate it properly
-                if (Item.Type == ItemTypes.TRINKET) {
-                    moveUp.name = "Card";
-                }
-                if (transform.name == "Physical Post") {
-                    moveUp.transform.localScale *= 0.66f;
-                }
-            }
         }
 
         public static void CheckCollectedItemFlags() {

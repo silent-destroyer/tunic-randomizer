@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Archipelago.MultiClient.Net.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -144,10 +145,12 @@ namespace TunicRandomizer {
                     Check check = Locations.RandomizedLocations[breakableId];
                     ItemPatches.GiveItem(check, alwaysSkip: true);
 
-                    GameObject fairyTarget = GameObject.Find($"fairy target {check.CheckId}");
-                    if (fairyTarget != null) {
-                        GameObject.Destroy(fairyTarget);
-                    }
+                } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
+                }
+                GameObject fairyTarget = GameObject.Find($"fairy target {breakableId}");
+                if (fairyTarget != null) {
+                    GameObject.Destroy(fairyTarget);
                 }
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
@@ -181,6 +184,8 @@ namespace TunicRandomizer {
                     if (fairyTarget != null) {
                         GameObject.Destroy(fairyTarget);
                     }
+                } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
                 }
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;

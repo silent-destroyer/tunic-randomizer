@@ -221,6 +221,8 @@ namespace TunicRandomizer {
                 return;
             }
 
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
+
             int seed = SaveFile.GetInt("seed");
             Dictionary<string, List<string>> SpoilerLog = new Dictionary<string, List<string>>();
             foreach (string Key in Locations.SceneNamesForSpoilerLog.Keys) {
@@ -233,7 +235,7 @@ namespace TunicRandomizer {
 
                     string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Item.Player.Name})";
 
-                    SpoilerLog[GrassRandomizer.GrassChecks.ContainsKey(Key) ? GrassRandomizer.GrassChecks[Key].Location.SceneName : Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
+                    SpoilerLog[AllLocations[Key].Location.SceneName].Add(Spoiler);
                 }
             }
             if (IsSinglePlayer()) {
