@@ -692,6 +692,7 @@ namespace TunicRandomizer {
             questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
             questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
             questionMark.transform.localScale = new Vector3(0.33f, 0.33f, 0.33f);
+
             ItemFlags flag = itemInfo.Flags;
             int randomFlag = new System.Random().Next(3);
             UnityEngine.Color color = new UnityEngine.Color();
@@ -873,6 +874,14 @@ namespace TunicRandomizer {
                 }
             }
 
+            moveUp.transform.localScale = TransformData.scale;
+            moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
+
+            moveUp.layer = 0;
+            moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
+            moveUp.AddComponent<MoveUp>().speed = 0.5f;
+            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
+
             if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null) {
                 moveUp.transform.parent = transform;
                 // so we can rotate it properly
@@ -883,14 +892,6 @@ namespace TunicRandomizer {
                     moveUp.transform.localScale *= 0.66f;
                 }
             }
-
-            moveUp.transform.localScale = TransformData.scale;
-            moveUp.transform.localPosition += new Vector3(0, 0.5f, 0);
-
-            moveUp.layer = 0;
-            moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
-            moveUp.AddComponent<MoveUp>().speed = 0.5f;
-            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
         }
 
         public static void CheckCollectedItemFlags() {
