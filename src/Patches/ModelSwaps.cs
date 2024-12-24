@@ -698,8 +698,10 @@ namespace TunicRandomizer {
             UnityEngine.Color color = new UnityEngine.Color();
             bool customColor = false;
 
-            MeshRenderer mesh = breakableObject.GetComponentInChildren<MeshRenderer>();
-            mesh.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+            MeshRenderer meshRenderer = breakableObject.GetComponentInChildren<MeshRenderer>();
+            meshRenderer.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+
+            MeshFilter meshFilter = breakableObject.GetComponentInChildren<MeshFilter>();
 
             if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
                 color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
@@ -725,8 +727,23 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (meshFilter != null) {
+                if (meshFilter.mesh.name.Contains("sewer_barrel")) {
+                    questionMark.transform.localPosition += new Vector3(0f, 0.9f, 0f);
+                }
+                if (meshFilter.mesh.name.Contains("crate")) {
+                    questionMark.transform.localPosition += new Vector3(0f, 0.2f, 0f);
+                }
+            }
+            
             if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
                 questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
+            }
+            
+            if (breakableObject.name == "Physical Post") {
+                questionMark.transform.localPosition = new Vector3(0f, 1f, 0.3f);
+                questionMark.transform.localScale = Vector3.one * 0.2f;
+                questionMark.transform.localEulerAngles = itemInfo.Flags.HasFlag(ItemFlags.Trap) ? new Vector3(0f, 0f, 180f) : Vector3.zero;
             }
             questionMark.SetActive(!Checked);
         }
@@ -762,13 +779,6 @@ namespace TunicRandomizer {
                     material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
                 }
 
-                if (Item.Name == "Fool Trap") {
-                    foreach (Transform child in leafPile.gameObject.GetComponentsInChildren<Transform>()) {
-                        if (child.name == leafPile.name) { continue; }
-                        child.localEulerAngles = new Vector3(180, 0, 0);
-                        child.position += new Vector3(0, 2, 0);
-                    }
-                }
                 if (material != null) {
                     foreach (MeshRenderer r in leafPile.gameObject.GetComponentsInChildren<MeshRenderer>()) {
                         r.material = material;
@@ -784,12 +794,11 @@ namespace TunicRandomizer {
             //}
             questionMark.transform.parent = leafPile.transform;
             questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
-            questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
-            questionMark.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+            questionMark.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+            questionMark.transform.localEulerAngles = new Vector3(0f, 45f, 15f);
             questionMark.transform.localScale = new Vector3(0.33f, 0.33f, 0.33f);
             ItemFlags flag = itemInfo.Flags;
             int randomFlag = new System.Random().Next(3);
-            UnityEngine.Color color;
 
             MeshRenderer mesh = leafPile.GetComponentInChildren<MeshRenderer>();
             mesh.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
@@ -798,7 +807,7 @@ namespace TunicRandomizer {
                 mesh.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
             }
             if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
-                mesh.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                mesh.material.color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
             }
             if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
                 mesh.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
@@ -809,7 +818,7 @@ namespace TunicRandomizer {
             }
 
             if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
-                questionMark.transform.localEulerAngles = new Vector3(90, 180, 0);
+                questionMark.transform.localEulerAngles = new Vector3(0f, 45f, 195f);
             }
             questionMark.SetActive(!Checked);
         }
