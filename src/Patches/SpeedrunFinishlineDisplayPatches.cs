@@ -207,32 +207,28 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.position = new Vector3(0f, 0f, 300f);
             CompletionCanvas.SetActive(false);
 
-            int CheckCount = 0;
-            int ChecksCollectedByOthers = 0;
+            List<Check> AllChecks = TunicUtils.GetAllInUseChecks();
+            int CompletedCheckCount = TunicUtils.GetCompletedChecksCount(AllChecks);
+            int ChecksCollectedByOthers = AllChecks.Where(check => check.IsCollectedInAP).Count();
             bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
             float CheckPercentage = 0;
             int GrassCount = 0;
             float GrassPercentage = 0f;
-            int TotalCheckCount = Locations.VanillaLocations.Count;
+            int TotalCheckCount = AllChecks.Count;
             string Color = "<#FFFFFF>";
 
-            CheckCount = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
-            ChecksCollectedByOthers = IsArchipelago() ? Locations.VanillaLocations.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                TotalCheckCount += GrassRandomizer.GrassChecks.Count;
-                GrassCount = GrassRandomizer.GrassChecks.Keys.Where(key => Locations.CheckedLocations[key] || (IncludeCollected && SaveFile.GetInt($"randomizer {key} was collected") == 1)).Count();
-                CheckCount += GrassCount;
-                ChecksCollectedByOthers += IsArchipelago() ? GrassRandomizer.GrassChecks.Keys.Where(Check => !Locations.CheckedLocations[Check] && SaveFile.GetInt($"randomizer {Check} was collected") == 1).Count() : 0;
+                GrassCount = TunicUtils.GetCompletedChecksCount(GrassRandomizer.GrassChecks.Values.ToList());
                 GrassPercentage = ((float)GrassCount / GrassRandomizer.GrassChecks.Count) * 100.0f;
             }
-            CheckPercentage = ((float)CheckCount / TotalCheckCount) * 100.0f;
-            Color = CheckCount == TotalCheckCount ? $"<#eaa614>" : "<#FFFFFF>";
+            CheckPercentage = ((float)CompletedCheckCount / TotalCheckCount) * 100.0f;
+            Color = CompletedCheckCount == TotalCheckCount ? $"<#eaa614>" : "<#FFFFFF>";
 
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(0, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CheckCount}/{TotalCheckCount}" +
+            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CompletedCheckCount}/{TotalCheckCount}" +
                 $"{(IncludeCollected ? "*" : "")} " +
                 $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}<#FFFFFF>" +
                 $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {(GrassCount == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}{GrassCount}/{GrassRandomizer.GrassChecks.Count}{(IncludeCollected ? "*" : "")} ({Math.Round(GrassPercentage, 2)}%) {((int)GrassPercentage == 69 ? "<size=40%>nice</size>" : "")} {((int)GrassPercentage == 69 && (int)CheckPercentage == 69 ? "<size=40%>x2</size>" : "")} " : $"")}" +
@@ -291,7 +287,7 @@ namespace TunicRandomizer {
             AreaCount.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
             AreaCount.SetActive(true);
             AreaCount.GetComponent<TextMeshPro>().text = $"";
-
+            List<Check> Checks = TunicUtils.GetAllInUseChecks();
             if (Locations.MainAreasToSubAreas.ContainsKey(Area)) {
                 float TotalAreaTime = 0.0f;
                 int TotalAreaChecks = 0;
@@ -299,12 +295,8 @@ namespace TunicRandomizer {
                 float Percentage = 0;
                 bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += Locations.CheckCountsPerScene[SubArea];
-                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
-                    if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                        TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
-                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && (Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1))).Count();
-                    }
+                    TotalAreaChecks += TunicUtils.GetCheckCountInScene(SubArea);
+                    AreaChecksFound += TunicUtils.GetCompletedChecksCountByScene(Checks, SubArea);
                     TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
                 }
                 if (TotalAreaChecks > 0) {
@@ -343,7 +335,7 @@ namespace TunicRandomizer {
                     Check check = Locations.VanillaLocations[Key];
                     if (check.Location.Requirements.Any(req => req.ContainsKey("21")) || new List<string>() { "Mountaintop", "Town_FiligreeRoom", "EastFiligreeCache" }.Contains(check.Location.SceneName)) {
                         TotalChecks++;
-                        if (Locations.CheckedLocations[Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) {
+                        if (check.IsCompletedOrCollected) {
                             ChecksFound++;
                         }
                     }

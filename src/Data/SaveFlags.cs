@@ -43,6 +43,7 @@
         public const string LadderRandoEnabled = "randomizer ladder rando enabled";
         public const string LaurelsLocation = "randomizer laurels location";
         public const string GrassRandoEnabled = "randomizer grass rando enabled";
+        public const string BreakableShuffleEnabled = "randomizer breakable shuffle enabled";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";
