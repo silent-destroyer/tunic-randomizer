@@ -684,9 +684,6 @@ namespace TunicRandomizer {
 
         public static void ApplyAPBreakableTexture(SmashableObject breakableObject, ItemInfo itemInfo, bool Checked) {
             GameObject questionMark = new GameObject("question mark");
-            //for (int i = 0; i < leafPile.transform.GetChild(1).childCount; i++) {
-            //    GameObject.Destroy(leafPile.transform.GetChild(1).GetChild(i).gameObject);
-            //}
             questionMark.transform.parent = breakableObject.transform;
             questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
             questionMark.transform.localPosition = new Vector3(0f, 1.7709f, 0f);
@@ -789,9 +786,6 @@ namespace TunicRandomizer {
 
         public static void ApplyAPDustyTexture(DustyPile leafPile, ItemInfo itemInfo, bool Checked) {
             GameObject questionMark = new GameObject("question mark");
-            //for (int i = 0; i < leafPile.transform.GetChild(1).childCount; i++) {
-            //    GameObject.Destroy(leafPile.transform.GetChild(1).GetChild(i).gameObject);
-            //}
             questionMark.transform.parent = leafPile.transform;
             questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
             questionMark.transform.localPosition = new Vector3(0f, 0.9f, 0f);
