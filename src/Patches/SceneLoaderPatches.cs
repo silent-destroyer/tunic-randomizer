@@ -60,6 +60,9 @@ namespace TunicRandomizer {
             }
 
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
+            if (BossAnnouncer.instance.barVisible) {
+                BossAnnouncer.instance.hideImmediate();
+            }
 
             return true;
         }
