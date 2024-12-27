@@ -1,5 +1,4 @@
-﻿using Archipelago.MultiClient.Net.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -28,7 +27,6 @@ namespace TunicRandomizer {
         };
 
         public static void LoadBreakableChecks() {
-            List<int> moneyAmounts = new List<int> { 1, 2, 3, 4, 5 };  // change this later
             var assembly = Assembly.GetExecutingAssembly();
             var breakableJson = "TunicRandomizer.src.Data.Breakables.json";
             var breakableReqsJson = "TunicRandomizer.src.Data.BreakableReqs.json";
@@ -89,7 +87,9 @@ namespace TunicRandomizer {
                                     BreakableChecksPerScene.Add(check.Location.SceneName, 0);
                                 }
                                 BreakableChecksPerScene[check.Location.SceneName]++;
-                                //APConvertedLines.Add(ConvertToAPLine(description, regionGroup.Key, BreakableBetterNames[breakableName]));
+                                //if (sceneName == "Purgatory") {
+                                //    APConvertedLines.Add(ConvertToAPLine(BreakableCheckDescriptions[check.CheckId], regionGroup.Key, BreakableBetterNames[breakableName]));
+                                //}
                             }
                         }
                     }

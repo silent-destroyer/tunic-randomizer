@@ -125,7 +125,8 @@ namespace TunicRandomizer {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
             }
             if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
-                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList());
+                bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
+                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
             }
             return CopyListOfChecks(checks);
         }

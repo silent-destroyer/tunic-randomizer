@@ -294,6 +294,9 @@ namespace TunicRandomizer {
             }
             
             foreach (string Key in SpoilerLog.Keys) {
+                if (SpoilerLog[Key].Count == 0) {
+                    continue;
+                }
                 SpoilerLogLines.Add(Locations.SceneNamesForSpoilerLog[Key]);
                 SpoilerLog[Key].Sort();
                 foreach (string line in SpoilerLog[Key]) {

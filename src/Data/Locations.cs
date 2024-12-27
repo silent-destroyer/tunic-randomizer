@@ -202,7 +202,8 @@ namespace TunicRandomizer {
             {"Swamp Redux 2", "Swamp"},
             {"Cathedral Redux", "Cathedral"},
             {"Cathedral Arena", "Cathedral (Gauntlet)"},
-            {"RelicVoid", "Hero's Grave"}
+            {"RelicVoid", "Hero's Grave"},
+            {"Purgatory", "Purgatory"},
         };
 
         public static List<string> HolyCrossExcludedScenes = new List<string>() {
