@@ -77,6 +77,7 @@ namespace TunicRandomizer {
             "Cathedral Redux Fox enemy zombie (13)",
             "Fortress Basement Spider Small (3)",
             "Fortress Basement Spider Small (5)",
+            "Fortress Basement Spider Small (10)",
             "Sewer Bat (7)", "Sewer Bat (8)", "Sewer Bat (9)",
             "Sewer Bat (10)", "Sewer Bat (11)", "Sewer Bat (12)",
             "East Forest Redux Skuladot redux (4)",
@@ -84,6 +85,7 @@ namespace TunicRandomizer {
             "East Forest Redux Skuladot redux (6)",
             "East Forest Redux Spider Small (8)",
             "Overworld Redux Honourguard",
+            "Overworld Redux Blob (18)",
         };
 
         public static List<string> BossStateVars = new List<string>() {
