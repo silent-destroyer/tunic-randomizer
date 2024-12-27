@@ -20,7 +20,7 @@ namespace TunicRandomizer {
 
         public override void Load() {
             TunicLogger.SetLogger(Log);
-            TunicLogger.LogInfo(PluginInfo.NAME + " v" + PluginInfo.VERSION + " loaded!");
+            TunicLogger.LogInfo($"{PluginInfo.NAME} v{PluginInfo.VERSION}{(TitleVersion.DevBuild ? "-dev" : "")}{(TitleVersion.BuildDescription != "" ? $" ({TitleVersion.BuildDescription})" : "")} loaded!");
 
             Application.runInBackground = true;
 
