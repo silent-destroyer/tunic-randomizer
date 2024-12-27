@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace TunicRandomizer {
@@ -17,7 +18,7 @@ namespace TunicRandomizer {
         public static bool UpdateAvailable = false;
         public static string UpdateVersion = "";
         public static GameObject Logo;
-        public static GameObject TitleButtons;
+
         public static void Initialize() {
             UpdateVersion = PluginInfo.VERSION;
             try {
@@ -69,7 +70,6 @@ namespace TunicRandomizer {
             if (SecretMayor.shouldBeActive) {
                 Logo.GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer secret_mayor");
             }
-            TitleButtons = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Button Group/");
         }
 
         private static bool isNewerVersion(string newVersion) {
