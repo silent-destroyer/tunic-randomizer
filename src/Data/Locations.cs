@@ -232,7 +232,8 @@ namespace TunicRandomizer {
                     "Overworld Interiors",
                     "Town_FiligreeRoom",
                     "Changing Room",
-                    "Posterity"
+                    "Posterity",
+                    "Purgatory",
                 }
             },
             {
@@ -382,6 +383,7 @@ namespace TunicRandomizer {
                     "Mountaintop",
                     "g_elements",
                     "Playable Intro",
+                    "Purgatory",
                 }
             },
             {
