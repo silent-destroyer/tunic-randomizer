@@ -181,6 +181,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool ShowSlotSettings {
+            get;
+            set;
+        }
+
         public DeathLinkType DeathLinkEffect {
             get;
             set;
@@ -516,6 +521,7 @@ namespace TunicRandomizer {
             CollectReflectsInWorld = false;
             SkipItemAnimations = false;
             SendHintsToServer = false;
+            ShowSlotSettings = false;
             DeathLinkEffect = DeathLinkType.DEATH;
 
             // Hints

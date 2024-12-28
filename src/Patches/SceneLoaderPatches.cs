@@ -86,6 +86,9 @@ namespace TunicRandomizer {
             }
 
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
+            if (BossAnnouncer.instance.barVisible) {
+                BossAnnouncer.instance.hideImmediate();
+            }
 
             return true;
         }
@@ -94,7 +97,7 @@ namespace TunicRandomizer {
 
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
-            EnemyRandomizer.DidArachnophoiaModeAlready = false;
+            ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -566,8 +569,8 @@ namespace TunicRandomizer {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
-                EnemyRandomizer.ToggleArachnophobiaMode();
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !ArachnophobiaMode.DidArachnophobiaModeAlready) {
+                ArachnophobiaMode.ToggleArachnophobiaMode();
             }
 
             try {

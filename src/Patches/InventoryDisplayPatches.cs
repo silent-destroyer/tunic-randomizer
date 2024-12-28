@@ -520,7 +520,7 @@ namespace TunicRandomizer {
                 bool readHint3 = SaveFile.GetInt($"randomizer hex quest read {abilities[2]} hint") == 1;
                 AbilityShuffle.transform.GetChild(13).GetComponent<TextMeshProUGUI>().text = hasAbility1 || readHint1 || (readHint2 && readHint3) ? abilities[0] : "?????";
                 AbilityShuffle.transform.GetChild(14).GetComponent<TextMeshProUGUI>().text = hasAbility2 || readHint2 || (readHint1 && readHint3) ? abilities[1] : "?????";
-                AbilityShuffle.transform.GetChild(15).GetComponent<TextMeshProUGUI>().text = hasAbility3 || readHint3 || (readHint1 && readHint2) || (hasAbility1 && hasAbility2) ? abilities[2] : "?????";
+                AbilityShuffle.transform.GetChild(15).GetComponent<TextMeshProUGUI>().text = hasAbility3 || readHint3 || ((readHint1 || hasAbility1) && (readHint2 || hasAbility2)) ? abilities[2] : "?????";
 
                 AbilityShuffle.transform.GetChild(13).GetComponent<TextMeshProUGUI>().color = hasAbility1 ? Full : Faded;
                 AbilityShuffle.transform.GetChild(14).GetComponent<TextMeshProUGUI>().color = hasAbility2 ? Full : Faded;
