@@ -170,6 +170,8 @@ namespace TunicRandomizer {
             ItemPresentationPatches.SetupCapePresentation();
             ItemPresentationPatches.SetupGrassPresentation();
 
+            ArachnophobiaMode.GetRuneSprites();
+
             // make it so you can pick up money from further away
             List<ItemPickup> coins = Resources.FindObjectsOfTypeAll<ItemPickup>().Where(coin => coin.gameObject.scene.name == "DontDestroyOnLoad").ToList();
             foreach (ItemPickup coin in coins) {

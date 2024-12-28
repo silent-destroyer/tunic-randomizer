@@ -71,7 +71,7 @@ namespace TunicRandomizer {
 
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
-            EnemyRandomizer.DidArachnophoiaModeAlready = false;
+            ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -542,8 +542,8 @@ namespace TunicRandomizer {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
-                EnemyRandomizer.ToggleArachnophobiaMode();
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !ArachnophobiaMode.DidArachnophobiaModeAlready) {
+                ArachnophobiaMode.ToggleArachnophobiaMode();
             }
 
             try {

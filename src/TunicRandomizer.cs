@@ -6,7 +6,6 @@ using System.IO;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
-
 namespace TunicRandomizer {
 
     [BepInPlugin(PluginInfo.GUID, PluginInfo.NAME, PluginInfo.VERSION)]
@@ -42,48 +41,13 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<RecentItemsDisplay>();
             ClassInjector.RegisterTypeInIl2Cpp<FoxgodDecoupledTeleporter>();
 
-            ClassInjector.RegisterTypeInIl2Cpp<MusicShuffler>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("music shuffler", new Il2CppSystem.Type[]
-            {
-                Il2CppType.Of<MusicShuffler>()
-            }) {
-                hideFlags = HideFlags.HideAndDontSave
-            });
-            ClassInjector.RegisterTypeInIl2Cpp<PaletteEditor>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("palette editor gui", new Il2CppSystem.Type[]
-            {
-                Il2CppType.Of<PaletteEditor>()
-            }) {
-                hideFlags = HideFlags.HideAndDontSave
-            });
-            ClassInjector.RegisterTypeInIl2Cpp<QuickSettings>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("quick settings gui", new Il2CppSystem.Type[]
-            {
-                Il2CppType.Of<QuickSettings>()
-            }) {
-                hideFlags = HideFlags.HideAndDontSave
-            });
-            ClassInjector.RegisterTypeInIl2Cpp<CreditsSkipper>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("credits skipper", new Il2CppSystem.Type[]
-            {
-                Il2CppType.Of<CreditsSkipper>()
-            }) {
-                hideFlags = HideFlags.HideAndDontSave
-            });
-            ClassInjector.RegisterTypeInIl2Cpp<InventoryCounter>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("inventory counter", new Il2CppSystem.Type[]
-            {
-                Il2CppType.Of<InventoryCounter>()
-            }) {
-                hideFlags = HideFlags.HideAndDontSave
-            });
-            ClassInjector.RegisterTypeInIl2Cpp<PlayerPositionDisplay>();
-            UnityEngine.Object.DontDestroyOnLoad(new GameObject("player position display", new Il2CppSystem.Type[]
-            {
-                Il2CppType.Of<PlayerPositionDisplay>()
-            }) {
-                hideFlags = HideFlags.HideAndDontSave
-            });
+            RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
+            RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
+            RegisterTypeAndCreateObject(typeof(QuickSettings), "quick settings gui");
+            RegisterTypeAndCreateObject(typeof(CreditsSkipper), "credits skipper");
+            RegisterTypeAndCreateObject(typeof(InventoryCounter), "inventory counter");
+            RegisterTypeAndCreateObject(typeof(PlayerPositionDisplay), "player position display");
+            RegisterTypeAndCreateObject(typeof(ArachnophobiaMode), "arachnophobia mode helper");
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");
@@ -204,6 +168,8 @@ namespace TunicRandomizer {
             
             Harmony.Patch(AccessTools.Method(typeof(Monster), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_OnTouchKillbox_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(Centipede), "monster_Start"), null, new HarmonyMethod(AccessTools.Method(typeof(ArachnophobiaMode), "Centipede_monster_Start_PostfixPatch")));
+
             Harmony.Patch(AccessTools.Method(typeof(CathedralGauntletManager), "Spawn"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "CathedralGauntletManager_Spawn_PostfixPatch")));
 
             // Finish Line
@@ -278,6 +244,16 @@ namespace TunicRandomizer {
             
             Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "PermanentStateByPosition_onKilled_PrefixPatch")));
 
+        }
+
+        private static void RegisterTypeAndCreateObject(System.Type type, string name) {
+            ClassInjector.RegisterTypeInIl2Cpp(type);
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject(name, new Il2CppSystem.Type[]
+            {
+                Il2CppType.From(type)
+            }) {
+                hideFlags = HideFlags.HideAndDontSave
+            });
         }
     }
 }
