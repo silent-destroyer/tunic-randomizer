@@ -279,23 +279,23 @@ namespace TunicRandomizer {
                     PlayerPalette.runtimePalette.SetPixel(Mathf.FloorToInt(i / 4f), i % 4, new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1));
                     PlayerPalette.runtimePalette.Apply();
                 }
-            }
-            // Hyperdash color
-            Color HyperdashColor = PlayerPalette.runtimePalette.GetPixel(2, 3);
-            ChangeHyperdashColors(HyperdashColor);
-            // Scav Mask color
-            GameObject ScavengerMask = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/scavenger_mask");
-            if (ScavengerMask != null) {
-                ScavengerMask.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0f);
-            }
-            // Sunglasses color
-            GameObject TheRealest = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/therealest");
-            if (TheRealest != null) {
-                TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
-                TheRealest.GetComponent<MeshRenderer>().material.color = PlayerPalette.runtimePalette.GetPixel(2, 0);
-            }
+                // Hyperdash color
+                Color HyperdashColor = PlayerPalette.runtimePalette.GetPixel(2, 3);
+                ChangeHyperdashColors(HyperdashColor);
+                // Scav Mask color
+                GameObject ScavengerMask = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/scavenger_mask");
+                if (ScavengerMask != null) {
+                    ScavengerMask.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0f);
+                }
+                // Sunglasses color
+                GameObject TheRealest = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/therealest");
+                if (TheRealest != null) {
+                    TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
+                    TheRealest.GetComponent<MeshRenderer>().material.color = PlayerPalette.runtimePalette.GetPixel(2, 0);
+                }
 
-            ChangeCapeColor(PlayerPalette.runtimePalette.GetPixel(2, 2));
+                ChangeCapeColor(PlayerPalette.runtimePalette.GetPixel(2, 2));
+            }
         }
 
         public static void RevertFoxColors() {
