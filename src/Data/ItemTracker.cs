@@ -348,6 +348,7 @@ namespace TunicRandomizer {
                 $"\t- Start with Sword: {SaveFile.GetInt(StartWithSword) == 1}",
                 $"\t- Shuffled Abilities: {SaveFile.GetInt(AbilityShuffle) == 1}",
                 $"\t- Shuffled Ladders: {SaveFile.GetInt(LadderRandoEnabled) == 1}",
+                $"\t- Shuffled Breakables: {SaveFile.GetInt(BreakableShuffleEnabled) == 1}",
                 $"\t- Grass Randomizer: {SaveFile.GetInt(GrassRandoEnabled) == 1}",
                 $"\t- Entrance Randomizer: {SaveFile.GetInt(EntranceRando) == 1}",
                 SaveFile.GetInt(EntranceRando) == 1 ? $"\t- Entrance Randomizer (Fewer Shops): {SaveFile.GetInt(ERFixedShop) == 1}" : "",

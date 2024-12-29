@@ -683,7 +683,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Grass Randomizer"), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
             TunicRandomizer.Settings.ClearEarlyBushes = GUI.Toggle(ShowTooltip(new Rect(195f * guiScale, advHeight, 195f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Clear Early Bushes"), TunicRandomizer.Settings.ClearEarlyBushes, "Clear Early Bushes");
             advHeight += 40f * guiScale;
-            TunicRandomizer.Settings.BreakableShuffle = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 250f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Breakable Objects"), TunicRandomizer.Settings.BreakableShuffle, "Shuffle Breakable Objects");
+            TunicRandomizer.Settings.BreakableShuffle = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 250f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Breakable Objects"), TunicRandomizer.Settings.BreakableShuffle, "Shuffle Breakables");
             advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Fool Traps");
             ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 80f * guiScale), "advancedSinglePlayer", "Fool Traps");
@@ -888,6 +888,14 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.MysterySeedWeights.Lanternless = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.Lanternless, 0, 100);
                 GUI.Label(new Rect(360f * guiScale, mystHeight + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.Maskless}%");
                 TunicRandomizer.Settings.MysterySeedWeights.Maskless = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.Maskless, 0, 100);
+
+                mystHeight += 40f * guiScale;
+                ShowTooltip(new Rect(10f * guiScale, mystHeight, 300f * guiScale, 75f * guiScale), "mysterySeed", "Shuffle Breakable Objects");
+                GUI.Label(new Rect(10f * guiScale, mystHeight, 300f * guiScale, 30f * guiScale), $"Shuffle Breakables");
+                mystHeight += 25f * guiScale; 
+                GUI.Label(new Rect(160f * guiScale, mystHeight + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables}%");
+                TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables, 0, 100);
+
             } else if (MysteryWindowPage == 1) {
 
                 GUI.Label(new Rect(10f * guiScale, mystHeight, 400f * guiScale, 30f * guiScale), $"Hexagon Quest - Goal Amount");

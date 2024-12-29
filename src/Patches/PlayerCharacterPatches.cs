@@ -701,7 +701,6 @@ namespace TunicRandomizer {
                 }
 
                 Locations.PopulateMajorItemLocations(slotData);
-
             }
         }
 
@@ -752,6 +751,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.GrassRando) {
                 SaveFile.SetInt(GrassRandoEnabled, 1);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables) {
+                SaveFile.SetInt(BreakableShuffleEnabled, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);
