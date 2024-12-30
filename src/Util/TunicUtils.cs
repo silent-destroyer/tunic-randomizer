@@ -168,6 +168,14 @@ namespace TunicRandomizer {
             return Math.Min((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal)), 100);
         }
 
+        public static bool IsCheckCompletedOrCollected(string CheckId) {
+            return Locations.CheckedLocations[CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
+        }
+
+        public static bool IsCheckCompletedInAP(string CheckId) {
+            return IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1;
+        }
+
         public static string RemoveParenNumber(string name) {
             name = name.Split('(')[0];
             if (name.EndsWith(" ")) {

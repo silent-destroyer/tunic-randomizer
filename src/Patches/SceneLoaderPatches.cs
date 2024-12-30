@@ -60,7 +60,7 @@ namespace TunicRandomizer {
                     if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
                         if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
                             if (breakable.name == "Physical Post") {
-                                GameObject.Destroy(breakable.gameObject.transform.parent.gameObject);
+                                breakable.smash(Vector3.zero);
                             } else {
                                 GameObject.Destroy(breakable.gameObject);
                             }

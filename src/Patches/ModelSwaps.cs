@@ -422,7 +422,7 @@ namespace TunicRandomizer {
                         foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>()) {
                             string grassId = GrassRandomizer.getGrassGameObjectId(grass);
                             if (Locations.RandomizedLocations.ContainsKey(grassId) || ItemLookup.ItemList.ContainsKey(grassId)) {
-                                if ((SwappedThisSceneAlready && !IsSwordCheck(grassId)) || Locations.CheckedLocations[grassId]) {
+                                if (SwappedThisSceneAlready && !IsSwordCheck(grassId)) {
                                     continue;
                                 }
                                 ApplyGrassTexture(grass);
@@ -433,7 +433,7 @@ namespace TunicRandomizer {
                         foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
                             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
                             if (Locations.RandomizedLocations.ContainsKey(breakableId) || ItemLookup.ItemList.ContainsKey(breakableId)) {
-                                if ((SwappedThisSceneAlready && !IsSwordCheck(breakableId)) || Locations.CheckedLocations[breakableId]) {
+                                if (SwappedThisSceneAlready && !IsSwordCheck(breakableId)) {
                                     continue;
                                 }
                                 ApplyBreakableTexture(breakableObject);
@@ -551,10 +551,14 @@ namespace TunicRandomizer {
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[GrassId];
                     Item = ItemLookup.GetItemDataFromCheck(check);
-                    SetupItemMoveUp(grass.transform, check: check);
+                    if (!check.IsCompletedOrCollected) {
+                        SetupItemMoveUp(grass.transform, check: check);
+                    }
                 } else if (IsArchipelago()) {
                     ItemInfo itemInfo = ItemLookup.ItemList[GrassId];
-                    SetupItemMoveUp(grass.transform, itemInfo: itemInfo);
+                    if (!TunicUtils.IsCheckCompletedInAP(GrassId)) {
+                        SetupItemMoveUp(grass.transform, itemInfo: itemInfo);
+                    }
                     if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                         ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {GrassId} was collected") == 1));
                         return;
@@ -585,6 +589,7 @@ namespace TunicRandomizer {
 
                 if (material != null) {
                     foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
                         r.material = material;
                     }
                 }
@@ -651,10 +656,14 @@ namespace TunicRandomizer {
                 if (IsSinglePlayer()) {
                     Check check = Locations.RandomizedLocations[breakableId];
                     Item = ItemLookup.GetItemDataFromCheck(check);
-                    SetupItemMoveUp(breakableObject.transform, check: check);
+                    if (!check.IsCompletedOrCollected) { 
+                        SetupItemMoveUp(breakableObject.transform, check: check);
+                    }
                 } else if (IsArchipelago()) {
                     ItemInfo itemInfo = ItemLookup.ItemList[breakableId];
-                    SetupItemMoveUp(breakableObject.transform, itemInfo: itemInfo);
+                    if (!TunicUtils.IsCheckCompletedInAP(breakableId)) {
+                        SetupItemMoveUp(breakableObject.transform, itemInfo: itemInfo);
+                    }
                     if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
                         ApplyAPBreakableTexture(breakableObject, itemInfo, Locations.CheckedLocations[breakableId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {breakableId} was collected") == 1));
                         return;
@@ -675,9 +684,15 @@ namespace TunicRandomizer {
                     material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
                 }
                 if (material != null) {
-                    foreach (MeshRenderer r in breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                    List<MeshRenderer> renderers;
+                    if (breakableObject.name == "Physical Post") {
+                        renderers = breakableObject.transform.parent.GetComponentsInChildren<MeshRenderer>(includeInactive: true).ToList();
+                    } else {
+                        renderers = breakableObject.gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true).ToList();
+                    }
+                    foreach (MeshRenderer r in renderers) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
-                        if (r.gameObject.GetComponent<MoveUp>() != null) { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
                         r.material = material;
                     }
                 }
