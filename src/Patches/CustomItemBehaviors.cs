@@ -237,6 +237,15 @@ namespace TunicRandomizer {
             instance.itemBehaviours = itemBehaviours.ToArray();
         }
 
+        public static void PatchShotgunItemBehaviour(ShotgunItemBehaviour shotgunBehaviour, PlayerCharacter instance) {
+            if (shotgunBehaviour != null) {
+                shotgunBehaviour.shotgunBulletPool.templateObject.GetComponent<RaycastProjectile>().IgnoreCollisionWith(instance.cachedCollider);
+                foreach (GameObject obj in shotgunBehaviour.shotgunBulletPool.pool) {
+                    obj.GetComponent<RaycastProjectile>().IgnoreCollisionWith(instance.cachedCollider);
+                }
+            }
+        }
+
         public static bool Item_shouldShowInInventory_GetterPatch(Item __instance, ref bool __result) {
             switch (__instance.name) {
                 case "Cape":

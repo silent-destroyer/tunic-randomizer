@@ -236,6 +236,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
             }
             CustomItemBehaviors.SetupTorchItemBehaviour(__instance);
+            CustomItemBehaviors.PatchShotgunItemBehaviour(__instance.GetComponent<ShotgunItemBehaviour>(), __instance);
 
             LoadSwords = true;
 
@@ -286,7 +287,7 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortals("Overworld Redux", sending: true);
                 GhostHints.SpawnTorchHintGhost();
             } else {
-                ERData.RandomizedPortals.Clear();
+                ERData.RandomizedPortals = ERData.VanillaPortals;
                 ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
@@ -318,8 +319,8 @@ namespace TunicRandomizer {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
-                EnemyRandomizer.ToggleArachnophobiaMode();
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !ArachnophobiaMode.DidArachnophobiaModeAlready) {
+                ArachnophobiaMode.ToggleArachnophobiaMode();
             }
 
             try {
@@ -648,7 +649,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (slotData.TryGetValue("ice_grappling", out var iceGrappling)) {
-                    if (iceGrappling.ToString() == "2" || iceGrappling.ToString() == "3") {
+                    if (iceGrappling.ToString() != "0") {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
                 }

@@ -60,6 +60,9 @@ namespace TunicRandomizer {
             }
 
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
+            if (BossAnnouncer.instance.barVisible) {
+                BossAnnouncer.instance.hideImmediate();
+            }
 
             return true;
         }
@@ -68,7 +71,7 @@ namespace TunicRandomizer {
 
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
-            EnemyRandomizer.DidArachnophoiaModeAlready = false;
+            ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -321,7 +324,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-                int denominator = SaveFile.GetInt(GrassRandoEnabled) == 1 ? 325 : 15;
+                int denominator = Locations.CheckedLocations.Count / 20;
                 PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / denominator;
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     Foxgod foxgod = GameObject.FindObjectOfType<Foxgod>();
@@ -526,7 +529,10 @@ namespace TunicRandomizer {
                 });
                 GhostHints.SpawnTorchHintGhost();
             } else {
-                ERData.RandomizedPortals.Clear();
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
+                ERData.RandomizedPortals = ERData.VanillaPortals;
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();
@@ -536,8 +542,8 @@ namespace TunicRandomizer {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
-                EnemyRandomizer.ToggleArachnophobiaMode();
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !ArachnophobiaMode.DidArachnophobiaModeAlready) {
+                ArachnophobiaMode.ToggleArachnophobiaMode();
             }
 
             try {
