@@ -236,6 +236,7 @@ namespace TunicRandomizer {
                 Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
             }
             CustomItemBehaviors.SetupTorchItemBehaviour(__instance);
+            CustomItemBehaviors.PatchShotgunItemBehaviour(__instance.GetComponent<ShotgunItemBehaviour>(), __instance);
 
             LoadSwords = true;
 
