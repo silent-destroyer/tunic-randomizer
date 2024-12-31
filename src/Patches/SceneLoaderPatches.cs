@@ -54,6 +54,32 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
+                foreach (SmashableObject breakable in Resources.FindObjectsOfTypeAll<SmashableObject>().Where(pot => pot.gameObject.scene.name == loadingScene.name)) {
+                    string breakableId = BreakableShuffle.getBreakableGameObjectId(breakable.gameObject);
+                    if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
+                        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                            if (breakable.name == "Physical Post") {
+                                breakable.smash(Vector3.zero);
+                            } else {
+                                GameObject.Destroy(breakable.gameObject);
+                            }
+                        }
+                    }
+                }
+                // this was not working, the scatteredCount resets at some point after you load in for some reason?
+                //if (loadingScene.name == "Dusty") {
+                //    foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
+                //        string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                //        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                //            // it doesn't increment on its own if you scatter it this way
+                //            DustyPile.scatteredCount++;
+                //            leafPile.scatter();
+                //        }
+                //    }
+                //}
+            }
+
             if (PlayerCharacter.Instanced && SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected() && SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) {
                 TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
                 Archipelago.instance.SilentReconnect();
@@ -250,6 +276,7 @@ namespace TunicRandomizer {
                     Locations.CreateLocationLookups();
                 }
                 GrassRandomizer.LoadGrassChecks();
+                BreakableShuffle.LoadBreakableChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
                 SceneLoader.LoadScene("Overworld Redux");
                 return;

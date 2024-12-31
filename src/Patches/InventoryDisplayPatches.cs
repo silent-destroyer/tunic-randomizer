@@ -50,24 +50,20 @@ namespace TunicRandomizer {
                 int ObtainedItemCount = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? Archipelago.instance.integration.session.Locations.AllLocationsChecked.Count : Locations.CheckedLocations.Where(loc => loc.Value).Count();
                 yield return true;
 
-                int ObtainedItemCountInCurrentScene = Locations.VanillaLocations.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
+                int ObtainedItemCountInCurrentScene = TunicUtils.GetCompletedChecksCountInCurrentScene();
                 yield return true;
 
-                int TotalItemCountInCurrentScene = Locations.CheckCountsPerScene[SceneLoaderPatches.SceneName];
+                int TotalItemCountInCurrentScene = TunicUtils.GetCheckCountInCurrentScene();
                 yield return true;
 
-                int TotalItemCount = Locations.VanillaLocations.Count;
-                bool isGrassRando = SaveFile.GetInt(GrassRandoEnabled) == 1;
+                int TotalItemCount = TunicUtils.GetAllInUseChecks().Count;
                 string sceneName = SceneLoaderPatches.SceneName;
                 yield return true;
-                if (isGrassRando && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
-                    int grassCutInCurrentScene = GrassRandomizer.GrassChecks.Where(loc => loc.Value.Location.SceneName == SceneLoaderPatches.SceneName && (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
-                    ObtainedItemCountInCurrentScene += grassCutInCurrentScene;
-                    TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[SceneLoaderPatches.SceneName];
-                    TotalItemCount += GrassRandomizer.GrassChecks.Count;
+                if (GetBool(GrassRandoEnabled) && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
+                    int grassCutInCurrentScene = TunicUtils.GetCompletedChecksCountByScene(GrassRandomizer.GrassChecks.Values.ToList(), sceneName);
                     yield return true;
                     if (InventoryDisplayPatches.GrassText != null) {
-                        int grassCut = GrassRandomizer.GrassChecks.Where(loc => (Locations.CheckedLocations[loc.Key] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {loc.Key} was collected") == 1))).ToList().Count;
+                        int grassCut = TunicUtils.GetCompletedChecksCount(GrassRandomizer.GrassChecks.Values.ToList());
                         InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
                             $"<#ffffff> • {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
                     }

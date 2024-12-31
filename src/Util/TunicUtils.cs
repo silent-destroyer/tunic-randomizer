@@ -48,6 +48,19 @@ namespace TunicRandomizer {
             return primaryDictionary;
         }
 
+        // for changing lists of requirements into dictionaries of them
+        public static Dictionary<string, int> ChangeListToDict(List<string> list) {
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            foreach (string item in list) {
+                if (dictionary.ContainsKey(item)) {
+                    dictionary[item]++;
+                } else {
+                    dictionary[item] = 1;
+                }
+            }
+            return dictionary;
+        }
+
         // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
         public static void FindChecksInLogic() {
             PlayerItemsAndRegions.Clear();
@@ -95,10 +108,7 @@ namespace TunicRandomizer {
         // updates PlayerItemsAndRegions based on which items the player has received, then updates ChecksInLogic based on the player's items/accessible regions
         public static void UpdateChecksInLogic() {
             ItemRandomizer.GetReachableRegions(PlayerItemsAndRegions);
-            List<Check> checks = Locations.VanillaLocations.Values.ToList();
-            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                checks.AddRange(GrassRandomizer.GrassChecks.Values);
-            }
+            List<Check> checks = GetAllInUseChecks();
             foreach (Check check in checks) {
                 // only put in unchecked locations
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && !Locations.CheckedLocations[check.CheckId] 
@@ -108,8 +118,70 @@ namespace TunicRandomizer {
             }
         }
 
+        public static List<Check> GetAllInUseChecks() {
+            // Get a list of all default checks based on settings
+            List<Check> checks = Locations.VanillaLocations.Values.ToList();
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+                checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
+            }
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
+                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
+            }
+            return CopyListOfChecks(checks);
+        }
+
+        public static Dictionary<string, Check> GetAllInUseChecksDictionary() {
+            // Get a list of all default checks based on settings
+            Dictionary<string, Check> Checks = new Dictionary<string, Check>();
+            foreach (Check check in GetAllInUseChecks()) {
+                Checks.Add(check.CheckId, check);
+            }
+            return Checks;
+        }
+
+        public static List<Check> CopyListOfChecks(List<Check> Checks) {
+            return Checks.Select(Check => new Check(Check)).ToList();
+        }
+        
+        public static int GetCompletedChecksCountInCurrentScene() {
+            return GetCompletedChecksCountByScene(GetAllInUseChecks(), SceneLoaderPatches.SceneName);
+        }
+
+        public static int GetCompletedChecksCountByScene(List<Check> checks, string scene) {
+            return checks.Where(check => check.Location.SceneName == scene && check.IsCompletedOrCollected).ToList().Count;
+        }
+
+        public static int GetCompletedChecksCount(List<Check> checks) {
+            return checks.Where(check => check.IsCompletedOrCollected).ToList().Count;
+        }
+
+        public static int GetCheckCountInCurrentScene() {
+            return GetCheckCountInScene(SceneLoaderPatches.SceneName);
+        }
+
+        public static int GetCheckCountInScene(string scene) {
+            return GetAllInUseChecks().Where(check => check.Location.SceneName == scene).Count();
+        }
+
         public static int GetMaxGoldHexagons() {
             return Math.Min((int)Math.Round((100f + SaveFile.GetInt(HexagonQuestExtras)) / 100f * SaveFile.GetInt(HexagonQuestGoal)), 100);
+        }
+
+        public static bool IsCheckCompletedOrCollected(string CheckId) {
+            return Locations.CheckedLocations[CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
+        }
+
+        public static bool IsCheckCompletedInAP(string CheckId) {
+            return IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1;
+        }
+
+        public static string RemoveParenNumber(string name) {
+            name = name.Split('(')[0];
+            if (name.EndsWith(" ")) {
+                name = name.Remove(name.Length - 1);
+            }
+            return name;
         }
 
     }

@@ -477,7 +477,7 @@ namespace TunicRandomizer {
             return ItemResult.Success;
         }
 
-        public static void GiveItem(Check Check, bool isGrassCheck = false) {
+        public static void GiveItem(Check Check, bool alwaysSkip = false) {
 
             string NotificationTop = "";
             string NotificationBottom = "";
@@ -485,7 +485,7 @@ namespace TunicRandomizer {
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
-            if (isGrassCheck) {
+            if (alwaysSkip) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 
