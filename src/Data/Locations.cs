@@ -18,6 +18,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> RandomizedLocations = new Dictionary<string, Check> { };
         public static Dictionary<string, bool> CheckedLocations = new Dictionary<string, bool>();
 
+        // For vanilla checks only
         public static Dictionary<string, int> CheckCountsPerScene = new Dictionary<string, int>();
 
         public static Dictionary<string, List<ArchipelagoHint>> MajorItemLocations = new Dictionary<string, List<ArchipelagoHint>>();
@@ -201,7 +202,8 @@ namespace TunicRandomizer {
             {"Swamp Redux 2", "Swamp"},
             {"Cathedral Redux", "Cathedral"},
             {"Cathedral Arena", "Cathedral (Gauntlet)"},
-            {"RelicVoid", "Hero's Grave"}
+            {"RelicVoid", "Hero's Grave"},
+            {"Purgatory", "Purgatory"},
         };
 
         public static List<string> HolyCrossExcludedScenes = new List<string>() {
@@ -230,7 +232,8 @@ namespace TunicRandomizer {
                     "Overworld Interiors",
                     "Town_FiligreeRoom",
                     "Changing Room",
-                    "Posterity"
+                    "Posterity",
+                    "Purgatory",
                 }
             },
             {
@@ -380,6 +383,7 @@ namespace TunicRandomizer {
                     "Mountaintop",
                     "g_elements",
                     "Playable Intro",
+                    "Purgatory",
                 }
             },
             {

@@ -18,6 +18,7 @@ namespace TunicRandomizer {
         public int Maskless;
         public int Lanternless;
         public int GrassRando;
+        public int ShuffleBreakables;
 
         public bool FoolTrapNone;
         public bool FoolTrapNormal;
@@ -53,6 +54,7 @@ namespace TunicRandomizer {
             Maskless = 25;
             Lanternless = 25;
             GrassRando = 50;
+            ShuffleBreakables = 50;
 
             FoolTrapNone = true;
             FoolTrapNormal = true;
@@ -89,6 +91,7 @@ namespace TunicRandomizer {
                 $"&{Maskless}" +
                 $"&{Lanternless}" +
                 $"&{GrassRando}" +
+                $"&{ShuffleBreakables}" +
                 $"&{HexagonQuest}" +
                 $"&{HexQuestAbilityShufflePages}" +
                 $"&{Convert.ToInt32(sToB(new bool[] { FoolTrapNone, FoolTrapNormal, FoolTrapDouble, FoolTrapOnslaught, LaurelsRandom, LaurelsSixCoins, LaurelsTenCoins, LaurelsTenFairies }), 2)}" +
@@ -110,6 +113,7 @@ namespace TunicRandomizer {
             Maskless = int.Parse(split[i++]);
             Lanternless = int.Parse(split[i++]);
             GrassRando = int.Parse(split[i++]);
+            ShuffleBreakables = int.Parse(split[i++]);
             HexagonQuest = int.Parse(split[i++]);
             HexQuestAbilityShufflePages = int.Parse(split[i++]);
             int foolLaurels = int.Parse(split[i++]);
@@ -153,6 +157,7 @@ namespace TunicRandomizer {
             Maskless = random.Next(101);
             Lanternless = random.Next(101);
             GrassRando = random.Next(101);
+            ShuffleBreakables = random.Next(101);
             HexagonQuest = random.Next(101);
             HexQuestAbilityShufflePages = random.Next(101);
 

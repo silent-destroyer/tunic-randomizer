@@ -212,6 +212,10 @@ namespace TunicRandomizer {
 
             // Money
             { "Money x1", new ItemData("Money x1", "useful", "money", ItemTypes.MONEY, 1) },
+            { "Money x2", new ItemData("Money x2", "useful", "money", ItemTypes.MONEY, 2) },
+            { "Money x3", new ItemData("Money x3", "useful", "money", ItemTypes.MONEY, 3) },
+            { "Money x4", new ItemData("Money x4", "useful", "money", ItemTypes.MONEY, 4) },
+            { "Money x5", new ItemData("Money x5", "useful", "money", ItemTypes.MONEY, 5) },
             { "Money x10", new ItemData("Money x10", "useful", "money", ItemTypes.MONEY, 10) },
             { "Money x15", new ItemData("Money x15", "useful", "money", ItemTypes.MONEY, 15) },
             { "Money x16", new ItemData("Money x16", "useful", "money", ItemTypes.MONEY, 16) },
@@ -566,6 +570,13 @@ namespace TunicRandomizer {
             { "Berry_HP", new List<int>() { 1, 2, 3 } },
             { "Berry_MP", new List<int>() { 1, 2, 3 } },
             { "money", new List<int>() { 20, 25, 30, 32, 40, 48, 50 } },
+        };
+
+        public static Dictionary<RandomizerSettings.FoolTrapOption, int> FoolTrapAmounts = new Dictionary<RandomizerSettings.FoolTrapOption, int> {
+            { RandomizerSettings.FoolTrapOption.NONE, 0 },
+            { RandomizerSettings.FoolTrapOption.NORMAL, 15 },
+            { RandomizerSettings.FoolTrapOption.DOUBLE, 32 },
+            { RandomizerSettings.FoolTrapOption.ONSLAUGHT, 50 },
         };
     }
 

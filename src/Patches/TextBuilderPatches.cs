@@ -197,6 +197,10 @@ namespace TunicRandomizer {
             { "Fool Trap", "[fooltrap]" },
             // Money
             { "Money x1", "[realmoney]" },
+            { "Money x2", "[realmoney]" },
+            { "Money x3", "[realmoney]" },
+            { "Money x4", "[realmoney]" },
+            { "Money x5", "[realmoney]" },
             { "Money x10", "[realmoney]" },
             { "Money x15", "[realmoney]" },
             { "Money x16", "[realmoney]" },

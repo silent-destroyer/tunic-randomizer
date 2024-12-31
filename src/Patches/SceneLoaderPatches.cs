@@ -54,12 +54,41 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
+                foreach (SmashableObject breakable in Resources.FindObjectsOfTypeAll<SmashableObject>().Where(pot => pot.gameObject.scene.name == loadingScene.name)) {
+                    string breakableId = BreakableShuffle.getBreakableGameObjectId(breakable.gameObject);
+                    if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
+                        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                            if (breakable.name == "Physical Post") {
+                                breakable.smash(Vector3.zero);
+                            } else {
+                                GameObject.Destroy(breakable.gameObject);
+                            }
+                        }
+                    }
+                }
+                // this was not working, the scatteredCount resets at some point after you load in for some reason?
+                //if (loadingScene.name == "Dusty") {
+                //    foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
+                //        string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                //        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                //            // it doesn't increment on its own if you scatter it this way
+                //            DustyPile.scatteredCount++;
+                //            leafPile.scatter();
+                //        }
+                //    }
+                //}
+            }
+
             if (PlayerCharacter.Instanced && SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected() && SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) {
                 TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
                 Archipelago.instance.SilentReconnect();
             }
 
             EnemyRandomizer.BossStateVars.ForEach(s => StateVariable.GetStateVariableByName(s).BoolValue = false);
+            if (BossAnnouncer.instance.barVisible) {
+                BossAnnouncer.instance.hideImmediate();
+            }
 
             return true;
         }
@@ -68,7 +97,7 @@ namespace TunicRandomizer {
 
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
-            EnemyRandomizer.DidArachnophoiaModeAlready = false;
+            ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -249,6 +278,7 @@ namespace TunicRandomizer {
                     Locations.CreateLocationLookups();
                 }
                 GrassRandomizer.LoadGrassChecks();
+                BreakableShuffle.LoadBreakableChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
                 SceneLoader.LoadScene("Overworld Redux");
                 return;
@@ -323,7 +353,7 @@ namespace TunicRandomizer {
                 for (int i = 0; i < 28; i++) {
                     SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer obtained page " + i) == 1 ? 1 : 0);
                 }
-                int denominator = SaveFile.GetInt(GrassRandoEnabled) == 1 ? 325 : 15;
+                int denominator = Locations.CheckedLocations.Count / 20;
                 PlayerCharacterPatches.HeirAssistModeDamageValue = Locations.CheckedLocations.Values.ToList().Where(item => item).ToList().Count / denominator;
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                     Foxgod foxgod = GameObject.FindObjectOfType<Foxgod>();
@@ -541,8 +571,8 @@ namespace TunicRandomizer {
                 EnemyRandomizer.SpawnNewEnemies();
             }
 
-            if (TunicRandomizer.Settings.ArachnophobiaMode && !EnemyRandomizer.DidArachnophoiaModeAlready) {
-                EnemyRandomizer.ToggleArachnophobiaMode();
+            if (TunicRandomizer.Settings.ArachnophobiaMode && !ArachnophobiaMode.DidArachnophobiaModeAlready) {
+                ArachnophobiaMode.ToggleArachnophobiaMode();
             }
 
             try {

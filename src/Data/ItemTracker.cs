@@ -221,6 +221,8 @@ namespace TunicRandomizer {
                 return;
             }
 
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
+
             int seed = SaveFile.GetInt("seed");
             Dictionary<string, List<string>> SpoilerLog = new Dictionary<string, List<string>>();
             foreach (string Key in Locations.SceneNamesForSpoilerLog.Keys) {
@@ -233,7 +235,7 @@ namespace TunicRandomizer {
 
                     string Spoiler = $"\t{((Locations.CheckedLocations[Key] || SaveFile.GetInt($"randomizer picked up {Key}") == 1 || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {Key} was collected") == 1)) ? "x" : "-")} {Locations.LocationIdToDescription[Key]}: {Item.ItemName} ({Item.Player.Name})";
 
-                    SpoilerLog[GrassRandomizer.GrassChecks.ContainsKey(Key) ? GrassRandomizer.GrassChecks[Key].Location.SceneName : Locations.VanillaLocations[Key].Location.SceneName].Add(Spoiler);
+                    SpoilerLog[AllLocations[Key].Location.SceneName].Add(Spoiler);
                 }
             }
             if (IsSinglePlayer()) {
@@ -292,6 +294,9 @@ namespace TunicRandomizer {
             }
             
             foreach (string Key in SpoilerLog.Keys) {
+                if (SpoilerLog[Key].Count == 0) {
+                    continue;
+                }
                 SpoilerLogLines.Add(Locations.SceneNamesForSpoilerLog[Key]);
                 SpoilerLog[Key].Sort();
                 foreach (string line in SpoilerLog[Key]) {
@@ -343,6 +348,7 @@ namespace TunicRandomizer {
                 $"\t- Start with Sword: {SaveFile.GetInt(StartWithSword) == 1}",
                 $"\t- Shuffled Abilities: {SaveFile.GetInt(AbilityShuffle) == 1}",
                 $"\t- Shuffled Ladders: {SaveFile.GetInt(LadderRandoEnabled) == 1}",
+                $"\t- Shuffled Breakables: {SaveFile.GetInt(BreakableShuffleEnabled) == 1}",
                 $"\t- Grass Randomizer: {SaveFile.GetInt(GrassRandoEnabled) == 1}",
                 $"\t- Entrance Randomizer: {SaveFile.GetInt(EntranceRando) == 1}",
                 SaveFile.GetInt(EntranceRando) == 1 ? $"\t- Entrance Randomizer (Fewer Shops): {SaveFile.GetInt(ERFixedShop) == 1}" : "",
@@ -362,28 +368,23 @@ namespace TunicRandomizer {
             int TotalAreaChecks = 0;
             int AreaChecksFound = 0;
             bool IncludeCollected = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
+            List<Check> Checks = TunicUtils.GetAllInUseChecks();
             foreach (string Area in Locations.MainAreasToSubAreas.Keys) {
                 TotalAreaChecks = 0;
                 AreaChecksFound = 0;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea).Count();
-                    AreaChecksFound += Locations.VanillaLocations.Keys.Where(Check => Locations.VanillaLocations[Check].Location.SceneName == SubArea && (Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1))).Count();
-                    if (SaveFile.GetInt(GrassRandoEnabled) == 1 ) {
-                        TotalAreaChecks += GrassRandomizer.GrassChecksPerScene[SubArea];
-                        AreaChecksFound += GrassRandomizer.GrassChecks.Where(check => check.Value.Location.SceneName == SubArea && (Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1))).Count();
-                    }
+                    TotalAreaChecks += TunicUtils.GetCheckCountInScene(SubArea);
+                    AreaChecksFound += TunicUtils.GetCompletedChecksCountByScene(Checks, SubArea);
                 }
                 displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(24, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(9, '.')}\"\n";
                 if (Area == "Rooted Ziggurat") {
                     displayText += "---" + title;
                 }
             }
-            int TotalChecksFound = Locations.VanillaLocations.Keys.Where(Check => Locations.CheckedLocations[Check] || (IncludeCollected && SaveFile.GetInt($"randomizer {Check} was collected") == 1)).Count();
-            int TotalChecks = Locations.VanillaLocations.Count;
-            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                TotalChecksFound += GrassRandomizer.GrassChecks.Where(check => Locations.CheckedLocations[check.Key] || (IncludeCollected && SaveFile.GetInt($"randomizer {check.Key} was collected") == 1)).Count();
-                TotalChecks += GrassRandomizer.GrassChecks.Count;
-            }
+
+            int TotalChecksFound = TunicUtils.GetCompletedChecksCount(Checks);
+            int TotalChecks = Checks.Count;
+
             displayText += $"\"{(TotalChecksFound == TotalChecks ? "<#eaa614>" : "<#ffffff>")}{"Total".PadRight(24, '.')}{$"{TotalChecksFound}/{TotalChecks}".PadLeft(9, '.')}\"";
             if (TotalChecksFound == TotalChecks) {
                 displayText += $"---\"<#eaa614>- - - - - - {TotalChecksFound.ToString().PadLeft(4)}/{TotalChecks.ToString().PadRight(4)} - - - - - -\"\n\n    ";

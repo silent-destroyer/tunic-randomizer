@@ -42,6 +42,7 @@ namespace TunicRandomizer {
         private const int ER_DIRECTION_PAIRS = 8192;
         private const int ER_DECOUPLED = 16384;
         private const int HEXAGON_QUEST_ABILITY_PAGES = 32768;
+        private const int BREAKABLE_SHUFFLE = 65536;
 
         public GameModes GameMode {
             get;
@@ -159,6 +160,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool BreakableShuffle {
+            get;
+            set;
+        }
+
         // Archipelago Settings
         public bool DeathLinkEnabled {
             get;
@@ -171,6 +177,11 @@ namespace TunicRandomizer {
         }
 
         public bool SendHintsToServer {
+            get;
+            set;
+        }
+
+        public bool ShowSlotSettings {
             get;
             set;
         }
@@ -499,6 +510,7 @@ namespace TunicRandomizer {
             MysterySeed = false;
             ShuffleLadders = false;
             GrassRandomizer = false;
+            BreakableShuffle = false;
             RandomizeHexQuest = false;
             HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
@@ -509,6 +521,7 @@ namespace TunicRandomizer {
             CollectReflectsInWorld = false;
             SkipItemAnimations = false;
             SendHintsToServer = false;
+            ShowSlotSettings = false;
             DeathLinkEffect = DeathLinkType.DEATH;
 
             // Hints
@@ -640,6 +653,7 @@ namespace TunicRandomizer {
                 PortalDirectionPairs = eval(logic, ER_DIRECTION_PAIRS);
                 DecoupledER = eval(logic, ER_DECOUPLED);
                 HexQuestAbilitiesUnlockedByPages = eval(logic, HEXAGON_QUEST_ABILITY_PAGES);
+                BreakableShuffle = eval(logic, BREAKABLE_SHUFFLE);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -714,6 +728,7 @@ namespace TunicRandomizer {
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
+                    BreakableShuffle,
                 };
             } else {
                 return new bool[] { 
@@ -725,6 +740,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
                     SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
+                    SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1,
                 };
             }
         }

@@ -168,6 +168,10 @@ namespace TunicRandomizer {
             "MP Berry x2",
             "MP Berry x3",
             "Money x1",
+            "Money x2",
+            "Money x3",
+            "Money x4",
+            "Money x5",
             "Money x10",
             "Money x15",
             "Money x16",
@@ -561,13 +565,7 @@ namespace TunicRandomizer {
 
             string Hint = "";
 
-            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
-            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
-            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
 
             List<string> HintableItems = new List<string>(HintableItemNames);
             List<string> HintableItemsSolo = new List<string>(HintableItemNamesSinglePlayer);
@@ -654,13 +652,7 @@ namespace TunicRandomizer {
         public static void GenerateBarrenAndMoneySceneHints() {
             BarrenAndTreasureHints.Clear();
 
-            Dictionary<string, Check> AllLocations = new Dictionary<string, Check>();
-            foreach (KeyValuePair<string, Check> pair in Locations.VanillaLocations) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
-            foreach (KeyValuePair<string, Check> pair in GrassRandomizer.GrassChecks) {
-                AllLocations.Add(pair.Key, pair.Value);
-            }
+            Dictionary<string, Check> AllLocations = TunicUtils.GetAllInUseChecksDictionary();
 
             foreach (string Key in Locations.SimplifiedSceneNames.Keys) { 
                 HashSet<string> ItemsInScene = new HashSet<string>();
