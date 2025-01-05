@@ -496,6 +496,9 @@ namespace TunicRandomizer {
                         if (TunicRandomizer.Settings.BreakableShuffle) {
                             SaveFile.SetInt(BreakableShuffleEnabled, 1);
                         }
+                        if (TunicRandomizer.Settings.FuseShuffle) { 
+                            SaveFile.SetInt(FuseShuffleEnabled, 1);
+                        }
 
                         if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
                             int goldHexagons = TunicUtils.GetMaxGoldHexagons();

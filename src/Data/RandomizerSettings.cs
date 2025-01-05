@@ -43,6 +43,7 @@ namespace TunicRandomizer {
         private const int ER_DECOUPLED = 16384;
         private const int HEXAGON_QUEST_ABILITY_PAGES = 32768;
         private const int BREAKABLE_SHUFFLE = 65536;
+        private const int FUSE_SHUFFLE = 131072;
 
         public GameModes GameMode {
             get;
@@ -161,6 +162,11 @@ namespace TunicRandomizer {
         }
 
         public bool BreakableShuffle {
+            get;
+            set;
+        }
+
+        public bool FuseShuffle {
             get;
             set;
         }
@@ -511,6 +517,7 @@ namespace TunicRandomizer {
             ShuffleLadders = false;
             GrassRandomizer = false;
             BreakableShuffle = false;
+            FuseShuffle = false;
             RandomizeHexQuest = false;
             HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
@@ -654,6 +661,7 @@ namespace TunicRandomizer {
                 DecoupledER = eval(logic, ER_DECOUPLED);
                 HexQuestAbilitiesUnlockedByPages = eval(logic, HEXAGON_QUEST_ABILITY_PAGES);
                 BreakableShuffle = eval(logic, BREAKABLE_SHUFFLE);
+                FuseShuffle = eval(logic, FUSE_SHUFFLE);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);

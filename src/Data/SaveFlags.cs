@@ -44,6 +44,7 @@
         public const string LaurelsLocation = "randomizer laurels location";
         public const string GrassRandoEnabled = "randomizer grass rando enabled";
         public const string BreakableShuffleEnabled = "randomizer breakable shuffle enabled";
+        public const string FuseShuffleEnabled = "randomizer fuse shuffle enabled";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";

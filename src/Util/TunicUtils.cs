@@ -134,6 +134,9 @@ namespace TunicRandomizer {
                 bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
                 checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
             }
+            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1) { 
+                checks.AddRange(FuseRandomizer.FuseChecks.Values.ToList());
+            }
             return CopyListOfChecks(checks);
         }
 
