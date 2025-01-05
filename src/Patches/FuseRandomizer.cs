@@ -37,12 +37,23 @@ namespace TunicRandomizer {
             FuseChecks.Clear();
             var assembly = Assembly.GetExecutingAssembly();
             var fuseJson = "TunicRandomizer.src.Data.Fuses.json";
-            using (Stream stream = assembly.GetManifestResourceStream(fuseJson))
-            using (StreamReader reader = new StreamReader(stream)) {
+            var fuseLocationNames = "TunicRandomizer.src.Data.FuseDescriptions.json";
+
+            using (Stream fuseStream = assembly.GetManifestResourceStream(fuseJson))
+            using (StreamReader reader = new StreamReader(fuseStream)) {
                 List<Check> checks = JsonConvert.DeserializeObject<List<Check>>(reader.ReadToEnd());
                 foreach (Check check in checks) { 
                     FuseChecks.Add(check.CheckId, check);
                     FakeFuseIds.Add(int.Parse(check.Location.LocationId), 9000 + FakeFuseIds.Count);
+                }
+            }
+
+            using (Stream fuseNameStream = assembly.GetManifestResourceStream(fuseLocationNames))
+            using (StreamReader reader = new StreamReader(fuseNameStream)) {
+                Dictionary<string, string> map = JsonConvert.DeserializeObject<Dictionary<string, string>>(reader.ReadToEnd());
+                foreach (KeyValuePair<string, string> pair in map) { 
+                    Locations.LocationIdToDescription.Add(pair.Key, pair.Value);
+                    Locations.LocationDescriptionToId.Add(pair.Value, pair.Key);
                 }
             }
         }

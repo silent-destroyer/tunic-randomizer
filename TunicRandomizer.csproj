@@ -253,6 +253,7 @@
     <EmbeddedResource Include="src\Data\BreakableReqs.json" />
     <EmbeddedResource Include="src\Data\Breakables.json" />
     <EmbeddedResource Include="src\Data\BreakableDescriptions.json" />
+    <EmbeddedResource Include="src\Data\FuseDescriptions.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
