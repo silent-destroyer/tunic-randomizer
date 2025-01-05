@@ -1114,6 +1114,9 @@ namespace TunicRandomizer {
                         } else {
                             TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
                         }
+                        if (Item.Type == ItemTypes.FUSE) {
+                            PagePickup.GetComponent<SphereCollider>().radius = 2f;
+                        }
                     }
 
                     NewItem.transform.localPosition = TransformData.pos;
@@ -1178,12 +1181,20 @@ namespace TunicRandomizer {
                     NewItem = SwordProgressionObject(Parent);
                 } else if (Item.Type == ItemTypes.LADDER) {
                     NewItem = GameObject.Instantiate(Items["Ladder"], Parent.transform.position, Parent.transform.rotation);
+                } else if (Item.Type == ItemTypes.FUSE) {
+                    NewItem = GameObject.Instantiate(Items["Fuse"], Parent.transform.position, Parent.transform.rotation);
+                    NewItem.transform.GetChild(1).gameObject.SetActive(false);
+                    NewItem.transform.GetChild(3).gameObject.SetActive(false);
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
             }
+
             NewItem.transform.parent = Parent.transform;
             NewItem.layer = 0;
+            foreach (Transform transform in NewItem.GetComponentsInChildren<Transform>(true)) {
+                transform.gameObject.layer = 0;
+            }
             for (int i = 0; i < NewItem.transform.childCount; i++) {
                 NewItem.transform.GetChild(i).gameObject.layer = 0;
             }
@@ -1570,7 +1581,7 @@ namespace TunicRandomizer {
                     if (Item.Type == ItemTypes.FAIRY) {
                         NewItem.transform.localScale = Vector3.one;
                     }
-                    if (Item.Type == ItemTypes.LADDER) {
+                    if (Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
                         NewItem.transform.localScale *= 2;
                     }
                     if (NewItem.GetComponent<Rotate>() == null) {
