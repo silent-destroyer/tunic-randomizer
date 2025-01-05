@@ -639,6 +639,11 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(BreakableShuffleEnabled, 1);
                     }
                 }
+                if (slotData.TryGetValue("shuffle_fuses", out var fuseShuffle)) {
+                    if (SaveFile.GetInt(FuseShuffleEnabled) == 0 && fuseShuffle.ToString() == "1") {
+                        SaveFile.SetInt(FuseShuffleEnabled, 1);
+                    }
+                }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
@@ -758,6 +763,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables) {
                 SaveFile.SetInt(BreakableShuffleEnabled, 1);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleFuses) {
+                SaveFile.SetInt(FuseShuffleEnabled, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);
