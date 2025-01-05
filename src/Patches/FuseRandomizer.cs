@@ -61,6 +61,7 @@ namespace TunicRandomizer {
         public static void CreateFuseItems() {
             foreach (ItemData FuseItem in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.FUSE)) {
                 CreateFuseItem(FuseItem.Name);
+                TextBuilderPatches.ItemNameToAbbreviation.Add(FuseItem.Name, "[fuse]");
             }
         }
 
@@ -71,7 +72,7 @@ namespace TunicRandomizer {
             Fuse.name = name;
             Fuse.collectionMessage = TunicUtils.CreateLanguageLine($"\"{Fuse.name.Replace("Fuse", "")}\"");
             Fuse.controlAction = "";
-
+            Fuse.icon = ModelSwaps.FindSprite("Randomizer items_fuse");
             Inventory.itemList.Add(Fuse);
         }
 

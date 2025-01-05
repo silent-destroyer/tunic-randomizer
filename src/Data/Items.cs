@@ -287,8 +287,8 @@ namespace TunicRandomizer {
 
             // Fuses
             { "Swamp Fuse 1", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 1", ItemTypes.FUSE, 1) },
-            { "Swamp Fuse 2", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 2", ItemTypes.FUSE, 1) },
-            { "Swamp Fuse 3", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 3", ItemTypes.FUSE, 1) },
+            { "Swamp Fuse 2", new ItemData("Swamp Fuse 2", "progression", "Swamp Fuse 2", ItemTypes.FUSE, 1) },
+            { "Swamp Fuse 3", new ItemData("Swamp Fuse 3", "progression", "Swamp Fuse 3", ItemTypes.FUSE, 1) },
             { "Cathedral Elevator Fuse", new ItemData("Cathedral Elevator Fuse", "progression", "Cathedral Elevator Fuse", ItemTypes.FUSE, 1) },
             { "Furnace to Well Fuse", new ItemData("Furnace to Well Fuse", "progression", "Furnace to Well Fuse", ItemTypes.FUSE, 1) },
             { "Atoll Northeast Fuse", new ItemData("Atoll Northeast Fuse", "progression", "Atoll Northeast Fuse", ItemTypes.FUSE, 1) },
