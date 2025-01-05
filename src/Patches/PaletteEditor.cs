@@ -194,7 +194,7 @@ namespace TunicRandomizer {
                 errorMessage = "";
             }
             y += 35f;
-            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Apply Saved Texture On Load");
+            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Always Apply Saved Texture");
             TunicRandomizer.Settings.UseCustomTexture = ToggleCustomTextureUse;
 
         }
@@ -250,6 +250,7 @@ namespace TunicRandomizer {
                 PlayerPalette.runtimePalette.SetPixel(2, 3, new Color(0.8577f, 0.5044f, 1.7513f, 1f));
                 PlayerPalette.runtimePalette.SetPixel(2, 0, PlayerPalette.runtimePalette.GetPixel(3, 0));
             }
+            TunicRandomizer.Settings.UseCustomTexture = true;
             errorMessage = "";
 
             File.WriteAllBytes(TexturePath, ImageConversion.EncodeToPNG(PlayerPalette.runtimePalette));

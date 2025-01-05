@@ -238,6 +238,7 @@ namespace TunicRandomizer {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("Fox Customization");
             OptionsGUI.addToggle("Random Fox Colors", "Off", "On", TunicRandomizer.Settings.RandomFoxColorsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleRandomFoxPalette);
+            OptionsGUI.addToggle("Use Custom Fox Texture", "Off", "On", TunicRandomizer.Settings.UseCustomTexture ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCustomTexture);
             OptionsGUI.addToggle("Keepin' It Real", "Off", "On", TunicRandomizer.Settings.RealestAlwaysOn ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSunglasses);
             OptionsGUI.addButton($"Open Fox Color Editor", (Action)(() => {
                 if (SceneManager.GetActiveScene().name == "TitleScreen") {
@@ -249,7 +250,6 @@ namespace TunicRandomizer {
                     GUIMode.PushGameMode(); 
                 }
             }));
-            OptionsGUI.addToggle("Use Custom Texture", "Off", "On", TunicRandomizer.Settings.UseCustomTexture ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCustomTexture);
             if (BonusOptionsUnlocked && SceneLoaderPatches.SceneName != "TitleScreen") {
                 OptionsGUI.addToggle("<#FFA500>BONUS: Matching Ghost Foxes", "Off", "On", PaletteEditor.CelShadingEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCelShading);
                 OptionsGUI.addToggle("<#00FFFF>BONUS: Party Hat", "Off", "On", PaletteEditor.PartyHatEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePartyHat);
