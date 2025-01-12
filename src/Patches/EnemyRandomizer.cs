@@ -1269,7 +1269,7 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.HeirAssistModeEnabled) {
                         __instance.hp -= PlayerCharacterPatches.HeirAssistModeDamageValue;
                     }
-                    if (__instance.hp == __instance.maxhp) {
+                    if (__instance.hp == __instance.maxhp && __instance.GetComponent<BossEnemy>() != null) {
                         __instance.Flinch(true);
                         return true;
                     }
