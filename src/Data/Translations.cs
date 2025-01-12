@@ -46,6 +46,7 @@ namespace TunicRandomizer {
             {"Gun", "guhn"},
             {"Shield", "$Eld"},
             {"Dath Stone", "dah% stOn"},
+            {"Torch", "torJ"},
             {"Hourglass", "owurglahs"},
             {"Old House Key", "Old hows kE"},
             {"Key", "kE"},

@@ -138,6 +138,7 @@ namespace TunicRandomizer {
             { "Gun", "[gun]" },
             { "Shield", "[shield]" },
             { "Dath Stone", "[dath]" },
+            { "Torch", "[torch]" },
             { "Hourglass", "[hourglass]" },
             { "Old House Key", "[housekey]" },
             { "Key", "[yellowkey]" },
