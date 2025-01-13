@@ -37,6 +37,7 @@ namespace TunicRandomizer {
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
         public static GameObject Chalkboard;
+        public static GameObject Torch;
 
         public static GameObject FishingRod;
 
@@ -165,6 +166,7 @@ namespace TunicRandomizer {
 
             ItemPresentationPatches.SetupOldHouseKeyItemPresentation();
             Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
+            ItemPresentationPatches.SetupTorchItemPresentation();
             ItemPresentationPatches.SetupDathStoneItemPresentation();
             ItemPresentationPatches.SetupHexagonQuestItemPresentation();
             ItemPresentationPatches.SetupCapePresentation();
