@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;
-using Newtonsoft.Json;
-using System.IO;
-using JetBrains.Annotations;
 
 namespace TunicRandomizer {
     public class InteractionPatches {
@@ -50,6 +46,10 @@ namespace TunicRandomizer {
                     if (Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt($"randomizer hexagon quest {GhostHints.HexQuestHintLookup[GhostHints.HintGhosts[__instance.name].Hint].ToLower()} requirement")) {
                         __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" Enuhf \"ALREADY?\" goud wurk!";
                     }
+                }
+
+                if (__instance.name == "torch hint ghost") {
+                    ItemPresentation.PresentItem(Inventory.GetItemByName("Torch"));
                 }
 
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
