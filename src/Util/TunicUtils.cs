@@ -89,7 +89,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            if (PlayerItemsAndRegions.ContainsKey("Hexagon Gold")) {
+            if (PlayerItemsAndRegions.ContainsKey("Hexagon Gold") && SaveFile.GetInt(HexagonQuestPageAbilities) != 1) {
                 if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
                     AddStringToDict(PlayerItemsAndRegions, "12");
                 }
