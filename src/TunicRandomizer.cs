@@ -21,8 +21,6 @@ namespace TunicRandomizer {
             TunicLogger.SetLogger(Log);
             TunicLogger.LogInfo($"{PluginInfo.NAME} v{PluginInfo.VERSION}{(TitleVersion.DevBuild ? "-dev" : "")}{(TitleVersion.BuildDescription != "" ? $" ({TitleVersion.BuildDescription})" : "")} loaded!");
 
-            Application.runInBackground = true;
-
             Tracker = new ItemTracker();
 
             ClassInjector.RegisterTypeInIl2Cpp<Archipelago>();
@@ -60,6 +58,8 @@ namespace TunicRandomizer {
                 Settings = JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(SettingsPath));
                 Log.LogInfo("Loaded settings from file: " + JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(SettingsPath)));
             }
+
+            Application.runInBackground = Settings.RunInBackground;
 
             Harmony Harmony = new Harmony(PluginInfo.GUID);
 

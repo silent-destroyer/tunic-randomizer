@@ -37,6 +37,7 @@ namespace TunicRandomizer {
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
         public static GameObject Chalkboard;
+        public static GameObject Torch;
 
         public static GameObject FishingRod;
 
@@ -165,6 +166,7 @@ namespace TunicRandomizer {
 
             ItemPresentationPatches.SetupOldHouseKeyItemPresentation();
             Items["Key (House)"] = ItemRoot.transform.GetChild(48).gameObject;
+            ItemPresentationPatches.SetupTorchItemPresentation();
             ItemPresentationPatches.SetupDathStoneItemPresentation();
             ItemPresentationPatches.SetupHexagonQuestItemPresentation();
             ItemPresentationPatches.SetupCapePresentation();
@@ -978,8 +980,13 @@ namespace TunicRandomizer {
                         Check = Locations.RandomizedLocations[ItemId];
                         ItemData = ItemLookup.GetItemDataFromCheck(Check);
                     }
+
                     if (Locations.CheckedLocations[ItemId] || SaveFile.GetInt($"{ItemPatches.SaveFileCollectedKey} {ItemId}") == 1) {
                         GameObject.Destroy(ItemPickup.gameObject);
+                        return;
+                    }
+
+                    if (ItemData != null && ItemData.ItemNameForInventory == ItemPickup.itemToGive.name) {
                         return;
                     }
 

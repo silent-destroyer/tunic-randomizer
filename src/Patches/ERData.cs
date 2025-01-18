@@ -574,7 +574,7 @@ namespace TunicRandomizer {
                 "East Forest Redux Interior",
                 new Dictionary<string, List<TunicPortal>> {
                     {
-                        "Guard House 2 Upper before bushes",
+                        "Guard House 2 Upper",
                         new List<TunicPortal> {
                             new TunicPortal("Guard House 2 Upper Exit", "East Forest Redux", "upper", PDir.WEST),
                         }
@@ -1700,7 +1700,7 @@ namespace TunicRandomizer {
                 new RegionInfo("East Forest Redux Laddercave", false)
             },
             {
-                "Guard House 2 Upper before bushes",
+                "Guard House 2 Upper",
                 new RegionInfo("East Forest Redux Interior", false)
             },
             {
@@ -3172,7 +3172,7 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Guard House 2 Upper before bushes",
+                "Guard House 2 Upper",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Guard House 2 Upper after bushes",
@@ -3208,7 +3208,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Guard House 2 Upper before bushes",
+                        "Guard House 2 Upper",
                         new List<List<string>> {
                             new List<string> {
                                 "Sword",

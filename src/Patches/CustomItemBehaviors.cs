@@ -22,6 +22,7 @@ namespace TunicRandomizer {
             ButtonAssignableItem Cape = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             ButtonAssignableItem LaurelsToggle = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             Item Grass = ScriptableObject.CreateInstance<Item>();
+            Item Torch = Inventory.GetItemByName("Torch");
 
             LibrarianSword.name = "Librarian Sword";
             LibrarianSword.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
@@ -46,6 +47,9 @@ namespace TunicRandomizer {
             DathStone.controlAction = "";
             DathStone.icon = Inventory.GetItemByName("Dash Stone").icon;
             DathStone.suppressQuantity = true;
+
+            Torch.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+            Torch.collectionMessage.text = $"yooz if lawst!";
 
             Cape.name = "Cape";
             Cape.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
@@ -81,7 +85,6 @@ namespace TunicRandomizer {
             Inventory.itemList.Add(DathStone);
             Inventory.itemList.Add(Cape);
             Inventory.itemList.Add(Grass);
-            Item Torch = Inventory.GetItemByName("Torch");
             for (int i = 0; i < Inventory.itemList.Count; i++) {
                 if (Inventory.itemList[i].name == "Sword") {
                     Inventory.itemList.Insert(i + 1, LibrarianSword);

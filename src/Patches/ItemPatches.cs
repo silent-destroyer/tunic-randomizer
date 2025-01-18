@@ -248,9 +248,6 @@ namespace TunicRandomizer {
             if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationName != "Cheat Console" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
-            if (itemInfo.ItemGame == "TUNIC" && itemInfo.ItemName == "Torch") {
-                TunicRandomizer.Settings.SkipItemAnimations = true;
-            }
 
             string NotificationTop = "";
             string NotificationBottom = "";
@@ -489,9 +486,6 @@ namespace TunicRandomizer {
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
             if (alwaysSkip) {
-                TunicRandomizer.Settings.SkipItemAnimations = true;
-            }
-            if (Check.Reward.Name == "Torch") {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 

@@ -465,6 +465,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool RunInBackground {
+            get;
+            set;
+        }
+
         public enum GameModes {
             RANDOMIZER,
             HEXAGONQUEST,
@@ -587,6 +592,7 @@ namespace TunicRandomizer {
             ShowPlayerPosition = false;
             DeathplanePatch = true;
             OptionTooltips = true;
+            RunInBackground = true;
         }
 
         public string GetSettingsString() {
