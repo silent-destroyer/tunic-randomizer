@@ -680,7 +680,11 @@ namespace TunicRandomizer {
                 List<Check> ChecksInUse = TunicUtils.GetAllInUseChecks();
                 foreach (Check Check in ChecksInUse) {
                     Locations.CheckedLocations.Add(Check.CheckId, SaveFile.GetInt($"randomizer picked up {Check.CheckId}") == 1);
-                    long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", Locations.LocationIdToDescription[Check.CheckId]);
+                    string LocationName = Locations.LocationIdToDescription[Check.CheckId];
+                    long id = Archipelago.instance.integration.session.Locations.GetLocationIdFromName("TUNIC", LocationName);
+                    if (id == -1L) {
+                        TunicLogger.LogError("Unable to find Archipelago Location Id for Location Name: " + LocationName);
+                    }
                     LocationIDs.Add(id);
                     if (Locations.CheckedLocations[Check.CheckId] && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(id)) {
                         TunicLogger.LogInfo("Checked in save file but not on AP: " + id + " " + Check.CheckId + "[" + Locations.LocationIdToDescription[Check.CheckId] + "]");
