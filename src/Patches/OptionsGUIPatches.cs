@@ -296,6 +296,12 @@ namespace TunicRandomizer {
             OptionsGUI.addButton("Open Log File", (Action)(() => { System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log"); }));
             OptionsGUI.addToggle("Title Screen Option Tooltips", "Off", "On", TunicRandomizer.Settings.OptionTooltips ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.OptionTooltips = !TunicRandomizer.Settings.OptionTooltips; SaveSettings(); }));
             OptionsGUI.addToggle("Deathplane/OOB Patch", "Off", "On", TunicRandomizer.Settings.DeathplanePatch ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.DeathplanePatch = !TunicRandomizer.Settings.DeathplanePatch; SaveSettings(); }));
+            OptionsGUI.addToggle("Run Game In Background", "Off", "On", TunicRandomizer.Settings.RunInBackground ? 1 : 0, 
+                (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { 
+                TunicRandomizer.Settings.RunInBackground = !TunicRandomizer.Settings.RunInBackground; 
+                Application.runInBackground = TunicRandomizer.Settings.RunInBackground; 
+                SaveSettings(); 
+            }));
         }
 
         public static void MusicSettingsPage() {
