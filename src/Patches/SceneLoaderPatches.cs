@@ -67,10 +67,18 @@ namespace TunicRandomizer {
                         }
                     }
                 }
+                foreach (SecretPassagePanel wall in Resources.FindObjectsOfTypeAll<SecretPassagePanel>().Where(w => w.gameObject.scene.name == loadingScene.name)) {
+                    string breakableId = BreakableShuffle.getBreakableGameObjectId(wall.gameObject);
+                    if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
+                        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                            GameObject.Destroy(wall.gameObject);
+                        }
+                    }
+                }
                 // this was not working, the scatteredCount resets at some point after you load in for some reason?
                 //if (loadingScene.name == "Dusty") {
                 //    foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
-                //        string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                //        string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafOrWall: true);
                 //        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
                 //            // it doesn't increment on its own if you scatter it this way
                 //            DustyPile.scatteredCount++;
@@ -646,6 +654,10 @@ namespace TunicRandomizer {
 
             if (SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
+            }
+            foreach (SecretPassagePanel wall in GameObject.FindObjectsOfType<SecretPassagePanel>().ToList()) {
+                TunicLogger.LogInfo(wall.name);
+                TunicLogger.LogInfo(wall.transform.position.ToString());
             }
         }
 

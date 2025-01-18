@@ -30,11 +30,19 @@ namespace TunicRandomizer {
                     ItemIdsInScene.AddRange(GrassRandomizer.GrassChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
                         ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
                 }
-                List<SmashableObject> breakableObjects = new List<SmashableObject>();
+                List<GameObject> breakableObjects = new List<GameObject>();
                 if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                     ItemIdsInScene.AddRange(BreakableShuffle.BreakableChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
                         ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
-                    breakableObjects = GameObject.FindObjectsOfType<SmashableObject>().ToList();
+                    foreach (SmashableObject obj in GameObject.FindObjectsOfType<SmashableObject>().ToList()) {
+                        breakableObjects.Add(obj.gameObject);
+                    }
+                    foreach (DustyPile obj in GameObject.FindObjectsOfType<DustyPile>().ToList()) {
+                        breakableObjects.Add(obj.gameObject);
+                    }
+                    foreach (SecretPassagePanel obj in GameObject.FindObjectsOfType<SecretPassagePanel>().ToList()) {
+                        breakableObjects.Add(obj.gameObject);
+                    }
                 }
 
 
@@ -54,8 +62,8 @@ namespace TunicRandomizer {
                         if (GameObject.Find($"fairy target {ItemId}") == null) {
                             FairyTarget fairyTarget = CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
                             if (isBreakable) {
-                                foreach (SmashableObject breakable in breakableObjects) {
-                                    if (BreakableShuffle.getBreakableGameObjectId(breakable.gameObject) == ItemId) {
+                                foreach (GameObject breakable in breakableObjects) {
+                                    if (BreakableShuffle.getBreakableGameObjectId(breakable) == ItemId) {
                                         fairyTarget.transform.parent = breakable.transform;
                                     }
                                 }
