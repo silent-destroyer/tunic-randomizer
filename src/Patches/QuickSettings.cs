@@ -199,11 +199,6 @@ namespace TunicRandomizer {
                     GUI.Window(107, new Rect(20f, (float)Screen.height - (110f * guiScale), 1000f * guiScale, 110f * guiScale), new Action<int>(TooltipWindow), hoveredOption);
                 }
                 GameObject.Find("elderfox_sword graphic").GetComponent<Renderer>().enabled = !ShowAdvancedSinglePlayerOptions && !ShowAPSettingsWindow && !ShowMysterySeedWindow;
-
-                TitleScreen titleScreen = GameObject.FindObjectOfType<TitleScreen>();
-                if (titleScreen != null) {
-                    titleScreen.lockout = ShowAPSettingsWindow;
-                }
             }
         }
 
@@ -363,6 +358,7 @@ namespace TunicRandomizer {
             if (ToggleSinglePlayer && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                 TunicRandomizer.Settings.Mode = RandomizerSettings.RandomizerType.SINGLEPLAYER;
                 RandomizerSettings.SaveSettings();
+                CloseAPSettingsWindow();
             }
             bool ToggleArchipelago = GUI.Toggle(new Rect(150f * guiScale, apHeight, 150f * guiScale, 30f * guiScale), TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO, "Archipelago");
             if (ToggleArchipelago && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER) {
@@ -407,6 +403,10 @@ namespace TunicRandomizer {
                     Archipelago.instance.Connect();
                 } else {
                     ShowAPSettingsWindow = true;
+                    TitleScreen titleScreen = GameObject.FindObjectOfType<TitleScreen>();
+                    if (titleScreen != null) {
+                        titleScreen.lockout = true;
+                    }
                 }
             }
             apHeight += 40f * guiScale;
@@ -974,6 +974,10 @@ namespace TunicRandomizer {
             stringToEdit = "";
             clearAllEditingFlags();
             RandomizerSettings.SaveSettings();
+            TitleScreen titleScreen = GameObject.FindObjectOfType<TitleScreen>();
+            if (titleScreen != null) {
+                titleScreen.lockout = false;
+            }
         }
 
         public static bool TitleScreen___NewGame_PrefixPatch(TitleScreen __instance) {
