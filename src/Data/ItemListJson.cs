@@ -3693,6 +3693,14 @@
                         {
                             ""Hyperdash"": 1,
                             ""Beneath the Vault Back"": 1
+                        },
+                        {
+                            ""Stundagger"": 1,
+                            ""Beneath the Vault Back"": 1
+                        },
+                        {
+                            ""Shotgun"": 1,
+                            ""Beneath the Vault Back"": 1
                         }
                     ]
                 }
