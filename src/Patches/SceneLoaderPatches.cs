@@ -70,7 +70,7 @@ namespace TunicRandomizer {
                 foreach (SecretPassagePanel wall in Resources.FindObjectsOfTypeAll<SecretPassagePanel>().Where(w => w.gameObject.scene.name == loadingScene.name)) {
                     string breakableId = BreakableShuffle.getBreakableGameObjectId(wall.gameObject);
                     if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
-                        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                        if (TunicUtils.IsCheckCompletedOrCollected(breakableId)) {
                             GameObject.Destroy(wall.gameObject);
                         }
                     }
