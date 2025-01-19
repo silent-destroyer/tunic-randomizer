@@ -10,7 +10,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> BreakableChecks = new Dictionary<string, Check>();
         public static Dictionary<string, int> BreakableChecksPerScene = new Dictionary<string, int>();
         public static Dictionary<string, string> BreakableCheckDescriptions = new Dictionary<string, string>();
-        //public static List<string> APConvertedLines = new List<string>();
+        public static List<string> APConvertedLines = new List<string>();
 
         // keys are the auto-genned name, values are the nicer name (or the key if the key is already a nice name)
         public static Dictionary<string, string> BreakableBetterNames = new Dictionary<string, string>() {
@@ -88,21 +88,19 @@ namespace TunicRandomizer {
                                     BreakableChecksPerScene.Add(check.Location.SceneName, 0);
                                 }
                                 BreakableChecksPerScene[check.Location.SceneName]++;
-                                //if (sceneName == "Purgatory") {
-                                //    APConvertedLines.Add(ConvertToAPLine(BreakableCheckDescriptions[check.CheckId], regionGroup.Key, BreakableBetterNames[breakableName]));
-                                //}
+                                APConvertedLines.Add(ConvertToAPLine(BreakableCheckDescriptions[check.CheckId], regionGroup.Key, BreakableBetterNames[breakableName]));
                             }
                         }
                     }
                 }
                 extraReader.Close();
             }
-            //string convertedBlock = "";
-            //foreach (string APLine in APConvertedLines) {
-            //    convertedBlock += APLine;
-            //    convertedBlock += "\n";
-            //}
-            //TunicLogger.LogInfo(convertedBlock);
+            string convertedBlock = "";
+            foreach (string APLine in APConvertedLines) {
+                convertedBlock += APLine;
+                convertedBlock += "\n";
+            }
+            TunicLogger.LogInfo(convertedBlock);
         }
 
         public static string ConvertToAPLine(string description, string region, string breakableName) {
@@ -111,9 +109,9 @@ namespace TunicRandomizer {
             converted += description;
             converted += "\": TunicLocationData(\"";
             converted += region;
-            converted += "\", breakable=\"";
-            converted += breakableName;
-            converted += "\"),";
+            converted += "\", BreakableType.";
+            converted += breakableName.ToLower();
+            converted += "),";
 
             return converted;
         }

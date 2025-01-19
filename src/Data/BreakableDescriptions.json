@@ -128,7 +128,7 @@
     "Urn Firey~(20.4, 0.0, -15.1) [Fortress Courtyard]": "Fortress Courtyard - Fire Pot 6",
     "Urn Firey~(17.3, 0.0, -14.2) [Fortress Courtyard]": "Fortress Courtyard - Fire Pot 7",
     "Urn Firey~(17.9, 0.0, -16.3) [Fortress Courtyard]": "Fortress Courtyard - Fire Pot 8",
-    "Urn Firey~(37.0, 8.0, -41.0) [Fortress Courtyard]": "Fortress Courtyard - [Upper] Fire Pot",
+    "Urn Firey~(37.0, 8.0, -41.0) [Fortress Courtyard]": "Fortress Courtyard - Upper Fire Pot",
 
     "Urn~(123.0, 0.0, -31.0) [Fortress Reliquary]": "Fortress Grave Path - [Entry] Pot 1",
     "Urn~(127.5, 0.0, -31.0) [Fortress Reliquary]": "Fortress Grave Path - [Entry] Pot 2",
@@ -211,9 +211,9 @@
     "Urn~(4.0, 8.0, 179.0) [Fortress Arena]": "Fortress Arena - Pot 1",
     "Urn~(6.0, 8.0, 179.0) [Fortress Arena]": "Fortress Arena - Pot 2",
 
-    "Urn~(-70.0, 4.0, 12.5) [Atoll Redux]": "Ruined Atoll - [Southwest] Pot in Broken House 1",
-    "Urn~(-74.0, 4.0, 12.0) [Atoll Redux]": "Ruined Atoll - [Southwest] Pot in Broken House 2",
-    "table~(-71.0, 4.0, 6.5) [Atoll Redux]": "Ruined Atoll - [Southwest] Table in Broken House",
+    "Urn~(-70.0, 4.0, 12.5) [Atoll Redux]": "Ruined Atoll - [West] Pot in Broken House 1",
+    "Urn~(-74.0, 4.0, 12.0) [Atoll Redux]": "Ruined Atoll - [West] Pot in Broken House 2",
+    "table~(-71.0, 4.0, 6.5) [Atoll Redux]": "Ruined Atoll - [West] Table in Broken House",
     "Urn Explosive~(-12.8, 2.1, -81.5) [Atoll Redux]": "Ruined Atoll - [South] Explosive Pot near Birds",
 
     "Urn~(204.0, 106.1, -64.0) [Frog Stairs]": "Frog Stairs - [Upper] Pot 1",
@@ -260,7 +260,7 @@
     "crate quarry~(-28.0, 0.0, 4.0) [Quarry Redux]": "Quarry - [Central] Crate near Shortcut Ladder 5",
     "Urn Explosive~(-53.0, -20.0, -6.0) [Quarry Redux]": "Quarry - [West] Explosive Pot near Bombable Wall 1",
     "Urn Explosive~(-56.0, -20.0, -6.0) [Quarry Redux]": "Quarry - [West] Explosive Pot near Bombable Wall 2",
-    "Urn Explosive~(-100.0, -24.0, 6.0) [Quarry Redux]": "Quarry - [West] Explosive Pot above Shooting Range ",
+    "Urn Explosive~(-100.0, -24.0, 6.0) [Quarry Redux]": "Quarry - [West] Explosive Pot above Shooting Range",
     "Urn Explosive~(-15.0, -47.4, -76.0) [Quarry Redux]": "Quarry - [West] Explosive Pot near Isolated Chest 1",
     "Urn Explosive~(-15.0, -47.4, -74.0) [Quarry Redux]": "Quarry - [West] Explosive Pot near Isolated Chest 2",
     "crate quarry~(-108.8, -40.0, 16.8) [Quarry Redux]": "Quarry - [West] Crate by Shooting Range 1",
