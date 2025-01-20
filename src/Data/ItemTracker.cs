@@ -232,7 +232,6 @@ namespace TunicRandomizer {
             }
 
             // list of all portals in order, for the purpose of sorting the entrance file
-            List<string> refList = new List<string>();
             foreach (KeyValuePair<string, Dictionary<string, List<ERData.TunicPortal>>> portalGroup in ERData.RegionPortalsList) {
                 if (!regionsToPortals.ContainsKey(portalGroup.Key) && Locations.SimplifiedSceneNames.ContainsKey(portalGroup.Key)) {
                     regionsToPortals.Add(Locations.SimplifiedSceneNames[portalGroup.Key], new List<string>());
