@@ -194,15 +194,74 @@ namespace TunicRandomizer {
         public void PopulateDiscoveredEntrances() {
             foreach (KeyValuePair<string, PortalCombo> portalCombo in ERData.RandomizedPortals) {
                 if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 1) {
-                    TunicRandomizer.Tracker.DiscoveredEntrances[portalCombo.Value.Portal1.SceneDestinationTag] = portalCombo.Value.Portal2.SceneDestinationTag;
+                    DiscoveredEntrances[portalCombo.Value.Portal1.SceneDestinationTag] = portalCombo.Value.Portal2.SceneDestinationTag;
                 }
                 if (!GetBool(Decoupled)) {
                     if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 1) {
-                        TunicRandomizer.Tracker.DiscoveredEntrances[portalCombo.Value.Portal2.SceneDestinationTag] = portalCombo.Value.Portal1.SceneDestinationTag;
+                        DiscoveredEntrances[portalCombo.Value.Portal2.SceneDestinationTag] = portalCombo.Value.Portal1.SceneDestinationTag;
                     }
                 }
             }
+            if (SaveFile.GetInt(EntranceRando) == 1) { 
+                WriteEntranceFile();
+            }
             SaveTrackerFile();
+        }
+
+        public void WriteEntranceFile() {
+            string fileContents = "";
+
+            Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
+            int numberOfShops = 0;
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                portalNameToPair.Add(portalCombo.Portal1.Name, portalCombo);
+                if (portalCombo.Portal1.Name.Contains("Shop Portal")) {
+                    numberOfShops++;
+                }
+            }
+
+            Dictionary<string, List<string>> regionsToPortals = new Dictionary<string, List<string>>();
+
+            void addPortal(string portalName, string portalRegion) {
+                PortalCombo portalCombo = portalNameToPair[portalName];
+                string portalLine = portalCombo.Portal1.Name + ",-->,";
+                if (SaveFile.GetInt("randomizer entered portal " + portalName) == 1) {
+                    portalLine += portalCombo.Portal2.Name;
+                }
+                regionsToPortals[Locations.SimplifiedSceneNames[portalRegion]].Add(portalLine);
+            }
+
+            // list of all portals in order, for the purpose of sorting the entrance file
+            List<string> refList = new List<string>();
+            foreach (KeyValuePair<string, Dictionary<string, List<ERData.TunicPortal>>> portalGroup in ERData.RegionPortalsList) {
+                if (!regionsToPortals.ContainsKey(portalGroup.Key) && Locations.SimplifiedSceneNames.ContainsKey(portalGroup.Key)) {
+                    regionsToPortals.Add(Locations.SimplifiedSceneNames[portalGroup.Key], new List<string>());
+                }
+                foreach (List<ERData.TunicPortal> portalList in portalGroup.Value.Values) {
+                    foreach (ERData.TunicPortal portal in portalList) {
+                        if (portalNameToPair.ContainsKey(portal.Name)) {
+                            addPortal(portal.Name, portalGroup.Key);
+                        } else if (portal.Name == "Shop Portal") {
+                            for (int i = 0; i < numberOfShops; i++) {
+                                addPortal($"{portal.Name} {i+1}", portalGroup.Key);
+                            }
+                        }                        
+                    }
+                }
+            }
+            fileContents = "From,,To\n";
+            foreach (KeyValuePair<string, List<string>> pair in regionsToPortals) {
+                fileContents += pair.Key + ",,\n";
+                foreach (string portalLine in pair.Value) {
+                    fileContents += portalLine + "\n";
+                }
+                fileContents += ",,\n";
+            }
+
+            if (File.Exists(TunicRandomizer.EntranceTrackerPath)) { 
+                File.Delete(TunicRandomizer.EntranceTrackerPath);
+            }
+            File.WriteAllText(TunicRandomizer.EntranceTrackerPath, fileContents);
         }
 
         public static void SaveTrackerFile() {

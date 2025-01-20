@@ -163,6 +163,13 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
                 OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
             }
+            OptionsGUI.addButton("Open Entrance Tracker", (Action)(() => {
+                if (File.Exists(TunicRandomizer.EntranceTrackerPath)) {
+                    System.Diagnostics.Process.Start(TunicRandomizer.EntranceTrackerPath);
+                } else {
+                    GenericMessage.ShowMessage("\"No entrance tracker file found.\"\n\"Load an entrance randomizer file\"\n\"and try again.\"");
+                }
+            }));
             OptionsGUI.setHeading("Hints");
         }
 
