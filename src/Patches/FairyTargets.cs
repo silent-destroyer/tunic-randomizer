@@ -30,32 +30,19 @@ namespace TunicRandomizer {
             }
 
             if (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) {
-                List<string> ItemIdsInScene = Locations.VanillaLocations.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
-                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList();
+                Dictionary<string, Check> Checks = TunicUtils.GetAllInUseChecksDictionary();
+                List<string> ItemIdsInScene = Checks.Values.Where(check => check.Location.SceneName == SceneManager.GetActiveScene().name 
+                && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
-                if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                    ItemIdsInScene.AddRange(GrassRandomizer.GrassChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
-                        ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
-                }
                 List<SmashableObject> breakableObjects = new List<SmashableObject>();
                 if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
-                    ItemIdsInScene.AddRange(BreakableShuffle.BreakableChecks.Where(Item => Item.Value.Location.SceneName == SceneManager.GetActiveScene().name && SaveFile.GetInt($"randomizer picked up {Item.Key}") == 0 &&
-                        ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {Item.Key} was collected") == 0 : true)).Select(Item => Item.Key).ToList());
                     breakableObjects = GameObject.FindObjectsOfType<SmashableObject>().ToList();
                 }
 
 
                 foreach (string ItemId in ItemIdsInScene) {
-                    bool isBreakable = false;
-                    Location Location;
-                    if (GrassRandomizer.GrassChecks.ContainsKey(ItemId)) {
-                        Location = GrassRandomizer.GrassChecks[ItemId].Location;
-                    } else if (BreakableShuffle.BreakableChecks.ContainsKey(ItemId)) {
-                        Location = BreakableShuffle.BreakableChecks[ItemId].Location;
-                        isBreakable = true;
-                    } else {
-                        Location = Locations.VanillaLocations[ItemId].Location;
-                    }
+                    bool isBreakable = BreakableShuffle.BreakableChecks.ContainsKey(ItemId);
+                    Location Location = Checks[ItemId].Location;
 
                     if (GameObject.Find($"fairy target {ItemId}") == null) {
                         FairyTarget fairyTarget = CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
@@ -98,24 +85,12 @@ namespace TunicRandomizer {
 
         public static void CreateLoadZoneTargets() {
             HashSet<string> ScenesWithItems = new HashSet<string>();
-            List<string> ItemIds = Locations.VanillaLocations.Keys.Where(itemId => Locations.VanillaLocations[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
-                ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList();
-            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
-                ItemIds.AddRange(GrassRandomizer.GrassChecks.Keys.Where(itemId => GrassRandomizer.GrassChecks[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
-                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList());
-            }
-            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
-                ItemIds.AddRange(BreakableShuffle.BreakableChecks.Keys.Where(itemId => BreakableShuffle.BreakableChecks[itemId].Location.SceneName != SceneLoaderPatches.SceneName && (SaveFile.GetInt($"randomizer picked up {itemId}") == 0 &&
-                    ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {itemId} was collected") == 0 : true))).ToList());
-            }
+            Dictionary<string, Check> Checks = TunicUtils.GetAllInUseChecksDictionary();
+            List<string> ItemIds = Checks.Values.Where(check => check.Location.SceneName == SceneManager.GetActiveScene().name
+            && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
+
             foreach (string ItemId in ItemIds) {
-                if (GrassRandomizer.GrassChecks.ContainsKey(ItemId)) {
-                    ScenesWithItems.Add(GrassRandomizer.GrassChecks[ItemId].Location.SceneName);
-                } else if (BreakableShuffle.BreakableChecks.ContainsKey(ItemId)) {
-                    ScenesWithItems.Add(BreakableShuffle.BreakableChecks[ItemId].Location.SceneName);
-                } else {
-                    ScenesWithItems.Add(Locations.VanillaLocations[ItemId].Location.SceneName);
-                }
+                ScenesWithItems.Add(Checks[ItemId].Location.SceneName);
             }
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
