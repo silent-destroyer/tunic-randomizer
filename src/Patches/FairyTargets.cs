@@ -59,7 +59,7 @@ namespace TunicRandomizer {
                             ItemTargetsInLogic.Add(fairyTarget);
                         }
                         if (isBreakable) {
-                            foreach (SmashableObject breakable in breakableObjects) {
+                            foreach (GameObject breakable in breakableObjects) {
                                 if (BreakableShuffle.getBreakableGameObjectId(breakable.gameObject) == ItemId) {
                                     fairyTarget.transform.parent = breakable.transform;
                                 }
