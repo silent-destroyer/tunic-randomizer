@@ -90,11 +90,33 @@ namespace TunicRandomizer {
         }
 
         public static void FuseCloseAnimationHelper___animationEvent_fuseCloseAnimationDone_PostfixPatch(FuseCloseAnimationHelper __instance) {
-            Fuse fuse = __instance.GetComponentInParent<Fuse>();
-            ConduitNode node = __instance.GetComponentInParent<ConduitNode>();
-            if (fuse != null && node != null) {
-                TunicLogger.LogInfo("fuse animator closed " + node.Guid);
+            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1) {
+                Fuse fuse = __instance.GetComponentInParent<Fuse>();
+                ConduitNode node = __instance.GetComponentInParent<ConduitNode>();
+                if (fuse != null && node != null) {
+                    TunicLogger.LogInfo("fuse closed " + node.Guid);
+                    string CheckId = GetFuseCheckId(fuse);
+                
+                    if (SaveFlags.IsArchipelago()) {
+                        // todo
+                    } else if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId)) {
+                        Check check = Locations.RandomizedLocations[CheckId];
+                        ItemPatches.GiveItem(check);
+                    }
+
+                    SaveFile.SetInt("fuse closed " + FakeFuseIds[node.Guid], 1);
+                    SaveFile.SetInt("randomizer fake fuse closed " + FakeFuseIds[node.Guid], 1);
+                }
             }
+        }
+
+        public static string GetFuseCheckId(Fuse __instance) {
+            ConduitNode node = __instance.GetComponent<ConduitNode>();
+            if (node != null) {
+                return $"{node.Guid} [{__instance.gameObject.scene.name}]";
+            }
+            TunicLogger.LogError("Could not find fuse check id for fuse " + __instance.name + " in " + __instance.gameObject.scene.name);
+            return null;
         }
 
         public static void ApplyFuseTexture(Fuse fuse, Material material = null) {
