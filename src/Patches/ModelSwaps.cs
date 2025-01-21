@@ -850,6 +850,32 @@ namespace TunicRandomizer {
                 if (transform.name == "Physical Post") {
                     moveUp.transform.localScale *= 0.66f;
                 }
+                switch (moveUp.transform.parent.transform.position.ToString()) {
+                    case "(22.0, 36.0, -82.0)":  // Overworld near checkpoint
+                        moveUp.transform.localPosition = new Vector3(0f, 2f, -1f);
+                        break;
+                    case "(-23.0, 24.0, -114.0)":  // Overworld at Cube Cave
+                        moveUp.transform.localPosition = new Vector3(-1.5f, 1.5f, 0f);
+                        break;
+                    case "(-57.5, 24.0, -97.0)":  // Overworld near fountain
+                        moveUp.transform.localPosition = new Vector3(1.5f, 1.5f, -3f);
+                        break;
+                    case "(-83.0, 3.5, 39.0)":  // Atoll
+                        moveUp.transform.localPosition = new Vector3(-1f, 2f, 1.5f);  // also needs to rotate 270 degrees about Y
+                        break;
+                    case "(84.0, 8.0, 69.0)":  // East Forest
+                        moveUp.transform.localPosition = new Vector3(0f, 2f, -1f);
+                        break;
+                    case "(30.0, 7.0, 38.3)":  // Fortress
+                        moveUp.transform.localPosition = new Vector3(-2f, 2f, 0f);
+                        break;
+                    case "(-52.0, -12.0, 14.0)":  // Quarry west
+                        moveUp.transform.localPosition = new Vector3(2f, 0f, 0f);
+                        break;
+                    case "(53.5, 0.0, 1.0)":  // Quarry east
+                        moveUp.transform.localPosition = new Vector3(-1.5f, 2f, -1f);
+                        break;
+                }
             }
         }
 

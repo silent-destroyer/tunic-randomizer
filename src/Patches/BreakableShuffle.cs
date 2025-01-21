@@ -164,7 +164,7 @@ namespace TunicRandomizer {
                 }
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
-                    moveUp.transform.parent = __instance.transform.parent;
+                    //moveUp.transform.parent = __instance.transform.parent;
                     moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 180f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
                     if (moveUp.name == "Card") {
                         moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 0f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
