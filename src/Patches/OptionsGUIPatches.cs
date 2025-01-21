@@ -604,6 +604,9 @@ namespace TunicRandomizer {
 
         public static void ToggleFairyLogic(int index) {
             TunicRandomizer.Settings.SeekingSpellLogic = !TunicRandomizer.Settings.SeekingSpellLogic;
+            if (PlayerCharacter.instance != null) {
+                FairyTargets.ChooseFairyTargetList();
+            }
             SaveSettings();
         }
 

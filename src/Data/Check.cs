@@ -93,7 +93,7 @@ namespace TunicRandomizer {
         }
         public bool IsCompletedOrCollected {
             get {
-                return Locations.CheckedLocations[CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
+                return SaveFile.GetInt("randomizer picked up " + CheckId) == 1 || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
             }
         }
         public bool IsCollectedInAP {
