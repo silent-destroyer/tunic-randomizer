@@ -770,6 +770,7 @@ namespace TunicRandomizer {
                 TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm.---I sE yoo hahv A torJ [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
                 TorchFox.GetComponent<NPC>().script = TorchFoxScript;
 
+                TorchFox.name = "torch hint ghost";
                 TorchFox.SetActive(true);
             }
         }

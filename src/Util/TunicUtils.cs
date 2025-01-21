@@ -8,6 +8,7 @@ namespace TunicRandomizer {
     public class TunicUtils {
         // list of the CheckIds for checks that are currently in logic
         public static List<string> ChecksInLogic = new List<string>();
+        public static Dictionary<string, List<string>> ChecksInLogicPerScene = new Dictionary<string, List<string>>();
         // items the player has received
         public static Dictionary<string, int> PlayerItemsAndRegions = new Dictionary<string, int>();
 
@@ -62,10 +63,28 @@ namespace TunicRandomizer {
             return dictionary;
         }
 
+        // for filtering items out in PlayerItemsAndRegions
+        public static List<string> AllProgressionNames = new List<string>() {
+            "Stick", "Sword", "Sword Upgrade", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shotgun",
+            "Key (House)", "Key", "Vault Key (Red)", "Trinket Coin", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "Hexagon Gold", "Mask",
+            "Fairy", "12", "21", "26", "Trinket - Glass Cannon",
+            "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to East Forest",
+            "Ladders to Lower Forest", "Ladders near Patrol Cave", "Ladders in Well", "Ladders to West Bell", "Ladder to Quarry",
+            "Ladder in Dark Tomb", "Ladders near Dark Tomb", "Ladder near Temple Rafters", "Ladder to Swamp", "Ladders in Swamp",
+            "Ladder to Ruined Atoll", "Ladders in South Atoll", "Ladders to Frog's Domain", "Ladders in Hourglass Cave",
+            "Ladder to Beneath the Vault", "Ladders in Lower Quarry", "Ladders in Library",
+        };
+
+
         // sets ChecksInLogic to contain a list of CheckIds for all checks that are currently in logic with the items you have received
         public static void FindChecksInLogic() {
             PlayerItemsAndRegions.Clear();
             ChecksInLogic.Clear();
+            ChecksInLogicPerScene.Clear();
+
+            foreach (string sceneName in Locations.AllScenes) {
+                ChecksInLogicPerScene[sceneName] = new List<string>();
+            }
 
             AddListToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
             PlayerItemsAndRegions.Add("Overworld", 1);
@@ -77,20 +96,29 @@ namespace TunicRandomizer {
                     string itemName = itemInfo.ItemName;
                     // convert display name to internal name
                     foreach (KeyValuePair<string, string> namePair in ItemLookup.SimplifiedItemNames) {
+                        // fairies have weird names
+                        if (itemName == "Fairy") {
+                            break;
+                        }
                         if (namePair.Value == itemName) {
                             itemName = namePair.Key;
+                            break;
                         }
                     }
-                    AddStringToDict(PlayerItemsAndRegions, itemName);
+                    if (AllProgressionNames.Contains(itemName)) {
+                        AddStringToDict(PlayerItemsAndRegions, itemName);
+                    }
                 }
             } else {
                 foreach (Check locationCheck in Locations.RandomizedLocations.Values) {
-                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true) {
-                        AddStringToDict(PlayerItemsAndRegions, locationCheck.Reward.Name);
+                    string itemName = ItemLookup.FairyLookup.ContainsKey(locationCheck.Reward.Name) ? "Fairy" : locationCheck.Reward.Name;
+                    if (Locations.CheckedLocations.ContainsKey(locationCheck.CheckId) && Locations.CheckedLocations[locationCheck.CheckId] == true
+                        && AllProgressionNames.Contains(itemName)) {
+                        AddStringToDict(PlayerItemsAndRegions, itemName);
                     }
                 }
             }
-            if (PlayerItemsAndRegions.ContainsKey("Hexagon Gold")) {
+            if (PlayerItemsAndRegions.ContainsKey("Hexagon Gold") && SaveFile.GetInt(HexagonQuestPageAbilities) != 1) {
                 if (PlayerItemsAndRegions["Hexagon Gold"] >= SaveFile.GetInt("randomizer hexagon quest prayer requirement")) {
                     AddStringToDict(PlayerItemsAndRegions, "12");
                 }
@@ -120,6 +148,7 @@ namespace TunicRandomizer {
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && !Locations.CheckedLocations[check.CheckId] 
                     && ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 0 : true)) {
                     ChecksInLogic.Add(check.CheckId);
+                    ChecksInLogicPerScene[check.Location.SceneName].Add(check.CheckId);
                 }
             }
         }
@@ -178,7 +207,7 @@ namespace TunicRandomizer {
         }
 
         public static bool IsCheckCompletedOrCollected(string CheckId) {
-            return Locations.CheckedLocations[CheckId] || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
+            return SaveFile.GetInt("randomizer picked up " + CheckId) == 1 || (SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {CheckId} was collected") == 1);
         }
 
         public static bool IsCheckCompletedInAP(string CheckId) {

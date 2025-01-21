@@ -172,12 +172,20 @@ namespace TunicRandomizer {
             if (GrassRandomizer.GrassChecks.ContainsKey(check.CheckId) && check.Reward.Name == "Grass") {
                 return;
             }
+            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && check.Reward.Name == "money" && check.Reward.Amount <= 5) {
+                return;
+            }
             recentItemsQueue.Add(new RecentItemData(check));
             UpdateItemDisplay();
         }
 
         public void EnqueueItem(ItemInfo itemInfo, bool forYou) {
             if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) && itemInfo.ItemName == "Grass") {
+                return;
+            }
+            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemName.Contains("Money")
+                && ItemLookup.Items.ContainsKey(itemInfo.ItemName) && ItemLookup.Items[itemInfo.ItemName].QuantityToGive <= 5) {
+
                 return;
             }
             recentItemsQueue.Add(new RecentItemData(itemInfo, forYou));

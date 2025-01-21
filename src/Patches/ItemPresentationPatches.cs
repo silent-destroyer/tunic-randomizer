@@ -150,6 +150,39 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupTorchItemPresentation() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "VaultKey").First().gameObject;
+
+                GameObject Torch = GameObject.Instantiate(PresentationBase);
+                Torch.transform.parent = PresentationBase.transform.parent;
+                Torch.transform.localScale = Vector3.one * 0.7477f;
+                Torch.transform.localPosition = new Vector3(-0.239f, -0.314f, 0f);
+                Torch.transform.localEulerAngles = new Vector3(0f, 0f, 318.4006f);
+                Torch.name = "torch";
+                Torch.GetComponent<MeshFilter>().mesh = MeshData.CreateMesh(MeshData.Torch);
+                Torch.GetComponent<MeshRenderer>().materials = new Material[] { Material.GetDefaultMaterial() };
+                Torch.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
+                Torch.GetComponent<MeshRenderer>().material.color = new Color(0.584f, 0.4927f, 0.1892f, 1f);
+                Torch.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Torch") };
+
+                GameObject Fire = GameObject.Instantiate(GameObject.Find("_Environment/_Decorations/wall torch (2)/lamp fire"));
+                Fire.transform.parent = Torch.transform;
+                Fire.transform.localPosition = new Vector3(-0.1f, 0.9f, -0.5f);
+                Fire.transform.localScale = Vector3.one;
+                Fire.transform.localEulerAngles = Vector3.zero;
+                Fire.layer = 5;
+                Fire.GetComponent<ParticleSystemRenderer>().material.color = Color.yellow;
+                Fire.AddComponent<UnscaledParticleSystem>();
+                Torch.SetActive(false);
+
+                ModelSwaps.Torch = Torch;
+                
+                RegisterNewItemPresentation(Torch.GetComponent<ItemPresentationGraphic>());
+            } catch (Exception e) {
+                TunicLogger.LogError("Torch presentation error: " + e.Message);
+            }
+        }
         public static void SetupCapePresentation() { 
             try {
                 GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "key twist").First().gameObject;

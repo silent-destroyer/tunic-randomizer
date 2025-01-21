@@ -47,7 +47,7 @@ namespace TunicRandomizer {
                 foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name)) {
                     string grassId = GrassRandomizer.getGrassGameObjectId(grass);
                     if (GrassRandomizer.GrassChecks.ContainsKey(grassId)) {
-                        if (SaveFile.GetInt("randomizer picked up " + grassId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[grassId]))) {
+                        if (TunicUtils.IsCheckCompletedOrCollected(grassId)) {
                             grass.goToDeadState();
                         }
                     }
@@ -58,7 +58,7 @@ namespace TunicRandomizer {
                 foreach (SmashableObject breakable in Resources.FindObjectsOfTypeAll<SmashableObject>().Where(pot => pot.gameObject.scene.name == loadingScene.name)) {
                     string breakableId = BreakableShuffle.getBreakableGameObjectId(breakable.gameObject);
                     if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
-                        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
+                        if (TunicUtils.IsCheckCompletedOrCollected(breakableId)) {
                             if (breakable.name == "Physical Post") {
                                 breakable.smash(Vector3.zero);
                             } else {
@@ -591,8 +591,6 @@ namespace TunicRandomizer {
                 if (PlayerCharacter.instance != null) {
                     TunicUtils.FindChecksInLogic();
                     FairyTargets.CreateFairyTargets();
-                    FairyTargets.CreateEntranceTargets();
-                    FairyTargets.FindFairyTargets();
                 }
             } catch (Exception ex) {
                 TunicLogger.LogError("An error occurred creating new fairy seeker spell targets:");
