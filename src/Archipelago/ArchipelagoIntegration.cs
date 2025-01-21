@@ -303,10 +303,7 @@ namespace TunicRandomizer {
                 if (GameObject.Find($"fairy target {GameObjectId}")) {
                     GameObject.Destroy(GameObject.Find($"fairy target {GameObjectId}"));
                 }
-                if (Locations.VanillaLocations.Keys.Where(key => Locations.VanillaLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0) {
-                    FairyTargets.CreateLoadZoneTargets();
-                }
-
+                FairyTargets.ChooseFairyTargetList();
                 if (SaveFile.GetInt(GrassRandoEnabled) != 1 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                     ItemTracker.PopulateSpoilerLog();
                 }
@@ -320,11 +317,6 @@ namespace TunicRandomizer {
                     Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                     RecentItemsDisplay.instance.EnqueueItem(itemInfo, false);
                 }
-
-                if (FairyTargets.ItemTargetsInLogic.Count == 0) {
-                    FairyTargets.CreateLogicLoadZoneTargets(addImmediately: true);
-                }
-
 
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);

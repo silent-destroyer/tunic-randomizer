@@ -704,15 +704,7 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
                 ModelSwaps.SwapItemsInScene();
             }
-
-            // todo: set this to only happen if the logic option isn't on
-            if (Locations.RandomizedLocations.Keys.Where(key => Locations.RandomizedLocations[key].Location.SceneName == SceneLoaderPatches.SceneName && !Locations.CheckedLocations[key]).ToList().Count == 0
-                && !TunicRandomizer.Settings.SeekingSpellLogic) {
-                FairyTargets.CreateLoadZoneTargets();
-            }
-            if (SaveFile.GetInt(GrassRandoEnabled) == 0) {
-                FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
-            }
+            FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
             if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
