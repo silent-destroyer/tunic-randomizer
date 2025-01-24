@@ -14,6 +14,7 @@ namespace TunicRandomizer {
         public static RandomizerSettings Settings = new RandomizerSettings();
         public static string SettingsPath = Application.persistentDataPath + "/Randomizer/Settings.json";
         public static string ItemTrackerPath = Application.persistentDataPath + "/Randomizer/ItemTracker.json";
+        public static string EntranceTrackerPath = Application.persistentDataPath + "/Randomizer/EntranceTracker.csv";
         public static string SpoilerLogPath = Application.persistentDataPath + "/Randomizer/Spoiler.log";
         public static ItemTracker Tracker;
 
@@ -57,6 +58,10 @@ namespace TunicRandomizer {
             } else {
                 Settings = JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(SettingsPath));
                 Log.LogInfo("Loaded settings from file: " + JsonConvert.DeserializeObject<RandomizerSettings>(File.ReadAllText(SettingsPath)));
+            }
+
+            if (!File.Exists(EntranceTrackerPath)) {
+                File.WriteAllText(EntranceTrackerPath, "");
             }
 
             Application.runInBackground = Settings.RunInBackground;
