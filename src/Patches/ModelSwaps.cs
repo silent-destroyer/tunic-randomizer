@@ -705,6 +705,9 @@ namespace TunicRandomizer {
                         if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
                         r.material = material;
                     }
+                    if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
+                        breakableObject.GetComponent<MeshRenderer>().materials = new Material[] { material, material };
+                    }
                 }
             }
         }
@@ -751,6 +754,10 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (meshRenderer.GetComponent<SecretPassagePanel>() != null) {
+                meshRenderer.materials = new Material[] { meshRenderer.material, meshRenderer.material };
+            }
+
             if (meshFilter != null) {
                 if (meshFilter.mesh.name.Contains("sewer_barrel")) {
                     questionMark.transform.localPosition += new Vector3(0f, 0.9f, 0f);
@@ -768,6 +775,14 @@ namespace TunicRandomizer {
                 questionMark.transform.localPosition = new Vector3(0f, 1f, 0.3f);
                 questionMark.transform.localScale = Vector3.one * 0.2f;
                 questionMark.transform.localEulerAngles = itemInfo.Flags.HasFlag(ItemFlags.Trap) ? new Vector3(0f, 0f, 180f) : Vector3.zero;
+            }
+            if (breakableObject.GetComponent<SecretPassagePanel>() != null 
+                && ItemPositions.BreakablePositionExtras.ContainsKey(breakableObject.transform.position.ToString())) {
+                questionMark.transform.localPosition = ItemPositions.BreakablePositionExtras[breakableObject.transform.position.ToString()].Item2;
+                questionMark.transform.localEulerAngles = new Vector3(0, ItemPositions.BreakablePositionExtras[breakableObject.transform.position.ToString()].Item3, 0);
+            }
+            if (flag.HasFlag(ItemFlags.Trap)) {
+                questionMark.transform.localEulerAngles += new Vector3(0, 0, 180);
             }
             questionMark.SetActive(!Checked);
         }
@@ -850,31 +865,8 @@ namespace TunicRandomizer {
                 if (transform.name == "Physical Post") {
                     moveUp.transform.localScale *= 0.66f;
                 }
-                switch (moveUp.transform.parent.transform.position.ToString()) {
-                    case "(22.0, 36.0, -82.0)":  // Overworld near checkpoint
-                        moveUp.transform.localPosition = new Vector3(0f, 2f, -1f);
-                        break;
-                    case "(-23.0, 24.0, -114.0)":  // Overworld at Cube Cave
-                        moveUp.transform.localPosition = new Vector3(-1.5f, 1.5f, 0f);
-                        break;
-                    case "(-57.5, 24.0, -97.0)":  // Overworld near fountain
-                        moveUp.transform.localPosition = new Vector3(1.5f, 1.5f, -3f);
-                        break;
-                    case "(-83.0, 3.5, 39.0)":  // Atoll
-                        moveUp.transform.localPosition = new Vector3(-1f, 2f, 1.5f);  // also needs to rotate 270 degrees about Y
-                        break;
-                    case "(84.0, 8.0, 69.0)":  // East Forest
-                        moveUp.transform.localPosition = new Vector3(0f, 2f, -1f);
-                        break;
-                    case "(30.0, 7.0, 38.3)":  // Fortress
-                        moveUp.transform.localPosition = new Vector3(-2f, 2f, 0f);
-                        break;
-                    case "(-52.0, -12.0, 14.0)":  // Quarry west
-                        moveUp.transform.localPosition = new Vector3(2f, 0f, 0f);
-                        break;
-                    case "(53.5, 0.0, 1.0)":  // Quarry east
-                        moveUp.transform.localPosition = new Vector3(-1.5f, 2f, -1f);
-                        break;
+                if (transform.GetComponent<SecretPassagePanel>() != null && ItemPositions.BreakablePositionExtras.ContainsKey(transform.position.ToString())) {
+                    moveUp.transform.localPosition = ItemPositions.BreakablePositionExtras[transform.position.ToString()].Item1;
                 }
             }
         }
