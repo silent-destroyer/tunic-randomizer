@@ -656,10 +656,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
             }
-            foreach (SecretPassagePanel wall in GameObject.FindObjectsOfType<SecretPassagePanel>().ToList()) {
-                TunicLogger.LogInfo(wall.name);
-                TunicLogger.LogInfo(wall.transform.position.ToString());
-            }
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
