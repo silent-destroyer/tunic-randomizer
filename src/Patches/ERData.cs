@@ -62,6 +62,10 @@ namespace TunicRandomizer {
 
         }
 
+        public static Dictionary<string, PortalCombo> GetVanillaPortals() {
+            return VanillaPortals.ToDictionary(k => k.Key, k => k.Value);
+        }
+
         public static Dictionary<string, Dictionary<string, List<TunicPortal>>> RegionPortalsList = new Dictionary<string, Dictionary<string, List<TunicPortal>>> {
             {
                 "Overworld Redux",

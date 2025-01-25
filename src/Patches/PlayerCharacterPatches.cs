@@ -287,10 +287,7 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortals("Overworld Redux", sending: true);
                 GhostHints.SpawnTorchHintGhost();
             } else {
-                if (ERData.VanillaPortals.Count == 0) {
-                    ERScripts.SetupVanillaPortals();
-                }
-                ERData.RandomizedPortals = ERData.VanillaPortals;
+                ERData.RandomizedPortals = ERData.GetVanillaPortals();
                 ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
@@ -623,11 +620,9 @@ namespace TunicRandomizer {
                     }
                 }
                 if (slotData.TryGetValue("Entrance Rando", out var entranceRandoPortals)) {
-                    ERScripts.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
-                    ERScripts.ModifyPortals("Overworld Redux");
-                    ERScripts.ModifyPortals("Overworld Redux", sending:true);
-                } else {
-                    ERScripts.ModifyPortalNames("Overworld Redux");
+                    if (SaveFile.GetInt(EntranceRando) == 1) { 
+                        ERScripts.CreatePortalPairs(((JObject)slotData["Entrance Rando"]).ToObject<Dictionary<string, string>>());
+                    }
                 }
                 if (slotData.TryGetValue("shuffle_ladders", out var ladderRando)) {
                     if (SaveFile.GetInt(LadderRandoEnabled) == 0 && ladderRando.ToString() == "1") {

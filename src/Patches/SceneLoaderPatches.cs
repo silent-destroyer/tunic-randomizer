@@ -283,6 +283,9 @@ namespace TunicRandomizer {
                 if (Locations.VanillaLocations.Count == 0) {
                     Locations.CreateLocationLookups();
                 }
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
                 GrassRandomizer.LoadGrassChecks();
                 BreakableShuffle.LoadBreakableChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
@@ -567,7 +570,7 @@ namespace TunicRandomizer {
                 if (ERData.VanillaPortals.Count == 0) {
                     ERScripts.SetupVanillaPortals();
                 }
-                ERData.RandomizedPortals = ERData.VanillaPortals;
+                ERData.RandomizedPortals = ERData.GetVanillaPortals();
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();
