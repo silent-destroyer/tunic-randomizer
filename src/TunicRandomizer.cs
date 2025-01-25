@@ -252,6 +252,8 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(PermanentStateByPosition), "onKilled"), new HarmonyMethod(AccessTools.Method(typeof(BreakableShuffle), "PermanentStateByPosition_onKilled_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(DustyPile), "scatter"), new HarmonyMethod(AccessTools.Method(typeof(BreakableShuffle), "DustyPile_scatter_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(SecretPassagePanel), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(BreakableShuffle), "SecretPassagePanel_IDamageable_ReceiveDamage_PrefixPatch")));
         }
 
         private static void RegisterTypeAndCreateObject(System.Type type, string name) {

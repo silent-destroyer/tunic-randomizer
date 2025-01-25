@@ -178,5 +178,94 @@
             "Quarry Back",
             "Shotgun"
         ]
+    ],
+
+    "SecretPassagePanel~(22.0, 36.0, -82.0)": [
+        [
+            "Overworld",
+            "Shotgun"
+        ],
+        [
+            "Overworld",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(-23.0, 24.0, -114.0)": [
+        [
+            "Overworld",
+            "Shotgun"
+        ],
+        [
+            "Overworld",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(-57.5, 24.0, -97.0)": [
+        [
+            "Overworld",
+            "Shotgun"
+        ],
+        [
+            "Overworld",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(-83.0, 3.5, 39.0)": [
+        [
+            "Ruined Atoll",
+            "Shotgun"
+        ],
+        [
+            "Ruined Atoll",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(84.0, 8.0, 69.0)": [
+        [
+            "East Forest",
+            "Shotgun"
+        ],
+        [
+            "East Forest",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(30.0, 7.0, 38.3)": [
+        [
+            "Eastern Vault Fortress",
+            "Shotgun"
+        ],
+        [
+            "Eastern Vault Fortress",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(-52.0, -12.0, 14.0)": [
+        [
+            "Quarry Back",
+            "Shotgun"
+        ],
+        [
+            "Quarry Back",
+            "Sword",
+            "Shop"
+        ]
+    ],
+    "SecretPassagePanel~(53.5, 0.0, 1.0)": [
+        [
+            "Quarry",
+            "Shotgun"
+        ],
+        [
+            "Quarry",
+            "Sword",
+            "Shop"
+        ]
     ]
 }

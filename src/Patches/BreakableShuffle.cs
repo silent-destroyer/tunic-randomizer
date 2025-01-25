@@ -22,8 +22,9 @@ namespace TunicRandomizer {
             { "crate", "Crate" },
             { "crate quarry", "Crate" },
             { "table", "Table" },
-            { "library_lab_pageBottle", "Library Glass" },  // probably rename this one
+            { "library_lab_pageBottle", "Library Glass" },
             { "leaf pile", "Leaf Pile" },
+            { "SecretPassagePanel", "Bombable Wall" },
         };
 
         public static void LoadBreakableChecks() {
@@ -70,7 +71,7 @@ namespace TunicRandomizer {
                                         continue;
                                     }
                                     // we're just doing this separately in BreakableReqs cause it'll be a mess if done here
-                                    if (breakableName == "leaf pile") {
+                                    if (breakableName == "leaf pile" || breakableName == "SecretPassagePanel") {
                                         continue;
                                     }
                                     check.Location.Requirements.Add(new Dictionary<string, int> { { breaker, 1 }, { regionName, 1 } });
@@ -87,9 +88,7 @@ namespace TunicRandomizer {
                                     BreakableChecksPerScene.Add(check.Location.SceneName, 0);
                                 }
                                 BreakableChecksPerScene[check.Location.SceneName]++;
-                                //if (sceneName == "Purgatory") {
-                                //    APConvertedLines.Add(ConvertToAPLine(BreakableCheckDescriptions[check.CheckId], regionGroup.Key, BreakableBetterNames[breakableName]));
-                                //}
+                                //APConvertedLines.Add(ConvertToAPLine(BreakableCheckDescriptions[check.CheckId], regionGroup.Key, BreakableBetterNames[breakableName]));
                             }
                         }
                     }
@@ -110,19 +109,23 @@ namespace TunicRandomizer {
             converted += description;
             converted += "\": TunicLocationData(\"";
             converted += region;
-            converted += "\", breakable=\"";
-            converted += breakableName;
-            converted += "\"),";
+            converted += "\", BreakableType.";
+            converted += breakableName.ToLower();
+            converted += "),";
 
             return converted;
         }
 
-        public static string getBreakableGameObjectId(GameObject gameObject, bool isLeafPile = false) {
+        public static string getBreakableGameObjectId(GameObject gameObject) {
             string name = TunicUtils.RemoveParenNumber(gameObject.name);
             string scene = gameObject.scene.name;
             string position;
-            if (isLeafPile) {
+            if (gameObject.GetComponent<DustyPile>() != null) {
                 position = gameObject.transform.position.ToString();
+            } else if (gameObject.GetComponent<SecretPassagePanel>() != null) {
+                position = gameObject.transform.position.ToString();
+                // most of them have different names, so this makes it easier on our end
+                name = "SecretPassagePanel";
             } else {
                 position = gameObject.GetComponent<SmashableObject>().initialPosition.ToString();
                 // if we're looking too early, initial position hasn't been set yet, but then the actual position is the one we want
@@ -136,10 +139,16 @@ namespace TunicRandomizer {
 
         public static bool PermanentStateByPosition_onKilled_PrefixPatch(PermanentStateByPosition __instance) {
             SmashableObject smashComp = __instance.GetComponent<SmashableObject>();
-            if (smashComp != null && SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+
+            if (smashComp == null) {
+                return true;
+            }
+
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
+
                 string breakableId = getBreakableGameObjectId(__instance.gameObject);
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Check check = Locations.RandomizedLocations[breakableId];
@@ -148,6 +157,7 @@ namespace TunicRandomizer {
                 } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
                 }
+
                 GameObject fairyTarget = GameObject.Find($"fairy target {breakableId}");
                 if (fairyTarget != null) {
                     GameObject.Destroy(fairyTarget);
@@ -161,7 +171,6 @@ namespace TunicRandomizer {
                     }
                     moveUp.SetActive(true);
                 }
-                return false;
             }
             return true;
         }
@@ -172,7 +181,7 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;
                 }
-                string breakableId = getBreakableGameObjectId(__instance.gameObject, isLeafPile: true);
+                string breakableId = getBreakableGameObjectId(__instance.gameObject);
 
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Check check = Locations.RandomizedLocations[breakableId];
@@ -187,6 +196,41 @@ namespace TunicRandomizer {
                 } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
                 }
+                if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
+                    GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
+                    moveUp.transform.parent = __instance.transform.parent;
+                    moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 180f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    if (moveUp.name == "Card") {
+                        moveUp.transform.rotation = new Quaternion(moveUp.transform.rotation.x, 0f, moveUp.transform.rotation.z, moveUp.transform.rotation.w);
+                    }
+                    moveUp.SetActive(true);
+                }
+            }
+            return true;
+        }
+
+
+        public static bool SecretPassagePanel_IDamageable_ReceiveDamage_PrefixPatch(int damagePoints, int poisePoints, Vector3 physicsForce, 
+            float freezeTime, int poisonDamage, SecretPassagePanel __instance) {
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                    return false;
+                }
+
+                string breakableId = getBreakableGameObjectId(__instance.gameObject);
+                if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
+                    Check check = Locations.RandomizedLocations[breakableId];
+                    ItemPatches.GiveItem(check, alwaysSkip: true);
+
+                } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
+                }
+
+                GameObject fairyTarget = GameObject.Find($"fairy target {breakableId}");
+                if (fairyTarget != null) {
+                    GameObject.Destroy(fairyTarget);
+                }
+                // todo: make this show the item in a reasonable spot
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
                     moveUp.transform.parent = __instance.transform.parent;
