@@ -33,7 +33,7 @@ namespace TunicRandomizer {
             { "Enemy Randomizer", "Randomizes the enemies that appear throughout the game. See the in-game options menu for configuration options, as well as for a variety of other options not shown here." },
             { "Music Shuffle", "Shuffles the music that plays throughout the game. See the in-game options menu to select which music tracks can be played, as well as for a variety of other options not shown here." },
             { "Death Link", "Enables Death Link when playing on Archipelago. When someone with Death Link enabled dies, everyone else that has it enabled also dies.\nSee the in-game options menu for a variety of other options not shown here." },
-            { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, and more." }
+            { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, bombable walls, and more." }
         };
     }
 }
