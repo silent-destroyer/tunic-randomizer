@@ -287,6 +287,9 @@ namespace TunicRandomizer {
                 ERScripts.ModifyPortals("Overworld Redux", sending: true);
                 GhostHints.SpawnTorchHintGhost();
             } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
                 ERData.RandomizedPortals = ERData.VanillaPortals;
                 ERScripts.ModifyPortalNames("Overworld Redux");
             }
