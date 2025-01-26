@@ -1,5 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -257,25 +258,17 @@ namespace TunicRandomizer {
                 fileContents += ",,\n";
             }
 
-            if (File.Exists(TunicRandomizer.EntranceTrackerPath)) { 
-                File.Delete(TunicRandomizer.EntranceTrackerPath);
-            }
-            File.WriteAllText(TunicRandomizer.EntranceTrackerPath, fileContents);
+            TunicUtils.TryWriteFile(TunicRandomizer.EntranceTrackerPath, fileContents);
         }
 
         public static void SaveTrackerFile() {
-            if (File.Exists(TunicRandomizer.ItemTrackerPath)) {
-                File.Delete(TunicRandomizer.ItemTrackerPath);
-            }
-            File.WriteAllText(TunicRandomizer.ItemTrackerPath, JsonConvert.SerializeObject(TunicRandomizer.Tracker, Formatting.Indented));
+            TunicUtils.TryWriteFile(TunicRandomizer.ItemTrackerPath, JsonConvert.SerializeObject(TunicRandomizer.Tracker, Formatting.Indented));
         }
 
         public static void PopulateSpoilerLog() {
             if (TunicRandomizer.Settings.RaceMode) { return; }
-            if (IsArchipelago() && Archipelago.instance.integration.disableSpoilerLog) { 
-                if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
-                    File.Delete(TunicRandomizer.SpoilerLogPath);
-                }
+            if (IsArchipelago() && Archipelago.instance.integration.disableSpoilerLog) {
+                TunicUtils.TryDeleteFile(TunicRandomizer.SpoilerLogPath);
                 return;
             }
 
@@ -388,13 +381,7 @@ namespace TunicRandomizer {
                     SpoilerLogLines.Add("\t " + combo);
                 }
             }
-            if (!File.Exists(TunicRandomizer.SpoilerLogPath)) {
-                File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
-            } else {
-                File.Delete(TunicRandomizer.SpoilerLogPath);
-                File.WriteAllLines(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
-            }
-            TunicLogger.LogInfo("Wrote spoiler log to " + TunicRandomizer.SpoilerLogPath);
+            TunicUtils.TryWriteFile(TunicRandomizer.SpoilerLogPath, SpoilerLogLines);
         }
 
         private static List<string> GetMysterySeedSettingsForSpoilerLog() {
