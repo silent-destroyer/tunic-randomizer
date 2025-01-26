@@ -703,10 +703,11 @@ namespace TunicRandomizer {
                     foreach (MeshRenderer r in renderers) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
                         if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
-                        r.material = material;
-                    }
-                    if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
-                        breakableObject.GetComponent<MeshRenderer>().materials = new Material[] { material, material };
+                        if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
+                            r.materials = new Material[] { material, material };
+                        } else {
+                            r.material = material;
+                        }
                     }
                 }
             }
@@ -754,7 +755,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (meshRenderer.GetComponent<SecretPassagePanel>() != null) {
+            if (breakableObject.GetComponent<SecretPassagePanel>() != null) {
                 meshRenderer.materials = new Material[] { meshRenderer.material, meshRenderer.material };
             }
 
