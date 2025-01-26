@@ -117,7 +117,8 @@ namespace TunicRandomizer {
                 string portalRegion = ERScripts.FindPortalRegionFromName(ScenePortal.name);
                 string destScene = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
                 // check if the entrance is logically accessible and if the adjacent scene has checks in logic
-                if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion) && TunicUtils.ChecksInLogicPerScene[destScene].Count > 0) {
+                if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion) && TunicUtils.ChecksInLogicPerScene.ContainsKey(destScene) 
+                    && TunicUtils.ChecksInLogicPerScene[destScene].Count > 0) {
                     AdjItemTargetsInLogic.Add(CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position));
                 }
             }
@@ -208,7 +209,8 @@ namespace TunicRandomizer {
                             string targetName = fairyTarget.name.Replace("fairy target ", "");
                             string regionName = ERScripts.FindPortalRegionFromName(targetName);
                             string destSceneName = ERScripts.FindPairedPortalSceneFromName(targetName);
-                            if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName) && TunicUtils.ChecksInLogicPerScene[destSceneName].Count > 0) {
+                            if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName) && TunicUtils.ChecksInLogicPerScene.ContainsKey(destSceneName) 
+                                && TunicUtils.ChecksInLogicPerScene[destSceneName].Count > 0) {
                                 AdjItemTargetsInLogic.Add(fairyTarget);
                             }
                         }

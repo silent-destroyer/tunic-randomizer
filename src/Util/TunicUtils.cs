@@ -82,8 +82,9 @@ namespace TunicRandomizer {
             ChecksInLogicPerScene.Clear();
 
             foreach (string sceneName in Locations.AllScenes) {
-                ChecksInLogicPerScene[sceneName] = new List<string>();
+                ChecksInLogicPerScene.Add(sceneName, new List<string>());
             }
+            ChecksInLogicPerScene.Add("Trinket Well", new List<string>());
 
             AddListToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
             PlayerItemsAndRegions.Add("Overworld", 1);
@@ -142,6 +143,9 @@ namespace TunicRandomizer {
                 if (!ChecksInLogic.Contains(check.CheckId) && check.Location.reachable(PlayerItemsAndRegions) && !Locations.CheckedLocations[check.CheckId] 
                     && ((SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld) ? SaveFile.GetInt($"randomizer {check.CheckId} was collected") == 0 : true)) {
                     ChecksInLogic.Add(check.CheckId);
+                    if (!ChecksInLogicPerScene.ContainsKey(check.Location.SceneName)) {
+                        ChecksInLogicPerScene.Add(check.Location.SceneName, new List<string>());
+                    }
                     ChecksInLogicPerScene[check.Location.SceneName].Add(check.CheckId);
                 }
             }
