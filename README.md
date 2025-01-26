@@ -42,6 +42,7 @@ For discussion around the Archipelago side of things, please visit the dedicated
 
 ## Helpful Tips
 - Regarding Logic:
+  - There is no logic regarding being able to get past bushes at the start of the game. You can use enemies to cut them, use one of the free bombs at the start to clear a path, or turn on the Clear Early Bushes setting.
   - West Garden is logically accessible with either the Lantern or Hero's Laurels.
   - The Eastern Vault Fortress is accessible with either the Lantern (and Prayer) or Hero's Laurels (with or without Prayer).
   - The Library is accessible with either the Hero's Laurels or the Magic Orb.
@@ -112,6 +113,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Place the Laurels at a predetermined location, currently the options are the 6 coin reward, 10 coin reward, or 10 fairy reward.
 - Grass Randomizer
   - Turns every bush and piece of grass in the game into a potential item location, for a total of over 6500 checks.
+- Shuffle Breakables
+  - Turns most ordinary breakable objects in the game into item checks, including pots, signs, boxes, bombable walls, and more.
 - Lanternless Logic
   - Removes the Lantern as a requirement for dark areas, allowing it (or items that grant access to it) to be shuffled into places like Dark Tomb, etc.
 - Maskless Logic
@@ -121,6 +124,8 @@ With the exception of the Logic settings (which are determined in your Archipela
 ### Archipelago-Specific Settings
 - Death Link
   - Want a more chaotic experience? When a player with Death Link enabled dies, everyone else with the setting on *also* dies. Be careful!
+- Death Link Effect
+  - Choose what happen when you receive a death link from someone else. Setting this to Fool Trap will spawn a fool trap instead of killing the player.
 - Auto-open !collect-ed Checks
   - Makes checks that you haven't found but were completed by another player (via !collect, slot co-op, etc) appear as already been opened/picked up. Also reflects the item counts on the inventory screen/ending summary. Can be toggled on/off freely, and will revert the appearance of checks to their previous state on the next scene transition.
 - Send hints to server
@@ -158,6 +163,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - For the experienced Ruin Seekers out there, this option removes most English words from custom dialogue, hints, or other text produced by the randomizer, leaving it up to your own knowledge to figure out what is where.
 - Seeking Spell Uses Logic
   - Makes it so the seeking spell only searches for checks that can be reached in logic. By default, the seeking spell will target the closest item regardless of if it can be reached or not.
+- Entrance Tracker File
+  - Automatically keeps track of the entrances you've been through and where they connect to.
 ### Enemy Randomization 
 - Enemy Randomizer
   - Randomly swaps out enemies with new ones when you load into a scene. You may even see some enemies you've never seen before!
@@ -170,6 +177,8 @@ With the exception of the Logic settings (which are determined in your Archipela
 - Limit Boss Spawns
   - Limits the number of boss-type enemies that can spawn in the enemy randomizer.
   - Turn off at own risk! Too many bosses can lag the game in certain areas.
+- Oops! All [Enemy]
+  - Chooses one enemy type at random and turns every enemy into it.
 - Enemy Toggles
   - Allows you to customize the enemy randomizer experience by choosing which enemies you want to appear.
   - Turn on the `Use Enemy Toggles` option and then use the Enemy Toggle List to make your choices.
@@ -219,6 +228,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Shows the position of the player in the lower right corner. Useful for finding missing grass in grass rando as they are denoted by position.
 - Deathplane/OOB Patch
   - Enables a patch to save the fox from dying if they accidentally fall out of bounds.
+- Run Game in Background
+  - Allows the game to continue running when tabbed out.
   
 ## Credits
 - Scipio for creating the Entrance Randomizer and maintaining the Archipelago logic.

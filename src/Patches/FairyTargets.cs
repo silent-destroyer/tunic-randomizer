@@ -34,11 +34,19 @@ namespace TunicRandomizer {
                 List<string> ItemIdsInScene = Checks.Values.Where(check => check.Location.SceneName == SceneManager.GetActiveScene().name 
                 && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
-                List<SmashableObject> breakableObjects = new List<SmashableObject>();
+                List<GameObject> breakableObjects = new List<GameObject>();
                 if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
-                    breakableObjects = GameObject.FindObjectsOfType<SmashableObject>().ToList();
-                }
+                    foreach (SmashableObject obj in GameObject.FindObjectsOfType<SmashableObject>().ToList()) {
+                        breakableObjects.Add(obj.gameObject);
+                    }
+                    foreach (DustyPile obj in GameObject.FindObjectsOfType<DustyPile>().ToList()) {
+                        breakableObjects.Add(obj.gameObject);
+                    }
+                    foreach (SecretPassagePanel obj in GameObject.FindObjectsOfType<SecretPassagePanel>().ToList()) {
+                        breakableObjects.Add(obj.gameObject);
+                    }
 
+                }
 
                 foreach (string ItemId in ItemIdsInScene) {
                     bool isBreakable = BreakableShuffle.BreakableChecks.ContainsKey(ItemId);
@@ -51,7 +59,7 @@ namespace TunicRandomizer {
                             ItemTargetsInLogic.Add(fairyTarget);
                         }
                         if (isBreakable) {
-                            foreach (SmashableObject breakable in breakableObjects) {
+                            foreach (GameObject breakable in breakableObjects) {
                                 if (BreakableShuffle.getBreakableGameObjectId(breakable.gameObject) == ItemId) {
                                     fairyTarget.transform.parent = breakable.transform;
                                 }
@@ -105,7 +113,7 @@ namespace TunicRandomizer {
 
         // specifically for fairy seeking spell with logic
         public static void CreateLogicLoadZoneTargets() {
-            foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
+            foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
                 string portalRegion = ERScripts.FindPortalRegionFromName(ScenePortal.name);
                 string destScene = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
                 // check if the entrance is logically accessible and if the adjacent scene has checks in logic

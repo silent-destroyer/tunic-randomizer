@@ -67,10 +67,18 @@ namespace TunicRandomizer {
                         }
                     }
                 }
+                foreach (SecretPassagePanel wall in Resources.FindObjectsOfTypeAll<SecretPassagePanel>().Where(w => w.gameObject.scene.name == loadingScene.name)) {
+                    string breakableId = BreakableShuffle.getBreakableGameObjectId(wall.gameObject);
+                    if (BreakableShuffle.BreakableChecks.ContainsKey(breakableId)) {
+                        if (TunicUtils.IsCheckCompletedOrCollected(breakableId)) {
+                            GameObject.Destroy(wall.gameObject);
+                        }
+                    }
+                }
                 // this was not working, the scatteredCount resets at some point after you load in for some reason?
                 //if (loadingScene.name == "Dusty") {
                 //    foreach (DustyPile leafPile in Resources.FindObjectsOfTypeAll<DustyPile>()) {
-                //        string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafPile: true);
+                //        string breakableId = BreakableShuffle.getBreakableGameObjectId(leafPile.gameObject, isLeafOrWall: true);
                 //        if (SaveFile.GetInt("randomizer picked up " + breakableId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(Locations.LocationIdToArchipelagoId[breakableId]))) {
                 //            // it doesn't increment on its own if you scatter it this way
                 //            DustyPile.scatteredCount++;
@@ -276,6 +284,9 @@ namespace TunicRandomizer {
                 GameObject.DontDestroyOnLoad(ArchipelagoObject);
                 if (Locations.VanillaLocations.Count == 0) {
                     Locations.CreateLocationLookups();
+                }
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
                 }
                 GrassRandomizer.LoadGrassChecks();
                 BreakableShuffle.LoadBreakableChecks();
@@ -561,7 +572,7 @@ namespace TunicRandomizer {
                 if (ERData.VanillaPortals.Count == 0) {
                     ERScripts.SetupVanillaPortals();
                 }
-                ERData.RandomizedPortals = ERData.VanillaPortals;
+                ERData.RandomizedPortals = ERData.GetVanillaPortals();
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
             ERScripts.MarkPortals();

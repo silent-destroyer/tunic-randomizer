@@ -150,6 +150,18 @@ namespace TunicRandomizer {
             {"Relic - Hero Water", new Quaternion(0.7071f, 0, 0, -0.7071f)},
         };
 
+        public static Dictionary<string, (Vector3, Vector3, float)> BreakablePositionExtras = new Dictionary<string, (Vector3, Vector3, float)>() {
+            // Breakable position -> Moveup position, question mark position, question mark y-rotation
+            { "(22.0, 36.0, -82.0)", (new Vector3(0f, 2f, -1f), new Vector3(-0.1f, 2f, -1f), 90f) }, // Overworld near checkpoint
+            { "(-23.0, 24.0, -114.0)", (new Vector3(-1.5f, 1.5f, 0f), new Vector3(-1.5f, 1.5f, -0.1f), 0f) }, // Overworld at Cube Cave
+            { "(-57.5, 24.0, -97.0)", (new Vector3(1.5f, 1.5f, -3f), new Vector3(1.5f, 1.5f, -3.0727f), 0f) }, // Overworld near fountain
+            { "(-83.0, 3.5, 39.0)", (new Vector3(-1f, 2f, 1.5f), new Vector3(-1.0327f, 2.5f, 1.5382f), 90f) }, // Atoll
+            { "(84.0, 8.0, 69.0)", (new Vector3(0f, 2f, -1f), new Vector3(-0.1f, 1.9709f, -1.2f), 90f) }, // East Forest
+            { "(30.0, 7.0, 38.3)", (new Vector3(-2f, 2f, 0f), new Vector3(-2f, 1.9709f, -0.3f), 0f) }, // Fortress
+            { "(-52.0, -12.0, 14.0)", (new Vector3(2f, 0f, 0f), new Vector3(2f, 2.0709f, -0.1f), 0f) }, // Quarry west
+            { "(53.5, 0.0, 1.0)", (new Vector3(-1.5f, 2f, -1f), new Vector3(-1.5f, 2.1709f, -1.1f), 0f) }, // Quarry east
+        };
+
         public static Dictionary<string, TransformData> Stundagger = new Dictionary<string, TransformData>() {
              { "Firecracker", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.15f, 0.15f, 0.15f)) },
              { "Firebomb", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.12f, 0.12f, 0.12f)) },

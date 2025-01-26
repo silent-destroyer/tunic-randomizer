@@ -194,7 +194,7 @@ namespace TunicRandomizer {
                 errorMessage = "";
             }
             y += 35f;
-            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Always Apply Saved Texture");
+            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Use Saved Texture");
             TunicRandomizer.Settings.UseCustomTexture = ToggleCustomTextureUse;
 
         }
