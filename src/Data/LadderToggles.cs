@@ -111,7 +111,11 @@ namespace TunicRandomizer {
 
                             Ladder.gameObject.AddComponent<ToggleLadderByLadderItem>().ladderItem = Inventory.GetItemByName(LadderItem);
                             Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().ladderInfo = ladderInfo;
-                            Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().SpawnBlockers();
+                            try {
+                                Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().SpawnBlockers();
+                            } catch (Exception e) {
+                                TunicLogger.LogError("Error spawning construction barriers for " + Ladder.name);
+                            }
                         }
                     }
                 }
