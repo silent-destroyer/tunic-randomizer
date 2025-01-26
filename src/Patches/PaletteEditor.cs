@@ -243,33 +243,41 @@ namespace TunicRandomizer {
         }
 
         private static void SaveTexture() {
-            string TexturePath = Application.persistentDataPath + "/Randomizer/texture.png";
-            if (File.Exists(TexturePath)) {
-                File.Delete(TexturePath);
-            } else {
-                PlayerPalette.runtimePalette.SetPixel(2, 3, new Color(0.8577f, 0.5044f, 1.7513f, 1f));
-                PlayerPalette.runtimePalette.SetPixel(2, 0, PlayerPalette.runtimePalette.GetPixel(3, 0));
-            }
-            TunicRandomizer.Settings.UseCustomTexture = true;
-            errorMessage = "";
+            try {
+                string TexturePath = Application.persistentDataPath + "/Randomizer/texture.png";
+                if (File.Exists(TexturePath)) {
+                    File.Delete(TexturePath);
+                } else {
+                    PlayerPalette.runtimePalette.SetPixel(2, 3, new Color(0.8577f, 0.5044f, 1.7513f, 1f));
+                    PlayerPalette.runtimePalette.SetPixel(2, 0, PlayerPalette.runtimePalette.GetPixel(3, 0));
+                }
+                TunicRandomizer.Settings.UseCustomTexture = true;
+                errorMessage = "";
 
-            File.WriteAllBytes(TexturePath, ImageConversion.EncodeToPNG(PlayerPalette.runtimePalette));
-            TunicLogger.LogInfo("Saved Custom Texture to " + TexturePath);
+                File.WriteAllBytes(TexturePath, ImageConversion.EncodeToPNG(PlayerPalette.runtimePalette));
+                TunicLogger.LogInfo("Saved Custom Texture to " + TexturePath);
+            } catch (Exception e) {
+                TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
+            }
         }
 
         public static void LoadCustomTexture() {
-            string TexturePath = Application.persistentDataPath + "/Randomizer/texture.png";
-            if (!File.Exists(TexturePath)) {
-                SaveTexture();
-            }
-            if (File.Exists(TexturePath)) {
-                Texture2D CustomPalette = new Texture2D(4, 4, TextureFormat.DXT1, false);
-                byte[] CustomPaletteData = File.ReadAllBytes(TexturePath);
-                ImageConversion.LoadImage(PlayerPalette.runtimePalette, CustomPaletteData);
-                PlayerPalette.runtimePalette.Apply();
-                ChangeHyperdashColors(PlayerPalette.runtimePalette.GetPixel(2, 3));
-                ChangeSunglassesColor(PlayerPalette.runtimePalette.GetPixel(2, 0));
-                ChangeCapeColor(PlayerPalette.runtimePalette.GetPixel(2, 2));
+            try {
+                string TexturePath = Application.persistentDataPath + "/Randomizer/texture.png";
+                if (!File.Exists(TexturePath)) {
+                    SaveTexture();
+                }
+                if (File.Exists(TexturePath)) {
+                    Texture2D CustomPalette = new Texture2D(4, 4, TextureFormat.DXT1, false);
+                    byte[] CustomPaletteData = File.ReadAllBytes(TexturePath);
+                    ImageConversion.LoadImage(PlayerPalette.runtimePalette, CustomPaletteData);
+                    PlayerPalette.runtimePalette.Apply();
+                    ChangeHyperdashColors(PlayerPalette.runtimePalette.GetPixel(2, 3));
+                    ChangeSunglassesColor(PlayerPalette.runtimePalette.GetPixel(2, 0));
+                    ChangeCapeColor(PlayerPalette.runtimePalette.GetPixel(2, 2));
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
             }
         }
 

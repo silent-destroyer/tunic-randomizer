@@ -120,9 +120,7 @@ namespace TunicRandomizer {
                 if (slotData.ContainsKey("disable_local_spoiler") && slotData["disable_local_spoiler"].ToString() == "1") {
                     disableSpoilerLog = true;
                     TunicRandomizer.Settings.CreateSpoilerLog = false;
-                    if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
-                        File.Delete(TunicRandomizer.SpoilerLogPath);
-                    }
+                    TunicUtils.TryDeleteFile(TunicRandomizer.SpoilerLogPath);
                 } else {
                     disableSpoilerLog = false;
                 }

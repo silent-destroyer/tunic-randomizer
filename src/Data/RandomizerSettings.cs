@@ -810,12 +810,7 @@ namespace TunicRandomizer {
         }
 
         public static void SaveSettings() {
-            if (!File.Exists(TunicRandomizer.SettingsPath)) {
-                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
-            } else {
-                File.Delete(TunicRandomizer.SettingsPath);
-                File.WriteAllText(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
-            }
+            TunicUtils.TryWriteFile(TunicRandomizer.SettingsPath, JsonConvert.SerializeObject(TunicRandomizer.Settings, Formatting.Indented));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static TunicRandomizer.SaveFlags;
 
@@ -217,5 +218,36 @@ namespace TunicRandomizer {
             return name;
         }
 
+        public static void TryWriteFile(string filePath, string fileContents) {
+            try {
+                if (File.Exists(filePath)) {
+                    File.Delete(filePath);
+                }
+                File.WriteAllText(filePath, fileContents);
+            } catch (Exception e) {
+                TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
+            }
+        }
+
+        public static void TryWriteFile(string filePath, List<string> fileContents) {
+            try {
+                if (File.Exists(filePath)) {
+                    File.Delete(filePath);
+                }
+                File.WriteAllLines(filePath, fileContents);
+            } catch (Exception e) {
+                TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
+            }
+        }
+
+        public static void TryDeleteFile(string filePath) {
+            try {
+                if (File.Exists(filePath)) {
+                    File.Delete(filePath);
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
+            }
+        }
     }
 }
