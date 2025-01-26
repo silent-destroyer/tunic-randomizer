@@ -29,16 +29,31 @@ For discussion around the Archipelago side of things, please visit the dedicated
 - Click New Game and have fun!
 
 ## Generating a Multiworld with Archipelago
+
+### With the website
+- Note: The website may not always have the latest options available that TUNIC supports. See the instructions below for installing the tunic.apworld, which will allow you to play with the most up-to-date options.
 - Head to the [TUNIC Options Page](https://archipelago.gg/games/TUNIC/player-options) on the Archipelago website.
 - Select your desired settings and enter a player name, then click `Export Options`. This will download a yaml file, which contains the information you selected on the page.
   - If playing solo, you can simply click `Generate Game` instead and skip the next two steps.
   - If playing with multiple people, you will need to send your yaml file to the person creating the game, or have everyone send you theirs if you are the one creating the game.
-- Once you have every player's yaml file, compress them into a zip file and upload it (here)[https://archipelago.gg/generate].
+- Once you have every player's yaml file, compress them into a zip file and upload it (to the Archipelago website)[https://archipelago.gg/generate]. 
+- Skip ahead to "Hosting the game".
+
+### With the latest tunic.apworld file
+- Head to the [Archipelago Setup Guide](https://archipelago.gg/tutorial/Archipelago/setup/en) and follow the 'installing the archipelago software' section.
+- Launch the Archipelago Launcher and click `Browse Files`.
+- Copy the `tunic.apworld` from the [latest randomizer release](https://github.com/silent-destroyer/tunic-randomizer/releases/latest) into the `lib/worlds` folder of Archipelago.
+  - Note: If you install the apworld by double clicking it, it will cause errors later on. Make sure there is only one `tunic.apworld` in either the `lib/worlds` folder or `custom_worlds` folder.
+- In the Archipelago Launcher, click `Generate Template Options` to create a template yaml with the new options from the apworld file.
+- Edit the yaml and place it (along with any others) in the Archipelago `Players` folder. 
+- Press `Generate` in the Archipelago Launcher, and find the resulting zip file in the `output` folder.
+- Once you have the generated zip file, upload it (to the Archipelago website)[https://archipelago.gg/uploads].
+
+### Hosting the game on the website
 - Click `Create New Room`, and you will see something like `/connect archipelago.gg:38281`. Archipelago.gg is the host and the last 5 numbers here are the port number, which you will need for the next step.
 - Launch the game and select `Archipelago` on the Title Screen, then click `Edit AP Config` and fill in your connection details. Player name must match what you entered in the first step, and hostname/port should match the info from the previous step.
 - All that's left is to press Connect, and if it says `Connected`, simply start a New Game and have fun!
 - For more information, see the official [Archipelago Setup Guide](https://archipelago.gg/tutorial/TUNIC/setup/en).
-- Note: These steps are for playing with games that are supported on the website. For beta/wip games, you will need to run the Archipelago software on your machine to generate the game instead by using (this guide)[https://archipelago.gg/tutorial/Archipelago/setup/en].
 
 ## Helpful Tips
 - Regarding Logic:
