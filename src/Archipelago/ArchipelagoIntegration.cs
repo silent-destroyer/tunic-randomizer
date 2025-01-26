@@ -323,9 +323,11 @@ namespace TunicRandomizer {
         }
 
         public void SendQueuedLocations() {
-            TunicLogger.LogInfo("Sending queued grass checks: " + string.Join(", ", locationsToSend));
-            session.Locations.CompleteLocationChecks(locationsToSend.ToArray());
-            locationsToSend.Clear();
+            if (locationsToSend.Count > 0) {
+                TunicLogger.LogInfo("Sending queued grass checks: " + string.Join(", ", locationsToSend));
+                session.Locations.CompleteLocationChecks(locationsToSend.ToArray());
+                locationsToSend.Clear();
+            }
         }
 
         public void CompleteLocationCheck(string LocationName) {
