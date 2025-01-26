@@ -56,7 +56,7 @@ namespace TunicRandomizer {
 
             if (this.GetComponent<Ladder>() != null && !this.ladderInfo.IsSpecialLadder && ladderItem.Quantity == 0) {
                 foreach (LadderEnd end in this.GetComponent<Ladder>().ladderEnds) {
-                    if ((end.name.ToLower().Contains("bottom") && ladderInfo.IsExit) || end.name.ToLower().Contains("top") && ladderInfo.IsEntrance) {
+                    if (end != null && ((end.name.ToLower().Contains("bottom") && ladderInfo.IsExit) || (end.name.ToLower().Contains("top") && ladderInfo.IsEntrance))) {
                         if (end.gameObject.GetComponent<BoxCollider>() == null) {
                             end.gameObject.AddComponent<BoxCollider>();
                         }
