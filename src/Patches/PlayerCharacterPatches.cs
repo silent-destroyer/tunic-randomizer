@@ -238,6 +238,8 @@ namespace TunicRandomizer {
             CustomItemBehaviors.SetupTorchItemBehaviour(__instance);
             CustomItemBehaviors.PatchShotgunItemBehaviour(__instance.GetComponent<ShotgunItemBehaviour>(), __instance);
 
+            CalculateHeirAssistDamage();
+
             LoadSwords = true;
 
             ItemPresentationPatches.SwitchDathStonePresentation();
@@ -899,6 +901,17 @@ namespace TunicRandomizer {
                 return false;
             }
             return true;
+        }
+
+        public static void CalculateHeirAssistDamage() {
+            try {
+                List<Check> checks = TunicUtils.GetAllInUseChecks();
+                int denominator = checks.Count / 20;
+                HeirAssistModeDamageValue = checks.Where(check => check.IsCompletedOrCollected).ToList().Count / denominator;
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error calculating damage value for easier heir fight!");
+                HeirAssistModeDamageValue = 0;
+            }
         }
 
         public static bool Ladder_ClimbOn_PrefixPatch(Ladder __instance, LadderEnd ladderEnd) {
