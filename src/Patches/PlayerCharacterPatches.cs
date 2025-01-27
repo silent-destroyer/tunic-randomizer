@@ -142,7 +142,7 @@ namespace TunicRandomizer {
             }
             if (TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
                 __instance.gameObject.transform.localScale = Vector3.one * 0.5f;
-                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 5;
+                PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 7;
             } else {
                 __instance.gameObject.transform.localScale = Vector3.one;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
