@@ -68,6 +68,8 @@ namespace TunicRandomizer {
                                 foreach (string breaker in breakers) {
                                     // can't break the signs or the table with the stick
                                     if (breaker == "Stick" && (breakableName == "Physical Post" || breakableName == "table")) {
+                                        check.Location.Requirements.Add(new Dictionary<string, int> { { "Stick", 1 },
+                                            { "Trinket - Glass Cannon", 1 }, { regionName, 1 } });
                                         continue;
                                     }
                                     // we're just doing this separately in BreakableReqs cause it'll be a mess if done here
