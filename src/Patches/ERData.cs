@@ -4325,6 +4325,12 @@ namespace TunicRandomizer {
                     {
                         "Monastery Back",
                         new List<List<string>> {
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
                         }
                     },
                 }
