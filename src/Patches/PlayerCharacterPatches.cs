@@ -333,6 +333,14 @@ namespace TunicRandomizer {
                 TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
+            try {
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && !FuseRandomizer.ModifiedFusesAlready) {
+                    FuseRandomizer.ModifyFuses();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error setting up fake fuses! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
                 PaletteEditor.ToonFox.AddComponent<MeshRenderer>().material = __instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().material;
             }

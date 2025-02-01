@@ -300,6 +300,13 @@ namespace TunicRandomizer {
                     InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
                 }
+                if (Item.Type == ItemTypes.FUSE) {
+                    FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
+                    if (fuseInformation.RealGuid != 0) {
+                        SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
+                        // todo: make fuses/power lines in same scene react to this
+                    }
+                }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
                     Inventory.GetItemByName("Flask Shard").Quantity -= 3;
@@ -534,6 +541,13 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.LADDER) {
                     InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
+                }
+                if (Item.Type == ItemTypes.FUSE) {
+                    FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
+                    if (fuseInformation.RealGuid != 0) {
+                        SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
+                        // todo: make fuses/power lines in same scene react to this
+                    }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {

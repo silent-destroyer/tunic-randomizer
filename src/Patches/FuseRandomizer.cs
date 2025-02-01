@@ -7,25 +7,47 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 
 namespace TunicRandomizer {
+
+    public class FuseCheckHelper : MonoBehaviour {
+        public int OriginalGuid;
+        public int FakeGuid;
+        public string CheckId {
+            get => $"{OriginalGuid} [{gameObject.scene.name}]";
+        }
+    }
+
     public struct FuseInformation {
-        public string Name;
-        public string Guid;
+        public int RealGuid;
+        public int FakeGuid;
         public string Position;
         public string SceneName;
-        public bool StartTall;
-        public string Fuse;
+        public string FuseItem;
+        public List<string> PowerRequirements;
+        public string FuseCheckId {
+            get => $"{RealGuid} [{SceneName}]";
+        }
+
+        public FuseInformation(int realGuid, int fakeGuid, string position, string sceneName, string fuseItem, List<string> powerRequirements) {
+            RealGuid = realGuid;
+            FakeGuid = fakeGuid;
+            Position = position;
+            SceneName = sceneName;
+            FuseItem = fuseItem;
+            PowerRequirements = powerRequirements;
+        }
     }
 
     public class FuseRandomizer {
 
         public const string fusePrefabRoot = "_Checkpoints, Fuses, Platform/TUNIC_Fuse_Big";
-
-        public static List<FuseInformation> Fuses = new List<FuseInformation>();
         public static string fuseFilePath = $"{Application.persistentDataPath}/Randomizer/Fuses.json";
-        public static GameObject FusePrefab;
-        public static Dictionary<int, int> FakeFuseIds = new Dictionary<int, int>();
-        
+
+        public static Dictionary<int, FuseInformation> Fuses = new Dictionary<int, FuseInformation>();
         public static Dictionary<string, Check> FuseChecks = new Dictionary<string, Check>();
+
+        public static GameObject FusePrefab;
+        
+        public static bool ModifiedFusesAlready = false;
 
         public static void Setup() {
             LoadFuseChecks();
@@ -43,8 +65,31 @@ namespace TunicRandomizer {
             using (StreamReader reader = new StreamReader(fuseStream)) {
                 List<Check> checks = JsonConvert.DeserializeObject<List<Check>>(reader.ReadToEnd());
                 foreach (Check check in checks) { 
+                    int fuseGuid = int.Parse(check.Location.LocationId);
+                    int fakeGuid = 9000 + FuseChecks.Count;
+
+                    ConduitDataEntry entry = new ConduitDataEntry();
+                    entry.connections = new int[] { 0 };
+                    entry.guid = fakeGuid;
+                    entry.sceneName = check.Location.SceneName;
+                    entry.prettyName = check.Reward.Name;
+                    entry.isFuse = true;
+                    entry.isLockingTerminus = true;
+                    ConduitData.DataObject.data.Add(entry);
+
                     FuseChecks.Add(check.CheckId, check);
-                    FakeFuseIds.Add(int.Parse(check.Location.LocationId), 9000 + FakeFuseIds.Count);
+
+                    List<string> requiredFuseItems = new List<string>();
+                    foreach (Dictionary<string, int> reqs in check.Location.Requirements) {
+                        foreach(string key in reqs.Keys) {
+                            if (!requiredFuseItems.Contains(key) && ItemLookup.Items.ContainsKey(key) && ItemLookup.Items[key].Type == ItemTypes.FUSE) {
+                                requiredFuseItems.Add(key);
+                            }
+                        }
+                    }
+                    FuseInformation fuseInfo = new FuseInformation(fuseGuid, fakeGuid, check.Location.Position.ToString(), check.Location.SceneName, check.Reward.Name, requiredFuseItems);
+                    Fuses.Add(fuseGuid, fuseInfo);
+                    Fuses.Add(fakeGuid, fuseInfo);
                 }
             }
 
@@ -81,6 +126,7 @@ namespace TunicRandomizer {
                 GameObject fuse = GameObject.Find(fusePrefabRoot);
                 if (fuse != null) {
                     FusePrefab = GameObject.Instantiate(fuse);
+                    FusePrefab.GetComponent<ConduitNode>().externalConnection.guid = -1000;
                     //FusePrefab.GetComponent<ConduitNode>().Guid = -1;
                     FusePrefab.SetActive(false);
                     FusePrefab.transform.position = new Vector3(-30000, -30000, -30000);
@@ -93,9 +139,10 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1) {
                 Fuse fuse = __instance.GetComponentInParent<Fuse>();
                 ConduitNode node = __instance.GetComponentInParent<ConduitNode>();
-                if (fuse != null && node != null) {
+                FuseCheckHelper fuseHelper = __instance.GetComponentInParent<FuseCheckHelper>();
+                if (fuse != null && node != null && fuseHelper != null) {
                     TunicLogger.LogInfo("fuse closed " + node.Guid);
-                    string CheckId = GetFuseCheckId(fuse);
+                    string CheckId = fuseHelper.CheckId;
                 
                     if (SaveFlags.IsArchipelago()) {
                         // todo
@@ -104,8 +151,7 @@ namespace TunicRandomizer {
                         ItemPatches.GiveItem(check);
                     }
 
-                    SaveFile.SetInt("fuse closed " + FakeFuseIds[node.Guid], 1);
-                    SaveFile.SetInt("randomizer fake fuse closed " + FakeFuseIds[node.Guid], 1);
+                    SaveFile.SetInt("randomizer fuse closed " + node.Guid, 1);
                 }
             }
         }
@@ -117,6 +163,42 @@ namespace TunicRandomizer {
             }
             TunicLogger.LogError("Could not find fuse check id for fuse " + __instance.name + " in " + __instance.gameObject.scene.name);
             return null;
+        }
+
+        public static FuseInformation GetFuseInformationByFuseItem(string FuseItem) {
+            return Fuses.Values.Where(fuse => fuse.FuseItem == FuseItem).First();
+        }
+
+        public static void ModifyFuses() {
+            foreach (Fuse fuse in Resources.FindObjectsOfTypeAll<Fuse>().Where(fuse => fuse.gameObject.scene.name == SceneManager.GetActiveScene().name && fuse.GetComponent<ConduitNode>() != null)) {
+                string fuseId = GetFuseCheckId(fuse);
+                if (FuseChecks.ContainsKey(fuseId)) {
+                    GameObject newFuseObject = GameObject.Instantiate(fuse.gameObject, fuse.transform.position, fuse.transform.rotation);
+
+                    Fuse newFuse = newFuseObject.GetComponent<Fuse>();
+                    newFuse.startTall = fuse.startTall;
+ 
+                    ConduitNode newNode = newFuse.GetComponent<ConduitNode>();
+                    ConduitNode oldNode = fuse.GetComponent<ConduitNode>();
+                    newNode.Guid = Fuses[oldNode.Guid].FakeGuid;
+                    newNode.externalConnection.guid = 0;
+                    newNode.internalConnections.Clear();
+                    
+                    FuseCheckHelper helper = newFuseObject.gameObject.AddComponent<FuseCheckHelper>();
+                    helper.OriginalGuid = oldNode.Guid;
+                    helper.FakeGuid = newNode.Guid;
+                    
+                    newFuseObject.SetActive(true);
+                    newFuseObject.name = "randomizer fake fuse " + newNode.Guid;
+
+                    newFuseObject.transform.GetChild(1).GetComponent<MeshRenderer>().materials =
+                        fuse.transform.GetChild(1).GetComponent<MeshRenderer>().materials;
+                    newFuse.Start();
+                    fuse.gameObject.SetActive(false);
+                }
+            }
+
+            ModifiedFusesAlready = true;
         }
 
         public static void ApplyFuseTexture(Fuse fuse, Material material = null) {
@@ -133,12 +215,30 @@ namespace TunicRandomizer {
                 __result = true;
                 return false;
             }
+            if (Fuses.ContainsKey(__instance.Guid) && SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
+                __result = true;
+                foreach (string fuseItem in Fuses[__instance.Guid].PowerRequirements) {
+                    if (Inventory.GetItemByName(fuseItem) != null && Inventory.GetItemByName(fuseItem).Quantity == 0) {
+                        __result = false;
+                    }
+                }
+                return false;
+            }
             return true;
         }
 
         public static bool ConduitData_CheckConnectedToPower_PrefixPatch(ConduitData __instance, ref int guid, ref bool __result) {
             if (SceneManager.GetActiveScene().name == "Quarry") {
                 __result = true;
+                return false;
+            }
+            if (Fuses.ContainsKey(guid) && SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
+                __result = true;
+                foreach (string fuseItem in Fuses[guid].PowerRequirements) {
+                    if (Inventory.GetItemByName(fuseItem) != null && Inventory.GetItemByName(fuseItem).Quantity == 0) {
+                        __result = false;
+                    }
+                }
                 return false;
             }
             return true;
@@ -154,7 +254,4 @@ namespace TunicRandomizer {
 
     }
 
-    public class ToggleFuseByFuseItem : MonoBehaviour {
-
-    }
 }
