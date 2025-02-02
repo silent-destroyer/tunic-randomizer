@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -257,6 +258,13 @@ namespace TunicRandomizer {
             } catch (Exception e) {
                 TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
             }
+        }
+
+        public static Vector3 StringToVector3(string Position) {
+            Position = Position.Replace("(", "").Replace(")", "");
+            string[] coords = Position.Split(',');
+            Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
+            return vector;
         }
     }
 }

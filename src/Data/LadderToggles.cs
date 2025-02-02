@@ -121,12 +121,12 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (scene == "Overworld Redux") {
-                SpawnLadderChecklist();
+            if (scene == "Overworld Redux" && GameObject.Find("ladder and fuse checklist") == null) {
+                SpawnOverworldChecklistSign();
             }
         }
 
-        private static void SpawnLadderChecklist() {
+        public static void SpawnOverworldChecklistSign() {
             GameObject sign = GameObject.Instantiate(ModelSwaps.UnderConstruction);
             sign.GetComponent<MeshFilter>().mesh = ModelSwaps.Signpost.GetComponent<MeshFilter>().mesh;
             sign.GetComponent<MeshRenderer>().materials = ModelSwaps.Signpost.GetComponent<MeshRenderer>().materials;
@@ -136,6 +136,7 @@ namespace TunicRandomizer {
             sign.transform.localScale = Vector3.one * 1.5f;
             sign.GetComponent<UnderConstruction>().isChecklistSign = true;
             sign.SetActive(true);
+            sign.name = "ladder and fuse checklist";
 
             GameObject construction = GameObject.Instantiate(ModelSwaps.UnderConstruction);
             construction.transform.position = new Vector3(-5.6409f, 44.0833f, -23.2322f);
