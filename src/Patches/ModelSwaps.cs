@@ -599,7 +599,7 @@ namespace TunicRandomizer {
 
                 if (material != null) {
                     foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
-                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>(includeInactive: true) != null) { continue; }
                         r.material = material;
                     }
                 }
@@ -702,7 +702,7 @@ namespace TunicRandomizer {
                     }
                     foreach (MeshRenderer r in renderers) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
-                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>(includeInactive: true) != null) { continue; }
                         if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
                             r.materials = new Material[] { material, material };
                         } else {
