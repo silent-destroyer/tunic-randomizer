@@ -159,6 +159,12 @@ namespace TunicRandomizer {
                         fuseHelper.Sign.SetActive(true);
                     }
 
+                    MoveUp moveUp = fuse.GetComponentInChildren<MoveUp>(includeInactive: true);
+                    if (moveUp != null) {
+                        moveUp.transform.position += new Vector3(0, 2, 0);
+                        moveUp.gameObject.SetActive(true);
+                        TunicLogger.LogInfo("activating move up " + moveUp.name);
+                    }
                     SaveFile.SetInt("randomizer fuse closed " + node.Guid, 1);
                 }
             }
@@ -232,15 +238,6 @@ namespace TunicRandomizer {
             }
 
             ModifiedFusesAlready = true;
-        }
-
-        public static void ApplyFuseTexture(Fuse fuse, Material material = null) {
-            foreach (MeshRenderer r in fuse.transform.GetChild(0).GetChild(0).GetComponentsInChildren<MeshRenderer>()) {
-                if (r.name.Contains("lights")) {
-                    continue;
-                }
-                r.material = material;
-            }
         }
 
         public static bool ConduitNode_CheckConnectedToPower_PrefixPatch(ConduitNode __instance, ref bool __result) {

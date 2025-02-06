@@ -431,6 +431,17 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (SaveFile.GetInt(FuseShuffleEnabled) == 1) { 
+                        foreach (Fuse fuse in Resources.FindObjectsOfTypeAll<Fuse>().Where(fuse => fuse.gameObject.scene.name == SceneLoaderPatches.SceneName)) {
+                            string fuseId = FuseRandomizer.GetFuseCheckId(fuse);
+                            if (Locations.RandomizedLocations.ContainsKey(fuseId) || ItemLookup.ItemList.ContainsKey(fuseId)) {
+                                if (SwappedThisSceneAlready && !IsSwordCheck(fuseId)) {
+                                    continue;
+                                }
+                                ApplyFuseTexture(fuse);
+                            }
+                        }
+                    }
                     if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
                         foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
                             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
@@ -788,6 +799,57 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
+        public static void ApplyFuseTexture(Fuse fuse) {
+            string fuseId = FuseRandomizer.GetFuseCheckId(fuse);
+            if (Locations.RandomizedLocations.ContainsKey(fuseId) || ItemLookup.ItemList.ContainsKey(fuseId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[fuseId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    if (!check.IsCompletedOrCollected) {
+                        SetupItemMoveUp(fuse.transform, check: check);
+                    }
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[fuseId];
+                    if (!TunicUtils.IsCheckCompletedInAP(fuseId)) {
+                        SetupItemMoveUp(fuse.transform, itemInfo: itemInfo);
+                    }
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPFuseTexture(fuse, itemInfo, TunicUtils.IsCheckCompletedOrCollected(fuseId));
+                        return;
+                    }
+                    Item = ItemLookup.Items[fuseId];
+                }
+
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+
+                if (Item.Name == "Fool Trap") {
+                    // todo figure out fool trap appearance
+                }
+
+                if (material != null) {
+                    foreach (MeshRenderer r in fuse.transform.GetChild(0).GetChild(0).GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                        if (r.name.Contains("omnifuse corner mid") || r.name.Contains("omnifuse corner top") || r.name.Contains("omnifuse slide")) {
+                            r.material = material; // todo: decide how they should look
+                        }
+                    }
+                }
+            }
+        }
+        
+        public static void ApplyAPFuseTexture(Fuse fuse, ItemInfo itemInfo, bool Checked) {
+
+        }
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
             if (check == null && itemInfo == null) { return; }
