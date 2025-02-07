@@ -84,7 +84,7 @@ namespace TunicRandomizer {
             }
             
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
-                if (!ProgressionNames.Contains("Trinket - Glass Cannon") {
+                if (!ProgressionNames.Contains("Trinket - Glass Cannon")) {
                     ProgressionNames.Add("Trinket - Glass Cannon");
                 }
                 foreach (Check check in InitialItems.Where(check => BreakableShuffle.BreakableChecks.ContainsKey(check.CheckId))) {
