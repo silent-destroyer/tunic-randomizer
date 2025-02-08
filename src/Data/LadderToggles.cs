@@ -148,14 +148,15 @@ namespace TunicRandomizer {
         }
 
         public static string GetLadderChecklist() {
-            string ladders = "          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
+            string header = "          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]<#FFFFFF>        [ladder]\n";
+            string ladders = $"{header}";
             int i = 0;
             foreach(ItemData ladder in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.LADDER)) {
                 ladders += $"\"{LadderCollectionMessages[ladder.Name]}{new String('.', 24-LadderCollectionMessages[ladder.Name].Length)}{(Inventory.GetItemByName(ladder.Name).Quantity == 0 ? "<#FF0000>Not Found" : "....<#00FF00>Found")}\"\n";
                 
                 i++;
                 if(i % 7 == 0 && i < 20) {
-                    ladders += "---          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
+                    ladders += $"---{header}";
                 }
             }
             return ladders;

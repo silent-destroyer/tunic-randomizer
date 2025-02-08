@@ -283,7 +283,7 @@ namespace TunicRandomizer {
         }
 
         public static string GetFuseStatusForSign(List<string> Fuses) {
-            string header = $"             <#FF0000>[death] kawndooit rehstorA$uhn <#FF0000>[death]\n";
+            string header = $"             <#FF0000>[death] kawndooit rehstorA$uhn <#FF0000>[death]<#FFFFFF>         [fuse]\n";
             string message = header;
             int i = 0;
             foreach (string fuse in Fuses) { 
