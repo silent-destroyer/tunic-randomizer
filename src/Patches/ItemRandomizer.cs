@@ -20,6 +20,7 @@ namespace TunicRandomizer {
         public static List<string> PrecollectedItems = new List<string>();
 
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
+        public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
 
         public static void PopulatePrecollected() {
             PrecollectedItems.Clear();
@@ -37,6 +38,17 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt(StartWithSword) == 1) {
                 PrecollectedItems.Add("Sword");
+            }
+
+            // Fake items to differentiate between fuse/non-fuse rules
+            if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+                PrecollectedItems.Add(ERData.FUSE_SHUFFLE);
+                if (SaveFile.GetInt(EntranceRando) == 1) {
+                    // Since the elevator is always active in ER, just ignore it in logic
+                    PrecollectedItems.Add("Cathedral Elevator Fuse");
+                }
+            } else {
+                PrecollectedItems.Add(ERData.NO_FUSE_SHUFFLE);
             }
         }
 

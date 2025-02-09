@@ -9,6 +9,8 @@ namespace TunicRandomizer {
         public static Dictionary<string, PortalCombo> VanillaPortals = new Dictionary<string, PortalCombo>();
         public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
 
+        public const string FUSE_SHUFFLE = "Fuse Shuffle";
+        public const string NO_FUSE_SHUFFLE = "No Fuse Shuffle";
         // the direction you move while entering the portal
         public enum PDir {
             NONE,
@@ -1283,6 +1285,11 @@ namespace TunicRandomizer {
                         "Cathedral",
                         new List<TunicPortal> {
                             new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "main", PDir.SOUTH),
+                        }
+                    },
+                    { 
+                        "Cathedral Elevator",
+                        new List<TunicPortal> {
                             new TunicPortal("Cathedral Elevator", "Cathedral Arena", "", PDir.LADDER_DOWN),
                         }
                     },
@@ -2169,6 +2176,10 @@ namespace TunicRandomizer {
             },
             {
                 "Cathedral",
+                new RegionInfo("Cathedral Redux", false)
+            },
+            {
+                "Cathedral Elevator",
                 new RegionInfo("Cathedral Redux", false)
             },
             {
@@ -3542,8 +3553,11 @@ namespace TunicRandomizer {
                         "West Garden Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "West Garden",
+                                "12", "West Garden", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "12", "West Garden Fuse", FUSE_SHUFFLE,
+                            }
                         }
                     },
                 }
@@ -3618,8 +3632,16 @@ namespace TunicRandomizer {
                         "Ruined Atoll Statue",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Ladders in South Atoll",
+                                "12", "Ladders in South Atoll", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "12",
+                                "Atoll Northeast Fuse",
+                                "Atoll Northwest Fuse",
+                                "Atoll Southeast Fuse",
+                                "Atoll Southwest Fuse",
+                                FUSE_SHUFFLE,
+                            }
                         }
                     },
                 }
@@ -4008,7 +4030,10 @@ namespace TunicRandomizer {
                         "Library Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12",
+                                "12", "Ladders in Library", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Library Lab Fuse", FUSE_SHUFFLE,
                             }
                         }
                     },
@@ -4080,7 +4105,10 @@ namespace TunicRandomizer {
                         "Fortress Exterior near cave",
                         new List<List<string>> {
                             new List<string> {
-                                "12",
+                                "12", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Fortress Exterior Fuse 1", FUSE_SHUFFLE,
                             },
                             new List<string> {
                                 "Hyperdash",
@@ -4106,6 +4134,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "12", "Fortress Exterior Fuse 1", FUSE_SHUFFLE,
+                            }
                         }
                     },
                     {
@@ -4241,8 +4272,23 @@ namespace TunicRandomizer {
                         "Eastern Vault Fortress Gold Door",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Fortress Courtyard Upper",
+                                "12", 
+                                "Fortress Exterior from Overworld", 
+                                "Beneath the Vault Back", 
+                                "Fortress Courtyard Upper",
+                                NO_FUSE_SHUFFLE
                             },
+                            new List<string> {
+                                "Fortress Exterior Fuse 1",
+                                "Fortress Exterior Fuse 2",
+                                "Fortress Courtyard Upper Fuse",
+                                "Fortress Courtyard Fuse",
+                                "Beneath the Vault Fuse",
+                                "Fortress Candles Fuse",
+                                "Fortress Door Left Fuse",
+                                "Fortress Door Right Fuse",
+                                FUSE_SHUFFLE,
+                            }
                         }
                     },
                 }
@@ -4298,8 +4344,21 @@ namespace TunicRandomizer {
                         "Fortress Arena Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Eastern Vault Fortress",
+                                "12", 
+                                "Fortress Exterior from Overworld", 
+                                "Beneath the Vault Back", 
+                                "Eastern Vault Fortress",
+                                NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "12",
+                                "Fortress Exterior Fuse 1",
+                                "Fortress Exterior Fuse 2",
+                                "Beneath the Vault Fuse",
+                                "Fortress Candles Fuse",
+                                "Fortress Door Left Fuse",
+                                FUSE_SHUFFLE,
+                            }
                         }
                     },
                 }
@@ -4386,8 +4445,11 @@ namespace TunicRandomizer {
                         "Quarry Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Quarry Connector at Fuse",
+                                "12", "Quarry Connector at Fuse", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "12", "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
+                            }
                         }
                     },
                     {
@@ -4527,8 +4589,24 @@ namespace TunicRandomizer {
                         "Lower Quarry Zig Door",
                         new List<List<string>> {
                             new List<string> {
-                                "Quarry", "Quarry Connector", "Wand", "12",
-                            }
+                                "Quarry", "Quarry Connector", "Wand", "12", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Lower Quarry Zig Door",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Even Lower Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
+                            },
                         }
                     },
                 }
@@ -4602,8 +4680,11 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "Sword", "12",
+                                "Sword", "12", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "Ziggurat Miniboss Fuse", FUSE_SHUFFLE,
+                            }
                         }
                     },
                 }
@@ -4615,8 +4696,11 @@ namespace TunicRandomizer {
                         "Rooted Ziggurat Lower Front",
                         new List<List<string>> {
                             new List<string> {
-                                "Hyperdash", "Sword", "12",
+                                "Hyperdash", "Sword", "12", NO_FUSE_SHUFFLE
                             },
+                            new List<string> {
+                                "Ziggurat Miniboss Fuse", FUSE_SHUFFLE
+                            }
                         }
                     },
                     {
@@ -4624,7 +4708,12 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "12",
+                                NO_FUSE_SHUFFLE
                             },
+                            new List<string> {
+                                "Ziggurat Teleporter Fuse",
+                                FUSE_SHUFFLE
+                            }
                         }
                     },
                 }
@@ -4656,8 +4745,11 @@ namespace TunicRandomizer {
                         "Rooted Ziggurat Portal Room Exit",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Rooted Ziggurat Lower Back",
+                                "12", "Rooted Ziggurat Lower Back", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "Ziggurat Teleporter Fuse", FUSE_SHUFFLE,
+                            }
                         }
                     },
                     {
@@ -4714,7 +4806,11 @@ namespace TunicRandomizer {
                         "Swamp to Cathedral Main Entrance",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Hyperdash",
+                                "12", "Hyperdash", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "Swamp Fuse 1", "Swamp Fuse 2",
+                                "Swamp Fuse 3", FUSE_SHUFFLE,
                             },
                         }
                     },
@@ -4726,6 +4822,20 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                }
+            },
+            {
+                "Swamp to Cathedral Main Entrance",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Swamp Mid",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Swamp Fuse 1", "Swamp Fuse 2",
+                                "Swamp Fuse 3", FUSE_SHUFFLE,
+                            },
+                        }
+                    }
                 }
             },
             {
@@ -4814,6 +4924,29 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Cathedral",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Cathedral Elevator",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Cathedral Elevator Fuse", FUSE_SHUFFLE
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "Cathedral Elevator",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Cathedral",
+                        new List<List<string>> {
+                        }
+                    }
+                }
+            },
+            {
                 "Cathedral Gauntlet",
                 new Dictionary<string, List<List<string>>> {
                     {
@@ -4862,32 +4995,53 @@ namespace TunicRandomizer {
                         "Far Shore to Quarry",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Quarry Connector", "Quarry", "Wand",
+                                "12", "Quarry Connector", "Quarry", "Wand", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
+                            }
                         }
                     },
                     {
                         "Far Shore to Library",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Library Lab",
+                                "12", "Library Lab", NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "Library Lab Fuse", FUSE_SHUFFLE,
+                            }
                         }
                     },
                     {
                         "Far Shore to West Garden",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "West Garden",
+                                "12", "West Garden", NO_FUSE_SHUFFLE
                             },
+                            new List<string> {
+                                "West Garden Fuse", FUSE_SHUFFLE,
+                            }
                         }
                     },
                     {
                         "Far Shore to Fortress",
                         new List<List<string>> {
                             new List<string> {  // only left fuses required
-                                "12", "Fortress Exterior from Overworld", "Beneath the Vault Back", "Eastern Vault Fortress",
+                                "12", 
+                                "Fortress Exterior from Overworld", 
+                                "Beneath the Vault Back", 
+                                "Eastern Vault Fortress",
+                                NO_FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "Fortress Exterior Fuse 1",
+                                "Fortress Exterior Fuse 2",
+                                "Beneath the Vault Fuse",
+                                "Fortress Candles Fuse",
+                                "Fortress Door Left Fuse",
+                                FUSE_SHUFFLE,
+                            }
                         }
                     },
                 }
