@@ -69,6 +69,7 @@ namespace TunicRandomizer {
             PopulatePrecollected();
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
             List<string> Ladders = new List<string>(LadderItems);
+            List<string> Fuses = new List<string>(FuseItems);
             List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             List<string> abilityPages = new List<string>() { "12", "21", "26" };
             if (SaveFile.GetInt(AbilityShuffle) == 1) {
@@ -88,6 +89,9 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
                 ProgressionNames.AddRange(Ladders);
+            }
+            if(SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+                ProgressionNames.AddRange(Fuses);
             }
 
             List<Check> InitialItems = TunicUtils.GetAllInUseChecks();

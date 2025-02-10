@@ -4931,6 +4931,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Cathedral Elevator Fuse", FUSE_SHUFFLE
+                            },
+                            new List<string> {
+                                NO_FUSE_SHUFFLE
                             }
                         }
                     }
