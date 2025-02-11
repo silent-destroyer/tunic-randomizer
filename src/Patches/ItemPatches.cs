@@ -304,7 +304,7 @@ namespace TunicRandomizer {
                     FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
                     if (fuseInformation.RealGuid != 0) {
                         SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
-                        // todo: make fuses/power lines in same scene react to this
+                        FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
@@ -546,7 +546,7 @@ namespace TunicRandomizer {
                     FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
                     if (fuseInformation.RealGuid != 0) {
                         SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
-                        // todo: make fuses/power lines in same scene react to this
+                        FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);

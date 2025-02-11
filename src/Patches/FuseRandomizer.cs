@@ -115,7 +115,6 @@ namespace TunicRandomizer {
         }
 
         private static void CreateFuseItem(string name) {
-
             SpecialItem Fuse = ScriptableObject.CreateInstance<SpecialItem>();
 
             Fuse.name = name;
@@ -132,7 +131,7 @@ namespace TunicRandomizer {
                     FusePrefab = GameObject.Instantiate(fuse);
                     FusePrefab.GetComponent<ConduitNode>().externalConnection.guid = -1000;
                     //FusePrefab.GetComponent<ConduitNode>().Guid = -1;
-                    FusePrefab.SetActive(false);
+                    FusePrefab.SetActive(true);
                     FusePrefab.transform.position = new Vector3(-30000, -30000, -30000);
                     GameObject.DontDestroyOnLoad(FusePrefab);
                 }
@@ -229,7 +228,6 @@ namespace TunicRandomizer {
                     ConstructionSign.AddComponent<ToggleObjectByFuseItem>().Fuse = Fuses[newNode.Guid];
                     helper.Sign = rigidBody;
                     rigidBody.AddComponent<Rigidbody>();
-                    TunicLogger.LogInfo("finished setting up fuse " +  newNode.Guid);
                 }
             }
 
@@ -240,12 +238,26 @@ namespace TunicRandomizer {
             ModifiedFusesAlready = true;
         }
 
+        public static void UpdateFuseVisualState(int fuseId) {
+            ConduitNode node = FusePrefab.GetComponent<ConduitNode>();
+            if (node != null) {
+                node.Guid = fuseId;
+                FuseCloseAnimationHelper helper = FusePrefab.GetComponentInChildren<FuseCloseAnimationHelper>(true);
+                if (helper != null) {
+                    helper.__animationEvent_fuseCloseAnimationDone();
+                }
+            }
+            if (fuseId == 1300 && SceneManager.GetActiveScene().name == "Cathedral Redux") {
+                StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
+            }
+        }
+
         public static bool ConduitNode_CheckConnectedToPower_PrefixPatch(ConduitNode __instance, ref bool __result) {
             if (TunicRandomizer.Settings.EnableAllCheckpoints && __instance != null && __instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
                 __result = true;
                 return false;
             }
-            if (Fuses.ContainsKey(__instance.Guid) && SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
+            if (__instance.Guid >= 9000 && Fuses.ContainsKey(__instance.Guid) && SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
                 __result = true;
                 foreach (string fuseItem in Fuses[__instance.Guid].PowerRequirements) {
                     if (Inventory.GetItemByName(fuseItem) != null && Inventory.GetItemByName(fuseItem).Quantity == 0) {
@@ -262,7 +274,7 @@ namespace TunicRandomizer {
                 __result = true;
                 return false;
             }
-            if (Fuses.ContainsKey(guid) && SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
+            if (guid >= 9000 && Fuses.ContainsKey(guid) && SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
                 __result = true;
                 foreach (string fuseItem in Fuses[guid].PowerRequirements) {
                     if (Inventory.GetItemByName(fuseItem) != null && Inventory.GetItemByName(fuseItem).Quantity == 0) {
