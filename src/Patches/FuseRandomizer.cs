@@ -148,7 +148,7 @@ namespace TunicRandomizer {
                     string CheckId = fuseHelper.CheckId;
                 
                     if (SaveFlags.IsArchipelago()) {
-                        // todo
+                        Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
                     } else if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId)) {
                         Check check = Locations.RandomizedLocations[CheckId];
                         ItemPatches.GiveItem(check);

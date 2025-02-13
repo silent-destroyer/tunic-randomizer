@@ -689,6 +689,11 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(GrassRandoEnabled, 1);
                     }
                 }
+                if (slotData.TryGetValue("shuffle_fuses", out var shuffleFuses)) {
+                    if (SaveFile.GetInt(FuseShuffleEnabled) == 0 && shuffleFuses.ToString() != "0") {
+                        SaveFile.SetInt(FuseShuffleEnabled, 1);
+                    }
+                }
                 SaveFile.SaveToDisk();
 
                 Locations.RandomizedLocations.Clear();

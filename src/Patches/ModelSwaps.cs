@@ -818,7 +818,7 @@ namespace TunicRandomizer {
                         ApplyAPFuseTexture(fuse, itemInfo, TunicUtils.IsCheckCompletedOrCollected(fuseId));
                         return;
                     }
-                    Item = ItemLookup.Items[fuseId];
+                    Item = ItemLookup.Items[itemInfo.ItemName];
                 }
 
                 Material material = null;

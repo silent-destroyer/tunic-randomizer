@@ -453,6 +453,11 @@ namespace TunicRandomizer {
                     } else {
                         GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
                     }
+                    if (slotData.ContainsKey("shuffle_fuses")) {
+                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
+                    } else {
+                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Fuses");
+                    }
                 } else {
                     apHeight += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, apHeight, 180f * guiScale, 30f * guiScale), false, "Keys Behind Bosses");
@@ -468,6 +473,7 @@ namespace TunicRandomizer {
                     GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Ladders");
                     apHeight += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
+                    GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Fuses");
                 }
             }
             apHeight += 40f * guiScale;
