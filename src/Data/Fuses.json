@@ -456,8 +456,15 @@
       "Position": "(102.0, 0.0, -108.0)",
         "Requirements": [
             {
-                "Rooted Ziggurat Lower Front": 1,
-                "12": 1
+              "Rooted Ziggurat Lower Front": 1,
+              "12": 1
+            },
+            {
+
+              "Rooted Ziggurat Lower Back": 1,
+              "Hyperdash": 1,
+              "Sword": 1,
+              "12": 1
             }
         ],
       "SceneId": 44,
