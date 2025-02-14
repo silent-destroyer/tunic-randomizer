@@ -711,12 +711,26 @@ namespace TunicRandomizer {
             }
         }
 
+
         public static (string, string) ApplyFoolEffect(int Player, bool fromDeathLink = false) {
             System.Random Random = new System.Random();
             int FoolType = Random.Next(100);
             string FoolMessageTop = $"";
             string FoolMessageBottom = $"";
-            if (FoolType < 10) {
+            if (FoolType >= 0) {
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+                FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
+                FoolMessageBottom = $".";  // come up with something related to directions or not being able to find stairs
+                CameraController.DerekRotationEnabled = true;
+                List<float> cameraRotations = new List<float>() { -45f, 45f };
+                if (cameraRotations.Contains(CameraController.DerekRotationRangeRight)) {
+                    CameraController.DerekRotationRangeRight *= -1;
+                } else {
+                    CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
+                }
+                PlayerCharacter.instance.Flinch(true);
+            } else if (FoolType < 10) {
                 // Mirror trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
