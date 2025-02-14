@@ -717,7 +717,16 @@ namespace TunicRandomizer {
             int FoolType = Random.Next(100);
             string FoolMessageTop = $"";
             string FoolMessageBottom = $"";
-            if (FoolType >= 0) {
+            if (FoolType < 10) {
+                // Mirror trap
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+                FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
+                FoolMessageBottom = $"tAk uh mOmint too ruhflehkt.";
+                CameraController.Flip = true;
+                PlayerCharacter.instance.Flinch(true);
+            } else if (FoolType < 20) {
+                // Unisometric Trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
                 FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
@@ -730,15 +739,7 @@ namespace TunicRandomizer {
                     CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
                 }
                 PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType < 10) {
-                // Mirror trap
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
-                FoolMessageBottom = $"tAk uh mOmint too ruhflehkt.";
-                CameraController.Flip = true;
-                PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 10 && FoolType < 30) {
+            } else if (FoolType < 35) {
                 // Tiny fox trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
@@ -746,7 +747,7 @@ namespace TunicRandomizer {
                 FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
                 PlayerCharacterPatches.TinierFox = true;
                 PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 30 && FoolType < 50) {
+            } else if (FoolType < 50) {
                 // Bee trap
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
@@ -754,7 +755,7 @@ namespace TunicRandomizer {
                 FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
                 PlayerCharacterPatches.StungByBee = true;
                 PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 50 && FoolType < 70) {
+            } else if (FoolType < 70) {
                 // Fire trap
                 PlayerCharacter.ApplyRadiationAsDamageInHP(0f);
                 PlayerCharacter.instance.stamina = 0;
@@ -763,7 +764,7 @@ namespace TunicRandomizer {
                 FoolMessageTop = $"yoo R A \"<#FF3333>FOOL<#ffffff>!!\" [fooltrap]";
                 FoolMessageBottom = $"iz it hawt in hEr?";
                 PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 70) {
+            } else {
                 // Ice trap
                 PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
