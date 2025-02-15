@@ -735,15 +735,15 @@ namespace TunicRandomizer {
                 }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $".";  // come up with something related to directions or not being able to find stairs
+                FoolMessageTop = $"yoo R A <#FFA500>toopointfIvdE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+                FoolMessageBottom = $"toonik iz ehn IsOmehtrik... wAt, wuht?";
                 CameraController.DerekRotationEnabled = true;
                 List<float> cameraRotations = new List<float>() { -45f, 45f };
                 CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType < 35) {
                 // Tiny fox trap
-                if (PlayerCharacterPatches.TinierFox) {
+                if (PlayerCharacterPatches.TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
                     return ApplyFoolEffect(Player, fromDeathLink);
                 }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
@@ -754,7 +754,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType < 50) {
                 // Bee trap
-                if (PlayerCharacterPatches.StungByBee) {
+                if (PlayerCharacterPatches.StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
                     return ApplyFoolEffect(Player, fromDeathLink);
                 }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
