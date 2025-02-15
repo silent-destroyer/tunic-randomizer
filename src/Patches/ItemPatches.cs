@@ -719,6 +719,9 @@ namespace TunicRandomizer {
             string FoolMessageBottom = $"";
             if (FoolType < 10) {
                 // Mirror trap
+                if (CameraController.Flip) {
+                    return ApplyFoolEffect(Player, fromDeathLink);
+                }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
                 FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
@@ -727,20 +730,22 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType < 20) {
                 // Unisometric Trap
+                if (CameraController.DerekRotationEnabled) {
+                    return ApplyFoolEffect(Player, fromDeathLink);
+                }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
                 FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
                 FoolMessageBottom = $".";  // come up with something related to directions or not being able to find stairs
                 CameraController.DerekRotationEnabled = true;
                 List<float> cameraRotations = new List<float>() { -45f, 45f };
-                if (cameraRotations.Contains(CameraController.DerekRotationRangeRight)) {
-                    CameraController.DerekRotationRangeRight *= -1;
-                } else {
-                    CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
-                }
+                CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType < 35) {
                 // Tiny fox trap
+                if (PlayerCharacterPatches.TinierFox) {
+                    return ApplyFoolEffect(Player, fromDeathLink);
+                }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
                 FoolMessageTop = $"yoo R A <#FFA500>tInE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
@@ -749,6 +754,9 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.Flinch(true);
             } else if (FoolType < 50) {
                 // Bee trap
+                if (PlayerCharacterPatches.StungByBee) {
+                    return ApplyFoolEffect(Player, fromDeathLink);
+                }
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
                 PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
                 FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
