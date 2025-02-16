@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using UnityEngine.UI;
 
 namespace TunicRandomizer {
 
@@ -15,6 +16,31 @@ namespace TunicRandomizer {
         public GameObject Sign;
         public string CheckId {
             get => $"{OriginalGuid} [{gameObject.scene.name}]";
+        }
+    }
+
+    public class FuseTrapAppearanceHelper : MonoBehaviour {
+        public UVScroller UVScroller;
+
+        public void Start() {
+            if (GetComponent<UVScroller>() != null) {
+                UVScroller = (UVScroller)GetComponent<UVScroller>();
+            }
+        }
+        public void Update() {
+            if (GetComponent<UVScroller>() != null && UVScroller == null) {
+                UVScroller = (UVScroller)GetComponent<UVScroller>();
+            }
+            if (UVScroller == null) {
+                return;
+            }
+
+            if (UVScroller != null) {
+                if (UVScroller.material != null) {
+                    UVScroller.material.SetTexture("_EmissionMap", ModelSwaps.FuseAltLights.GetComponent<Image>().mainTexture);
+                }
+            }
+
         }
     }
 
@@ -71,7 +97,7 @@ namespace TunicRandomizer {
                 foreach (Check check in checks) { 
                     int fuseGuid = int.Parse(check.Location.LocationId);
                     int fakeGuid = 9000 + FuseChecks.Count;
-
+                    
                     ConduitDataEntry entry = new ConduitDataEntry();
                     entry.connections = new int[] { 0 };
                     entry.guid = fakeGuid;

@@ -21,6 +21,7 @@ namespace TunicRandomizer {
         public static GameObject HexagonGoldImage;
         public static GameObject TuncTitleImage;
         public static GameObject TuncImage;
+        public static GameObject FuseAltLights;
 
         public static GameObject FairyAnimation;
         public static GameObject IceFlask;
@@ -833,14 +834,14 @@ namespace TunicRandomizer {
                 }
 
                 if (Item.Name == "Fool Trap") {
-                    // todo figure out fool trap appearance
+                    doFuseFoolTrapSetup(fuse);
                 }
 
                 if (material != null) {
                     foreach (MeshRenderer r in fuse.transform.GetChild(0).GetChild(0).GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                         if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
                         if (r.name.Contains("omnifuse corner mid") || r.name.Contains("omnifuse corner top") || r.name.Contains("omnifuse slide")) {
-                            r.material = material; // todo: decide how they should look
+                            r.material = material;
                         }
                     }
                 }
@@ -848,7 +849,52 @@ namespace TunicRandomizer {
         }
         
         public static void ApplyAPFuseTexture(Fuse fuse, ItemInfo itemInfo, bool Checked) {
+            List<MeshRenderer> renderers = new List<MeshRenderer>();
+            foreach (MeshRenderer r in fuse.transform.GetChild(0).GetChild(0).GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                if (r.name.Contains("omnifuse corner mid") || r.name.Contains("omnifuse corner top") || r.name.Contains("omnifuse slide")) {
+                    renderers.Add(r);
+                }
+            }
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            Material material = FindMaterial("treasure chest trim (Instance) (Instance)");
+            UnityEngine.Color color;
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material = material;
+                    r.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material = material;
+                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                    if (r.name.Contains("omnifuse corner top") && flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                        r.material = material;
+                        r.material.color = UnityEngine.Color.cyan;
+                    }
+                }
+            }
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                doFuseFoolTrapSetup(fuse);
+            }
+        }
 
+        private static void doFuseFoolTrapSetup(Fuse fuse) {
+            // Flip lights upside down and change from rgb -> cmy
+            UVScroller uvScroller = fuse.GetComponentInChildren<UVScroller>(true);
+            if (uvScroller != null) {
+                uvScroller.gameObject.transform.localEulerAngles = new Vector3(0, 0, 180);
+                uvScroller.gameObject.transform.localPosition = new Vector3(0, 17.4809f, 0);
+                uvScroller.gameObject.AddComponent<FuseTrapAppearanceHelper>();
+                uvScroller.gameObject.GetComponent<FuseTrapAppearanceHelper>().UVScroller = uvScroller;
+            }
         }
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
@@ -1743,6 +1789,7 @@ namespace TunicRandomizer {
             HexagonGoldImage = CreateSprite(ImageData.GoldHex, ImageMaterial, 160, 160, "Hexagon Quest");
             TuncTitleImage = CreateSprite(ImageData.TuncTitle, ImageMaterial, 1400, 742, "tunc title logo");
             TuncImage = CreateSprite(ImageData.Tunc, ImageMaterial, 148, 148, "tunc sprite");
+            FuseAltLights = CreateSprite(ImageData.FuseAltIndicatorLights, ImageMaterial, 32, 32, "fuse alt indicator lights");
 
             CustomItemImages.Add("Librarian Sword", CreateSprite(ImageData.SecondSword, ImageMaterial, SpriteName: "Randomizer items_Librarian Sword"));
             CustomItemImages.Add("Heir Sword", CreateSprite(ImageData.ThirdSword, ImageMaterial, SpriteName: "Randomizer items_Heir Sword"));

@@ -619,7 +619,8 @@ namespace TunicRandomizer {
             }
 
             try {
-                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && !FuseRandomizer.ModifiedFusesAlready) {
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && !FuseRandomizer.ModifiedFusesAlready &&
+                    (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) && SaveFile.GetInt("seed") != 0) {
                     FuseRandomizer.ModifyFuses();
                 }
             } catch (Exception e) {
