@@ -157,10 +157,10 @@ namespace TunicRandomizer {
             { "Potion Flask", new ItemData("Potion Flask", "useful", "Flask Container", ItemTypes.INVENTORY, 1) },
             { "Golden Coin", new ItemData("Golden Coin", "progression", "Trinket Coin", ItemTypes.INVENTORY, 1) },
             { "Card Slot", new ItemData("Card Slot", "useful", "Trinket Slot", ItemTypes.INVENTORY, 1) },
-            { "Red Questagon", new ItemData("Red Questagon", "useful", "Hexagon Red", ItemTypes.INVENTORY, 1) },
-            { "Green Questagon", new ItemData("Green Questagon", "useful", "Hexagon Green", ItemTypes.INVENTORY, 1) },
-            { "Blue Questagon", new ItemData("Blue Questagon", "useful", "Hexagon Blue", ItemTypes.INVENTORY, 1) },
-            { "Gold Questagon", new ItemData("Gold Questagon", "useful", "Hexagon Gold", ItemTypes.HEXAGONQUEST, 1) },
+            { "Red Questagon", new ItemData("Red Questagon", "progression", "Hexagon Red", ItemTypes.INVENTORY, 1) },
+            { "Green Questagon", new ItemData("Green Questagon", "progression", "Hexagon Green", ItemTypes.INVENTORY, 1) },
+            { "Blue Questagon", new ItemData("Blue Questagon", "progression", "Hexagon Blue", ItemTypes.INVENTORY, 1) },
+            { "Gold Questagon", new ItemData("Gold Questagon", "progression", "Hexagon Gold", ItemTypes.HEXAGONQUEST, 1) },
 
             // Upgrades and Relics
             { "ATT Offering", new ItemData("ATT Offering", "useful", "Upgrade Offering - Attack - Tooth", ItemTypes.INVENTORY, 1) },

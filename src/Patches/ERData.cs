@@ -1923,10 +1923,6 @@ namespace TunicRandomizer {
                 new RegionInfo("Library Lab", false)
             },
             {
-                "Library Lab at Fuse",
-                new RegionInfo("Library Lab", true)
-            },
-            {
                 "Library Portal",
                 new RegionInfo("Library Lab", false, outletRegion:"Library Lab on Portal Pad")
             },
@@ -2037,10 +2033,6 @@ namespace TunicRandomizer {
             {
                 "Quarry Connector",
                 new RegionInfo("Darkwoods Tunnel", false)
-            },
-            {
-                "Quarry Connector at Fuse",
-                new RegionInfo("Darkwoods Tunnel", true)
             },
             {
                 "Quarry Entry",
@@ -4012,14 +4004,6 @@ namespace TunicRandomizer {
                                 "Ladders in Library",
                             },
                         }
-                    },
-                    {
-                        "Library Lab at Fuse",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Ladders in Library",
-                            }
-                        }
                     }
                 }
             },
@@ -4445,7 +4429,7 @@ namespace TunicRandomizer {
                         "Quarry Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Quarry Connector at Fuse", NO_FUSE_SHUFFLE,
+                                "12", "Quarry Connector", "Wand", NO_FUSE_SHUFFLE,
                             },
                             new List<string> {
                                 "12", "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
@@ -4526,19 +4510,6 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                }
-            },
-            {
-                "Quarry Connector",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Quarry Connector at Fuse",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Wand"
-                            }
-                        }
-                    }
                 }
             },
             {

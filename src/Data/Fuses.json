@@ -135,6 +135,12 @@
         "Requirements": [
             {
                 "Ruined Atoll": 1,
+                "Wand": 1,
+                "12": 1
+            },
+            {
+                "Ruined Atoll": 1,
+                "Hyperdash": 1,
                 "12": 1
             }
         ],
@@ -214,7 +220,8 @@
       "Position": "(127.5, 107.0, -39.0)",
         "Requirements": [
             {
-                "Library Lab at Fuse": 1,
+                "Library Lab": 1,
+                "Ladders in Library": 1,
                 "12": 1
             }
         ],
@@ -415,7 +422,8 @@
       "Position": "(102.0, 16.0, 28.0)",
         "Requirements": [
             {
-                "Quarry Connector at Fuse": 1,
+                "Quarry Connector": 1,
+                "Wand": 1,
                 "12": 1
             }
         ],
@@ -456,15 +464,15 @@
       "Position": "(102.0, 0.0, -108.0)",
         "Requirements": [
             {
-              "Rooted Ziggurat Lower Front": 1,
-              "12": 1
+                "Rooted Ziggurat Lower Front": 1,
+                "Sword": 1,
+                "12": 1
             },
             {
-
-              "Rooted Ziggurat Lower Back": 1,
-              "Hyperdash": 1,
-              "Sword": 1,
-              "12": 1
+                "Rooted Ziggurat Lower Back": 1,
+                "Hyperdash": 1,
+                "Sword": 1,
+                "12": 1
             }
         ],
       "SceneId": 44,
