@@ -153,7 +153,7 @@ namespace TunicRandomizer {
             {"Swamp Fuse 2", "swawmp fyooz 2"},
             {"Swamp Fuse 3", "swawmp fyooz 3"},
             {"Cathedral Elevator Fuse", "kuh%Edruhl ehluhvAtor fyooz"},
-            {"Furnace to Well Fuse", "furnis too wehl fyooz"},
+            {"West Furnace Fuse", "wehst furnis fyooz"},
             {"West Garden Fuse", "wehst gRdin fyooz" },
             {"Atoll Northwest Fuse", "ahtawl nor%wehst fyooz"},
             {"Atoll Northeast Fuse", "ahtawl nor%Est fyooz"},

@@ -369,9 +369,9 @@ namespace TunicRandomizer {
                 }
             },
             {
-                1305, // Furnace to Well Fuse
+                1305, // West Furnace Fuse
                 new List<string>() {
-                    "Furnace to Well Fuse",
+                    "West Furnace Fuse",
                 }
             },
             {

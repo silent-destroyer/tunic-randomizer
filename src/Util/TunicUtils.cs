@@ -79,7 +79,7 @@ namespace TunicRandomizer {
             "Quarry Fuse 1", "Quarry Fuse 2", "Ziggurat Miniboss Fuse", "Ziggurat Teleporter Fuse",
             "Fortress Exterior Fuse 1", "Fortress Exterior Fuse 2", "Fortress Courtyard Upper Fuse",
             "Fortress Courtyard Fuse", "Beneath the Vault Fuse", "Fortress Candles Fuse",
-            "Fortress Door Left Fuse", "Fortress Door Right Fuse", "Furnace to Well Fuse",
+            "Fortress Door Left Fuse", "Fortress Door Right Fuse", "West Furnace Fuse",
             "West Garden Fuse", "Atoll Northeast Fuse", "Atoll Northwest Fuse", "Atoll Southeast Fuse",
             "Atoll Southwest Fuse", "Library Lab Fuse",
         };

@@ -2910,7 +2910,7 @@
                         },
                         {
                             ""Beneath the Well Back"": 1,
-                            ""Furnace to Well Fuse"": 1,
+                            ""West Furnace Fuse"": 1,
                             ""Fuse Shuffle"": 1,
                         }
                     ]
