@@ -20,6 +20,7 @@ namespace TunicRandomizer {
         public static List<string> PrecollectedItems = new List<string>();
 
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
+        public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
 
         public static void PopulatePrecollected() {
             PrecollectedItems.Clear();
@@ -37,6 +38,17 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt(StartWithSword) == 1) {
                 PrecollectedItems.Add("Sword");
+            }
+
+            // Fake items to differentiate between fuse/non-fuse rules
+            if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+                PrecollectedItems.Add(ERData.FUSE_SHUFFLE);
+                if (SaveFile.GetInt(EntranceRando) == 1) {
+                    // Since the elevator is always active in ER, just ignore it in logic
+                    PrecollectedItems.Add("Cathedral Elevator Fuse");
+                }
+            } else {
+                PrecollectedItems.Add(ERData.NO_FUSE_SHUFFLE);
             }
         }
 
@@ -57,6 +69,7 @@ namespace TunicRandomizer {
             PopulatePrecollected();
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
             List<string> Ladders = new List<string>(LadderItems);
+            List<string> Fuses = new List<string>(FuseItems);
             List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             List<string> abilityPages = new List<string>() { "12", "21", "26" };
             if (SaveFile.GetInt(AbilityShuffle) == 1) {
@@ -76,6 +89,9 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
                 ProgressionNames.AddRange(Ladders);
+            }
+            if(SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+                ProgressionNames.AddRange(Fuses);
             }
 
             List<Check> InitialItems = TunicUtils.GetAllInUseChecks();

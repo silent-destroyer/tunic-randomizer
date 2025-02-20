@@ -328,6 +328,9 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
                     MajorItems.AddRange(ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name));
                 }
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+                    MajorItems.AddRange(ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name));
+                }
                 foreach (string MajorItem in MajorItems) {
                     foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {
                         ItemData ItemData = ItemLookup.GetItemDataFromCheck(Check);

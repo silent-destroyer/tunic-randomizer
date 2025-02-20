@@ -39,6 +39,9 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<FleemerQuartet>();
             ClassInjector.RegisterTypeInIl2Cpp<RecentItemsDisplay>();
             ClassInjector.RegisterTypeInIl2Cpp<FoxgodDecoupledTeleporter>();
+            ClassInjector.RegisterTypeInIl2Cpp<FuseCheckHelper>();
+            ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuseItem>();
+            ClassInjector.RegisterTypeInIl2Cpp<FuseTrapAppearanceHelper>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
@@ -192,6 +195,9 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(GameOverDecision), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "GameOverDecision_Start_PostfixPatch")));
 
+            // Fuses
+            Harmony.Patch(AccessTools.Method(typeof(FuseCloseAnimationHelper), "__animationEvent_fuseCloseAnimationDone"), null, new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "FuseCloseAnimationHelper___animationEvent_fuseCloseAnimationDone_PostfixPatch")));
+            
             // Misc
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
 
@@ -235,13 +241,13 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Campfire), "isUseableAccordingToConduitSystem"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "Campfire_isUseableAccordingToConduitSystem_GetterPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(ConduitNode), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitNode_CheckConnectedToPower_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(ConduitNode), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitNode_CheckConnectedToPower_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(SecretMayor), "SceneLoader_OnSceneLoaded_SecretMayorPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(ConduitData), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitData_CheckConnectedToPower_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(ConduitData), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitData_CheckConnectedToPower_PrefixPatch")));
             
-            Harmony.Patch(AccessTools.Method(typeof(ConduitData), "IsFuseClosedByID"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "ConduitData_IsFuseClosedByID_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(ConduitData), "IsFuseClosedByID"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitData_IsFuseClosedByID_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(PlayMusicOnLoad), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(MusicShuffler), "PlayMusicOnLoad_Start_PostfixPatch")));
 

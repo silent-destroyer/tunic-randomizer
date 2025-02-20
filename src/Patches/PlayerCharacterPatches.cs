@@ -96,6 +96,8 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+            }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
                 try {
@@ -333,6 +335,14 @@ namespace TunicRandomizer {
                 TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
+            try {
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && !FuseRandomizer.ModifiedFusesAlready) {
+                    FuseRandomizer.ModifyFuses();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error setting up fake fuses! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
                 PaletteEditor.ToonFox.AddComponent<MeshRenderer>().material = __instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().material;
             }
@@ -498,6 +508,9 @@ namespace TunicRandomizer {
                         if (TunicRandomizer.Settings.BreakableShuffle) {
                             SaveFile.SetInt(BreakableShuffleEnabled, 1);
                         }
+                        if (TunicRandomizer.Settings.FuseShuffle) { 
+                            SaveFile.SetInt(FuseShuffleEnabled, 1);
+                        }
 
                         if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
                             int goldHexagons = TunicUtils.GetMaxGoldHexagons();
@@ -636,6 +649,11 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(BreakableShuffleEnabled, 1);
                     }
                 }
+                if (slotData.TryGetValue("shuffle_fuses", out var fuseShuffle)) {
+                    if (SaveFile.GetInt(FuseShuffleEnabled) == 0 && fuseShuffle.ToString() == "1") {
+                        SaveFile.SetInt(FuseShuffleEnabled, 1);
+                    }
+                }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
@@ -669,6 +687,11 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("grass_randomizer", out var grassRandomizer)) {
                     if (SaveFile.GetInt(GrassRandoEnabled) == 0 && grassRandomizer.ToString() != "0") {
                         SaveFile.SetInt(GrassRandoEnabled, 1);
+                    }
+                }
+                if (slotData.TryGetValue("shuffle_fuses", out var shuffleFuses)) {
+                    if (SaveFile.GetInt(FuseShuffleEnabled) == 0 && shuffleFuses.ToString() != "0") {
+                        SaveFile.SetInt(FuseShuffleEnabled, 1);
                     }
                 }
                 SaveFile.SaveToDisk();
@@ -759,6 +782,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables) {
                 SaveFile.SetInt(BreakableShuffleEnabled, 1);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleFuses) {
+                SaveFile.SetInt(FuseShuffleEnabled, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);

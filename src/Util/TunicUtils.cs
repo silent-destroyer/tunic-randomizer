@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -73,6 +75,13 @@ namespace TunicRandomizer {
             "Ladder in Dark Tomb", "Ladders near Dark Tomb", "Ladder near Temple Rafters", "Ladder to Swamp", "Ladders in Swamp",
             "Ladder to Ruined Atoll", "Ladders in South Atoll", "Ladders to Frog's Domain", "Ladders in Hourglass Cave",
             "Ladder to Beneath the Vault", "Ladders in Lower Quarry", "Ladders in Library",
+            "Swamp Fuse 1", "Swamp Fuse 2", "Swamp Fuse 3", "Cathedral Elevator Fuse",
+            "Quarry Fuse 1", "Quarry Fuse 2", "Ziggurat Miniboss Fuse", "Ziggurat Teleporter Fuse",
+            "Fortress Exterior Fuse 1", "Fortress Exterior Fuse 2", "Fortress Courtyard Upper Fuse",
+            "Fortress Courtyard Fuse", "Beneath the Vault Fuse", "Fortress Candles Fuse",
+            "Fortress Door Left Fuse", "Fortress Door Right Fuse", "West Furnace Fuse",
+            "West Garden Fuse", "Atoll Northeast Fuse", "Atoll Northwest Fuse", "Atoll Southeast Fuse",
+            "Atoll Southwest Fuse", "Library Lab Fuse",
         };
 
 
@@ -134,6 +143,11 @@ namespace TunicRandomizer {
             UpdateChecksInLogic();
         }
 
+        public static LanguageLine CreateLanguageLine(string text) {
+            LanguageLine languageLine = ScriptableObject.CreateInstance<LanguageLine>();
+            languageLine.text = text;
+            return languageLine;
+        }
 
         // updates PlayerItemsAndRegions based on which items the player has received, then updates ChecksInLogic based on the player's items/accessible regions
         public static void UpdateChecksInLogic() {
@@ -161,6 +175,9 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
                 checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
+            }
+            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1) { 
+                checks.AddRange(FuseRandomizer.FuseChecks.Values.ToList());
             }
             return CopyListOfChecks(checks);
         }
@@ -248,6 +265,13 @@ namespace TunicRandomizer {
             } catch (Exception e) {
                 TunicLogger.LogError(e.Message + e.Source + e.StackTrace);
             }
+        }
+
+        public static Vector3 StringToVector3(string Position) {
+            Position = Position.Replace("(", "").Replace(")", "");
+            string[] coords = Position.Split(',');
+            Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
+            return vector;
         }
     }
 }

@@ -343,6 +343,12 @@ namespace TunicRandomizer {
             }
             FullInventory.Add(start_region, 1);
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
+            if (SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
+                FullInventory.Add(FUSE_SHUFFLE, 1);
+            } else {
+                FullInventory.Add(NO_FUSE_SHUFFLE, 1);
+            }
             FullInventory = UpdateReachableRegions(FullInventory);
 
             // get the total number of regions to get before doing dead ends

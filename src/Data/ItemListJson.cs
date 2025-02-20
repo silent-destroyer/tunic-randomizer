@@ -2905,7 +2905,13 @@
                         {
                             ""Beneath the Well Back"": 1,
                             ""Furnace Fuse"": 1,
-                            ""12"": 1
+                            ""12"": 1,
+                            ""No Fuse Shuffle"": 1,
+                        },
+                        {
+                            ""Beneath the Well Back"": 1,
+                            ""West Furnace Fuse"": 1,
+                            ""Fuse Shuffle"": 1,
                         }
                     ]
                 }
@@ -4772,7 +4778,13 @@
                         {
                             ""Rooted Ziggurat Lower Front"": 1,
                             ""12"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""No Fuse Shuffle"": 1,
+                        },
+                        {
+                            ""Rooted Ziggurat Lower Front"": 1,
+                            ""Ziggurat Miniboss Fuse"": 1,
+                            ""Fuse Shuffle"": 1,
                         }
                     ]
                 }

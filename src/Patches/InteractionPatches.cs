@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.Hints;
 using static TunicRandomizer.SaveFlags;
@@ -63,15 +65,37 @@ namespace TunicRandomizer {
                 GenericMessage.ShowMessage(Hint);
                 return false;
             }
-            if (__instance.GetComponent<UnderConstruction>() != null && __instance.GetComponent<UnderConstruction>().isChecklistSign) {
-                __instance.GetComponent<Signpost>().message.text = LadderToggles.GetLadderChecklist();
-                NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
-                return false;
-            }
-            if (__instance.GetComponent<UnderConstruction>() != null && __instance.name.Contains("chalkboard")) {
-                __instance.GetComponent<Signpost>().message.text = ItemTracker.GetItemCountsByRegion();
-                NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
-                return false;
+            if (__instance.GetComponent<UnderConstruction>() != null) {
+                // Ladder & Fuse checklist
+                if (__instance.GetComponent<UnderConstruction>().isChecklistSign) {
+                    string message = "";
+                    if (GetBool(LadderRandoEnabled)) {
+                        message += LadderToggles.GetLadderChecklist();
+                    }
+                    if (GetBool(FuseShuffleEnabled)) {
+                        if (message != "") {
+                            message += "---";
+                        }
+                        List<string> fuses = ItemLookup.Items.Values.Where(fuse => fuse.Type == ItemTypes.FUSE).Select(fuse => fuse.Name).ToList();
+                        message += FuseRandomizer.GetFuseStatusForSign(fuses);
+                    }
+                    __instance.GetComponent<Signpost>().message.text = message;
+                    NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
+                    return false;
+                }
+                // Fuse path signs
+                if (__instance.GetComponent<UnderConstruction>().isFuseSign) {
+                    __instance.GetComponent<Signpost>().message.text = FuseRandomizer.GetFuseStatusForSign(__instance.GetComponent<UnderConstruction>().fuses);
+
+                    NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
+                    return false;
+                }
+                // Sealed temple chalkboard
+                if (__instance.name.Contains("chalkboard")) {
+                    __instance.GetComponent<Signpost>().message.text = ItemTracker.GetItemCountsByRegion();
+                    NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
+                    return false;
+                }
             }
             if (__instance.GetComponentInParent<HeroGraveToggle>() != null && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 bool showRelicHint = StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue;
@@ -218,31 +242,5 @@ namespace TunicRandomizer {
 
             return true;
         }
-
-        public static bool ConduitNode_CheckConnectedToPower_PrefixPatch(ConduitNode __instance, ref bool __result) {
-            if (TunicRandomizer.Settings.EnableAllCheckpoints && __instance != null && __instance.GetComponent<Campfire>() != null && __instance.GetComponent<UpgradeAltar>() != null) {
-                __result = true;
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool ConduitData_CheckConnectedToPower_PrefixPatch(ConduitData __instance, ref int guid, ref bool __result) {
-            if (SceneManager.GetActiveScene().name == "Quarry") {
-                __result = true;
-                return false;
-            }
-            return true;
-        }
-
-        public static bool ConduitData_IsFuseClosedByID_PrefixPatch(ConduitData __instance, ref int guid, ref bool __result) {
-            if (SceneManager.GetActiveScene().name == "Quarry") {
-                __result = true;
-                return false;
-            }
-            return true;
-        }
-
     }
 }
