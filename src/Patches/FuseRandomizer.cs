@@ -266,8 +266,10 @@ namespace TunicRandomizer {
 
         public static void UpdateFuseVisualState(int fuseId) {
             ConduitNode node = FusePrefab.GetComponent<ConduitNode>();
-            if (node != null) {
+            Fuse fuse = FusePrefab.GetComponent<Fuse>();
+            if (node != null && fuse != null) {
                 node.Guid = fuseId;
+                fuse.mpToGiveDat.Value = 0;
                 FuseCloseAnimationHelper helper = FusePrefab.GetComponentInChildren<FuseCloseAnimationHelper>(true);
                 if (helper != null) {
                     helper.__animationEvent_fuseCloseAnimationDone();
