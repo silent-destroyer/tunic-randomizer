@@ -35,6 +35,7 @@ namespace TunicRandomizer {
         public List<long> locationsToSend = new List<long>();
         public float locationsToSendTimer = 0.0f;
         public float locationsToSendDelay = 5.0f;
+        private Version archipelagoVersion = new Version("0.5.1");
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -92,7 +93,7 @@ namespace TunicRandomizer {
             locationsToSend = new List<long>();
 
             try {
-                LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
+                LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, version: archipelagoVersion, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
             } catch (Exception e) {
                 LoginResult = new LoginFailure(e.GetBaseException().Message);
             }
@@ -154,7 +155,7 @@ namespace TunicRandomizer {
         public void TrySilentReconnect() {
             LoginResult LoginResult;
             try {
-                LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
+                LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, version: archipelagoVersion, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
             } catch (Exception e) {
                 LoginResult = new LoginFailure(e.GetBaseException().Message);
             }
