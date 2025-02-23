@@ -233,7 +233,6 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 1) {
                     incomingItems.TryDequeue(out _);
                     TunicLogger.LogInfo("Skipping item " + itemName + " at index " + pendingItem.index + " as it has already been processed.");
-                    yield return true;
                     continue;
                 }
 
