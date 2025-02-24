@@ -303,8 +303,13 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.FUSE) {
                     FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
                     if (fuseInformation.RealGuid != 0) {
-                        SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
-                        FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
+                        if (GetBool(FuseShuffleEnabled)) {
+                            SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
+                            FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
+                            NotificationBottom = $"yoo hEr uh strAnj huhm...";
+                        } else {
+                            NotificationBottom = $"\"...but nothing happened.\"";
+                        }
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
@@ -545,8 +550,13 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.FUSE) {
                     FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
                     if (fuseInformation.RealGuid != 0) {
-                        SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
-                        FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
+                        if (GetBool(FuseShuffleEnabled)) {
+                            SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
+                            FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
+                            NotificationBottom = $"yoo hEr uh strAnj huhm...";
+                        } else {
+                            NotificationBottom = $"\"...but nothing happened.\"";
+                        }
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
