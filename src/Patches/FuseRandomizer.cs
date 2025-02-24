@@ -209,7 +209,9 @@ namespace TunicRandomizer {
         }
 
         public static void ModifyFuses() {
-            foreach (Fuse fuse in Resources.FindObjectsOfTypeAll<Fuse>().Where(fuse => fuse.gameObject.scene.name == SceneManager.GetActiveScene().name && fuse.GetComponent<ConduitNode>() != null)) {
+            string sceneName = SceneManager.GetActiveScene().name;
+
+            foreach (Fuse fuse in Resources.FindObjectsOfTypeAll<Fuse>().Where(fuse => fuse.gameObject.scene.name == sceneName && fuse.GetComponent<ConduitNode>() != null)) {
                 string fuseId = GetFuseCheckId(fuse);
                 if (FuseChecks.ContainsKey(fuseId)) {
                     GameObject newFuseObject = GameObject.Instantiate(fuse.gameObject, fuse.transform.position, fuse.transform.rotation);
@@ -257,8 +259,32 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (SceneManager.GetActiveScene().name == "Overworld Redux" && GameObject.Find("ladder and fuse checklist") == null) {
+            if (sceneName == "Overworld Redux" && GameObject.Find("ladder and fuse checklist") == null) {
                 LadderToggles.SpawnOverworldChecklistSign();
+            }
+
+
+            if (FarShoreSignPlacements.ContainsKey(sceneName)) {
+                foreach (KeyValuePair<string, (int, Vector3)> pair in FarShoreSignPlacements[sceneName]) {
+                    GameObject teleporter = GameObject.Find(pair.Key);
+                    if (teleporter != null) {
+                        GameObject rigidBody = new GameObject($"teleporter construction sign {sceneName}");
+                        rigidBody.transform.parent = teleporter.transform;
+                        rigidBody.transform.position = teleporter.transform.position;
+                        rigidBody.transform.rotation = teleporter.transform.rotation;
+                        GameObject sign = GameObject.Instantiate(ModelSwaps.UnderConstruction, teleporter.transform.position, teleporter.transform.rotation);
+                        sign.transform.parent = rigidBody.transform;
+                        sign.transform.localEulerAngles = pair.Value.Item2;
+                        sign.transform.localPosition = new Vector3(0, 0.6f, 0);
+                        sign.GetComponent<UnderConstruction>().isFuseSign = true;
+                        sign.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
+                        sign.GetComponent<Signpost>().message.text = $"<#FF0000>[death] kawndooit rehstorA$uhn <#FF0000>[death]";
+                        sign.SetActive(true);
+                        sign.AddComponent<ToggleObjectByFuseItem>().Fuse = Fuses[pair.Value.Item1];
+                        sign.GetComponent<UnderConstruction>().fuses = Fuses[pair.Value.Item1].FusePath;
+                        rigidBody.AddComponent<Rigidbody>();
+                    }
+                }
             }
 
             ModifiedFusesAlready = true;
@@ -338,6 +364,67 @@ namespace TunicRandomizer {
             
             return message;
         }
+
+
+        public static Dictionary<string, Dictionary<string, (int, Vector3)>> FarShoreSignPlacements = new Dictionary<string, Dictionary<string, (int, Vector3)>>() {
+            {
+                "Transit",
+                new Dictionary<string, (int, Vector3)>() {
+                    {
+                        "_Platforms/TUNIC_Platform_Small/", // fortress
+                        (1015, new Vector3(0, 180, 0))
+                    },
+                    {
+                        "_Platforms/TUNIC_Platform_Small (6)/", // quarry
+                        (1262, new Vector3(0, 180, 0))
+                    },
+                    {
+                        "_Platforms/TUNIC_Platform_Small (2)/", // west garden
+                        (1032, new Vector3(0, 90, 0))
+                    },
+                    {
+                        "_Platforms/TUNIC_Platform_Small (4)/", // library
+                        (1055, new Vector3 (0, 180, 0))
+                    },
+                }
+            },
+            {
+                "Quarry Redux",
+                new Dictionary<string, (int, Vector3)>() {
+                    {
+                        "TUNIC_Platform_Small/",
+                        (1262, new Vector3(0, 90, 0))
+                    }
+                }
+            },
+            {
+                "Fortress Arena",
+                new Dictionary<string, (int, Vector3)>() {
+                    {
+                        "_Conduit Stuff/TUNIC_Platform_Small (1)/",
+                        (1015, new Vector3(0, 180, 0))
+                    }
+                }
+            },
+            {
+                "Archipelagos Redux",
+                new Dictionary<string, (int, Vector3)>() {
+                    {
+                        "_Checkpoints, Fuses, Platform/TUNIC_Platform_Small/",
+                        (1032, new Vector3(0, 90, 0))
+                    }
+                }
+            },
+            {
+                "Library Lab",
+                new Dictionary<string, (int, Vector3)>() {
+                    {
+                        "Room - Lab/STOLEN TECH/TUNIC_Platform_Small/",
+                        (1055, new Vector3(0, 180, 0))
+                    }
+                }
+            }
+        };
 
         public static Dictionary<int, List<string>> FusePaths = new Dictionary<int, List<string>>() {
             { 
