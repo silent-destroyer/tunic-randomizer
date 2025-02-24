@@ -1040,6 +1040,10 @@ namespace TunicRandomizer {
                         }
                     }
 
+                    if (TunicRandomizer.Settings.RandomEnemySizes) {
+                        float scale = UnityEngine.Random.Range(0.25f, 1.75f);
+                        NewEnemy.transform.localScale *= scale;
+                    }
 
                     NewEnemy.name += $" {i}";
                     EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
