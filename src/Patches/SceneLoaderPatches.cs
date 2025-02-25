@@ -98,6 +98,9 @@ namespace TunicRandomizer {
                 BossAnnouncer.instance.hideImmediate();
             }
 
+            // undoing the rotation trap
+            CameraController.DerekRotationEnabled = false;
+
             return true;
         }
 
