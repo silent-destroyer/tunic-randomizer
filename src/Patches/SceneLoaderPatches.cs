@@ -551,8 +551,11 @@ namespace TunicRandomizer {
                         GameObject.Find("_GRASS/grass beach (154)/grass base (2)").SetActive(false);
                     }
                 }
-            } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
+            } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(EntranceRando) == 1) {
                 SpawnZigSkipRecovery();
+            } else if (SceneName == "ziggurat2020_0" && SaveFile.GetInt(FuseShuffleEnabled) == 1 
+                && SaveFile.GetInt(EntranceRando) == 0) {
+                FuseRandomizer.SpawnZigguratEscapePoint();
             }
 
             EnemyRandomizer.CheckBossState();

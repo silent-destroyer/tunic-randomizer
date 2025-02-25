@@ -414,6 +414,10 @@ namespace TunicRandomizer {
                     }
                     if (TunicRandomizer.Settings.ShuffleAbilities) {
                         SaveFile.SetInt(AbilityShuffle, 1);
+                    } else {
+                        SaveFile.SetInt(PrayerUnlocked, 1);
+                        SaveFile.SetInt(HolyCrossUnlocked, 1);
+                        SaveFile.SetInt(IceBoltUnlocked, 1);
                     }
 
                     if (SaveFile.GetString("randomizer game mode") != "VANILLA") {
@@ -749,6 +753,10 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleAbilities) {
                 SaveFile.SetInt(AbilityShuffle, 1);
+            } else {
+                SaveFile.SetInt(PrayerUnlocked, 1);
+                SaveFile.SetInt(HolyCrossUnlocked, 1);
+                SaveFile.SetInt(IceBoltUnlocked, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders) {
                 SaveFile.SetInt(LadderRandoEnabled, 1);
