@@ -106,6 +106,7 @@ namespace TunicRandomizer {
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
             ArachnophobiaMode.DidArachnophobiaModeAlready = false;
+            FuseRandomizer.ModifiedFusesAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -268,6 +269,8 @@ namespace TunicRandomizer {
 
                 TextBuilderPatches.SetupCustomGlyphSprites();
                 EnemyRandomizer.InitializeEnemies("Overworld Redux");
+
+                FuseRandomizer.Setup();
 
                 LadderToggles.CreateLadderItems();
                 ModelSwaps.CreateConstructionObject();
@@ -434,8 +437,9 @@ namespace TunicRandomizer {
 
                 if (SaveFile.GetInt("seed") != 0 && (SaveFile.GetInt(LadderRandoEnabled) == 0 || Inventory.GetItemByName("Ladder to Swamp").Quantity == 1) && SaveFile.GetString("randomizer game mode") != "VANILLA") {
                     for(int i = 0; i < 3; i++) {
-                        GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.AddComponent<ToggleObjectByFuse>().fuseId = 1096;
-                        GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.GetComponent<ToggleObjectByFuse>().stateWhenClosed = i != 0;
+                        ToggleObjectByFuse fuseToggle = GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.AddComponent<ToggleObjectByFuse>();
+                        fuseToggle.fuseId = SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1 ? 9000 : 1096;
+                        fuseToggle.stateWhenClosed = i != 0;
                         GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.SetActive(true);
                     }
                 }
@@ -468,7 +472,7 @@ namespace TunicRandomizer {
                 // Activate night bridge to allow access to shortcut ladder
                 GameObject.Find("_Setpieces Etc/NightBridge/").GetComponent<DayNightBridge>().dayOrNight = StateVariable.GetStateVariableByName("Is Night").BoolValue ? DayNightBridge.DayNight.NIGHT : DayNightBridge.DayNight.DAY;
 
-                if (SaveFile.GetInt("fuseClosed 1096") == 1) {
+                if ((GetBool(FuseShuffleEnabled) && GetBool("fuseClosed 1096")) || ((GetBool(FuseShuffleEnabled) && GetBool("fuseClosed 9000")))) {
                     if (GameObject.Find("_Setpieces Etc/plank_4u (planks on gate)/") != null) {
                         GameObject.Find("_Setpieces Etc/plank_4u (planks on gate)/").SetActive(false);
                     }
@@ -476,7 +480,6 @@ namespace TunicRandomizer {
                         GameObject.Find("_Setpieces Etc/Gated Wooden Double Door/").GetComponent<ToggleGraveyardGate>().stateVar = StateVariable.GetStateVariableByName("true");
                         GameObject.Find("_Setpieces Etc/Gated Wooden Double Door/").GetComponent<ToggleGraveyardGate>().isNightstateVar = StateVariable.GetStateVariableByName("true");
                     }
-
                 }
 
                 GameObject SignpostHint = GameObject.Instantiate(ModelSwaps.Signpost, new Vector3(-3.6754f, -1.175f, -74.2004f), new Quaternion(0, 0.8206f, 0, -0.5715f));
@@ -548,8 +551,11 @@ namespace TunicRandomizer {
                         GameObject.Find("_GRASS/grass beach (154)/grass base (2)").SetActive(false);
                     }
                 }
-            } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(SaveFlags.EntranceRando) == 1) {
+            } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(EntranceRando) == 1) {
                 SpawnZigSkipRecovery();
+            } else if (SceneName == "ziggurat2020_0" && SaveFile.GetInt(FuseShuffleEnabled) == 1 
+                && SaveFile.GetInt(EntranceRando) == 0) {
+                FuseRandomizer.SpawnZigguratEscapePoint();
             }
 
             EnemyRandomizer.CheckBossState();
@@ -613,6 +619,15 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && !FuseRandomizer.ModifiedFusesAlready &&
+                    (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) && SaveFile.GetInt("seed") != 0) {
+                    FuseRandomizer.ModifyFuses();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error setting up fake fuses! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {

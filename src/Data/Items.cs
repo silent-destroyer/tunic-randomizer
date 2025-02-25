@@ -18,7 +18,8 @@ namespace TunicRandomizer {
         FOOLTRAP,
         HEXAGONQUEST,
         LADDER,
-        GRASS
+        GRASS,
+        FUSE,
     }
 
     public struct BonusUpgrade {
@@ -156,10 +157,10 @@ namespace TunicRandomizer {
             { "Potion Flask", new ItemData("Potion Flask", "useful", "Flask Container", ItemTypes.INVENTORY, 1) },
             { "Golden Coin", new ItemData("Golden Coin", "progression", "Trinket Coin", ItemTypes.INVENTORY, 1) },
             { "Card Slot", new ItemData("Card Slot", "useful", "Trinket Slot", ItemTypes.INVENTORY, 1) },
-            { "Red Questagon", new ItemData("Red Questagon", "useful", "Hexagon Red", ItemTypes.INVENTORY, 1) },
-            { "Green Questagon", new ItemData("Green Questagon", "useful", "Hexagon Green", ItemTypes.INVENTORY, 1) },
-            { "Blue Questagon", new ItemData("Blue Questagon", "useful", "Hexagon Blue", ItemTypes.INVENTORY, 1) },
-            { "Gold Questagon", new ItemData("Gold Questagon", "useful", "Hexagon Gold", ItemTypes.HEXAGONQUEST, 1) },
+            { "Red Questagon", new ItemData("Red Questagon", "progression", "Hexagon Red", ItemTypes.INVENTORY, 1) },
+            { "Green Questagon", new ItemData("Green Questagon", "progression", "Hexagon Green", ItemTypes.INVENTORY, 1) },
+            { "Blue Questagon", new ItemData("Blue Questagon", "progression", "Hexagon Blue", ItemTypes.INVENTORY, 1) },
+            { "Gold Questagon", new ItemData("Gold Questagon", "progression", "Hexagon Gold", ItemTypes.HEXAGONQUEST, 1) },
 
             // Upgrades and Relics
             { "ATT Offering", new ItemData("ATT Offering", "useful", "Upgrade Offering - Attack - Tooth", ItemTypes.INVENTORY, 1) },
@@ -285,19 +286,44 @@ namespace TunicRandomizer {
             { "Ladders in Lower Quarry", new ItemData("Ladders in Lower Quarry", "progression", "Ladders in Lower Quarry", ItemTypes.LADDER, 1) }, // DONE
             { "Ladders in Library", new ItemData("Ladders in Library", "progression", "Ladders in Library", ItemTypes.LADDER, 1) }, // DONE
 
+            // Fuses
+            { "Swamp Fuse 1", new ItemData("Swamp Fuse 1", "progression", "Swamp Fuse 1", ItemTypes.FUSE, 1) },
+            { "Swamp Fuse 2", new ItemData("Swamp Fuse 2", "progression", "Swamp Fuse 2", ItemTypes.FUSE, 1) },
+            { "Swamp Fuse 3", new ItemData("Swamp Fuse 3", "progression", "Swamp Fuse 3", ItemTypes.FUSE, 1) },
+            { "Cathedral Elevator Fuse", new ItemData("Cathedral Elevator Fuse", "progression", "Cathedral Elevator Fuse", ItemTypes.FUSE, 1) },
+            { "Quarry Fuse 1", new ItemData("Quarry Fuse 1", "progression", "Quarry Fuse 1", ItemTypes.FUSE, 1) },
+            { "Quarry Fuse 2", new ItemData("Quarry Fuse 2", "progression", "Quarry Fuse 2", ItemTypes.FUSE, 1) },
+            { "Ziggurat Miniboss Fuse", new ItemData("Ziggurat Miniboss Fuse", "progression", "Ziggurat Miniboss Fuse", ItemTypes.FUSE, 1) },
+            { "Ziggurat Teleporter Fuse", new ItemData("Ziggurat Teleporter Fuse", "progression", "Ziggurat Teleporter Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Exterior Fuse 1", new ItemData("Fortress Exterior Fuse 1", "progression", "Fortress Exterior Fuse 1", ItemTypes.FUSE, 1) },
+            { "Fortress Exterior Fuse 2", new ItemData("Fortress Exterior Fuse 2", "progression", "Fortress Exterior Fuse 2", ItemTypes.FUSE, 1) },
+            { "Fortress Courtyard Upper Fuse", new ItemData("Fortress Courtyard Upper Fuse", "progression", "Fortress Courtyard Upper Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Courtyard Fuse", new ItemData("Fortress Courtyard Fuse", "progression", "Fortress Courtyard Fuse", ItemTypes.FUSE, 1) },
+            { "Beneath the Vault Fuse", new ItemData("Beneath the Vault Fuse", "progression", "Beneath the Vault Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Candles Fuse", new ItemData("Fortress Candles Fuse", "progression", "Fortress Candles Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Door Left Fuse", new ItemData("Fortress Door Left Fuse", "progression", "Fortress Door Left Fuse", ItemTypes.FUSE, 1) },
+            { "Fortress Door Right Fuse", new ItemData("Fortress Door Right Fuse", "progression", "Fortress Door Right Fuse", ItemTypes.FUSE, 1) },
+            { "West Furnace Fuse", new ItemData("West Furnace Fuse", "progression", "West Furnace Fuse", ItemTypes.FUSE, 1) },
+            { "West Garden Fuse", new ItemData("West Garden Fuse", "progression", "West Garden Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Northeast Fuse", new ItemData("Atoll Northeast Fuse", "progression", "Atoll Northeast Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Northwest Fuse", new ItemData("Atoll Northwest Fuse", "progression", "Atoll Northwest Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Southeast Fuse", new ItemData("Atoll Southeast Fuse", "progression", "Atoll Southeast Fuse", ItemTypes.FUSE, 1) },
+            { "Atoll Southwest Fuse", new ItemData("Atoll Southwest Fuse", "progression", "Atoll Southwest Fuse", ItemTypes.FUSE, 1) },
+            { "Library Lab Fuse", new ItemData("Library Lab Fuse", "progression", "Library Lab Fuse", ItemTypes.FUSE, 1) },
+
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {
-            if (ItemLookup.FairyLookup.ContainsKey(Check.Reward.Name)) {
+            if (FairyLookup.ContainsKey(Check.Reward.Name)) {
                 return Items["Fairy"];
             } else if (Check.Reward.Name == "Sword Progression") {
                 return Items["Sword Upgrade"];
             } else if (Check.Reward.Name == "Fool Trap") {
                 return Items["Fool Trap"];
             } else {
-                string itemName = ItemLookup.Items.Values.Where(itemdata => itemdata.ItemNameForInventory == Check.Reward.Name && itemdata.QuantityToGive == Check.Reward.Amount).FirstOrDefault().Name;
+                string itemName = Items.Values.Where(itemdata => itemdata.ItemNameForInventory == Check.Reward.Name && itemdata.QuantityToGive == Check.Reward.Amount).FirstOrDefault().Name;
                 return Items.ContainsKey(itemName) ? Items[itemName] : Items["Money x1"];
             }
         }
@@ -498,28 +524,51 @@ namespace TunicRandomizer {
             {"25", "Pages 50-51"},
             {"26", "Pages 52-53 (Icebolt)"},
             {"27", "Pages 54-55"},
-            { "Ladders in Overworld Town", "Ladders in Overworld Town" },
-            { "Ladders near Weathervane", "Ladders near Weathervane" },
-            { "Ladders near Overworld Checkpoint", "Ladders near Overworld Checkpoint" },
-            { "Ladder to East Forest", "Ladder to East Forest" },
-            { "Ladders to Lower Forest", "Ladders to Lower Forest" },
-            { "Ladders near Patrol Cave", "Ladders near Patrol Cave" },
-            { "Ladders in Well", "Ladders in Well" },
-            { "Ladders to West Bell", "Ladders to West Bell" },
-            { "Ladder to Quarry", "Ladder to Quarry" },
-            { "Ladder in Dark Tomb", "Ladder in Dark Tomb" },
-            { "Ladders near Dark Tomb", "Ladders near Dark Tomb" },
-            { "Ladder near Temple Rafters", "Ladder near Temple Rafters" },
-            { "Ladder to Swamp", "Ladder to Swamp" },
-            { "Ladders in Swamp", "Ladders in Swamp" },
-            { "Ladder to Ruined Atoll", "Ladder to Ruined Atoll" },
-            { "Ladders in South Atoll", "Ladders in South Atoll" },
-            { "Ladders to Frog's Domain", "Ladders to Frog's Domain" },
-            { "Ladders in Hourglass Cave", "Ladders in Hourglass Cave" },
-            { "Ladder to Beneath the Vault", "Ladder to Beneath the Vault" },
-            { "Ladders in Lower Quarry", "Ladders in Lower Quarry" },
-            { "Ladders in Library", "Ladders in Library" },
-            { "Grass", "Grass" }
+            {"Ladders in Overworld Town", "Ladders in Overworld Town"},
+            {"Ladders near Weathervane", "Ladders near Weathervane"},
+            {"Ladders near Overworld Checkpoint", "Ladders near Overworld Checkpoint"},
+            {"Ladder to East Forest", "Ladder to East Forest"},
+            {"Ladders to Lower Forest", "Ladders to Lower Forest"},
+            {"Ladders near Patrol Cave", "Ladders near Patrol Cave"},
+            {"Ladders in Well", "Ladders in Well"},
+            {"Ladders to West Bell", "Ladders to West Bell"},
+            {"Ladder to Quarry", "Ladder to Quarry"},
+            {"Ladder in Dark Tomb", "Ladder in Dark Tomb"},
+            {"Ladders near Dark Tomb", "Ladders near Dark Tomb"},
+            {"Ladder near Temple Rafters", "Ladder near Temple Rafters"},
+            {"Ladder to Swamp", "Ladder to Swamp"},
+            {"Ladders in Swamp", "Ladders in Swamp"},
+            {"Ladder to Ruined Atoll", "Ladder to Ruined Atoll"},
+            {"Ladders in South Atoll", "Ladders in South Atoll"},
+            {"Ladders to Frog's Domain", "Ladders to Frog's Domain"},
+            {"Ladders in Hourglass Cave", "Ladders in Hourglass Cave"},
+            {"Ladder to Beneath the Vault", "Ladder to Beneath the Vault"},
+            {"Ladders in Lower Quarry", "Ladders in Lower Quarry"},
+            {"Ladders in Library", "Ladders in Library"},
+            {"Grass", "Grass"},
+            {"Swamp Fuse 1", "Swamp Fuse 1"},
+            {"Swamp Fuse 2", "Swamp Fuse 2"},
+            {"Swamp Fuse 3", "Swamp Fuse 3"},
+            {"Cathedral Elevator Fuse" , "Cathedral Elevator Fuse"},
+            {"West Furnace Fuse", "West Furnace Fuse"},
+            {"Atoll Northeast Fuse", "Atoll Northeast Fuse"},
+            {"Atoll Northwest Fuse", "Atoll Northwest Fuse"},
+            {"Atoll Southeast Fuse", "Atoll Southeast Fuse"},
+            {"Atoll Southwest Fuse", "Atoll Southwest Fuse"},
+            {"Library Lab Fuse", "Library Lab Fuse"},
+            {"Quarry Fuse 1", "Quarry Fuse 1"},
+            {"Quarry Fuse 2", "Quarry Fuse 2"},
+            {"Ziggurat Miniboss Fuse", "Ziggurat Miniboss Fuse"},
+            {"Ziggurat Teleporter Fuse", "Ziggurat Teleporter Fuse"},
+            {"West Garden Fuse", "West Garden Fuse"},
+            {"Fortress Exterior Fuse 1", "Fortress Exterior Fuse 1"},
+            {"Fortress Exterior Fuse 2", "Fortress Exterior Fuse 2"},
+            {"Fortress Courtyard Upper Fuse", "Fortress Courtyard Upper Fuse"},
+            {"Fortress Courtyard Fuse", "Fortress Courtyard Fuse"},
+            {"Beneath the Vault Fuse", "Beneath the Vault Fuse"},
+            {"Fortress Candles Fuse", "Fortress Candles Fuse"},
+            {"Fortress Door Left Fuse", "Fortress Door Left Fuse"},
+            {"Fortress Door Right Fuse", "Fortress Door Right Fuse"},
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {

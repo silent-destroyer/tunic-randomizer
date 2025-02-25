@@ -121,12 +121,12 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (scene == "Overworld Redux") {
-                SpawnLadderChecklist();
+            if (scene == "Overworld Redux" && GameObject.Find("ladder and fuse checklist") == null) {
+                SpawnOverworldChecklistSign();
             }
         }
 
-        private static void SpawnLadderChecklist() {
+        public static void SpawnOverworldChecklistSign() {
             GameObject sign = GameObject.Instantiate(ModelSwaps.UnderConstruction);
             sign.GetComponent<MeshFilter>().mesh = ModelSwaps.Signpost.GetComponent<MeshFilter>().mesh;
             sign.GetComponent<MeshRenderer>().materials = ModelSwaps.Signpost.GetComponent<MeshRenderer>().materials;
@@ -136,6 +136,7 @@ namespace TunicRandomizer {
             sign.transform.localScale = Vector3.one * 1.5f;
             sign.GetComponent<UnderConstruction>().isChecklistSign = true;
             sign.SetActive(true);
+            sign.name = "ladder and fuse checklist";
 
             GameObject construction = GameObject.Instantiate(ModelSwaps.UnderConstruction);
             construction.transform.position = new Vector3(-5.6409f, 44.0833f, -23.2322f);
@@ -147,14 +148,15 @@ namespace TunicRandomizer {
         }
 
         public static string GetLadderChecklist() {
-            string ladders = "          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
+            string header = "          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]<#FFFFFF>        [ladder]\n";
+            string ladders = $"{header}";
             int i = 0;
             foreach(ItemData ladder in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.LADDER)) {
                 ladders += $"\"{LadderCollectionMessages[ladder.Name]}{new String('.', 24-LadderCollectionMessages[ladder.Name].Length)}{(Inventory.GetItemByName(ladder.Name).Quantity == 0 ? "<#FF0000>Not Found" : "....<#00FF00>Found")}\"\n";
                 
                 i++;
                 if(i % 7 == 0 && i < 20) {
-                    ladders += "---          <#FF0000>[death] kuhnstruhk$uhn stahtuhs [death]\n";
+                    ladders += $"---{header}";
                 }
             }
             return ladders;

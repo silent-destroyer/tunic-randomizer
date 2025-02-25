@@ -53,7 +53,7 @@ namespace TunicRandomizer {
                     Location Location = Checks[ItemId].Location;
 
                     if (GameObject.Find($"fairy target {ItemId}") == null) {
-                        FairyTarget fairyTarget = CreateFairyTarget($"fairy target {ItemId}", StringToVector3(Location.Position));
+                        FairyTarget fairyTarget = CreateFairyTarget($"fairy target {ItemId}", TunicUtils.StringToVector3(Location.Position));
                         ItemTargets.Add(fairyTarget);
                         if (TunicUtils.ChecksInLogic.Contains(ItemId)) {
                             ItemTargetsInLogic.Add(fairyTarget);
@@ -145,15 +145,6 @@ namespace TunicRandomizer {
             fairyTarget.transform.position = Position;
             return fairyTarget.GetComponent<FairyTarget>();
         }
-
-
-        private static Vector3 StringToVector3(string Position) {
-            Position = Position.Replace("(", "").Replace(")", "");
-            string[] coords = Position.Split(',');
-            Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
-            return vector;
-        }
-
 
         public static void ChooseFairyTargetList() {
             Il2CppSystem.Collections.Generic.List<FairyTarget> targets = new Il2CppSystem.Collections.Generic.List<FairyTarget>();
