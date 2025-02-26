@@ -3686,26 +3686,32 @@
                     ""Requirements"": [
                         {
                             ""Stick"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Sword"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Techbow"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Hyperdash"": 1,
+                            ""Lantern"": 1
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Stundagger"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Shotgun"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         }
                     ]
