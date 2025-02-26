@@ -3701,7 +3701,7 @@
                         },
                         {
                             ""Hyperdash"": 1,
-                            ""Lantern"": 1
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
