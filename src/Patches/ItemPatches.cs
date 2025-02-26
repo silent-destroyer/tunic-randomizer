@@ -217,6 +217,11 @@ namespace TunicRandomizer {
 
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
             string LocationId = $"Well Reward ({StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue} Coins) [Trinket Well]";
+            if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                Archipelago.instance.integration.ShowNotConnectedError();
+                SaveFile.SetInt(ItemCollectedKey + LocationId, 1);
+                return false;
+            }
             if (IsArchipelago() && Locations.LocationIdToDescription.ContainsKey(LocationId)) {
                 if (TunicRandomizer.Settings.SkipItemAnimations) {
                     ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, itemInfo: ItemLookup.ItemList[LocationId]);
