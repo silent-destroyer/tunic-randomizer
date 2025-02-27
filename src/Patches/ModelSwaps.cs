@@ -21,6 +21,7 @@ namespace TunicRandomizer {
         public static GameObject HexagonGoldImage;
         public static GameObject TuncTitleImage;
         public static GameObject TuncImage;
+        public static GameObject FuseAltLights;
 
         public static GameObject FairyAnimation;
         public static GameObject IceFlask;
@@ -431,6 +432,17 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (SaveFile.GetInt(FuseShuffleEnabled) == 1) { 
+                        foreach (Fuse fuse in Resources.FindObjectsOfTypeAll<Fuse>().Where(fuse => fuse.gameObject.scene.name == SceneLoaderPatches.SceneName)) {
+                            string fuseId = FuseRandomizer.GetFuseCheckId(fuse);
+                            if (Locations.RandomizedLocations.ContainsKey(fuseId) || ItemLookup.ItemList.ContainsKey(fuseId)) {
+                                if (SwappedThisSceneAlready && !IsSwordCheck(fuseId)) {
+                                    continue;
+                                }
+                                ApplyFuseTexture(fuse);
+                            }
+                        }
+                    }
                     if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
                         foreach (SmashableObject breakableObject in Resources.FindObjectsOfTypeAll<SmashableObject>()) {
                             string breakableId = BreakableShuffle.getBreakableGameObjectId(breakableObject.gameObject);
@@ -599,7 +611,7 @@ namespace TunicRandomizer {
 
                 if (material != null) {
                     foreach(MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
-                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>(includeInactive: true) != null) { continue; }
                         r.material = material;
                     }
                 }
@@ -702,7 +714,7 @@ namespace TunicRandomizer {
                     }
                     foreach (MeshRenderer r in renderers) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
-                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>(includeInactive: true) != null) { continue; }
                         if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
                             r.materials = new Material[] { material, material };
                         } else {
@@ -788,6 +800,102 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
+        public static void ApplyFuseTexture(Fuse fuse) {
+            string fuseId = FuseRandomizer.GetFuseCheckId(fuse);
+            if (Locations.RandomizedLocations.ContainsKey(fuseId) || ItemLookup.ItemList.ContainsKey(fuseId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[fuseId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                    if (!check.IsCompletedOrCollected) {
+                        SetupItemMoveUp(fuse.transform, check: check);
+                    }
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[fuseId];
+                    if (!TunicUtils.IsCheckCompletedInAP(fuseId)) {
+                        SetupItemMoveUp(fuse.transform, itemInfo: itemInfo);
+                    }
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPFuseTexture(fuse, itemInfo, TunicUtils.IsCheckCompletedOrCollected(fuseId));
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+
+                Material material = null;
+                if (Item.Type == ItemTypes.FAIRY) {
+                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory == "Hyperdash") {
+                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+                }
+
+                if (Item.Name == "Fool Trap") {
+                    doFuseFoolTrapSetup(fuse);
+                }
+
+                if (material != null) {
+                    foreach (MeshRenderer r in fuse.transform.GetChild(0).GetChild(0).GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                        if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                        if (r.name.Contains("omnifuse corner mid") || r.name.Contains("omnifuse corner top") || r.name.Contains("omnifuse slide")) {
+                            r.material = material;
+                        }
+                    }
+                }
+            }
+        }
+        
+        public static void ApplyAPFuseTexture(Fuse fuse, ItemInfo itemInfo, bool Checked) {
+            List<MeshRenderer> renderers = new List<MeshRenderer>();
+            foreach (MeshRenderer r in fuse.transform.GetChild(0).GetChild(0).GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
+                if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>() != null) { continue; }
+                if (r.name.Contains("omnifuse corner mid") || r.name.Contains("omnifuse corner top") || r.name.Contains("omnifuse slide")) {
+                    renderers.Add(r);
+                }
+            }
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            Material material = FindMaterial("treasure chest trim (Instance) (Instance)");
+            UnityEngine.Color color;
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material = material;
+                    r.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material = material;
+                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                    if (r.name.Contains("omnifuse corner top") && flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                        r.material = material;
+                        r.material.color = UnityEngine.Color.cyan;
+                    }
+                }
+            }
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                doFuseFoolTrapSetup(fuse);
+            }
+        }
+
+        private static void doFuseFoolTrapSetup(Fuse fuse) {
+            // Flip lights upside down and change from rgb -> cmy
+            UVScroller uvScroller = fuse.GetComponentInChildren<UVScroller>(true);
+            if (uvScroller != null) {
+                uvScroller.gameObject.transform.localEulerAngles = new Vector3(0, 0, 180);
+                uvScroller.gameObject.transform.localPosition = new Vector3(0, 17.4809f, 0);
+                uvScroller.gameObject.AddComponent<FuseTrapAppearanceHelper>();
+                uvScroller.gameObject.GetComponent<FuseTrapAppearanceHelper>().UVScroller = uvScroller;
+            }
+        }
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
             if (check == null && itemInfo == null) { return; }
@@ -1077,6 +1185,9 @@ namespace TunicRandomizer {
                         } else {
                             TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
                         }
+                        if (Item.Type == ItemTypes.FUSE) {
+                            PagePickup.GetComponent<SphereCollider>().radius = 2f;
+                        }
                     }
 
                     NewItem.transform.localPosition = TransformData.pos;
@@ -1141,12 +1252,20 @@ namespace TunicRandomizer {
                     NewItem = SwordProgressionObject(Parent);
                 } else if (Item.Type == ItemTypes.LADDER) {
                     NewItem = GameObject.Instantiate(Items["Ladder"], Parent.transform.position, Parent.transform.rotation);
+                } else if (Item.Type == ItemTypes.FUSE) {
+                    NewItem = GameObject.Instantiate(Items["Fuse"], Parent.transform.position, Parent.transform.rotation);
+                    NewItem.transform.GetChild(1).gameObject.SetActive(false);
+                    NewItem.transform.GetChild(3).gameObject.SetActive(false);
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
             }
+
             NewItem.transform.parent = Parent.transform;
             NewItem.layer = 0;
+            foreach (Transform transform in NewItem.GetComponentsInChildren<Transform>(true)) {
+                transform.gameObject.layer = 0;
+            }
             for (int i = 0; i < NewItem.transform.childCount; i++) {
                 NewItem.transform.GetChild(i).gameObject.layer = 0;
             }
@@ -1533,7 +1652,7 @@ namespace TunicRandomizer {
                     if (Item.Type == ItemTypes.FAIRY) {
                         NewItem.transform.localScale = Vector3.one;
                     }
-                    if (Item.Type == ItemTypes.LADDER) {
+                    if (Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
                         NewItem.transform.localScale *= 2;
                     }
                     if (NewItem.GetComponent<Rotate>() == null) {
@@ -1670,6 +1789,7 @@ namespace TunicRandomizer {
             HexagonGoldImage = CreateSprite(ImageData.GoldHex, ImageMaterial, 160, 160, "Hexagon Quest");
             TuncTitleImage = CreateSprite(ImageData.TuncTitle, ImageMaterial, 1400, 742, "tunc title logo");
             TuncImage = CreateSprite(ImageData.Tunc, ImageMaterial, 148, 148, "tunc sprite");
+            FuseAltLights = CreateSprite(ImageData.FuseAltIndicatorLights, ImageMaterial, 32, 32, "fuse alt indicator lights");
 
             CustomItemImages.Add("Librarian Sword", CreateSprite(ImageData.SecondSword, ImageMaterial, SpriteName: "Randomizer items_Librarian Sword"));
             CustomItemImages.Add("Heir Sword", CreateSprite(ImageData.ThirdSword, ImageMaterial, SpriteName: "Randomizer items_Heir Sword"));
@@ -1703,6 +1823,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Ladder", CreateSprite(ImageData.Ladder, ImageMaterial, 160, 160, SpriteName: "Randomizer items_ladder"));
             CustomItemImages.Add("Secret Mayor", CreateSprite(ImageData.SecretMayor, ImageMaterial, 1400, 675, SpriteName: "Randomizer secret_mayor"));
             CustomItemImages.Add("Grass", CreateSprite(ImageData.Grass, ImageMaterial, 160, 160, SpriteName: "Randomizer items_grass"));
+            CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;

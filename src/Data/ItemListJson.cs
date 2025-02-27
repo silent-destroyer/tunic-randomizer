@@ -2905,7 +2905,13 @@
                         {
                             ""Beneath the Well Back"": 1,
                             ""Furnace Fuse"": 1,
-                            ""12"": 1
+                            ""12"": 1,
+                            ""No Fuse Shuffle"": 1,
+                        },
+                        {
+                            ""Beneath the Well Back"": 1,
+                            ""West Furnace Fuse"": 1,
+                            ""Fuse Shuffle"": 1,
                         }
                     ]
                 }
@@ -3680,26 +3686,32 @@
                     ""Requirements"": [
                         {
                             ""Stick"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Sword"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Techbow"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Hyperdash"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Stundagger"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         },
                         {
                             ""Shotgun"": 1,
+                            ""Lantern"": 1,
                             ""Beneath the Vault Back"": 1
                         }
                     ]
@@ -4772,7 +4784,13 @@
                         {
                             ""Rooted Ziggurat Lower Front"": 1,
                             ""12"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""No Fuse Shuffle"": 1,
+                        },
+                        {
+                            ""Rooted Ziggurat Lower Front"": 1,
+                            ""Ziggurat Miniboss Fuse"": 1,
+                            ""Fuse Shuffle"": 1,
                         }
                     ]
                 }

@@ -79,8 +79,6 @@ namespace TunicRandomizer {
 
             SpeedrunReportItem DathStone = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             DathStone.icon = Inventory.GetItemByName("Dath Stone").icon;
-            SpeedrunReportItem GoldenItem = ScriptableObject.CreateInstance<SpeedrunReportItem>();
-            GoldenItem.icon = Inventory.GetItemByName("Spear").icon;
             SpeedrunReportItem ManualOrGoldHex = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 ManualOrGoldHex.icon = Inventory.GetItemByName("Hexagon Gold").icon;
@@ -89,6 +87,15 @@ namespace TunicRandomizer {
             }
             SpeedrunReportItem Grass = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             Grass.icon = Inventory.GetItemByName("Grass").icon;
+            SpeedrunReportItem Ladders = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            Ladders.icon = ModelSwaps.FindSprite("Randomizer items_ladder");
+            SpeedrunReportItem Fuses = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            Fuses.icon = ModelSwaps.FindSprite("Randomizer items_fuse");
+
+
+            List<SpeedrunReportItem> items = SpeedrunFinishlineDisplay.instance.reportGroup_items.ToList();
+            items.Add(DathStone);
+            SpeedrunFinishlineDisplay.instance.reportGroup_items = items.ToArray();
 
             SpeedrunFinishlineDisplay.instance.reportGroup_secrets = new SpeedrunReportItem[] {
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[0],
@@ -96,9 +103,9 @@ namespace TunicRandomizer {
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[2],
                 SpeedrunFinishlineDisplay.instance.reportGroup_secrets[3],
                 ManualOrGoldHex,
-                DathStone,
-                GoldenItem,
-                Grass
+                Ladders,
+                Fuses,
+                Grass,
             };
 
             Inventory.GetItemByName("Firecracker").Quantity += 1;
@@ -125,14 +132,6 @@ namespace TunicRandomizer {
         }
 
         public static bool SpeedrunFinishlineDisplay_addParadeIcon_PrefixPatch(SpeedrunFinishlineDisplay __instance, ref Sprite icon, ref int quantity, ref RectTransform rt) {
-            if (icon.name == "Inventory items_money triangle") {
-                if (TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12) {
-                    quantity = 1;
-                    return true;
-                } else {
-                    return false;
-                }
-            }
             if (icon.name == "Inventory items_sword" && Inventory.GetItemByName("Sword").Quantity > 0) {
                 quantity = 1;
                 return true;
@@ -140,6 +139,14 @@ namespace TunicRandomizer {
             if (icon.name == "Randomizer items_grass") {
                 quantity = Inventory.GetItemByName("Grass").Quantity;
                 return SaveFile.GetInt(GrassRandoEnabled) == 1;
+            }
+            if (icon.name == "Randomizer items_ladder") {
+                quantity = ItemRandomizer.LadderItems.Where(item => Inventory.GetItemByName(item).Quantity > 0).Count();
+                return SaveFile.GetInt(LadderRandoEnabled) == 1;
+            }
+            if (icon.name == "Randomizer items_fuse") {
+                quantity = ItemRandomizer.FuseItems.Where(item => Inventory.GetItemByName(item).Quantity > 0).Count();
+                return SaveFile.GetInt(FuseShuffleEnabled) == 1;
             }
             if (TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]] == 0) {
                 return false;

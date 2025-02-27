@@ -217,6 +217,11 @@ namespace TunicRandomizer {
 
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
             string LocationId = $"Well Reward ({StateVariable.GetStateVariableByName("Trinket Coins Tossed").IntValue} Coins) [Trinket Well]";
+            if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                Archipelago.instance.integration.ShowNotConnectedError();
+                SaveFile.SetInt(ItemCollectedKey + LocationId, 1);
+                return false;
+            }
             if (IsArchipelago() && Locations.LocationIdToDescription.ContainsKey(LocationId)) {
                 if (TunicRandomizer.Settings.SkipItemAnimations) {
                     ModelSwaps.SetupItemMoveUp(__instance.__4__this.transform, itemInfo: ItemLookup.ItemList[LocationId]);
@@ -283,7 +288,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Item.QuantityToGive;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -299,6 +304,18 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.LADDER) {
                     InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
+                }
+                if (Item.Type == ItemTypes.FUSE) {
+                    FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
+                    if (fuseInformation.RealGuid != 0) {
+                        if (GetBool(FuseShuffleEnabled)) {
+                            SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
+                            FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
+                            NotificationBottom = $"yoo hEr uh strAnj huhm...";
+                        } else {
+                            NotificationBottom = $"\"...but nothing happened.\"";
+                        }
+                    }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -518,7 +535,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER) {
+            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Check.Reward.Amount;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -534,6 +551,18 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.LADDER) {
                     InventoryItem.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     InventoryItem.collectionMessage.text = TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Item.Name, false) : $"\"{LadderToggles.LadderCollectionMessages[Item.Name]}\"";
+                }
+                if (Item.Type == ItemTypes.FUSE) {
+                    FuseInformation fuseInformation = FuseRandomizer.GetFuseInformationByFuseItem(Item.Name);
+                    if (fuseInformation.RealGuid != 0) {
+                        if (GetBool(FuseShuffleEnabled)) {
+                            SaveFile.SetInt($"fuseClosed {fuseInformation.RealGuid}", 1);
+                            FuseRandomizer.UpdateFuseVisualState(fuseInformation.RealGuid);
+                            NotificationBottom = $"yoo hEr uh strAnj huhm...";
+                        } else {
+                            NotificationBottom = $"\"...but nothing happened.\"";
+                        }
+                    }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -909,6 +938,7 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Piggybank L1").Quantity = 99;
             Inventory.GetItemByName("Trinket Coin").Quantity = 17;
             Inventory.GetItemByName("Hyperdash").Quantity = 1;
+            Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
             Inventory.GetItemByName("Key (House)").Quantity = 1;
             Inventory.GetItemByName("Vault Key (Red)").Quantity = 1;
         }

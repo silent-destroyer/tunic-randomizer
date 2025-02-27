@@ -43,6 +43,7 @@ namespace TunicRandomizer {
         private const int ER_DECOUPLED = 16384;
         private const int HEXAGON_QUEST_ABILITY_PAGES = 32768;
         private const int BREAKABLE_SHUFFLE = 65536;
+        private const int FUSE_SHUFFLE = 131072;
 
         public GameModes GameMode {
             get;
@@ -161,6 +162,11 @@ namespace TunicRandomizer {
         }
 
         public bool BreakableShuffle {
+            get;
+            set;
+        }
+
+        public bool FuseShuffle {
             get;
             set;
         }
@@ -356,6 +362,7 @@ namespace TunicRandomizer {
         private const int EXCLUDE_ENEMIES = 16;
         private const int LIMIT_BOSS_SPAWNS = 32;
         private const int OOPS_ALL_ENEMY = 64;
+        private const int RANDOM_ENEMY_SIZES = 128;
         public bool EnemyRandomizerEnabled {
             get;
             set;
@@ -382,6 +389,11 @@ namespace TunicRandomizer {
         }
 
         public bool OopsAllEnemy {
+            get;
+            set;
+        }
+
+        public bool RandomEnemySizes {
             get;
             set;
         }
@@ -516,6 +528,7 @@ namespace TunicRandomizer {
             ShuffleLadders = false;
             GrassRandomizer = false;
             BreakableShuffle = false;
+            FuseShuffle = false;
             RandomizeHexQuest = false;
             HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
@@ -570,6 +583,7 @@ namespace TunicRandomizer {
             LimitBossSpawns = true;
             UseEnemyToggles = false;
             OopsAllEnemy = false;
+            RandomEnemySizes = false;
             EnemyToggles = new Dictionary<string, bool>();
             foreach(string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
                 EnemyToggles.Add(enemy, true);
@@ -660,6 +674,7 @@ namespace TunicRandomizer {
                 DecoupledER = eval(logic, ER_DECOUPLED);
                 HexQuestAbilitiesUnlockedByPages = eval(logic, HEXAGON_QUEST_ABILITY_PAGES);
                 BreakableShuffle = eval(logic, BREAKABLE_SHUFFLE);
+                FuseShuffle = eval(logic, FUSE_SHUFFLE);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -687,6 +702,7 @@ namespace TunicRandomizer {
                 UseEnemyToggles = eval(enemies, EXCLUDE_ENEMIES);
                 LimitBossSpawns = eval(enemies, LIMIT_BOSS_SPAWNS);
                 OopsAllEnemy = eval(enemies, OOPS_ALL_ENEMY);
+                RandomEnemySizes = eval(enemies, RANDOM_ENEMY_SIZES);
 
                 int race = int.Parse(decodedSplit[10]);
                 RaceMode = eval(race, RACE_MODE);
@@ -734,7 +750,7 @@ namespace TunicRandomizer {
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
-                    BreakableShuffle,
+                    BreakableShuffle, FuseShuffle,
                 };
             } else {
                 return new bool[] { 
@@ -746,7 +762,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
                     SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
                     SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
-                    SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1,
+                    SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1, SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1,
                 };
             }
         }
@@ -767,7 +783,7 @@ namespace TunicRandomizer {
         }
 
         public bool[] enemySettings() {
-            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, UseEnemyToggles, LimitBossSpawns, OopsAllEnemy };
+            return new bool[] { EnemyRandomizerEnabled, ExtraEnemiesEnabled, BalancedEnemies, SeededEnemies, UseEnemyToggles, LimitBossSpawns, OopsAllEnemy, RandomEnemySizes };
         }
 
         private string ConvertEnemyToggles() {

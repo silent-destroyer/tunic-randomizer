@@ -928,6 +928,29 @@ namespace TunicRandomizer {
                     if (SceneLoaderPatches.SceneName == "ziggurat2020_1" && Enemy.GetComponent<Administrator>() != null) {
                         GameObject.FindObjectOfType<ZigguratAdminGate>().admin = NewEnemy.GetComponent<Monster>();
                     }
+
+                    void resetMonsterStateMonitor(GameObject gate) {
+                        if (gate != null) { 
+                            MonsterStateMonitor monitor = gate.GetComponent<MonsterStateMonitor>();
+                            Monster monster = NewEnemy.GetComponent<Monster>();
+                            if (monitor != null && monster != null) {
+                                monitor.monsters = new Monster[] {
+                                    monster,
+                                };
+                                monitor.Awake();
+                                monitor.Start();
+                                monitor.GetComponent<ToggleObjectByMonsterState>().Start();
+                            }
+                        }
+                    }
+
+                    if (SceneLoaderPatches.SceneName == "ziggurat2020_3" && Enemy.GetComponent<Administrator>() != null) {
+                        resetMonsterStateMonitor(GameObject.Find("_Gates-Enter Arena/catwalk_stateful (8)/"));
+                        resetMonsterStateMonitor(GameObject.Find("_Gates-Enter Arena/catwalk_stateful (9)/"));
+                        resetMonsterStateMonitor(GameObject.Find("_Gates-Enter Arena/catwalk_stateful (5)/"));
+                        resetMonsterStateMonitor(GameObject.Find("_Gates-Enter Arena/catwalk_stateful (4)/"));
+
+                    }
                     if (SceneLoaderPatches.SceneName != "Atoll Redux" && NewEnemy.GetComponent<Crabbo>() != null) {
                         NewEnemy.transform.GetComponent<NavMeshAgent>().agentTypeID = 0;
                     }
@@ -1040,6 +1063,10 @@ namespace TunicRandomizer {
                         }
                     }
 
+                    if (TunicRandomizer.Settings.RandomEnemySizes) {
+                        float scale = UnityEngine.Random.Range(0.25f, 1.75f);
+                        NewEnemy.transform.localScale *= scale;
+                    }
 
                     NewEnemy.name += $" {i}";
                     EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());

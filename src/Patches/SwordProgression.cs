@@ -180,7 +180,7 @@ namespace TunicRandomizer {
             }
 
             // Allows lvl 4 sword to hit bells/switches, also tells AP data storage if bells were rung
-            if ((__instance.GetComponent<TuningForkBell>() != null || __instance.GetComponent<PowerSwitch>() != null) && isPlayerCharacterMelee) {
+            if ((__instance.GetComponent<TuningForkBell>() != null || __instance.GetComponent<PowerSwitch>() != null || __instance.GetComponent<PlayerPaletteResetter>() != null) && isPlayerCharacterMelee) {
                 if (__instance.name == "tuning fork" && IsArchipelago()) {
                     if (SceneManager.GetActiveScene().name == "Forest Belltower") {
                         Archipelago.instance.UpdateDataStorage("Rang East Bell", true);

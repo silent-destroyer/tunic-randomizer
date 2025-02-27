@@ -92,6 +92,7 @@ namespace TunicRandomizer {
             { "[archipelago]", "Randomizer items_Archipelago Item" },
             { "[ladder]", "Randomizer items_ladder" },
             { "[grass]", "Randomizer items_grass" },
+            { "[fuse]", "Randomizer items_fuse" },
         };
 
         public static Dictionary<string, string> SpriteNameToAbbreviation = new Dictionary<string, string>();

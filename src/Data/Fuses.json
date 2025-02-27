@@ -1,0 +1,503 @@
+[
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Swamp Fuse 1",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1096",
+      "Position": "(84.0, 12.0, -197.0)",
+        "Requirements": [
+            {
+                "Overworld": 1,
+                "Hyperdash": 1,
+                "12":  1
+            }
+        ],
+      "SceneId": 25,
+      "SceneName": "Overworld Redux"
+    },
+    "CheckId": "1096 [Overworld Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Swamp Fuse 2",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1240",
+      "Position": "(92.0, 2.0, 0.0)",
+        "Requirements": [
+            {
+                "Swamp Fuse 1": 1,
+                "Swamp Mid": 1,
+                "12":  1
+            }
+        ],
+      "SceneId": 59,
+      "SceneName": "Swamp Redux 2"
+    },
+    "CheckId": "1240 [Swamp Redux 2]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Swamp Fuse 3",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1239",
+      "Position": "(92.0, 26.0, 106.3)",
+        "Requirements": [
+            {
+                "Swamp Fuse 1": 1,
+                "Swamp Fuse 2": 1,
+                "Swamp Mid": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 59,
+      "SceneName": "Swamp Redux 2"
+    },
+    "CheckId": "1239 [Swamp Redux 2]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Cathedral Elevator Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1300",
+      "Position": "(16.0, 19.0, -11.0)",
+        "Requirements": [
+            {
+                "Cathedral": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 69,
+      "SceneName": "Cathedral Redux"
+    },
+    "CheckId": "1300 [Cathedral Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "West Furnace Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1305",
+      "Position": "(-132.0, 33.0, -40.0)",
+        "Requirements": [
+            {
+                "Furnace Fuse": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 57,
+      "SceneName": "Furnace"
+    },
+    "CheckId": "1305 [Furnace]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "West Garden Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1032",
+      "Position": "(-236.0, 12.0, -22.5)",
+        "Requirements": [
+            {
+                "West Garden": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 31,
+      "SceneName": "Archipelagos Redux"
+    },
+    "CheckId": "1032 [Archipelagos Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Atoll Northwest Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "949",
+      "Position": "(-72.0, 16.0, 72.0)",
+        "Requirements": [
+            {
+                "Ruined Atoll": 1,
+                "Wand": 1,
+                "12": 1
+            },
+            {
+                "Ruined Atoll": 1,
+                "Hyperdash": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 32,
+      "SceneName": "Atoll Redux"
+    },
+    "CheckId": "949 [Atoll Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Atoll Northeast Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "952",
+      "Position": "(72.0, 21.0, 72.0)",
+        "Requirements": [
+            {
+                "Ruined Atoll": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 32,
+      "SceneName": "Atoll Redux"
+    },
+    "CheckId": "952 [Atoll Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Atoll Southeast Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+        "LocationId": "951",
+        "Position": "(72.0, 25.0, -72.0)",
+        "Requirements": [
+            {
+                "Ruined Atoll Ladder Tops": 1,
+                "12": 1
+            }
+        ],
+        "SceneId": 32,
+        "SceneName": "Atoll Redux"
+    },
+    "CheckId": "951 [Atoll Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Atoll Southwest Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+        "LocationId": "950",
+        "Position": "(-72.0, 25.0, -72.0)",
+        "Requirements": [
+            {
+                "Ruined Atoll": 1,
+                "12": 1
+            }
+        ],
+        "SceneId": 32,
+        "SceneName": "Atoll Redux"
+    },
+    "CheckId": "950 [Atoll Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Library Lab Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1055",
+      "Position": "(127.5, 107.0, -39.0)",
+        "Requirements": [
+            {
+                "Library Lab": 1,
+                "Ladders in Library": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 18,
+      "SceneName": "Library Lab"
+    },
+    "CheckId": "1055 [Library Lab]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Exterior Fuse 1",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1218",
+      "Position": "(0.0, 0.0, -123.0)",
+        "Requirements": [
+            {
+                "Fortress Exterior from Overworld": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 15,
+      "SceneName": "Fortress Courtyard"
+    },
+    "CheckId": "1218 [Fortress Courtyard]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Exterior Fuse 2",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1235",
+      "Position": "(-46.6, 0.0, -56.8)",
+        "Requirements": [
+            {
+                "Fortress Exterior from Overworld": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "12": 1
+            },
+            {
+                "Fortress Exterior near cave": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 15,
+      "SceneName": "Fortress Courtyard"
+    },
+    "CheckId": "1235 [Fortress Courtyard]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Courtyard Upper Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1229",
+      "Position": "(27.0, 8.0, -57.0)",
+        "Requirements": [
+            {
+                "Fortress Courtyard Upper": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 15,
+      "SceneName": "Fortress Courtyard"
+    },
+    "CheckId": "1229 [Fortress Courtyard]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Courtyard Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1236",
+      "Position": "(0.0, 0.0, -34.0)",
+        "Requirements": [
+            {
+                "Fortress Courtyard": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "Fortress Courtyard Upper Fuse": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 15,
+      "SceneName": "Fortress Courtyard"
+    },
+    "CheckId": "1236 [Fortress Courtyard]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Beneath the Vault Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1013",
+      "Position": "(-4.0, -2.0, 38.0)",
+        "Requirements": [
+            {
+                "Beneath the Vault Back": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "Fortress Exterior Fuse 2": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 14,
+      "SceneName": "Fortress Basement"
+    },
+    "CheckId": "1013 [Fortress Basement]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Candles Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1016",
+      "Position": "(-75.0, -1.0, 23.0)",
+        "Requirements": [
+            {
+                "Eastern Vault Fortress": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "Fortress Exterior Fuse 2": 1,
+                "Beneath the Vault Fuse": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 13,
+      "SceneName": "Fortress Main"
+    },
+    "CheckId": "1016 [Fortress Main]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Door Left Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1015",
+      "Position": "(-8.8, 7.0, 61.3)",
+        "Requirements": [
+            {
+                "Eastern Vault Fortress": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "Fortress Exterior Fuse 2": 1,
+                "Beneath the Vault Fuse": 1,
+                "Fortress Candles Fuse": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 13,
+      "SceneName": "Fortress Main"
+    },
+    "CheckId": "1015 [Fortress Main]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Fortress Door Right Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1014",
+      "Position": "(9.0, 7.0, 61.3)",
+        "Requirements": [
+            {
+                "Eastern Vault Fortress": 1,
+                "Fortress Exterior Fuse 1": 1,
+                "Fortress Courtyard Upper Fuse": 1,
+                "Fortress Courtyard Fuse": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 13,
+      "SceneName": "Fortress Main"
+    },
+    "CheckId": "1014 [Fortress Main]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Quarry Fuse 1",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1101",
+      "Position": "(102.0, 16.0, 28.0)",
+        "Requirements": [
+            {
+                "Quarry Connector": 1,
+                "Wand": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 23,
+      "SceneName": "Darkwoods Tunnel"
+    },
+    "CheckId": "1101 [Darkwoods Tunnel]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Quarry Fuse 2",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1262",
+      "Position": "(144.0, 0.0, -156.0)",
+        "Requirements": [
+            {
+                "Quarry Entry": 1,
+                "Quarry Fuse 1": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 60,
+      "SceneName": "Quarry Redux"
+    },
+    "CheckId": "1262 [Quarry Redux]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Ziggurat Miniboss Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1117",
+      "Position": "(102.0, 0.0, -108.0)",
+        "Requirements": [
+            {
+                "Rooted Ziggurat Lower Front": 1,
+                "Sword": 1,
+                "12": 1
+            },
+            {
+                "Rooted Ziggurat Lower Back": 1,
+                "Hyperdash": 1,
+                "Sword": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 44,
+      "SceneName": "ziggurat2020_3"
+    },
+    "CheckId": "1117 [ziggurat2020_3]"
+  },
+  {
+    "Reward": {
+      "Amount": 1,
+      "Name": "Ziggurat Teleporter Fuse",
+      "Type": "FUSE"
+    },
+    "Location": {
+      "LocationId": "1121",
+      "Position": "(387.0, -49.0, -124.0)",
+        "Requirements": [
+            {
+                "Rooted Ziggurat Lower Back": 1,
+                "12": 1
+            }
+        ],
+      "SceneId": 44,
+      "SceneName": "ziggurat2020_3"
+    },
+    "CheckId": "1121 [ziggurat2020_3]"
+  }
+]
