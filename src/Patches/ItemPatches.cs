@@ -751,64 +751,31 @@ namespace TunicRandomizer {
                 if (CameraController.Flip) {
                     return ApplyFoolEffect(Player, fromDeathLink);
                 }
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
-                FoolMessageBottom = $"tAk uh mOmint too ruhflehkt.";
-                CameraController.Flip = true;
-                PlayerCharacter.instance.Flinch(true);
+                
             } else if (FoolType < 20) {
                 // Unisometric Trap
                 if (CameraController.DerekRotationEnabled) {
                     return ApplyFoolEffect(Player, fromDeathLink);
                 }
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"yoo R A <#FFA500>toopointfIvdE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"toonik iz ehn IsOmehtrik... wAt, wuht?";
-                CameraController.DerekRotationEnabled = true;
-                List<float> cameraRotations = new List<float>() { -45f, 45f };
-                CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
-                PlayerCharacter.instance.Flinch(true);
+                (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
             } else if (FoolType < 35) {
                 // Tiny fox trap
                 if (PlayerCharacterPatches.TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
                     return ApplyFoolEffect(Player, fromDeathLink);
                 }
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"yoo R A <#FFA500>tInE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
-                PlayerCharacterPatches.TinierFox = true;
-                PlayerCharacter.instance.Flinch(true);
+                (FoolMessageTop, FoolMessageBottom) = FoolBeeTrap();
             } else if (FoolType < 50) {
                 // Bee trap
                 if (PlayerCharacterPatches.StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
                     return ApplyFoolEffect(Player, fromDeathLink);
                 }
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
-                PlayerCharacterPatches.StungByBee = true;
-                PlayerCharacter.instance.Flinch(true);
+                
             } else if (FoolType < 70) {
                 // Fire trap
-                PlayerCharacter.ApplyRadiationAsDamageInHP(0f);
-                PlayerCharacter.instance.stamina = 0;
-                PlayerCharacter.instance.cachedFireController.FireAmount = 3f;
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                FoolMessageTop = $"yoo R A \"<#FF3333>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"iz it hawt in hEr?";
-                PlayerCharacter.instance.Flinch(true);
+                (FoolMessageTop, FoolMessageBottom) = FoolFireTrap();
             } else {
                 // Ice trap
-                PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
-                PlayerCharacter.instance.AddFreezeTime(3f);
-                FoolMessageTop = $"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"hahvi^ ahn Is tIm?";
+                (FoolMessageTop, FoolMessageBottom) = FoolIceTrap();
             }
 
             if (Player == -1 && IsSinglePlayer()) {
@@ -819,6 +786,60 @@ namespace TunicRandomizer {
             if (!fromDeathLink) {
                 Notifications.Show(FoolMessageTop, FoolMessageBottom);
             }
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolIceTrap() {
+            PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
+            PlayerCharacter.instance.AddFreezeTime(3f);
+            string FoolMessageTop = $"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"hahvi^ ahn Is tIm?";
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolFireTrap() {
+            PlayerCharacter.ApplyRadiationAsDamageInHP(0f);
+            PlayerCharacter.instance.stamina = 0;
+            PlayerCharacter.instance.cachedFireController.FireAmount = 3f;
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A \"<#FF3333>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"iz it hawt in hEr?";
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolBeeTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+            string FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
+            PlayerCharacterPatches.StungByBee = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolMirrorTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+            string FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
+            string FoolMessageBottom = $"tAk uh mOmint too ruhflehkt.";
+            CameraController.Flip = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolDeisometricTrap() {
+            System.Random Random = new System.Random();
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+            string FoolMessageTop = $"yoo R A <#FFA500>toopointfIvdE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"toonik iz ehn IsOmehtrik... wAt, wuht?";
+            CameraController.DerekRotationEnabled = true;
+            List<float> cameraRotations = new List<float>() { -45f, 45f };
+            CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
+            PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
 
