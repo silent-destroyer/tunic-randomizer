@@ -740,42 +740,68 @@ namespace TunicRandomizer {
             }
         }
 
+        public enum TrapType {
+            Ice,
+            Fire,
+            Bee,
+            Tiny,
+            Mirror,
+            Deisometric,
+        }
+
+
+        public static Dictionary<TrapType, int> TrapWeights = new Dictionary<TrapType, int> {
+            {TrapType.Ice, 30 },
+            {TrapType.Fire, 20 },
+            {TrapType.Bee, 15 },
+            {TrapType.Tiny, 15 },
+            {TrapType.Mirror, 10 },
+            {TrapType.Deisometric, 10 },
+        };
+
 
         public static (string, string) ApplyFoolEffect(int Player, bool fromDeathLink = false) {
             System.Random Random = new System.Random();
             int FoolType = Random.Next(100);
             string FoolMessageTop = $"";
             string FoolMessageBottom = $"";
-            if (FoolType < 10) {
-                // Mirror trap
-                if (CameraController.Flip) {
-                    return ApplyFoolEffect(Player, fromDeathLink);
+
+            List<TrapType> weightedTrapList = new List<TrapType>();
+            foreach (TrapType trapType in TrapWeights.Keys) {
+                if (trapType == TrapType.Mirror && CameraController.Flip) {
+                    continue;
                 }
-                
-            } else if (FoolType < 20) {
-                // Unisometric Trap
-                if (CameraController.DerekRotationEnabled) {
-                    return ApplyFoolEffect(Player, fromDeathLink);
+                if (trapType == TrapType.Tiny && (PlayerCharacterPatches.TinierFox || TunicRandomizer.Settings.TinierFoxMode)) {
+                    continue;
                 }
-                (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
-            } else if (FoolType < 35) {
-                // Tiny fox trap
-                if (PlayerCharacterPatches.TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
-                    return ApplyFoolEffect(Player, fromDeathLink);
+                if (trapType == TrapType.Bee && (PlayerCharacterPatches.StungByBee || TunicRandomizer.Settings.BiggerHeadMode)) {
+                    continue;
                 }
-                (FoolMessageTop, FoolMessageBottom) = FoolBeeTrap();
-            } else if (FoolType < 50) {
-                // Bee trap
-                if (PlayerCharacterPatches.StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
-                    return ApplyFoolEffect(Player, fromDeathLink);
+                if (trapType == TrapType.Deisometric && CameraController.DerekRotationEnabled) {
+                    continue;
                 }
-                
-            } else if (FoolType < 70) {
-                // Fire trap
-                (FoolMessageTop, FoolMessageBottom) = FoolFireTrap();
-            } else {
-                // Ice trap
-                (FoolMessageTop, FoolMessageBottom) = FoolIceTrap();
+                weightedTrapList.AddRange(Enumerable.Repeat(trapType, TrapWeights[trapType]));
+            }
+
+            switch (weightedTrapList[Random.Next(weightedTrapList.Count)]) {
+                case TrapType.Ice:
+                    (FoolMessageTop, FoolMessageBottom) = FoolIceTrap();
+                    break;
+                case TrapType.Fire:
+                    (FoolMessageTop, FoolMessageBottom) = FoolFireTrap();
+                    break;
+                case TrapType.Bee:
+                    (FoolMessageTop, FoolMessageBottom) = FoolBeeTrap();
+                    break;
+                case TrapType.Tiny:
+                    (FoolMessageTop, FoolMessageBottom) = FoolTinyTrap();
+                    break;
+                case TrapType.Mirror:
+                    (FoolMessageTop, FoolMessageBottom) = FoolMirrorTrap();
+                    break;
+                case TrapType.Deisometric:
+                    (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
+                    break;
             }
 
             if (Player == -1 && IsSinglePlayer()) {
@@ -816,6 +842,16 @@ namespace TunicRandomizer {
             string FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
             PlayerCharacterPatches.StungByBee = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolTinyTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
+            string FoolMessageTop = $"yoo R A <#FFA500>tInE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
+            PlayerCharacterPatches.TinierFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
