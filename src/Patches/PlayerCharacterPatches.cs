@@ -48,7 +48,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.DeathLinkEffect == RandomizerSettings.DeathLinkType.DEATH) {
                     __instance.hp = -1;
                 } else if (TunicRandomizer.Settings.DeathLinkEffect == RandomizerSettings.DeathLinkType.FOOLTRAP) {
-                    ItemPatches.ApplyFoolEffect(Archipelago.instance.GetPlayerSlot(), true);
+                    FoolTrap.ApplyFoolEffect(Archipelago.instance.GetPlayerSlot(), true);
                     DiedToDeathLink = false;
                 }
             }

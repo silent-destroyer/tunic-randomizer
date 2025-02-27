@@ -415,7 +415,7 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.FOOLTRAP) {
-                (NotificationTop, NotificationBottom) = ApplyFoolEffect(itemInfo.Player);
+                (NotificationTop, NotificationBottom) = FoolTrap.ApplyFoolEffect(itemInfo.Player);
                 DisplayMessageAnyway = true;
             }
 
@@ -662,7 +662,7 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.FOOLTRAP) {
-                (NotificationTop, NotificationBottom) = ApplyFoolEffect(-1);
+                (NotificationTop, NotificationBottom) = FoolTrap.ApplyFoolEffect(-1);
                 DisplayMessageAnyway = true;
             }
 
@@ -737,78 +737,6 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
             if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
-            }
-        }
-
-        public static (string, string) ApplyFoolEffect(int Player, bool fromDeathLink = false) {
-            System.Random Random = new System.Random();
-            int FoolType = Random.Next(100);
-            string FoolMessageTop = $"";
-            string FoolMessageBottom = $"";
-            if (FoolType < 10) {
-                // Mirror trap
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"[fooltrap] \"!!\"<#FF00FF>lfoo \"A ERA UOY\"";
-                FoolMessageBottom = $"tAk uh mOmint too ruhflehkt.";
-                CameraController.Flip = true;
-                PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 10 && FoolType < 30) {
-                // Tiny fox trap
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"yoo R A <#FFA500>tInE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
-                PlayerCharacterPatches.TinierFox = true;
-                PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 30 && FoolType < 50) {
-                // Bee trap
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
-                FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
-                PlayerCharacterPatches.StungByBee = true;
-                PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 50 && FoolType < 70) {
-                // Fire trap
-                PlayerCharacter.ApplyRadiationAsDamageInHP(0f);
-                PlayerCharacter.instance.stamina = 0;
-                PlayerCharacter.instance.cachedFireController.FireAmount = 3f;
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                FoolMessageTop = $"yoo R A \"<#FF3333>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"iz it hawt in hEr?";
-                PlayerCharacter.instance.Flinch(true);
-            } else if (FoolType >= 70) {
-                // Ice trap
-                PlayerCharacter.ApplyRadiationAsDamageInHP(PlayerCharacter.instance.maxhp * .2f);
-                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-                SFX.PlayAudioClipAtFox(PlayerCharacter.standardFreezeSFX);
-                PlayerCharacter.instance.AddFreezeTime(3f);
-                FoolMessageTop = $"yoo R A \"<#86A5FF>FOOL<#ffffff>!!\" [fooltrap]";
-                FoolMessageBottom = $"hahvi^ ahn Is tIm?";
-            }
-
-            if (Player == -1 && IsSinglePlayer()) {
-
-            } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
-                FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
-            }
-            if (!fromDeathLink) {
-                Notifications.Show(FoolMessageTop, FoolMessageBottom);
-            }
-            return (FoolMessageTop, FoolMessageBottom);
-        }
-
-        public static void CheckFoolTrapSetting(string RewardId) {
-            Reward Reward = Locations.RandomizedLocations[RewardId].Reward;
-            if (Reward.Type == "MONEY") {
-                if ((TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.NORMAL && Reward.Amount < 20)
-                || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.DOUBLE && Reward.Amount <= 20)
-                || (TunicRandomizer.Settings.FoolTrapIntensity == RandomizerSettings.FoolTrapOption.ONSLAUGHT && Reward.Amount <= 30)) {
-                    Reward.Name = "Fool";
-                    Reward.Type = "FOOL";
-                    Reward.Amount = 1;
-                }
             }
         }
 
