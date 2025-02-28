@@ -271,6 +271,7 @@ namespace TunicRandomizer {
                 EnemyRandomizer.InitializeEnemies("Overworld Redux");
 
                 FuseRandomizer.Setup();
+                BellShuffle.Setup();
 
                 LadderToggles.CreateLadderItems();
                 ModelSwaps.CreateConstructionObject();
@@ -628,6 +629,14 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error setting up fake fuses! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
+                if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
+                    BellShuffle.ModifyBells();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {

@@ -198,6 +198,9 @@ namespace TunicRandomizer {
             // Fuses
             Harmony.Patch(AccessTools.Method(typeof(FuseCloseAnimationHelper), "__animationEvent_fuseCloseAnimationDone"), null, new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "FuseCloseAnimationHelper___animationEvent_fuseCloseAnimationDone_PostfixPatch")));
             
+            // Bell
+            Harmony.Patch(AccessTools.Method(typeof(TuningForkBell), "onStateChange"), null, new HarmonyMethod(AccessTools.Method(typeof(BellShuffle), "TuningForkBell_onStateChange_PostfixPatch")));
+
             // Misc
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
 

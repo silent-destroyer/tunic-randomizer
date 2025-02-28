@@ -45,6 +45,7 @@
         public const string GrassRandoEnabled = "randomizer grass rando enabled";
         public const string BreakableShuffleEnabled = "randomizer breakable shuffle enabled";
         public const string FuseShuffleEnabled = "randomizer fuse shuffle enabled";
+        public const string BellShuffleEnabled = "randomizer bell shuffle enabled";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";

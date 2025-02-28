@@ -326,10 +326,13 @@ namespace TunicRandomizer {
                     MajorItems.Add("Trinket - Glass Cannon");
                 }
                 if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
-                    MajorItems.AddRange(ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name));
+                    MajorItems.AddRange(ItemRandomizer.LadderItems);
                 }
                 if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
-                    MajorItems.AddRange(ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name));
+                    MajorItems.AddRange(ItemRandomizer.FuseItems);
+                }
+                if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
+                    MajorItems.AddRange(ItemRandomizer.BellItems);
                 }
                 foreach (string MajorItem in MajorItems) {
                     foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {

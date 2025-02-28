@@ -332,6 +332,10 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupBellPresentation() {
+
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);

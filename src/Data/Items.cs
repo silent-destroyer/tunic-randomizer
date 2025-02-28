@@ -20,6 +20,7 @@ namespace TunicRandomizer {
         LADDER,
         GRASS,
         FUSE,
+        BELL,
     }
 
     public struct BonusUpgrade {
@@ -310,6 +311,10 @@ namespace TunicRandomizer {
             { "Atoll Southeast Fuse", new ItemData("Atoll Southeast Fuse", "progression", "Atoll Southeast Fuse", ItemTypes.FUSE, 1) },
             { "Atoll Southwest Fuse", new ItemData("Atoll Southwest Fuse", "progression", "Atoll Southwest Fuse", ItemTypes.FUSE, 1) },
             { "Library Lab Fuse", new ItemData("Library Lab Fuse", "progression", "Library Lab Fuse", ItemTypes.FUSE, 1) },
+
+            // Bells
+            { "West Bell", new ItemData("West Bell", "progression", "West Bell", ItemTypes.BELL, 1) },
+            { "East Bell", new ItemData("East Bell", "progression", "East Bell", ItemTypes.BELL, 1) },
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },

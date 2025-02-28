@@ -343,6 +343,14 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Error setting up fake fuses! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
+            try {
+                if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
+                    BellShuffle.ModifyBells();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
                 PaletteEditor.ToonFox.AddComponent<MeshRenderer>().material = __instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().material;
             }
@@ -515,6 +523,9 @@ namespace TunicRandomizer {
                         if (TunicRandomizer.Settings.FuseShuffle) { 
                             SaveFile.SetInt(FuseShuffleEnabled, 1);
                         }
+                        if (TunicRandomizer.Settings.BellShuffle) {
+                            SaveFile.SetInt(BellShuffleEnabled, 1);
+                        }
 
                         if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
                             int goldHexagons = TunicUtils.GetMaxGoldHexagons();
@@ -658,6 +669,11 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(FuseShuffleEnabled, 1);
                     }
                 }
+                if (slotData.TryGetValue("shuffle_bells", out var bellShuffle)) {
+                    if (SaveFile.GetInt(BellShuffleEnabled) == 0 && bellShuffle.ToString() == "1") {
+                        SaveFile.SetInt(BellShuffleEnabled, 1);
+                    }
+                }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
@@ -793,6 +809,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleFuses) {
                 SaveFile.SetInt(FuseShuffleEnabled, 1);
+            }
+            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleBells) { 
+                SaveFile.SetInt(BellShuffleEnabled, 1);
             }
             if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);

@@ -81,7 +81,7 @@ namespace TunicRandomizer {
             "Fortress Courtyard Fuse", "Beneath the Vault Fuse", "Fortress Candles Fuse",
             "Fortress Door Left Fuse", "Fortress Door Right Fuse", "West Furnace Fuse",
             "West Garden Fuse", "Atoll Northeast Fuse", "Atoll Northwest Fuse", "Atoll Southeast Fuse",
-            "Atoll Southwest Fuse", "Library Lab Fuse",
+            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell"
         };
 
 
@@ -178,6 +178,9 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1) { 
                 checks.AddRange(FuseRandomizer.FuseChecks.Values.ToList());
+            }
+            if (SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1) {
+                checks.AddRange(BellShuffle.BellChecks.Values.ToList());
             }
             return CopyListOfChecks(checks);
         }

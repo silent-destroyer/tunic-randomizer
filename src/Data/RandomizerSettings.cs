@@ -44,6 +44,7 @@ namespace TunicRandomizer {
         private const int HEXAGON_QUEST_ABILITY_PAGES = 32768;
         private const int BREAKABLE_SHUFFLE = 65536;
         private const int FUSE_SHUFFLE = 131072;
+        private const int BELL_SHUFFLE = 262144;
 
         public GameModes GameMode {
             get;
@@ -167,6 +168,11 @@ namespace TunicRandomizer {
         }
 
         public bool FuseShuffle {
+            get;
+            set;
+        }
+
+        public bool BellShuffle {
             get;
             set;
         }
@@ -529,6 +535,7 @@ namespace TunicRandomizer {
             GrassRandomizer = false;
             BreakableShuffle = false;
             FuseShuffle = false;
+            BellShuffle = false;
             RandomizeHexQuest = false;
             HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
@@ -675,6 +682,7 @@ namespace TunicRandomizer {
                 HexQuestAbilitiesUnlockedByPages = eval(logic, HEXAGON_QUEST_ABILITY_PAGES);
                 BreakableShuffle = eval(logic, BREAKABLE_SHUFFLE);
                 FuseShuffle = eval(logic, FUSE_SHUFFLE);
+                BellShuffle = eval(logic, BELL_SHUFFLE);
 
                 int general = int.Parse(decodedSplit[7]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -750,7 +758,7 @@ namespace TunicRandomizer {
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
-                    BreakableShuffle, FuseShuffle,
+                    BreakableShuffle, FuseShuffle, BellShuffle,
                 };
             } else {
                 return new bool[] { 
@@ -763,6 +771,7 @@ namespace TunicRandomizer {
                     SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
                     SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
                     SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1, SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1,
+                    SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1,
                 };
             }
         }

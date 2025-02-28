@@ -188,7 +188,6 @@ namespace TunicRandomizer {
                     if (moveUp != null) {
                         moveUp.transform.position += new Vector3(0, 2, 0);
                         moveUp.gameObject.SetActive(true);
-                        TunicLogger.LogInfo("activating move up " + moveUp.name);
                     }
                     SaveFile.SetInt("randomizer fuse closed " + node.Guid, 1);
                 }
