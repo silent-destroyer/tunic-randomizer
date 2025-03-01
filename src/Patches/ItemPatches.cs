@@ -323,14 +323,13 @@ namespace TunicRandomizer {
                 }
                 if (Item.Type == ItemTypes.BELL) {
                     if (GetBool(BellShuffleEnabled)) {
-                        if (BellShuffle.BellStateVariables.ContainsKey(Item.Name)) {
-                            BellShuffle.BellStateVariables[Item.Name].BoolValue = true;
-                        }
                         if (Item.Name == "East Bell") {
                             NotificationBottom = $"di^!";
+                            BellShuffle.EastBellStateVar.BoolValue = true;
                         }
                         if (Item.Name == "West Bell") {
                             NotificationBottom = $"daw^!";
+                            BellShuffle.WestBellStateVar.BoolValue = true;
                         }
                     } else {
                         NotificationBottom = $"\"...but nothing happened.\"";
@@ -589,14 +588,13 @@ namespace TunicRandomizer {
                 }
                 if (Item.Type == ItemTypes.BELL) {
                     if (GetBool(BellShuffleEnabled)) {
-                        if (BellShuffle.BellStateVariables.ContainsKey(Item.Name)) {
-                            BellShuffle.BellStateVariables[Item.Name].BoolValue = true;
-                        }
                         if (Item.Name == "East Bell") {
                             NotificationBottom = $"di^!";
+                            BellShuffle.EastBellStateVar.BoolValue = true;
                         }
                         if (Item.Name == "West Bell") {
                             NotificationBottom = $"daw^!";
+                            BellShuffle.WestBellStateVar.BoolValue = true;
                         }
                     } else {
                         NotificationBottom = $"\"...but nothing happened.\"";

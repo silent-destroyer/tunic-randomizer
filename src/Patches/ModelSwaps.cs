@@ -901,8 +901,6 @@ namespace TunicRandomizer {
                     Item = ItemLookup.Items[itemInfo.ItemName];
                 }
 
-                ApplyAPBellTexture(bell, null, false);
-                return;
                 Material material = GetMaterialType(Item);
 
                 if (Item.Name == "Fool Trap") {

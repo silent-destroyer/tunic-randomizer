@@ -126,8 +126,10 @@ namespace TunicRandomizer {
         }
 
         public static void ModifyTempleDoor() {
-            foreach (TuningForkBell bell in GameObject.FindObjectsOfType<TuningForkBell>()) {
-                
+            TempleDoor templeDoor = GameObject.FindObjectOfType<TempleDoor>();
+            if (templeDoor != null) {
+                templeDoor.bell_east = EastBellStateVar;
+                templeDoor.bell_west = WestBellStateVar;
             }
         }
         

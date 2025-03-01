@@ -313,8 +313,8 @@ namespace TunicRandomizer {
             { "Library Lab Fuse", new ItemData("Library Lab Fuse", "progression", "Library Lab Fuse", ItemTypes.FUSE, 1) },
 
             // Bells
-            { "West Bell", new ItemData("West Bell", "progression", "West Bell", ItemTypes.BELL, 1) },
             { "East Bell", new ItemData("East Bell", "progression", "East Bell", ItemTypes.BELL, 1) },
+            { "West Bell", new ItemData("West Bell", "progression", "West Bell", ItemTypes.BELL, 1) },
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
