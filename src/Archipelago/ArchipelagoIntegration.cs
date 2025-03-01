@@ -38,7 +38,7 @@ namespace TunicRandomizer {
         private Version archipelagoVersion = new Version("0.5.1");
 
         private IEnumerator<bool> checkTrapLink;
-        private Queue<(string, string)> trapLinkQueue;
+        private Queue<(string, string, float)> trapLinkQueue;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -100,7 +100,7 @@ namespace TunicRandomizer {
             locationsToSend = new List<long>();
 
             checkTrapLink = CheckTrapLinkQueue();
-            trapLinkQueue = new Queue<(string, string)>();
+            trapLinkQueue = new Queue<(string, string, float)>();
 
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, version: archipelagoVersion, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
@@ -427,20 +427,16 @@ namespace TunicRandomizer {
         }
 
         public void SendTrapLink(FoolTrap.TrapType trapType) {
-            TunicLogger.LogInfo("sending trap link");
             BouncePacket bouncePacket = new BouncePacket {
                 Tags = new List<string> { "TrapLink" },
                 Data = new Dictionary<string, JToken>
                 {
-                    { "time", DateTime.Now.ToUnixTimeStamp() },
+                    { "time", (float)DateTime.Now.ToUnixTimeStamp() },
                     { "source", SaveFile.GetString(SaveFlags.ArchipelagoPlayerName) },
                     { "trap_name", FoolTrap.TrapTypeToName[trapType] }
                 }
             };
-            TunicLogger.LogInfo("sending trap link 2");
-
             session.Socket.SendPacketAsync(bouncePacket);
-            TunicLogger.LogInfo("sent trap link");
         }
 
         private IEnumerator<bool> CheckTrapLinkQueue() {
@@ -457,22 +453,13 @@ namespace TunicRandomizer {
                     continue;
                 }
 
-                if (PlayerCharacter.Instanced && trapLinkQueue.Count > 0) {
+                (string, string, float) trapSource = trapLinkQueue.Dequeue();
+                string FoolMessageTop = $"";
+                string FoolMessageBottom = $"";
+                (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(FoolTrap.TrapNameToType[trapSource.Item1]);
+                FoolMessageTop = $"\"{trapSource.Item2}\" %i^ks {FoolMessageTop}";
 
-                    DateTime postInteractionStart = DateTime.Now;
-                    while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(2f)) {
-                        yield return true;
-                    }
-                    (string, string) trapSource = trapLinkQueue.Dequeue();
-
-                    string FoolMessageTop = $"";
-                    string FoolMessageBottom = $""; 
-                    (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(FoolTrap.TrapNameToType[trapSource.Item1]);
-                    FoolMessageTop = $"\"{trapSource.Item2}\" %i^ks {FoolMessageTop}";
-
-                    Notifications.Show(FoolMessageTop, FoolMessageBottom);
-                }
-
+                Notifications.Show(FoolMessageTop, FoolMessageBottom);
 
                 yield return true;
             }
@@ -483,13 +470,14 @@ namespace TunicRandomizer {
                 // we don't want to receive own trap links, since the other slot will have already received a trap on its own
                 // note: if two people are connected to the same slot, both players will likely send their own trap links
                 // idk if we can actually fix this?
-                if ((string)bouncedPacket.Data["source"] != SaveFile.GetString(SaveFlags.ArchipelagoPlayerName)) {
+                if ((string)bouncedPacket.Data["source"] == SaveFile.GetString(SaveFlags.ArchipelagoPlayerName)) {
                     return;
                 }
-                string trapName = (string)bouncedPacket.Data["trap_name"];
+                string trapName = bouncedPacket.Data["trap_name"].ToString();
                 string source = bouncedPacket.Data["source"].ToString();
+                float time = (float)bouncedPacket.Data["time"];
                 if (FoolTrap.TrapNameToType.ContainsKey(trapName)) {
-                    trapLinkQueue.Enqueue((trapName, source));
+                    trapLinkQueue.Enqueue((trapName, source, time));
                 } else {
                     return;
                 }

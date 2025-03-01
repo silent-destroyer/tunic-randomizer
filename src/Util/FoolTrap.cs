@@ -124,14 +124,10 @@ namespace TunicRandomizer {
             if (Player == -1 && IsSinglePlayer()) {
 
             } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
-                TunicLogger.LogInfo("apply random fool effect 1");
                 FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
-                TunicLogger.LogInfo("apply random fool effect 2");
                 // if trap link is enabled
                 if (true) {
-                    TunicLogger.LogInfo("apply random fool effect 3");
                     Archipelago.instance.integration.SendTrapLink(trapSelected);
-                    TunicLogger.LogInfo("apply random fool effect 4");
                 }
             }
             if (!fromDeathLink) {
