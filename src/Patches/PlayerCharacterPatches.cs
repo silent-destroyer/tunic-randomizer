@@ -96,12 +96,6 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) {
-                ItemPresentation.PresentItem(Inventory.GetItemByName("West Bell"));
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha8)) {
-                __instance.transform.position = GameObject.FindObjectOfType<TuningForkBell>().transform.position;
-            }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
                 try {
@@ -396,12 +390,6 @@ namespace TunicRandomizer {
                 AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.5f, scale.y, scale.z);
             } else {
                 AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.0777f, scale.y, scale.z);
-            }
-
-            foreach (Check check in Locations.RandomizedLocations.Values) {
-                check.Reward.Name = "West Bell";
-                check.Reward.Type = "INVENTORY";
-                check.Reward.Amount = 1;
             }
         }
 

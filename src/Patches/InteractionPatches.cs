@@ -138,7 +138,9 @@ namespace TunicRandomizer {
                     GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
                     return false;
                 }
-                if (__instance.transform.position.ToString() == "(2.0, 46.0, 0.0)" && SceneLoaderPatches.SceneName == "Overworld Redux" && !(StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue)) {
+                if (__instance.transform.position.ToString() == "(2.0, 46.0, 0.0)" && SceneLoaderPatches.SceneName == "Overworld Redux" && 
+                    !(!GetBool(BellShuffleEnabled) && StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue) &&
+                    !(GetBool(BellShuffleEnabled) && StateVariable.GetStateVariableByName("randomizer Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("randomizer Rung Bell 2 (West)").BoolValue)) {
                     GenericMessage.ShowMessage($"\"Sealed Forever.\"");
                     return false;
                 }
