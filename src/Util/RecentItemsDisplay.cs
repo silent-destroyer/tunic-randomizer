@@ -116,6 +116,7 @@ namespace TunicRandomizer {
                                 recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
                             } else {
                                 ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
+                                isTrap = isTrap || itemData.Type == ItemTypes.FOOLTRAP;
                                 isMoney = itemData.Type == ItemTypes.MONEY;
                                 isTrinket = itemData.Type == ItemTypes.TRINKET;
                                 isSwordUpgrade = itemData.Type == ItemTypes.SWORDUPGRADE;
