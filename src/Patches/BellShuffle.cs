@@ -165,10 +165,10 @@ namespace TunicRandomizer {
                     bell.transform.parent = null;
                     bell.gameObject.SetActive(false);
                     if (bell.name == "tuning fork (Door, West)") {
-                        bell.stateVar = WestBellStateVar;
+                        bell.stateVar = StateVariable.GetStateVariableByName("true");
                         bell.gameObject.AddComponent<VisibleByHavingInventoryItem>().enablingItem = Inventory.GetItemByName("West Bell");
                     } else if (bell.name == "tuning fork (Door, East)") {
-                        bell.stateVar = EastBellStateVar;
+                        bell.stateVar = StateVariable.GetStateVariableByName("true");
                         bell.gameObject.AddComponent<VisibleByHavingInventoryItem>().enablingItem = Inventory.GetItemByName("East Bell");
                     }
                     bell.transform.GetChild(2).GetChild(0).GetChild(0).gameObject.SetActive(false);
@@ -183,12 +183,13 @@ namespace TunicRandomizer {
                     bell.transform.GetChild(5).GetComponent<StudioEventEmitter>().enabled = false;
                     bell.gameObject.GetComponent<VisibleByHavingInventoryItem>().renderers = new Renderer[] {
                         bell.transform.GetChild(1).GetComponent<MeshRenderer>(),
-                        bell.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<MeshRenderer>(),
-                        bell.transform.GetChild(2).GetChild(1).GetComponent<MeshRenderer>(),
+                        bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>(),
+                        bell.transform.GetChild(2).GetComponent<MeshRenderer>(),
                         aura.GetComponent<MeshRenderer>(),
                     };
                     bell.gameObject.GetComponent<VisibleByHavingInventoryItem>().lights = new Light[] { };
                     bell.gameObject.SetActive(true);
+                    bell.Start();
                 }
             }
         }
