@@ -131,27 +131,26 @@ namespace TunicRandomizer {
             }
         }
         
+        public static string GetBellCheckId(TuningForkBell bell) {
+            return $"{bell.name} [{bell.gameObject.scene.name}]";
+        }
+
         public static void TuningForkBell_onStateChange_PostfixPatch(TuningForkBell __instance) {
-            TunicLogger.LogInfo("bell rung");
-            string checkId = $"tuning fork [{SceneManager.GetActiveScene().name}]";
+            string checkId = GetBellCheckId(__instance);
 
             if (Locations.RandomizedLocations.ContainsKey(checkId) || ItemLookup.ItemList.ContainsKey(checkId)) {
-                if (SaveFile.GetInt("archipelago") == 1 && !SaveFlags.IsArchipelago()) {
-                    SaveFile.SetInt("randomizer picked up " + checkId, 1);
+                if (!TunicUtils.IsCheckCompletedOrCollected(checkId)) { 
+                    if (SaveFile.GetInt("archipelago") == 1 && !SaveFlags.IsArchipelago()) {
+                        SaveFile.SetInt("randomizer picked up " + checkId, 1);
+                    }
+                    if (SaveFlags.IsArchipelago()) {
+                        Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[checkId]);
+                    } else if (SaveFlags.IsSinglePlayer()) {
+                        Check check = Locations.RandomizedLocations[checkId];
+                        ItemPatches.GiveItem(check);
+                    }                
                 }
-                if (SaveFlags.IsArchipelago()) {
-                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[checkId]);
-                } else if (SaveFlags.IsSinglePlayer()) {
-                    Check check = Locations.RandomizedLocations[checkId];
-                    ItemPatches.GiveItem(check);
-                }
-            }
-            
-            MoveUp moveUp = __instance.GetComponentInChildren<MoveUp>();
-            if (moveUp != null) {
-                moveUp.gameObject.SetActive(true);
-            }
-            SaveFile.SetInt("randomizer " + __instance.stateVar.name, 1);
+            }            
         }
     }
 }

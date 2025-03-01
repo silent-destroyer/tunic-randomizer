@@ -476,6 +476,19 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (GetBool(BellShuffleEnabled)) {
+                        TuningForkBell bell = GameObject.FindObjectOfType<TuningForkBell>();
+                        if (bell != null && bell.gameObject.scene.name == SceneLoaderPatches.SceneName) {
+                            string bellCheckId = BellShuffle.GetBellCheckId(bell);
+                            if (Locations.RandomizedLocations.ContainsKey(bellCheckId) || ItemLookup.ItemList.ContainsKey(bellCheckId)) {
+                                if ((SwappedThisSceneAlready && !IsSwordCheck(bellCheckId))) {
+                                    
+                                } else {
+                                    ApplyBellTexture(bell);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
@@ -590,16 +603,7 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.GRASS) {
                     return;
                 }
-                Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
-                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
-                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory == "Hyperdash") {
-                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
-                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
-                }
+                Material material = GetMaterialType(Item);
 
                 if (Item.Name == "Fool Trap") {
                     foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
@@ -695,16 +699,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.GRASS) {
                     return;
                 }
-                Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
-                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
-                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory == "Hyperdash") {
-                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
-                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
-                }
+                
+                Material material = GetMaterialType(Item);
+
                 if (material != null) {
                     List<MeshRenderer> renderers;
                     if (breakableObject.name == "Physical Post") {
@@ -822,16 +819,7 @@ namespace TunicRandomizer {
                     Item = ItemLookup.Items[itemInfo.ItemName];
                 }
 
-                Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
-                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
-                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory == "Hyperdash") {
-                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
-                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
-                }
+                Material material = GetMaterialType(Item);
 
                 if (Item.Name == "Fool Trap") {
                     doFuseFoolTrapSetup(fuse);
@@ -886,14 +874,6 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void ApplyBellTexture() {
-
-        }
-
-        public static void ApplyAPBellTexture() {
-
-        }
-
         private static void doFuseFoolTrapSetup(Fuse fuse) {
             // Flip lights upside down and change from rgb -> cmy
             UVScroller uvScroller = fuse.GetComponentInChildren<UVScroller>(true);
@@ -903,6 +883,101 @@ namespace TunicRandomizer {
                 uvScroller.gameObject.AddComponent<FuseTrapAppearanceHelper>();
                 uvScroller.gameObject.GetComponent<FuseTrapAppearanceHelper>().UVScroller = uvScroller;
             }
+        }
+
+        public static void ApplyBellTexture(TuningForkBell bell) {
+            string bellId = BellShuffle.GetBellCheckId(bell);
+            if (Locations.RandomizedLocations.ContainsKey(bellId) || ItemLookup.ItemList.ContainsKey(bellId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[bellId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[bellId];
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPBellTexture(bell, itemInfo, TunicUtils.IsCheckCompletedOrCollected(bellId));
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+
+                ApplyAPBellTexture(bell, null, false);
+                return;
+                Material material = GetMaterialType(Item);
+
+                if (Item.Name == "Fool Trap") {
+                    bell.transform.GetChild(1).localEulerAngles = new Vector3(180, 0, 0);
+                    bell.transform.GetChild(1).localPosition = new Vector3(0, 11, 0);
+                    bell.transform.GetChild(2).localPosition = new Vector3(0, 6, 0);
+                }
+
+                if (material != null) { 
+                    bell.transform.GetChild(1).GetComponent<MeshRenderer>().material = material;
+                    bell.transform.GetChild(2).GetComponent<MeshRenderer>().material = material;
+                    bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>().material = material;
+                }
+            }
+        }
+
+        public static void ApplyAPBellTexture(TuningForkBell bell, ItemInfo itemInfo, bool Checked) {
+            List<MeshRenderer> renderers = new List<MeshRenderer>();
+            renderers.Add(bell.transform.GetChild(1).GetComponent<MeshRenderer>());
+            renderers.Add(bell.transform.GetChild(2).GetComponent<MeshRenderer>());
+            renderers.Add(bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>());
+
+            ItemFlags flag = PlayerCharacterPatches.Flags;
+            int randomFlag = new System.Random().Next(3);
+            UnityEngine.Color color;
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material.color = new UnityEngine.Color(0f, 0.85f, 0f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 1f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in renderers) {
+                    if (r.name.Contains("gyro") && flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                        r.material.color = UnityEngine.Color.cyan;
+                    } else {
+                        r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                    }
+                }
+            }
+
+            GameObject questionMark = new GameObject("question mark");
+            questionMark.transform.parent = bell.transform;
+            questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
+            questionMark.transform.localPosition = new Vector3(0f, 0.8f, 1f);
+            questionMark.transform.localEulerAngles = new Vector3(45f, 180f, 0f);
+            questionMark.transform.localScale = Vector3.one * 0.25f;
+
+            //if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+            if (PlayerCharacterPatches.Flags.HasFlag(ItemFlags.Trap)) {
+                bell.transform.GetChild(1).localEulerAngles = new Vector3(180, 0, 0);
+                bell.transform.GetChild(1).localPosition = new Vector3(0, 11, 0);
+                bell.transform.GetChild(2).localPosition = new Vector3(0, 6, 0);
+                questionMark.transform.localEulerAngles = new Vector3(45f, 180f, 180f);
+            }
+
+            questionMark.SetActive(!Checked);
+        }
+
+        private static Material GetMaterialType(ItemData Item) {
+            Material material = null;
+            if (Item.Type == ItemTypes.FAIRY) {
+                material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+            } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+            } else if (Item.ItemNameForInventory == "Hyperdash") {
+                material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+            } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+            }
+            return material;
         }
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
