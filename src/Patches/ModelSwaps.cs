@@ -925,7 +925,7 @@ namespace TunicRandomizer {
             renderers.Add(bell.transform.GetChild(2).GetComponent<MeshRenderer>());
             renderers.Add(bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>());
 
-            ItemFlags flag = PlayerCharacterPatches.Flags;
+            ItemFlags flag = itemInfo.Flags;
             int randomFlag = new System.Random().Next(3);
             UnityEngine.Color color;
             if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
@@ -955,8 +955,7 @@ namespace TunicRandomizer {
             questionMark.transform.localEulerAngles = new Vector3(45f, 180f, 0f);
             questionMark.transform.localScale = Vector3.one * 0.25f;
 
-            //if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
-            if (PlayerCharacterPatches.Flags.HasFlag(ItemFlags.Trap)) {
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
                 bell.transform.GetChild(1).localEulerAngles = new Vector3(180, 0, 0);
                 bell.transform.GetChild(1).localPosition = new Vector3(0, 11, 0);
                 bell.transform.GetChild(2).localPosition = new Vector3(0, 6, 0);
