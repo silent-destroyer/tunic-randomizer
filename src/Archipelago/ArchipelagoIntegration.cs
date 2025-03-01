@@ -13,6 +13,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 using static TunicRandomizer.ERData;
+using Archipelago.MultiClient.Net.Packets;
+using Newtonsoft.Json.Linq;
+using Archipelago.MultiClient.Net.Converters;
+using Archipelago.MultiClient.Net.Helpers;
 
 namespace TunicRandomizer {
     public class ArchipelagoIntegration {
@@ -117,6 +121,10 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.DeathLinkEnabled) {
                     deathLinkService.EnableDeathLink();
                 }
+                // if trap link setting enabled
+                EnableTrapLink();
+
+                session.Socket.PacketReceived += ReceiveTrapLink;
 
                 if (slotData.ContainsKey("disable_local_spoiler") && slotData["disable_local_spoiler"].ToString() == "1") {
                     disableSpoilerLog = true;
@@ -395,6 +403,65 @@ namespace TunicRandomizer {
             }
 
             deathLinkService.SendDeathLink(new DeathLink(Player, $"{Player}{DeathLinkMessages.Causes[AreaDiedIn][new System.Random().Next(DeathLinkMessages.Causes[AreaDiedIn].Count)]}"));
+        }
+
+
+        public void EnableTrapLink() {
+            if (!session.ConnectionInfo.Tags.Contains("TrapLink")) {
+                session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Concat(new string[1] { "TrapLink" }).ToArray());
+            }
+        }
+
+        public void DisableTrapLink() {
+            if (session.ConnectionInfo.Tags.Contains("TrapLink")) {
+                session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Where(tag => tag != "DeathLink").ToArray());
+            }
+        }
+
+        public void SendTrapLink(FoolTrap.TrapType trapType) {
+            TunicLogger.LogInfo("sending trap link");
+            BouncePacket bouncePacket = new BouncePacket {
+                Tags = new List<string> { "TrapLink" },
+                Data = new Dictionary<string, JToken>
+                {
+                    { "time", DateTime.Now.ToUnixTimeStamp() },
+                    { "source", SaveFile.GetString(SaveFlags.ArchipelagoPlayerName) },
+                    { "trap_name", FoolTrap.TrapTypeToName[trapType] }
+                }
+            };
+            TunicLogger.LogInfo("sending trap link 2");
+
+            session.Socket.SendPacketAsync(bouncePacket);
+            TunicLogger.LogInfo("sent trap link");
+        }
+
+        public void ReceiveTrapLink(ArchipelagoPacketBase packet) {
+            if (packet is BouncedPacket bouncedPacket && bouncedPacket.Tags.Contains("TrapLink")) {
+                TunicLogger.LogInfo((string)bouncedPacket.Data["source"]);
+                // we don't want to receive own trap links, since the other slot will have already received a trap on its own
+                // note: if two people are connected to the same slot, both players will likely send their own trap links
+                // idk if we can actually fix this?
+                if ((string)bouncedPacket.Data["source"] != SaveFile.GetString(SaveFlags.ArchipelagoPlayerName)) {
+                    return;
+                }
+                string trapName = (string)bouncedPacket.Data["trap_name"];
+                string FoolMessageTop = $"";
+                string FoolMessageBottom = $"";
+                if (FoolTrap.TrapNameToType.ContainsKey(trapName)) {
+                    (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(FoolTrap.TrapNameToType[trapName]);
+                } else {
+                    return;
+                }
+                string source = bouncedPacket.Data["source"].ToString();
+                TunicLogger.LogInfo(FoolMessageTop);
+                FoolMessageTop = $"\"{source}\" %i^ks {FoolMessageTop}";
+                TunicLogger.LogInfo(bouncedPacket.Data["source"].ToString());
+                TunicLogger.LogInfo("receive trap link 8");
+                TunicLogger.LogInfo(FoolMessageTop);
+                TunicLogger.LogInfo(FoolMessageBottom);
+                Notifications.Show(FoolMessageTop, FoolMessageBottom);
+                TunicLogger.LogInfo("receive trap link 9");
+            }
         }
 
         private void SetupDataStorage() {

@@ -415,7 +415,7 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.FOOLTRAP) {
-                (NotificationTop, NotificationBottom) = FoolTrap.ApplyFoolEffect(itemInfo.Player);
+                (NotificationTop, NotificationBottom) = FoolTrap.ApplyRandomFoolEffect(itemInfo.Player);
                 DisplayMessageAnyway = true;
             }
 
@@ -662,7 +662,7 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.FOOLTRAP) {
-                (NotificationTop, NotificationBottom) = FoolTrap.ApplyFoolEffect(-1);
+                (NotificationTop, NotificationBottom) = FoolTrap.ApplyRandomFoolEffect(-1);
                 DisplayMessageAnyway = true;
             }
 
