@@ -2,7 +2,6 @@
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using .Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
