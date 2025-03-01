@@ -574,6 +574,8 @@ namespace TunicRandomizer {
             {"Fortress Candles Fuse", "Fortress Candles Fuse"},
             {"Fortress Door Left Fuse", "Fortress Door Left Fuse"},
             {"Fortress Door Right Fuse", "Fortress Door Right Fuse"},
+            {"East Bell", "East Bell"},
+            {"West Bell", "West Bell"},
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {

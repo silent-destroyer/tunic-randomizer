@@ -71,8 +71,10 @@ namespace TunicRandomizer {
         public static Dictionary<string, StateVariable> BellStateVariables;
         public static StateVariable EastBellStateVar;
         public static StateVariable WestBellStateVar;
+
         public static void Setup() {
             LoadBellChecks();
+            CreateBellItems();
             CreateStateVars();
             InstantiateBellPrefab();
             ItemPresentationPatches.SetupBellPresentation();
@@ -90,6 +92,21 @@ namespace TunicRandomizer {
             }
         }
 
+        private static void CreateBellItems() {
+            CreateBellItem("West Bell");
+            CreateBellItem("East Bell");
+        }
+
+        private static void CreateBellItem(string itemName) {
+            SpecialItem item = ScriptableObject.CreateInstance<SpecialItem>();
+            item.name = itemName;
+            item.collectionMessage = TunicUtils.CreateLanguageLine($"\"{itemName}\"");
+            item.controlAction = "";
+            item.icon = ModelSwaps.FindSprite("Randomizer items_bell");
+            Inventory.itemList.Add(item);
+        }
+
+
         public static void InstantiateBellPrefab() {
 
         
@@ -103,26 +120,14 @@ namespace TunicRandomizer {
             StateVariable.stateVariableList.Add(WestBellStateVar);
             StateVariable.stateVariableList.Add(EastBellStateVar);
             BellStateVariables = new Dictionary<string, StateVariable>() {
-                {"Rung Bell 1 (East)", EastBellStateVar},
-                {"Rung Bell 2 (West)", WestBellStateVar},
-                {"East Bell", StateVariable.GetStateVariableByName("Rung Bell 1 (East)")},
-                {"West Bell", StateVariable.GetStateVariableByName("Rung Bell 2 (West)")}
+                {"East Bell", EastBellStateVar},
+                {"West Bell", WestBellStateVar}
             };
         }
 
-        public static void ModifyBells() {
+        public static void ModifyTempleDoor() {
             foreach (TuningForkBell bell in GameObject.FindObjectsOfType<TuningForkBell>()) {
-                // "Rung Bell 1 (East)"
-                // "Rung Bell 2 (West)"
-                string checkId = $"{bell.name} [{bell.gameObject.scene.name}]";
-                if (BellChecks.ContainsKey(checkId)) {
-                    if (bell.gameObject.scene.name == "Forest Belltower") {
-                        bell.stateVar = EastBellStateVar;
-                    } else if (bell.gameObject.scene.name == "Overworld Redux") {
-                        bell.stateVar = WestBellStateVar;
-                    }
-                    bell.Start();
-                }
+                
             }
         }
         

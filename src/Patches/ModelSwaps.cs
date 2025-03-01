@@ -886,6 +886,14 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void ApplyBellTexture() {
+
+        }
+
+        public static void ApplyAPBellTexture() {
+
+        }
+
         private static void doFuseFoolTrapSetup(Fuse fuse) {
             // Flip lights upside down and change from rgb -> cmy
             UVScroller uvScroller = fuse.GetComponentInChildren<UVScroller>(true);
@@ -1256,6 +1264,12 @@ namespace TunicRandomizer {
                     NewItem = GameObject.Instantiate(Items["Fuse"], Parent.transform.position, Parent.transform.rotation);
                     NewItem.transform.GetChild(1).gameObject.SetActive(false);
                     NewItem.transform.GetChild(3).gameObject.SetActive(false);
+                } else if (Item.Type == ItemTypes.BELL) {
+                    NewItem = GameObject.Instantiate(Items["Bell"], Parent.transform.position, Parent.transform.rotation);
+                    NewItem.transform.GetChild(3).gameObject.SetActive(false);
+                    GameObject.Destroy(NewItem.GetComponent<TuningForkBell>());
+                    GameObject.Destroy(NewItem.GetComponent<SphereCollider>());
+                    GameObject.Destroy(NewItem.GetComponent<BoxCollider>());
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
@@ -1652,7 +1666,7 @@ namespace TunicRandomizer {
                     if (Item.Type == ItemTypes.FAIRY) {
                         NewItem.transform.localScale = Vector3.one;
                     }
-                    if (Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
+                    if (Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE || Item.Type == ItemTypes.BELL) {
                         NewItem.transform.localScale *= 2;
                     }
                     if (NewItem.GetComponent<Rotate>() == null) {
@@ -1824,6 +1838,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Secret Mayor", CreateSprite(ImageData.SecretMayor, ImageMaterial, 1400, 675, SpriteName: "Randomizer secret_mayor"));
             CustomItemImages.Add("Grass", CreateSprite(ImageData.Grass, ImageMaterial, 160, 160, SpriteName: "Randomizer items_grass"));
             CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
+            CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;

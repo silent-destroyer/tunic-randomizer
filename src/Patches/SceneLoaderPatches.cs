@@ -633,7 +633,7 @@ namespace TunicRandomizer {
 
             try {
                 if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
-                    BellShuffle.ModifyBells();
+                    BellShuffle.ModifyTempleDoor();
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
