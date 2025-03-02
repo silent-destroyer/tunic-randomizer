@@ -638,7 +638,7 @@ namespace TunicRandomizer {
                 } else if(split.StartsWith("[") && split.EndsWith("]")) {
                     spritelength += split.Length;
                 }
-                if ((formattedHint + split2).Length-spritelength < length) {
+                if ((formattedHint + split2.Replace("\"", "").Replace("\"", "")).Length-spritelength < length) {
                     formattedHint += split2 + " ";
                 } else {
                     formattedHint += split2 + "\n";
