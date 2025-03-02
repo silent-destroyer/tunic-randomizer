@@ -558,6 +558,11 @@ namespace TunicRandomizer {
                 } else {
                     Archipelago.instance.integration.DisableDeathLink();
                 }
+                if (TunicRandomizer.Settings.TrapLinkEnabled) {
+                    Archipelago.instance.integration.EnableTrapLink();
+                } else {
+                    Archipelago.instance.integration.DisableTrapLink();
+                }
             }
 
             if (Archipelago.instance.integration.connected) {

@@ -124,9 +124,8 @@ namespace TunicRandomizer {
             if (Player == -1 && IsSinglePlayer()) {
 
             } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
-                FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
-                // if trap link is enabled
-                if (true) {
+                if (TunicRandomizer.Settings.TrapLinkEnabled && !fromDeathLink) {
+                    FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
                     Archipelago.instance.integration.SendTrapLink(trapSelected);
                 }
             }
