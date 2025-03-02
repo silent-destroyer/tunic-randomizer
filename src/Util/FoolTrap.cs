@@ -26,10 +26,78 @@ namespace TunicRandomizer {
             {TrapType.Deisometric, 10 },
         };
 
+        public static Dictionary<TrapType, string> TrapTypeToName = new Dictionary<TrapType, string> {
+            {TrapType.Ice, "Ice Trap" },
+            {TrapType.Fire, "Fire Trap" },
+            {TrapType.Bee, "Bee Trap" },
+            {TrapType.Tiny, "Tiny Trap" },
+            {TrapType.Mirror, "Screen Flip Trap" },
+            {TrapType.Deisometric, "Deisometric Trap" },
+        };
 
-        public static (string, string) ApplyFoolEffect(int Player, bool fromDeathLink = false) {
+        // for TrapLink, we convert names of similar traps to our trap types for receiving traps
+        public static Dictionary<string, TrapType> TrapNameToType = new Dictionary<string, TrapType> {
+            {"Ice Trap", TrapType.Ice },
+            {"Freeze Trap", TrapType.Ice },
+            {"Frozen Trap", TrapType.Ice },
+            {"Stun Trap", TrapType.Ice },
+            {"Paralyze Trap", TrapType.Ice },
+            {"Chaos Control Trap", TrapType.Ice },
+
+            {"Fire Trap", TrapType.Fire },
+            {"Damage Trap", TrapType.Fire },
+
+            {"Bee Trap", TrapType.Bee },
+
+            {"Tiny Trap", TrapType.Tiny },
+
+            {"Screen Flip Trap", TrapType.Mirror },
+            {"Mirror Trap", TrapType.Mirror },
+            {"Reverse Trap", TrapType.Mirror },
+            {"Reversal Trap", TrapType.Mirror },
+
+            {"Deisometric Trap", TrapType.Deisometric },
+            {"Confuse Trap", TrapType.Deisometric },
+            {"Confusion Trap", TrapType.Deisometric },
+            {"Fuzzy Trap", TrapType.Deisometric },
+            {"Confound Trap", TrapType.Deisometric },
+
+        };
+
+
+        public static (string, string) ApplyFoolEffect(TrapType trapType) {
+            string FoolMessageTop = $"";
+            string FoolMessageBottom = $"";
+            // this is a switch instead of an if else because I wrote it for a spot where switch was reasonable, then moved it
+            switch (trapType) {
+                case TrapType.Ice:
+                    (FoolMessageTop, FoolMessageBottom) = FoolIceTrap();
+                    break;
+                case TrapType.Fire:
+                    (FoolMessageTop, FoolMessageBottom) = FoolFireTrap();
+                    break;
+                case TrapType.Bee:
+                    (FoolMessageTop, FoolMessageBottom) = FoolBeeTrap();
+                    break;
+                case TrapType.Tiny:
+                    (FoolMessageTop, FoolMessageBottom) = FoolTinyTrap();
+                    break;
+                case TrapType.Mirror:
+                    (FoolMessageTop, FoolMessageBottom) = FoolMirrorTrap();
+                    break;
+                case TrapType.Deisometric:
+                    (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
+                    break;
+                default:
+                    TunicLogger.LogError("No match found for trap type " + trapType.ToString());
+                    break;
+            }
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+
+        public static (string, string) ApplyRandomFoolEffect(int Player, bool fromDeathLink = false) {
             System.Random Random = new System.Random();
-            int FoolType = Random.Next(100);
             string FoolMessageTop = $"";
             string FoolMessageBottom = $"";
 
@@ -49,32 +117,14 @@ namespace TunicRandomizer {
                 }
                 weightedTrapList.AddRange(Enumerable.Repeat(trapType, TrapWeights[trapType]));
             }
+            TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
+            (FoolMessageTop, FoolMessageBottom) = ApplyFoolEffect(trapSelected);
 
-            switch (weightedTrapList[Random.Next(weightedTrapList.Count)]) {
-                case TrapType.Ice:
-                    (FoolMessageTop, FoolMessageBottom) = FoolIceTrap();
-                    break;
-                case TrapType.Fire:
-                    (FoolMessageTop, FoolMessageBottom) = FoolFireTrap();
-                    break;
-                case TrapType.Bee:
-                    (FoolMessageTop, FoolMessageBottom) = FoolBeeTrap();
-                    break;
-                case TrapType.Tiny:
-                    (FoolMessageTop, FoolMessageBottom) = FoolTinyTrap();
-                    break;
-                case TrapType.Mirror:
-                    (FoolMessageTop, FoolMessageBottom) = FoolMirrorTrap();
-                    break;
-                case TrapType.Deisometric:
-                    (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
-                    break;
-            }
-
-            if (Player == -1 && IsSinglePlayer()) {
-
-            } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
-                FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
+            if (IsArchipelago() && TunicRandomizer.Settings.TrapLinkEnabled && !fromDeathLink) {
+                if (Player != Archipelago.instance.GetPlayerSlot()) {
+                    FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
+                }
+                Archipelago.instance.integration.SendTrapLink(trapSelected);
             }
             if (!fromDeathLink) {
                 Notifications.Show(FoolMessageTop, FoolMessageBottom);

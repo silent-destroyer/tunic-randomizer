@@ -48,7 +48,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.DeathLinkEffect == RandomizerSettings.DeathLinkType.DEATH) {
                     __instance.hp = -1;
                 } else if (TunicRandomizer.Settings.DeathLinkEffect == RandomizerSettings.DeathLinkType.FOOLTRAP) {
-                    FoolTrap.ApplyFoolEffect(Archipelago.instance.GetPlayerSlot(), true);
+                    FoolTrap.ApplyRandomFoolEffect(Archipelago.instance.GetPlayerSlot(), true);
                     DiedToDeathLink = false;
                 }
             }
@@ -557,6 +557,11 @@ namespace TunicRandomizer {
                     Archipelago.instance.integration.EnableDeathLink();
                 } else {
                     Archipelago.instance.integration.DisableDeathLink();
+                }
+                if (TunicRandomizer.Settings.TrapLinkEnabled) {
+                    Archipelago.instance.integration.EnableTrapLink();
+                } else {
+                    Archipelago.instance.integration.DisableTrapLink();
                 }
             }
 
