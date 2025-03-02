@@ -999,6 +999,9 @@ namespace TunicRandomizer {
                             if (ItemPickup.gameObject.scene.name == "Sword Access") {
                                 GameObject.Find("_Setpieces/RelicPlinth (1)/").transform.GetChild(5).gameObject.SetActive(true);
                             }
+                            if (ItemPickup.gameObject.scene.name == "Fortress Arena" && ItemPickup.itemToGive.name == "Vault Key (Red)") {
+                                continue;
+                            }
                             GameObject.Destroy(ItemPickup.gameObject);
                         }
                     }
