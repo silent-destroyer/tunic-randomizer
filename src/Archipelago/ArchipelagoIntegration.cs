@@ -424,7 +424,7 @@ namespace TunicRandomizer {
 
         public void DisableTrapLink() {
             if (session.ConnectionInfo.Tags.Contains("TrapLink")) {
-                session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Where(tag => tag != "DeathLink").ToArray());
+                session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Where(tag => tag != "TrapLink").ToArray());
             }
         }
 
