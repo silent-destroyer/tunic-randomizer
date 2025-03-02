@@ -481,7 +481,7 @@ namespace TunicRandomizer {
                 }
             } else {
                 SaveFile.SetString("randomizer mailbox hint location", "no first steps");
-                Hint = $"yor frehndz muhst furst hehlp yoo fInd yor wA...\ngoud luhk, rooin sEkur.";
+                Hint = $"yor frehndz muhst furst hehlp yoo fInd yor wA...\n\"GOOD LUCK,\" rooin sEkur.";
             }
             HintMessages.Add("Mailbox", Hint);
             return mailboxitem == null ? "" : mailboxitem.ItemName;
