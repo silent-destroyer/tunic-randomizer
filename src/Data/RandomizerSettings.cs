@@ -183,6 +183,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool TrapLinkEnabled {
+            get;
+            set;
+        }
+
         public bool CollectReflectsInWorld {
             get;
             set;
@@ -543,6 +548,7 @@ namespace TunicRandomizer {
 
             // Archipelago 
             DeathLinkEnabled = false;
+            TrapLinkEnabled = false;
             CollectReflectsInWorld = false;
             SkipItemAnimations = false;
             SendHintsToServer = false;

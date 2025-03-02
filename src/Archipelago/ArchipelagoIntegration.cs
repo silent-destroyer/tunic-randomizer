@@ -2,17 +2,17 @@
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 using static TunicRandomizer.ERData;
+using Archipelago.MultiClient.Net.Packets;
+using Newtonsoft.Json.Linq;
+using Archipelago.MultiClient.Net.Converters;
 
 namespace TunicRandomizer {
     public class ArchipelagoIntegration {
@@ -37,6 +37,9 @@ namespace TunicRandomizer {
         public float locationsToSendDelay = 5.0f;
         private Version archipelagoVersion = new Version("0.5.1");
 
+        private IEnumerator<bool> checkTrapLink;
+        private Queue<(string, string, DateTime)> trapLinkQueue;
+
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
                 return;
@@ -54,6 +57,10 @@ namespace TunicRandomizer {
 
                 if (incomingItemHandler != null) {
                     incomingItemHandler.MoveNext();
+                }
+
+                if (checkTrapLink != null) { 
+                    checkTrapLink.MoveNext();
                 }
 
                 if ((locationsToSendTimer > locationsToSendDelay && locationsToSend.Count > 0) || locationsToSend.Count >= 10) {
@@ -92,6 +99,9 @@ namespace TunicRandomizer {
             incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int index)>();
             locationsToSend = new List<long>();
 
+            checkTrapLink = CheckTrapLinkQueue();
+            trapLinkQueue = new Queue<(string, string, DateTime)>();
+
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, version: archipelagoVersion, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
             } catch (Exception e) {
@@ -117,6 +127,12 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.DeathLinkEnabled) {
                     deathLinkService.EnableDeathLink();
                 }
+
+                if (TunicRandomizer.Settings.TrapLinkEnabled) {
+                    EnableTrapLink();
+                }
+
+                session.Socket.PacketReceived += ReceiveTrapLink;
 
                 if (slotData.ContainsKey("disable_local_spoiler") && slotData["disable_local_spoiler"].ToString() == "1") {
                     disableSpoilerLog = true;
@@ -177,6 +193,8 @@ namespace TunicRandomizer {
                 disableSpoilerLog = false;
                 incomingItems = new ConcurrentQueue<(ItemInfo ItemInfo, int ItemIndex)>();
                 locationsToSend = new List<long>();
+                trapLinkQueue = null;
+                checkTrapLink = null;
                 deathLinkService = null;
                 slotData = null;
                 ItemIndex = 0;
@@ -396,6 +414,80 @@ namespace TunicRandomizer {
 
             deathLinkService.SendDeathLink(new DeathLink(Player, $"{Player}{DeathLinkMessages.Causes[AreaDiedIn][new System.Random().Next(DeathLinkMessages.Causes[AreaDiedIn].Count)]}"));
         }
+
+
+        public void EnableTrapLink() {
+            if (!session.ConnectionInfo.Tags.Contains("TrapLink")) {
+                session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Concat(new string[1] { "TrapLink" }).ToArray());
+            }
+        }
+
+        public void DisableTrapLink() {
+            if (session.ConnectionInfo.Tags.Contains("TrapLink")) {
+                session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Where(tag => tag != "TrapLink").ToArray());
+            }
+        }
+
+        public void SendTrapLink(FoolTrap.TrapType trapType) {
+            BouncePacket bouncePacket = new BouncePacket {
+                Tags = new List<string> { "TrapLink" },
+                Data = new Dictionary<string, JToken>
+                {
+                    { "time", (float)DateTime.Now.ToUnixTimeStamp() },
+                    { "source", SaveFile.GetString(SaveFlags.ArchipelagoPlayerName) },
+                    { "trap_name", FoolTrap.TrapTypeToName[trapType] }
+                }
+            };
+            session.Socket.SendPacketAsync(bouncePacket);
+        }
+
+        public void ReceiveTrapLink(ArchipelagoPacketBase packet) {
+            if (packet is BouncedPacket bouncedPacket && bouncedPacket.Tags.Contains("TrapLink")) {
+                // we don't want to receive own trap links, since the other slot will have already received a trap on its own
+                // note: if two people are connected to the same slot, both players will likely send their own trap links
+                // idk if we can actually fix this?
+                if (bouncedPacket.Data["source"].ToString() == SaveFile.GetString(SaveFlags.ArchipelagoPlayerName)) {
+                    return;
+                }
+                string trapName = bouncedPacket.Data["trap_name"].ToString();
+                string source = bouncedPacket.Data["source"].ToString();
+                DateTime time = DateTime.Now;
+                if (FoolTrap.TrapNameToType.ContainsKey(trapName)) {
+                    trapLinkQueue.Enqueue((trapName, source, time));
+                } else {
+                    return;
+                }
+            }
+        }
+
+        private IEnumerator<bool> CheckTrapLinkQueue() {
+            while (connected) {
+                if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled ||
+                        NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
+                        GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
+                    yield return true;
+                    continue;
+                }
+
+                if (trapLinkQueue.Count == 0) {
+                    yield return true;
+                    continue;
+                }
+
+                (string, string, DateTime) trapSource = trapLinkQueue.Dequeue();
+                if (trapSource.Item3 + TimeSpan.FromSeconds(5f) > DateTime.Now) {
+                    string FoolMessageTop = $"";
+                    string FoolMessageBottom = $"";
+                    (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(FoolTrap.TrapNameToType[trapSource.Item1]);
+                    FoolMessageTop = $"\"{trapSource.Item2}\" %i^ks {FoolMessageTop}";
+
+                    Notifications.Show(FoolMessageTop, FoolMessageBottom);
+                }
+
+                yield return true;
+            }
+        }
+
 
         private void SetupDataStorage() {
             if (session != null) {

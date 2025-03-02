@@ -42,6 +42,7 @@ namespace TunicRandomizer {
             Il2CppStringArray DeathLinkTypes = (Il2CppStringArray)new string[] { "Death", "Fool Trap" };
             OptionsGUI.addToggle("Death Link", "Off", "On", TunicRandomizer.Settings.DeathLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDeathLink);
             OptionsGUI.addMultiSelect("Death Link Effect", DeathLinkTypes, (int)TunicRandomizer.Settings.DeathLinkEffect, (OptionsGUIMultiSelect.MultiSelectAction)ChangeDeathLinkType).wrap = true;
+            OptionsGUI.addToggle("Trap Link", "Off", "On", TunicRandomizer.Settings.TrapLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrapLink);
             OptionsGUI.addToggle("Auto-open !collect-ed Checks", "Off", "On", TunicRandomizer.Settings.CollectReflectsInWorld ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUpdateOnCollect);
             OptionsGUI.addToggle("Send Hints to Server", "Off", "On", TunicRandomizer.Settings.SendHintsToServer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSendHintsToServer);
         }
@@ -512,6 +513,19 @@ namespace TunicRandomizer {
                 }
             }
 
+            SaveSettings();
+        }
+
+        public static void ToggleTrapLink(int index) {
+            TunicRandomizer.Settings.TrapLinkEnabled = !TunicRandomizer.Settings.TrapLinkEnabled;
+
+            if (Archipelago.instance.integration != null) {
+                if (TunicRandomizer.Settings.TrapLinkEnabled) {
+                    Archipelago.instance.integration.EnableTrapLink();
+                } else {
+                    Archipelago.instance.integration.DisableTrapLink();
+                }
+            }
             SaveSettings();
         }
 
