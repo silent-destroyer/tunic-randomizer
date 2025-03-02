@@ -38,7 +38,7 @@ namespace TunicRandomizer {
         private Version archipelagoVersion = new Version("0.5.1");
 
         private IEnumerator<bool> checkTrapLink;
-        private Queue<(string, string, double)> trapLinkQueue;
+        private Queue<(string, string, DateTime)> trapLinkQueue;
 
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
@@ -100,7 +100,7 @@ namespace TunicRandomizer {
             locationsToSend = new List<long>();
 
             checkTrapLink = CheckTrapLinkQueue();
-            trapLinkQueue = new Queue<(string, string, double)>();
+            trapLinkQueue = new Queue<(string, string, DateTime)>();
 
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, version: archipelagoVersion, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
@@ -451,7 +451,7 @@ namespace TunicRandomizer {
                 }
                 string trapName = bouncedPacket.Data["trap_name"].ToString();
                 string source = bouncedPacket.Data["source"].ToString();
-                double time = (double)bouncedPacket.Data["time"];
+                DateTime time = DateTime.Now;
                 if (FoolTrap.TrapNameToType.ContainsKey(trapName)) {
                     trapLinkQueue.Enqueue((trapName, source, time));
                 } else {
@@ -474,8 +474,8 @@ namespace TunicRandomizer {
                     continue;
                 }
 
-                (string, string, double) trapSource = trapLinkQueue.Dequeue();
-                if (trapSource.Item3 + TimeSpan.FromSeconds(5f).TotalMilliseconds > DateTime.Now.ToUnixTimeStamp()) {
+                (string, string, DateTime) trapSource = trapLinkQueue.Dequeue();
+                if (trapSource.Item3 + TimeSpan.FromSeconds(5f) > DateTime.Now) {
                     string FoolMessageTop = $"";
                     string FoolMessageBottom = $"";
                     (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(FoolTrap.TrapNameToType[trapSource.Item1]);
