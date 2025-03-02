@@ -121,13 +121,11 @@ namespace TunicRandomizer {
             TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
             (FoolMessageTop, FoolMessageBottom) = ApplyFoolEffect(trapSelected);
 
-            if (Player == -1 && IsSinglePlayer()) {
-
-            } else if (IsArchipelago() && Player != Archipelago.instance.GetPlayerSlot()) {
-                if (TunicRandomizer.Settings.TrapLinkEnabled && !fromDeathLink) {
+            if (IsArchipelago() && TunicRandomizer.Settings.TrapLinkEnabled && !fromDeathLink) {
+                if (Player != Archipelago.instance.GetPlayerSlot()) {
                     FoolMessageTop = $"\"{Archipelago.instance.GetPlayerName(Player)}\" %i^ks {FoolMessageTop}";
-                    Archipelago.instance.integration.SendTrapLink(trapSelected);
                 }
+                Archipelago.instance.integration.SendTrapLink(trapSelected);
             }
             if (!fromDeathLink) {
                 Notifications.Show(FoolMessageTop, FoolMessageBottom);
