@@ -21,7 +21,7 @@ namespace TunicRandomizer {
 
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
         public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
-
+        public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
         public static void PopulatePrecollected() {
             PrecollectedItems.Clear();
             if (SaveFile.GetInt(LadderRandoEnabled) == 0) {
@@ -50,6 +50,12 @@ namespace TunicRandomizer {
             } else {
                 PrecollectedItems.Add(ERData.NO_FUSE_SHUFFLE);
             }
+
+            if (SaveFile.GetInt(BellShuffleEnabled) == 1) { 
+                PrecollectedItems.Add(ERData.BELL_SHUFFLE);
+            } else {
+                PrecollectedItems.Add(ERData.NO_BELL_SHUFFLE);
+            }
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
@@ -70,6 +76,7 @@ namespace TunicRandomizer {
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
             List<string> Ladders = new List<string>(LadderItems);
             List<string> Fuses = new List<string>(FuseItems);
+            List<string> Bells = new List<string>(BellItems);
             List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             List<string> abilityPages = new List<string>() { "12", "21", "26" };
             if (SaveFile.GetInt(AbilityShuffle) == 1) {
@@ -92,6 +99,9 @@ namespace TunicRandomizer {
             }
             if(SaveFile.GetInt(FuseShuffleEnabled) == 1) {
                 ProgressionNames.AddRange(Fuses);
+            }
+            if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
+                ProgressionNames.AddRange(Bells);
             }
 
             List<Check> InitialItems = TunicUtils.GetAllInUseChecks();

@@ -93,6 +93,7 @@ namespace TunicRandomizer {
             { "[ladder]", "Randomizer items_ladder" },
             { "[grass]", "Randomizer items_grass" },
             { "[fuse]", "Randomizer items_fuse" },
+            { "[bell]", "Randomizer items_bell" },
         };
 
         public static Dictionary<string, string> SpriteNameToAbbreviation = new Dictionary<string, string>();
@@ -269,6 +270,10 @@ namespace TunicRandomizer {
             { "Ladder to Beneath the Vault", "[ladder]" },
             { "Ladders in Lower Quarry", "[ladder]"},
             { "Ladders in Library", "[ladder]"},
+            // Fuses added here in FuseRandomizer.CreateFuseItems()
+            // Bells
+            { "East Bell", "[bell]" },
+            { "West Bell", "[bell]" },
             // Grass
             { "Grass", "[grass]"},
             // Non-Tunic Item

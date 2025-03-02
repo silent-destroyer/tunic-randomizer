@@ -172,6 +172,8 @@ namespace TunicRandomizer {
             {"Quarry Fuse 2", "kworE fyooz 2"},
             {"Ziggurat Miniboss Fuse", "ziguraht minEbaws fyooz"},
             {"Ziggurat Teleporter Fuse", "ziguraht tehluhportur fyooz"},
+            {"East Bell", "Est behl"},
+            {"West Bell", "wehst behl"},
             {"Grass", "grahs"},
             {"Overworld", "Ovurwurld"},
             {"West Furnace", "wehst furnis"},

@@ -20,6 +20,7 @@ namespace TunicRandomizer {
         LADDER,
         GRASS,
         FUSE,
+        BELL,
     }
 
     public struct BonusUpgrade {
@@ -311,6 +312,10 @@ namespace TunicRandomizer {
             { "Atoll Southwest Fuse", new ItemData("Atoll Southwest Fuse", "progression", "Atoll Southwest Fuse", ItemTypes.FUSE, 1) },
             { "Library Lab Fuse", new ItemData("Library Lab Fuse", "progression", "Library Lab Fuse", ItemTypes.FUSE, 1) },
 
+            // Bells
+            { "East Bell", new ItemData("East Bell", "progression", "East Bell", ItemTypes.BELL, 1) },
+            { "West Bell", new ItemData("West Bell", "progression", "West Bell", ItemTypes.BELL, 1) },
+
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
         };
@@ -569,6 +574,8 @@ namespace TunicRandomizer {
             {"Fortress Candles Fuse", "Fortress Candles Fuse"},
             {"Fortress Door Left Fuse", "Fortress Door Left Fuse"},
             {"Fortress Door Right Fuse", "Fortress Door Right Fuse"},
+            {"East Bell", "East Bell"},
+            {"West Bell", "West Bell"},
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {

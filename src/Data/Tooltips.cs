@@ -35,6 +35,7 @@ namespace TunicRandomizer {
             { "Death Link", "Enables Death Link when playing on Archipelago. When someone with Death Link enabled dies, everyone else that has it enabled also dies.\nSee the in-game options menu for a variety of other options not shown here." },
             { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, bombable walls, and more." },
             { "Shuffle Fuses", "Praying at a fuse now rewards an item instead of turning on the power.\nInstead, the power connections between fuses are shuffled into the item pool and unlocked separately." },
+            { "Shuffle Bells", "The East and West bells are shuffled into the item pool and must be found in order to unlock the Sealed Temple.\nRinging the bells will instead now reward a random item." },
         };
     }
 }
