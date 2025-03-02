@@ -230,6 +230,7 @@
     <Compile Include="src\TunicRandomizer.cs" />
     <Compile Include="src\Util\CreditsSkipper.cs" />
     <Compile Include="src\Util\DDRSpell.cs" />
+    <Compile Include="src\Util\FoolTrap.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />
