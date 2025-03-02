@@ -168,7 +168,7 @@ namespace TunicRandomizer {
 
                 GameObject Fire = GameObject.Instantiate(GameObject.Find("_Environment/_Decorations/wall torch (2)/lamp fire"));
                 Fire.transform.parent = Torch.transform;
-                Fire.transform.localPosition = new Vector3(-0.1f, 0.9f, -0.5f);
+                Fire.transform.localPosition = new Vector3(0, 1 ,0);
                 Fire.transform.localScale = Vector3.one;
                 Fire.transform.localEulerAngles = Vector3.zero;
                 Fire.layer = 5;
@@ -177,6 +177,8 @@ namespace TunicRandomizer {
                 Torch.SetActive(false);
 
                 ModelSwaps.Torch = Torch;
+
+                ModelSwaps.Items["Torch"] = Torch;
                 
                 RegisterNewItemPresentation(Torch.GetComponent<ItemPresentationGraphic>());
             } catch (Exception e) {
