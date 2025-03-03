@@ -132,6 +132,7 @@ namespace TunicRandomizer {
             {"Mountaintop", "Top of the Mountain"},
             {"Darkwoods Tunnel", "Quarry Entryway"},
             {"Quarry Redux", "Quarry"},
+            {"Quarry", "Quarry"},
             {"Monastery", "Monastery"},
             {"ziggurat2020_0", "Rooted Ziggurat Entrance"},
             {"ziggurat2020_1", "Rooted Ziggurat Upper"},

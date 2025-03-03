@@ -10,6 +10,7 @@ namespace TunicRandomizer {
         public Queue<(string, int)> paramsToSet;
         public Queue<(string, int)> paramsToSetRealtime;
         public static MusicShuffler instance;
+        public static EventReference SecretSFX = CreateEventReference("4198e0be-c4f1-4b7e-931e-c6c7b970df6c");
         public float TimeSinceMusicStart = 0f;
 
         public void Start() {

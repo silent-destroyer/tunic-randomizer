@@ -555,11 +555,19 @@ namespace TunicRandomizer {
                         GameObject.Find("_GRASS/grass beach (154)/grass base (2)").SetActive(false);
                     }
                 }
-            } else if (SceneName == "ziggurat2020_1" && SaveFile.GetInt(EntranceRando) == 1) {
-                SpawnZigSkipRecovery();
-            } else if (SceneName == "ziggurat2020_0" && SaveFile.GetInt(FuseShuffleEnabled) == 1 
-                && SaveFile.GetInt(EntranceRando) == 0) {
-                FuseRandomizer.SpawnZigguratEscapePoint();
+            } else if (SceneName == "ziggurat2020_1") {
+                if (SaveFile.GetInt(EntranceRando) == 1) {
+                    SpawnZigSkipRecovery();
+
+                }
+            } else if (SceneName == "ziggurat2020_0") {
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && SaveFile.GetInt(EntranceRando) == 0) {
+                    FuseRandomizer.SpawnZigguratEscapePoint();
+                }
+            } else if (SceneName == "Quarry Redux") {
+                SetupQuarrySecret();
+            } else if (SceneName == "Quarry") {
+                SetupOldQuarryStuff();
             }
 
             EnemyRandomizer.CheckBossState();
@@ -777,11 +785,92 @@ namespace TunicRandomizer {
             spawn.GetComponent<PlayerCharacterSpawn>().id = "Sewer_Boss_customfasttravel_spawnid";
             spawn.transform.position = new Vector3(-79.3f, 57f, -30.8f);
             spawn.SetActive(true);
-            GameObject.FindObjectOfType<ToggleObjectBySpell>().stateVar = StateVariable.GetStateVariableByName("randomizer crypt secret filigree door opened");
+            GameObject.FindObjectOfType<ToggleObjectBySpell>().stateVar = StateVariable.GetStateVariableByName(CryptSecret);
             GameObject.Instantiate(ModelSwaps.UnderConstruction, new Vector3(-72.0534f, 57, -15.2989f), new Quaternion(0, 0.7071f, 0, 0.7071f)).SetActive(true);
             foreach (UnderConstruction sign in GameObject.FindObjectsOfType<UnderConstruction>()) {
                 sign.message = ScriptableObject.CreateInstance<LanguageLine>();
                 sign.message.text = "\"???\"";
+            }
+        }
+
+        public static void SetupQuarrySecret() {
+            GameObject signpost = GameObject.Instantiate(ModelSwaps.UnderConstruction);
+            signpost.GetComponent<MeshFilter>().mesh = ModelSwaps.Signpost.GetComponent<MeshFilter>().mesh;
+            signpost.GetComponent<MeshRenderer>().materials = ModelSwaps.Signpost.GetComponent<MeshRenderer>().materials;
+            signpost.transform.position = new Vector3(-9.3333f, -11.9494f, -153.7474f);
+            signpost.transform.localScale = Vector3.one * 1.25f;
+            signpost.transform.localEulerAngles = Vector3.zero;
+            signpost.GetComponent<SphereCollider>().radius = 0.75f;
+            signpost.transform.GetComponent<UnderConstruction>().message = ScriptableObject.CreateInstance<LanguageLine>();
+            signpost.transform.GetComponent<UnderConstruction>().message.text = 
+                $"[arrow_up] [arrow_right] [arrow_down] [arrow_left] [arrow_up] [arrow_right] [arrow_down] [arrow_left]\n" +
+                $"[arrow_up] [arrow_right] [arrow_down] [arrow_left] [arrow_up] [arrow_right] [arrow_down] [arrow_left]";
+            signpost.SetActive(true);
+
+            GameObject spellToggle = GameObject.Instantiate(GameObject.FindObjectOfType<ToggleObjectBySpell>().gameObject);
+            spellToggle.GetComponent<ToggleObjectBySpell>().stateVar = StateVariable.GetStateVariableByName(QuarrySecret);
+            spellToggle.GetComponent<ToggleObjectBySpell>().targetSpell = "urdlurdlurdlurdl";
+            spellToggle.GetComponent<ToggleObjectBySpell>().minDistance = 32;
+            spellToggle.GetComponent<ToggleObjectAnimation>().onStateBecomesTrueSFX = MusicShuffler.SecretSFX;
+            spellToggle.GetComponent<ToggleObjectBySpell>().Start();
+
+            for (int i = 0; i < spellToggle.transform.GetChild(2).childCount; i++) {
+                spellToggle.transform.GetChild(2).GetChild(i).gameObject.SetActive(false);
+            }
+            spellToggle.transform.position = new Vector3(3f, -11.9494f, -165.3333f);
+            spellToggle.SetActive(true);
+            GameObject portal = GameObject.Instantiate(GlyphTowerTeleporterPrefab);
+            portal.transform.parent = spellToggle.transform.GetChild(2);
+            portal.transform.localPosition = Vector3.zero;
+            portal.transform.localScale = Vector3.one * 0.5f;
+            portal.SetActive(true);
+            ScenePortal scenePortal = portal.GetComponentInChildren<ScenePortal>();
+            scenePortal.id = "customfasttravel_spawnid";
+            scenePortal.destinationSceneName = "Quarry";
+
+            GameObject spawn = new GameObject("old quarry spawn");
+            spawn.AddComponent<PlayerCharacterSpawn>();
+            spawn.GetComponent<PlayerCharacterSpawn>().id = "Quarry_";
+            spawn.transform.position = new Vector3(-2.61f, 1.28f, -156f);
+            spawn.transform.localEulerAngles = new Vector3(0, 270, 0);
+            spawn.SetActive(true);
+        }
+
+        public static void SetupOldQuarryStuff() {
+            GameObject portal = GameObject.Instantiate(GlyphTowerTeleporterPrefab);
+            portal.transform.position = new Vector3(-4.6956f, 260.0833f, -4.0044f);
+            portal.SetActive(true);
+
+            ScenePortal scenePortal = portal.GetComponentInChildren<ScenePortal>();
+            scenePortal.destinationSceneName = "Quarry Redux";
+            foreach (ScenePortal quarryPortal in GameObject.FindObjectsOfType<ScenePortal>()) {
+                quarryPortal.destinationSceneName = "Quarry Redux";
+                quarryPortal.id = "";
+                quarryPortal.optionalIDToSpawnAt = "";
+            }
+            
+            GameObject spawn = new GameObject("old quarry spawn");
+            spawn.AddComponent<PlayerCharacterSpawn>();
+            spawn.GetComponent<PlayerCharacterSpawn>().id = "Quarry Redux_customfasttravel_spawnid";
+            spawn.transform.position = new Vector3(0.8348f, 260.1032f, -4.2417f);
+            spawn.transform.localEulerAngles = new Vector3(0, 90, 0);
+            spawn.SetActive(true);
+
+            // Switches don't work so moving these so you can get further
+            GameObject portcullis = GameObject.Find("_The Quarry (root for easy duplication)/Portcullis (1)/");
+            if (portcullis != null) {
+                portcullis.transform.position += new Vector3(0, 4.5f, 0);
+            }
+            GameObject portcullis2 = GameObject.Find("_The Quarry (root for easy duplication)/LOWER QUARRY/Portcullis/");
+            if (portcullis2 != null) {
+                portcullis2.transform.localScale = new Vector3(1, 0.4f, 1);
+                portcullis2.transform.position = new Vector3(-10.5f, 176.2446f, 55f);
+            }
+
+            GameObject hex = GameObject.Find("_The Quarry (root for easy duplication)/LOWER QUARRY/questagon mockup/questagon/");
+            if (hex != null) {
+                hex.transform.localPosition = Vector3.zero;
+                GameObject.Destroy(hex.GetComponent<InteractionTrigger>());
             }
         }
 
