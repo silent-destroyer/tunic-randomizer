@@ -741,7 +741,7 @@ namespace TunicRandomizer {
         }
 
         public static void ToggleHolyCrossObjects(bool isEnabled) {
-            foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>().Where(toggle => !Locations.HolyCrossExcludedScenes.Contains(toggle.gameObject.scene.name))) {
+            foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>().Where(toggle => toggle.GetComponent<AllowHolyCross>() == null)) {
                 foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
                     Spell.enabled = isEnabled;
                 }
