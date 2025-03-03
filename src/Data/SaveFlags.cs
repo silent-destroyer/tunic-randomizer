@@ -51,6 +51,8 @@
         public const string EnemiesDefeatedCount = "randomizer enemies defeated";
         public const string DiedToHeir = "randomizer died to heir";
         public const string RescuedLostFox = "randomizer sent lost fox home";
+        public const string CryptSecret = "randomizer crypt secret filigree door opened";
+        public const string QuarrySecret = "randomizer quarry secret portal spawned";
 
         // Archipelago
         public const string ArchipelagoFlag = "archipelago";
