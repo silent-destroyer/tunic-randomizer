@@ -71,7 +71,7 @@ namespace TunicRandomizer {
         public static Color Gold = new Color(0.917f, 0.65f, .08f);
 
         public static bool CelShadingEnabled = false;
-        public static bool PartyHatEnabled = false;
+        public static bool PartyHatEnabled = IsHatDay();
         public static GameObject ToonFox;
         public static GameObject RegularFox;
         public static GameObject GhostFox;
@@ -479,6 +479,11 @@ namespace TunicRandomizer {
                 CapePresentation.GetComponent<MeshRenderer>().materials = player.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials;
                 ChangeCapeColor(new Color(0.9882353f, 0.4431373f, 0.945098f));
             }
+        }
+
+        public static bool IsHatDay() {
+            DateTime time = DateTime.Now;
+            return time.Month == 3 && time.Day == 16;
         }
 
     }

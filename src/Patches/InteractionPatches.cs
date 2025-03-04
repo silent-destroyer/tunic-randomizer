@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -134,15 +135,36 @@ namespace TunicRandomizer {
                 return false;
             }
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
-                    GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
-                    return false;
-                }
                 if (__instance.transform.position.ToString() == "(2.0, 46.0, 0.0)" && SceneLoaderPatches.SceneName == "Overworld Redux" && 
                     !(!GetBool(BellShuffleEnabled) && StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue) &&
                     !(GetBool(BellShuffleEnabled) && StateVariable.GetStateVariableByName("randomizer Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("randomizer Rung Bell 2 (West)").BoolValue)) {
                     GenericMessage.ShowMessage($"\"Sealed Forever.\"");
                     return false;
+                }
+            }
+            FoxgodArenaCutscenes cutscene = __instance.GetComponent<FoxgodArenaCutscenes>();
+            if (cutscene != null) {
+                if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                    if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                        GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
+                        return false;
+                    }
+                } else {
+                    bool HasAllPages = true;
+                    for (int i = 0; i < 28; i++) {
+                        if (SaveFile.GetInt($"randomizer obtained page {i}") == 0) {
+                            HasAllPages = false;
+                            break;
+                        }
+                    }
+                    if (!StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue && HasAllPages) {
+                        GenericPrompt.ShowPrompt(cutscene.chooseFateLanguageLine, (Action)(() => {
+                            cutscene._IInteractionReceiver_Interact_b__32_0();
+                        }), (Action)(() => { 
+                            cutscene._IInteractionReceiver_Interact_b__32_1();
+                        }));
+                        return false;
+                    }
                 }
             }
             if (__instance.GetComponent<Pickup>() != null || __instance.GetComponent<ShopItem>() != null) {

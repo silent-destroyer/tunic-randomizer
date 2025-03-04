@@ -1352,5 +1352,26 @@ namespace TunicRandomizer {
                 }
             }
         }
+
+        public static void Monster_monster_Start_PostfixPatch(Crocodoo __instance) {
+            if (__instance.GetComponent<Crocodoo>() != null) { 
+                if (PaletteEditor.PartyHatEnabled) {
+                    GiveTerryAHat(__instance);
+                }
+            }
+        }
+
+        private static void GiveTerryAHat(Crocodoo terry) {
+            if (terry != null) {
+                GameObject hat = new GameObject("party hat");
+                hat.transform.parent = terry.transform.GetChild(3).GetChild(0).GetChild(0);
+                hat.transform.localPosition = new Vector3(-0.5f, -1.8f, -1.7f);
+                hat.transform.localScale = Vector3.one * 2f;
+                hat.transform.localEulerAngles = new Vector3(47.5f, 0, 0);
+                hat.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("floppy hat");
+                hat.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("fox redux");
+                hat.SetActive(true);
+            }
+        }
     }
 }
