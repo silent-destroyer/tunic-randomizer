@@ -188,7 +188,7 @@ namespace TunicRandomizer {
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
             PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
             string FoolMessageTop = $"yoo R A <#FFA500>toopointfIvdE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
-            string FoolMessageBottom = $"toonik iz ehn IsOmehtrik... wAt, wuht?";
+            string FoolMessageBottom = $"toonik iz ahn IsOmehtrik... wAt, wuht?";
             CameraController.DerekRotationEnabled = true;
             List<float> cameraRotations = new List<float>() { -45f, 45f };
             CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
