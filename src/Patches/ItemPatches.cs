@@ -379,7 +379,9 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
-                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
                 } else {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
@@ -394,7 +396,9 @@ namespace TunicRandomizer {
                 Item RelicItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 RelicItem.Quantity += Item.QuantityToGive;
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
                 }
 
                 // Apply custom pickup text
@@ -616,7 +620,9 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
-                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
                 } else {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
@@ -631,7 +637,9 @@ namespace TunicRandomizer {
                 Item RelicItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 RelicItem.Quantity += Check.Reward.Amount;
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                    Inventory.GetItemByName(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp).Quantity += 1;
+                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
                 }
 
                 // Apply custom pickup text
@@ -793,9 +801,9 @@ namespace TunicRandomizer {
         }
 
         public static void OfferingItem_PriceForNext_PostfixPatch(OfferingItem __instance, ref int __result) {
-            int free_upgrade_count = ItemLookup.BonusUpgrades.Where(bonus => Inventory.GetItemByName(bonus.Key).Quantity > 0 && bonus.Value.LevelUp == __instance.upgradeItemReceived.name).Count();
+            int free_upgrade_count = SaveFile.GetInt(__instance.upgradeItemReceived.name);
             // potion upgrades cost 100 for the first, 300 for the second, 1000 for the third, and +200 for each one after the third
-            if (__instance.name == "Upgrade Offering - PotionEfficiency Swig - Ash" 
+            if (__instance.name == "Upgrade Offering - PotionEfficiency Swig - Ash"
                 && __result >= 1000 && free_upgrade_count >= (__result - 800) / 200) {
                 __result -= Mathf.RoundToInt(500 + 200 * free_upgrade_count);
             } else {
