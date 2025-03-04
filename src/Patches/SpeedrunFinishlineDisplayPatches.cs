@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -133,9 +132,18 @@ namespace TunicRandomizer {
 
         public static bool SpeedrunFinishlineDisplay_addParadeIcon_PrefixPatch(SpeedrunFinishlineDisplay __instance, ref Sprite icon, ref int quantity, ref RectTransform rt) {
             if (icon.name == "Inventory items_sword" && Inventory.GetItemByName("Sword").Quantity > 0) {
+                if (GetBool(SwordProgressionEnabled)) {
+                    int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                    if (SwordLevel == 3) {
+                        icon = Inventory.GetItemByName("Librarian Sword").icon;
+                    } else if (SwordLevel >= 4) {
+                        icon = Inventory.GetItemByName("Heir Sword").icon;
+                    }
+                }
                 quantity = 1;
                 return true;
             }
+
             if (icon.name == "Randomizer items_grass") {
                 quantity = Inventory.GetItemByName("Grass").Quantity;
                 return SaveFile.GetInt(GrassRandoEnabled) == 1;
@@ -153,6 +161,9 @@ namespace TunicRandomizer {
             }
 
             quantity = TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]];
+            if (HeroRelicIcons.ContainsKey(icon.name) && Inventory.GetItemByName(HeroRelicIcons[icon.name].Item1).Quantity > 0) {
+                icon = ModelSwaps.FindSprite(HeroRelicIcons[icon.name].Item2);
+            }
             return true;
         }
 
@@ -167,26 +178,6 @@ namespace TunicRandomizer {
             if (GameObject.Find("_FinishlineDisplay(Clone)/").transform.childCount >= 3) {
                 GameObject.Destroy(GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2).gameObject);
             }
-            try {
-                foreach (ItemIcon Icon in Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.transform.parent.name.Contains("Item Parade Group"))) {
-                    string SpriteName = Icon.transform.GetChild(1).GetComponent<Image>().sprite.name;
-                    // Change quantity text to gold if hero relic obtained
-                    if (HeroRelicIcons.ContainsKey(SpriteName) && Inventory.GetItemByName(HeroRelicIcons[SpriteName].Item1).Quantity > 0) {
-                        Icon.transform.GetChild(1).GetComponent<Image>().sprite = ModelSwaps.FindSprite(HeroRelicIcons[SpriteName].Item2);
-                    }
-                    // Change sword icon for custom swords
-                    if (SpriteName == "Inventory items_sword") {
-                        if (SaveFile.GetInt(SwordProgressionEnabled) == 1) {
-                            int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
-                            if (SwordLevel == 3) {
-                                Icon.transform.GetChild(1).GetComponent<Image>().sprite = Inventory.GetItemByName("Librarian Sword").icon;
-                            } else if(SwordLevel == 4) {
-                                Icon.transform.GetChild(1).GetComponent<Image>().sprite = Inventory.GetItemByName("Heir Sword").icon;
-                            }
-                        }
-                    }
-                }
-            } catch (Exception ex) { }
         }
 
         public static void SetupCompletionStatsDisplay() {

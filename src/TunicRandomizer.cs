@@ -42,6 +42,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<FuseCheckHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuseItem>();
             ClassInjector.RegisterTypeInIl2Cpp<FuseTrapAppearanceHelper>();
+            ClassInjector.RegisterTypeInIl2Cpp<AllowHolyCross>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
@@ -245,8 +246,6 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.PropertyGetter(typeof(Campfire), "isUseableAccordingToConduitSystem"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "Campfire_isUseableAccordingToConduitSystem_GetterPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(ConduitNode), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitNode_CheckConnectedToPower_PrefixPatch")));
-
-            Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(SecretMayor), "SceneLoader_OnSceneLoaded_SecretMayorPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(ConduitData), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitData_CheckConnectedToPower_PrefixPatch")));
             

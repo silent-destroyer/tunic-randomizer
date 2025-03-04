@@ -208,10 +208,6 @@ namespace TunicRandomizer {
             {"Purgatory", "Purgatory"},
         };
 
-        public static List<string> HolyCrossExcludedScenes = new List<string>() {
-            "Crypt"
-        };
-
         public static Dictionary<string, List<string>> MainAreasToSubAreas = new Dictionary<string, List<string>>() {
             {
                 "Overworld",

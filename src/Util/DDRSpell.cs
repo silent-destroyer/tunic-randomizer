@@ -5,6 +5,9 @@ using UnhollowerBaseLib;
 using UnityEngine;
 
 namespace TunicRandomizer {
+
+    public class AllowHolyCross : MonoBehaviour {}
+
     public class DDRSpell : MagicSpell {
 
         public static GameObject DPADPool;

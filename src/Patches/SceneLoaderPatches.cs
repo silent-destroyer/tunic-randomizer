@@ -110,6 +110,7 @@ namespace TunicRandomizer {
             EnemyRandomizer.RandomizedThisSceneAlready = false;
             ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             FuseRandomizer.ModifiedFusesAlready = false;
+            SecretMayor.SetupAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -692,6 +693,8 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
             }
+
+            SecretMayor.Setup(loadingScene);
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {
@@ -785,7 +788,9 @@ namespace TunicRandomizer {
             spawn.GetComponent<PlayerCharacterSpawn>().id = "Sewer_Boss_customfasttravel_spawnid";
             spawn.transform.position = new Vector3(-79.3f, 57f, -30.8f);
             spawn.SetActive(true);
+            GameObject.FindObjectOfType<ToggleObjectBySpell>().gameObject.AddComponent<AllowHolyCross>();
             GameObject.FindObjectOfType<ToggleObjectBySpell>().stateVar = StateVariable.GetStateVariableByName(CryptSecret);
+            GameObject.FindObjectOfType<ToggleObjectBySpell>().GetComponent<ToggleObjectAnimation>().onStateBecomesTrueSFX = MusicShuffler.SecretSFX;
             GameObject.Instantiate(ModelSwaps.UnderConstruction, new Vector3(-72.0534f, 57, -15.2989f), new Quaternion(0, 0.7071f, 0, 0.7071f)).SetActive(true);
             foreach (UnderConstruction sign in GameObject.FindObjectsOfType<UnderConstruction>()) {
                 sign.message = ScriptableObject.CreateInstance<LanguageLine>();
@@ -808,16 +813,18 @@ namespace TunicRandomizer {
             signpost.SetActive(true);
 
             GameObject spellToggle = GameObject.Instantiate(GameObject.FindObjectOfType<ToggleObjectBySpell>().gameObject);
+            spellToggle.name = "Quarry Toggle";
+            spellToggle.AddComponent<AllowHolyCross>();
             spellToggle.GetComponent<ToggleObjectBySpell>().stateVar = StateVariable.GetStateVariableByName(QuarrySecret);
             spellToggle.GetComponent<ToggleObjectBySpell>().targetSpell = "urdlurdlurdlurdl";
             spellToggle.GetComponent<ToggleObjectBySpell>().minDistance = 32;
             spellToggle.GetComponent<ToggleObjectAnimation>().onStateBecomesTrueSFX = MusicShuffler.SecretSFX;
             spellToggle.GetComponent<ToggleObjectBySpell>().Start();
 
-            for (int i = 0; i < spellToggle.transform.GetChild(2).childCount; i++) {
-                spellToggle.transform.GetChild(2).GetChild(i).gameObject.SetActive(false);
+            for (int i = spellToggle.transform.GetChild(2).childCount - 1; i >= 0; i--) {
+                GameObject.Destroy(spellToggle.transform.GetChild(2).GetChild(i).gameObject);
             }
-            spellToggle.transform.position = new Vector3(3f, -11.9494f, -165.3333f);
+            spellToggle.transform.position = new Vector3(3f, -11.9494f, -164.8333f);
             spellToggle.SetActive(true);
             GameObject portal = GameObject.Instantiate(GlyphTowerTeleporterPrefab);
             portal.transform.parent = spellToggle.transform.GetChild(2);

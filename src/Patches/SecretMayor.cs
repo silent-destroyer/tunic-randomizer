@@ -9,13 +9,13 @@ namespace TunicRandomizer {
     public class SecretMayor {
 
         public static bool shouldBeActive = isCorrectDate();
+        public static bool SetupAlready = false;
         public static GameObject MrMayor;
-        public static void SceneLoader_OnSceneLoaded_SecretMayorPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
+        public static void Setup(Scene loadingScene) {
             if (!SceneLoaderPatches.InitialLoadDone) {
                 return;
             }
-
-            if (shouldBeActive) {
+            if (shouldBeActive && !SetupAlready) {
                 Mesh mesh = MrMayor.GetComponent<MeshFilter>().mesh;
                 Material[] materials = MrMayor.GetComponent<MeshRenderer>().materials;
                 Material laurelsMat = ModelSwaps.FindMaterial("Shader Forge_laurels_nowiggle (Instance)") ?? ModelSwaps.FindMaterial("Shader Forge_laurels_nowiggle");
@@ -76,6 +76,7 @@ namespace TunicRandomizer {
                         mayorStatue.transform.localScale = Vector3.one * 0.8f;
                         mayorStatue.transform.localEulerAngles = Vector3.zero;
                         mayorStatue.GetComponent<MeshRenderer>().materials = new Material[] { meshRenderer.material, meshRenderer.material, meshRenderer.material };
+                        mayorStatue.SetActive(true);
                     }
 
                     for(int i = 9; i < 13; i++) {
@@ -156,6 +157,7 @@ namespace TunicRandomizer {
                         foxStatue.GetComponent<MeshRenderer>().material,
                         foxStatue.GetComponent<MeshRenderer>().material,
                     };
+                    mayor.SetActive(true);
                 }
 
                 if (scene == "Spirit Arena") {
@@ -181,6 +183,7 @@ namespace TunicRandomizer {
                     mayor.transform.localScale = Vector3.one * 2;
                     mayor.transform.localPosition = Vector3.zero;
                     mayor.transform.localEulerAngles = Vector3.zero;
+                    mayor.SetActive(true);
                 }
 
                 if(scene == "Resurrection") {
@@ -193,6 +196,7 @@ namespace TunicRandomizer {
                     mayor.transform.localScale = Vector3.one * 2;
                     mayor.transform.localPosition = Vector3.zero;
                     mayor.transform.localEulerAngles = Vector3.zero;
+                    mayor.SetActive(true);
                 }
                 if (scene == "Transit") {
                     GameObject.Find("Foxgod_Cutscenes/elderfox legs").SetActive(false);
@@ -204,6 +208,7 @@ namespace TunicRandomizer {
                     mayor.transform.localScale = Vector3.one * 2;
                     mayor.transform.localPosition = Vector3.zero;
                     mayor.transform.localEulerAngles = Vector3.zero;
+                    mayor.SetActive(true);
                 }
 
                 if (scene == "ziggurat2020_2") {
@@ -284,8 +289,11 @@ namespace TunicRandomizer {
                         mayor.transform.localPosition = new Vector3(0f, 0.7f, 1.3f);
                     }
                     statue.SetActive(false);
+                    mayor.SetActive(true);
                     campfire.transform.GetChild(6).GetChild(2).GetChild(0).gameObject.SetActive(false);
                 }
+
+                SetupAlready = true;
             }
         }
 
