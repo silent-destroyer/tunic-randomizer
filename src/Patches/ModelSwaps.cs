@@ -1870,5 +1870,14 @@ namespace TunicRandomizer {
                 return null;
             }
         }
+
+        public static Mesh FindMesh(string MeshName) {
+            List<Mesh> Meshes = Resources.FindObjectsOfTypeAll<Mesh>().Where(Sprite => Sprite.name == MeshName).ToList();
+            if (Meshes != null && Meshes.Count > 0) {
+                return Meshes[0];
+            } else {
+                return null;
+            }
+        }
     }
 }
