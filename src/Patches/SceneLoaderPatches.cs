@@ -110,6 +110,7 @@ namespace TunicRandomizer {
             EnemyRandomizer.RandomizedThisSceneAlready = false;
             ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             FuseRandomizer.ModifiedFusesAlready = false;
+            SecretMayor.SetupAlready = false;
             SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
@@ -683,6 +684,8 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
             }
+
+            SecretMayor.Setup(loadingScene);
         }
 
         private static void SpawnHeirFastTravel(string SceneName, Vector3 position) {

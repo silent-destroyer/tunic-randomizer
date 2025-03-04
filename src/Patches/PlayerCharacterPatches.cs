@@ -385,6 +385,8 @@ namespace TunicRandomizer {
             } else {
                 AreaLabel.instance.transform.GetChild(0).localScale = new Vector3(1.0777f, scale.y, scale.z);
             }
+
+            SecretMayor.Setup(SceneManager.GetActiveScene());
         }
 
         private static void PlayerCharacter_Start_SinglePlayerSetup() {

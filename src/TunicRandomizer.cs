@@ -244,8 +244,6 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(ConduitNode), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitNode_CheckConnectedToPower_PrefixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), null, new HarmonyMethod(AccessTools.Method(typeof(SecretMayor), "SceneLoader_OnSceneLoaded_SecretMayorPatch")));
-
             Harmony.Patch(AccessTools.Method(typeof(ConduitData), "CheckConnectedToPower"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitData_CheckConnectedToPower_PrefixPatch")));
             
             Harmony.Patch(AccessTools.Method(typeof(ConduitData), "IsFuseClosedByID"), new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "ConduitData_IsFuseClosedByID_PrefixPatch")));
