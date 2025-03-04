@@ -90,6 +90,8 @@ namespace TunicRandomizer {
             Ladders.icon = ModelSwaps.FindSprite("Randomizer items_ladder");
             SpeedrunReportItem Fuses = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             Fuses.icon = ModelSwaps.FindSprite("Randomizer items_fuse");
+            SpeedrunReportItem Bells = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            Bells.icon = ModelSwaps.FindSprite("Randomizer items_bell");
 
 
             List<SpeedrunReportItem> items = SpeedrunFinishlineDisplay.instance.reportGroup_items.ToList();
@@ -104,6 +106,7 @@ namespace TunicRandomizer {
                 ManualOrGoldHex,
                 Ladders,
                 Fuses,
+                Bells,
                 Grass,
             };
 
@@ -155,6 +158,10 @@ namespace TunicRandomizer {
             if (icon.name == "Randomizer items_fuse") {
                 quantity = ItemRandomizer.FuseItems.Where(item => Inventory.GetItemByName(item).Quantity > 0).Count();
                 return SaveFile.GetInt(FuseShuffleEnabled) == 1;
+            }
+            if (icon.name == "Randomizer items_bell") {
+                quantity = ItemRandomizer.BellItems.Where(item => Inventory.GetItemByName(item).Quantity > 0).Count();
+                return SaveFile.GetInt(BellShuffleEnabled) == 1;
             }
             if (TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]] == 0) {
                 return false;
