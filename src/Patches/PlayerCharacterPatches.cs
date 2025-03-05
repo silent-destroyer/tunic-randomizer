@@ -317,8 +317,17 @@ namespace TunicRandomizer {
                 ModelSwaps.SwapItemsInScene();
             }
 
-            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
-                EnemyRandomizer.SpawnNewEnemies();
+            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0) {
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0 && !EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
+                    EnemyRandomizer.SpawnNewEnemies();
+                } else {
+                    if (TunicRandomizer.Settings.RandomEnemySizes) {
+                        EnemyRandomizer.RandomizeEnemySizes();
+                    }
+                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                        EnemyRandomizer.EnableExtraEnemies();
+                    }
+                }
             }
 
             if (TunicRandomizer.Settings.ArachnophobiaMode && !ArachnophobiaMode.DidArachnophobiaModeAlready) {
