@@ -195,14 +195,14 @@ namespace TunicRandomizer {
             Il2CppStringArray EnemyDifficulties = (Il2CppStringArray)new string[] { "Random", "Balanced" };
             Il2CppStringArray EnemyGenerationTypes = (Il2CppStringArray)new string[] { "Random", "Seeded" };
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.setHeading("Enemy Randomization");
-            OptionsGUI.addToggle("Enemy Randomizer", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
-            OptionsGUI.addToggle("Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
-            OptionsGUI.addToggle("Balanced Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
+            OptionsGUI.setHeading("Enemy Settings");
+            OptionsGUI.addToggle("Randomize Enemy Types", "Off", "On", TunicRandomizer.Settings.EnemyRandomizerEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyRandomizer);
+            OptionsGUI.addToggle("Randomize Enemy Sizes", "Off", "On", TunicRandomizer.Settings.RandomEnemySizes ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.RandomEnemySizes = !TunicRandomizer.Settings.RandomEnemySizes; SaveSettings(); }));
+            OptionsGUI.addToggle("Enable Extra Enemies", "Off", "On", TunicRandomizer.Settings.ExtraEnemiesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemies);
+            OptionsGUI.addToggle("Balance Enemies", "Off", "On", TunicRandomizer.Settings.BalancedEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBalancedEnemies);
             OptionsGUI.addToggle("Seeded Enemies", "Off", "On", TunicRandomizer.Settings.SeededEnemies ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSeededEnemies);
             OptionsGUI.addToggle("Limit Boss Spawns", "Off", "On", TunicRandomizer.Settings.LimitBossSpawns ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.LimitBossSpawns = !TunicRandomizer.Settings.LimitBossSpawns; SaveSettings(); }));
             OptionsGUI.addToggle("Oops! All [Enemy]", "Off", "On", TunicRandomizer.Settings.OopsAllEnemy ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.OopsAllEnemy = !TunicRandomizer.Settings.OopsAllEnemy; SaveSettings(); }));
-            OptionsGUI.addToggle("Random Enemy Sizes", "Off", "On", TunicRandomizer.Settings.RandomEnemySizes ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.RandomEnemySizes = !TunicRandomizer.Settings.RandomEnemySizes; SaveSettings(); }));
             OptionsGUI.addToggle("Use Enemy Toggles", "Off", "On", TunicRandomizer.Settings.UseEnemyToggles ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExcludeEnemies);
             addPageButton("Configure Enemy Toggles", EnemyTogglesPage);
         }

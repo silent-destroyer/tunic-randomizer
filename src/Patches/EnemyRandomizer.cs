@@ -1144,6 +1144,24 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void RandomizeEnemySizes() {
+            string scene = SceneManager.GetActiveScene().name;
+            foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
+                float scale = UnityEngine.Random.Range(0.25f, 1.75f);
+                monster.gameObject.transform.localScale *= scale; 
+            }
+            foreach (TurretTrap monster in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
+                float scale = UnityEngine.Random.Range(0.25f, 1.75f);
+                monster.gameObject.transform.localScale *= scale;
+            }
+            RandomizedThisSceneAlready = true;
+        }
+
+        public static void EnableExtraEnemies() {
+            // TODO enable ng+/nighttime enemies here
+            RandomizedThisSceneAlready = true;
+        }
+
         public static bool Monster_Die_MoveNext_PrefixPatch(Monster._Die_d__77 __instance, ref bool __result) {
             if (__instance.__4__this.GetComponent<BossAnnounceOnAggro>() != null) {
                 if (SceneManager.GetActiveScene().name == "Forest Boss Room") {
