@@ -374,7 +374,7 @@ namespace TunicRandomizer {
                     GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
                     string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
                     Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
                 } else {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
@@ -391,7 +391,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
                     Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
                 }
 
                 // Apply custom pickup text
@@ -613,7 +613,7 @@ namespace TunicRandomizer {
                     GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
                     string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
                     Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
                 } else {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
@@ -630,7 +630,7 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
                     Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt(bonus_upgrade) + 1);
+                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
                 }
 
                 // Apply custom pickup text
@@ -864,7 +864,7 @@ namespace TunicRandomizer {
         }
 
         public static void OfferingItem_PriceForNext_PostfixPatch(OfferingItem __instance, ref int __result) {
-            int free_upgrade_count = SaveFile.GetInt(__instance.upgradeItemReceived.name);
+            int free_upgrade_count = SaveFile.GetInt($"randomizer bonus upgrade {__instance.upgradeItemReceived.name}");
             // potion upgrades cost 100 for the first, 300 for the second, 1000 for the third, and +200 for each one after the third
             if (__instance.name == "Upgrade Offering - PotionEfficiency Swig - Ash"
                 && __result >= 1000 && free_upgrade_count >= (__result - 800) / 200) {
