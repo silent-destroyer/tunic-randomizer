@@ -372,9 +372,10 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
-                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
-                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
+                    string bonusUpgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
+                    string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
+                    SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
                 } else {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
@@ -389,9 +390,10 @@ namespace TunicRandomizer {
                 Item RelicItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 RelicItem.Quantity += Item.QuantityToGive;
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
-                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
+                    string bonusUpgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
+                    string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
+                    SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
                 }
 
                 // Apply custom pickup text
@@ -611,9 +613,10 @@ namespace TunicRandomizer {
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = Translations.TranslateDefaultNoQuotes(ItemLookup.BonusUpgrades[Item.ItemNameForInventory].CustomPickupMessage, true);
-                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
-                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
+                    string bonusUpgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
+                    string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
+                    SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
                 } else {
                     GoldenTrophy.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
                     GoldenTrophy.collectionMessage.text = $"kawngrahJoulA$uhnz!";
@@ -628,9 +631,10 @@ namespace TunicRandomizer {
                 Item RelicItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 RelicItem.Quantity += Check.Reward.Amount;
                 if (TunicRandomizer.Settings.BonusStatUpgradesEnabled) {
-                    string bonus_upgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
-                    Inventory.GetItemByName(bonus_upgrade).Quantity += 1;
-                    SaveFile.SetInt(bonus_upgrade, SaveFile.GetInt($"randomizer bonus upgrade {bonus_upgrade}") + 1);
+                    string bonusUpgrade = ItemLookup.BonusUpgrades[Item.ItemNameForInventory].LevelUp;
+                    Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
+                    string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
+                    SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
                 }
 
                 // Apply custom pickup text
