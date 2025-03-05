@@ -688,6 +688,23 @@ namespace TunicRandomizer {
 
         }
 
+        public static void DoEnemyRandomization() {
+            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0) {
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0) {
+                    if (!EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
+                        EnemyRandomizer.SpawnNewEnemies();
+                    }
+                } else {
+                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                        EnemyRandomizer.EnableExtraEnemies();
+                    }
+                }
+                if (TunicRandomizer.Settings.RandomEnemySizes) {
+                    EnemyRandomizer.RandomizeEnemySizes();
+                }
+            }
+        }
+
         public static void SpawnNewEnemies() {
             EnemiesInCurrentScene.Clear();
 
@@ -1063,11 +1080,6 @@ namespace TunicRandomizer {
                         }
                     }
 
-                    if (TunicRandomizer.Settings.RandomEnemySizes) {
-                        float scale = UnityEngine.Random.Range(0.25f, 1.75f);
-                        NewEnemy.transform.localScale *= scale;
-                    }
-
                     NewEnemy.name += $" {i}";
                     EnemiesInCurrentScene.Add(NewEnemy.name, NewEnemy.transform.position.ToString());
 
@@ -1149,6 +1161,11 @@ namespace TunicRandomizer {
             foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
                 float scale = UnityEngine.Random.Range(0.25f, 1.75f);
                 monster.gameObject.transform.localScale *= scale; 
+                if (monster.GetComponent<FleemerQuartet>() != null) {
+                    foreach (GameObject fleemer in monster.GetComponent<FleemerQuartet>().Quartet) {
+                        fleemer.transform.localScale = (Vector3.one * 0.44f) * scale;
+                    }
+                }
             }
             foreach (TurretTrap monster in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
                 float scale = UnityEngine.Random.Range(0.25f, 1.75f);
