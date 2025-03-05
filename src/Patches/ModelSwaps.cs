@@ -476,6 +476,19 @@ namespace TunicRandomizer {
                             }
                         }
                     }
+                    if (GetBool(BellShuffleEnabled)) {
+                        TuningForkBell bell = GameObject.FindObjectOfType<TuningForkBell>();
+                        if (bell != null && bell.gameObject.scene.name == SceneLoaderPatches.SceneName) {
+                            string bellCheckId = BellShuffle.GetBellCheckId(bell);
+                            if (Locations.RandomizedLocations.ContainsKey(bellCheckId) || ItemLookup.ItemList.ContainsKey(bellCheckId)) {
+                                if ((SwappedThisSceneAlready && !IsSwordCheck(bellCheckId))) {
+                                    
+                                } else {
+                                    ApplyBellTexture(bell);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             ItemLookup.Items["Fool Trap"].QuantityToGive = 1;
@@ -590,16 +603,7 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.GRASS) {
                     return;
                 }
-                Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
-                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
-                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory == "Hyperdash") {
-                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
-                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
-                }
+                Material material = GetMaterialType(Item);
 
                 if (Item.Name == "Fool Trap") {
                     foreach (Transform child in grass.GetComponentsInChildren<Transform>()) {
@@ -695,16 +699,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.GRASS) {
                     return;
                 }
-                Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
-                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
-                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory == "Hyperdash") {
-                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
-                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
-                }
+                
+                Material material = GetMaterialType(Item);
+
                 if (material != null) {
                     List<MeshRenderer> renderers;
                     if (breakableObject.name == "Physical Post") {
@@ -822,16 +819,7 @@ namespace TunicRandomizer {
                     Item = ItemLookup.Items[itemInfo.ItemName];
                 }
 
-                Material material = null;
-                if (Item.Type == ItemTypes.FAIRY) {
-                    material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
-                    material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory == "Hyperdash") {
-                    material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
-                } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
-                    material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
-                }
+                Material material = GetMaterialType(Item);
 
                 if (Item.Name == "Fool Trap") {
                     doFuseFoolTrapSetup(fuse);
@@ -895,6 +883,98 @@ namespace TunicRandomizer {
                 uvScroller.gameObject.AddComponent<FuseTrapAppearanceHelper>();
                 uvScroller.gameObject.GetComponent<FuseTrapAppearanceHelper>().UVScroller = uvScroller;
             }
+        }
+
+        public static void ApplyBellTexture(TuningForkBell bell) {
+            string bellId = BellShuffle.GetBellCheckId(bell);
+            if (Locations.RandomizedLocations.ContainsKey(bellId) || ItemLookup.ItemList.ContainsKey(bellId)) {
+                ItemData Item = ItemLookup.Items["Money x1"];
+                if (IsSinglePlayer()) {
+                    Check check = Locations.RandomizedLocations[bellId];
+                    Item = ItemLookup.GetItemDataFromCheck(check);
+                } else if (IsArchipelago()) {
+                    ItemInfo itemInfo = ItemLookup.ItemList[bellId];
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                        ApplyAPBellTexture(bell, itemInfo, TunicUtils.IsCheckCompletedOrCollected(bellId));
+                        return;
+                    }
+                    Item = ItemLookup.Items[itemInfo.ItemName];
+                }
+
+                Material material = GetMaterialType(Item);
+
+                if (Item.Name == "Fool Trap") {
+                    bell.transform.GetChild(1).localEulerAngles = new Vector3(180, 0, 0);
+                    bell.transform.GetChild(1).localPosition = new Vector3(0, 11, 0);
+                    bell.transform.GetChild(2).localPosition = new Vector3(0, 6, 0);
+                }
+
+                if (material != null) { 
+                    bell.transform.GetChild(1).GetComponent<MeshRenderer>().material = material;
+                    bell.transform.GetChild(2).GetComponent<MeshRenderer>().material = material;
+                    bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>().material = material;
+                }
+            }
+        }
+
+        public static void ApplyAPBellTexture(TuningForkBell bell, ItemInfo itemInfo, bool Checked) {
+            List<MeshRenderer> renderers = new List<MeshRenderer>();
+            renderers.Add(bell.transform.GetChild(1).GetComponent<MeshRenderer>());
+            renderers.Add(bell.transform.GetChild(2).GetComponent<MeshRenderer>());
+            renderers.Add(bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>());
+
+            ItemFlags flag = itemInfo.Flags;
+            int randomFlag = new System.Random().Next(3);
+            UnityEngine.Color color;
+            if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material.color = new UnityEngine.Color(0f, 0.85f, 0f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
+                foreach (MeshRenderer r in renderers) {
+                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 1f, 1f);
+                }
+            }
+            if (flag.HasFlag(ItemFlags.Advancement) || (flag == ItemFlags.Trap && randomFlag == 2)) {
+                foreach (MeshRenderer r in renderers) {
+                    if (r.name.Contains("gyro") && flag.HasFlag(ItemFlags.Advancement) && flag.HasFlag(ItemFlags.NeverExclude)) {
+                        r.material.color = UnityEngine.Color.cyan;
+                    } else {
+                        r.material = Items["Hexagon Gold"].GetComponent<MeshRenderer>().material;
+                    }
+                }
+            }
+
+            GameObject questionMark = new GameObject("question mark");
+            questionMark.transform.parent = bell.transform;
+            questionMark.AddComponent<SpriteRenderer>().sprite = FindSprite("trinkets 1_slot_grey");
+            questionMark.transform.localPosition = new Vector3(0f, 0.8f, 1f);
+            questionMark.transform.localEulerAngles = new Vector3(45f, 180f, 0f);
+            questionMark.transform.localScale = Vector3.one * 0.25f;
+
+            if (itemInfo.Flags.HasFlag(ItemFlags.Trap)) {
+                bell.transform.GetChild(1).localEulerAngles = new Vector3(180, 0, 0);
+                bell.transform.GetChild(1).localPosition = new Vector3(0, 11, 0);
+                bell.transform.GetChild(2).localPosition = new Vector3(0, 6, 0);
+                questionMark.transform.localEulerAngles = new Vector3(45f, 180f, 180f);
+            }
+
+            questionMark.SetActive(!Checked);
+        }
+
+        private static Material GetMaterialType(ItemData Item) {
+            Material material = null;
+            if (Item.Type == ItemTypes.FAIRY) {
+                material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
+            } else if (Item.Type == ItemTypes.GOLDENTROPHY) {
+                material = Chests["GoldenTrophy"].GetComponent<MeshRenderer>().material;
+            } else if (Item.ItemNameForInventory == "Hyperdash") {
+                material = Chests["Hyperdash"].GetComponent<MeshRenderer>().material;
+            } else if (Item.ItemNameForInventory.Contains("Hexagon") && Item.Type != ItemTypes.HEXAGONQUEST) {
+                material = Items[Item.ItemNameForInventory].GetComponent<MeshRenderer>().material;
+            }
+            return material;
         }
 
         public static void SetupItemMoveUp(Transform transform, Check check = null, ItemInfo itemInfo = null) {
@@ -1259,6 +1339,12 @@ namespace TunicRandomizer {
                     NewItem = GameObject.Instantiate(Items["Fuse"], Parent.transform.position, Parent.transform.rotation);
                     NewItem.transform.GetChild(1).gameObject.SetActive(false);
                     NewItem.transform.GetChild(3).gameObject.SetActive(false);
+                } else if (Item.Type == ItemTypes.BELL) {
+                    NewItem = GameObject.Instantiate(Items["Bell"], Parent.transform.position, Parent.transform.rotation);
+                    NewItem.transform.GetChild(3).gameObject.SetActive(false);
+                    GameObject.Destroy(NewItem.GetComponent<TuningForkBell>());
+                    GameObject.Destroy(NewItem.GetComponent<SphereCollider>());
+                    GameObject.Destroy(NewItem.GetComponent<BoxCollider>());
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
@@ -1655,7 +1741,7 @@ namespace TunicRandomizer {
                     if (Item.Type == ItemTypes.FAIRY) {
                         NewItem.transform.localScale = Vector3.one;
                     }
-                    if (Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
+                    if (Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE || Item.Type == ItemTypes.BELL) {
                         NewItem.transform.localScale *= 2;
                     }
                     if (NewItem.GetComponent<Rotate>() == null) {
@@ -1827,6 +1913,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Secret Mayor", CreateSprite(ImageData.SecretMayor, ImageMaterial, 1400, 675, SpriteName: "Randomizer secret_mayor"));
             CustomItemImages.Add("Grass", CreateSprite(ImageData.Grass, ImageMaterial, 160, 160, SpriteName: "Randomizer items_grass"));
             CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
+            CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;

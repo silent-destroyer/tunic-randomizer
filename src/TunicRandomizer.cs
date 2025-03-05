@@ -200,7 +200,10 @@ namespace TunicRandomizer {
 
             // Fuses
             Harmony.Patch(AccessTools.Method(typeof(FuseCloseAnimationHelper), "__animationEvent_fuseCloseAnimationDone"), null, new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "FuseCloseAnimationHelper___animationEvent_fuseCloseAnimationDone_PostfixPatch")));
-            
+
+            // Bells            
+            Harmony.Patch(AccessTools.Method(typeof(TuningForkBell), "onStateChange"), null, new HarmonyMethod(AccessTools.Method(typeof(BellShuffle), "TuningForkBell_onStateChange_PostfixPatch")));
+
             // Misc
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
 
@@ -214,7 +217,7 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(BloodstainChest), "IInteractionReceiver_Interact"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "BloodstainChest_IInteractionReceiver_Interact_PrefixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(SwordProgression), "HitReceiver_ReceiveHit_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "HitReceiver_ReceiveHit_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "HitReceiver_ReceiveHit_PrefixPatch")));
 

@@ -11,6 +11,8 @@ namespace TunicRandomizer {
 
         public const string FUSE_SHUFFLE = "Fuse Shuffle";
         public const string NO_FUSE_SHUFFLE = "No Fuse Shuffle";
+        public const string BELL_SHUFFLE = "Bell Shuffle";
+        public const string NO_BELL_SHUFFLE = "No Bell Shuffle";
         // the direction you move while entering the portal
         public enum PDir {
             NONE,
@@ -2440,11 +2442,14 @@ namespace TunicRandomizer {
                         "Overworld Temple Door",
                         new List<List<string>> {
                             new List<string> {
-                                "Stick", "Forest Belltower Upper", "Overworld Belltower at Bell",
+                                "Stick", "Forest Belltower Upper", "Overworld Belltower at Bell", NO_BELL_SHUFFLE,
                             },
                             new List<string> {
-                                "Techbow", "Forest Belltower Upper", "Overworld Belltower at Bell",
+                                "Techbow", "Forest Belltower Upper", "Overworld Belltower at Bell", NO_BELL_SHUFFLE,
                             },
+                            new List<string> {
+                                "West Bell", "East Bell", BELL_SHUFFLE,
+                            }
                         }
                     },
                     {

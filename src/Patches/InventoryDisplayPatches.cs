@@ -124,9 +124,14 @@ namespace TunicRandomizer {
 
                 yield return true;
                 InventoryDisplayPatches.GuardCaptain.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1 ? InventoryDisplayPatches.GuardCaptainColor : Color.white;
-                InventoryDisplayPatches.Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
                 InventoryDisplayPatches.GardenKnight.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1 ? Color.cyan : Color.white;
-                InventoryDisplayPatches.Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                if (GetBool(BellShuffleEnabled)) {
+                    InventoryDisplayPatches.Ding.GetComponent<Image>().color = Inventory.GetItemByName("East Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                    InventoryDisplayPatches.Dong.GetComponent<Image>().color = Inventory.GetItemByName("West Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                } else {
+                    InventoryDisplayPatches.Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                    InventoryDisplayPatches.Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                }
                 InventoryDisplayPatches.SiegeEngine.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1 ? InventoryDisplayPatches.RedMarkerColor : Color.white;
                 InventoryDisplayPatches.Librarian.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1 ? InventoryDisplayPatches.GreenMarkerColor : Color.white;
                 InventoryDisplayPatches.BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;

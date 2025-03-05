@@ -334,6 +334,72 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupBellPresentation() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "VaultKey").First().gameObject;
+                GameObject BellPresentation = GameObject.Instantiate(PresentationBase);
+                GameObject BellObject = GameObject.Instantiate(GameObject.FindObjectOfType<TuningForkBell>().gameObject);
+
+                if (BellPresentation.GetComponent<MeshFilter>() != null && BellPresentation.GetComponent<MeshRenderer>() != null) {
+                    GameObject.Destroy(BellPresentation.GetComponent<MeshFilter>());
+                    GameObject.Destroy(BellPresentation.GetComponent<MeshRenderer>());
+                }
+
+                BellPresentation.transform.parent = PresentationBase.transform.parent;
+                BellPresentation.transform.localPosition = Vector3.zero;
+                BellPresentation.transform.localEulerAngles = new Vector3(345, 45, 345);
+                BellPresentation.transform.localScale = Vector3.one;
+                BellObject.transform.parent = BellPresentation.transform;
+                BellObject.transform.localScale = Vector3.one * 0.175f;
+                BellObject.transform.localEulerAngles = Vector3.zero;
+                BellObject.layer = 5;
+                BellObject.transform.localPosition = new Vector3(0f, -1, 0f);
+                foreach (Transform transform in BellObject.GetComponentsInChildren<Transform>(true)) {
+                    transform.gameObject.layer = 5;
+                    transform.gameObject.SetActive(false);
+                }
+                BellObject.transform.GetChild(1).gameObject.SetActive(true);
+                BellObject.transform.GetChild(2).gameObject.SetActive(false);
+                GameObject innerRing = GameObject.Instantiate(BellObject.transform.GetChild(2).gameObject);
+                innerRing.SetActive(true);
+                innerRing.transform.parent = BellObject.transform;
+                innerRing.transform.localScale = Vector3.one;
+                innerRing.transform.localPosition = new Vector3(0, 4.952f ,0);
+                innerRing.transform.localEulerAngles = new Vector3(0, 180, 0);
+                innerRing.transform.GetChild(0).gameObject.SetActive(true);
+                BellObject.transform.GetChild(3).gameObject.SetActive(false);
+                GameObject outerRing = GameObject.Instantiate(BellObject.transform.GetChild(3).GetChild(0).gameObject);
+                outerRing.SetActive(true);
+                outerRing.transform.parent = BellObject.transform;
+                outerRing.transform.localEulerAngles = Vector3.zero;
+                outerRing.transform.localPosition = Vector3.zero;
+
+                BellObject.transform.GetChild(3).gameObject.SetActive(true);
+                BellObject.transform.GetChild(3).localEulerAngles = Vector3.zero;
+                BellObject.transform.GetChild(3).GetChild(0).gameObject.SetActive(true);
+
+                BellObject.GetComponent<TuningForkBell>().stateVar = StateVariable.GetStateVariableByName("true");
+                BellObject.GetComponent<TuningForkBell>().Start();
+                GameObject.Destroy(BellObject.GetComponent<HitReceiver>());
+                GameObject.Destroy(BellObject.GetComponent<InteractionTrigger>());
+
+                BellPresentation.name = "tuning fork bell";
+                BellPresentation.layer = 5;
+
+                BellPresentation.GetComponent<ItemPresentationGraphic>().items = ItemRandomizer.BellItems.Select(item => Inventory.GetItemByName(item)).ToArray();
+
+                BellPresentation.SetActive(false);
+                BellObject.SetActive(true);
+
+                RegisterNewItemPresentation(BellPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Bell"] = BellObject;
+
+            } catch (Exception e) {
+                TunicLogger.LogError("Bell presentation error: " + e.Message);
+            }
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);
