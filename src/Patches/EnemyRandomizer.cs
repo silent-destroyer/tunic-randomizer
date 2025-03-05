@@ -1158,7 +1158,38 @@ namespace TunicRandomizer {
         }
 
         public static void EnableExtraEnemies() {
-            // TODO enable ng+/nighttime enemies here
+            string scene = SceneManager.GetActiveScene().name;
+
+            List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab") && Monster.gameObject.scene.name == scene).ToList();
+            foreach (GameObject Enemy in Monsters) {
+                if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && scene != "Cathedral Arena"))) {
+                    Enemy.transform.parent.gameObject.SetActive(true);
+                }
+
+                if (scene == "Monastery") {
+                    if (GameObject.Find("_NIGHT/Corruption Blocker/") != null) {
+                        GameObject.Find("_NIGHT/Corruption Blocker/").transform.position = new Vector3(30000, 30000, 30000);
+                    }
+                    if (GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/") != null) {
+                        GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/").transform.position = new Vector3(30000, 30000, 30000);
+                    }
+                    foreach (Voidtouched voidtouched in Resources.FindObjectsOfTypeAll<Voidtouched>().Where(voidtouched => voidtouched.gameObject.scene.name == scene)) {
+                        voidtouched.onlyAggroViaTrigger = false;
+                    }
+                }
+            }
+            if (scene == "Library Hall" && !CycleController.IsNight) {
+                GameObject.Find("beefboy statues").SetActive(false);
+                GameObject.Find("beefboy statues (2)").SetActive(false);
+                foreach (GameObject Monster in Monsters) {
+                    Monster.transform.parent = null;
+                }
+            }
+            if (scene == "ziggurat2020_3") {
+                foreach (ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == scene)) {
+                    bossScav.eggTossChance = 0.2f;
+                }
+            }
             RandomizedThisSceneAlready = true;
         }
 
