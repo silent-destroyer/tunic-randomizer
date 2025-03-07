@@ -68,6 +68,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Shuffle Abilities", "Off", "On", TunicRandomizer.Settings.ShuffleAbilities ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAbilityShuffling);
                 OptionsGUI.addToggle("Shuffle Ladders", "Off", "On", TunicRandomizer.Settings.ShuffleLadders ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLadderShuffle);
                 OptionsGUI.addToggle("Shuffle Fuses", "Off", "On", TunicRandomizer.Settings.FuseShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFuseShuffle);
+                OptionsGUI.addToggle("Shuffle Bells", "Off", "On", TunicRandomizer.Settings.BellShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBellShuffle);
                 OptionsGUI.addToggle("Shuffle Breakable Objects", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
                 addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addToggle("Grass Randomizer", "Off", "On", TunicRandomizer.Settings.GrassRandomizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
@@ -95,6 +96,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Shuffled Abilities", SaveFile.GetInt(AbilityShuffle) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Ladders", SaveFile.GetInt(LadderRandoEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Fuses", SaveFile.GetInt(FuseShuffleEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                OptionsGUI.addButton("Shuffled Bells", SaveFile.GetInt(BellShuffleEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Breakable Objects", SaveFile.GetInt(BreakableShuffleEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt(LaurelsLocation)], null);
@@ -478,6 +480,11 @@ namespace TunicRandomizer {
 
         public static void ToggleFuseShuffle(int index) {
             TunicRandomizer.Settings.FuseShuffle = !TunicRandomizer.Settings.FuseShuffle;
+            SaveSettings();
+        }
+
+        public static void ToggleBellShuffle(int index) {
+            TunicRandomizer.Settings.BellShuffle = !TunicRandomizer.Settings.BellShuffle;
             SaveSettings();
         }
 

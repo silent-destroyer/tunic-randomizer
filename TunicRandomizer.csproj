@@ -197,6 +197,7 @@
     <Compile Include="src\Data\Tooltips.cs" />
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Patches\ArachnophobiaMode.cs" />
+    <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />

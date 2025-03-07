@@ -10,7 +10,7 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
 
     public class ItemPatches {
-        
+
         public enum ItemResult {
             Success,
             TemporaryFailure, // Can't accept right now, but can accept in the future
@@ -74,9 +74,9 @@ namespace TunicRandomizer {
         }
 
         public static bool Chest_itemContentsfromDatabase_GetterPatch(Chest __instance, ref Item __result) {
-            
+
             __result = null;
-            
+
             return false;
         }
 
@@ -205,7 +205,7 @@ namespace TunicRandomizer {
                 }
                 __instance.boughtStatevar.BoolValue = true;
             }
-            
+
             InShopPlayerMoneyDisplay.Show = false;
             return false;
         }
@@ -238,12 +238,12 @@ namespace TunicRandomizer {
         }
 
         public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
-            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || 
+            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled ||
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
                 GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
                 return ItemResult.TemporaryFailure;
             }
-            
+
             if (!ItemLookup.Items.ContainsKey(ItemName)) {
                 return ItemResult.PermanentFailure;
             }
@@ -260,7 +260,7 @@ namespace TunicRandomizer {
 
             ItemData Item = ItemLookup.Items[ItemName];
             string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
-            
+
             if (Item.Type == ItemTypes.GRASS) {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
                 Inventory.GetItemByName("Grass").Quantity += 1;
@@ -288,7 +288,11 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
+            if (Item.Type == ItemTypes.INVENTORY ||
+                Item.Type == ItemTypes.TRINKET ||
+                Item.Type == ItemTypes.LADDER ||
+                Item.Type == ItemTypes.FUSE ||
+                Item.Type == ItemTypes.BELL) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Item.QuantityToGive;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -315,6 +319,20 @@ namespace TunicRandomizer {
                         } else {
                             NotificationBottom = $"\"...but nothing happened.\"";
                         }
+                    }
+                }
+                if (Item.Type == ItemTypes.BELL) {
+                    if (GetBool(BellShuffleEnabled)) {
+                        if (Item.Name == "East Bell") {
+                            NotificationBottom = $"di^!";
+                            BellShuffle.EastBellStateVar.BoolValue = true;
+                        }
+                        if (Item.Name == "West Bell") {
+                            NotificationBottom = $"daw^!";
+                            BellShuffle.WestBellStateVar.BoolValue = true;
+                        }
+                    } else {
+                        NotificationBottom = $"\"...but nothing happened.\"";
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
@@ -531,7 +549,11 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Item.Type == ItemTypes.INVENTORY || Item.Type == ItemTypes.TRINKET || Item.Type == ItemTypes.LADDER || Item.Type == ItemTypes.FUSE) {
+            if (Item.Type == ItemTypes.INVENTORY || 
+                Item.Type == ItemTypes.TRINKET ||
+                Item.Type == ItemTypes.LADDER || 
+                Item.Type == ItemTypes.FUSE ||
+                Item.Type == ItemTypes.BELL) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Check.Reward.Amount;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -558,6 +580,20 @@ namespace TunicRandomizer {
                         } else {
                             NotificationBottom = $"\"...but nothing happened.\"";
                         }
+                    }
+                }
+                if (Item.Type == ItemTypes.BELL) {
+                    if (GetBool(BellShuffleEnabled)) {
+                        if (Item.Name == "East Bell") {
+                            NotificationBottom = $"di^!";
+                            BellShuffle.EastBellStateVar.BoolValue = true;
+                        }
+                        if (Item.Name == "West Bell") {
+                            NotificationBottom = $"daw^!";
+                            BellShuffle.WestBellStateVar.BoolValue = true;
+                        }
+                    } else {
+                        NotificationBottom = $"\"...but nothing happened.\"";
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);

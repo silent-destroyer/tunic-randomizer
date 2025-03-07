@@ -135,7 +135,9 @@ namespace TunicRandomizer {
                 return false;
             }
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                if (__instance.transform.position.ToString() == "(2.0, 46.0, 0.0)" && SceneLoaderPatches.SceneName == "Overworld Redux" && !(StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue)) {
+                if (__instance.transform.position.ToString() == "(2.0, 46.0, 0.0)" && SceneLoaderPatches.SceneName == "Overworld Redux" && 
+                    !(!GetBool(BellShuffleEnabled) && StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue) &&
+                    !(GetBool(BellShuffleEnabled) && StateVariable.GetStateVariableByName("randomizer Rung Bell 1 (East)").BoolValue && StateVariable.GetStateVariableByName("randomizer Rung Bell 2 (West)").BoolValue)) {
                     GenericMessage.ShowMessage($"\"Sealed Forever.\"");
                     return false;
                 }
@@ -260,6 +262,33 @@ namespace TunicRandomizer {
                 __result = true;
 
                 return false;
+            }
+
+            return true;
+        }
+
+        public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
+
+            // Disables hitting the west bell from long range for race purposes
+            if (__instance.GetComponent<TuningForkBell>() != null && __instance.name == "tuning fork" && SceneManager.GetActiveScene().name == "Overworld Redux"
+                && hitType == HitType.TECHBOW && TunicRandomizer.Settings.RaceMode && TunicRandomizer.Settings.DisableDistantBellShots) {
+                if (PlayerCharacter.instance.transform.position.x > __instance.transform.position.x + 5
+                    || PlayerCharacter.instance.transform.position.z > __instance.transform.position.z + 5) {
+                    return false;
+                }
+            }
+
+            // Allows lvl 4 sword to hit bells/switches, also tells AP data storage if bells were rung
+            if ((__instance.GetComponent<TuningForkBell>() != null || __instance.GetComponent<PowerSwitch>() != null || __instance.GetComponent<PlayerPaletteResetter>() != null) && isPlayerCharacterMelee) {
+                if (__instance.name == "tuning fork" && SaveFlags.IsArchipelago()) {
+                    if (SceneManager.GetActiveScene().name == "Forest Belltower") {
+                        Archipelago.instance.UpdateDataStorage("Rang East Bell", true);
+                    }
+                    if (SceneManager.GetActiveScene().name == "Overworld Redux") {
+                        Archipelago.instance.UpdateDataStorage("Rang West Bell", true);
+                    }
+                }
+                unblockable = false;
             }
 
             return true;
