@@ -69,12 +69,12 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Shuffle Ladders", "Off", "On", TunicRandomizer.Settings.ShuffleLadders ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLadderShuffle);
                 OptionsGUI.addToggle("Shuffle Fuses", "Off", "On", TunicRandomizer.Settings.FuseShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFuseShuffle);
                 OptionsGUI.addToggle("Shuffle Bells", "Off", "On", TunicRandomizer.Settings.BellShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBellShuffle);
-                OptionsGUI.addToggle("Shuffle Breakable Objects", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
-                addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addToggle("Grass Randomizer", "Off", "On", TunicRandomizer.Settings.GrassRandomizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
                     TunicRandomizer.Settings.GrassRandomizer = !TunicRandomizer.Settings.GrassRandomizer;
                     SaveSettings();
                 }));
+                OptionsGUI.addToggle("Shuffle Breakable Objects", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
+                addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
                 OptionsGUI.addMultiSelect("Laurels Location", LaurelsLocations, GetLaurelsLocationIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLaurelsLocation).wrap = true;
                 OptionsGUI.addToggle("Lanternless Logic", "Off", "On", TunicRandomizer.Settings.Lanternless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLanternless);
@@ -97,6 +97,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Shuffled Ladders", SaveFile.GetInt(LadderRandoEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Fuses", SaveFile.GetInt(FuseShuffleEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Bells", SaveFile.GetInt(BellShuffleEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                OptionsGUI.addButton("Grass Randomizer", SaveFile.GetInt(GrassRandoEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Shuffled Breakable Objects", SaveFile.GetInt(BreakableShuffleEnabled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addButton("Laurels Location", LaurelsLocations[SaveFile.GetInt(LaurelsLocation)], null);
