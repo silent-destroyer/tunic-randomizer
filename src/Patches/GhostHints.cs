@@ -627,7 +627,7 @@ namespace TunicRandomizer {
         public static string WordWrapString(string Hint) {
             string formattedHint = "";
 
-            int length = 40;
+            int length = 39;
             int spritelength = 0;
             foreach (string split in Hint.Split(' ')) {
                 string split2 = split;
@@ -638,11 +638,11 @@ namespace TunicRandomizer {
                 } else if(split.StartsWith("[") && split.EndsWith("]")) {
                     spritelength += split.Length;
                 }
-                if ((formattedHint + split2.Replace("\"", "").Replace("\"", "")).Length-spritelength < length) {
+                if ((formattedHint.Replace("\"", "").Replace("\"", "") + split2.Replace("\"", "").Replace("\"", "")).Length-spritelength < length) {
                     formattedHint += split2 + " ";
                 } else {
                     formattedHint += split2 + "\n";
-                    length += 40;
+                    length += 39;
                 }
             }
 
