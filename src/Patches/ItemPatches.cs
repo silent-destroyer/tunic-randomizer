@@ -248,18 +248,20 @@ namespace TunicRandomizer {
                 return ItemResult.PermanentFailure;
             }
 
-            bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
-
-            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationName != "Cheat Console" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName])) {
-                TunicRandomizer.Settings.SkipItemAnimations = true;
-            }
+            ItemData Item = ItemLookup.Items[ItemName];
+            string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
 
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
 
-            ItemData Item = ItemLookup.Items[ItemName];
-            string itemDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ItemName] : "";
+            bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
+
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationName != "Cheat Console" && Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationName) &&
+                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]))) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
+
 
             if (Item.Type == ItemTypes.GRASS) {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
