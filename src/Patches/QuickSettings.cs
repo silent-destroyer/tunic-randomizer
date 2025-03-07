@@ -172,7 +172,7 @@ namespace TunicRandomizer {
                 Cursor.visible = true;
                 switch (TunicRandomizer.Settings.Mode) {
                     case RandomizerSettings.RandomizerType.SINGLEPLAYER:
-                        windowRects["singlePlayer"] = new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, TunicRandomizer.Settings.MysterySeed ? 510f * guiScale : 550f * guiScale);
+                        windowRects["singlePlayer"] = new Rect(20f, (float)Screen.height * 0.12f, 430f * guiScale, TunicRandomizer.Settings.MysterySeed ? 510f * guiScale : 630f * guiScale);
                         GUI.Window(101, windowRects["singlePlayer"], new Action<int>(SinglePlayerQuickSettingsWindow), "Single Player Settings");
                         ShowAPSettingsWindow = false;
                         clearAllEditingFlags();
@@ -453,10 +453,25 @@ namespace TunicRandomizer {
                     } else {
                         GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
                     }
-                    if (slotData.ContainsKey("shuffle_fuses")) {
-                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
+                    //breakable_shuffle
+                    if (slotData.ContainsKey("breakable_shuffle")) {
+                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
                     } else {
-                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Fuses");
+                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Breakables");
+                    }
+
+                    apHeight += 40f * guiScale;
+
+                    if (slotData.ContainsKey("shuffle_fuses")) {
+                        GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
+                    } else {
+                        GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Fuses");
+                    }
+                    //breakable_shuffle
+                    if (slotData.ContainsKey("shuffle_bells")) {
+                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), slotData["shuffle_bells"].ToString() == "1", $"Shuffled Bells");
+                    } else {
+                        GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Bells");
                     }
                 } else {
                     apHeight += 40f * guiScale;
@@ -473,15 +488,20 @@ namespace TunicRandomizer {
                     GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Ladders");
                     apHeight += 40f * guiScale;
                     GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Grass Randomizer");
-                    GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Fuses");
+                    GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Breakables");
+                    apHeight += 40f * guiScale;
+                    GUI.Toggle(new Rect(10f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Fuses");
+                    GUI.Toggle(new Rect(220f * guiScale, apHeight, 195f * guiScale, 30f * guiScale), false, $"Shuffled Bells");
                 }
             }
             apHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, apHeight, 400f * guiScale, 30f * guiScale), $"Other Settings <size={(int)(18 * guiScale)}>(see in-game options menu!)</size>");
             apHeight += 40f * guiScale;
-            TunicRandomizer.Settings.DeathLinkEnabled = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, apHeight, 105f * guiScale, 30f * guiScale), "archipelago", "Death Link"), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
-            TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(ShowTooltip(new Rect(120f * guiScale, apHeight, 170f * guiScale, 30f * guiScale), "archipelago", "Enemy Randomizer"), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
-            TunicRandomizer.Settings.MusicShuffle = GUI.Toggle(ShowTooltip(new Rect(295f * guiScale, apHeight, 130f * guiScale, 30f * guiScale), "archipelago", "Music Shuffle"), TunicRandomizer.Settings.MusicShuffle, "Music Shuffle");
+            TunicRandomizer.Settings.DeathLinkEnabled = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, apHeight, 130f * guiScale, 30f * guiScale), "archipelago", "Death Link"), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
+            TunicRandomizer.Settings.TrapLinkEnabled = GUI.Toggle(ShowTooltip(new Rect(220f * guiScale, apHeight, 130f * guiScale, 30f * guiScale), "archipelago", "Trap Link"), TunicRandomizer.Settings.TrapLinkEnabled, "Trap Link");
+            apHeight += 40f * guiScale;
+            TunicRandomizer.Settings.EnemyRandomizerEnabled = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, apHeight, 170f * guiScale, 30f * guiScale), "archipelago", "Enemy Randomizer"), TunicRandomizer.Settings.EnemyRandomizerEnabled, "Enemy Randomizer");
+            TunicRandomizer.Settings.MusicShuffle = GUI.Toggle(ShowTooltip(new Rect(220f * guiScale, apHeight, 130f * guiScale, 30f * guiScale), "archipelago", "Music Shuffle"), TunicRandomizer.Settings.MusicShuffle, "Music Shuffle");
             apHeight += 40f * guiScale;
             GUI.skin.label.fontSize = (int)(20 * guiScale);
         }
@@ -563,6 +583,12 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer"); 
                 TunicRandomizer.Settings.ShuffleLadders = GUI.Toggle(ShowTooltip(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Shuffle Ladders"), TunicRandomizer.Settings.ShuffleLadders, "Shuffle Ladders");
                 y += 40f * guiScale;
+                TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Grass Randomizer"), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
+                TunicRandomizer.Settings.BreakableShuffle = GUI.Toggle(ShowTooltip(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Shuffle Breakable Objects"), TunicRandomizer.Settings.BreakableShuffle, "Shuffle Breakables");
+                y += 40f * guiScale;
+                TunicRandomizer.Settings.FuseShuffle = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Shuffle Fuses"), TunicRandomizer.Settings.FuseShuffle, "Shuffle Fuses");
+                TunicRandomizer.Settings.BellShuffle = GUI.Toggle(ShowTooltip(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Shuffle Bells"), TunicRandomizer.Settings.BellShuffle, "Shuffle Bells");
+                y += 40f * guiScale;
                 TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, y, 175f * guiScale, 30f * guiScale), "singlePlayer", "Start With Sword"), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
                 TunicRandomizer.Settings.MysterySeed = GUI.Toggle(ShowTooltip(new Rect(240f * guiScale, y, 200f * guiScale, 30f * guiScale), "singlePlayer", "Mystery Seed"), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
                 y += 40f * guiScale;
@@ -573,7 +599,6 @@ namespace TunicRandomizer {
                     ShowMysterySeedWindow = false;
                 }
                 y += 40f * guiScale;
-
             }
             GUI.Label(new Rect(10f * guiScale, y, 400f * guiScale, 30f * guiScale), $"Other Settings <size={(int)(18 * guiScale)}>(see in-game options menu!)</size>");
             y += 40f * guiScale;
@@ -682,7 +707,7 @@ namespace TunicRandomizer {
             }
             advHeight += 40f * guiScale;
             TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 200f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
-            advHeight += 40f * guiScale;
+/*            advHeight += 40f * guiScale;
             GUI.skin.label.fontSize = (int)(25 * guiScale);
             GUI.Label(new Rect(10f * guiScale, advHeight, 400f * guiScale, 30f * guiScale), $"Grass Randomizer & Other Shufflers");
             advHeight += 40f * guiScale;
@@ -690,7 +715,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.BreakableShuffle = GUI.Toggle(ShowTooltip(new Rect(195f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Breakable Objects"), TunicRandomizer.Settings.BreakableShuffle, "Shuffle Breakables");
             advHeight += 40f * guiScale;
             TunicRandomizer.Settings.FuseShuffle = GUI.Toggle(ShowTooltip(new Rect(10f * guiScale, advHeight, 195f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Fuses"), TunicRandomizer.Settings.FuseShuffle, "Shuffle Fuses");
-            TunicRandomizer.Settings.BellShuffle = GUI.Toggle(ShowTooltip(new Rect(195f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Bells"), TunicRandomizer.Settings.BellShuffle, "Shuffle Bells");
+            TunicRandomizer.Settings.BellShuffle = GUI.Toggle(ShowTooltip(new Rect(195f * guiScale, advHeight, 175f * guiScale, 30f * guiScale), "advancedSinglePlayer", "Shuffle Bells"), TunicRandomizer.Settings.BellShuffle, "Shuffle Bells");*/
             advHeight += 40f * guiScale;
             GUI.Label(new Rect(10f * guiScale, advHeight, 300f * guiScale, 30f * guiScale), $"Fool Traps");
             ShowTooltip(new Rect(10f * guiScale, advHeight, 385f * guiScale, 80f * guiScale), "advancedSinglePlayer", "Fool Traps");
