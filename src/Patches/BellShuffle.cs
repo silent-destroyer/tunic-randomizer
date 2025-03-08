@@ -180,7 +180,7 @@ namespace TunicRandomizer {
                     aura.transform.localEulerAngles = new Vector3(180, 0, 0);
                     aura.transform.localScale = Vector3.one * 0.5f;
                     aura.SetActive(true);
-                    bell.transform.GetChild(5).GetComponent<StudioEventEmitter>().enabled = false;
+                    GameObject.Destroy(bell.transform.GetChild(5).GetComponent<StudioEventEmitter>());
                     bell.gameObject.GetComponent<VisibleByHavingInventoryItem>().renderers = new Renderer[] {
                         bell.transform.GetChild(1).GetComponent<MeshRenderer>(),
                         bell.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>(),
