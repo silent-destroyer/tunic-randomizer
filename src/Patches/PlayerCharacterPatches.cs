@@ -266,10 +266,18 @@ namespace TunicRandomizer {
                 ItemTracker.PopulateSpoilerLog();
             }
 
-            Hints.PopulateHints();
-            
-            GhostHints.GenerateHints();
-            
+            try {
+                Hints.PopulateHints();
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error generating hints! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
+                GhostHints.GenerateHints();
+            } catch (Exception e) {
+                TunicLogger.LogInfo("Error generating ghost hints! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             if (Hints.HeroGraveHints.Count != 0) {
                 Hints.SetupHeroGraveToggle();
             }

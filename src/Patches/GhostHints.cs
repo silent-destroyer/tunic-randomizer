@@ -462,9 +462,11 @@ namespace TunicRandomizer {
 
             List<(string, string, string, string)> Hints = new List<(string, string, string, string)>();
             for (int i = 0; i < 5; i++) {
-                (string, string, string, string) LocationHint = LocationHints[random.Next(LocationHints.Count)];
-                Hints.Add(LocationHint);
-                LocationHints.Remove(LocationHint);
+                if (LocationHints.Count > 0) {
+                    (string, string, string, string) LocationHint = LocationHints[random.Next(LocationHints.Count)];
+                    Hints.Add(LocationHint);
+                    LocationHints.Remove(LocationHint);
+                }
             }
             for (int i = 0; i < 7; i++) {
                 if (ItemHints.Count > 0) {
@@ -532,7 +534,7 @@ namespace TunicRandomizer {
                 string Location = HintableLocationIds[Key];
                 string LocationSuffix = Location[Location.Length - 1] == 'S' ? "R" : "iz";
 
-                if (IsArchipelago()) {
+                if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(Key)) {
                     ItemInfo ItemInfo = ItemLookup.ItemList[Key];
                     string PlayerName = ItemInfo.Player.Name;
                     bool IsTunicItem = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
