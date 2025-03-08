@@ -670,11 +670,6 @@ namespace TunicRandomizer {
             }
 
             try {
-                if (GhostHints.HintGhosts.Count == 0 &&
-                    ((IsSinglePlayer() && Locations.RandomizedLocations.Count > 0) || (IsArchipelago() && ItemLookup.ItemList.Count > 0))) {
-                    TunicLogger.LogInfo("Ghost hint list is empty, trying again to generate them.");
-                    GhostHints.GenerateHints();
-                }
                 if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
                     GhostHints.SpawnHintGhosts(SceneName);
                     SpawnedGhosts = true;
