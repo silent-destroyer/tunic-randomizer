@@ -190,6 +190,11 @@ namespace TunicRandomizer {
                         moveUp.gameObject.SetActive(true);
                     }
                     SaveFile.SetInt("randomizer fuse closed " + node.Guid, 1);
+
+                    if (node.Guid == 9003 && node.gameObject.scene.name == "Cathedral Redux") {
+                        StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = false;
+                        StateVariable.GetStateVariableByName("SV_cathedral elevator ever been on").BoolValue = false;
+                    }
                 }
             }
         }
@@ -315,8 +320,9 @@ namespace TunicRandomizer {
                     helper.__animationEvent_fuseCloseAnimationDone();
                 }
             }
-            if (fuseId == 1300 && SceneManager.GetActiveScene().name == "Cathedral Redux") {
+            if (fuseId == 1300) {
                 StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
+                StateVariable.GetStateVariableByName("SV_cathedral elevator ever been on").BoolValue = true;
             }
         }
 
