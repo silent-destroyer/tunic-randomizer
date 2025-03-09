@@ -270,6 +270,14 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (sceneName == "Library Lab" && !SaveFlags.GetBool(SaveFlags.EntranceRando)) {
+                if ((Inventory.GetItemByName("Hyperdash").Quantity == 0 || SaveFile.GetInt("fuseClosed 1055") == 0 || 
+                    (SaveFile.GetInt(SaveFlags.PrayerUnlocked) == 0 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1))
+                    && Inventory.GetItemByName("Torch").Quantity == 0) {
+                    SpawnLibraryEscapePortal();
+                }
+            }
+
             if (FarShoreSignPlacements.ContainsKey(sceneName)) {
                 foreach (KeyValuePair<string, (int, Vector3)> pair in FarShoreSignPlacements[sceneName]) {
                     GameObject teleporter = GameObject.Find(pair.Key);
@@ -357,17 +365,22 @@ namespace TunicRandomizer {
 
         public static void SpawnZigguratEscapePortal() {
             GameObject portal = GameObject.Instantiate(SceneLoaderPatches.SpiritArenaTeleporterPrefab);
-            if (portal.scene.name == "ziggurat2020_3") {
-                portal.transform.position = new Vector3(77.1016f, 3.5704f, 60.888f);
-            } else if(portal.scene.name == "ziggurat2020_1") {
-                portal.transform.position = new Vector3(111.7893f, 137.6833f, 77.0541f);
-            }
             portal.transform.localScale = Vector3.one;
             if (portal.GetComponentInChildren<ScenePortal>() != null) {
                 portal.GetComponentInChildren<ScenePortal>().id = "customfasttravel_spawnid";
                 portal.GetComponentInChildren<ScenePortal>().destinationSceneName = "ziggurat2020_0";
                 portal.GetComponentInChildren<ScenePortal>().optionalIDToSpawnAt = "customfasttravel_spawnid";
                 portal.SetActive(true);
+            }
+
+            if (portal.scene.name == "ziggurat2020_3") {
+                portal.transform.position = new Vector3(77.1016f, 3.5704f, 60.888f);
+                GameObject portal2 = GameObject.Instantiate(portal);
+                portal2.transform.localScale = Vector3.one;
+                portal2.transform.position = new Vector3(393.0816f, -48.4296f, -128.7851f);
+                portal2.SetActive(true);
+            } else if(portal.scene.name == "ziggurat2020_1") {
+                portal.transform.position = new Vector3(111.7893f, 137.6833f, 77.0541f);
             }
         }
 
@@ -385,6 +398,27 @@ namespace TunicRandomizer {
             spawn2.transform.position = new Vector3(15.9234f, 2.0023f, -4.1708f);
             spawn2.transform.localEulerAngles = new Vector3(180, 0, 0);
             spawn2.SetActive(true);
+        }
+
+        public static void SpawnLibraryEscapePortal() {
+            GameObject portal = GameObject.Instantiate(SceneLoaderPatches.SpiritArenaTeleporterPrefab);
+            portal.transform.localScale = Vector3.one;
+            portal.transform.position = new Vector3(142.9628f, 96.7144f, -34.6715f);
+            if (portal.GetComponentInChildren<ScenePortal>() != null) {
+                portal.GetComponentInChildren<ScenePortal>().id = "customfasttravel_spawnid";
+                portal.GetComponentInChildren<ScenePortal>().destinationSceneName = "Library Exterior";
+                portal.GetComponentInChildren<ScenePortal>().optionalIDToSpawnAt = "customfasttravel_spawnid";
+                portal.SetActive(true);
+            }
+        }
+
+        public static void SpawnLibraryEscapePoint() {
+            GameObject spawn = new GameObject("library escape spawn point from lab");
+            spawn.AddComponent<PlayerCharacterSpawn>();
+            spawn.GetComponent<PlayerCharacterSpawn>().id = "Library Lab_customfasttravel_spawnid";
+            spawn.transform.position = new Vector3(1.8175f, 44.0645f, -11.6797f);
+            spawn.transform.localEulerAngles = new Vector3(0, 180, 0);
+            spawn.SetActive(true);
         }
 
         public static string GetFuseStatusForSign(List<string> Fuses) {

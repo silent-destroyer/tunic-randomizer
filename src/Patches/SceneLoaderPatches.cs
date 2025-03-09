@@ -569,6 +569,10 @@ namespace TunicRandomizer {
                 SetupQuarrySecret();
             } else if (SceneName == "Quarry") {
                 SetupOldQuarryStuff();
+            } else if (SceneName == "Library Exterior") {
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && SaveFile.GetInt(EntranceRando) == 0) {
+                    FuseRandomizer.SpawnLibraryEscapePoint();
+                }
             }
 
             EnemyRandomizer.CheckBossState();
