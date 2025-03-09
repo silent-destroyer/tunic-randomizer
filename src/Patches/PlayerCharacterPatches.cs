@@ -753,7 +753,7 @@ namespace TunicRandomizer {
                         foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
                             ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationName], ItemInfo);
                         }
-                    }).Wait(TimeSpan.FromSeconds(5.0f));
+                    }).Wait(TimeSpan.FromSeconds(10.0f));
                     TunicLogger.LogInfo("Successfully scouted locations for item placements");
 
                     Archipelago.instance.integration.UpdateDataStorageOnLoad();
