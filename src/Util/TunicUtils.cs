@@ -166,29 +166,29 @@ namespace TunicRandomizer {
             }
         }
 
-        public static List<Check> GetAllInUseChecks() {
+        public static List<Check> GetAllInUseChecks(bool getAll = false) {
             // Get a list of all default checks based on settings
             List<Check> checks = Locations.VanillaLocations.Values.ToList();
-            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1) {
+            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1 || getAll) {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
             }
-            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1 || getAll) {
                 bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
                 checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
             }
-            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1) { 
+            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1 || getAll) { 
                 checks.AddRange(FuseRandomizer.FuseChecks.Values.ToList());
             }
-            if (SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1) {
+            if (SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1 || getAll) {
                 checks.AddRange(BellShuffle.BellChecks.Values.ToList());
             }
             return CopyListOfChecks(checks);
         }
 
-        public static Dictionary<string, Check> GetAllInUseChecksDictionary() {
+        public static Dictionary<string, Check> GetAllInUseChecksDictionary(bool getAll = false) {
             // Get a list of all default checks based on settings
             Dictionary<string, Check> Checks = new Dictionary<string, Check>();
-            foreach (Check check in GetAllInUseChecks()) {
+            foreach (Check check in GetAllInUseChecks(getAll)) {
                 Checks.Add(check.CheckId, check);
             }
             return Checks;
