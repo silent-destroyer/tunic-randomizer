@@ -818,7 +818,6 @@ namespace TunicRandomizer {
                         "Fortress Grave Path",
                         new List<TunicPortal> {
                             new TunicPortal("Fortress Grave Path Lower Exit", "Fortress Courtyard", "Lower", PDir.WEST),
-                            new TunicPortal("Fortress Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                     {
@@ -831,6 +830,12 @@ namespace TunicRandomizer {
                         "Fortress Grave Path Dusty Entrance",
                         new List<TunicPortal> {
                             new TunicPortal("Fortress Grave Path Dusty Entrance", "Dusty", "", PDir.NORTH),
+                        }
+                    },
+                    {
+                        "Fortress Hero's Grave",
+                        new List<TunicPortal> {
+                            new TunicPortal("Fortress Hero's Grave", "RelicVoid", "teleporter_relic plinth", PDir.FLOOR),
                         }
                     },
                 }
