@@ -130,6 +130,10 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Turns every bush and piece of grass in the game into a potential item location, for a total of over 6500 checks.
 - Shuffle Breakables
   - Turns most ordinary breakable objects in the game into item checks, including pots, signs, boxes, bombable walls, and more.
+- Shuffle Fuses
+  - Turns every fuse into an item that will immediately restore power to that node when found. The fuses can still be prayed at, but will reward a random item instead of affect the power lines.
+- Shuffle Bells
+  - Turns the East and West Bells into items that will open the Sealed Temple when found. Ringing the bells anyway will instead reward a random item.
 - Lanternless Logic
   - Removes the Lantern as a requirement for dark areas, allowing it (or items that grant access to it) to be shuffled into places like Dark Tomb, etc.
 - Maskless Logic
@@ -141,6 +145,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Want a more chaotic experience? When a player with Death Link enabled dies, everyone else with the setting on *also* dies. Be careful!
 - Death Link Effect
   - Choose what happen when you receive a death link from someone else. Setting this to Fool Trap will spawn a fool trap instead of killing the player.
+- Trap Link
+  - When you find or receive a Fool Trap, it will send one to everyone else that is currently playing with the setting enabled.
 - Auto-open !collect-ed Checks
   - Makes checks that you haven't found but were completed by another player (via !collect, slot co-op, etc) appear as already been opened/picked up. Also reflects the item counts on the inventory screen/ending summary. Can be toggled on/off freely, and will revert the appearance of checks to their previous state on the next scene transition.
 - Send hints to server
@@ -181,10 +187,12 @@ With the exception of the Logic settings (which are determined in your Archipela
 - Entrance Tracker File
   - Automatically keeps track of the entrances you've been through and where they connect to.
 ### Enemy Randomization 
-- Enemy Randomizer
+- Randomize Enemy Types
   - Randomly swaps out enemies with new ones when you load into a scene. You may even see some enemies you've never seen before!
-- Extra Enemies
-  - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos.
+- Enable Extra Enemies
+  - Enables certain NG+ and nighttime enemy slots to add more enemies into the mix for increased chaos. This setting works with or without randomized enemies.
+- Randomize Enemy Sizes
+  - Randomly scales enemies between 0.25x to 1.75x their original size. This setting works with or without randomized enemies.
 - Balanced Enemies
   - Enemies are randomized based on the difficulty of the original enemy being swapped out.
 - Seeded Enemies
