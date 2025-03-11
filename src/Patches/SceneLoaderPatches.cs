@@ -477,7 +477,7 @@ namespace TunicRandomizer {
                 // Activate night bridge to allow access to shortcut ladder
                 GameObject.Find("_Setpieces Etc/NightBridge/").GetComponent<DayNightBridge>().dayOrNight = StateVariable.GetStateVariableByName("Is Night").BoolValue ? DayNightBridge.DayNight.NIGHT : DayNightBridge.DayNight.DAY;
 
-                if ((GetBool(FuseShuffleEnabled) && GetBool("fuseClosed 1096")) || ((GetBool(FuseShuffleEnabled) && GetBool("fuseClosed 9000")))) {
+                if ((!GetBool(FuseShuffleEnabled) && GetBool("fuseClosed 1096")) || (GetBool(FuseShuffleEnabled) && GetBool("fuseClosed 9000"))) {
                     if (GameObject.Find("_Setpieces Etc/plank_4u (planks on gate)/") != null) {
                         GameObject.Find("_Setpieces Etc/plank_4u (planks on gate)/").SetActive(false);
                     }
