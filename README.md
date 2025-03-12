@@ -83,13 +83,14 @@ For discussion around the Archipelago side of things, please visit the dedicated
     - If playing with ladder shuffle, this hint will still let you know where a useful item is, but it may require you to find some ladders first to get to it and thus won't always be immediately available.
   - The Hero's Graves in the Swamp, Monastery, and Library will hint the location of the three Hexagon keys.
   - The Hero's Graves in East Forest, West Garden, and the Eastern Vault Fortress hint towards a major progression item, such as the Magic Orb, Magic Wand, Magic Dagger, a Sword Upgrade, and/or the Prayer/Holy Cross pages if abilities are shuffled.
-    - You can tell if a hinted item was found if the candle at the Hero's Grave statue is lit or not. Lit = item found.
+    - You can tell if a hinted item was found if the candle at the Hero's Grave statue is lit or not. If it is lit, the item has been found.
     - Once all 6 items hinted by the Hero's Graves are obtained, the graves will switch to displaying hints for the six Hero Relics. This is indicated by the candle flames at each statue turning blue.
   - The statue in the Sealed Temple will always hint the general location of the Hero's Laurels.
 - The "Fairy Seeker" Holy Cross spell (ULURDR) can  be used to seek out all items in an area, instead of just fairies. If all items in an area have been found, the fairy seeker will seek out the closest load zone that has items immediately beyond it. Useful for finding missing checks in areas with lots of obscured or hidden items!
 - Save files created by the randomizer will be marked with a "randomizer" or "archipelago" tag in the file select screen to help differentiate them from your vanilla save files while the mod is loaded. The mod has protections in place to avoid loading vanilla saves on accident as well.
 - The mod will routinely write to a couple of files in the Randomizer folder under the game's AppData directory (typically C:\Users\You\AppData\LocalLow\Andrew Shouldice\Secret Legend\Randomizer):
   - Spoiler.log - This file lists every check in the game and what item they contain. It will also mark off which checks you have collected.
+  - EntranceTracker.csv - This file will show you the entrances you have discovered and where they lead when doing an Entrance Randomizer seed.
   - ItemTracker.json - This file contains information such as the current seed number, what important items have been obtained, and a running list of all checks that have been found. Can be useful for creating external programs that interface with the randomizer, such as this [Item Tracker](https://github.com/radicoon/tunic-rando-tracker) by Radicoon.
 - Custom seeds can be set on the title screen before starting a New Game.
 - The Randomizer will notify you on the title screen if a new update is available.
