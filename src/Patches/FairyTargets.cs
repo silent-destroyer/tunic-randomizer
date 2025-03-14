@@ -169,7 +169,7 @@ namespace TunicRandomizer {
         private static Il2CppSystem.Collections.Generic.List<FairyTarget> CleanList(Il2CppSystem.Collections.Generic.List<FairyTarget> list) {
             Il2CppSystem.Collections.Generic.List<FairyTarget> newList = new Il2CppSystem.Collections.Generic.List<FairyTarget>();
             foreach (var item in list) {
-                if (item == null) {
+                if (item != null) {
                     newList.Add(item);
                 }
             }
