@@ -394,7 +394,7 @@ namespace TunicRandomizer {
                 "Hero Relic - MP", "Red Questagon", "Green Questagon", "Blue Questagon", "Gold Questagon", "Pages 24-25 (Prayer)", "Pages 42-43 (Holy Cross)", "Pages 52-53 (Icebolt)"
         };
 
-        public static List<string> LegacyMajorItems = new List<string>() { "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shield", "Shotgun", "Mask",
+        public static List<string> LegacyMajorItems = new List<string>() { "Stick", "Sword", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shield", "Shotgun", "Mask",
                 "Key (House)", "Vault Key (Red)", "Dath Stone", "Relic - Hero Sword", "Relic - Hero Crown", "Relic - Hero Water", "Relic - Hero Pendant HP", "Relic - Hero Pendant SP",
                 "Relic - Hero Pendant MP", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "12", "21", "26"
         };

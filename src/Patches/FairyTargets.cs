@@ -185,7 +185,7 @@ namespace TunicRandomizer {
                         newItem = namePair.Key;
                     }
                 }
-                if (ItemLookup.LegacyMajorItems.Contains(newItem) || newItem.StartsWith("Ladder")) {
+                if (TunicUtils.AllProgressionNames.Contains(newItem)) {
                     // add the new item received to the items the player has
                     TunicUtils.AddStringToDict(TunicUtils.PlayerItemsAndRegions, newItem);
                     TunicUtils.UpdateChecksInLogic();
