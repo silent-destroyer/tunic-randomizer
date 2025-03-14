@@ -163,7 +163,6 @@ namespace TunicRandomizer {
                 GameObject fairyTarget = GameObject.Find($"fairy target {breakableId}");
                 if (fairyTarget != null) {
                     GameObject.Destroy(fairyTarget);
-                    FairyTargets.ChooseFairyTargetList();
                 }
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
@@ -195,7 +194,6 @@ namespace TunicRandomizer {
                     GameObject fairyTarget = GameObject.Find($"fairy target {check.CheckId}");
                     if (fairyTarget != null) {
                         GameObject.Destroy(fairyTarget);
-                        FairyTargets.ChooseFairyTargetList();
                     }
                 } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(breakableId) && !Locations.CheckedLocations[breakableId]) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
@@ -233,7 +231,6 @@ namespace TunicRandomizer {
                 GameObject fairyTarget = GameObject.Find($"fairy target {breakableId}");
                 if (fairyTarget != null) {
                     GameObject.Destroy(fairyTarget);
-                    FairyTargets.ChooseFairyTargetList();
                 }
                 // todo: make this show the item in a reasonable spot
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {

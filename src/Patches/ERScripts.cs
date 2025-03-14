@@ -992,6 +992,9 @@ namespace TunicRandomizer {
                 if (portalCombo.Portal1.Name == portalName) {
                     return portalCombo.Portal2.Scene;
                 }
+                if (portalCombo.Portal2.Name == portalName) {
+                    return portalCombo.Portal1.Scene;
+                }
             }
             // returning this if it fails, since that makes some FairyTarget stuff easier
             return "FindPairedPortalSceneFromName failed to find a match";
