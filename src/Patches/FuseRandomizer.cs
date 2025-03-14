@@ -172,7 +172,9 @@ namespace TunicRandomizer {
                 if (fuse != null && node != null && fuseHelper != null) {
                     TunicLogger.LogInfo("fuse closed " + node.Guid);
                     string CheckId = fuseHelper.CheckId;
-                
+                    if (SaveFile.GetInt("archipelago") == 1 && !SaveFlags.IsArchipelago()) {
+                        SaveFile.SetInt("randomizer picked up " + CheckId, 1);
+                    }
                     if (SaveFlags.IsArchipelago()) {
                         Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
                     } else if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId)) {
