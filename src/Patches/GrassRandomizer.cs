@@ -134,6 +134,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
                         if (GameObject.Find($"fairy target {grassId}")) {
                             GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
+                            FairyTargets.ChooseFairyTargetList();
                         }
                         string receiver = ItemInfo.Player.Name;
                         string itemName = ItemInfo.ItemName;
@@ -167,6 +168,7 @@ namespace TunicRandomizer {
                         GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
                         if (FairyTarget != null) {
                             GameObject.Destroy(FairyTarget);
+                            FairyTargets.ChooseFairyTargetList();
                         }
                     }
                     if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
