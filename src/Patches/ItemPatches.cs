@@ -756,7 +756,6 @@ namespace TunicRandomizer {
             GameObject FairyTarget = GameObject.Find($"fairy target {CheckId}");
             if (FairyTarget != null) {
                 GameObject.Destroy(FairyTarget);
-                FairyTargets.ChooseFairyTargetList();
             }
 
             RecentItemsDisplay.instance.EnqueueItem(Check);
