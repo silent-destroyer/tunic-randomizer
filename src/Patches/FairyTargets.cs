@@ -148,6 +148,9 @@ namespace TunicRandomizer {
 
         public static void ChooseFairyTargetList() {
             Il2CppSystem.Collections.Generic.List<FairyTarget> targets = new Il2CppSystem.Collections.Generic.List<FairyTarget>();
+            // remove any destroyed game objects from the list
+            ItemTargets = CleanList(ItemTargets);
+            ItemTargetsInLogic = CleanList(ItemTargetsInLogic);
             if (TunicRandomizer.Settings.SeekingSpellLogic) {
                 if (ItemTargetsInLogic.Count > 0) {
                     targets = ItemTargetsInLogic;
@@ -164,12 +167,13 @@ namespace TunicRandomizer {
             FairyTarget.registered = CleanList(targets);
         }
         private static Il2CppSystem.Collections.Generic.List<FairyTarget> CleanList(Il2CppSystem.Collections.Generic.List<FairyTarget> list) {
-            foreach (var item in list) { 
-                if (item == null) {
-                    list.Remove(item);
+            Il2CppSystem.Collections.Generic.List<FairyTarget> newList = new Il2CppSystem.Collections.Generic.List<FairyTarget>();
+            foreach (var item in list) {
+                if (item != null) {
+                    newList.Add(item);
                 }
             }
-            return list;
+            return newList;
         }
 
         // update what targets are in logic based on the item that was received, or just updates which list to use

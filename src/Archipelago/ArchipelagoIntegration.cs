@@ -318,8 +318,8 @@ namespace TunicRandomizer {
                 Locations.CheckedLocations[GameObjectId] = true;
                 if (GameObject.Find($"fairy target {GameObjectId}")) {
                     GameObject.Destroy(GameObject.Find($"fairy target {GameObjectId}"));
+                    FairyTargets.ChooseFairyTargetList();
                 }
-                FairyTargets.ChooseFairyTargetList();
                 if (SaveFile.GetInt(GrassRandoEnabled) != 1 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                     ItemTracker.PopulateSpoilerLog();
                 }

@@ -763,7 +763,9 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
                 ModelSwaps.SwapItemsInScene();
             }
-            FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
+            if (SaveFile.GetInt(GrassRandoEnabled) == 0) {
+                FairyTargets.UpdateFairyTargetsInLogic(ItemLookup.SimplifiedItemNames[Check.Reward.Name]);
+            }
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
             if (SaveFile.GetInt(GrassRandoEnabled) == 0 && TunicRandomizer.Settings.CreateSpoilerLog && !TunicRandomizer.Settings.RaceMode) {
                 ItemTracker.PopulateSpoilerLog();
