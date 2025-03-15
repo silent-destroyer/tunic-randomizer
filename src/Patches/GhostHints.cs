@@ -368,8 +368,8 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Cathedral 2", "Cathedral Redux", new Vector3(-10.9f, 1.45f, -65.2f), new Quaternion(0f, .9238f, 0f, -.3829f), NPC.NPCAnimState.SIT, $"hI, Im #uh wuhn hoo rEsehts awl uhv #uh buhtin wawlz.") }
             },
             { "Lower Zig", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Lower Zig 1", "ziggurat2020_3", new Vector3(66f, 3.8f, 56f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"wuhn fi$, too fi$, rehd fi$, bloo fi$...\nwehl ahkJoouhlE #Ar juhst purpl.", fishingPole: true, fishingRodPos: new TransformData(new Vector3(66f, 4.8f, 56f), new Quaternion(0f, 0.7f, 0f, 0.7f), new Vector3(1f, 1f, 1f))),
-                new HintGhost("Hint Ghost Lower Zig 2", "ziggurat2020_3", new Vector3(55.9f, 4.1f, 4.6f), new Quaternion(0f, 0.9f, 0f, -0.5f), NPC.NPCAnimState.GAZE, $"hA frehnd, I beht #Ars suhm rElE good loot in #aht\nJehst #Ar. its purfehktlE sAf, kmawn, giv it uh trI!"), }
+                new HintGhost("Hint Ghost Lower Zig 1", "ziggurat2020_3", new Vector3(66f, 3.8f, 56f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"wuhn fi$, too fi$, rehd fi$, bloo fi$...\nwehl ahkJoouhlE #Ar juhst purpl.", fishingPole: true, fishingRodPos: new TransformData(new Vector3(66f, 4.8f, 56f), new Quaternion(0f, 0.7f, 0f, 0.7f), new Vector3(1f, 1f, 1f)), wearScavMask: true),
+                new HintGhost("Hint Ghost Lower Zig 2", "ziggurat2020_3", new Vector3(55.9f, 4.1f, 4.6f), new Quaternion(0f, 0.9f, 0f, -0.5f), NPC.NPCAnimState.GAZE, $"hA frehnd, I beht #Ars suhm rElE good loot in #aht\nJehst #Ar. its purfehktlE sAf, kmawn, giv it uh trI!", wearScavMask: true), }
             },
         };
 
