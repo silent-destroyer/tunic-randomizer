@@ -381,7 +381,7 @@ namespace TunicRandomizer {
 
                 if (GetBool(Decoupled) && GetBool("Placed Hexagons ALL")) {
                     GameObject teleporter = null;
-                    foreach(FoxgodArenaCutscenes c in Resources.FindObjectsOfTypeAll<FoxgodArenaCutscenes>().Where(c => c.teleporterCollider != null)) {
+                    foreach (FoxgodArenaCutscenes c in Resources.FindObjectsOfTypeAll<FoxgodArenaCutscenes>().Where(c => c.teleporterCollider != null)) {
                         teleporter = c.teleporterCollider.gameObject;
                     }
                     if (teleporter != null) {
@@ -396,7 +396,7 @@ namespace TunicRandomizer {
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
             } else if (SceneName == "Overworld Interiors") {
                 GameObject.FindObjectOfType<BedToggle>().canBeUsed = StateVariable.GetStateVariableByName("false");
-                
+
                 if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && SaveFile.GetInt(HexagonQuestEnabled) == 0) {
                     InteractionPatches.SetupDayNightHourglass();
                 }
@@ -441,7 +441,7 @@ namespace TunicRandomizer {
                 GameObject.Destroy(GameObject.Find("_Bridges-Day/log bridge/").GetComponent<DayNightBridge>());
 
                 if (SaveFile.GetInt("seed") != 0 && (SaveFile.GetInt(LadderRandoEnabled) == 0 || Inventory.GetItemByName("Ladder to Swamp").Quantity == 1) && SaveFile.GetString("randomizer game mode") != "VANILLA") {
-                    for(int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 3; i++) {
                         ToggleObjectByFuse fuseToggle = GameObject.Find("_Bridges-Night").transform.GetChild(i).gameObject.AddComponent<ToggleObjectByFuse>();
                         fuseToggle.fuseId = SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1 ? 9000 : 1096;
                         fuseToggle.stateWhenClosed = i != 0;
@@ -525,13 +525,13 @@ namespace TunicRandomizer {
                 foreach (Chest chest in Resources.FindObjectsOfTypeAll<Chest>().Where(chest => chest.name == "Chest: Fairy")) {
                     chest.transform.GetChild(4).gameObject.SetActive(false);
                 }
-            } else if(SceneName == "frog cave main") { 
+            } else if (SceneName == "frog cave main") {
                 SetupFrogDomainSecret();
             } else if (SceneName == "Sewer_Boss") {
                 SetupCryptSecret();
             } else if (SceneName == "Crypt") {
                 SetupOldCryptStuff();
-            } else if(SceneName == "Sword Access") {
+            } else if (SceneName == "Sword Access") {
                 GameObject Bush = GameObject.Find("_Grass/bush (70)");
                 if (Bush != null) {
                     Bush.SetActive(false);
@@ -559,7 +559,6 @@ namespace TunicRandomizer {
             } else if (SceneName == "ziggurat2020_1") {
                 if (SaveFile.GetInt(EntranceRando) == 1) {
                     SpawnZigSkipRecovery();
-
                 }
             } else if (SceneName == "ziggurat2020_0") {
                 if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && SaveFile.GetInt(EntranceRando) == 0) {

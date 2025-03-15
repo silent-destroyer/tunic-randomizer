@@ -24,6 +24,9 @@ namespace TunicRandomizer {
                 if (GhostHints.HintGhosts.ContainsKey(__instance.name)) {
                     GhostHints.HintGhost hintGhost = GhostHints.HintGhosts[__instance.name];
                     __instance.GetComponent<NPC>().script.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.TrunicDialogue : hintGhost.Dialogue)}---{hintGhost.Hint}";
+                    if (hintGhost.AltDialogueCondition != "" && SaveFile.GetInt(hintGhost.AltDialogueCondition) == 1) {
+                        __instance.GetComponent<NPC>().script.text = $"{(TunicRandomizer.Settings.UseTrunicTranslations ? hintGhost.AltTrunicDialogue : hintGhost.AltDialogue)}---{hintGhost.Hint}";
+                    }
                     if (hintGhost.CheckId != "") {
                         if (hintGhost.CheckId == "Your Pocket" || SaveFile.GetInt("randomizer picked up " + hintGhost.CheckId) == 1 || (IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {hintGhost.CheckId} was collected") == 1)) {
                             __instance.GetComponent<NPC>().script.text += $"---... O! hahv yoo \"FOUND\" it \"ALREADY?\" goud wurk!";

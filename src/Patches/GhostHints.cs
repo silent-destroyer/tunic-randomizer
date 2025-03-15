@@ -40,10 +40,17 @@ namespace TunicRandomizer {
             public int CameraOverride;
             public float InteractRadiusOverride;
             public bool WearScavMask;
+            public string AltDialogueCondition;
+            public string AltDialogue;
+            public string AltTrunicDialogue;
 
             public HintGhost() { }
 
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false) {
+            public HintGhost(string name, string sceneName, Vector3 position, 
+                Quaternion rotation, NPC.NPCAnimState animState, string dialogue, 
+                bool fishingPole = false, TransformData fishingRodPos = new TransformData(), 
+                int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false,
+                string altDialogueCondition = "", string altDialogue = "", string altTrunicDialogue = "") {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -60,8 +67,14 @@ namespace TunicRandomizer {
                 CameraOverride = cameraYOverride;
                 InteractRadiusOverride = interactRadiusOverride;
                 WearScavMask = wearScavMask;
+                AltDialogueCondition = altDialogueCondition;
+                AltDialogue = altDialogue;
+                AltTrunicDialogue = altTrunicDialogue == "" ? altDialogue : altTrunicDialogue;
             }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, 
+                NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, 
+                TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, 
+                bool wearScavMask = false, string altDialogueCondition = "", string altDialogue = "", string altTrunicDialogue = "") {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -78,10 +91,11 @@ namespace TunicRandomizer {
                 CameraOverride = cameraYOverride;
                 InteractRadiusOverride = interactRadiusOverride;
                 WearScavMask = wearScavMask;
+                AltDialogueCondition = altDialogueCondition;
+                AltDialogue = altDialogue;
+                AltTrunicDialogue = altTrunicDialogue == "" ? altDialogue : altTrunicDialogue;
             }
         }
-
-        
 
         public static GameObject GhostFox;
 
@@ -295,7 +309,7 @@ namespace TunicRandomizer {
             },
             { "East Forest Entrance", new List<HintGhost>() {
                 new HintGhost("Hint Ghost East Forest Entrance 1", "Forest Belltower", new Vector3(500.9258f, 13.9394f, 63.79896f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.SIT, $"#uh lahdur brOk ahnd #Ar R ehnehmEz owtsId, buht #is stahJoo\nawfurz sAftE."),
-                new HintGhost("Hint Ghost East Forest Entrance 2", "East Forest Redux", new Vector3(75.5f, 4f, 52f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"plEz dOnt %rO koinz in #uh wehl, yool skAr uhwA\n#uh fi$.", true, new TransformData(new Vector3(75.5f, 5.1f, 51.7f), new Quaternion(0f, 0.7071f, 0f, 0.7071f), new Vector3(1f, 1f, 1f))) }
+                new HintGhost("Hint Ghost East Forest Entrance 2", "East Forest Redux", new Vector3(75.5f, 4f, 52f), new Quaternion(0f, -1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"plEz dOnt %rO koinz in #uh wehl, yool skAr uhwA\n#uh fi$.", fishingPole: true, fishingRodPos: new TransformData(new Vector3(75.5f, 5.1f, 51.7f), new Quaternion(0f, 0.7071f, 0f, 0.7071f), new Vector3(1f, 1f, 1f))) }
             },
             { "East Forest Exit", new List<HintGhost>() {
                 new HintGhost("Hint Ghost East Forest Exit 1", "Forest Belltower", new Vector3(500.3264f, 62.012f, 107.5831f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.GAZE, $"di^ daw^! doo yoo hahv wuht it tAks?"),
@@ -366,6 +380,10 @@ namespace TunicRandomizer {
             { "Cathedral", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Cathedral", "Cathedral Redux", new Vector3(10.5f, 1f, -47.6f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.SIT, $"hahv yoo hurd uhbowt owur lord ahnd sAvyur ahndroo $OldIs?"),
                 new HintGhost("Hint Ghost Cathedral 2", "Cathedral Redux", new Vector3(-10.9f, 1.45f, -65.2f), new Quaternion(0f, .9238f, 0f, -.3829f), NPC.NPCAnimState.SIT, $"hI, Im #uh wuhn hoo rEsehts awl uhv #uh buhtin wawlz.") }
+            },
+            { "Lower Zig", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Lower Zig 1", "ziggurat2020_3", new Vector3(66f, 3.8f, 56f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"wuhn fi$, too fi$, rehd fi$, bloo fi$...\nwehl, ahkJoouhlE #Ar juhst purpl.", fishingPole: true, fishingRodPos: new TransformData(new Vector3(66f, 4.8f, 56f), new Quaternion(0f, 0.7f, 0f, 0.7f), new Vector3(1f, 1f, 1f)), wearScavMask: true),
+                new HintGhost("Hint Ghost Lower Zig 2", "ziggurat2020_3", new Vector3(55.9f, 4.1f, 4.6f), new Quaternion(0f, 0.9f, 0f, -0.5f), NPC.NPCAnimState.GAZE, $"hA frehnd, I beht #Ars suhm rElE goud loot in #aht\nJehst #Ar. its purfehktlE sAf, kmawn, giv it uh trI!", wearScavMask: true, altDialogueCondition: "randomizer picked up 231 [ziggurat2020_3]", altDialogue: $"wuht, yoo survIvd? I mEn, uhv kors yoo did, woud yor\ngoud frehnd pahJiz ehvur stEr yoo raw^?"), }
             },
         };
 
