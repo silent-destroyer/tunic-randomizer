@@ -347,6 +347,9 @@ namespace TunicRandomizer {
             { "Quarry Entrance", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Quarry Entrance", "Darkwoods Tunnel", new Vector3(102.7876f, 11.8391f, 9.2092f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.GAZE, $"I kahnt juhmp fR inuhf too rEj #aht %i^...", cameraYOverride: 150), }
             },
+            { "Quarry", new List<HintGhost>() {
+                new HintGhost("Hint Ghost Quarry", "Quarry Redux", new Vector3(-5.3239f, 68.0506f, 79.6667f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.SIT, "#uh Ar iz pritE spIsE hEr... I woud giv yoo mI mahsk,\nbuht mI hahndz gO rIt %roo it.", wearScavMask: true)} 
+            },
         };
 
         public static Dictionary<string, List<HintGhost>> EntranceRandoGhostLocations = new Dictionary<string, List<HintGhost>>() {
