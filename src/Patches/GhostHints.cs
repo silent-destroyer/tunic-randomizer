@@ -40,10 +40,17 @@ namespace TunicRandomizer {
             public int CameraOverride;
             public float InteractRadiusOverride;
             public bool WearScavMask;
+            public string AltDialogueCondition;
+            public string AltDialogue;
+            public string AltTrunicDialogue;
 
             public HintGhost() { }
 
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false) {
+            public HintGhost(string name, string sceneName, Vector3 position, 
+                Quaternion rotation, NPC.NPCAnimState animState, string dialogue, 
+                bool fishingPole = false, TransformData fishingRodPos = new TransformData(), 
+                int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false,
+                string altDialogueCondition = "", string altDialogue = "", string altTrunicDialogue = "") {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -60,8 +67,14 @@ namespace TunicRandomizer {
                 CameraOverride = cameraYOverride;
                 InteractRadiusOverride = interactRadiusOverride;
                 WearScavMask = wearScavMask;
+                AltDialogueCondition = altDialogueCondition;
+                AltDialogue = altDialogue;
+                AltTrunicDialogue = altTrunicDialogue == "" ? altDialogue : altTrunicDialogue;
             }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, 
+                NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, 
+                TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, 
+                bool wearScavMask = false, string altDialogueCondition = "", string altDialogue = "", string altTrunicDialogue = "") {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -78,10 +91,11 @@ namespace TunicRandomizer {
                 CameraOverride = cameraYOverride;
                 InteractRadiusOverride = interactRadiusOverride;
                 WearScavMask = wearScavMask;
+                AltDialogueCondition = altDialogueCondition;
+                AltDialogue = altDialogue;
+                AltTrunicDialogue = altTrunicDialogue == "" ? altDialogue : altTrunicDialogue;
             }
         }
-
-        
 
         public static GameObject GhostFox;
 
@@ -369,7 +383,7 @@ namespace TunicRandomizer {
             },
             { "Lower Zig", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Lower Zig 1", "ziggurat2020_3", new Vector3(66f, 3.8f, 56f), new Quaternion(0f, 1f, 0f, 0f), NPC.NPCAnimState.FISHING, $"wuhn fi$, too fi$, rehd fi$, bloo fi$...\nwehl ahkJoouhlE #Ar juhst purpl.", fishingPole: true, fishingRodPos: new TransformData(new Vector3(66f, 4.8f, 56f), new Quaternion(0f, 0.7f, 0f, 0.7f), new Vector3(1f, 1f, 1f)), wearScavMask: true),
-                new HintGhost("Hint Ghost Lower Zig 2", "ziggurat2020_3", new Vector3(55.9f, 4.1f, 4.6f), new Quaternion(0f, 0.9f, 0f, -0.5f), NPC.NPCAnimState.GAZE, $"hA frehnd, I beht #Ars suhm rElE good loot in #aht\nJehst #Ar. its purfehktlE sAf, kmawn, giv it uh trI!", wearScavMask: true), }
+                new HintGhost("Hint Ghost Lower Zig 2", "ziggurat2020_3", new Vector3(55.9f, 4.1f, 4.6f), new Quaternion(0f, 0.9f, 0f, -0.5f), NPC.NPCAnimState.GAZE, $"hA frehnd, I beht #Ars suhm rElE good loot in #aht\nJehst #Ar. its purfehktlE sAf, kmawn, giv it uh trI!", wearScavMask: true, altDialogueCondition: "randomizer picked up 231 [ziggurat2020_3]", altDialogue: $"wuht, yoo survIvd? I mEn, uhv kors yoo did, wood yor\ngood frehnd pahJehs ehvur stEr yoo raw^?"), }
             },
         };
 
