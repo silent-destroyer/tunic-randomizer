@@ -39,10 +39,11 @@ namespace TunicRandomizer {
             public TransformData FishingRodPos;
             public int CameraOverride;
             public float InteractRadiusOverride;
+            public bool WearScavMask;
 
             public HintGhost() { }
 
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false) {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -58,8 +59,9 @@ namespace TunicRandomizer {
                 FishingRodPos = fishingRodPos;
                 CameraOverride = cameraYOverride;
                 InteractRadiusOverride = interactRadiusOverride;
+                WearScavMask = wearScavMask;
             }
-            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1) {
+            public HintGhost(string name, string sceneName, Vector3 position, Quaternion rotation, NPC.NPCAnimState animState, string dialogue, string trunicDialogue, bool fishingPole = false, TransformData fishingRodPos = new TransformData(), int cameraYOverride = -1, float interactRadiusOverride = -1, bool wearScavMask = false) {
                 Name = name;
                 SceneName = sceneName;
                 Position = position;
@@ -75,6 +77,7 @@ namespace TunicRandomizer {
                 FishingRodPos = fishingRodPos;
                 CameraOverride = cameraYOverride;
                 InteractRadiusOverride = interactRadiusOverride;
+                WearScavMask = wearScavMask;
             }
         }
 
@@ -375,6 +378,15 @@ namespace TunicRandomizer {
                 GhostFox = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<NPC>().Where(npc => npc.name == "NPC_greeter").ToList()[0].gameObject);
                 GameObject.DontDestroyOnLoad(GhostFox);
                 GhostFox.SetActive(false);
+
+                GameObject ScavMask = new GameObject("ghost fox scavenger mask");
+                ScavMask.transform.parent = GhostFox.GetComponentInChildren<BHMBone>().transform;
+                ScavMask.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("scavenger_mask");
+                ScavMask.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("Scavenger miner");
+                ScavMask.transform.localScale = Vector3.one * 1.15f;
+                ScavMask.transform.localEulerAngles = new Vector3(22.5f, 0, 0);
+                ScavMask.transform.localPosition = new Vector3(0f, -1.3f, -0.45f);
+                ScavMask.SetActive(true);
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error initalizing ghost foxes for hints!");
             }
@@ -426,6 +438,13 @@ namespace TunicRandomizer {
 
             if (hintGhost.CameraOverride != -1 && NewGhostFox.GetComponent<NPC>().cameraOverrideTrigger != null) {
                 NewGhostFox.GetComponent<NPC>().cameraOverrideTrigger.data.eulerY = hintGhost.CameraOverride;
+            }
+
+            if (hintGhost.WearScavMask || hintGhost.HintedItem == "Scavenger Mask") {
+                GameObject mask = NewGhostFox.GetComponentInChildren<BHMBone>().transform.GetChild(2).gameObject;
+                mask.GetComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("scavenger_mask");
+                mask.GetComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("Scavenger miner");
+                mask.SetActive(true);
             }
 
             if (hintGhost.SceneName == "Library Lab") {

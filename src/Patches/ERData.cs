@@ -2423,7 +2423,7 @@ namespace TunicRandomizer {
                                 "Heir Sword",
                             },
                             new List<string> {
-                                "Gun",
+                                "Shotgun",
                             },
                         }
                     },
@@ -2493,7 +2493,7 @@ namespace TunicRandomizer {
                         "Cube Cave Entrance Region",
                         new List<List<string>> {
                             new List<string> {
-                                "Gun",
+                                "Shotgun",
                             },
                             new List<string> {
                                 "Sword", "Shop",
@@ -2866,11 +2866,6 @@ namespace TunicRandomizer {
                                 "Ladder to Quarry",
                             },
                         }
-                    },
-                    {
-                        "Quarry Connector",
-                        new List<List<string>> {
-                        }
                     }
                 }
             },
@@ -2890,7 +2885,7 @@ namespace TunicRandomizer {
                     //            "Heir Sword",
                     //        },
                     //        new List<string> {
-                    //            "Gun",
+                    //            "Shotgun",
                     //        },
                     //    }
                     //},
@@ -2977,6 +2972,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Furnace Fuse",
                 new Dictionary<string, List<List<string>>> {
@@ -3024,6 +3020,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Sealed Temple",
                 new Dictionary<string, List<List<string>>> {
@@ -3047,6 +3044,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Hourglass Cave",
                 new Dictionary<string, List<List<string>>> {
@@ -3060,6 +3058,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Forest Belltower Upper",
                 new Dictionary<string, List<List<string>>> {
@@ -3113,6 +3112,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "East Forest",
                 new Dictionary<string, List<List<string>>> {
@@ -3178,6 +3178,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Guard House 1 East",
                 new Dictionary<string, List<List<string>>> {
@@ -3201,6 +3202,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Guard House 2 Upper",
                 new Dictionary<string, List<List<string>>> {
@@ -3272,6 +3274,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Forest Grave Path Main",
                 new Dictionary<string, List<List<string>>> {
@@ -3326,6 +3329,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Beneath the Well Ladder Exit",
                 new Dictionary<string, List<List<string>>> {
@@ -3397,6 +3401,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Well Boss",
                 new Dictionary<string, List<List<string>>> {
@@ -3407,6 +3412,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Dark Tomb Entry Point",
                 new Dictionary<string, List<List<string>>> {
@@ -3469,6 +3475,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "West Garden",
                 new Dictionary<string, List<List<string>>> {
@@ -3584,6 +3591,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Ruined Atoll",
                 new Dictionary<string, List<List<string>>> {
@@ -3809,6 +3817,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Library Exterior Tree",
                 new Dictionary<string, List<List<string>>> {
@@ -3859,6 +3868,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Library Hall Bookshelf",
                 new Dictionary<string, List<List<string>>> {
@@ -3924,6 +3934,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Library Rotunda to Hall",
                 new Dictionary<string, List<List<string>>> {
@@ -4179,6 +4190,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Beneath the Vault Ladder Exit",
                 new Dictionary<string, List<List<string>>> {
@@ -4203,11 +4215,26 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {  // todo: ap logic says you need a weapon or a way to get a bomb to do this, decide whether to put it here too
+                    {
                         "Beneath the Vault Main",
                         new List<List<string>> {
                             new List<string> {
-                                "Lantern",
+                                "Lantern", "Stick",
+                            },
+                            new List<string> {
+                                "Lantern", "Sword",
+                            },
+                            new List<string> {
+                                "Lantern", "Wand",
+                            },
+                            new List<string> {
+                                "Lantern", "Techbow",
+                            },
+                            new List<string> {
+                                "Lantern", "Shotgun",
+                            },
+                            new List<string> {
+                                "Lantern", "Hyperdash",
                             },
                         }
                     },
@@ -4249,6 +4276,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Fortress East Shortcut Upper",
                 new Dictionary<string, List<List<string>>> {
@@ -4259,6 +4287,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Eastern Vault Fortress",
                 new Dictionary<string, List<List<string>>> {
@@ -4287,6 +4316,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Fortress Grave Path",
                 new Dictionary<string, List<List<string>>> {
@@ -4331,6 +4361,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Fortress Arena",
                 new Dictionary<string, List<List<string>>> {
@@ -4367,6 +4398,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Lower Mountain",
                 new Dictionary<string, List<List<string>>> {
@@ -4393,6 +4425,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Monastery Front",
                 new Dictionary<string, List<List<string>>> {
@@ -4432,6 +4465,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Quarry Entry",
                 new Dictionary<string, List<List<string>>> {
@@ -4444,11 +4478,6 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "12", "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
                             }
-                        }
-                    },
-                    {
-                        "Quarry Connector",
-                        new List<List<string>> {
                         }
                     },
                     {
@@ -4602,6 +4631,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Rooted Ziggurat Upper Entry",
                 new Dictionary<string, List<List<string>>> {
@@ -4641,6 +4671,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Rooted Ziggurat Middle Top",
                 new Dictionary<string, List<List<string>>> {
@@ -4651,6 +4682,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Rooted Ziggurat Lower Front",
                 new Dictionary<string, List<List<string>>> {
@@ -4709,6 +4741,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Rooted Ziggurat Portal Room Exit",
                 new Dictionary<string, List<List<string>>> {
@@ -4753,6 +4786,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Swamp Front",
                 new Dictionary<string, List<List<string>>> {
@@ -4894,16 +4928,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
-            {
-                "Cathedral Gauntlet Checkpoint",
-                new Dictionary<string, List<List<string>>> {
-                    {
-                        "Cathedral Gauntlet",
-                        new List<List<string>> {
-                        }
-                    },
-                }
-            },
+
             {
                 "Cathedral",
                 new Dictionary<string, List<List<string>>> {
@@ -4928,6 +4953,17 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                         }
                     }
+                }
+            },
+
+            {
+                "Cathedral Gauntlet Checkpoint",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Cathedral Gauntlet",
+                        new List<List<string>> {
+                        }
+                    },
                 }
             },
             {
@@ -4956,6 +4992,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Far Shore",
                 new Dictionary<string, List<List<string>>> {
@@ -5096,6 +5133,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+
             {
                 "Shop Entrance 1",
                 new Dictionary<string, List<List<string>>> {
