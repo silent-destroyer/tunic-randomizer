@@ -1,7 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using UnhollowerBaseLib;
 using UnityEngine;
@@ -45,7 +43,6 @@ namespace TunicRandomizer {
                     foreach (SecretPassagePanel obj in GameObject.FindObjectsOfType<SecretPassagePanel>().ToList()) {
                         breakableObjects.Add(obj.gameObject);
                     }
-
                 }
 
                 foreach (string ItemId in ItemIdsInScene) {
@@ -94,7 +91,7 @@ namespace TunicRandomizer {
         public static void CreateLoadZoneTargets() {
             HashSet<string> ScenesWithItems = new HashSet<string>();
             Dictionary<string, Check> Checks = TunicUtils.GetAllInUseChecksDictionary();
-            List<string> ItemIds = Checks.Values.Where(check => check.Location.SceneName == SceneManager.GetActiveScene().name
+            List<string> ItemIds = Checks.Values.Where(check => check.Location.SceneName != SceneManager.GetActiveScene().name
             && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
             foreach (string ItemId in ItemIds) {
@@ -146,11 +143,25 @@ namespace TunicRandomizer {
             return fairyTarget.GetComponent<FairyTarget>();
         }
 
+        public static void RemoveFairyTarget(string checkId) {
+            GameObject gameObject = GameObject.Find($"fairy target {checkId}");
+            if (gameObject == null) {
+                return;
+            }
+            FairyTarget fairyTarget = gameObject.GetComponent<FairyTarget>();
+            ItemTargets.Remove(fairyTarget);
+            ItemTargetsInLogic.Remove(fairyTarget);
+            if (FairyTarget.registered.Count == 0) {
+                if (TunicRandomizer.Settings.SeekingSpellLogic) {
+                    FairyTarget.registered = AdjItemTargetsInLogic;
+                } else {
+                    FairyTarget.registered = AdjItemTargets;
+                }
+            }
+        }
+
         public static void ChooseFairyTargetList() {
             Il2CppSystem.Collections.Generic.List<FairyTarget> targets = new Il2CppSystem.Collections.Generic.List<FairyTarget>();
-            // remove any destroyed game objects from the list
-            ItemTargets = CleanList(ItemTargets);
-            ItemTargetsInLogic = CleanList(ItemTargetsInLogic);
             if (TunicRandomizer.Settings.SeekingSpellLogic) {
                 if (ItemTargetsInLogic.Count > 0) {
                     targets = ItemTargetsInLogic;
@@ -164,16 +175,7 @@ namespace TunicRandomizer {
                     targets = AdjItemTargets;
                 }
             }
-            FairyTarget.registered = CleanList(targets);
-        }
-        private static Il2CppSystem.Collections.Generic.List<FairyTarget> CleanList(Il2CppSystem.Collections.Generic.List<FairyTarget> list) {
-            Il2CppSystem.Collections.Generic.List<FairyTarget> newList = new Il2CppSystem.Collections.Generic.List<FairyTarget>();
-            foreach (var item in list) {
-                if (item != null) {
-                    newList.Add(item);
-                }
-            }
-            return newList;
+            FairyTarget.registered = targets;
         }
 
         // update what targets are in logic based on the item that was received, or just updates which list to use

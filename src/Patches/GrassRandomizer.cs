@@ -1,7 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -132,9 +131,7 @@ namespace TunicRandomizer {
                         SaveFile.SetInt("randomizer picked up " + grassId, 1);
                         Locations.CheckedLocations[grassId] = true;
                         TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
-                        if (GameObject.Find($"fairy target {grassId}")) {
-                            GameObject.Destroy(GameObject.Find($"fairy target {grassId}"));
-                        }
+                        FairyTargets.RemoveFairyTarget(grassId);
                         string receiver = ItemInfo.Player.Name;
                         string itemName = ItemInfo.ItemName;
                         TunicLogger.LogInfo("Sent " + ItemInfo.ItemName + " at " + ItemInfo.LocationName + " to " + receiver);
@@ -164,10 +161,7 @@ namespace TunicRandomizer {
                             }
                             ItemPatches.GiveItem(check, alwaysSkip: true);
                         }
-                        GameObject FairyTarget = GameObject.Find($"fairy target {check.CheckId}");
-                        if (FairyTarget != null) {
-                            GameObject.Destroy(FairyTarget);
-                        }
+                        FairyTargets.RemoveFairyTarget(check.CheckId);
                     }
                     if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                         __instance.GetComponentInChildren<MoveUp>(true).gameObject.SetActive(true);

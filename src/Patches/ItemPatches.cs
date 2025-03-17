@@ -1,5 +1,4 @@
 ﻿using Archipelago.MultiClient.Net.Models;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -753,10 +752,7 @@ namespace TunicRandomizer {
 
             Locations.CheckedLocations[CheckId] = true;
             SaveFile.SetInt($"randomizer picked up {CheckId}", 1);
-            GameObject FairyTarget = GameObject.Find($"fairy target {CheckId}");
-            if (FairyTarget != null) {
-                GameObject.Destroy(FairyTarget);
-            }
+            FairyTargets.RemoveFairyTarget(CheckId);
 
             RecentItemsDisplay.instance.EnqueueItem(Check);
 
