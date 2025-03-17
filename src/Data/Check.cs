@@ -9,6 +9,19 @@ namespace TunicRandomizer {
         public int SceneId;
         public string SceneName;
 
+        public Location(Location location) {
+            LocationId = location.LocationId;
+            Position = location.Position;
+            Requirements = new List<Dictionary<string, int>>();
+            foreach (Dictionary<string, int> dictionary in location.Requirements) {
+                Dictionary<string, int> d = new Dictionary<string, int>();
+                TunicUtils.AddDictToDict(d, dictionary);
+                Requirements.Add(d);
+            }
+            SceneId = location.SceneId;
+            SceneName = location.SceneName;
+        }
+
         public bool reachable(Dictionary<string, int> inventory) {
             List<Dictionary<string, int>> itemsRequired;
             
@@ -84,6 +97,12 @@ namespace TunicRandomizer {
         public int Amount;
         public string Name;
         public string Type;
+
+        public Reward(Reward reward) {
+            this.Amount = reward.Amount;
+            this.Name = reward.Name;
+            this.Type = reward.Type;
+        }
     }
     public class Check {
         public Location Location;
@@ -104,8 +123,8 @@ namespace TunicRandomizer {
         public Check() { }
 
         public Check(Check check) {
-            Location = check.Location;
-            Reward = check.Reward;
+            Location = new Location(check.Location);
+            Reward = new Reward(check.Reward);
         }
 
         public Check(Location location, Reward reward) {
