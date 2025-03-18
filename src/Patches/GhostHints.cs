@@ -97,6 +97,9 @@ namespace TunicRandomizer {
             }
         }
 
+        public static bool SpawnedGhosts = false;
+        public static bool FoxMaskSetup = false;
+
         public static GameObject GhostFox;
 
         public static List<char> Vowels = new List<char>() { 'A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u' };
@@ -395,21 +398,25 @@ namespace TunicRandomizer {
                 GhostFox = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<NPC>().Where(npc => npc.name == "NPC_greeter").ToList()[0].gameObject);
                 GameObject.DontDestroyOnLoad(GhostFox);
                 GhostFox.SetActive(false);
-
-                GameObject ScavMask = new GameObject("ghost fox scavenger mask");
-                ScavMask.transform.parent = GhostFox.GetComponentInChildren<BHMBone>().transform;
-                ScavMask.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("scavenger_mask");
-                ScavMask.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("Scavenger miner");
-                ScavMask.transform.localScale = Vector3.one * 1.15f;
-                ScavMask.transform.localEulerAngles = new Vector3(22.5f, 0, 0);
-                ScavMask.transform.localPosition = new Vector3(0f, -1.3f, -0.45f);
-                ScavMask.SetActive(true);
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error initalizing ghost foxes for hints!");
             }
         }
 
+        public static void SetupFoxMask() {
+            GameObject ScavMask = new GameObject("ghost fox scavenger mask");
+            ScavMask.transform.parent = GhostFox.GetComponentInChildren<BHMBone>().transform;
+            ScavMask.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("scavenger_mask");
+            ScavMask.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("Scavenger miner");
+            ScavMask.transform.localScale = Vector3.one * 1.15f;
+            ScavMask.transform.localEulerAngles = new Vector3(22.5f, 0, 0);
+            ScavMask.transform.localPosition = new Vector3(0f, -1.3f, -0.45f);
+            ScavMask.SetActive(false);
+            FoxMaskSetup = true;
+        }
+
         public static void SpawnHintGhosts(string SceneName) {
+            if (!FoxMaskSetup) { SetupFoxMask(); }
             bool spawnAllTest = false;
             if (spawnAllTest) {
                 foreach (List<HintGhost> list in GhostLocations.Values) {
@@ -458,10 +465,7 @@ namespace TunicRandomizer {
             }
 
             if (hintGhost.WearScavMask || hintGhost.HintedItem == "Scavenger Mask") {
-                GameObject mask = NewGhostFox.GetComponentInChildren<BHMBone>().transform.GetChild(2).gameObject;
-                mask.GetComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("scavenger_mask");
-                mask.GetComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("Scavenger miner");
-                mask.SetActive(true);
+                NewGhostFox.GetComponentInChildren<BHMBone>().transform.GetChild(2).gameObject.SetActive(true);
             }
 
             if (hintGhost.SceneName == "Library Lab") {

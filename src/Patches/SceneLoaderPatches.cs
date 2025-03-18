@@ -12,7 +12,6 @@ namespace TunicRandomizer {
         public static string SceneName;
         public static int SceneId;
         public static float TimeOfLastSceneTransition = 0.0f;
-        public static bool SpawnedGhosts = false;
         public static bool InitialLoadDone = false;
 
         public static GameObject SpiritArenaTeleporterPrefab;
@@ -111,7 +110,7 @@ namespace TunicRandomizer {
             ArachnophobiaMode.DidArachnophobiaModeAlready = false;
             FuseRandomizer.ModifiedFusesAlready = false;
             SecretMayor.SetupAlready = false;
-            SpawnedGhosts = false;
+            GhostHints.SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
 
@@ -675,7 +674,7 @@ namespace TunicRandomizer {
             try {
                 if (TunicRandomizer.Settings.GhostFoxHintsEnabled && GhostHints.HintGhosts.Count > 0 && SaveFile.GetInt("seed") != 0) {
                     GhostHints.SpawnHintGhosts(SceneName);
-                    SpawnedGhosts = true;
+                    GhostHints.SpawnedGhosts = true;
                 }
             } catch (Exception ex) {
                 TunicLogger.LogError("An error occurred spawning hint ghost foxes:");

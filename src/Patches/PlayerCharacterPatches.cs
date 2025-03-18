@@ -313,7 +313,7 @@ namespace TunicRandomizer {
                 TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
             }
 
-            if (!SceneLoaderPatches.SpawnedGhosts && TunicRandomizer.Settings.GhostFoxHintsEnabled) {
+            if (!GhostHints.SpawnedGhosts && TunicRandomizer.Settings.GhostFoxHintsEnabled) {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
 
