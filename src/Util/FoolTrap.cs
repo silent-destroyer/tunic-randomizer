@@ -46,10 +46,12 @@ namespace TunicRandomizer {
 
             {"Fire Trap", TrapType.Fire },
             {"Damage Trap", TrapType.Fire },
+            {"Bomb", TrapType.Fire },  // Luigi's Mansion, yes it's just Bomb
 
             {"Bee Trap", TrapType.Bee },
 
             {"Tiny Trap", TrapType.Tiny },
+            {"Poison Mushroom", TrapType.Tiny },  // Luigi's Mansion, makes player smaller
 
             {"Screen Flip Trap", TrapType.Mirror },
             {"Mirror Trap", TrapType.Mirror },
