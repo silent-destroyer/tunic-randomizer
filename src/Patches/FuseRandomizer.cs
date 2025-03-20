@@ -272,7 +272,7 @@ namespace TunicRandomizer {
             if ((sceneName == "ziggurat2020_3" || sceneName == "ziggurat2020_1") && !SaveFlags.GetBool(SaveFlags.EntranceRando)) {
                 if ((SaveFile.GetInt("fuseClosed 1117") == 0 || SaveFile.GetInt("fuseClosed 1121") == 0 || Inventory.GetItemByName("Sword").Quantity == 0 ||
                     (SaveFile.GetInt(SaveFlags.PrayerUnlocked) == 0 && SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1)) 
-                    && Inventory.GetItemByName("Torch").Quantity == 0) {
+                    && Inventory.GetItemByName("Torch").Quantity == 0 && SaveFile.GetInt("fuseClosed 1101") == 1 && SaveFile.GetInt("fuseClosed 1262") == 1) {
                     SpawnZigguratEscapePortal();
                 }
             }
