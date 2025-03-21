@@ -173,6 +173,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Archipelago\Archipelago.cs" />
     <Compile Include="src\Archipelago\ArchipelagoIntegration.cs" />
     <Compile Include="src\Archipelago\DeathLinkMessages.cs" />
@@ -242,9 +243,7 @@
     <Compile Include="src\Util\UnderConstruction.cs" />
     <Compile Include="src\Util\VisibleByNotHavingItem.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="src\Data\Grass.json" />
