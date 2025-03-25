@@ -340,8 +340,11 @@ namespace TunicRandomizer {
             }
 
             try {
-                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && !FuseRandomizer.ModifiedFusesAlready) {
-                    FuseRandomizer.ModifyFuses();
+                if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+                    if (!FuseRandomizer.ModifiedFusesAlready) {
+                        FuseRandomizer.ModifyFuses();
+                    }
+                    Inventory.GetItemByName("Torch").Quantity = 1;
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error setting up fake fuses! " + e.Source + " " + e.Message + " " + e.StackTrace);

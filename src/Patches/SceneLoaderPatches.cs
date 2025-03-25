@@ -559,18 +559,10 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(EntranceRando) == 1) {
                     SpawnZigSkipRecovery();
                 }
-            } else if (SceneName == "ziggurat2020_0") {
-                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && SaveFile.GetInt(EntranceRando) == 0) {
-                    FuseRandomizer.SpawnZigguratEscapePoint();
-                }
             } else if (SceneName == "Quarry Redux") {
                 SetupQuarrySecret();
             } else if (SceneName == "Quarry") {
                 SetupOldQuarryStuff();
-            } else if (SceneName == "Library Exterior") {
-                if (SaveFile.GetInt(FuseShuffleEnabled) == 1 && SaveFile.GetInt(EntranceRando) == 0) {
-                    FuseRandomizer.SpawnLibraryEscapePoint();
-                }
             }
 
             EnemyRandomizer.CheckBossState();
