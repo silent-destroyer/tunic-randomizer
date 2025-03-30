@@ -3836,7 +3836,7 @@ namespace TunicRandomizer {
                                 "12", "Ladders in South Atoll", "Hyperdash", "Sword", NO_FUSE_SHUFFLE,
                             },
                             new List<string> {
-                                "12", "Ladders in South Atoll", "Hyperdash", "Gun", NO_FUSE_SHUFFLE,
+                                "12", "Ladders in South Atoll", "Hyperdash", "Shotgun", NO_FUSE_SHUFFLE,
                             },
                             new List<string> {
                                 "12", "Ladders in South Atoll", "Hyperdash", "Techbow", NO_FUSE_SHUFFLE,

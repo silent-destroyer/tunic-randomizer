@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -62,37 +63,38 @@ namespace TunicRandomizer {
                                         met_count++;
                                     }
                                 } else if (req == "12" && IsHexQuestWithHexAbilities()) {
-                                    foreach (KeyValuePair<string, int> item in inventory) {
-                                        if (item.Key == "Hexagon Gold") {
-                                            if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest prayer requirement")) {
-                                                met_count++;
-                                            }
-                                            break;
-                                        }
+                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestPrayer)) {
+                                        met_count++;
                                     }
                                 } else if (req == "21" && IsHexQuestWithHexAbilities()) {
-                                    foreach (KeyValuePair<string, int> item in inventory) {
-                                        if (item.Key == "Hexagon Gold") {
-                                            if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest holy cross requirement")) {
-                                                met_count++;
-                                            }
-                                            break;
-                                        }
+                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestHolyCross)) {
+                                        met_count++;
                                     }
                                 } else if (req == "26" && IsHexQuestWithHexAbilities()) {
-                                    foreach (KeyValuePair<string, int> item in inventory) {
-                                        if (item.Key == "Hexagon Gold") {
-                                            if (item.Value >= SaveFile.GetInt($"randomizer hexagon quest icebolt requirement")) {
-                                                met_count++;
-                                            }
-                                            break;
-                                        }
+                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
+                                        met_count++;
                                     }
                                 } else if (req == "Key") {  // need both keys or you could potentially use them in the wrong order
                                     if (inventory.ContainsKey("Key") && inventory["Key"] == 2) {
                                         met_count++;
                                     }
-                                } else if (inventory.ContainsKey(req)) {
+                                } else if (req.StartsWith("IG")) {
+                                    int difficulty = Convert.ToInt32(req.Substring(2, 2));
+                                    string range = req.Substring(3, 3);
+                                    bool met_difficulty = SaveFile.GetInt(SaveFlags.IceGrapplingDifficulty) >= difficulty;
+                                    if (met_difficulty && inventory.ContainsKey("Wand") && inventory.ContainsKey("Stundagger")) {
+                                        if (range == "S") {
+                                            met_count++;
+                                        } else {
+                                            if (inventory.ContainsKey("Techbow")
+                                                && (inventory.ContainsKey("26")
+                                                    || (IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)))) {
+                                                    met_count++;
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (inventory.ContainsKey(req)) {
                                     met_count++;
                                     TunicLogger.LogTesting("met_count is " + met_count);
                                     TunicLogger.LogTesting("reqs.count is " + reqs.Count);
@@ -121,56 +123,6 @@ namespace TunicRandomizer {
             // if we gained any regions, rerun this to get any new regions
             if (inv_count != inventory.Count) {
                 UpdateReachableRegions(inventory);
-            }
-            return inventory;
-        }
-
-        public static Dictionary<string, int> FirstStepsUpdateReachableRegions(Dictionary<string, int> inventory) {
-            int inv_count = inventory.Count;
-            // add all regions in Overworld that you can currently reach to the inventory
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
-                string origin_region = traversal_group.Key;
-                if (!inventory.ContainsKey(origin_region)) {
-                    continue;
-                }
-                foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
-                    string destination = destination_group.Key;
-                    if (inventory.ContainsKey(destination)) {
-                        continue;
-                    }
-                    // met is whether you meet any of the requirement lists for a destination
-                    bool met = false;
-                    // check through each list of requirements
-                    foreach (List<string> reqs in destination_group.Value) {
-                        if (reqs.Count == 0) {
-                            // if a group is empty, you can just walk there
-                            met = true;
-                        } else {
-                            // check if we have the items in our inventory to traverse this path
-                            int met_count = 0;
-                            foreach (string req in reqs) {
-                                if (inventory.ContainsKey(req)) {
-                                    met_count++;
-                                }
-                            }
-                            // if you have all the requirements, you can traverse this path
-                            if (met_count == reqs.Count) {
-                                met = true;
-                            }
-                        }
-                        // if we meet one list of requirements, we don't have to do the rest
-                        if (met == true) {
-                            break;
-                        }
-                    }
-                    if (met == true) {
-                        inventory.Add(destination, 1);
-                    }
-                }
-            }
-            // if we gained any regions, rerun this to get any new regions
-            if (inv_count != inventory.Count) {
-                FirstStepsUpdateReachableRegions(inventory);
             }
             return inventory;
         }

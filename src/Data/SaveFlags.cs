@@ -36,6 +36,12 @@
         public const string PortalDirectionPairs = "randomizer paired portal directions enabled";
         public const string Decoupled = "randomizer decoupled ER enabled";
 
+        // Logic Trick Flags
+        public const string LaurelsZips = "randomizer laurels zips enabled";
+        public const string IceGrapplingDifficulty = "randomizer ice grappling difficulty";
+        public const string LadderStorageDifficulty = "randomizer ladder storage difficulty";
+        public const string LadderStorageWithoutItems = "randomizer ladder storage without items enabled";
+
         // Other Logic Flags
         public const string StartWithSword = "randomizer started with sword";
         public const string MasklessLogic = "randomizer maskless logic enabled";

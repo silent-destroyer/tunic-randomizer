@@ -666,7 +666,7 @@ namespace TunicRandomizer {
                 TunicUtils.AddDictToDict(Inventory, startInventory);
             }
             
-            Inventory = ERScripts.FirstStepsUpdateReachableRegions(Inventory);
+            Inventory = ERScripts.UpdateReachableRegions(Inventory);
             
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
@@ -684,7 +684,7 @@ namespace TunicRandomizer {
                     Inventory.Add(portal.Region, 1);
                 }
             }
-            Inventory = ERScripts.FirstStepsUpdateReachableRegions(Inventory);
+            Inventory = ERScripts.UpdateReachableRegions(Inventory);
             return Inventory;
         }
     }
