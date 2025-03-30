@@ -150,5 +150,30 @@ namespace TunicRandomizer {
             new LadderInfo(origin: "Back of Swamp", destination: "Swamp Redux 2, Cathedral Redux_secret"),
         };
 
+        public class LSElevConnect {
+            public string Origin;  // the LS elevation region you start in
+            public string Destination;  // the portal you enter using LS
+            public int Difficulty;  // 1 is easy, 2 is medium, 3 is hard
+
+            public LSElevConnect(string origin, string destination, int difficulty) {
+                Origin = origin;
+                Destination = destination;
+                Difficulty = difficulty;
+            }
+        }
+
+        public List<LSElevConnect> LSElevConnections = new List<LSElevConnect> {
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Furnace_gyro_west", difficulty: 1),
+
+            new LSElevConnect(origin: "LS Elev 3", destination: "Overworld Redux, Sewer_west_aqueduct", difficulty: 2),
+            new LSElevConnect(origin: "LS Elev 3", destination: "Overworld Redux, Furnace_gyro_upper_north", difficulty: 2),
+
+            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, EastFiligreeCache_", difficulty: 3),
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Town_FiligreeRoom_", difficulty: 3),
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Ruins Passage_west", difficulty: 3),
+            new LSElevConnect(origin: "LS Elev 3", destination: "Overworld Redux, Overworld Interiors_house", difficulty: 3),
+            new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, Temple_main", difficulty: 3),
+        };
+
     }
 }

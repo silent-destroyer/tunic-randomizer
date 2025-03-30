@@ -4373,7 +4373,7 @@
                     ""Requirements"": [
                         {
                             ""Mask"": 1,
-                            ""Even Lower Quarry"": 1
+                            ""Even Lower Quarry Isolated Chest"": 1
                         }
                     ]
                 }
