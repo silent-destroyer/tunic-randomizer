@@ -199,16 +199,18 @@ namespace TunicRandomizer {
                     mayor.SetActive(true);
                 }
                 if (scene == "Transit") {
-                    GameObject.Find("Foxgod_Cutscenes/elderfox legs").SetActive(false);
-                    GameObject.Find("Foxgod_Cutscenes/elderfox legs partial").SetActive(false);
-                    GameObject foxgod = GameObject.Find("Foxgod_Cutscenes/elderfox");
-                    foxgod.GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
-                    GameObject mayor = GameObject.Instantiate(MrMayor, foxgod.transform);
-                    mayor.layer = 0;
-                    mayor.transform.localScale = Vector3.one * 2;
-                    mayor.transform.localPosition = Vector3.zero;
-                    mayor.transform.localEulerAngles = Vector3.zero;
-                    mayor.SetActive(true);
+                    if (GameObject.Find("Foxgod_Cutscenes") != null) {
+                        GameObject.Find("Foxgod_Cutscenes/elderfox legs").SetActive(false);
+                        GameObject.Find("Foxgod_Cutscenes/elderfox legs partial").SetActive(false);
+                        GameObject foxgod = GameObject.Find("Foxgod_Cutscenes/elderfox");
+                        foxgod.GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
+                        GameObject mayor = GameObject.Instantiate(MrMayor, foxgod.transform);
+                        mayor.layer = 0;
+                        mayor.transform.localScale = Vector3.one * 2;
+                        mayor.transform.localPosition = Vector3.zero;
+                        mayor.transform.localEulerAngles = Vector3.zero;
+                        mayor.SetActive(true);
+                    }
                 }
 
                 if (scene == "ziggurat2020_2") {
