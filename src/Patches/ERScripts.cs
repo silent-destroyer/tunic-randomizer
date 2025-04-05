@@ -426,11 +426,15 @@ namespace TunicRandomizer {
             bool decoupledEnabled = SaveFile.GetInt(Decoupled) == 1;
             bool dirPairsEnabled = SaveFile.GetInt(PortalDirectionPairs) == 1;
 
+            // -----------------------------------------------
+            // Portal Pairing Starts Here
+            // -----------------------------------------------
+
             TunicUtils.ShuffleList(twoPlusPortals, seed);
             List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
             int failCount = 0;
             int previousConnNum = 0;
-            while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
+            while (FullInventory.Where(name => RegionDict.ContainsKey(name.Key)).ToList().Count < total_nondeadend_count) {
                 Portal portal1 = null;
                 Portal portal2 = null;
 
@@ -455,6 +459,9 @@ namespace TunicRandomizer {
                         foreach (string thing in FullInventory.Keys) {
                             TunicLogger.LogInfo(thing);
                         }
+                        TunicLogger.LogInfo("---------------------------------------");
+                        TunicLogger.LogInfo("This will now reroll the entrances and try again.");
+                        TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
                         //throw new System.Exception("Failed to pair portals.");
                         // reroll, hopefully this shouldn't be common at all
                         RandomizePortals(seed + 1);
@@ -581,13 +588,13 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("done pairing twoplusportals");
 
             // if we run into issues again, these were very helpful in diagnosing them
-            //TunicLogger.LogInfo("if there are regions missing, they are as follows:");
+            //TunicLogger.LogInfo("\nIf there are regions missing, they are as follows:");
             //foreach (string region in nondeadend_regions) {
             //    if (!FullInventory.ContainsKey(region)) {
             //        TunicLogger.LogInfo(region);
             //    }
             //}
-            //TunicLogger.LogInfo("inventory:");
+            //TunicLogger.LogInfo("\nInventory:");
             //foreach (string thing in FullInventory.Keys) {
             //    TunicLogger.LogInfo(thing);
             //}
