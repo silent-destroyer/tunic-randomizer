@@ -286,10 +286,8 @@ namespace TunicRandomizer {
                 { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
 
-            // todo: swap this to use AddDictToDict in a later PR
-            foreach (KeyValuePair<string, int> item in MaxItems) {
-                FullInventory.Add(item.Key, item.Value);
-            }
+            TunicUtils.AddDictToDict(FullInventory, MaxItems);
+
             // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
             if (SaveFile.GetInt(LaurelsLocation) == 3) {
                 FullInventory.Remove("Hyperdash");
