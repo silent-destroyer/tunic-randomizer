@@ -380,7 +380,7 @@ namespace TunicRandomizer {
             List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
             int failCount = 0;
             int previousConnNum = 0;
-            while (FullInventory.Count - MaxItems.Count - ItemRandomizer.LadderItems.Count < total_nondeadend_count) {
+            while (FullInventory.Where(name => RegionDict.ContainsKey(name.Key)).ToList().Count < total_nondeadend_count) {
                 Portal portal1 = null;
                 Portal portal2 = null;
 
