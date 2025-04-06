@@ -285,7 +285,6 @@ namespace TunicRandomizer {
                 { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Gun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
                 { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
-
             TunicUtils.AddDictToDict(FullInventory, MaxItems);
 
             // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
@@ -306,6 +305,39 @@ namespace TunicRandomizer {
             } else {
                 FullInventory.Add(NO_BELL_SHUFFLE, 1);
             }
+
+            // add trick logic fake items to the inventory
+            if (SaveFile.GetInt(LaurelsZips) == 1) {
+                TunicUtils.AddStringToDict(FullInventory, "Zip");
+            }
+            switch (SaveFile.GetInt(IceGrapplingDifficulty)) {
+                case 1:
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L" });
+                    break;
+                case 2:
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L", "IG2S", "IG2L" });
+                    break;
+                case 3:
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L", "IG2S", "IG2L", "IG3S", "IG3L" });
+                    break;
+                default:
+                    break;
+            }
+            TunicUtils.AddStringToDict(FullInventory, PAIRING_ONLY);
+            switch (SaveFile.GetInt(LadderStorageDifficulty)) {
+                case 1:
+                    TunicUtils.AddStringToDict(FullInventory, "LS1");
+                    break;
+                case 2:
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "LS1", "LS2" });
+                    break;
+                case 3:
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "LS1", "LS2", "LS3" });
+                    break;
+                default:
+                    break;
+            }
+
             FullInventory = UpdateReachableRegions(FullInventory);
 
             // get the total number of regions to get before doing dead ends
