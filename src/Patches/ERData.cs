@@ -2300,6 +2300,10 @@ namespace TunicRandomizer {
             },
         };
 
+        // LS gets you to a portal rather than a region usually, but during portal pairing that doesn't actually matter since we only have one portal you cannot walk out from (zig skip)
+        // so, special keyword for when we just want to care about a connection during portal pairing, for use with LS
+        public static string PAIRING_ONLY = "Portal Pairing Only";
+
         // these are the traversal rules for getting from one region to another
         // for example, with the first one on the list, if you are in Overworld, you can get to Overworld Beach if you have Laurels, Orb, or Ladders in Overworld Town
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>> {
@@ -2336,7 +2340,18 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG2S"
-                            }
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Special Shop Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2344,6 +2359,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -2463,6 +2481,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2499,6 +2520,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG2S"
                             },
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2506,6 +2530,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "IG2S"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -2558,8 +2585,18 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Overworld Well to Furnace Rail",
+                        new List<List<string>> {
+                            // because you can get to either end of the rail in LS, and the middle of the rail is worthless, this doesn't need pairing only on it
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    }
                 }
             },
+            // todo: next time, continue here with adding LS with pairing only to the traversal reqs
             {
                 "East Overworld",
                 new Dictionary<string, List<List<string>>> {
@@ -2608,6 +2645,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },

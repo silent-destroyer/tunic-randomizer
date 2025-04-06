@@ -150,6 +150,9 @@ namespace TunicRandomizer {
             new LadderInfo(origin: "Back of Swamp", destination: "Swamp Redux 2, Cathedral Redux_secret"),
         };
 
+
+        // this is for Overworld portals that have weird rules
+        // ex: change elevations on difficulty 1 (if there's convenient stairs), going behind the map, etc.
         public class LSElevConnect {
             public string Origin;  // the LS elevation region you start in
             public string Destination;  // the portal you enter using LS
