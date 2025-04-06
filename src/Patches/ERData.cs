@@ -2302,6 +2302,7 @@ namespace TunicRandomizer {
 
         // LS gets you to a portal rather than a region usually, but during portal pairing that doesn't actually matter since we only have one portal you cannot walk out from (zig skip)
         // so, special keyword for when we just want to care about a connection during portal pairing, for use with LS
+        // it should not be used for connections where you can do the connection with something other than Laurels, LS, or IG (since it'll auto-succeed during pairing)
         public static string PAIRING_ONLY = "Portal Pairing Only";
 
         // these are the traversal rules for getting from one region to another
@@ -2596,7 +2597,7 @@ namespace TunicRandomizer {
                     }
                 }
             },
-            // todo: next time, continue here with adding LS with pairing only to the traversal reqs
+
             {
                 "East Overworld",
                 new Dictionary<string, List<List<string>>> {
@@ -2613,6 +2614,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -2754,6 +2758,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2862,6 +2869,12 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -3151,6 +3164,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -3158,6 +3174,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -3284,6 +3303,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG1L"
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -3365,6 +3387,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -3454,6 +3479,9 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG3S"
+                            },
+                            new List<string> {
+                                "LS2", PAIRING_ONLY
                             },
                         }
                     },
@@ -3552,6 +3580,7 @@ namespace TunicRandomizer {
                     },
                 }
             },
+            // todo: wasn't there a ladder storage here to get from front to back or back to front?
             {
                 "Beneath the Well Main",
                 new Dictionary<string, List<List<string>>> {
@@ -3685,6 +3714,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -3831,6 +3863,9 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -4345,6 +4380,23 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                "LS2"
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -4381,6 +4433,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG1L"
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                 }
@@ -4396,7 +4451,10 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "12", "Fortress Exterior Fuse 1", FUSE_SHUFFLE,
-                            }
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -4412,9 +4470,21 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "IG3L"
-                            }
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
-                    }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                "LS2"
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -4826,6 +4896,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Monastery Rope",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2", PAIRING_ONLY,
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -4858,6 +4936,14 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                        }
+                    },
+                    {
+                        "Monastery Rope",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2", PAIRING_ONLY,
+                            }
                         }
                     },
                 }
@@ -5083,7 +5169,11 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L"
-                            }
+                            },
+                            // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                            new List<string> {
+                                "LS2"
+                            },
                         }
                     },
                     {
@@ -5214,6 +5304,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG2S"
                             },
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -5225,6 +5318,14 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG3L"
                             }
+                        }
+                    },
+                    {
+                        "Back of Swamp",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                 }
@@ -5296,6 +5397,39 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "12",
+                            },
+                        }
+                    },
+                    {
+                        "Swamp Mid",
+                        new List<List<string>> {
+                            new List<string> {
+                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                "LS2",
+                            },
+                        }
+                    },
+                    {
+                        "Swamp Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Main Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Treasure Room",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
                             },
                         }
                     },
