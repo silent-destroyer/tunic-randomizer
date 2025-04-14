@@ -89,12 +89,24 @@ namespace TunicRandomizer {
                                             if (inventory.ContainsKey("Techbow")
                                                 && (inventory.ContainsKey("26")
                                                     || (IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)))) {
-                                                    met_count++;
+                                                met_count++;
                                             }
                                         }
                                     }
-                                }
-                                else if (inventory.ContainsKey(req)) {
+                                } else if (req.StartsWith("LS")) {
+                                    int difficulty = Convert.ToInt32(req.Substring(2, 2));
+                                    bool met_difficulty = SaveFile.GetInt(SaveFlags.LadderStorageDifficulty) >= difficulty;
+                                    if (met_difficulty &&
+                                        (SaveFile.GetInt(SaveFlags.LadderStorageWithoutItems) == 1
+                                         || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")
+                                         || inventory.ContainsKey("Shield") || inventory.ContainsKey("Wand"))) {
+                                        met_count++;
+                                    }
+                                } else if (req == "Zip") {
+                                    if (inventory.ContainsKey("Hyperdash") && SaveFile.GetInt(SaveFlags.LaurelsZips) == 1) {
+                                        met_count++;
+                                    }
+                                } else if (inventory.ContainsKey(req)) {
                                     met_count++;
                                     TunicLogger.LogTesting("met_count is " + met_count);
                                     TunicLogger.LogTesting("reqs.count is " + reqs.Count);
