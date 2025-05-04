@@ -96,7 +96,7 @@ namespace TunicRandomizer {
             }
             ChecksInLogicPerScene.Add("Trinket Well", new List<string>());
 
-            AddDictToDict(PlayerItemsAndRegions, ItemRandomizer.PrecollectedItems);
+            AddDictToDict(PlayerItemsAndRegions, ItemRandomizer.PopulatePrecollected());
             PlayerItemsAndRegions.Add("Overworld", 1);
 
             // archipelago and standalone have different methods to state which items have been received

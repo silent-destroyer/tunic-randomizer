@@ -26,16 +26,16 @@ namespace TunicRandomizer {
         // Items you start with or effectively start with
         public static Dictionary<string, int> PopulatePrecollected() {
             Dictionary<string, int> precollectedItems = new Dictionary<string, int>();
-            if (SaveFile.GetInt(LadderRandoEnabled) == 0) {
+            if (!GetBool(LadderRandoEnabled)) {
                 TunicUtils.AddListToDict(precollectedItems, LadderItems);
             }
-            if (SaveFile.GetInt(MasklessLogic) == 1) {
+            if (GetBool(MasklessLogic)) {
                 precollectedItems.Add("Mask", 1);
             }
-            if (SaveFile.GetInt(LanternlessLogic) == 1) {
+            if (GetBool(LanternlessLogic)) {
                 precollectedItems.Add("Lantern", 1);
             }
-            if (SaveFile.GetInt(AbilityShuffle) == 0) {
+            if (!GetBool(AbilityShuffle)) {
                 TunicUtils.AddListToDict(precollectedItems, new List<string> { "12", "21", "26" });
             }
             if (GetBool(StartWithSword)) {
@@ -45,7 +45,7 @@ namespace TunicRandomizer {
             // Fake items to differentiate between fuse/non-fuse rules
             if (GetBool(FuseShuffleEnabled)) {
                 precollectedItems.Add(ERData.FUSE_SHUFFLE, 1);
-                if (SaveFile.GetInt(EntranceRando) == 1) {
+                if (GetBool(EntranceRando)) {
                     // Since the elevator is always active in ER, just ignore it in logic
                     precollectedItems.Add("Cathedral Elevator Fuse", 1);
                 }

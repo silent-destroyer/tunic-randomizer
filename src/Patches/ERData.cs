@@ -4423,6 +4423,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "LS1", PAIRING_ONLY
                             },
+                            new List<string> {
+                                "LS2"
+                            },
                         }
                     },
                 }
@@ -4460,6 +4463,9 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2"
                             },
                         }
                     },
