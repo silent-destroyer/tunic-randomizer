@@ -2397,14 +2397,6 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld Ruined Passage Door",
-                        new List<List<string>> {
-                            new List<string> {
-                                "Zip"
-                            },
-                        }
-                    },
-                    {
                         "After Ruined Passage",
                         new List<List<string>> {
                             new List<string> {
