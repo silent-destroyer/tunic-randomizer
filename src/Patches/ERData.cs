@@ -4379,11 +4379,6 @@ namespace TunicRandomizer {
                                 // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
                                 "LS2"
                             },
-                        }
-                    },
-                    {
-                        "Fortress Courtyard Upper",
-                        new List<List<string>> {
                             new List<string> {
                                 "LS1", PAIRING_ONLY
                             },
