@@ -75,13 +75,11 @@ namespace TunicRandomizer {
             public string Origin;  // origin region
             public string Destination;  // destination portal
             public string LaddersReq;  // ladders required to do this
-            public bool DestIsRegion;  // whether it is a region that you are going to
 
-            public LadderInfo(string origin, string destination, string laddersReq = null, bool destIsRegion = false) {
+            public LadderInfo(string origin, string destination, string laddersReq = null) {
                 Origin = origin;
                 Destination = destination;
                 LaddersReq = laddersReq;
-                DestIsRegion = destIsRegion;
             }
         }
 
@@ -115,25 +113,17 @@ namespace TunicRandomizer {
         };
 
         public static List<LadderInfo> MediumLS = new List<LadderInfo> {
-            new LadderInfo(origin: "East Forest", destination: "East Forest Dance Fox Spot", destIsRegion: true),
-            new LadderInfo(origin: "Back of Swamp", destination: "Swamp Mid", destIsRegion: true),
-            new LadderInfo(origin: "Back of Swamp", destination: "Swamp Front", destIsRegion: true),
             new LadderInfo(origin: "Ruined Atoll", destination: "Atoll Redux, Frog Stairs_eye"),
             new LadderInfo(origin: "Forest Grave Path Main", destination: "Sword Access, East Forest Redux_upper"),
-            new LadderInfo(origin: "Fortress Exterior from Overworld", destination: "Fortress Courtyard Upper", destIsRegion: true),
             new LadderInfo(origin: "Fortress Exterior from East Forest", destination: "Fortress Courtyard, Fortress Reliquary_Upper"),
             new LadderInfo(origin: "Fortress Exterior from East Forest", destination: "Fortress Courtyard, Fortress East_"),
-            new LadderInfo(origin: "Fortress Exterior from East Forest", destination: "Fortress Courtyard Upper", destIsRegion: true),
             new LadderInfo(origin: "Fortress Exterior near cave", destination: "Fortress Courtyard, Fortress Reliquary_Upper", laddersReq: "Ladder to Beneath the Vault"),
             new LadderInfo(origin: "Fortress Exterior near cave", destination: "Fortress Courtyard, Fortress East_", laddersReq: "Ladder to Beneath the Vault"),
-            new LadderInfo(origin: "Fortress Exterior near cave", destination: "Fortress Courtyard Upper", laddersReq: "Ladder to Beneath the Vault", destIsRegion: true),
             new LadderInfo(origin: "Lower Mountain", destination: "Mountain, Mountaintop_"),
             new LadderInfo(origin: "Quarry Entry", destination: "Quarry Redux, Monastery_back"),
             new LadderInfo(origin: "Quarry Monastery Entry", destination: "Quarry Redux, Monastery_back"),
             new LadderInfo(origin: "Quarry Back", destination: "Quarry Redux, Monastery_back"),
             new LadderInfo(origin: "Rooted Ziggurat Lower Back", destination: "ziggurat2020_3, ziggurat2020_2_"),
-            new LadderInfo(origin: "Rooted Ziggurat Lower Back", destination: "Rooted Ziggurat Lower Entry", destIsRegion: true),
-            new LadderInfo(origin: "Rooted Ziggurat Lower Back", destination: "Rooted Ziggurat Lower Mid Checkpoint", destIsRegion: true),
             new LadderInfo(origin: "Swamp Mid", destination: "Swamp Redux 2, Overworld Redux_wall", laddersReq: "Ladders in Swamp"),
             new LadderInfo(origin: "Back of Swamp", destination: "Swamp Redux 2, Overworld Redux_wall"),
         };
@@ -141,9 +131,7 @@ namespace TunicRandomizer {
         public static List<LadderInfo> HardLS = new List<LadderInfo> {
             new LadderInfo(origin: "Beneath the Well Front", destination: "Sewer, Sewer_Boss_", laddersReq: "Ladders in Well"),
             new LadderInfo(origin: "Beneath the Well Front", destination: "Sewer, Overworld Redux_west_aqueduct", laddersReq: "Ladders in Well"),
-            new LadderInfo(origin: "Beneath the Well Front", destination: "Beneath the Well Back", laddersReq: "Ladders in Well", destIsRegion: true),
             new LadderInfo(origin: "Frog's Domain Front", destination: "frog cave main, Frog Stairs_Exit", laddersReq: "Ladders to Frog's Domain"),
-            new LadderInfo(origin: "Frog's Domain Front", destination: "Frog's Domain Back", laddersReq: "Ladders to Frog's Domain", destIsRegion: true),
             new LadderInfo(origin: "Swamp Mid", destination: "Swamp Redux 2, Cathedral Redux_main", laddersReq: "Ladders in Swamp"),
             new LadderInfo(origin: "Back of Swamp", destination: "Swamp Redux 2, Cathedral Redux_main"),
             new LadderInfo(origin: "Swamp Mid", destination: "Swamp Redux 2, Cathedral Redux_secret", laddersReq: "Ladders in Swamp"),

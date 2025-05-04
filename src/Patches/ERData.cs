@@ -3298,6 +3298,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "LS1", PAIRING_ONLY
                             },
+                            new List<string> {
+                                "LS2"
+                            },
                         }
                     },
                     {
@@ -3570,9 +3573,16 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Beneath the Well Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS3", "Ladders in Well"
+                            },
+                        }
+                    },
                 }
             },
-            // todo: wasn't there a ladder storage here to get from front to back or back to front?
             {
                 "Beneath the Well Main",
                 new Dictionary<string, List<List<string>>> {
@@ -4092,6 +4102,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Wand",
                             },
+                            new List<string> {
+                                "LS3", "Ladders to Frog's Domain"
+                            },
                         }
                     },
                 }
@@ -4428,6 +4441,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -4465,7 +4486,7 @@ namespace TunicRandomizer {
                                 "LS1", PAIRING_ONLY
                             },
                             new List<string> {
-                                "LS2"
+                                "LS2", "Ladder to Beneath the Vault"
                             },
                         }
                     },
@@ -5169,6 +5190,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {  // can't get to checkpoint if enemies aggro, gap too big
+                        "Rooted Ziggurat Lower Mid Checkpoint",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    },
                     {
                         "Rooted Ziggurat Portal Room Entrance",
                         new List<List<string>> {
@@ -5407,6 +5436,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2"
                             },
                         }
                     },
