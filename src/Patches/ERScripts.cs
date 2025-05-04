@@ -322,32 +322,26 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(LaurelsZips) == 1) {
                 TunicUtils.AddStringToDict(FullInventory, "Zip");
             }
-            switch (SaveFile.GetInt(IceGrapplingDifficulty)) {
-                case 1:
-                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L" });
-                    break;
-                case 2:
-                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L", "IG2S", "IG2L" });
-                    break;
-                case 3:
-                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L", "IG2S", "IG2L", "IG3S", "IG3L" });
-                    break;
-                default:
-                    break;
+
+            if (SaveFile.GetInt(IceGrapplingDifficulty) >= 1) {
+                TunicUtils.AddListToDict(FullInventory, new List<string> { "IG1S", "IG1L" });
+                if (SaveFile.GetInt(IceGrapplingDifficulty) >= 2) {
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "IG2S", "IG2L" });
+                    if (SaveFile.GetInt(IceGrapplingDifficulty) >= 3) {
+                        TunicUtils.AddListToDict(FullInventory, new List<string> { "IG3S", "IG3L" });
+                    }
+                }
             }
+
             TunicUtils.AddStringToDict(FullInventory, PAIRING_ONLY);
-            switch (SaveFile.GetInt(LadderStorageDifficulty)) {
-                case 1:
-                    TunicUtils.AddStringToDict(FullInventory, "LS1");
-                    break;
-                case 2:
-                    TunicUtils.AddListToDict(FullInventory, new List<string> { "LS1", "LS2" });
-                    break;
-                case 3:
-                    TunicUtils.AddListToDict(FullInventory, new List<string> { "LS1", "LS2", "LS3" });
-                    break;
-                default:
-                    break;
+            if (SaveFile.GetInt(LadderStorageDifficulty) >= 1) {
+                TunicUtils.AddListToDict(FullInventory, new List<string> { "LS1" });
+                if (SaveFile.GetInt(LadderStorageDifficulty) >= 2) {
+                    TunicUtils.AddListToDict(FullInventory, new List<string> { "LS2" });
+                    if (SaveFile.GetInt(LadderStorageDifficulty) >= 3) {
+                        TunicUtils.AddListToDict(FullInventory, new List<string> { "LS3" });
+                    }
+                }
             }
 
             FullInventory = UpdateReachableRegions(FullInventory);
