@@ -100,6 +100,23 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool LaurelsZips {
+            get;
+            set;
+        }
+        public IceGrapplingType IceGrappling {
+            get;
+            set;
+        }
+        public LadderStorageType LadderStorage {
+            get;
+            set;
+        }
+        public bool LadderStorageWithoutItems {
+            get;
+            set;
+        }
+
         public FixedLaurelsType FixedLaurelsOption {
             get;
             set;
@@ -511,6 +528,19 @@ namespace TunicRandomizer {
             SIXCOINS,
             TENCOINS,
             TENFAIRIES,
+        }
+
+        public enum IceGrapplingType {
+            OFF,
+            EASY,
+            MEDIUM,
+            HARD,
+        }
+        public enum LadderStorageType {
+            OFF,
+            EASY,
+            MEDIUM,
+            HARD,
         }
 
         public RandomizerSettings() {
