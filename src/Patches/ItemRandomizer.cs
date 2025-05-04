@@ -38,12 +38,12 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(AbilityShuffle) == 0) {
                 TunicUtils.AddListToDict(precollectedItems, new List<string> { "12", "21", "26" });
             }
-            if (SaveFile.GetInt(StartWithSword) == 1) {
+            if (GetBool(StartWithSword)) {
                 precollectedItems.Add("Sword", 1);
             }
 
             // Fake items to differentiate between fuse/non-fuse rules
-            if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+            if (GetBool(FuseShuffleEnabled)) {
                 precollectedItems.Add(ERData.FUSE_SHUFFLE, 1);
                 if (SaveFile.GetInt(EntranceRando) == 1) {
                     // Since the elevator is always active in ER, just ignore it in logic
@@ -53,13 +53,13 @@ namespace TunicRandomizer {
                 precollectedItems.Add(ERData.NO_FUSE_SHUFFLE, 1);
             }
 
-            if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
+            if (GetBool(BellShuffleEnabled)) {
                 precollectedItems.Add(ERData.BELL_SHUFFLE, 1);
             } else {
                 precollectedItems.Add(ERData.NO_BELL_SHUFFLE, 1);
             }
 
-            if (SaveFile.GetInt(LaurelsZips) == 1) {
+            if (GetBool(LaurelsZips)) {
                 precollectedItems.Add("Zip", 1);
             }
 
