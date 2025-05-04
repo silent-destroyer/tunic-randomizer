@@ -67,8 +67,8 @@ namespace TunicRandomizer {
                                 met++;
                             }
                         } else if (item.StartsWith("IG")) {
-                            int difficulty = Convert.ToInt32(item.Substring(2, 2));
-                            string range = item.Substring(3, 3);
+                            int difficulty = Convert.ToInt32(item.Substring(2, 1));
+                            string range = item.Substring(3, 1);
                             bool met_difficulty = SaveFile.GetInt(SaveFlags.IceGrapplingDifficulty) >= difficulty;
                             if (met_difficulty && inventory.ContainsKey("Wand") && inventory.ContainsKey("Stundagger")) {
                                 if (range == "S") {
