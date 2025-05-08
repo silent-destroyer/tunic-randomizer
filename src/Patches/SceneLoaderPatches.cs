@@ -454,7 +454,7 @@ namespace TunicRandomizer {
                         GameObject bushObj = GameObject.Find($"_Bush and Grass/bush ({bush})/");
                         if (bushObj != null) {
                             bushObj.GetComponent<Grass>().onKilled();
-                            bushObj.GetComponent<Grass>().doClippingAnimation();
+                            bushObj.GetComponent<Grass>().ShowAsClipped();
                         }
                     }
                 }
