@@ -209,7 +209,7 @@ namespace TunicRandomizer {
         public static (string, string) FoolTripTrap() {
             PlayerCharacter.instance.stamina = 0;
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
-            string FoolMessageTop = $"yoo R A \"<#FF3333>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageTop = $"yoo R A \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"iz #is brawl or suhm%i^?";
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
