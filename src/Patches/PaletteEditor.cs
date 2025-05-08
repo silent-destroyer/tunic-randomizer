@@ -194,9 +194,12 @@ namespace TunicRandomizer {
                 errorMessage = "";
             }
             y += 35f;
-            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 275f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Use Saved Texture");
+            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 200f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Use Saved Texture");
             TunicRandomizer.Settings.UseCustomTexture = ToggleCustomTextureUse;
 
+            GUI.skin.label.fontSize = 16;
+            GUI.Label(new Rect(555f, y-5f, 275f, 30f), "Camera Zoom");
+            CameraController.DerekZoom = 1 - GUI.HorizontalSlider(new Rect(555f, y+20f, 200f, 30f), 1-CameraController.DerekZoom, 0f, 0.99f);
         }
         private static void CopyHexValue() {
             GUIUtility.systemCopyBuffer = string.Format("#{0:X2}{1:X2}{2:X2}", ToByte(SelectedColor.r), ToByte(SelectedColor.g), ToByte(SelectedColor.b));
