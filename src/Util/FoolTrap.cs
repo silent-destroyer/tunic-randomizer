@@ -15,6 +15,7 @@ namespace TunicRandomizer {
             Tiny,
             Mirror,
             Deisometric,
+            Trip,  // for trap link
         }
 
         public static Dictionary<TrapType, int> TrapWeights = new Dictionary<TrapType, int> {
@@ -33,6 +34,7 @@ namespace TunicRandomizer {
             {TrapType.Tiny, "Tiny Trap" },
             {TrapType.Mirror, "Screen Flip Trap" },
             {TrapType.Deisometric, "Deisometric Trap" },
+            {TrapType.Trip, "Trip Trap" },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -64,6 +66,9 @@ namespace TunicRandomizer {
             {"Fuzzy Trap", TrapType.Deisometric },
             {"Confound Trap", TrapType.Deisometric },
 
+            {"Bonk Trap", TrapType.Trip },
+            {"Banana Trap", TrapType.Trip },
+            {"Spring Trap", TrapType.Trip },
         };
 
 
@@ -89,6 +94,9 @@ namespace TunicRandomizer {
                     break;
                 case TrapType.Deisometric:
                     (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
+                    break;
+                case TrapType.Trip:
+                    (FoolMessageTop, FoolMessageBottom) = FoolTripTrap();
                     break;
                 default:
                     TunicLogger.LogError("No match found for trap type " + trapType.ToString());
@@ -194,6 +202,15 @@ namespace TunicRandomizer {
             CameraController.DerekRotationEnabled = true;
             List<float> cameraRotations = new List<float>() { -45f, 45f };
             CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolTripTrap() {
+            PlayerCharacter.instance.stamina = 0;
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"iz #is brawl or suhm%i^?";
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
