@@ -16,6 +16,7 @@ namespace TunicRandomizer {
         public static int HeirAssistModeDamageValue = 0;
         public static bool StungByBee = false;
         public static bool TinierFox = false;
+        public static bool BaldFox = false;  // for trap link
         public static bool IsTeleporting = false;
         public static bool DiedToDeathLink = false;
         public static string DeathLinkMessage = "";
@@ -146,6 +147,10 @@ namespace TunicRandomizer {
             } else {
                 __instance.gameObject.transform.localScale = Vector3.one;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
+            }
+
+            if (BaldFox) {
+                __instance.gameObject.transform.Find("fox hair").gameObject.active = false;
             }
 
             if (SaveFile.GetInt(AbilityShuffle) == 1) { 

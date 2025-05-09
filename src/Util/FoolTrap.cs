@@ -16,6 +16,8 @@ namespace TunicRandomizer {
             Mirror,
             Deisometric,
             Trip,  // for trap link
+            Zoom,  // for trap link
+            Bald,  // for trap link
         }
 
         public static Dictionary<TrapType, int> TrapWeights = new Dictionary<TrapType, int> {
@@ -49,6 +51,8 @@ namespace TunicRandomizer {
             {"Fire Trap", TrapType.Fire },
             {"Damage Trap", TrapType.Fire },
             {"Bomb", TrapType.Fire },  // Luigi's Mansion, yes it's just Bomb
+            {"Posession Trap", TrapType.Fire },  // Luigi's Mansion, damage-based trap
+            {"Nut Trap", TrapType.Fire },  // DKC, damage-based trap
 
             {"Bee Trap", TrapType.Bee },
 
@@ -69,6 +73,10 @@ namespace TunicRandomizer {
             {"Bonk Trap", TrapType.Trip },
             {"Banana Trap", TrapType.Trip },
             {"Spring Trap", TrapType.Trip },
+
+            {"Zoom Trap", TrapType.Zoom },  // Celeste, zooms camera in
+
+            {"Bald Trap", TrapType.Bald },  // Celeste, bald
         };
 
 
@@ -97,6 +105,12 @@ namespace TunicRandomizer {
                     break;
                 case TrapType.Trip:
                     (FoolMessageTop, FoolMessageBottom) = FoolTripTrap();
+                    break;
+                case TrapType.Zoom:
+                    (FoolMessageTop, FoolMessageBottom) = FoolZoomTrap();
+                    break;
+                case TrapType.Bald:
+                    (FoolMessageTop, FoolMessageBottom) = FoolBaldTrap();
                     break;
                 default:
                     TunicLogger.LogError("No match found for trap type " + trapType.ToString());
@@ -211,6 +225,24 @@ namespace TunicRandomizer {
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
             string FoolMessageTop = $"yoo R A \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"iz #is brawl or suhm%i^?";
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolZoomTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>zoomd in \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"wehl I kehn sE juhst fIn...";
+            CameraController.DerekZoom = 0.5f;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolBaldTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>bawld \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"giv it bahk!";
+            PlayerCharacterPatches.BaldFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
