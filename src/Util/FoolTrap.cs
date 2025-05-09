@@ -27,6 +27,7 @@ namespace TunicRandomizer {
             {TrapType.Tiny, 15 },
             {TrapType.Mirror, 10 },
             {TrapType.Deisometric, 10 },
+            {TrapType.Zoom, 5},
         };
 
         public static Dictionary<TrapType, string> TrapTypeToName = new Dictionary<TrapType, string> {
