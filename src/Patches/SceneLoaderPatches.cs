@@ -316,9 +316,13 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Resetting time of day to daytime!"); 
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
             }
-
-            PlayerCharacterPatches.StungByBee = false;
-            PlayerCharacterPatches.TinierFox = false;
+            FoolTrap.StungByBee = false;
+            FoolTrap.TinierFox = false;
+            FoolTrap.BaldFox = false;
+            if (FoolTrap.ZoomedCamera) {
+                CameraController.DerekZoom = 1f;
+                FoolTrap.ZoomedCamera = false;
+            }
 
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
