@@ -149,9 +149,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
             }
 
-            if (BaldFox) {
-                __instance.gameObject.transform.Find("fox hair").gameObject.active = false;
-            }
+                __instance.gameObject.transform.Find("fox hair").GetComponent<Renderer>().enabled = !BaldFox;
 
             if (SaveFile.GetInt(AbilityShuffle) == 1) { 
                 if(SaveFile.GetInt(PrayerUnlocked) == 0) {
