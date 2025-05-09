@@ -17,6 +17,7 @@ namespace TunicRandomizer {
         public static bool StungByBee = false;
         public static bool TinierFox = false;
         public static bool BaldFox = false;  // for trap link
+        public static bool ZoomedCamera = false;  // for trap link
         public static bool IsTeleporting = false;
         public static bool DiedToDeathLink = false;
         public static string DeathLinkMessage = "";

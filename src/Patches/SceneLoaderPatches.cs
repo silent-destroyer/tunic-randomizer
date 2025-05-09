@@ -320,6 +320,10 @@ namespace TunicRandomizer {
             PlayerCharacterPatches.StungByBee = false;
             PlayerCharacterPatches.TinierFox = false;
             PlayerCharacterPatches.BaldFox = false;
+            if (PlayerCharacterPatches.ZoomedCamera) {
+                CameraController.DerekZoom = 1f;
+                PlayerCharacterPatches.ZoomedCamera = false;
+            }
 
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
