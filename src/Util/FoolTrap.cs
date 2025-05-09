@@ -232,7 +232,7 @@ namespace TunicRandomizer {
         public static (string, string) FoolZoomTrap() {
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
             string FoolMessageTop = $"yoo R A <#FFA500>zoomd in \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
-            string FoolMessageBottom = $"wehl I kehn sE juhst fIn...";
+            string FoolMessageBottom = $"wehl I kahn sE juhst fIn...";
             CameraController.DerekZoom = 0.5f;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
