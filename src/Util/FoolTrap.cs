@@ -79,6 +79,10 @@ namespace TunicRandomizer {
             {"Bald Trap", TrapType.Bald },  // Celeste, bald
         };
 
+        public static bool StungByBee = false;
+        public static bool TinierFox = false;
+        public static bool BaldFox = false;  // for trap link
+        public static bool ZoomedCamera = false;  // for trap link
 
         public static (string, string) ApplyFoolEffect(TrapType trapType) {
             string FoolMessageTop = $"";
@@ -130,10 +134,10 @@ namespace TunicRandomizer {
                 if (trapType == TrapType.Mirror && CameraController.Flip) {
                     continue;
                 }
-                if (trapType == TrapType.Tiny && (PlayerCharacterPatches.TinierFox || TunicRandomizer.Settings.TinierFoxMode)) {
+                if (trapType == TrapType.Tiny && (TinierFox || TunicRandomizer.Settings.TinierFoxMode)) {
                     continue;
                 }
-                if (trapType == TrapType.Bee && (PlayerCharacterPatches.StungByBee || TunicRandomizer.Settings.BiggerHeadMode)) {
+                if (trapType == TrapType.Bee && (StungByBee || TunicRandomizer.Settings.BiggerHeadMode)) {
                     continue;
                 }
                 if (trapType == TrapType.Deisometric && CameraController.DerekRotationEnabled) {
@@ -182,7 +186,7 @@ namespace TunicRandomizer {
             PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
             string FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
-            PlayerCharacterPatches.StungByBee = true;
+            StungByBee = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
@@ -192,7 +196,7 @@ namespace TunicRandomizer {
             PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
             string FoolMessageTop = $"yoo R A <#FFA500>tInE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
-            PlayerCharacterPatches.TinierFox = true;
+            TinierFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
@@ -234,7 +238,7 @@ namespace TunicRandomizer {
             string FoolMessageTop = $"yoo R A <#FFA500>zoomd in \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"wehl I kahn sE juhst fIn...";
             CameraController.DerekZoom = 0.5f;
-            PlayerCharacterPatches.ZoomedCamera = true;
+            ZoomedCamera = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
@@ -243,7 +247,7 @@ namespace TunicRandomizer {
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
             string FoolMessageTop = $"yoo R A <#FFA500>bawld \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"giv it bahk!";
-            PlayerCharacterPatches.BaldFox = true;
+            BaldFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
