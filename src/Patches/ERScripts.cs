@@ -13,6 +13,12 @@ namespace TunicRandomizer {
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
+            if (TunicLogger.Testing) {
+                TunicLogger.LogTesting("Starting UpdateReachableRegions, current inventory is as follows:");
+                foreach (string itemName in inventory.Keys) {
+                    TunicLogger.LogTesting(itemName);
+                }
+            }
             int inv_count = inventory.Count;
             // for each origin region
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
@@ -330,7 +336,7 @@ namespace TunicRandomizer {
             string start_region = "Overworld";
 
             Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Gun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
                 { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
 
