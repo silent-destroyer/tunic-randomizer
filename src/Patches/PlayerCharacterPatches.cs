@@ -340,6 +340,14 @@ namespace TunicRandomizer {
             }
 
             try {
+                if (GetBool(GrassRandoEnabled)) {
+                    GrassRandomizer.UpdateGrassCounters();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error counting grass! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
                 if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
                     if (!FuseRandomizer.ModifiedFusesAlready) {
                         FuseRandomizer.ModifyFuses();

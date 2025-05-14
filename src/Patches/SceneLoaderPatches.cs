@@ -51,6 +51,8 @@ namespace TunicRandomizer {
                         }
                     }
                 }
+
+                GrassRandomizer.UpdateGrassCounters();
             }
 
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {

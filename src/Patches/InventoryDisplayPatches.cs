@@ -47,25 +47,42 @@ namespace TunicRandomizer {
                 InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
                 yield return true;
 
-                int ObtainedItemCount = IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld ? Archipelago.instance.integration.session.Locations.AllLocationsChecked.Count : Locations.CheckedLocations.Where(loc => loc.Value).Count();
-                yield return true;
-
-                int ObtainedItemCountInCurrentScene = TunicUtils.GetCompletedChecksCountInCurrentScene();
-                yield return true;
-
-                int TotalItemCountInCurrentScene = TunicUtils.GetCheckCountInCurrentScene();
-                yield return true;
-
-                int TotalItemCount = TunicUtils.GetAllInUseChecks().Count;
+                List<Check> allChecks = TunicUtils.GetAllInUseChecks(exceptGrass: true);
+                int ObtainedItemCount = 0;
+                int ObtainedItemCountInCurrentScene = 0;
+                int TotalItemCountInCurrentScene = 0;
+                int TotalItemCount = allChecks.Count;
                 string sceneName = SceneLoaderPatches.SceneName;
                 yield return true;
-                if (GetBool(GrassRandoEnabled) && GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "loading") {
-                    int grassCutInCurrentScene = TunicUtils.GetCompletedChecksCountByScene(GrassRandomizer.GrassChecks.Values.ToList(), sceneName);
-                    yield return true;
-                    if (InventoryDisplayPatches.GrassText != null) {
-                        int grassCut = TunicUtils.GetCompletedChecksCount(GrassRandomizer.GrassChecks.Values.ToList());
-                        InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(grassCutInCurrentScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{grassCutInCurrentScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
-                            $"<#ffffff> • {(grassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{grassCut}/{GrassRandomizer.GrassChecks.Count}";
+
+                for (int i = 0; i < allChecks.Count; i++) {
+                    Check check = allChecks[i];
+
+                    if (check.IsCompletedOrCollected) { 
+                        ObtainedItemCount++;
+                        if (check.Location.SceneName == sceneName) {
+                            TotalItemCountInCurrentScene++;
+                            ObtainedItemCountInCurrentScene++;
+                        }
+                    } else {
+                        if (check.Location.SceneName == sceneName) {
+                            TotalItemCountInCurrentScene++;
+                        }
+                    }
+                    if (i % (allChecks.Count / 5) == 0) {
+                        yield return true;
+                    }
+                }
+                yield return true;
+                
+                if (GetBool(GrassRandoEnabled)) {
+                    TotalItemCount += GrassRandomizer.GrassChecks.Count;
+                    ObtainedItemCount += GrassRandomizer.GrassCut;
+                    if (GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "Loading" && InventoryDisplayPatches.GrassText != null) {
+                        TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[sceneName];
+                        ObtainedItemCountInCurrentScene += GrassRandomizer.GrassCutScene;
+                        InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(GrassRandomizer.GrassCutScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCutScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
+                            $"<#ffffff> • {(GrassRandomizer.GrassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCut}/{GrassRandomizer.GrassChecks.Count}";
                     }
                 }
                 yield return true;
