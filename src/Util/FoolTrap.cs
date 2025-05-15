@@ -20,6 +20,7 @@ namespace TunicRandomizer {
             Bald,  // for trap link
         }
 
+        // todo: in some later update, consolidate this and the below dictionary into one dictionary
         public static Dictionary<TrapType, int> TrapWeights = new Dictionary<TrapType, int> {
             {TrapType.Ice, 30 },
             {TrapType.Fire, 20 },
@@ -38,6 +39,7 @@ namespace TunicRandomizer {
             {TrapType.Mirror, "Screen Flip Trap" },
             {TrapType.Deisometric, "Deisometric Trap" },
             {TrapType.Trip, "Trip Trap" },
+            {TrapType.Zoom, "Zoom Trap" },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
