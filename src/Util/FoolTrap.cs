@@ -20,26 +20,26 @@ namespace TunicRandomizer {
             Bald,  // for trap link
         }
 
-        // todo: in some later update, consolidate this and the below dictionary into one dictionary
-        public static Dictionary<TrapType, int> TrapWeights = new Dictionary<TrapType, int> {
-            {TrapType.Ice, 30 },
-            {TrapType.Fire, 20 },
-            {TrapType.Bee, 15 },
-            {TrapType.Tiny, 15 },
-            {TrapType.Mirror, 10 },
-            {TrapType.Deisometric, 10 },
-            {TrapType.Zoom, 5},
-        };
+        public class Trap {
+            public string Name;
+            public int Weight;  // for random fool traps
 
-        public static Dictionary<TrapType, string> TrapTypeToName = new Dictionary<TrapType, string> {
-            {TrapType.Ice, "Ice Trap" },
-            {TrapType.Fire, "Fire Trap" },
-            {TrapType.Bee, "Bee Trap" },
-            {TrapType.Tiny, "Tiny Trap" },
-            {TrapType.Mirror, "Screen Flip Trap" },
-            {TrapType.Deisometric, "Deisometric Trap" },
-            {TrapType.Trip, "Trip Trap" },
-            {TrapType.Zoom, "Zoom Trap" },
+            public Trap(string name, int weight) {
+                Name = name;
+                Weight = weight;
+            }
+        }
+
+        public static Dictionary<TrapType, Trap> Traps = new Dictionary<TrapType, Trap> {
+            {TrapType.Ice, new Trap("Ice Trap", 30) },
+            {TrapType.Fire, new Trap("Fire Trap", 20) },
+            {TrapType.Bee, new Trap("Bee Trap", 15) },
+            {TrapType.Tiny, new Trap("Tiny Trap", 15) },
+            {TrapType.Mirror, new Trap("Screen Flip Trap", 10) },
+            {TrapType.Deisometric, new Trap("Deisometric Trap", 10) },
+            {TrapType.Trip, new Trap("Trip Trap", 0) },
+            {TrapType.Zoom, new Trap("Zoom Trap", 5) },
+            {TrapType.Bald, new Trap("Bald Trap", 0) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -133,7 +133,7 @@ namespace TunicRandomizer {
             string FoolMessageBottom = $"";
 
             List<TrapType> weightedTrapList = new List<TrapType>();
-            foreach (TrapType trapType in TrapWeights.Keys) {
+            foreach (TrapType trapType in Traps.Keys) {
                 if (trapType == TrapType.Mirror && CameraController.Flip) {
                     continue;
                 }
@@ -146,7 +146,7 @@ namespace TunicRandomizer {
                 if (trapType == TrapType.Deisometric && CameraController.DerekRotationEnabled) {
                     continue;
                 }
-                weightedTrapList.AddRange(Enumerable.Repeat(trapType, TrapWeights[trapType]));
+                weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
             }
             TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
             (FoolMessageTop, FoolMessageBottom) = ApplyFoolEffect(trapSelected);
