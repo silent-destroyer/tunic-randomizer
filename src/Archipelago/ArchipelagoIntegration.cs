@@ -432,7 +432,7 @@ namespace TunicRandomizer {
                 {
                     { "time", (float)DateTime.Now.ToUnixTimeStamp() },
                     { "source", SaveFile.GetString(SaveFlags.ArchipelagoPlayerName) },
-                    { "trap_name", FoolTrap.TrapTypeToName[trapType] }
+                    { "trap_name", FoolTrap.Traps[trapType].Name }
                 }
             };
             session.Socket.SendPacketAsync(bouncePacket);
