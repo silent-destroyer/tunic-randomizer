@@ -146,6 +146,9 @@ namespace TunicRandomizer {
                 if (trapType == TrapType.Deisometric && CameraController.DerekRotationEnabled) {
                     continue;
                 }
+                if (trapType == TrapType.Zoom && CameraController.DerekZoom == 0.5f) {
+                    continue;
+                }
                 weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
             }
             TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
