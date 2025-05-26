@@ -967,7 +967,8 @@ namespace TunicRandomizer {
                             if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
                                 SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
                                 if (IsArchipelago()) {
-                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}{portalCombo.Value.Portal1.Tag}", true);
+                                    string key = $"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}_{portalCombo.Value.Portal1.Tag}";
+                                    Archipelago.instance.integration.UpdateDataStorage(key, true);
                                 }
                             }
                             // if decoupled is off, we can just mark the other side of the portal too
@@ -975,7 +976,8 @@ namespace TunicRandomizer {
                                 if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
                                     SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
                                     if (IsArchipelago()) {
-                                        Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
+                                        string key = $"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}_{portalCombo.Value.Portal2.Tag}";
+                                        Archipelago.instance.integration.UpdateDataStorage(key, true);
                                     }
                                 }
                             }

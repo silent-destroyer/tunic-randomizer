@@ -405,6 +405,7 @@ namespace TunicRandomizer {
             {
                 "Dark Tomb",
                 new List<string> () {
+                    "Crypt",
                     "Crypt Redux"
                 }
             },
@@ -458,6 +459,7 @@ namespace TunicRandomizer {
             {
                 "The Quarry",
                 new List<string> () {
+                    "Quarry",
                     "Quarry Redux",
                     "Monastery",
                     "Darkwoods Tunnel",
@@ -488,6 +490,157 @@ namespace TunicRandomizer {
             },
             {
                 "The Far Shore",
+                new List<string> () {
+                    "Transit",
+                    "RelicVoid",
+                    "Spirit Arena",
+                }
+            }
+        };
+
+        // For the entrance tracker webite
+        public static Dictionary<string, List<string>> EntranceTrackerMapScenes = new Dictionary<string, List<string>>() {
+            {
+                "overworld",
+                new List<string> () {
+                    "Overworld Redux",
+                    "Posterity",
+                    "Playable Intro",
+                    "Purgatory",
+                    "Shop",
+                }
+            },
+            {
+                "overworld_interiors",
+                new List<string>() {
+                    "Overworld Interiors",
+                    "Town_FiligreeRoom",
+                    "Changing Room",
+                    "Waterfall",
+                    "Overworld Cave",
+                    "Furnace",
+                    "Windmill",
+                    "ShopSpecial",
+                    "CubeRoom",
+                    "PatrolCave",
+                    "Maze Room",
+                    "Sword Cave",
+                    "Ruined Shop",
+                    "Town Basement",
+                    "Ruins Passage",
+                    "g_elements",
+                    "EastFiligreeCache",
+                    "Temple",
+                }
+            },
+            {
+                "east_forest",
+                new List<string> () {
+                    "Forest Belltower",
+                    "East Forest Redux",
+                    "East Forest Redux Interior",
+                    "East Forest Redux Laddercave",
+                    "Sword Access",
+                    "Forest Boss Room"
+                }
+            },
+            {
+                "bottom_of_the_well",
+                new List<string> () {
+                    "Sewer",
+                    "Sewer_Boss"
+                }
+            },
+            {
+                "dark_tomb",
+                new List<string> () {
+                    "Crypt Redux",
+                    "Crypt",
+                }
+            },
+            {
+                "west_garden",
+                new List<string> () {
+                    "Archipelagos Redux",
+                    "archipelagos_house"
+                }
+            },
+            {
+                "beneath_the_earth",
+                new List<string> () {
+                    "Fortress Basement",
+                }
+            },
+            {
+                "fortress",
+                new List<string> () {
+                    "Fortress Main",
+                    "Fortress Courtyard",
+                    "Fortress Arena",
+                    "Fortress East",
+                    "Fortress Reliquary",
+                    "Dusty"
+                }
+            },
+            {
+                "atoll",
+                new List<string> () {
+                    "Atoll Redux"
+                }
+            },
+            {
+                "frogs",
+                new List<string> () {
+                    "Frog Stairs",
+                    "frog cave main"
+                }
+            },
+            {
+                "library",
+                new List<string> () {
+                    "Library Lab",
+                    "Library Hall",
+                    "Library Rotunda",
+                    "Library Arena",
+                    "Library Exterior"
+                }
+            },
+            {
+                "quarry",
+                new List<string> () {
+                    "Quarry",
+                    "Quarry Redux",
+                    "Monastery",
+                    "Darkwoods Tunnel",
+                    "Mountain",
+                    "Mountaintop",
+                }
+            },
+            {
+                "ziggurat",
+                new List<string> () {
+                    "ziggurat2020_2",
+                    "ziggurat2020_1",
+                    "ziggurat2020_3",
+                    "ziggurat2020_0",
+                    "ziggurat2020_FTRoom"
+                }
+            },
+            {
+                "swamp",
+                new List<string> () {
+                    "Swamp Redux 2"
+                }
+            },
+            {
+                "cathedral",
+                new List<string> () {
+                    "Cathedral Arena",
+                    "Cathedral Redux"
+                }
+            },
+            {
+                "far_shore",
                 new List<string> () {
                     "Transit",
                     "RelicVoid",

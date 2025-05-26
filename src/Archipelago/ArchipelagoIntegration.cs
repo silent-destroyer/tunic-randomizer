@@ -491,6 +491,7 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Initializing DataStorage values");
                 // Map to Display
                 session.DataStorage[Scope.Slot, "Current Map"].Initialize("Overworld");
+                session.DataStorage[Scope.Slot, "Entrance Tracker Map"].Initialize("overworld");
 
                 // Boss Info
                 session.DataStorage[Scope.Slot, "Defeated Guard Captain"].Initialize(false);
@@ -514,8 +515,9 @@ namespace TunicRandomizer {
                     foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> portalDict in RegionPortalsList.Where(dict => dict.Key != "Shop")) {
                         foreach (KeyValuePair<string, List<TunicPortal>> portals in portalDict.Value) {
                             foreach (TunicPortal portal in portals.Value) {
-                                TunicLogger.LogInfo("initializing datastorage value for portal: " + portalDict.Key + ", " + portal.Destination + portal.Tag);
-                                session.DataStorage[Scope.Slot, $"{portalDict.Key}, {portal.Destination}{portal.Tag}"].Initialize(false);
+                                string key = $"{portalDict.Key}, {portal.Destination}_{portal.Tag}";
+                                TunicLogger.LogInfo("initializing datastorage value for portal: " + key);
+                                session.DataStorage[Scope.Slot, key].Initialize(false);
                             }
                         }
                     }
@@ -544,6 +546,12 @@ namespace TunicRandomizer {
             foreach (string Key in Locations.PopTrackerMapScenes.Keys) {
                 if (Locations.PopTrackerMapScenes[Key].Contains(SceneLoaderPatches.SceneName)) {
                     UpdateDataStorage("Current Map", Key);
+                    break;
+                }
+            }
+            foreach (string Key in Locations.EntranceTrackerMapScenes.Keys) {
+                if (Locations.EntranceTrackerMapScenes[Key].Contains(SceneLoaderPatches.SceneName)) {
+                    UpdateDataStorage("Entrance Tracker Map", Key);
                     break;
                 }
             }
