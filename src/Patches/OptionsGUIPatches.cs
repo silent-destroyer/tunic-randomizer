@@ -547,6 +547,8 @@ namespace TunicRandomizer {
         public static void OpenLocalSpoilerLog() {
             if (File.Exists(TunicRandomizer.SpoilerLogPath)) {
                 System.Diagnostics.Process.Start(TunicRandomizer.SpoilerLogPath);
+            } else {
+                GenericMessage.ShowMessage("\"Spoiler Log not found.\"");
             }
         }
 
