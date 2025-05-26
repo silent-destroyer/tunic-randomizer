@@ -172,7 +172,11 @@ namespace TunicRandomizer {
             }
             OptionsGUI.addButton("Open Entrance Tracker", (Action)(() => {
                 if (File.Exists(TunicRandomizer.EntranceTrackerPath)) {
-                    System.Diagnostics.Process.Start(TunicRandomizer.EntranceTrackerPath);
+                    GenericPrompt.ShowPrompt("\"Open Entrance Tracker Website?\"", (Action)(() => {
+                        System.Diagnostics.Process.Start("https://scipiowright.gitlab.io/tunic-tracker/");
+                    }),(Action)(() => {
+                        System.Diagnostics.Process.Start(TunicRandomizer.EntranceTrackerPath);
+                    }));
                 } else {
                     GenericMessage.ShowMessage("\"No entrance tracker file found.\"\n\"Load an entrance randomizer file\"\n\"and try again.\"");
                 }
