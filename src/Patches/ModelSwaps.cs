@@ -712,7 +712,7 @@ namespace TunicRandomizer {
                     foreach (MeshRenderer r in renderers) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
                         if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>(includeInactive: true) != null) { continue; }
-                        if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
+                        if (breakableObject.GetComponent<SecretPassagePanel>() != null) {
                             r.materials = new Material[] { material, material };
                         } else {
                             r.material = material;
@@ -736,7 +736,10 @@ namespace TunicRandomizer {
             bool customColor = false;
 
             MeshRenderer meshRenderer = breakableObject.GetComponentInChildren<MeshRenderer>();
-            meshRenderer.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+            // signs already look good without changing the material
+            if (breakableObject.name != "Physical Post") {
+                meshRenderer.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+            }
 
             MeshFilter meshFilter = breakableObject.GetComponentInChildren<MeshFilter>();
 
@@ -758,8 +761,15 @@ namespace TunicRandomizer {
                     questionMark.GetComponent<SpriteRenderer>().material.color = UnityEngine.Color.cyan;
                 }
             } else if (customColor) {
+                Material outerMaterial = null;
+                if (breakableObject.GetComponent<MeshRenderer>() != null) {
+                    outerMaterial = breakableObject.GetComponent<MeshRenderer>().material;
+                }
                 foreach (MeshRenderer r in breakableObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                     if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
+                    if (!r.transform.gameObject.active && outerMaterial != null) {
+                        r.material = outerMaterial;
+                    }
                     r.material.color = color;
                 }
             }
