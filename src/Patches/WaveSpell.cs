@@ -17,6 +17,8 @@ namespace TunicRandomizer {
             base.particles = PlayerCharacter.instance.transform.GetChild(8).gameObject.GetComponent<ParticleSystem>();
             List<DPAD> dPADs = new List<DPAD>() { DPAD.UP, DPAD.RIGHT, DPAD.LEFT, DPAD.DOWN };
             List<int> inputs = new List<int>() { 2, 3, 1, 3, 2, 2, 3, 1, 0, 1, 1, 3, 1, 1, 0, 2, 2, 2, 0, 1, 0, 1, 1, 3, 3, 2, 0, 0, 2, 3 };
+            List<int> inputsAlt = new List<int>() { 2, 3, 1, 3, 1, 0, 1, 1, 0, 2, 0, 1, 0, 1, 1, 0, 0, 2, 3, 2, 2, 1, 3, 1, 2, 2, 3, 3, 2, 3 };
+            List<int> inputsAltAlt = new List<int>() { 2, 3, 3, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 2, 1, 1, 2, 3, 1, 3, 2, 3, 3, 2, 2, 1, 2, 2, 3 };
             CustomInputs.Clear();
             for (int i = 0; i < inputs.Count; i++) {
                 CustomInputs.Add(dPADs[inputs[i]]);
@@ -25,12 +27,34 @@ namespace TunicRandomizer {
 
         public override bool CheckInput(Il2CppStructArray<DPAD> inputs, int length) {
             if (length == CustomInputs.Count) {
+                bool success = true;
                 for (int i = 0; i < length; i++) {
                     if (inputs[i] != CustomInputs[i]) {
-                        return false;
+                        success = false;
+                        break;
                     }
                 }
-                DoWave();
+                if (!success) {
+                    success = true;
+                    for (int i = 0; i < length; i++) {
+                        if (inputsAlt[i] != CustomInputs[i]) {
+                            success = false;
+                            break;
+                        }
+                    }
+                }
+                if (!success) {
+                    success = true;
+                    for (int i = 0; i < length; i++) {
+                        if (inputsAltAlt[i] != CustomInputs[i]) {
+                            success = false;
+                            break;
+                        }
+                    }
+                }
+                if (success) {
+                    DoWave();
+                }
             }
             return false;
         }
