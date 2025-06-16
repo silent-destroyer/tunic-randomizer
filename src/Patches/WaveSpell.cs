@@ -16,8 +16,11 @@ namespace TunicRandomizer {
             base.hpToGive = 0;
             base.particles = PlayerCharacter.instance.transform.GetChild(8).gameObject.GetComponent<ParticleSystem>();
             List<DPAD> dPADs = new List<DPAD>() { DPAD.UP, DPAD.RIGHT, DPAD.LEFT, DPAD.DOWN };
+            // read left to right across the screen
             List<int> inputs = new List<int>() { 2, 3, 1, 3, 2, 2, 3, 1, 0, 1, 1, 3, 1, 1, 0, 2, 2, 2, 0, 1, 0, 1, 1, 3, 3, 2, 0, 0, 2, 3 };
+            // read left to right on the left side of the screen first then the right side of the screen
             List<int> inputsAlt = new List<int>() { 2, 3, 1, 3, 1, 0, 1, 1, 0, 2, 0, 1, 0, 1, 1, 0, 0, 2, 3, 2, 2, 1, 3, 1, 2, 2, 3, 3, 2, 3 };
+            // read left to right column by column, the time found one is the last input
             List<int> inputsAltAlt = new List<int>() { 2, 3, 3, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 2, 1, 1, 2, 3, 1, 3, 2, 3, 3, 2, 2, 1, 2, 2, 3 };
             CustomInputs.Clear();
             for (int i = 0; i < inputs.Count; i++) {
