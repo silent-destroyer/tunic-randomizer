@@ -617,6 +617,10 @@ namespace TunicRandomizer {
                     if (SaveFile.GetInt(PortalDirectionPairs) == 1 && directionPairs[portal1.Direction] != portal2.Direction) {
                         continue;
                     }
+                    // don't pair this to a dead end, only an issue in fewer shops
+                    if (portal2.Region == "Zig Skip Exit") {
+                        continue;
+                    }
                     randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
                     comboNumber++;
 
