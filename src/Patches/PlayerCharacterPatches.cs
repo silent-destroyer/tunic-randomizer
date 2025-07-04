@@ -145,6 +145,10 @@ namespace TunicRandomizer {
                 __instance.gameObject.transform.localScale = Vector3.one;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
             }
+            if (FoolTrap.WideFox) {
+                Vector3 scale = __instance.gameObject.transform.localScale;
+                __instance.gameObject.transform.localScale = new Vector3(2f, scale.y, scale.z);
+            }
 
             __instance.gameObject.transform.Find("fox hair").GetComponent<Renderer>().enabled = !FoolTrap.BaldFox;
 
