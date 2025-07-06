@@ -14,6 +14,12 @@ namespace TunicRandomizer {
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
+            if (TunicLogger.Testing) {
+                TunicLogger.LogTesting("Starting UpdateReachableRegions, current inventory is as follows:");
+                foreach (string itemName in inventory.Keys) {
+                    TunicLogger.LogTesting(itemName);
+                }
+            }
             int inv_count = inventory.Count;
             // for each origin region
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
@@ -295,7 +301,7 @@ namespace TunicRandomizer {
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
             // it doesn't really matter if there's duplicates from the above for this
             Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Gun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
                 { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
             };
             TunicUtils.AddDictToDict(FullInventory, MaxItems);
@@ -379,6 +385,10 @@ namespace TunicRandomizer {
             bool decoupledEnabled = GetBool(Decoupled);
             bool dirPairsEnabled = GetBool(PortalDirectionPairs);
 
+            // -----------------------------------------------
+            // Portal Pairing Starts Here
+            // -----------------------------------------------
+
             TunicUtils.ShuffleList(twoPlusPortals, seed);
             List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
             int failCount = 0;
@@ -408,6 +418,9 @@ namespace TunicRandomizer {
                         foreach (string thing in FullInventory.Keys) {
                             TunicLogger.LogInfo(thing);
                         }
+                        TunicLogger.LogInfo("---------------------------------------");
+                        TunicLogger.LogInfo("This will now reroll the entrances and try again.");
+                        TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
                         //throw new System.Exception("Failed to pair portals.");
                         // reroll, hopefully this shouldn't be common at all
                         RandomizePortals(seed + 1);
@@ -532,13 +545,13 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("done pairing twoplusportals");
 
             // if we run into issues again, these were very helpful in diagnosing them
-            //TunicLogger.LogInfo("if there are regions missing, they are as follows:");
+            //TunicLogger.LogInfo("\nIf there are regions missing, they are as follows:");
             //foreach (string region in nondeadend_regions) {
             //    if (!FullInventory.ContainsKey(region)) {
             //        TunicLogger.LogInfo(region);
             //    }
             //}
-            //TunicLogger.LogInfo("inventory:");
+            //TunicLogger.LogInfo("\nInventory:");
             //foreach (string thing in FullInventory.Keys) {
             //    TunicLogger.LogInfo(thing);
             //}
@@ -553,6 +566,10 @@ namespace TunicRandomizer {
                 bool foundPair = false;
                 foreach (Portal portal2 in twoPlusPortals) {
                     if (GetBool(PortalDirectionPairs) && directionPairs[portal1.Direction] != portal2.Direction) {
+                        continue;
+                    }
+                    // don't pair this to a dead end, only an issue in fewer shops
+                    if (portal2.Region == "Zig Skip Exit") {
                         continue;
                     }
                     randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
@@ -905,7 +922,8 @@ namespace TunicRandomizer {
                             if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
                                 SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
                                 if (IsArchipelago()) {
-                                    Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}{portalCombo.Value.Portal1.Tag}", true);
+                                    string key = $"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}_{portalCombo.Value.Portal1.Tag}";
+                                    Archipelago.instance.integration.UpdateDataStorage(key, true);
                                 }
                             }
                             // if decoupled is off, we can just mark the other side of the portal too
@@ -913,7 +931,8 @@ namespace TunicRandomizer {
                                 if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
                                     SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
                                     if (IsArchipelago()) {
-                                        Archipelago.instance.integration.UpdateDataStorage($"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}{portalCombo.Value.Portal2.Tag}", true);
+                                        string key = $"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}_{portalCombo.Value.Portal2.Tag}";
+                                        Archipelago.instance.integration.UpdateDataStorage(key, true);
                                     }
                                 }
                             }

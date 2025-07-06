@@ -1158,8 +1158,14 @@ namespace TunicRandomizer {
 
         public static void RandomizeEnemySizes() {
             string scene = SceneManager.GetActiveScene().name;
+            System.Random Random;
+            if (TunicRandomizer.Settings.SeededEnemies) {
+                Random = new System.Random(SaveFile.GetInt($"randomizer enemy seed {scene}"));
+            } else {
+                Random = new System.Random();
+            }
             foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
-                float scale = UnityEngine.Random.Range(0.25f, 1.75f);
+                float scale = ((float)Random.NextDouble() * 1.5f) + 0.25f;
                 monster.gameObject.transform.localScale *= scale; 
                 if (monster.GetComponent<FleemerQuartet>() != null) {
                     foreach (GameObject fleemer in monster.GetComponent<FleemerQuartet>().Quartet) {
@@ -1168,7 +1174,7 @@ namespace TunicRandomizer {
                 }
             }
             foreach (TurretTrap monster in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
-                float scale = UnityEngine.Random.Range(0.25f, 1.75f);
+                float scale = ((float)Random.NextDouble() * 1.5f) + 0.25f;
                 monster.gameObject.transform.localScale *= scale;
             }
             RandomizedThisSceneAlready = true;

@@ -14,8 +14,6 @@ namespace TunicRandomizer {
 
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
-        public static bool StungByBee = false;
-        public static bool TinierFox = false;
         public static bool IsTeleporting = false;
         public static bool DiedToDeathLink = false;
         public static string DeathLinkMessage = "";
@@ -137,16 +135,18 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
+            if (FoolTrap.StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = Vector3.one * 3f;
             }
-            if (TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
+            if (FoolTrap.TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
                 __instance.gameObject.transform.localScale = Vector3.one * 0.5f;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 7;
             } else {
                 __instance.gameObject.transform.localScale = Vector3.one;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
             }
+
+            __instance.gameObject.transform.Find("fox hair").GetComponent<Renderer>().enabled = !FoolTrap.BaldFox;
 
             if (SaveFile.GetInt(AbilityShuffle) == 1) { 
                 if(SaveFile.GetInt(PrayerUnlocked) == 0) {
@@ -337,6 +337,14 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
+                if (GetBool(GrassRandoEnabled)) {
+                    GrassRandomizer.UpdateGrassCounters();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error counting grass! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {

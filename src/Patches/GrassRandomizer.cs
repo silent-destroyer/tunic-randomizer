@@ -27,6 +27,10 @@ namespace TunicRandomizer {
             "bush (62)~(66.5, 44.0, -111.0)",
             "bush (64)~(56.0, 44.0, -107.0)",
         };
+
+        public static int GrassCut = 0;
+        public static int GrassCutScene = 0;
+
         public static void LoadGrassChecks() {
             var assembly = Assembly.GetExecutingAssembly();
             var grassJson = "TunicRandomizer.src.Data.Grass.json";
@@ -130,6 +134,7 @@ namespace TunicRandomizer {
                         }
                         SaveFile.SetInt("randomizer picked up " + grassId, 1);
                         Locations.CheckedLocations[grassId] = true;
+                        IncrementGrassCounters();
                         TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
                         FairyTargets.RemoveFairyTarget(grassId);
                         string receiver = ItemInfo.Player.Name;
@@ -161,6 +166,7 @@ namespace TunicRandomizer {
                             }
                             ItemPatches.GiveItem(check, alwaysSkip: true);
                         }
+                        IncrementGrassCounters();
                         FairyTargets.RemoveFairyTarget(check.CheckId);
                     }
                     if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
@@ -171,6 +177,25 @@ namespace TunicRandomizer {
                 }
             }
             return true;
+        }
+
+        private static void IncrementGrassCounters() {
+            GrassCut += 1;
+            GrassCutScene += 1;
+        }
+
+        public static void UpdateGrassCounters() {
+            GrassCut = 0;
+            GrassCutScene = 0;
+
+            foreach (Check check in GrassChecks.Values) { 
+                if (check.IsCompletedOrCollected) {
+                    GrassCut++;
+                    if (check.Location.SceneName == SceneManager.GetActiveScene().name) {
+                        GrassCutScene++;
+                    }
+                }
+            }
         }
 
         public static bool PauseMenu___button_ReturnToTitle_PrefixPatch(PauseMenu __instance) {

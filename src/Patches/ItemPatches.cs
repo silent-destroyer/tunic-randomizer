@@ -857,7 +857,18 @@ namespace TunicRandomizer {
         }
 
         // Extender for debug/cheat function
+        public static bool Cheats_giveLotsOfItems_PrefixPatch(Cheats __instance) { 
+            if (TunicRandomizer.Settings.RaceMode) {
+                return false;
+            }
+
+            return true;
+        }
+
         public static void Cheats_giveLotsOfItems_PostfixPatch(Cheats __instance) {
+            if (TunicRandomizer.Settings.RaceMode) {
+                return;
+            }
             Inventory.GetItemByName("Librarian Sword").Quantity = 1;
             Inventory.GetItemByName("Heir Sword").Quantity = 1;
             Inventory.GetItemByName("Dath Stone").Quantity = 1;
