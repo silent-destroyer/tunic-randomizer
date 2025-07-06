@@ -650,6 +650,7 @@ namespace TunicRandomizer {
                     comboNumber++;
                 }
             }
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
 
         // shops will be formatted like "Shop, 3_" for Shop Portal 3, instead of the current "Shop, Previous Region_"
@@ -730,6 +731,7 @@ namespace TunicRandomizer {
                     comboNumber++;
                 }
             }
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
@@ -966,7 +968,17 @@ namespace TunicRandomizer {
             // returning this if it fails, since that makes some FairyTarget stuff easier
             return "FindPairedPortalSceneFromName failed to find a match";
         }
-        
+
+        public static string FindPairedPortalRegionFromName(string portalName) {
+            foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    return portalCombo.Portal2.OutletRegion();
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalSceneFromName failed to find a match";
+        }
+
     }
 
     public class FoxgodDecoupledTeleporter : MonoBehaviour {

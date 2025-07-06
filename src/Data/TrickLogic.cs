@@ -166,5 +166,84 @@ namespace TunicRandomizer {
             new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, Temple_main", difficulty: 3),
         };
 
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
+            Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
+
+            // add connections to the Overworld LS regions
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> keyValuePair in traversalReqs) {
+                string originRegion = keyValuePair.Key;
+                if (RegionLadders.ContainsKey(originRegion)) {
+                    foreach (string ladder in RegionLadders[originRegion]) {
+                        foreach (KeyValuePair<string, OWLadderInfo> ladderGroup in OWLadderGroups) {
+                            string lselev = ladderGroup.Key;
+                            OWLadderInfo ladderInfo = ladderGroup.Value;
+                            if (ladderInfo.Ladders.Contains(ladder)) {
+                                if (!traversalReqsWithLS[originRegion].ContainsKey(lselev)) {
+                                    traversalReqsWithLS[originRegion].Add(lselev, new List<List<string>>());
+                                }
+                                traversalReqsWithLS[originRegion][lselev].Add(new List<string> { "LS1", ladder });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // add the Overworld LS regions
+            foreach (KeyValuePair<string, OWLadderInfo> keyValuePair in OWLadderGroups) {
+                string lselev = keyValuePair.Key;
+                OWLadderInfo ladderInfo = keyValuePair.Value;
+                traversalReqsWithLS.Add(lselev, new Dictionary<string, List<List<string>>>());
+
+                Dictionary<string, List<List<string>>> destinations = new Dictionary<string, List<List<string>>>();
+                // build the rules for each destination, add them to the dictionary
+                foreach (string destinationPortal in ladderInfo.Portals) {
+                    string destinationRegion = ERScripts.FindPairedPortalRegionFromName(destinationPortal);
+                    List<List<string>> allReqsForDestination = new List<List<string>>();
+                    foreach (string ladder in ladderInfo.Ladders) {
+                        allReqsForDestination.Add(new List<string> { "LS1", ladder });
+                    }
+                    // add the destination region and its rules
+                    if (!destinations.ContainsKey(destinationRegion)) {
+                        destinations.Add(destinationRegion, allReqsForDestination);
+                    } else {
+                        destinations[destinationRegion].AddRange(allReqsForDestination);
+                    }
+                }
+                foreach (string destinationRegion in ladderInfo.Regions) {
+                    List<List<string>> allReqsForDestination = new List<List<string>>();
+                    foreach (string ladder in ladderInfo.Ladders) {
+                        allReqsForDestination.Add(new List<string> { "LS2", ladder });
+                    }
+                    // add the destination region and its rules
+                    if (!destinations.ContainsKey(destinationRegion)) {
+                        destinations.Add(destinationRegion, allReqsForDestination);
+                    } else {
+                        destinations[destinationRegion].AddRange(allReqsForDestination);
+                    }
+                }
+                foreach (KeyValuePair<string, List<List<string>>> destination in destinations) {
+                    if (!traversalReqsWithLS[lselev].ContainsKey(destination.Key)) {
+                        traversalReqsWithLS[lselev].Add(destination.Key, destination.Value);
+                    } else {
+                        traversalReqsWithLS[lselev][destination.Key].AddRange(destination.Value);
+                    }
+                }
+
+                // add all the connections between LS Elev regions
+                string baseString = "LS Elev ";
+                for (int i = 0; i < OWLadderGroups.Count; i++) {
+                    traversalReqsWithLS[baseString + i.ToString()].Add(baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } });
+                }
+            }
+
+            // add all the special OW LS connections
+
+
+            // add all the Easy, Medium, and Hard LS connections
+
+
+            return traversalReqsWithLS;
+        }
+
     }
 }
