@@ -180,7 +180,12 @@ namespace TunicRandomizer {
                             string lselev = ladderGroup.Key;
                             OWLadderInfo ladderInfo = ladderGroup.Value;
                             if (ladderInfo.Ladders.Contains(ladder)) {
-                                traversalReqsWithLS[originRegion].SetDefault(lselev, new List<List<string>> { new List<string> { "LS1", ladder } } );
+                                //traversalReqsWithLS[originRegion].SetDefault(lselev, new List<List<string>> { new List<string> { "LS1", ladder } } );
+                                if (!traversalReqsWithLS[originRegion].ContainsKey(lselev)) {
+                                    traversalReqsWithLS[originRegion].Add(lselev, new List<List<string>> { new List<string> { "LS1", ladder } });
+                                } else {
+                                    traversalReqsWithLS[originRegion][lselev].AddRange(new List<List<string>> { new List<string> { "LS1", ladder } });
+                                }
                             }
                         }
                     }
@@ -202,7 +207,12 @@ namespace TunicRandomizer {
                         allReqsForDestination.Add(new List<string> { "LS1", ladder });
                     }
                     // add the destination region and its rules
-                    destinations.SetDefault(destinationRegion, allReqsForDestination);
+                    if (!destinations.ContainsKey(destinationRegion)) {
+                        destinations.Add(destinationRegion, allReqsForDestination);
+                    } else {
+                        destinations[destinationRegion].AddRange(allReqsForDestination);
+                    }
+                    //destinations.SetDefault(destinationRegion, allReqsForDestination);
                 }
                 foreach (string destinationRegion in ladderInfo.Regions) {
                     List<List<string>> allReqsForDestination = new List<List<string>>();
@@ -210,15 +220,30 @@ namespace TunicRandomizer {
                         allReqsForDestination.Add(new List<string> { "LS2", ladder });
                     }
                     // add the destination region and its rules
-                    destinations.SetDefault(destinationRegion, allReqsForDestination);
+                    if (!destinations.ContainsKey(destinationRegion)) {
+                        destinations.Add(destinationRegion, allReqsForDestination);
+                    } else {
+                        destinations[destinationRegion].AddRange(allReqsForDestination);
+                    }
+                    //destinations.SetDefault(destinationRegion, allReqsForDestination);
                 }
                 foreach (KeyValuePair<string, List<List<string>>> destination in destinations) {
-                    traversalReqsWithLS[lselev].SetDefault(destination.Key, destination.Value);
+                    //traversalReqsWithLS[lselev].SetDefault(destination.Key, destination.Value);
+                    if (!traversalReqsWithLS[lselev].ContainsKey(destination.Key)) {
+                        traversalReqsWithLS[lselev].Add(destination.Key, destination.Value);
+                    } else {
+                        traversalReqsWithLS[lselev][destination.Key].AddRange(destination.Value);
+                    }
                 }
+            }
 
-                // add all the connections between LS Elev regions
-                string baseString = "LS Elev ";
-                for (int i = 0; i < OWLadderGroups.Count; i++) {
+            // add all the connections between LS Elev regions
+            string baseString = "LS Elev ";
+            for (int i = 0; i < OWLadderGroups.Count; i++) {
+                //traversalReqsWithLS.SetDefault(baseString + i.ToString(), new Dictionary<string, List<List<string>>> { { baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } } } });
+                if (!traversalReqsWithLS.ContainsKey(baseString + i.ToString())) {
+                    traversalReqsWithLS.Add(baseString + i.ToString(), new Dictionary<string, List<List<string>>> { { baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } } } });
+                } else {
                     traversalReqsWithLS[baseString + i.ToString()].Add(baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } });
                 }
             }
@@ -227,19 +252,37 @@ namespace TunicRandomizer {
             foreach (LSElevConnect connection in LSElevConnections) {
                 string destination = ERScripts.FindPairedPortalRegionFromName(connection.Destination);
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
-                traversalReqsWithLS[connection.Origin].SetDefault(destination, rules);
+                //traversalReqsWithLS[connection.Origin].SetDefault(destination, rules);
+                if (!traversalReqsWithLS.ContainsKey(connection.Origin)) {
+                    traversalReqsWithLS.Add(connection.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
+                } else {
+                    if (!traversalReqsWithLS[connection.Origin].ContainsKey(destination)) {
+                        traversalReqsWithLS[connection.Origin].Add(destination, rules);
+                    } else {
+                        traversalReqsWithLS[connection.Origin][destination].AddRange(rules);
+                    }
+                }
             }
 
             // add all the Easy, Medium, and Hard LS connections
             void DifficultyLS(List<LadderInfo> ladderInfos, string difficultyString) {
                 foreach (LadderInfo ladderInfo in ladderInfos) {
                     List<List<string>> rules;
-                    if (ladderInfo.LaddersReq != null) {
+                    if (ladderInfo.LaddersReq == null) {
                         rules = new List<List<string>> { new List<string> { difficultyString } };
                     } else {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
-                    traversalReqsWithLS.SetDefault(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { ladderInfo.Destination, rules } });
+                    //traversalReqsWithLS.SetDefault(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { ladderInfo.Destination, rules } });
+                    if (!traversalReqsWithLS.ContainsKey(ladderInfo.Origin)) {
+                        traversalReqsWithLS.Add(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { ladderInfo.Destination, rules } });
+                    } else {
+                        if (!traversalReqsWithLS[ladderInfo.Origin].ContainsKey(ladderInfo.Destination)) {
+                            traversalReqsWithLS[ladderInfo.Origin].Add(ladderInfo.Destination, rules);
+                        } else {
+                            traversalReqsWithLS[ladderInfo.Origin][ladderInfo.Destination].AddRange(rules);
+                        }
+                    }
                 }
             }
             DifficultyLS(EasyLS, "LS1");

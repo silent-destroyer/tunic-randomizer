@@ -278,14 +278,4 @@ namespace TunicRandomizer {
         }
     }
 
-    public static class DictionaryExtensions {
-        public static T SetDefault<K, T>(this Dictionary<K, T> dictionary, K key, T @default) {
-            if (!dictionary.TryGetValue(key, out T value)) {
-                dictionary.Add(key, value);
-                return @default;
-            } else {
-                return value;
-            }
-        }
-    }
 }
