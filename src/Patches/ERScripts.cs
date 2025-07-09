@@ -146,7 +146,6 @@ namespace TunicRandomizer {
         }
 
         public static void SetupVanillaPortals() {
-            ModifiedTraversalReqs = TraversalReqs;
             Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
             List<Portal> portalList = new List<Portal>();
@@ -202,6 +201,13 @@ namespace TunicRandomizer {
                 count++;
             }
             ERData.VanillaPortals = portalCombos;
+        }
+
+        public static void SetupVanillaPortalsAndTraversalReqs() {
+            if (VanillaPortals.Count == 0) {
+                SetupVanillaPortals();
+            }
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TraversalReqs);
         }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
@@ -960,7 +966,13 @@ namespace TunicRandomizer {
         }
 
         public static string FindPairedPortalSceneFromName(string portalName) {
-            foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+            Dictionary<string, PortalCombo> portalList;
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList.Values) {
                 if (portalCombo.Portal1.Name == portalName) {
                     return portalCombo.Portal2.Scene;
                 }
@@ -969,14 +981,28 @@ namespace TunicRandomizer {
             return "FindPairedPortalSceneFromName failed to find a match";
         }
 
-        public static string FindPairedPortalRegionFromName(string portalName) {
-            foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
-                if (portalCombo.Portal1.Name == portalName) {
+        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
+            Dictionary<string, PortalCombo> portalList;
+            if (SaveFile.GetInt(EntranceRando) == 1) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    SetupVanillaPortals();
+                }
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList.Values) {
+                if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
                     return portalCombo.Portal2.OutletRegion();
                 }
             }
+            TunicLogger.LogInfo("portalSDT is " + portalSDT);
+            foreach (PortalCombo portalCombo in portalList.Values) {
+                TunicLogger.LogInfo(portalCombo.Portal1.SceneDestinationTag);
+            }
+
             // returning this if it fails, since that makes some FairyTarget stuff easier
-            return "FindPairedPortalSceneFromName failed to find a match";
+            return "FindPairedPortalRegionFromSDT failed to find a match";
         }
 
     }

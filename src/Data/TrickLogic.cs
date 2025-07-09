@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
-using System.Security;
+﻿using System.Collections.Generic;
 
 namespace TunicRandomizer {
     public class TrickLogic {
@@ -201,7 +199,7 @@ namespace TunicRandomizer {
                 Dictionary<string, List<List<string>>> destinations = new Dictionary<string, List<List<string>>>();
                 // build the rules for each destination, add them to the dictionary
                 foreach (string destinationPortal in ladderInfo.Portals) {
-                    string destinationRegion = ERScripts.FindPairedPortalRegionFromName(destinationPortal);
+                    string destinationRegion = ERScripts.FindPairedPortalRegionFromSDT("Overworld Redux, " + destinationPortal);
                     List<List<string>> allReqsForDestination = new List<List<string>>();
                     foreach (string ladder in ladderInfo.Ladders) {
                         allReqsForDestination.Add(new List<string> { "LS1", ladder });
@@ -250,7 +248,7 @@ namespace TunicRandomizer {
 
             // add all the special OW LS connections
             foreach (LSElevConnect connection in LSElevConnections) {
-                string destination = ERScripts.FindPairedPortalRegionFromName(connection.Destination);
+                string destination = ERScripts.FindPairedPortalRegionFromSDT(connection.Destination);
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
                 //traversalReqsWithLS[connection.Origin].SetDefault(destination, rules);
                 if (!traversalReqsWithLS.ContainsKey(connection.Origin)) {
@@ -274,13 +272,14 @@ namespace TunicRandomizer {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
                     //traversalReqsWithLS.SetDefault(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { ladderInfo.Destination, rules } });
+                    string destination = ERScripts.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
                     if (!traversalReqsWithLS.ContainsKey(ladderInfo.Origin)) {
-                        traversalReqsWithLS.Add(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { ladderInfo.Destination, rules } });
+                        traversalReqsWithLS.Add(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
                     } else {
-                        if (!traversalReqsWithLS[ladderInfo.Origin].ContainsKey(ladderInfo.Destination)) {
-                            traversalReqsWithLS[ladderInfo.Origin].Add(ladderInfo.Destination, rules);
+                        if (!traversalReqsWithLS[ladderInfo.Origin].ContainsKey(destination)) {
+                            traversalReqsWithLS[ladderInfo.Origin].Add(destination, rules);
                         } else {
-                            traversalReqsWithLS[ladderInfo.Origin][ladderInfo.Destination].AddRange(rules);
+                            traversalReqsWithLS[ladderInfo.Origin][destination].AddRange(rules);
                         }
                     }
                 }
@@ -288,6 +287,28 @@ namespace TunicRandomizer {
             DifficultyLS(EasyLS, "LS1");
             DifficultyLS(MediumLS, "LS2");
             DifficultyLS(HardLS, "LS3");
+            //TunicLogger.LogInfo("Test start");
+            //foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> keyValuePair in traversalReqsWithLS) {
+            //    string originRegion = keyValuePair.Key;
+            //    TunicLogger.LogInfo("-----------------------------------------------------------");
+            //    TunicLogger.LogInfo("Origin region is " + originRegion);
+            //    foreach (KeyValuePair<string, List<List<string>>> kvp in keyValuePair.Value) {
+            //        string destRegion = kvp.Key;
+            //        List<List<string>> rules = kvp.Value;
+            //        TunicLogger.LogInfo("Destination region is " + destRegion);
+            //        TunicLogger.LogInfo("Rules are as follows:");
+            //        foreach (List<string> ruleSet in rules) {
+            //            string ruleString = "";
+            //            foreach (string rule in ruleSet) {
+            //                ruleString += rule;
+            //                ruleString += ", ";
+            //            }
+            //            TunicLogger.LogInfo(ruleString);
+            //        }
+            //        TunicLogger.LogInfo("-----------------------------------------------------------");
+            //    }
+            //    TunicLogger.LogInfo("===========================================================");
+            //}
 
             return traversalReqsWithLS;
         }
