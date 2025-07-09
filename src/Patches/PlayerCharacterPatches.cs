@@ -762,7 +762,7 @@ namespace TunicRandomizer {
                 } else {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(LocationIDs.ToArray()).ContinueWith(locationInfoPacket => {
                         foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                            ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationName], ItemInfo);
+                            ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationDisplayName], ItemInfo);
                         }
                     }).Wait(TimeSpan.FromSeconds(10.0f));
                     TunicLogger.LogInfo("Successfully scouted locations for item placements");

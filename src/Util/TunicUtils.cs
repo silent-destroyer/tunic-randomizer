@@ -103,7 +103,7 @@ namespace TunicRandomizer {
             if (SaveFlags.IsArchipelago()) {
                 AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
                 foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
-                    string itemName = itemInfo.ItemName;
+                    string itemName = itemInfo.ItemDisplayName;
                     // convert display name to internal name
                     foreach (KeyValuePair<string, string> namePair in ItemLookup.SimplifiedItemNames) {
                         // fairies have weird names
