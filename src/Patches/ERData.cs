@@ -49,19 +49,36 @@ namespace TunicRandomizer {
         public class RegionInfo {
             public string Scene;
             public bool DeadEnd;
-            public string OutletRegion;  // for where a portal forces you to another region immediately
-            // example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
+            public string OutletRegion;  // for where a portal forces you to another region immediately, example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
+            public bool SkipCounting;  // for ones that we skip every time because they're weird (zig skip, ls elevation regions) and shouldn't be counted in portal pairing the same way
+            
 
             public RegionInfo(string scene, bool deadEnd) {
                 Scene = scene;
                 DeadEnd = deadEnd;
                 OutletRegion = null;
+                SkipCounting = false;
             }
 
             public RegionInfo(string scene, bool deadEnd, string outletRegion) {
                 Scene = scene;
                 DeadEnd = deadEnd;
                 OutletRegion = outletRegion;
+                SkipCounting = false;
+            }
+
+            public RegionInfo(string scene, bool deadEnd, bool skipCounting) {
+                Scene = scene;
+                DeadEnd = deadEnd;
+                OutletRegion = null;
+                SkipCounting = skipCounting;
+            }
+
+            public RegionInfo(string scene, bool deadEnd, string outletRegion, bool skipCounting) {
+                Scene = scene;
+                DeadEnd = deadEnd;
+                OutletRegion = outletRegion;
+                SkipCounting = skipCounting;
             }
 
         }
@@ -2122,12 +2139,16 @@ namespace TunicRandomizer {
                 new RegionInfo("ziggurat2020_3", false)
             },
             {
+                "Rooted Ziggurat Lower Mid Checkpoint",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
                 "Rooted Ziggurat Lower Back",
                 new RegionInfo("ziggurat2020_3", false)
             },
             {
                 "Zig Skip Exit",
-                new RegionInfo("ziggurat2020_3", false, outletRegion:"Rooted Ziggurat Lower Front")
+                new RegionInfo("ziggurat2020_3", false, outletRegion:"Rooted Ziggurat Lower Front", skipCounting:true)
             },
             {
                 "Rooted Ziggurat Portal Room Entrance",
@@ -2297,6 +2318,38 @@ namespace TunicRandomizer {
             {
                 "Spirit Arena",
                 new RegionInfo("Spirit Arena", true)
+            },
+            {
+                "LS Elev 0",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 1",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 2",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 3",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 4",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 5",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 6",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 7",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
         };
 

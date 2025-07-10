@@ -233,6 +233,7 @@
     <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
+    <Compile Include="src\Util\LogicChecker.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />
     <Compile Include="src\Util\RecentItemsDisplay.cs" />

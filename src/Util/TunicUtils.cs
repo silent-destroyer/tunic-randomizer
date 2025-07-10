@@ -143,6 +143,69 @@ namespace TunicRandomizer {
             UpdateChecksInLogic();
         }
 
+        public static bool HasReq(string req, Dictionary<string, int> inventory) {
+            if (req == "Sword") {
+                if ((inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) || inventory.ContainsKey("Sword")) {
+                    return true;
+                }
+            } else if (req == "Stick") {
+                if (inventory.ContainsKey("Sword Progression") || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")) {
+                    return true;
+                }
+            } else if (req == "Heir Sword") {
+                if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 4) {
+                    return true;
+                }
+            } else if (req == "12" && IsHexQuestWithHexAbilities()) {
+                if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestPrayer)) {
+                    return true;
+                }
+            } else if (req == "21" && IsHexQuestWithHexAbilities()) {
+                if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestHolyCross)) {
+                    return true;
+                }
+            } else if (req == "26" && IsHexQuestWithHexAbilities()) {
+                if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestIcebolt)) {
+                    return true;
+                }
+            } else if (req == "Key") {  // need both keys or you could potentially use them in the wrong order
+                if (inventory.ContainsKey("Key") && inventory["Key"] == 2) {
+                    return true;
+                }
+            } else if (req.StartsWith("IG")) {
+                int difficulty = Convert.ToInt32(req.Substring(2, 1));
+                string range = req.Substring(3, 1);
+                bool met_difficulty = SaveFile.GetInt(IceGrapplingDifficulty) >= difficulty;
+                if (met_difficulty && inventory.ContainsKey("Wand") && inventory.ContainsKey("Stundagger")) {
+                    if (range == "S") {
+                        return true;
+                    } else {
+                        if (inventory.ContainsKey("Techbow")
+                            && (inventory.ContainsKey("26")
+                                || (IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestIcebolt)))) {
+                            return true;
+                        }
+                    }
+                }
+            } else if (req.StartsWith("LS")) {
+                int difficulty = Convert.ToInt32(req.Substring(2, 1));
+                bool met_difficulty = SaveFile.GetInt(LadderStorageDifficulty) >= difficulty;
+                if (met_difficulty &&
+                    (GetBool(LadderStorageWithoutItems)
+                     || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")
+                     || inventory.ContainsKey("Shield") || inventory.ContainsKey("Wand"))) {
+                    return true;
+                }
+            } else if (req == "Zip") {
+                if (inventory.ContainsKey("Hyperdash") && GetBool(LaurelsZips)) {
+                    return true;
+                }
+            } else if (inventory.ContainsKey(req)) {
+                return true;
+            }
+            return false;
+        }
+
         public static LanguageLine CreateLanguageLine(string text) {
             LanguageLine languageLine = ScriptableObject.CreateInstance<LanguageLine>();
             languageLine.text = text;

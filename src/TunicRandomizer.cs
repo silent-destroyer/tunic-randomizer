@@ -16,6 +16,7 @@ namespace TunicRandomizer {
         public static string ItemTrackerPath = Application.persistentDataPath + "/Randomizer/ItemTracker.json";
         public static string EntranceTrackerPath = Application.persistentDataPath + "/Randomizer/EntranceTracker.csv";
         public static string SpoilerLogPath = Application.persistentDataPath + "/Randomizer/Spoiler.log";
+        public static string RegionLogicPath = Application.persistentDataPath + "/Randomizer/RegionLogic.log";
         public static ItemTracker Tracker;
 
         public override void Load() {

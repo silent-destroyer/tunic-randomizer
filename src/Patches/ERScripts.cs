@@ -55,68 +55,8 @@ namespace TunicRandomizer {
                             met_count = 0;
                             foreach (string req in reqs) {
                                 TunicLogger.LogTesting("req is " + req);
-                                // if sword progression is on, check for this too
-                                if (req == "Sword") {
-                                    if ((inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) || inventory.ContainsKey("Sword")) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Stick") {
-                                    if (inventory.ContainsKey("Sword Progression") || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Heir Sword") {
-                                    if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 4) {
-                                        met_count++;
-                                    }
-                                } else if (req == "12" && IsHexQuestWithHexAbilities()) {
-                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestPrayer)) {
-                                        met_count++;
-                                    }
-                                } else if (req == "21" && IsHexQuestWithHexAbilities()) {
-                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestHolyCross)) {
-                                        met_count++;
-                                    }
-                                } else if (req == "26" && IsHexQuestWithHexAbilities()) {
-                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestIcebolt)) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Key") {  // need both keys or you could potentially use them in the wrong order
-                                    if (inventory.ContainsKey("Key") && inventory["Key"] == 2) {
-                                        met_count++;
-                                    }
-                                } else if (req.StartsWith("IG")) {
-                                    int difficulty = Convert.ToInt32(req.Substring(2, 1));
-                                    string range = req.Substring(3, 1);
-                                    bool met_difficulty = SaveFile.GetInt(IceGrapplingDifficulty) >= difficulty;
-                                    if (met_difficulty && inventory.ContainsKey("Wand") && inventory.ContainsKey("Stundagger")) {
-                                        if (range == "S") {
-                                            met_count++;
-                                        } else {
-                                            if (inventory.ContainsKey("Techbow")
-                                                && (inventory.ContainsKey("26")
-                                                    || (IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestIcebolt)))) {
-                                                met_count++;
-                                            }
-                                        }
-                                    }
-                                } else if (req.StartsWith("LS")) {
-                                    int difficulty = Convert.ToInt32(req.Substring(2, 1));
-                                    bool met_difficulty = SaveFile.GetInt(LadderStorageDifficulty) >= difficulty;
-                                    if (met_difficulty &&
-                                        (GetBool(LadderStorageWithoutItems)
-                                         || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")
-                                         || inventory.ContainsKey("Shield") || inventory.ContainsKey("Wand"))) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Zip") {
-                                    if (inventory.ContainsKey("Hyperdash") && GetBool(LaurelsZips)) {
-                                        met_count++;
-                                    }
-                                } else if (inventory.ContainsKey(req)) {
+                                if (TunicUtils.HasReq(req, inventory)) {
                                     met_count++;
-                                    TunicLogger.LogTesting("met_count is " + met_count);
-                                    TunicLogger.LogTesting("reqs.count is " + reqs.Count);
-                                    TunicLogger.LogTesting("we met this requirement");
                                 }
                             }
                             // if you have all the requirements, you can traverse this path
@@ -144,6 +84,7 @@ namespace TunicRandomizer {
             }
             return inventory;
         }
+
 
         public static void SetupVanillaPortals() {
             Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
@@ -328,8 +269,8 @@ namespace TunicRandomizer {
             // used for generating useful error messages
             List<string> nondeadend_regions = new List<string>();
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
-                // the region isn't an actual region anymore, since outlet regions exists now
-                if (region.Key == "Zig Skip Exit") {
+                // zig skip is only an outlet, ls elev regions shouldn't be counted here
+                if (region.Value.SkipCounting) {
                     continue;
                 }
                 // in decoupled, dead ends aren't real, they can't hurt you

@@ -94,6 +94,9 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                LogicChecker.WriteLogicSummaryFile();
+            }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
                 try {

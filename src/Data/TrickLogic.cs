@@ -237,7 +237,7 @@ namespace TunicRandomizer {
 
             // add all the connections between LS Elev regions
             string baseString = "LS Elev ";
-            for (int i = 0; i < OWLadderGroups.Count; i++) {
+            for (int i = 0; i < OWLadderGroups.Count - 1; i++) {
                 //traversalReqsWithLS.SetDefault(baseString + i.ToString(), new Dictionary<string, List<List<string>>> { { baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } } } });
                 if (!traversalReqsWithLS.ContainsKey(baseString + i.ToString())) {
                     traversalReqsWithLS.Add(baseString + i.ToString(), new Dictionary<string, List<List<string>>> { { baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } } } });
