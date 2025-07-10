@@ -908,7 +908,7 @@ namespace TunicRandomizer {
 
         public static string FindPairedPortalSceneFromName(string portalName) {
             Dictionary<string, PortalCombo> portalList;
-            if (SaveFile.GetInt(EntranceRando) == 1) {
+            if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
                 portalList = ERData.VanillaPortals;
@@ -924,7 +924,7 @@ namespace TunicRandomizer {
 
         public static string FindPairedPortalRegionFromSDT(string portalSDT) {
             Dictionary<string, PortalCombo> portalList;
-            if (SaveFile.GetInt(EntranceRando) == 1) {
+            if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
                 if (ERData.VanillaPortals.Count == 0) {

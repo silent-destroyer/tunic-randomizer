@@ -477,6 +477,8 @@ namespace TunicRandomizer {
                     // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
                     if (counter >= InitialLocations.Count) {
                         TunicLogger.LogInfo("Failed to find more spots to place items. Debug info below. It will attempt to re-randomize afterwards. If you see this, please report it to the TUNIC devs along with the seed paste.");
+                        LogicChecker.WriteLogicSummaryFile();
+                        TunicLogger.LogInfo("Logic file has been written");
                         TunicLogger.LogInfo("item being placed is " + item.Name);
                         TunicLogger.LogInfo("unplaced inventory contents:");
                         foreach (KeyValuePair<string, int> itemgroup in UnplacedInventory) {

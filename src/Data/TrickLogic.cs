@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class TrickLogic {
@@ -287,6 +288,37 @@ namespace TunicRandomizer {
             DifficultyLS(EasyLS, "LS1");
             DifficultyLS(MediumLS, "LS2");
             DifficultyLS(HardLS, "LS3");
+
+
+            Dictionary<string, PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
+                portalList = ERData.VanillaPortals;
+            }
+
+            // while we're here, let's just add the portal combo connections to the traversal reqs too for completion's sake
+            foreach (PortalCombo portalCombo in portalList.Values) {
+                string p1region = portalCombo.Portal1.Region;
+                string p2region = portalCombo.Portal2.OutletRegion();
+
+                // skip self-connections, cause why bother
+                if (p1region == p2region) {
+                    continue;
+                }
+                if (!traversalReqsWithLS.ContainsKey(p1region)) {
+                    traversalReqsWithLS.Add(p1region, new Dictionary<string, List<List<string>>> { { p2region, new List<List<string>>() } });
+                } else {
+                    if (!traversalReqsWithLS[p1region].ContainsKey(p2region)) {
+                        traversalReqsWithLS[p1region].Add(p2region, new List<List<string>>());
+                    } else {
+                        traversalReqsWithLS[p1region][p2region] = new List<List<string>>();
+                    }
+                }
+            }
             //TunicLogger.LogInfo("Test start");
             //foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> keyValuePair in traversalReqsWithLS) {
             //    string originRegion = keyValuePair.Key;

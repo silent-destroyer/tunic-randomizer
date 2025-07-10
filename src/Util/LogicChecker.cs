@@ -101,9 +101,6 @@ namespace TunicRandomizer {
 
         public static void WriteLogicSummaryFile() {
             SetupRegionLogicSummaryWithStatus();
-            foreach (string line in StringifyLogicSummary(RegionLogicSummaryWithStatus)) {
-                TunicLogger.LogInfo(line);
-            }
             TunicUtils.TryWriteFile(TunicRandomizer.RegionLogicPath, StringifyLogicSummary(RegionLogicSummaryWithStatus));
         }
 
