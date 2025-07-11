@@ -25,9 +25,6 @@ namespace TunicRandomizer {
                 if (!TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
                     regionWithMarker = MarkString(regionName);
                 }
-                if (regionWithMarker.EndsWith("Lower Mid Checkpoint")) {
-                    TunicLogger.LogInfo(regionWithMarker);
-                }
                 RegionLogicSummaryWithStatus.Add(regionWithMarker, new Dictionary<string, List<List<string>>>());
             }
 
@@ -56,13 +53,6 @@ namespace TunicRandomizer {
                         markedRules.Add(markedList);
                     }
                     RegionLogicSummaryWithStatus[destinationRegion].Add(originRegion, markedRules);
-                    //if (RegionLogicSummaryWithStatus.ContainsKey(destinationRegion)) {
-                    //    RegionLogicSummaryWithStatus[destinationRegion].Add(originRegion, markedRules);
-                    //} else {
-                    //    string unmarkedString = destinationRegion.Remove(0, 4);
-                    //    RegionLogicSummaryWithStatus[unmarkedString].Add(originRegion, markedRules);
-                    //}
-                    
                 }
             }
         }
@@ -70,7 +60,8 @@ namespace TunicRandomizer {
 
         public static List<string> StringifyLogicSummary(Dictionary<string, Dictionary<string, List<List<string>>>> logicSummary) {
             List<string> output = new List<string>();
-
+            output.Add("This is for dev use, and is not meant for users.");
+            output.Add("");
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> kvp in logicSummary) {
                 string goalRegion = kvp.Key;
                 output.Add(goalRegion);

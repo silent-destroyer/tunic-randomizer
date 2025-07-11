@@ -546,6 +546,14 @@ namespace TunicRandomizer {
                         if (TunicRandomizer.Settings.BellShuffle) {
                             SaveFile.SetInt(BellShuffleEnabled, 1);
                         }
+                        if (TunicRandomizer.Settings.LaurelsZips) {
+                            SaveFile.SetInt(LaurelsZips, 1);
+                        }
+                        SaveFile.SetInt(IceGrapplingDifficulty, (int)TunicRandomizer.Settings.IceGrappling);
+                        SaveFile.SetInt(LadderStorageDifficulty, (int)TunicRandomizer.Settings.LadderStorage);
+                        if (TunicRandomizer.Settings.LadderStorageWithoutItems) {
+                            SaveFile.SetInt(LadderStorageWithoutItems, 1);
+                        }
 
                         if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
                             int goldHexagons = TunicUtils.GetMaxGoldHexagons();

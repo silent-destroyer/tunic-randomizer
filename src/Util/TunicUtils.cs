@@ -193,7 +193,8 @@ namespace TunicRandomizer {
                 if (met_difficulty &&
                     (GetBool(LadderStorageWithoutItems)
                      || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")
-                     || inventory.ContainsKey("Shield") || inventory.ContainsKey("Wand"))) {
+                     || inventory.ContainsKey("Shield") || inventory.ContainsKey("Wand")
+                     || inventory.ContainsKey("Sword Progression"))) {
                     return true;
                 }
             } else if (req == "Zip") {

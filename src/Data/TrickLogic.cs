@@ -301,6 +301,7 @@ namespace TunicRandomizer {
             }
 
             // while we're here, let's just add the portal combo connections to the traversal reqs too for completion's sake
+            // we could do this in another function, but ideally we always do this right after the trick logic (or right before I guess)
             foreach (PortalCombo portalCombo in portalList.Values) {
                 string p1region = portalCombo.Portal1.Region;
                 string p2region = portalCombo.Portal2.OutletRegion();
