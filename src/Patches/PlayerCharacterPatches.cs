@@ -551,6 +551,10 @@ namespace TunicRandomizer {
                         }
                         SaveFile.SetInt(IceGrapplingDifficulty, (int)TunicRandomizer.Settings.IceGrappling);
                         SaveFile.SetInt(LadderStorageDifficulty, (int)TunicRandomizer.Settings.LadderStorage);
+                        if (TunicRandomizer.Settings.IceGrappling >= RandomizerSettings.IceGrapplingType.EASY
+                            || TunicRandomizer.Settings.LadderStorage >= RandomizerSettings.LadderStorageType.EASY) {
+                            Inventory.GetItemByName("Torch").Quantity = 1;
+                        }
                         if (TunicRandomizer.Settings.LadderStorageWithoutItems) {
                             SaveFile.SetInt(LadderStorageWithoutItems, 1);
                         }
