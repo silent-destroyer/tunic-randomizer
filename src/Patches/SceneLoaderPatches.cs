@@ -295,6 +295,7 @@ namespace TunicRandomizer {
                 if (ERData.VanillaPortals.Count == 0) {
                     ERScripts.SetupVanillaPortals();
                 }
+                SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
                 GrassRandomizer.LoadGrassChecks();
                 BreakableShuffle.LoadBreakableChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];

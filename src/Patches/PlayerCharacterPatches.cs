@@ -51,7 +51,7 @@ namespace TunicRandomizer {
                 }
             }
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null) {
+                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
                     SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
                 }
             }
