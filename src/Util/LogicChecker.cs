@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using static TunicRandomizer.SaveFlags;
+﻿using System.Collections.Generic;
 
 namespace TunicRandomizer {
     public class LogicChecker {
@@ -59,9 +54,10 @@ namespace TunicRandomizer {
 
 
         public static List<string> StringifyLogicSummary(Dictionary<string, Dictionary<string, List<List<string>>>> logicSummary) {
-            List<string> output = new List<string>();
-            output.Add("This is for dev use, and is not meant for users.");
-            output.Add("");
+            List<string> output = new List<string> {
+                "This is for dev use, and will not look very nice for users.",
+                "",
+            };
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> kvp in logicSummary) {
                 string goalRegion = kvp.Key;
                 output.Add(goalRegion);
