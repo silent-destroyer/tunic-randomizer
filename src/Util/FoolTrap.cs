@@ -45,7 +45,7 @@ namespace TunicRandomizer {
             {TrapType.Bald, new Trap("Bald Trap", 0) },
             {TrapType.Home, new Trap("Home Trap", 0) },
             {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
-            {TrapType.Wide, new Trap("Wide Trap", 0) },
+            {TrapType.Wide, new Trap("W I D E Trap", 0) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
