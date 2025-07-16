@@ -18,6 +18,9 @@ namespace TunicRandomizer {
             Trip,  // for trap link
             Zoom,  // for trap link
             Bald,  // for trap link
+            Home,  // for trap link
+            Whoops,// for trap link
+            Wide,  // for trap link
         }
 
         public class Trap {
@@ -40,6 +43,9 @@ namespace TunicRandomizer {
             {TrapType.Trip, new Trap("Trip Trap", 0) },
             {TrapType.Zoom, new Trap("Zoom Trap", 5) },
             {TrapType.Bald, new Trap("Bald Trap", 0) },
+            {TrapType.Home, new Trap("Home Trap", 0) },
+            {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
+            {TrapType.Wide, new Trap("W I D E Trap", 0) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -80,12 +86,17 @@ namespace TunicRandomizer {
             {"Zoom Trap", TrapType.Zoom },  // Celeste, zooms camera in
 
             {"Bald Trap", TrapType.Bald },  // Celeste, bald
+            {"Whoops! Trap", TrapType.Whoops }, // Here Comes Niko, drops the player from way high up
+            {"W I D E Trap", TrapType.Wide }, // Here Comes Niko, makes the fox W I D E
+            {"Home Trap", TrapType.Home }, // Here Comes Niko, teleports the player "home", overworld in this case
         };
 
         public static bool StungByBee = false;
         public static bool TinierFox = false;
-        public static bool BaldFox = false;  // for trap link
-        public static bool ZoomedCamera = false;  // for trap link
+        // for trap link
+        public static bool BaldFox = false;
+        public static bool WideFox = false;
+        public static bool ZoomedCamera = false;
 
         public static (string, string) ApplyFoolEffect(TrapType trapType) {
             string FoolMessageTop = $"";
@@ -118,6 +129,15 @@ namespace TunicRandomizer {
                     break;
                 case TrapType.Bald:
                     (FoolMessageTop, FoolMessageBottom) = FoolBaldTrap();
+                    break;
+                case TrapType.Whoops:
+                    (FoolMessageTop, FoolMessageBottom) = FoolWhoopsTrap();
+                    break;
+                case TrapType.Wide:
+                    (FoolMessageTop, FoolMessageBottom) = FoolWideTrap();
+                    break;
+                case TrapType.Home:
+                    (FoolMessageTop, FoolMessageBottom) = FoolHomeTrap();
                     break;
                 default:
                     TunicLogger.LogError("No match found for trap type " + trapType.ToString());
@@ -254,6 +274,35 @@ namespace TunicRandomizer {
             string FoolMessageTop = $"yoo R A <#FFA500>bawld \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"giv it bahk!";
             BaldFox = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolWhoopsTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>\"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"woups!";
+            PlayerCharacter.instance.transform.position += new Vector3(0, 450f, 0f);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolHomeTrap() {
+            string FoolMessageTop = $"yoo R A <#FFA500>\"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"bI bI!";
+            foreach(BoneItemBehaviour bib in PlayerCharacter.instance.gameObject.GetComponentsInChildren<BoneItemBehaviour>()) {
+                if (bib.item.name == "Torch") {
+                    bib.confirmBoneUseCallback();
+                    break;
+                }
+            }
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolWideTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>wId \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"tuhuhuhuhuhuhuhnk";
+            WideFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
