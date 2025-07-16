@@ -18,9 +18,9 @@ namespace TunicRandomizer {
             Trip,  // for trap link
             Zoom,  // for trap link
             Bald,  // for trap link
-            Home,
-            Whoops,
-            Wide,
+            Home,  // for trap link
+            Whoops,// for trap link
+            Wide,  // for trap link
         }
 
         public class Trap {
