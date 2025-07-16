@@ -194,7 +194,6 @@ namespace TunicRandomizer {
             if (imageManager != null) {
                 imageManager.MoveNext();
             }
-
         }
     }
 

@@ -72,8 +72,8 @@ namespace TunicRandomizer {
                     }
                 } else {
                     foreach(ItemInfo itemInfo in ItemLookup.ItemList.Values) {
-                        if (itemInfo.ItemName == Item && itemInfo.Player == Archipelago.instance.GetPlayerSlot()) {
-                            MajorItemLocations[Item].Add(new ArchipelagoHint(Item, itemInfo.LocationName, itemInfo.Player));
+                        if (itemInfo.ItemDisplayName == Item && itemInfo.Player == Archipelago.instance.GetPlayerSlot()) {
+                            MajorItemLocations[Item].Add(new ArchipelagoHint(Item, itemInfo.LocationDisplayName, itemInfo.Player));
                         }
                     }
                 }

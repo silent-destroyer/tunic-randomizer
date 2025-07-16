@@ -74,6 +74,8 @@ namespace TunicRandomizer {
         public static bool ShowCompletionStatsAfterDelay = false;
         public static bool GameCompleted = false;
 
+        public static Dictionary<string, GameObject> StatSections = new Dictionary<string, GameObject>();
+
         public static bool SpeedrunFinishlineDisplay_showFinishline_PrefixPatch(SpeedrunFinishlineDisplay __instance) {
 
             SpeedrunReportItem DathStone = ScriptableObject.CreateInstance<SpeedrunReportItem>();
@@ -92,7 +94,6 @@ namespace TunicRandomizer {
             Fuses.icon = ModelSwaps.FindSprite("Randomizer items_fuse");
             SpeedrunReportItem Bells = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             Bells.icon = ModelSwaps.FindSprite("Randomizer items_bell");
-
 
             List<SpeedrunReportItem> items = SpeedrunFinishlineDisplay.instance.reportGroup_items.ToList();
             items.Add(DathStone);
@@ -189,12 +190,12 @@ namespace TunicRandomizer {
 
         public static void SetupCompletionStatsDisplay() {
 
-            if (CompletionRate != null) {
-                GameObject.Destroy(CompletionRate.gameObject);
+            if (CompletionRate != null && CompletionCanvas != null) {
+                return;
             }
-            if (CompletionCanvas != null) {
-                GameObject.Destroy(CompletionCanvas.gameObject);
-            }
+
+            StatSections.Clear();
+
             CompletionRate = new GameObject("completion rate");
             CompletionRate.transform.parent = GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(0).GetChild(0);
             CompletionRate.AddComponent<TextMeshPro>().fontMaterial = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
@@ -212,35 +213,10 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.position = new Vector3(0f, 0f, 300f);
             CompletionCanvas.SetActive(false);
 
-            List<Check> AllChecks = TunicUtils.GetAllInUseChecks();
-            int CompletedCheckCount = TunicUtils.GetCompletedChecksCount(AllChecks);
-            int ChecksCollectedByOthers = AllChecks.Where(check => check.IsCollectedInAP).Count();
-            bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
-            float CheckPercentage = 0;
-            int GrassCount = 0;
-            float GrassPercentage = 0f;
-            int TotalCheckCount = AllChecks.Count;
-            string Color = "<#FFFFFF>";
-
-            if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                GrassCount = TunicUtils.GetCompletedChecksCount(GrassRandomizer.GrassChecks.Values.ToList());
-                GrassPercentage = ((float)GrassCount / GrassRandomizer.GrassChecks.Count) * 100.0f;
-            }
-            CheckPercentage = ((float)CompletedCheckCount / TotalCheckCount) * 100.0f;
-            Color = CompletedCheckCount == TotalCheckCount ? $"<#eaa614>" : "<#FFFFFF>";
-
             GameObject TotalCompletion = GameObject.Instantiate(CompletionRate.gameObject, GameObject.Find("_FinishlineDisplay(Clone)/").transform.GetChild(2));
             TotalCompletion.transform.position = new Vector3(0, -30f, 55f);
             TotalCompletion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
 
-            TotalCompletion.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CompletedCheckCount}/{TotalCheckCount}" +
-                $"{(IncludeCollected ? "*" : "")} " +
-                $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}<#FFFFFF>" +
-                $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {(GrassCount == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}{GrassCount}/{GrassRandomizer.GrassChecks.Count}{(IncludeCollected ? "*" : "")} ({Math.Round(GrassPercentage, 2)}%) {((int)GrassPercentage == 69 ? "<size=40%>nice</size>" : "")} {((int)GrassPercentage == 69 && (int)CheckPercentage == 69 ? "<size=40%>x2</size>" : "")} " : $"")}" +
-                $"<#FFFFFF>{(IncludeCollected ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}";
-
-            TotalCompletion.GetComponent<TextMeshPro>().horizontalAlignment = HorizontalAlignmentOptions.Center;
-            TotalCompletion.GetComponent<TextMeshPro>().fontSize = 100f;
             TotalCompletion.SetActive(true);
             List<List<string>> Columns = new List<List<string>>() {
                 new List<string>(){"Overworld", "West Garden", "Ruined Atoll", "Quarry/Mountain", "Swamp"},
@@ -269,17 +245,18 @@ namespace TunicRandomizer {
             CompletionCanvas.transform.localScale = new Vector3(2, 2, 2);
             CompletionCanvas.transform.position = new Vector3(0, 0, 200);
 
-            if (!Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode)) {
-                GameObject TimeText = GameObject.Instantiate(SpeedrunFinishlineDisplay.instance.transform.GetChild(0).GetChild(0).GetChild(0).gameObject);
-                TimeText.transform.parent = CompletionCanvas.transform;
-                TimeText.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                TimeText.transform.position = new Vector3(0, 185f, 210f);
-                TimeText.GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
-                TimeText.transform.GetChild(2).GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
-                TimeText.name = "randomizer finish line time text";
-            }
+            GameObject TimeText = GameObject.Instantiate(SpeedrunFinishlineDisplay.instance.transform.GetChild(0).GetChild(0).GetChild(0).gameObject);
+            TimeText.transform.parent = CompletionCanvas.transform;
+            TimeText.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            TimeText.transform.position = new Vector3(0, 185f, 210f);
+            TimeText.GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+            TimeText.transform.GetChild(2).GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+            TimeText.name = "randomizer finish line time text";
+            TimeText.SetActive(false);
+            StatSections.Add("Timer", TimeText);
 
-            ShowCompletionStatsAfterDelay = true;
+            StatSections.Add("Total Completion", TotalCompletion);
+            UpdateCounters();
         }
 
         public static void SetupCompletionCount(string Area, int index, int x) {
@@ -292,116 +269,169 @@ namespace TunicRandomizer {
             AreaCount.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
             AreaCount.SetActive(true);
             AreaCount.GetComponent<TextMeshPro>().text = $"";
+            
+
+            if (!StatSections.ContainsKey(Area)) { 
+                StatSections.Add(Area, AreaCount);
+            } else {
+                StatSections[Area] = AreaCount;
+            }
+        }
+
+        public static void UpdateCounters() {
+            Dictionary<string, int> ChecksPerArea = new Dictionary<string, int>();
+            Dictionary<string, int> CompletedChecksPerArea = new Dictionary<string, int>();
+            int HolyCrossChecks = 0;
+            int HolyCrossChecksFound = 0;
+            foreach (string Area in StatSections.Keys) {
+                if (Locations.MainAreasToSubAreas.ContainsKey(Area)) {
+                    foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
+                        ChecksPerArea.Add(SubArea, 0);
+                        CompletedChecksPerArea.Add(SubArea, 0);
+                    }
+                }
+            }
             List<Check> Checks = TunicUtils.GetAllInUseChecks();
-            if (Locations.MainAreasToSubAreas.ContainsKey(Area)) {
-                float TotalAreaTime = 0.0f;
-                int TotalAreaChecks = 0;
-                int AreaChecksFound = 0;
-                float Percentage = 0;
-                bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
-                foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
-                    TotalAreaChecks += TunicUtils.GetCheckCountInScene(SubArea);
-                    AreaChecksFound += TunicUtils.GetCompletedChecksCountByScene(Checks, SubArea);
-                    TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
-                }
-                if (TotalAreaChecks > 0) {
-                    Percentage = ((float)AreaChecksFound / TotalAreaChecks) * 100.0f;
-                }
-                string TimeString = FormatTime(TotalAreaTime, false);// time.Hours == 0 ? $"{time.Minutes}m {time.Seconds}s" : $"{time.Hours}h {time.Minutes}m {time.Seconds}s";
-                string Color = AreaChecksFound == TotalAreaChecks ? $"<#{new Color32(234, 166, 20, 255).ColorToHex()}>" : "<#FFFFFF>";
-                AreaCount.GetComponent<TextMeshPro>().text = $"{(AreaChecksFound == TotalAreaChecks ? StatsScreenSecret[Area] : Area)}\n<size=80%>{TimeString}\n{Color}{AreaChecksFound} / {TotalAreaChecks} ({(int)Percentage}%)";
-
-                if (Area == "Swamp") {
-                    AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>Press 1 to hide stats.";
-                    if (IsArchipelago()) {
-                        if (Archipelago.instance.integration.session.RoomState.ReleasePermissions == Permissions.Disabled) {
-                            AreaCount.GetComponent<TextMeshPro>().text += "\nReleasing is disabled by host.";
-                        } else {
-                            AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.";
-                        }
-                        if (Archipelago.instance.integration.session.RoomState.CollectPermissions == Permissions.Disabled) {
-                            AreaCount.GetComponent<TextMeshPro>().text += "\nCollecting disabled by host.";
-                        } else {
-                            AreaCount.GetComponent<TextMeshPro>().text += "\nPress C to collect items.";
-                        }
-                    }
-                    AreaCount.GetComponent<TextMeshPro>().text += "\nHold S to skip credits.";
-                }
-                if (Area == "Far Shore/Hero's Grave") {
-                    AreaCount.GetComponent<TextMeshPro>().text = $"<size=90%>{AreaCount.GetComponent<TextMeshPro>().text}";
-                }
-            }
-
-            if (Area == "Holy Cross Checks") {
-                int TotalChecks = 0;
-                int ChecksFound = 0;
-                float Percentage = 0;
-                foreach (string Key in Locations.VanillaLocations.Keys) {
-                    Check check = Locations.VanillaLocations[Key];
-                    if (check.Location.Requirements.Any(req => req.ContainsKey("21")) || new List<string>() { "Mountaintop", "Town_FiligreeRoom", "EastFiligreeCache" }.Contains(check.Location.SceneName)) {
-                        TotalChecks++;
-                        if (check.IsCompletedOrCollected) {
-                            ChecksFound++;
-                        }
+            foreach (Check check in Checks) {
+                if (ChecksPerArea.ContainsKey(check.Location.SceneName)) {
+                    ChecksPerArea[check.Location.SceneName]++;
+                    if (check.IsCompletedOrCollected) {
+                        CompletedChecksPerArea[check.Location.SceneName]++;
                     }
                 }
-                Percentage = ((float)ChecksFound / TotalChecks) * 100;
-                string Color = ChecksFound == TotalChecks ? $"<#eaa614>" : "<#FFFFFF>";
-
-                AreaCount.GetComponent<TextMeshPro>().text = $"{(ChecksFound == TotalChecks ? StatsScreenSecret[Area] : Area)}\n<size=80%>{Color}{ChecksFound} / {TotalChecks} ({(int)Percentage}%)";
-            }
-
-            if (Area == "Player Deaths") {
-                AreaCount.GetComponent<TextMeshPro>().text = $"{StatsScreenSecret[Area]}\n{SaveFile.GetInt(PlayerDeathCount)}";
-            }
-
-            if (Area == "Bosses Defeated") {
-                int BossesDefeated = 0;
-                foreach (string BossState in EnemyRandomizer.CustomBossFlags) {
-                    if (SaveFile.GetInt(BossState) == 1) {
-                        BossesDefeated++;
+                if (Locations.VanillaLocations.ContainsKey(check.CheckId) && check.Location.Requirements.Any(req => req.ContainsKey("21")) || new List<string>() { "Mountaintop", "Town_FiligreeRoom", "EastFiligreeCache" }.Contains(check.Location.SceneName)) {
+                    HolyCrossChecks++;
+                    if (check.IsCompletedOrCollected) {
+                        HolyCrossChecksFound++;
                     }
                 }
-                string Color = BossesDefeated == 5 ? $"<#eaa614>" : "<#FFFFFF>";
-
-                AreaCount.GetComponent<TextMeshPro>().text = $"{(BossesDefeated == 5 ? StatsScreenSecret[Area] : Area)}\n<size=80%>{Color}{BossesDefeated} / 5 ({(BossesDefeated * 100) / 5}%)\n<#FFFFFF>Enemies Defeated: {SaveFile.GetInt(EnemiesDefeatedCount)}";
             }
+            foreach (string Area in StatSections.Keys) {
+                GameObject AreaCount = StatSections[Area];
+                if (Locations.MainAreasToSubAreas.ContainsKey(Area)) {
+                    float TotalAreaTime = 0.0f;
+                    int TotalAreaChecks = 0;
+                    int AreaChecksFound = 0;
+                    float Percentage = 0;
+                    bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
+                    foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
+                        TotalAreaChecks += ChecksPerArea[SubArea];
+                        AreaChecksFound += CompletedChecksPerArea[SubArea];
+                        TotalAreaTime += SaveFile.GetFloat($"randomizer play time {SubArea}");
+                    }
+                    if (TotalAreaChecks > 0) {
+                        Percentage = ((float)AreaChecksFound / TotalAreaChecks) * 100.0f;
+                    }
+                    string TimeString = FormatTime(TotalAreaTime, false);// time.Hours == 0 ? $"{time.Minutes}m {time.Seconds}s" : $"{time.Hours}h {time.Minutes}m {time.Seconds}s";
+                    string Color = AreaChecksFound == TotalAreaChecks ? $"<#{new Color32(234, 166, 20, 255).ColorToHex()}>" : "<#FFFFFF>";
+                    AreaCount.GetComponent<TextMeshPro>().text = $"{(AreaChecksFound == TotalAreaChecks ? StatsScreenSecret[Area] : Area)}\n<size=80%>{TimeString}\n{Color}{AreaChecksFound} / {TotalAreaChecks} ({(int)Percentage}%)";
 
-            if (Area == "Time Found") {
-                string Text = $"<size=78%><#FFFFFF>";
-                List<float> HexTimes = new List<float>();
-                List<string> Times = new List<string>();
-                if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                    int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
-                    int HalfGoal = HexGoal / 2;
-                    Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Gold Questagon 1 time"), true)}\t" +
-                            $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {HalfGoal} time"), true)}\n" +
-                            $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {SaveFile.GetInt(HexagonQuestGoal)} time"), true)}\t";
-                } else {
-                    Text += $"Red Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Red Questagon 1 time"), true)}\t" +
-                            $"Green Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Green Questagon 1 time"), true)}\n" +
-                            $"Blue Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Blue Questagon 1 time"), true)}\t";
+                    if (Area == "Swamp") {
+                        AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>Press 1 to hide stats.";
+                        if (IsArchipelago()) {
+                            if (Archipelago.instance.integration.session.RoomState.ReleasePermissions == Permissions.Disabled) {
+                                AreaCount.GetComponent<TextMeshPro>().text += "\nReleasing is disabled by host.";
+                            } else {
+                                AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.";
+                            }
+                            if (Archipelago.instance.integration.session.RoomState.CollectPermissions == Permissions.Disabled) {
+                                AreaCount.GetComponent<TextMeshPro>().text += "\nCollecting disabled by host.";
+                            } else {
+                                AreaCount.GetComponent<TextMeshPro>().text += "\nPress C to collect items.";
+                            }
+                        }
+                        AreaCount.GetComponent<TextMeshPro>().text += "\nHold S to skip credits.";
+                    }
+                    if (Area == "Far Shore/Hero's Grave") {
+                        AreaCount.GetComponent<TextMeshPro>().text = $"<size=90%>{AreaCount.GetComponent<TextMeshPro>().text}";
+                    }
                 }
-                System.Random random = new System.Random();
-                float SwordTime = SaveFile.GetInt(SwordProgressionEnabled) == 1 ? SaveFile.GetFloat("randomizer Sword Progression 2 time") : SaveFile.GetFloat("randomizer Sword 1 time");
-                float GrappleTime = SaveFile.GetFloat("randomizer Magic Orb 1 time");
-                float HyperdashTime = SaveFile.GetFloat("randomizer Hero's Laurels 1 time");
-                Text += $"Sword:\t{FormatTime(SwordTime, true)}\n" +
-                        $"Magic Orb:\t{FormatTime(GrappleTime, true)}\t" +
-                        $"Laurels:\t{FormatTime(HyperdashTime, true)}\n";
-                int Total = 6;
-                if (SaveFile.GetInt(AbilityShuffle) == 1) {
-                    float PrayerTime = SaveFile.GetFloat(PrayerUnlockedTime);
-                    float HolyCrossTime = SaveFile.GetFloat(HolyCrossUnlockedTime);
-                    Text += $"Prayer:\t{FormatTime(PrayerTime, true)}\t" +
-                            $"Holy Cross:\t{FormatTime(HolyCrossTime, true)}";
-                    Total = 8;
+
+                if (Area == "Holy Cross Checks") {
+                    float Percentage = ((float)HolyCrossChecksFound / HolyCrossChecks) * 100;
+                    string Color = HolyCrossChecksFound == HolyCrossChecks ? $"<#eaa614>" : "<#FFFFFF>";
+
+                    AreaCount.GetComponent<TextMeshPro>().text = $"{(HolyCrossChecksFound == HolyCrossChecks ? StatsScreenSecret[Area] : Area)}\n<size=80%>{Color}{HolyCrossChecksFound} / {HolyCrossChecks} ({(int)Percentage}%)";
                 }
-                int NotFound = Regex.Matches(Text, "Not Found").Count;
-                Text = $"\t\t{(NotFound > 0 ? Area : StatsScreenSecret[Area])} <size=80%>{(NotFound == 0 ? $"<#eaa614>" : "<#FFFFFF>")}({(Total - NotFound)} / {Total})\n" + Text;
-                AreaCount.GetComponent<TextMeshPro>().text = Text;
+
+                if (Area == "Player Deaths") {
+                    AreaCount.GetComponent<TextMeshPro>().text = $"{StatsScreenSecret[Area]}\n{SaveFile.GetInt(PlayerDeathCount)}";
+                }
+
+                if (Area == "Bosses Defeated") {
+                    int BossesDefeated = 0;
+                    foreach (string BossState in EnemyRandomizer.CustomBossFlags) {
+                        if (SaveFile.GetInt(BossState) == 1) {
+                            BossesDefeated++;
+                        }
+                    }
+                    string Color = BossesDefeated == 5 ? $"<#eaa614>" : "<#FFFFFF>";
+
+                    AreaCount.GetComponent<TextMeshPro>().text = $"{(BossesDefeated == 5 ? StatsScreenSecret[Area] : Area)}\n<size=80%>{Color}{BossesDefeated} / 5 ({(BossesDefeated * 100) / 5}%)\n<#FFFFFF>Enemies Defeated: {SaveFile.GetInt(EnemiesDefeatedCount)}";
+                }
+
+                if (Area == "Time Found") {
+                    string Text = $"<size=78%><#FFFFFF>";
+                    List<float> HexTimes = new List<float>();
+                    List<string> Times = new List<string>();
+                    if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+                        int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
+                        int HalfGoal = HexGoal / 2;
+                        Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Gold Questagon 1 time"), true)}\t" +
+                                $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {HalfGoal} time"), true)}\n" +
+                                $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {SaveFile.GetInt(HexagonQuestGoal)} time"), true)}\t";
+                    } else {
+                        Text += $"Red Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Red Questagon 1 time"), true)}\t" +
+                                $"Green Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Green Questagon 1 time"), true)}\n" +
+                                $"Blue Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Blue Questagon 1 time"), true)}\t";
+                    }
+                    System.Random random = new System.Random();
+                    float SwordTime = SaveFile.GetInt(SwordProgressionEnabled) == 1 ? SaveFile.GetFloat("randomizer Sword Progression 2 time") : SaveFile.GetFloat("randomizer Sword 1 time");
+                    float GrappleTime = SaveFile.GetFloat("randomizer Magic Orb 1 time");
+                    float HyperdashTime = SaveFile.GetFloat("randomizer Hero's Laurels 1 time");
+                    Text += $"Sword:\t{FormatTime(SwordTime, true)}\n" +
+                            $"Magic Orb:\t{FormatTime(GrappleTime, true)}\t" +
+                            $"Laurels:\t{FormatTime(HyperdashTime, true)}\n";
+                    int Total = 6;
+                    if (SaveFile.GetInt(AbilityShuffle) == 1) {
+                        float PrayerTime = SaveFile.GetFloat(PrayerUnlockedTime);
+                        float HolyCrossTime = SaveFile.GetFloat(HolyCrossUnlockedTime);
+                        Text += $"Prayer:\t{FormatTime(PrayerTime, true)}\t" +
+                                $"Holy Cross:\t{FormatTime(HolyCrossTime, true)}";
+                        Total = 8;
+                    }
+                    int NotFound = Regex.Matches(Text, "Not Found").Count;
+                    Text = $"\t\t{(NotFound > 0 ? Area : StatsScreenSecret[Area])} <size=80%>{(NotFound == 0 ? $"<#eaa614>" : "<#FFFFFF>")}({(Total - NotFound)} / {Total})\n" + Text;
+                    AreaCount.GetComponent<TextMeshPro>().text = Text;
+                }
+                if (Area == "Total Completion") {
+                    int CompletedCheckCount = TunicUtils.GetCompletedChecksCount(Checks);
+                    int ChecksCollectedByOthers = Checks.Where(check => check.IsCollectedInAP).Count();
+                    bool IncludeCollected = SaveFlags.IsArchipelago() && TunicRandomizer.Settings.CollectReflectsInWorld;
+                    float CheckPercentage = 0;
+                    int GrassCount = 0;
+                    float GrassPercentage = 0f;
+                    int TotalCheckCount = Checks.Count;
+                    string Color = "<#FFFFFF>";
+                    if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
+                        GrassCount = TunicUtils.GetCompletedChecksCount(GrassRandomizer.GrassChecks.Values.ToList());
+                        GrassPercentage = ((float)GrassCount / GrassRandomizer.GrassChecks.Count) * 100.0f;
+                    }
+                    CheckPercentage = ((float)CompletedCheckCount / TotalCheckCount) * 100.0f;
+                    Color = CompletedCheckCount == TotalCheckCount ? $"<#eaa614>" : "<#FFFFFF>";
+                    AreaCount.GetComponent<TextMeshPro>().text = $"Overall Completion: {Color}{CompletedCheckCount}/{TotalCheckCount}" +
+                        $"{(IncludeCollected ? "*" : "")} " +
+                        $"({Math.Round(CheckPercentage, 2)}%) {((int)CheckPercentage == 69 ? "<size=40%>nice</size>" : "")}<#FFFFFF>" +
+                        $"{(SaveFile.GetInt(GrassRandoEnabled) == 1 ? $"\n<size=80%>Grass Cut: {(GrassCount == GrassRandomizer.GrassChecks.Count ? "<#00FF00>" : "<#FFFFFF>")}{GrassCount}/{GrassRandomizer.GrassChecks.Count}{(IncludeCollected ? "*" : "")} ({Math.Round(GrassPercentage, 2)}%) {((int)GrassPercentage == 69 ? "<size=40%>nice</size>" : "")} {((int)GrassPercentage == 69 && (int)CheckPercentage == 69 ? "<size=40%>x2</size>" : "")} " : $"")}" +
+                        $"<#FFFFFF>{(IncludeCollected ? $"\n<size=60%>*includes {ChecksCollectedByOthers} locations collected by others" : "")}";
+                    AreaCount.GetComponent<TextMeshPro>().horizontalAlignment = HorizontalAlignmentOptions.Center;
+                    AreaCount.GetComponent<TextMeshPro>().fontSize = 100f;
+                }
+                if (Area == "Timer") {
+                    AreaCount.GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+                    AreaCount.transform.GetChild(2).GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
+                }
             }
-
         }
 
         public static string FormatTime(float Seconds, bool ItemTime, bool isIgt = false) {
@@ -428,7 +458,7 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("unlocked page " + i, SaveFile.GetInt("randomizer picked up page " + i) == 1 ? 1 : 0);
             }
             if (CompletionCanvas != null) {
-                GameObject.Destroy(CompletionCanvas);
+                CompletionCanvas.SetActive(false);
             }
 
 
@@ -445,7 +475,7 @@ namespace TunicRandomizer {
 
         public static bool GameOverDecision___newgame_PrefixPatch(GameOverDecision __instance) {
             if (CompletionCanvas != null) {
-                GameObject.Destroy(CompletionCanvas);
+                CompletionCanvas.SetActive(false);
             }
             if (IsArchipelago()) {
                 Archipelago.instance.integration.sentCompletion = false;

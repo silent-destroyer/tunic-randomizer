@@ -216,7 +216,7 @@ namespace TunicRandomizer {
             while (connected) {
                 while (session.Items.AllItemsReceived.Count > ItemIndex) {
                     ItemInfo ItemInfo = session.Items.AllItemsReceived[ItemIndex];
-                    TunicLogger.LogInfo("Placing item " + ItemInfo.ItemName + " with index " + ItemIndex + " in queue.");
+                    TunicLogger.LogInfo("Placing item " + ItemInfo.ItemDisplayName + " with index " + ItemIndex + " in queue.");
                     incomingItems.Enqueue((ItemInfo, ItemIndex));
                     ItemIndex++;
                 }
@@ -233,15 +233,15 @@ namespace TunicRandomizer {
                 }
 
                 var itemInfo = pendingItem.ItemInfo;
-                var itemName = itemInfo.ItemName;
+                var itemName = itemInfo.ItemDisplayName;
                 var itemDisplayName = itemName + " (" + itemInfo.ItemId + ") at index " + pendingItem.index;
 
-                if (itemInfo.ItemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]))) {
+                if (itemName == "Grass" && SaveFile.GetInt($"randomizer processed item index {pendingItem.index}") == 0 && (itemInfo.Player != session.ConnectionInfo.Slot || GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
                     SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
                     Inventory.GetItemByName("Grass").Quantity += 1;
                     incomingItems.TryDequeue(out _);
                     if (incomingItems.TryPeek(out var nextItem)) {
-                        if (nextItem.ItemInfo.ItemName == "Grass") {
+                        if (nextItem.ItemInfo.ItemDisplayName == "Grass") {
                             continue;
                         }
                     }
@@ -263,7 +263,7 @@ namespace TunicRandomizer {
                 var handleResult = ItemPatches.GiveItem(itemName, itemInfo);
                 switch (handleResult) {
                     case ItemPatches.ItemResult.Success:
-                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + itemInfo.Player.Name + " at " + itemInfo.LocationName);
+                        TunicLogger.LogInfo("Received " + itemDisplayName + " from " + itemInfo.Player.Name + " at " + itemInfo.LocationDisplayName);
 
                         incomingItems.TryDequeue(out _);
                         SaveFile.SetInt($"randomizer processed item index {pendingItem.index}", 1);
@@ -280,7 +280,7 @@ namespace TunicRandomizer {
                         }
 
                         // Pause before processing next item
-                        if (itemInfo.ItemName != "Grass") {
+                        if (itemInfo.ItemDisplayName != "Grass") {
                             DateTime postInteractionStart = DateTime.Now;
                             while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
                                 yield return true;
@@ -323,8 +323,8 @@ namespace TunicRandomizer {
 
                 ItemInfo itemInfo = ItemLookup.ItemList[GameObjectId];
                 string receiver = itemInfo.Player.Name;
-                string itemName = itemInfo.ItemName;
-                TunicLogger.LogInfo("Sent " + itemInfo.ItemName + " at " + location + " to " + receiver);
+                string itemName = itemInfo.ItemDisplayName;
+                TunicLogger.LogInfo("Sent " + itemName + " at " + location + " to " + receiver);
                 if (itemInfo.Player != session.ConnectionInfo.Slot) {
                     SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
                     Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
@@ -582,7 +582,7 @@ namespace TunicRandomizer {
                 // start inventory items have a location ID of -2, add them to a dict so we can use them for first steps
                 foreach (ItemInfo item in session.Items.AllItemsReceived) {
                     if (item.LocationId == -2) {
-                        string itemName = item.ItemName;
+                        string itemName = item.ItemDisplayName;
                         if (ItemLookup.Items.ContainsKey(itemName)) {
                             TunicUtils.AddStringToDict(startInventory, ItemLookup.Items[itemName].ItemNameForInventory);
                         }

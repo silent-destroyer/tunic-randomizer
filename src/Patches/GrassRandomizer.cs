@@ -117,8 +117,8 @@ namespace TunicRandomizer {
                     if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
                         bool isForTunicPlayer = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
-                        if (isForTunicPlayer && ItemInfo.ItemName != "Grass") {
-                            if (ItemInfo.ItemName == "Fool Trap") {
+                        if (isForTunicPlayer && ItemInfo.ItemDisplayName != "Grass") {
+                            if (ItemInfo.ItemDisplayName == "Fool Trap") {
                                 foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
                                     if (child.name == __instance.name) { continue; }
                                     child.localEulerAngles = Vector3.zero;
@@ -126,7 +126,7 @@ namespace TunicRandomizer {
                                 }
                             }
                         } 
-                        if (isForTunicPlayer && ItemInfo.ItemName == "Grass") {
+                        if (isForTunicPlayer && ItemInfo.ItemDisplayName == "Grass") {
                             TunicLogger.LogInfo("Adding location id to queue " + ItemInfo.LocationId);
                             Archipelago.instance.integration.locationsToSend.Add(ItemInfo.LocationId);
                         } else {
@@ -138,9 +138,9 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
                         FairyTargets.RemoveFairyTarget(grassId);
                         string receiver = ItemInfo.Player.Name;
-                        string itemName = ItemInfo.ItemName;
-                        TunicLogger.LogInfo("Sent " + ItemInfo.ItemName + " at " + ItemInfo.LocationName + " to " + receiver);
-                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemName != "Grass" : true)) {
+                        string itemName = ItemInfo.ItemDisplayName;
+                        TunicLogger.LogInfo("Sent " + itemName + " at " + ItemInfo.LocationDisplayName + " to " + receiver);
+                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemDisplayName != "Grass" : true)) {
                             SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
                             Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && isForTunicPlayer ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                             RecentItemsDisplay.instance.EnqueueItem(ItemInfo, false);
