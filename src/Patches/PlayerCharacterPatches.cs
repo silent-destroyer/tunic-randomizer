@@ -94,6 +94,14 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                // can't think of why it would fail right now, but if it fails I don't really want it to break anything
+                try {
+                    LogicChecker.WriteLogicSummaryFile();
+                } catch (Exception e) {
+                    TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
+                }
+            }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
                 try {
@@ -546,6 +554,18 @@ namespace TunicRandomizer {
                         }
                         if (TunicRandomizer.Settings.BellShuffle) {
                             SaveFile.SetInt(BellShuffleEnabled, 1);
+                        }
+                        if (TunicRandomizer.Settings.LaurelsZips) {
+                            SaveFile.SetInt(LaurelsZips, 1);
+                        }
+                        SaveFile.SetInt(IceGrapplingDifficulty, (int)TunicRandomizer.Settings.IceGrappling);
+                        SaveFile.SetInt(LadderStorageDifficulty, (int)TunicRandomizer.Settings.LadderStorage);
+                        if (TunicRandomizer.Settings.IceGrappling >= RandomizerSettings.IceGrapplingType.EASY
+                            || TunicRandomizer.Settings.LadderStorage >= RandomizerSettings.LadderStorageType.EASY) {
+                            Inventory.GetItemByName("Torch").Quantity = 1;
+                        }
+                        if (TunicRandomizer.Settings.LadderStorageWithoutItems) {
+                            SaveFile.SetInt(LadderStorageWithoutItems, 1);
                         }
 
                         if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
