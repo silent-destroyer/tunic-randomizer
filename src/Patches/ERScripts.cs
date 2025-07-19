@@ -146,9 +146,9 @@ namespace TunicRandomizer {
 
         public static void SetupVanillaPortalsAndTraversalReqs() {
             if (VanillaPortals.Count == 0) {
-                SetupVanillaPortals();
+                SetupVanillaPortals();   
             }
-            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TraversalReqs);
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
         }
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
@@ -159,7 +159,7 @@ namespace TunicRandomizer {
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
             List<Portal> twoPlusPortals = new List<Portal>();
-            ModifiedTraversalReqs = TraversalReqs;
+            ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
 
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -607,7 +607,7 @@ namespace TunicRandomizer {
             RandomizedPortals.Clear();
             List<Portal> portalsList = new List<Portal>();
             // equivalent of doing TraversalReqs.copy() in python
-            ModifiedTraversalReqs = TraversalReqs.ToDictionary(entry => entry.Key, entry => entry.Value);
+            ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
             int comboNumber = 1000;
 
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {

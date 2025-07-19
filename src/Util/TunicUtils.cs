@@ -207,6 +207,23 @@ namespace TunicRandomizer {
             return false;
         }
 
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> DeepCopyTraversalReqs() {
+            Dictionary<string, Dictionary<string, List<List<string>>>> deepCopied = new Dictionary<string, Dictionary<string, List<List<string>>>>();
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> kvp in ERData.TraversalReqs) {
+                Dictionary<string, List<List<string>>> newDict = new Dictionary<string, List<List<string>>>();
+                foreach (KeyValuePair<string, List<List<string>>> kvp2 in kvp.Value) {
+                    List<List<string>> newListList = new List<List<string>>();
+                    foreach (List<string> list in kvp2.Value) {
+                        List<string> newList = new List<string>(list);
+                        newListList.Add(list);
+                    }
+                    newDict.Add(kvp2.Key, newListList);
+                }
+                deepCopied.Add(kvp.Key, newDict);
+            }
+            return deepCopied;
+        }
+
         public static LanguageLine CreateLanguageLine(string text) {
             LanguageLine languageLine = ScriptableObject.CreateInstance<LanguageLine>();
             languageLine.text = text;

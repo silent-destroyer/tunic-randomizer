@@ -169,7 +169,6 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
             Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
-
             // add connections to the Overworld LS regions
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> keyValuePair in traversalReqs) {
                 string originRegion = keyValuePair.Key;
