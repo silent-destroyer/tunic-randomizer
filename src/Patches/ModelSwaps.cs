@@ -1341,8 +1341,14 @@ namespace TunicRandomizer {
                     NewItem = GameObject.Instantiate(PagePickup, Parent.transform.position, Parent.transform.rotation);
                 } else if (Item.Type == ItemTypes.FAIRY) {
                     NewItem = GameObject.Instantiate(Chests["Fairy"], Parent.transform.position, Parent.transform.rotation);
-                } else if (Item.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || APItem.Player == Archipelago.instance.GetPlayerSlot())) {
-                    NewItem = SwordProgressionObject(Parent);
+                } else if (Item.Type == ItemTypes.SWORDUPGRADE) {
+                    int SwordLevel = 1;
+                    if (IsSinglePlayer() || (APItem != null && APItem.Player == Archipelago.instance.GetPlayerSlot())) {
+                        SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                    } else if (APItem != null && APItem.Player.Slot != Archipelago.instance.GetPlayerSlot()) {
+                        SwordLevel = Archipelago.instance.GetPlayerSwordLevel(APItem.Player.Slot);
+                    }
+                    NewItem = SwordProgressionObject(Parent, SwordLevel);
                 } else if (Item.Type == ItemTypes.LADDER) {
                     NewItem = GameObject.Instantiate(Items["Ladder"], Parent.transform.position, Parent.transform.rotation);
                 } else if (Item.Type == ItemTypes.FUSE) {
@@ -1382,8 +1388,7 @@ namespace TunicRandomizer {
             }
         }
 
-        private static GameObject SwordProgressionObject(Transform Parent) {
-            int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+        private static GameObject SwordProgressionObject(Transform Parent, int SwordLevel) {
             GameObject NewItem;
             if (SwordLevel == 0) {
                 NewItem = GameObject.Instantiate(Items["Stick"], Parent.transform.position, Parent.transform.rotation);

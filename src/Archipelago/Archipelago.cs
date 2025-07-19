@@ -87,6 +87,13 @@ namespace TunicRandomizer {
             return integration.session.Locations.GetLocationIdFromName(game, name);
         }
 
+        public int GetPlayerSwordLevel(int slot) {
+            if (integration.multiworldSwordLevels.ContainsKey(slot)) {
+                return integration.multiworldSwordLevels[slot];
+            }
+            return 1;
+        }
+
         public bool IsConnected() {
             return integration != null ? integration.connected : false;
         }

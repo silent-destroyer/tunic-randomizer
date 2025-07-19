@@ -40,6 +40,8 @@ namespace TunicRandomizer {
         private IEnumerator<bool> checkTrapLink;
         private Queue<(string, string, DateTime)> trapLinkQueue;
 
+        public Dictionary<int, int> multiworldSwordLevels = new Dictionary<int, int>();
+
         public void Update() {
             if ((SceneManager.GetActiveScene().name == "TitleScreen" && TunicRandomizer.Settings.Mode != RandomizerSettings.RandomizerType.ARCHIPELAGO) || SaveFile.GetInt("archipelago") == 0) {
                 return;
@@ -101,6 +103,8 @@ namespace TunicRandomizer {
 
             checkTrapLink = CheckTrapLinkQueue();
             trapLinkQueue = new Queue<(string, string, DateTime)>();
+
+            multiworldSwordLevels.Clear();
 
             try {
                 LoginResult = session.TryConnectAndLogin("TUNIC", TunicRandomizer.Settings.ConnectionSettings.Player, ItemsHandlingFlags.AllItems, version: archipelagoVersion, requestSlotData: true, password: TunicRandomizer.Settings.ConnectionSettings.Password);
@@ -197,6 +201,7 @@ namespace TunicRandomizer {
                 checkTrapLink = null;
                 deathLinkService = null;
                 slotData = null;
+                multiworldSwordLevels.Clear();
                 ItemIndex = 0;
                 Locations.CheckedLocations.Clear();
                 ItemLookup.ItemList.Clear();
@@ -510,6 +515,33 @@ namespace TunicRandomizer {
                 session.DataStorage[Scope.Slot, "Granted Firecracker"].Initialize(false);
                 session.DataStorage[Scope.Slot, "Granted Firebomb"].Initialize(false);
                 session.DataStorage[Scope.Slot, "Granted Icebomb"].Initialize(false);
+                
+                if (slotData.ContainsKey("sword_progression") && slotData["sword_progression"].ToString() == "1") {
+                    session.DataStorage[Scope.Slot, "Sword Level"].Initialize(0);
+                }
+
+                foreach (var player in session.Players.AllPlayers) {
+                    if (Archipelago.instance.IsTunicPlayer(player)) {
+                        if (!multiworldSwordLevels.ContainsKey(player.Slot)) {
+                            multiworldSwordLevels.Add(player.Slot, 0);
+                        }
+                        TunicLogger.LogInfo(session.DataStorage[$"Slot:{player.Slot}:Sword Level"]);
+                        session.DataStorage[$"Slot:{player.Slot}:Sword Level"].OnValueChanged += (a, b, c) => {
+                            TunicLogger.LogInfo("On Change Triggered");
+                            TunicLogger.LogInfo(a.ToString());
+                            TunicLogger.LogInfo(b.ToString());
+                            foreach (var key in c.Keys) { 
+                                TunicLogger.LogInfo($"{key}: {c[key]}");
+                            }
+                            if (int.TryParse(b.ToString(), out var level)) {
+                                TunicLogger.LogInfo($"level: {level}");
+                                TunicLogger.LogInfo($"test: {(int)b}");
+                                multiworldSwordLevels[player.Slot] = level;
+                            }
+                            TunicLogger.LogInfo("On Change Ended");
+                        };
+                    }
+                }
 
                 if (slotData.ContainsKey("entrance_rando") && slotData["entrance_rando"].ToString() == "1") {
                     foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> portalDict in RegionPortalsList.Where(dict => dict.Key != "Shop")) {

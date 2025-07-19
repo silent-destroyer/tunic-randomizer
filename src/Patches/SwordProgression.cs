@@ -10,6 +10,9 @@ namespace TunicRandomizer {
         public static void UpgradeSword(int SwordLevel) {
             
             SaveFile.SetInt(SwordProgressionLevel, SwordLevel);
+            if (IsArchipelago()) {
+                Archipelago.instance.UpdateDataStorage("Sword Level", SwordLevel);
+            }
 
             if (SwordLevel == 1) {
                 //fownd ahn Itehm!
