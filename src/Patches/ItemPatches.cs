@@ -154,14 +154,15 @@ namespace TunicRandomizer {
                 if (IsArchipelago()) {
                     ItemInfo ShopItem = ItemLookup.ItemList[LocationId];
                     itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemDisplayName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemDisplayName] : "[archipelago]";
-                    if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
-                        itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;
+                    if (Archipelago.instance.IsTunicPlayer(ShopItem.Player) && ShopItem.ItemName == "Sword Upgrade") {
+                        int SwordLevel = Archipelago.instance.GetPlayerSwordLevel(ShopItem.Player);
+                        itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SwordLevel + 1) : itemToDisplay;
                     }
                     __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemDisplayName.ToUpper().Replace("_", " ").Replace($" ", $"\" \"")}\"");
                 } else if (IsSinglePlayer()) {
                     ItemData itemData = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[LocationId]);
                     itemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[itemData.Name] : "";
-                    if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
+                    if (itemData.Type == ItemTypes.SWORDUPGRADE && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
                         itemToDisplay = TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1);
                     }
                     __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?";
@@ -345,7 +346,6 @@ namespace TunicRandomizer {
             }
 
             if (Item.Type == ItemTypes.SWORDUPGRADE) {
-
                 if (SaveFile.GetInt(SwordProgressionEnabled) == 1 && Item.Name == "Sword Upgrade") {
                     int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                     SwordProgression.UpgradeSword(SwordLevel + 1);

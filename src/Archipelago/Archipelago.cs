@@ -88,6 +88,9 @@ namespace TunicRandomizer {
         }
 
         public int GetPlayerSwordLevel(int slot) {
+            if (slot == GetPlayerSlot() && SaveFlags.GetBool(SaveFlags.SwordProgressionEnabled)) {
+                return SaveFile.GetInt(SaveFlags.SwordProgressionLevel);
+            }
             if (integration.multiworldSwordLevels.ContainsKey(slot)) {
                 return integration.multiworldSwordLevels[slot];
             }

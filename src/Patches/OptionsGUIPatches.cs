@@ -840,7 +840,7 @@ namespace TunicRandomizer {
                             button.itemPresentationGraphics[0].GetComponent<Image>().sprite = Inventory.GetItemByName("Librarian Sword").icon;
                             button.itemPresentationGraphics[0].items = new Item[] { Inventory.GetItemByName("Librarian Sword") };
                         }
-                        if (SaveFile.GetInt(SwordProgressionLevel) == 3) {
+                        if (SaveFile.GetInt(SwordProgressionLevel) >= 4) {
                             button.itemPresentationGraphics[0].GetComponent<Image>().sprite = Inventory.GetItemByName("Heir Sword").icon;
                             button.itemPresentationGraphics[0].items = new Item[] { Inventory.GetItemByName("Heir Sword") };
                         }

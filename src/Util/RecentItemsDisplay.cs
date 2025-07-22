@@ -152,8 +152,9 @@ namespace TunicRandomizer {
                             recentItems[index].transform.GetChild(2).gameObject.SetActive(true);
                             recentItems[index].transform.GetChild(3).GetComponent<Image>().material = ModelSwaps.FindMaterial("UI-trinket");
                         }
-                        if (item.isForYou && isSwordUpgrade) {
-                            recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SaveFlags.SwordProgressionLevel))]);
+                        if (isSwordUpgrade) {
+                            int SwordLevel = Archipelago.instance.GetPlayerSwordLevel(item.itemInfo.Player);
+                            recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.GetSwordIconName(SwordLevel)]);
                         }
                         recentItemsQueue[i] = item;
                     } else {

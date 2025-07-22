@@ -315,6 +315,8 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Checked location " + LocationName);
                 string GameObjectId = Locations.LocationDescriptionToId[LocationName];
                 var location = ItemLookup.ItemList[GameObjectId].LocationId;
+                ItemInfo itemInfo = ItemLookup.ItemList[GameObjectId];
+                int SwordLevel = Archipelago.instance.GetPlayerSwordLevel(itemInfo.Player);
 
                 session.Locations.CompleteLocationChecks(location);
 
@@ -326,13 +328,16 @@ namespace TunicRandomizer {
                     ItemTracker.PopulateSpoilerLog();
                 }
 
-                ItemInfo itemInfo = ItemLookup.ItemList[GameObjectId];
                 string receiver = itemInfo.Player.Name;
                 string itemName = itemInfo.ItemDisplayName;
                 TunicLogger.LogInfo("Sent " + itemName + " at " + location + " to " + receiver);
                 if (itemInfo.Player != session.ConnectionInfo.Slot) {
                     SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
-                    Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
+                    string iconToDisplay = (TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]");
+                    if (Archipelago.instance.IsTunicPlayer(itemInfo.Player) && itemName == "Sword Upgrade") {
+                        iconToDisplay = TextBuilderPatches.GetSwordIconName(SwordLevel + 1);
+                    }
+                    Notifications.Show($"yoo sehnt  {iconToDisplay}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                     RecentItemsDisplay.instance.EnqueueItem(itemInfo, false);
                 }
 
@@ -523,22 +528,13 @@ namespace TunicRandomizer {
                 foreach (var player in session.Players.AllPlayers) {
                     if (Archipelago.instance.IsTunicPlayer(player)) {
                         if (!multiworldSwordLevels.ContainsKey(player.Slot)) {
-                            multiworldSwordLevels.Add(player.Slot, 0);
+                            int? playerSwordLevel = session.DataStorage[$"Slot:{player.Slot}:Sword Level"];
+                            multiworldSwordLevels.Add(player.Slot, playerSwordLevel.HasValue ? playerSwordLevel.Value : 1);
                         }
-                        TunicLogger.LogInfo(session.DataStorage[$"Slot:{player.Slot}:Sword Level"]);
-                        session.DataStorage[$"Slot:{player.Slot}:Sword Level"].OnValueChanged += (a, b, c) => {
-                            TunicLogger.LogInfo("On Change Triggered");
-                            TunicLogger.LogInfo(a.ToString());
-                            TunicLogger.LogInfo(b.ToString());
-                            foreach (var key in c.Keys) { 
-                                TunicLogger.LogInfo($"{key}: {c[key]}");
-                            }
-                            if (int.TryParse(b.ToString(), out var level)) {
-                                TunicLogger.LogInfo($"level: {level}");
-                                TunicLogger.LogInfo($"test: {(int)b}");
+                        session.DataStorage[$"Slot:{player.Slot}:Sword Level"].OnValueChanged += (oldValue, newValue, args) => {
+                            if (int.TryParse(newValue.ToString(), out var level)) {
                                 multiworldSwordLevels[player.Slot] = level;
                             }
-                            TunicLogger.LogInfo("On Change Ended");
                         };
                     }
                 }
@@ -606,6 +602,12 @@ namespace TunicRandomizer {
             UpdateDataStorage("Granted Firebomb", StateVariable.GetStateVariableByName("Granted Firebomb").BoolValue, false);
             UpdateDataStorage("Granted Icebomb", StateVariable.GetStateVariableByName("Granted Icebomb").BoolValue, false);
 
+            if (GetBool(SwordProgressionEnabled)) {
+                int? playerSwordLevel = session.DataStorage[Scope.Slot, "Sword Level"];
+                if (!playerSwordLevel.HasValue || playerSwordLevel.Value != SaveFile.GetInt(SwordProgressionLevel)) {
+                    UpdateDataStorage("Sword Level", SaveFile.GetInt(SwordProgressionLevel), false);
+                }
+            }
         }
 
         public Dictionary<string, int> GetStartInventory() {

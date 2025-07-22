@@ -333,6 +333,7 @@ namespace TunicRandomizer {
 
         public static string GetSwordIconName(int level) {
             switch(level) {
+                case 0:
                 case 1:
                     return "[stick]";
                 case 2:
