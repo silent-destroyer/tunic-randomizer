@@ -103,7 +103,7 @@ namespace TunicRandomizer {
             if (SaveFlags.IsArchipelago()) {
                 AddDictToDict(PlayerItemsAndRegions, Archipelago.instance.integration.GetStartInventory());
                 foreach (var itemInfo in Archipelago.instance.integration.session.Items.AllItemsReceived) {
-                    string itemName = itemInfo.ItemName;
+                    string itemName = itemInfo.ItemDisplayName;
                     // convert display name to internal name
                     foreach (KeyValuePair<string, string> namePair in ItemLookup.SimplifiedItemNames) {
                         // fairies have weird names
@@ -166,10 +166,10 @@ namespace TunicRandomizer {
             }
         }
 
-        public static List<Check> GetAllInUseChecks(bool getAll = false) {
+        public static List<Check> GetAllInUseChecks(bool getAll = false, bool exceptGrass = false) {
             // Get a list of all default checks based on settings
             List<Check> checks = Locations.VanillaLocations.Values.ToList();
-            if (SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1 || getAll) {
+            if ((SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1 || getAll) && !exceptGrass) {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
             }
             if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1 || getAll) {

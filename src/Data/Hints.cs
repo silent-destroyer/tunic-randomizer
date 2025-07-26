@@ -427,7 +427,7 @@ namespace TunicRandomizer {
             }
             foreach (string itemkey in ItemLookup.ItemList.Keys) {
                 ItemInfo item = ItemLookup.ItemList[itemkey];
-                if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemName)) {
+                if (Archipelago.instance.IsTunicPlayer(item.Player) && MailboxItems.Contains(item.ItemDisplayName)) {
                     var requirements = AllLocations[itemkey].Location.Requirements[0];
                     foreach (KeyValuePair<string, int> req in requirements) {
                         int checkCount = 0;
@@ -484,7 +484,7 @@ namespace TunicRandomizer {
                 Hint = $"yor frehndz muhst furst hehlp yoo fInd yor wA...\n\"GOOD LUCK,\" rooin sEkur.";
             }
             HintMessages.Add("Mailbox", Hint);
-            return mailboxitem == null ? "" : mailboxitem.ItemName;
+            return mailboxitem == null ? "" : mailboxitem.ItemDisplayName;
         }
 
         private static void Shuffle(List<Check> list, System.Random random) {

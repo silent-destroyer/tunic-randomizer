@@ -501,7 +501,7 @@ namespace TunicRandomizer {
             }
             if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(CheckId)) {
                 ItemInfo itemInfo = ItemLookup.ItemList[CheckId];
-                return itemInfo.ItemGame == "TUNIC" && ItemLookup.Items[itemInfo.ItemName].Type == ItemTypes.SWORDUPGRADE;
+                return itemInfo.ItemGame == "TUNIC" && ItemLookup.Items[itemInfo.ItemDisplayName].Type == ItemTypes.SWORDUPGRADE;
             }
             return false;
         }
@@ -512,8 +512,8 @@ namespace TunicRandomizer {
                 string ItemName = "Stick";
                 if (IsArchipelago() && ItemLookup.ItemList.ContainsKey(ItemId)) {
                     ItemInfo APItem = ItemLookup.ItemList[ItemId];
-                    ItemName = APItem.ItemName;
-                    if (!Archipelago.instance.IsTunicPlayer(APItem.Player) || !ItemLookup.Items.ContainsKey(APItem.ItemName)) {
+                    ItemName = APItem.ItemDisplayName;
+                    if (!Archipelago.instance.IsTunicPlayer(APItem.Player) || !ItemLookup.Items.ContainsKey(ItemName)) {
                         Chest.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials = Chests["Normal"].GetComponent<MeshRenderer>().materials;
                         Chest.GetComponent<FMODUnity.StudioEventEmitter>().EventReference = Chests["Normal"].GetComponent<FMODUnity.StudioEventEmitter>().EventReference;
                         Chest.GetComponent<FMODUnity.StudioEventEmitter>().Lookup();
@@ -594,11 +594,11 @@ namespace TunicRandomizer {
                     if (!TunicUtils.IsCheckCompletedInAP(GrassId)) {
                         SetupItemMoveUp(grass.transform, itemInfo: itemInfo);
                     }
-                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName)) {
                         ApplyAPGrassTexture(grass, itemInfo, Locations.CheckedLocations[GrassId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {GrassId} was collected") == 1));
                         return;
                     }
-                    Item = ItemLookup.Items[itemInfo.ItemName];
+                    Item = ItemLookup.Items[itemInfo.ItemDisplayName];
                 }
                 if (Item.Type == ItemTypes.GRASS) {
                     return;
@@ -690,11 +690,11 @@ namespace TunicRandomizer {
                     if (!TunicUtils.IsCheckCompletedInAP(breakableId)) {
                         SetupItemMoveUp(breakableObject.transform, itemInfo: itemInfo);
                     }
-                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName)) {
                         ApplyAPBreakableTexture(breakableObject, itemInfo, Locations.CheckedLocations[breakableId] || (TunicRandomizer.Settings.CollectReflectsInWorld && SaveFile.GetInt($"randomizer {breakableId} was collected") == 1));
                         return;
                     }
-                    Item = ItemLookup.Items[itemInfo.ItemName];
+                    Item = ItemLookup.Items[itemInfo.ItemDisplayName];
                 }
                 if (Item.Type == ItemTypes.GRASS) {
                     return;
@@ -712,7 +712,7 @@ namespace TunicRandomizer {
                     foreach (MeshRenderer r in renderers) {
                         if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
                         if (r.gameObject.GetComponent<MoveUp>() != null || r.gameObject.GetComponentInParent<MoveUp>(includeInactive: true) != null) { continue; }
-                        if(breakableObject.GetComponent<SecretPassagePanel>() != null) {
+                        if (breakableObject.GetComponent<SecretPassagePanel>() != null) {
                             r.materials = new Material[] { material, material };
                         } else {
                             r.material = material;
@@ -736,7 +736,10 @@ namespace TunicRandomizer {
             bool customColor = false;
 
             MeshRenderer meshRenderer = breakableObject.GetComponentInChildren<MeshRenderer>();
-            meshRenderer.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+            // signs already look good without changing the material
+            if (breakableObject.name != "Physical Post") {
+                meshRenderer.material = Chests["Normal"].GetComponent<MeshRenderer>().material;
+            }
 
             MeshFilter meshFilter = breakableObject.GetComponentInChildren<MeshFilter>();
 
@@ -758,8 +761,15 @@ namespace TunicRandomizer {
                     questionMark.GetComponent<SpriteRenderer>().material.color = UnityEngine.Color.cyan;
                 }
             } else if (customColor) {
+                Material outerMaterial = null;
+                if (breakableObject.GetComponent<MeshRenderer>() != null) {
+                    outerMaterial = breakableObject.GetComponent<MeshRenderer>().material;
+                }
                 foreach (MeshRenderer r in breakableObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                     if (r.name == "cathedral_candles_single" || r.name == "cathedral_candleflame" || r.name == "library_lab_pageBottle_glass") { continue; }
+                    if (!r.transform.gameObject.active && outerMaterial != null) {
+                        r.material = outerMaterial;
+                    }
                     r.material.color = color;
                 }
             }
@@ -812,11 +822,11 @@ namespace TunicRandomizer {
                     if (!TunicUtils.IsCheckCompletedInAP(fuseId)) {
                         SetupItemMoveUp(fuse.transform, itemInfo: itemInfo);
                     }
-                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName)) {
                         ApplyAPFuseTexture(fuse, itemInfo, TunicUtils.IsCheckCompletedOrCollected(fuseId));
                         return;
                     }
-                    Item = ItemLookup.Items[itemInfo.ItemName];
+                    Item = ItemLookup.Items[itemInfo.ItemDisplayName];
                 }
 
                 Material material = GetMaterialType(Item);
@@ -894,11 +904,11 @@ namespace TunicRandomizer {
                     Item = ItemLookup.GetItemDataFromCheck(check);
                 } else if (IsArchipelago()) {
                     ItemInfo itemInfo = ItemLookup.ItemList[bellId];
-                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
+                    if (!Archipelago.instance.IsTunicPlayer(itemInfo.Player) || !ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName)) {
                         ApplyAPBellTexture(bell, itemInfo, TunicUtils.IsCheckCompletedOrCollected(bellId));
                         return;
                     }
-                    Item = ItemLookup.Items[itemInfo.ItemName];
+                    Item = ItemLookup.Items[itemInfo.ItemDisplayName];
                 }
 
                 Material material = GetMaterialType(Item);
@@ -988,8 +998,8 @@ namespace TunicRandomizer {
 
             if (check != null) {
                 Item = ItemLookup.GetItemDataFromCheck(check);
-            } else if (itemInfo != null && Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemName)) {
-                Item = ItemLookup.Items[itemInfo.ItemName];
+            } else if (itemInfo != null && Archipelago.instance.IsTunicPlayer(itemInfo.Player) && ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName)) {
+                Item = ItemLookup.Items[itemInfo.ItemDisplayName];
             }
             if (transform.GetComponent<Grass>() != null && Item != null && Item.Type == ItemTypes.GRASS) {
                 return;
@@ -1120,7 +1130,7 @@ namespace TunicRandomizer {
                     if (IsArchipelago()) {
                         ApItem = ItemLookup.ItemList[ItemId];
                         if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                            ItemData = ItemLookup.Items[ApItem.ItemName];
+                            ItemData = ItemLookup.Items[ApItem.ItemDisplayName];
                         }
                     }
                     if (IsSinglePlayer()) {
@@ -1161,7 +1171,7 @@ namespace TunicRandomizer {
                                 NewItem.transform.GetChild(1).localPosition = new Vector3(2.6f, 1.9f, 0.7f);
                             }
                         }
-                        if (IsArchipelago() && ItemData == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                        if (IsArchipelago() && ItemData == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                             TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name]["Other World"];
                         } else {
                             if (ItemData.ItemNameForInventory.Contains("Trinket - ") || ItemData.ItemNameForInventory == "Mask") {
@@ -1220,8 +1230,8 @@ namespace TunicRandomizer {
                         int Player = Archipelago.instance.GetPlayerSlot();
                         ApItem = ItemLookup.ItemList[ItemId];
                         if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                            Item = ItemLookup.Items[ApItem.ItemName];
-                            if (ItemLookup.Items.ContainsKey(ApItem.ItemName) && ItemLookup.Items[ApItem.ItemName].Type == ItemTypes.PAGE) {
+                            Item = ItemLookup.Items[ApItem.ItemDisplayName];
+                            if (ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName) && ItemLookup.Items[ApItem.ItemDisplayName].Type == ItemTypes.PAGE) {
                                 return;
                             }
                         }
@@ -1248,7 +1258,7 @@ namespace TunicRandomizer {
 
                     Page.transform.localRotation = Quaternion.Euler(0, 0, 0);
                     TransformData TransformData;
-                    if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                    if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                         TransformData = ItemPositions.Techbow["Other World"];
                         PagePickup.transform.GetChild(2).GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(0f, 45f, 0f);
                     } else {
@@ -1288,7 +1298,7 @@ namespace TunicRandomizer {
 
         public static GameObject SetupItemBase(Transform Parent, ItemInfo APItem = null, Check Check = null) {
             GameObject NewItem;
-            if (IsArchipelago() && (!Archipelago.instance.IsTunicPlayer(APItem.Player) || !ItemLookup.Items.ContainsKey(APItem.ItemName))) {
+            if (IsArchipelago() && (!Archipelago.instance.IsTunicPlayer(APItem.Player) || !ItemLookup.Items.ContainsKey(APItem.ItemDisplayName))) {
                 ItemFlags flag = ItemFlags.None;
                 if (APItem.Flags == ItemFlags.Trap) {
                     flag = new List<ItemFlags>() { ItemFlags.Advancement, ItemFlags.NeverExclude, ItemFlags.None}[new System.Random().Next(3)];
@@ -1315,7 +1325,7 @@ namespace TunicRandomizer {
             } else {
                 ItemData Item = ItemLookup.Items["Stick"];
                 if (IsArchipelago() && APItem != null) {
-                    Item = ItemLookup.Items[APItem.ItemName];
+                    Item = ItemLookup.Items[APItem.ItemDisplayName];
                 } else if (IsSinglePlayer() && Check != null) {
                     Item = ItemLookup.GetItemDataFromCheck(Check);
                 }
@@ -1406,7 +1416,7 @@ namespace TunicRandomizer {
                 if (IsArchipelago()) {
                     ApItem = ItemLookup.ItemList[ItemId];
                     if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                        HexagonItem = ItemLookup.Items[ApItem.ItemName];
+                        HexagonItem = ItemLookup.Items[ApItem.ItemDisplayName];
                         if (HexagonItem.ItemNameForInventory == "Hexagon Red") {
                             return;
                         }
@@ -1432,7 +1442,7 @@ namespace TunicRandomizer {
                 GameObject NewItem = SetupItemBase(Plinth.transform, ApItem, Check);
 
                 TransformData TransformData;
-                if (IsArchipelago() && HexagonItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                if (IsArchipelago() && HexagonItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                     TransformData = ItemPositions.HexagonRed["Other World"];
                 } else {
                     if (HexagonItem.Type == ItemTypes.TRINKET) {
@@ -1479,7 +1489,7 @@ namespace TunicRandomizer {
                     int Player = Archipelago.instance.GetPlayerSlot();
                     ApItem = ItemLookup.ItemList[ItemId];
                     if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                        HexagonItem = ItemLookup.Items[ApItem.ItemName];
+                        HexagonItem = ItemLookup.Items[ApItem.ItemDisplayName];
                         if (HexagonItem.ItemNameForInventory == "Hexagon Blue") {
                             return;
                         }
@@ -1505,7 +1515,7 @@ namespace TunicRandomizer {
                 GameObject NewItem = SetupItemBase(Plinth.transform, ApItem, Check);
 
                 TransformData TransformData;
-                if (IsArchipelago() && HexagonItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                if (IsArchipelago() && HexagonItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                     TransformData = ItemPositions.HexagonRed["Other World"];
                 } else {
                     if (HexagonItem.Type == ItemTypes.TRINKET) {
@@ -1551,7 +1561,7 @@ namespace TunicRandomizer {
                     if (IsArchipelago()) {
                         ApItem = ItemLookup.ItemList[ItemId];
                         if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                            VaultKeyItem = ItemLookup.Items[ApItem.ItemName];
+                            VaultKeyItem = ItemLookup.Items[ApItem.ItemDisplayName];
                             if (VaultKeyItem.ItemNameForInventory == "Vault Key (Red)") {
                                 return;
                             }
@@ -1576,7 +1586,7 @@ namespace TunicRandomizer {
                     GameObject NewItem = SetupItemBase(VaultKey.transform, ApItem, Check);
 
                     TransformData TransformData;
-                    if (IsArchipelago() && VaultKeyItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                    if (IsArchipelago() && VaultKeyItem == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                         TransformData = ItemPositions.VaultKeyRed["Other World"];
                     } else {
                         if (VaultKeyItem.Type == ItemTypes.TRINKET) {
@@ -1633,7 +1643,7 @@ namespace TunicRandomizer {
                     if (IsArchipelago()) {
                         ApItem = ItemLookup.ItemList[ShopItemIDs[i]];
                         if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                            Item = ItemLookup.Items[ApItem.ItemName];
+                            Item = ItemLookup.Items[ApItem.ItemDisplayName];
                         }
                     }
                     if (IsSinglePlayer()) {
@@ -1644,7 +1654,7 @@ namespace TunicRandomizer {
                     NewItem = SetupItemBase(ItemHolder.transform, ApItem, Check);
 
                     TransformData TransformData;
-                    if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                    if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                         TransformData = ItemPositions.Shop["Other World"];
                     } else {
                         if (Item.Type == ItemTypes.TRINKET) {
@@ -1709,7 +1719,7 @@ namespace TunicRandomizer {
                 if (IsArchipelago()) {
                     ApItem = ItemLookup.ItemList[ItemId];
                     if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
-                        Item = ItemLookup.Items[ApItem.ItemName];
+                        Item = ItemLookup.Items[ApItem.ItemDisplayName];
                     }
                 }
                 if (IsSinglePlayer()) {
@@ -1718,7 +1728,7 @@ namespace TunicRandomizer {
                 }
                 GameObject NewItem = SetupItemBase(HeroRelicPickup.transform, ApItem, Check);
 
-                if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemName))) {
+                if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
                     if (NewItem.GetComponent<Rotate>() == null) {
                         NewItem.AddComponent<Rotate>().eulerAnglesPerSecond = new Vector3(0f, 45f, 0f);
                     }
@@ -1815,7 +1825,7 @@ namespace TunicRandomizer {
                             foreach (ShopItem shopItem in ShopManager.cachedShopItems) {
                                 if (ShopItemIDs.Contains($"{shopItem.name} [Shop]") && !Locations.CheckedLocations[$"{shopItem.name} [Shop]"]
                                     && ((IsSinglePlayer() && Locations.RandomizedLocations[$"{shopItem.name} [Shop]"].Reward.Name.Contains("Ice Bomb")) 
-                                    || (IsArchipelago() && ItemLookup.ItemList[$"{shopItem.name} [Shop]"].ItemName.Contains("Ice Bomb") && Archipelago.instance.IsTunicPlayer(ItemLookup.ItemList[$"{shopItem.name} [Shop]"].Player)))) {
+                                    || (IsArchipelago() && ItemLookup.ItemList[$"{shopItem.name} [Shop]"].ItemDisplayName.Contains("Ice Bomb") && Archipelago.instance.IsTunicPlayer(ItemLookup.ItemList[$"{shopItem.name} [Shop]"].Player)))) {
                                     shopItem.transform.GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
                                 }
                             }

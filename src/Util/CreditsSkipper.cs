@@ -15,7 +15,7 @@ namespace TunicRandomizer {
 
         public void Update() {
             if (Input.GetKey(KeyCode.S)) { 
-                if (holdTime >= 3f && SpeedrunData.gameComplete != 0 && SceneManager.GetActiveScene().name != "GameOverDecision" && SpeedrunFinishlineDisplayPatches.CompletionCanvas != null) {
+                if (holdTime >= 3f && SpeedrunData.gameComplete != 0 && SceneManager.GetActiveScene().name != "GameOverDecision") {
                     TunicLogger.LogInfo("Skipping credits!");
                     foreach(StudioEventEmitter sfx in GameObject.FindObjectsOfType<StudioEventEmitter>()) {
                         sfx.Stop();
@@ -28,19 +28,21 @@ namespace TunicRandomizer {
             }
             if (SpeedrunData.gameComplete != 0 && !SpeedrunFinishlineDisplayPatches.GameCompleted) {
                 SpeedrunFinishlineDisplayPatches.GameCompleted = true;
-                SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
+                SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = true;
+                if (InventoryDisplayPatches.HexagonQuest != null) {
+                    InventoryDisplayPatches.HexagonQuest.SetActive(false);
+                }
+                if (InventoryDisplayPatches.GrassCounter != null) {
+                    InventoryDisplayPatches.GrassCounter.SetActive(false);
+                }
             }
             if (SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay) {
                 CompletionTimer += Time.fixedUnscaledDeltaTime;
                 if (CompletionTimer > 6.0f) {
                     CompletionTimer = 0.0f;
+                    SpeedrunFinishlineDisplayPatches.UpdateCounters();
+                    SpeedrunFinishlineDisplayPatches.StatSections["Timer"].SetActive(!Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode));
                     SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
-                    Material outline = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
-                    foreach (TextMeshPro tmp in SpeedrunFinishlineDisplayPatches.CompletionCanvas.GetComponentsInChildren<TextMeshPro>(true)) {
-                        if (tmp.name == "randomizer finish line time text") { continue; }
-                        tmp.fontMaterial = outline;
-                        tmp.material = outline;
-                    }
                     SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = false;
                 }
             }

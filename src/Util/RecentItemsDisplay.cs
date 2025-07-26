@@ -111,17 +111,17 @@ namespace TunicRandomizer {
                             isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
                             if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
-                                string itemFormatted = item.itemInfo.ItemName.Length > 20 ? item.itemInfo.ItemName.Substring(0, 20) + "..." : item.itemInfo.ItemName;
+                                string itemFormatted = item.itemInfo.ItemDisplayName.Length > 20 ? item.itemInfo.ItemDisplayName.Substring(0, 20) + "..." : item.itemInfo.ItemDisplayName;
                                 itemFormatted = itemFormatted.Replace("_", " ");
                                 recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
                             } else {
-                                ItemData itemData = ItemLookup.Items[item.itemInfo.ItemName];
+                                ItemData itemData = ItemLookup.Items[item.itemInfo.ItemDisplayName];
                                 isTrap = isTrap || itemData.Type == ItemTypes.FOOLTRAP;
                                 isMoney = itemData.Type == ItemTypes.MONEY;
                                 isTrinket = itemData.Type == ItemTypes.TRINKET;
                                 isSwordUpgrade = itemData.Type == ItemTypes.SWORDUPGRADE;
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.itemInfo.ItemName]]);
-                                string itemFormatted = item.itemInfo.ItemName;
+                                string itemFormatted = item.itemInfo.ItemDisplayName;
                                 int split = itemFormatted.LastIndexOf(' ');
                                 if (itemFormatted.Length > 20) {
                                     if (split > 0) {
@@ -181,11 +181,11 @@ namespace TunicRandomizer {
         }
 
         public void EnqueueItem(ItemInfo itemInfo, bool forYou) {
-            if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) && itemInfo.ItemName == "Grass") {
+            if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.ItemDisplayName == "Grass") {
                 return;
             }
-            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemName.Contains("Money")
-                && ItemLookup.Items.ContainsKey(itemInfo.ItemName) && ItemLookup.Items[itemInfo.ItemName].QuantityToGive <= 5) {
+            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemDisplayName.Contains("Money")
+                && ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName) && ItemLookup.Items[itemInfo.ItemDisplayName].QuantityToGive <= 5) {
 
                 return;
             }

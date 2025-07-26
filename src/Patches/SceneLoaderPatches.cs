@@ -51,6 +51,8 @@ namespace TunicRandomizer {
                         }
                     }
                 }
+
+                GrassRandomizer.UpdateGrassCounters();
             }
 
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
@@ -293,6 +295,7 @@ namespace TunicRandomizer {
                 if (ERData.VanillaPortals.Count == 0) {
                     ERScripts.SetupVanillaPortals();
                 }
+                SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
                 GrassRandomizer.LoadGrassChecks();
                 BreakableShuffle.LoadBreakableChecks();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
@@ -316,9 +319,14 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Resetting time of day to daytime!"); 
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
             }
-
-            PlayerCharacterPatches.StungByBee = false;
-            PlayerCharacterPatches.TinierFox = false;
+            FoolTrap.StungByBee = false;
+            FoolTrap.TinierFox = false;
+            FoolTrap.BaldFox = false;
+            FoolTrap.WideFox = false;
+            if (FoolTrap.ZoomedCamera) {
+                CameraController.DerekZoom = 1f;
+                FoolTrap.ZoomedCamera = false;
+            }
 
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
@@ -454,7 +462,7 @@ namespace TunicRandomizer {
                         GameObject bushObj = GameObject.Find($"_Bush and Grass/bush ({bush})/");
                         if (bushObj != null) {
                             bushObj.GetComponent<Grass>().onKilled();
-                            bushObj.GetComponent<Grass>().doClippingAnimation();
+                            bushObj.GetComponent<Grass>().ShowAsClipped();
                         }
                     }
                 }

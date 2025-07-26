@@ -14,8 +14,6 @@ namespace TunicRandomizer {
 
         public static string SaveName = null;
         public static int HeirAssistModeDamageValue = 0;
-        public static bool StungByBee = false;
-        public static bool TinierFox = false;
         public static bool IsTeleporting = false;
         public static bool DiedToDeathLink = false;
         public static string DeathLinkMessage = "";
@@ -53,7 +51,7 @@ namespace TunicRandomizer {
                 }
             }
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null) {
+                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
                     SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
                 }
             }
@@ -137,16 +135,22 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
+            if (FoolTrap.StungByBee || TunicRandomizer.Settings.BiggerHeadMode) {
                 __instance.gameObject.transform.Find("Fox/root/pelvis/chest/head").localScale = Vector3.one * 3f;
             }
-            if (TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
+            if (FoolTrap.TinierFox || TunicRandomizer.Settings.TinierFoxMode) {
                 __instance.gameObject.transform.localScale = Vector3.one * 0.5f;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 7;
             } else {
                 __instance.gameObject.transform.localScale = Vector3.one;
                 PlayerCharacter.kStopDropRollDistancePerSecondThreshold = 10;
             }
+            if (FoolTrap.WideFox) {
+                Vector3 scale = __instance.gameObject.transform.localScale;
+                __instance.gameObject.transform.localScale = new Vector3(2f, scale.y, scale.z);
+            }
+
+            __instance.gameObject.transform.Find("fox hair").GetComponent<Renderer>().enabled = !FoolTrap.BaldFox;
 
             if (SaveFile.GetInt(AbilityShuffle) == 1) { 
                 if(SaveFile.GetInt(PrayerUnlocked) == 0) {
@@ -337,6 +341,14 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogError("Error toggling ladders! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
+                if (GetBool(GrassRandoEnabled)) {
+                    GrassRandomizer.UpdateGrassCounters();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error counting grass! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {
@@ -754,7 +766,7 @@ namespace TunicRandomizer {
                 } else {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(LocationIDs.ToArray()).ContinueWith(locationInfoPacket => {
                         foreach (ItemInfo ItemInfo in locationInfoPacket.Result.Values) {
-                            ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationName], ItemInfo);
+                            ItemLookup.ItemList.Add(Locations.LocationDescriptionToId[ItemInfo.LocationDisplayName], ItemInfo);
                         }
                     }).Wait(TimeSpan.FromSeconds(10.0f));
                     TunicLogger.LogInfo("Successfully scouted locations for item placements");

@@ -27,6 +27,10 @@ namespace TunicRandomizer {
             "bush (62)~(66.5, 44.0, -111.0)",
             "bush (64)~(56.0, 44.0, -107.0)",
         };
+
+        public static int GrassCut = 0;
+        public static int GrassCutScene = 0;
+
         public static void LoadGrassChecks() {
             var assembly = Assembly.GetExecutingAssembly();
             var grassJson = "TunicRandomizer.src.Data.Grass.json";
@@ -113,8 +117,8 @@ namespace TunicRandomizer {
                     if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(grassId) && !Locations.CheckedLocations[grassId]) {
                         ItemInfo ItemInfo = ItemLookup.ItemList[grassId];
                         bool isForTunicPlayer = Archipelago.instance.IsTunicPlayer(ItemInfo.Player);
-                        if (isForTunicPlayer && ItemInfo.ItemName != "Grass") {
-                            if (ItemInfo.ItemName == "Fool Trap") {
+                        if (isForTunicPlayer && ItemInfo.ItemDisplayName != "Grass") {
+                            if (ItemInfo.ItemDisplayName == "Fool Trap") {
                                 foreach (Transform child in __instance.GetComponentsInChildren<Transform>()) {
                                     if (child.name == __instance.name) { continue; }
                                     child.localEulerAngles = Vector3.zero;
@@ -122,7 +126,7 @@ namespace TunicRandomizer {
                                 }
                             }
                         } 
-                        if (isForTunicPlayer && ItemInfo.ItemName == "Grass") {
+                        if (isForTunicPlayer && ItemInfo.ItemDisplayName == "Grass") {
                             TunicLogger.LogInfo("Adding location id to queue " + ItemInfo.LocationId);
                             Archipelago.instance.integration.locationsToSend.Add(ItemInfo.LocationId);
                         } else {
@@ -130,12 +134,13 @@ namespace TunicRandomizer {
                         }
                         SaveFile.SetInt("randomizer picked up " + grassId, 1);
                         Locations.CheckedLocations[grassId] = true;
+                        IncrementGrassCounters();
                         TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
                         FairyTargets.RemoveFairyTarget(grassId);
                         string receiver = ItemInfo.Player.Name;
-                        string itemName = ItemInfo.ItemName;
-                        TunicLogger.LogInfo("Sent " + ItemInfo.ItemName + " at " + ItemInfo.LocationName + " to " + receiver);
-                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemName != "Grass" : true)) {
+                        string itemName = ItemInfo.ItemDisplayName;
+                        TunicLogger.LogInfo("Sent " + itemName + " at " + ItemInfo.LocationDisplayName + " to " + receiver);
+                        if (ItemInfo.Player != Archipelago.instance.GetPlayerSlot() && (isForTunicPlayer ? ItemInfo.ItemDisplayName != "Grass" : true)) {
                             SaveFile.SetInt("archipelago items sent to other players", SaveFile.GetInt("archipelago items sent to other players") + 1);
                             Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && isForTunicPlayer ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                             RecentItemsDisplay.instance.EnqueueItem(ItemInfo, false);
@@ -161,6 +166,7 @@ namespace TunicRandomizer {
                             }
                             ItemPatches.GiveItem(check, alwaysSkip: true);
                         }
+                        IncrementGrassCounters();
                         FairyTargets.RemoveFairyTarget(check.CheckId);
                     }
                     if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
@@ -171,6 +177,25 @@ namespace TunicRandomizer {
                 }
             }
             return true;
+        }
+
+        private static void IncrementGrassCounters() {
+            GrassCut += 1;
+            GrassCutScene += 1;
+        }
+
+        public static void UpdateGrassCounters() {
+            GrassCut = 0;
+            GrassCutScene = 0;
+
+            foreach (Check check in GrassChecks.Values) { 
+                if (check.IsCompletedOrCollected) {
+                    GrassCut++;
+                    if (check.Location.SceneName == SceneManager.GetActiveScene().name) {
+                        GrassCutScene++;
+                    }
+                }
+            }
         }
 
         public static bool PauseMenu___button_ReturnToTitle_PrefixPatch(PauseMenu __instance) {

@@ -15,24 +15,37 @@ namespace TunicRandomizer {
             Tiny,
             Mirror,
             Deisometric,
+            Trip,  // for trap link
+            Zoom,  // for trap link
+            Bald,  // for trap link
+            Home,  // for trap link
+            Whoops,// for trap link
+            Wide,  // for trap link
         }
 
-        public static Dictionary<TrapType, int> TrapWeights = new Dictionary<TrapType, int> {
-            {TrapType.Ice, 30 },
-            {TrapType.Fire, 20 },
-            {TrapType.Bee, 15 },
-            {TrapType.Tiny, 15 },
-            {TrapType.Mirror, 10 },
-            {TrapType.Deisometric, 10 },
-        };
+        public class Trap {
+            public string Name;
+            public int Weight;  // for random fool traps
 
-        public static Dictionary<TrapType, string> TrapTypeToName = new Dictionary<TrapType, string> {
-            {TrapType.Ice, "Ice Trap" },
-            {TrapType.Fire, "Fire Trap" },
-            {TrapType.Bee, "Bee Trap" },
-            {TrapType.Tiny, "Tiny Trap" },
-            {TrapType.Mirror, "Screen Flip Trap" },
-            {TrapType.Deisometric, "Deisometric Trap" },
+            public Trap(string name, int weight) {
+                Name = name;
+                Weight = weight;
+            }
+        }
+
+        public static Dictionary<TrapType, Trap> Traps = new Dictionary<TrapType, Trap> {
+            {TrapType.Ice, new Trap("Ice Trap", 30) },
+            {TrapType.Fire, new Trap("Fire Trap", 20) },
+            {TrapType.Bee, new Trap("Bee Trap", 15) },
+            {TrapType.Tiny, new Trap("Tiny Trap", 15) },
+            {TrapType.Mirror, new Trap("Screen Flip Trap", 10) },
+            {TrapType.Deisometric, new Trap("Deisometric Trap", 10) },
+            {TrapType.Trip, new Trap("Trip Trap", 0) },
+            {TrapType.Zoom, new Trap("Zoom Trap", 5) },
+            {TrapType.Bald, new Trap("Bald Trap", 0) },
+            {TrapType.Home, new Trap("Home Trap", 0) },
+            {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
+            {TrapType.Wide, new Trap("W I D E Trap", 0) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -47,6 +60,8 @@ namespace TunicRandomizer {
             {"Fire Trap", TrapType.Fire },
             {"Damage Trap", TrapType.Fire },
             {"Bomb", TrapType.Fire },  // Luigi's Mansion, yes it's just Bomb
+            {"Posession Trap", TrapType.Fire },  // Luigi's Mansion, damage-based trap
+            {"Nut Trap", TrapType.Fire },  // DKC, damage-based trap
 
             {"Bee Trap", TrapType.Bee },
 
@@ -64,8 +79,24 @@ namespace TunicRandomizer {
             {"Fuzzy Trap", TrapType.Deisometric },
             {"Confound Trap", TrapType.Deisometric },
 
+            {"Bonk Trap", TrapType.Trip },
+            {"Banana Trap", TrapType.Trip },
+            {"Spring Trap", TrapType.Trip },
+
+            {"Zoom Trap", TrapType.Zoom },  // Celeste, zooms camera in
+
+            {"Bald Trap", TrapType.Bald },  // Celeste, bald
+            {"Whoops! Trap", TrapType.Whoops }, // Here Comes Niko, drops the player from way high up
+            {"W I D E Trap", TrapType.Wide }, // Here Comes Niko, makes the fox W I D E
+            {"Home Trap", TrapType.Home }, // Here Comes Niko, teleports the player "home", overworld in this case
         };
 
+        public static bool StungByBee = false;
+        public static bool TinierFox = false;
+        // for trap link
+        public static bool BaldFox = false;
+        public static bool WideFox = false;
+        public static bool ZoomedCamera = false;
 
         public static (string, string) ApplyFoolEffect(TrapType trapType) {
             string FoolMessageTop = $"";
@@ -90,6 +121,24 @@ namespace TunicRandomizer {
                 case TrapType.Deisometric:
                     (FoolMessageTop, FoolMessageBottom) = FoolDeisometricTrap();
                     break;
+                case TrapType.Trip:
+                    (FoolMessageTop, FoolMessageBottom) = FoolTripTrap();
+                    break;
+                case TrapType.Zoom:
+                    (FoolMessageTop, FoolMessageBottom) = FoolZoomTrap();
+                    break;
+                case TrapType.Bald:
+                    (FoolMessageTop, FoolMessageBottom) = FoolBaldTrap();
+                    break;
+                case TrapType.Whoops:
+                    (FoolMessageTop, FoolMessageBottom) = FoolWhoopsTrap();
+                    break;
+                case TrapType.Wide:
+                    (FoolMessageTop, FoolMessageBottom) = FoolWideTrap();
+                    break;
+                case TrapType.Home:
+                    (FoolMessageTop, FoolMessageBottom) = FoolHomeTrap();
+                    break;
                 default:
                     TunicLogger.LogError("No match found for trap type " + trapType.ToString());
                     break;
@@ -104,20 +153,23 @@ namespace TunicRandomizer {
             string FoolMessageBottom = $"";
 
             List<TrapType> weightedTrapList = new List<TrapType>();
-            foreach (TrapType trapType in TrapWeights.Keys) {
+            foreach (TrapType trapType in Traps.Keys) {
                 if (trapType == TrapType.Mirror && CameraController.Flip) {
                     continue;
                 }
-                if (trapType == TrapType.Tiny && (PlayerCharacterPatches.TinierFox || TunicRandomizer.Settings.TinierFoxMode)) {
+                if (trapType == TrapType.Tiny && (TinierFox || TunicRandomizer.Settings.TinierFoxMode)) {
                     continue;
                 }
-                if (trapType == TrapType.Bee && (PlayerCharacterPatches.StungByBee || TunicRandomizer.Settings.BiggerHeadMode)) {
+                if (trapType == TrapType.Bee && (StungByBee || TunicRandomizer.Settings.BiggerHeadMode)) {
                     continue;
                 }
                 if (trapType == TrapType.Deisometric && CameraController.DerekRotationEnabled) {
                     continue;
                 }
-                weightedTrapList.AddRange(Enumerable.Repeat(trapType, TrapWeights[trapType]));
+                if (trapType == TrapType.Zoom && CameraController.DerekZoom == 0.5f) {
+                    continue;
+                }
+                weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
             }
             TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
             (FoolMessageTop, FoolMessageBottom) = ApplyFoolEffect(trapSelected);
@@ -160,7 +212,7 @@ namespace TunicRandomizer {
             PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
             string FoolMessageTop = $"yoo R A \"<#ffd700>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"\"(\"it wuhz A swRm uhv <#ffd700>bEz\"...)\"";
-            PlayerCharacterPatches.StungByBee = true;
+            StungByBee = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
@@ -170,7 +222,7 @@ namespace TunicRandomizer {
             PlayerCharacter.instance.IDamageable_ReceiveDamage(PlayerCharacter.instance.hp / 3, 0, Vector3.zero, 0, 0);
             string FoolMessageTop = $"yoo R A <#FFA500>tInE \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"hahf #uh sIz, duhbuhl #uh kyoot.";
-            PlayerCharacterPatches.TinierFox = true;
+            TinierFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
@@ -194,6 +246,63 @@ namespace TunicRandomizer {
             CameraController.DerekRotationEnabled = true;
             List<float> cameraRotations = new List<float>() { -45f, 45f };
             CameraController.DerekRotationRangeRight = cameraRotations[Random.Next(cameraRotations.Count)];
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolTripTrap() {
+            PlayerCharacter.instance.stamina = 0;
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"iz #is brawl or suhm%i^?";
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolZoomTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>zoomd in \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"wehl I kahn sE juhst fIn...";
+            CameraController.DerekZoom = 0.5f;
+            ZoomedCamera = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolBaldTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>bawld \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"giv it bahk!";
+            BaldFox = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolWhoopsTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>\"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"woups!";
+            PlayerCharacter.instance.transform.position += new Vector3(0, 450f, 0f);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolHomeTrap() {
+            string FoolMessageTop = $"yoo R A <#FFA500>\"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"bI bI!";
+            foreach(BoneItemBehaviour bib in PlayerCharacter.instance.gameObject.GetComponentsInChildren<BoneItemBehaviour>()) {
+                if (bib.item.name == "Torch") {
+                    bib.confirmBoneUseCallback();
+                    break;
+                }
+            }
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolWideTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>wId \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"tuhuhuhuhuhuhuhnk";
+            WideFox = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }

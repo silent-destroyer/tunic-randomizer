@@ -153,11 +153,11 @@ namespace TunicRandomizer {
                 string itemToDisplay = "";
                 if (IsArchipelago()) {
                     ItemInfo ShopItem = ItemLookup.ItemList[LocationId];
-                    itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemName] : "[archipelago]";
+                    itemToDisplay = Archipelago.instance.IsTunicPlayer(ShopItem.Player) && TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(ShopItem.ItemDisplayName) ? TextBuilderPatches.ItemNameToAbbreviation[ShopItem.ItemDisplayName] : "[archipelago]";
                     if (itemToDisplay == "[realsword]" && SaveFile.GetInt(SwordProgressionEnabled) == 1) {
                         itemToDisplay = ShopItem.Player == Archipelago.instance.GetPlayerSlot() ? TextBuilderPatches.GetSwordIconName(SaveFile.GetInt(SwordProgressionLevel) + 1) : itemToDisplay;
                     }
-                    __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemName.ToUpper().Replace("_", " ").Replace($" ", $"\" \"")}\"");
+                    __instance.confirmPurchaseFormattedLanguageLine.text = $"bI for {Price} [money]?\n    {itemToDisplay} " + GhostHints.WordWrapString($"\"{Archipelago.instance.GetPlayerName(ShopItem.Player).ToUpper().Replace(" ", "\" \"")}'S\" \"{ShopItem.ItemDisplayName.ToUpper().Replace("_", " ").Replace($" ", $"\" \"")}\"");
                 } else if (IsSinglePlayer()) {
                     ItemData itemData = ItemLookup.GetItemDataFromCheck(Locations.RandomizedLocations[LocationId]);
                     itemToDisplay = TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemData.Name) ? TextBuilderPatches.ItemNameToAbbreviation[itemData.Name] : "";
@@ -256,8 +256,8 @@ namespace TunicRandomizer {
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
-            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationName != "Cheat Console" && Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationName) &&
-                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationName]))) {
+            if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationDisplayName != "Cheat Console" && Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) &&
+                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 
@@ -277,8 +277,8 @@ namespace TunicRandomizer {
                     { "Shop - Coin 2", 999 }
                 };
                 // If buying your own money item from the shop, increase amount rewarded
-                if (itemInfo.LocationName != null && OriginalShopPrices.ContainsKey(itemInfo.LocationName) && (itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
-                    AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[itemInfo.LocationName];
+                if (OriginalShopPrices.ContainsKey(itemInfo.LocationDisplayName) && (itemInfo.Player == Archipelago.instance.GetPlayerSlot())) {
+                    AmountToGive += TunicRandomizer.Settings.CheaperShopItemsEnabled ? 300 : OriginalShopPrices[itemInfo.LocationDisplayName];
                 }
 
                 if (TunicRandomizer.Settings.SkipItemAnimations) {
@@ -484,7 +484,7 @@ namespace TunicRandomizer {
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
-            string slotLoc = $"{itemInfo.Player.Slot}, {itemInfo.LocationName}";
+            string slotLoc = $"{itemInfo.Player.Slot}, {itemInfo.LocationDisplayName}";
             if (Hints.HeroGraveHints.Values.Where(hint => hint.PathHintId == slotLoc || hint.RelicHintId == slotLoc).Any()) {
                 SaveFile.SetInt($"randomizer hint found {slotLoc}", 1);
             }
@@ -857,7 +857,18 @@ namespace TunicRandomizer {
         }
 
         // Extender for debug/cheat function
+        public static bool Cheats_giveLotsOfItems_PrefixPatch(Cheats __instance) { 
+            if (TunicRandomizer.Settings.RaceMode) {
+                return false;
+            }
+
+            return true;
+        }
+
         public static void Cheats_giveLotsOfItems_PostfixPatch(Cheats __instance) {
+            if (TunicRandomizer.Settings.RaceMode) {
+                return;
+            }
             Inventory.GetItemByName("Librarian Sword").Quantity = 1;
             Inventory.GetItemByName("Heir Sword").Quantity = 1;
             Inventory.GetItemByName("Dath Stone").Quantity = 1;
