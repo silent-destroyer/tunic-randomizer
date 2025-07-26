@@ -59,30 +59,6 @@ namespace TunicRandomizer {
                 precollectedItems.Add(ERData.NO_BELL_SHUFFLE, 1);
             }
 
-            if (GetBool(LaurelsZips)) {
-                precollectedItems.Add("Zip", 1);
-            }
-
-            if (SaveFile.GetInt(IceGrapplingDifficulty) >= 1) {
-                TunicUtils.AddListToDict(precollectedItems, new List<string> { "IG1S", "IG1L" });
-                if (SaveFile.GetInt(IceGrapplingDifficulty) >= 2) {
-                    TunicUtils.AddListToDict(precollectedItems, new List<string> { "IG2S", "IG2L" });
-                    if (SaveFile.GetInt(IceGrapplingDifficulty) >= 3) {
-                        TunicUtils.AddListToDict(precollectedItems, new List<string> { "IG3S", "IG3L" });
-                    }
-                }
-            }
-
-            if (SaveFile.GetInt(LadderStorageDifficulty) >= 1) {
-                precollectedItems.Add("LS1", 1);
-                if (SaveFile.GetInt(LadderStorageDifficulty) >= 2) {
-                    precollectedItems.Add("LS2", 1);
-                    if (SaveFile.GetInt(LadderStorageDifficulty) >= 3) {
-                        precollectedItems.Add("LS3", 1);
-                    }
-                }
-            }
-
             return precollectedItems;
         }
 
@@ -477,6 +453,8 @@ namespace TunicRandomizer {
                     // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
                     if (counter >= InitialLocations.Count) {
                         TunicLogger.LogInfo("Failed to find more spots to place items. Debug info below. It will attempt to re-randomize afterwards. If you see this, please report it to the TUNIC devs along with the seed paste.");
+                        LogicChecker.WriteLogicSummaryFile();
+                        TunicLogger.LogInfo("Logic file has been written");
                         TunicLogger.LogInfo("item being placed is " + item.Name);
                         TunicLogger.LogInfo("unplaced inventory contents:");
                         foreach (KeyValuePair<string, int> itemgroup in UnplacedInventory) {
@@ -569,6 +547,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
                 }
             }
+            TunicLogger.LogInfo("Successfully randomized and placed items!");
         }
 
         private static void Shuffle(List<Reward> Rewards, List<Location> Locations, System.Random random) {

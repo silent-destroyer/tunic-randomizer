@@ -293,7 +293,7 @@ namespace TunicRandomizer {
                     Locations.CreateLocationLookups();
                 }
                 if (ERData.VanillaPortals.Count == 0) {
-                    ERScripts.SetupVanillaPortals();
+                    ERScripts.SetupVanillaPortalsAndTraversalReqs();
                 }
                 SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
                 GrassRandomizer.LoadGrassChecks();
@@ -590,7 +590,7 @@ namespace TunicRandomizer {
                 GhostHints.SpawnTorchHintGhost();
             } else {
                 if (ERData.VanillaPortals.Count == 0) {
-                    ERScripts.SetupVanillaPortals();
+                    ERScripts.SetupVanillaPortalsAndTraversalReqs();
                 }
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
                 ERScripts.ModifyPortalNames(loadingScene.name);

@@ -55,68 +55,8 @@ namespace TunicRandomizer {
                             met_count = 0;
                             foreach (string req in reqs) {
                                 TunicLogger.LogTesting("req is " + req);
-                                // if sword progression is on, check for this too
-                                if (req == "Sword") {
-                                    if ((inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 2) || inventory.ContainsKey("Sword")) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Stick") {
-                                    if (inventory.ContainsKey("Sword Progression") || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Heir Sword") {
-                                    if (inventory.ContainsKey("Sword Progression") && inventory["Sword Progression"] >= 4) {
-                                        met_count++;
-                                    }
-                                } else if (req == "12" && IsHexQuestWithHexAbilities()) {
-                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestPrayer)) {
-                                        met_count++;
-                                    }
-                                } else if (req == "21" && IsHexQuestWithHexAbilities()) {
-                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestHolyCross)) {
-                                        met_count++;
-                                    }
-                                } else if (req == "26" && IsHexQuestWithHexAbilities()) {
-                                    if (inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestIcebolt)) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Key") {  // need both keys or you could potentially use them in the wrong order
-                                    if (inventory.ContainsKey("Key") && inventory["Key"] == 2) {
-                                        met_count++;
-                                    }
-                                } else if (req.StartsWith("IG")) {
-                                    int difficulty = Convert.ToInt32(req.Substring(2, 1));
-                                    string range = req.Substring(3, 1);
-                                    bool met_difficulty = SaveFile.GetInt(IceGrapplingDifficulty) >= difficulty;
-                                    if (met_difficulty && inventory.ContainsKey("Wand") && inventory.ContainsKey("Stundagger")) {
-                                        if (range == "S") {
-                                            met_count++;
-                                        } else {
-                                            if (inventory.ContainsKey("Techbow")
-                                                && (inventory.ContainsKey("26")
-                                                    || (IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(HexagonQuestIcebolt)))) {
-                                                met_count++;
-                                            }
-                                        }
-                                    }
-                                } else if (req.StartsWith("LS")) {
-                                    int difficulty = Convert.ToInt32(req.Substring(2, 1));
-                                    bool met_difficulty = SaveFile.GetInt(LadderStorageDifficulty) >= difficulty;
-                                    if (met_difficulty &&
-                                        (GetBool(LadderStorageWithoutItems)
-                                         || inventory.ContainsKey("Stick") || inventory.ContainsKey("Sword")
-                                         || inventory.ContainsKey("Shield") || inventory.ContainsKey("Wand"))) {
-                                        met_count++;
-                                    }
-                                } else if (req == "Zip") {
-                                    if (inventory.ContainsKey("Hyperdash") && GetBool(LaurelsZips)) {
-                                        met_count++;
-                                    }
-                                } else if (inventory.ContainsKey(req)) {
+                                if (TunicUtils.HasReq(req, inventory)) {
                                     met_count++;
-                                    TunicLogger.LogTesting("met_count is " + met_count);
-                                    TunicLogger.LogTesting("reqs.count is " + reqs.Count);
-                                    TunicLogger.LogTesting("we met this requirement");
                                 }
                             }
                             // if you have all the requirements, you can traverse this path
@@ -145,8 +85,8 @@ namespace TunicRandomizer {
             return inventory;
         }
 
+
         public static void SetupVanillaPortals() {
-            ModifiedTraversalReqs = TraversalReqs;
             Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
             List<Portal> portalList = new List<Portal>();
@@ -204,6 +144,13 @@ namespace TunicRandomizer {
             ERData.VanillaPortals = portalCombos;
         }
 
+        public static void SetupVanillaPortalsAndTraversalReqs() {
+            if (VanillaPortals.Count == 0) {
+                SetupVanillaPortals();   
+            }
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
+        }
+
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static void RandomizePortals(int seed) {
             TunicLogger.LogTesting("Randomizing portals");
@@ -212,7 +159,7 @@ namespace TunicRandomizer {
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> deadEndPortals = new List<Portal>();
             List<Portal> twoPlusPortals = new List<Portal>();
-            ModifiedTraversalReqs = TraversalReqs;
+            ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
 
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -322,8 +269,8 @@ namespace TunicRandomizer {
             // used for generating useful error messages
             List<string> nondeadend_regions = new List<string>();
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
-                // the region isn't an actual region anymore, since outlet regions exists now
-                if (region.Key == "Zig Skip Exit") {
+                // zig skip is only an outlet, ls elev regions shouldn't be counted here
+                if (region.Value.SkipCounting) {
                     continue;
                 }
                 // in decoupled, dead ends aren't real, they can't hurt you
@@ -650,6 +597,7 @@ namespace TunicRandomizer {
                     comboNumber++;
                 }
             }
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
 
         // shops will be formatted like "Shop, 3_" for Shop Portal 3, instead of the current "Shop, Previous Region_"
@@ -659,7 +607,7 @@ namespace TunicRandomizer {
             RandomizedPortals.Clear();
             List<Portal> portalsList = new List<Portal>();
             // equivalent of doing TraversalReqs.copy() in python
-            ModifiedTraversalReqs = TraversalReqs.ToDictionary(entry => entry.Key, entry => entry.Value);
+            ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
             int comboNumber = 1000;
 
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
@@ -730,6 +678,7 @@ namespace TunicRandomizer {
                     comboNumber++;
                 }
             }
+            ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
@@ -958,7 +907,13 @@ namespace TunicRandomizer {
         }
 
         public static string FindPairedPortalSceneFromName(string portalName) {
-            foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+            Dictionary<string, PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList.Values) {
                 if (portalCombo.Portal1.Name == portalName) {
                     return portalCombo.Portal2.Scene;
                 }
@@ -966,7 +921,31 @@ namespace TunicRandomizer {
             // returning this if it fails, since that makes some FairyTarget stuff easier
             return "FindPairedPortalSceneFromName failed to find a match";
         }
-        
+
+        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
+            Dictionary<string, PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    SetupVanillaPortals();
+                }
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList.Values) {
+                if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
+                    return portalCombo.Portal2.OutletRegion();
+                }
+            }
+            TunicLogger.LogInfo("portalSDT is " + portalSDT);
+            foreach (PortalCombo portalCombo in portalList.Values) {
+                TunicLogger.LogInfo(portalCombo.Portal1.SceneDestinationTag);
+            }
+
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalRegionFromSDT failed to find a match";
+        }
+
     }
 
     public class FoxgodDecoupledTeleporter : MonoBehaviour {
