@@ -57,7 +57,7 @@ namespace TunicRandomizer {
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
-                if (SaveFile.GetInt("randomizer mystery seed") == 1) {
+                if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
@@ -434,7 +434,7 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("randomizer", 1);
 
                 if (TunicRandomizer.Settings.MysterySeed) {
-                    SaveFile.SetInt("randomizer mystery seed", 1);
+                    SaveFile.SetInt(MysterySeedEnabled, 1);
                     GenerateMysterySettings();
                 } else {
                     System.Random random = new System.Random(seed);
@@ -494,8 +494,8 @@ namespace TunicRandomizer {
                                         SaveFile.SetInt(HexagonQuestExtras, random.Next(67, 101));
                                         break;
                                 }
-                                SaveFile.SetInt("randomizer hexagon quest random goal", (int)TunicRandomizer.Settings.HexagonQuestRandomGoal);
-                                SaveFile.SetInt("randomizer hexagon quest random extras", (int)TunicRandomizer.Settings.HexagonQuestRandomExtras);
+                                SaveFile.SetInt(HexagonQuestRandomGoal, (int)TunicRandomizer.Settings.HexagonQuestRandomGoal);
+                                SaveFile.SetInt(HexagonQuestRandomExtras, (int)TunicRandomizer.Settings.HexagonQuestRandomExtras);
                             } else {
                                 SaveFile.SetInt(HexagonQuestGoal, TunicRandomizer.Settings.HexagonQuestGoal);
                                 SaveFile.SetInt(HexagonQuestExtras, TunicRandomizer.Settings.HexagonQuestExtraPercentage);

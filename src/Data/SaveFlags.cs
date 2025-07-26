@@ -14,6 +14,9 @@
         public const string HexagonQuestRandomizedValues = "randomizer hexagon quest randomized values";
         public const string HexagonQuestPageAbilities = "randomizer hexagon quest ability pages";
 
+        public const string HexagonQuestRandomGoal = "randomizer hexagon quest random goal";
+        public const string HexagonQuestRandomExtras = "randomizer hexagon quest random extras";
+
         // Ability Shuffle Flags
         public const string AbilityShuffle = "randomizer shuffled abilities";
         public const string PrayerUnlocked = "randomizer prayer unlocked";
@@ -52,6 +55,7 @@
         public const string BreakableShuffleEnabled = "randomizer breakable shuffle enabled";
         public const string FuseShuffleEnabled = "randomizer fuse shuffle enabled";
         public const string BellShuffleEnabled = "randomizer bell shuffle enabled";
+        public const string MysterySeedEnabled = "randomizer mystery seed";
 
         // Special Flags
         public const string PlayerDeathCount = "randomizer death count";

@@ -388,7 +388,7 @@ namespace TunicRandomizer {
         }
 
         private static List<string> GetMysterySeedSettingsForSpoilerLog() {
-            if (SaveFile.GetInt("randomizer mystery seed") == 0) { return new List<string>(); };
+            if (SaveFile.GetInt(MysterySeedEnabled) == 0) { return new List<string>(); };
             List<string> MysterySettings = new List<string>() {
                 "Mystery Seed Settings:",
                 $"\t- Hexagon Quest: {SaveFile.GetInt(HexagonQuestEnabled) == 1}",

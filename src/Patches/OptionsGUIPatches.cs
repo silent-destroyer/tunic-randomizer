@@ -96,7 +96,7 @@ namespace TunicRandomizer {
                 }));
 
             } else {
-                if (SaveFile.GetInt("randomizer mystery seed") == 1) {
+                if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     OptionsGUI.addButton("Mystery Seed", "<#00ff00>On", null);
                     return;
                 }
