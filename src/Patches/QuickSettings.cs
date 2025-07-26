@@ -1039,6 +1039,44 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.MysterySeedWeights.Lanternless = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.Lanternless, 0, 100);
                 GUI.Label(new Rect(360f * guiScale, mystHeight + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.Maskless}%");
                 TunicRandomizer.Settings.MysterySeedWeights.Maskless = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.Maskless, 0, 100);
+            } else if (MysteryWindowPage == 2) {
+                GUI.Label(new Rect(10f * guiScale, mystHeight, 400f * guiScale, 30f * guiScale), $"Ice Grapples in Logic");
+                ShowTooltip(new Rect(10f * guiScale, mystHeight, 400f * guiScale, 30f * guiScale), "mysterySeed", "Ice Grapples");
+                mystHeight += 30f * guiScale;
+                ShowTooltip(new Rect(10f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ice Grapples Off");
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleOff = GUI.Toggle(new Rect(10f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.IceGrappleOff, $"Off");
+                ShowTooltip(new Rect(110f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ice Grapples Easy");
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleEasy = GUI.Toggle(new Rect(110f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.IceGrappleEasy, $"Easy");
+                ShowTooltip(new Rect(210f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ice Grapples Medium");
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleMedium = GUI.Toggle(new Rect(210f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.IceGrappleMedium, $"Medium");
+                ShowTooltip(new Rect(310f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ice Grapples Hard");
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleHard = GUI.Toggle(new Rect(310f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.IceGrappleHard, $"Hard");
+
+                mystHeight += 35f * guiScale;
+                GUI.Label(new Rect(10f * guiScale, mystHeight, 400f * guiScale, 30f * guiScale), $"Ladder Storage in Logic");
+                ShowTooltip(new Rect(10f * guiScale, mystHeight, 400f * guiScale, 30f * guiScale), "mysterySeed", "Ladder Storage");
+                mystHeight += 30f * guiScale;
+                ShowTooltip(new Rect(10f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ladder Storage Off");
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageOff = GUI.Toggle(new Rect(10f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LadderStorageOff, $"Off");
+                ShowTooltip(new Rect(110f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ladder Storage Easy");
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageEasy = GUI.Toggle(new Rect(110f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LadderStorageEasy, $"Easy");
+                ShowTooltip(new Rect(210f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ladder Storage Medium");
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageMedium = GUI.Toggle(new Rect(210f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LadderStorageMedium, $"Medium");
+                ShowTooltip(new Rect(310f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), "mysterySeed", "Ladder Storage Hard");
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageHard = GUI.Toggle(new Rect(310f * guiScale, mystHeight, 90f * guiScale, 30f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LadderStorageHard, $"Hard");
+
+                mystHeight += 35f * guiScale;
+                ShowTooltip(new Rect(10f * guiScale, mystHeight, 300f * guiScale, 75f * guiScale), "mysterySeed", "Laurels Zips");
+                GUI.Label(new Rect(10f * guiScale, mystHeight, 300f * guiScale, 30f * guiScale), $"Laurels Zips");
+                ShowTooltip(new Rect(210f * guiScale, mystHeight, 350f * guiScale, 75f * guiScale), "mysterySeed", "Ladder Storage Without Items");
+                GUI.skin.label.fontSize = (int)(17.95f * guiScale);
+                GUI.Label(new Rect(210f * guiScale, mystHeight, 350f * guiScale, 30f * guiScale), $"Ladder Storage w/o Items");
+                GUI.skin.label.fontSize = (int)(20 * guiScale);
+                mystHeight += 25f * guiScale;
+                GUI.Label(new Rect(160f * guiScale, mystHeight + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips}%");
+                TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips = (int)GUI.HorizontalSlider(new Rect(10f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips, 0, 100);
+                GUI.Label(new Rect(360f * guiScale, mystHeight + 5, 45f * guiScale, 30f * guiScale), $"{TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems}%");
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems = (int)GUI.HorizontalSlider(new Rect(210f * guiScale, mystHeight + 15, 140f * guiScale, 20f * guiScale), TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems, 0, 100);
             }
             GUI.skin.button.fontSize = (int)(20 * guiScale);
             mystHeight += 40f * guiScale;
@@ -1059,10 +1097,23 @@ namespace TunicRandomizer {
                 MysteryWindowPage = 0;
                 RandomizerSettings.SaveSettings();
             }
-            bool SwitchPage = GUI.Button(new Rect(207.5f * guiScale, mystHeight, 187.5f * guiScale, 30f * guiScale), MysteryWindowPage == 0 ? "Next Page >" : "< Prev Page");
-            if (SwitchPage) {
-                MysteryWindowPage = MysteryWindowPage == 0 ? 1 : 0;
-                RandomizerSettings.SaveSettings();
+            if (MysteryWindowPage == 1) {
+                bool PrevPage = GUI.Button(new Rect(207.5f * guiScale, mystHeight, 91.25f * guiScale, 30f * guiScale), "< Prev");
+                if (PrevPage) {
+                    MysteryWindowPage = MysteryWindowPage = 0;
+                    RandomizerSettings.SaveSettings();
+                }
+                bool NextPage = GUI.Button(new Rect(303.75f * guiScale, mystHeight, 91.25f * guiScale, 30f * guiScale), "Next >");
+                if (NextPage) {
+                    MysteryWindowPage = MysteryWindowPage = 2;
+                    RandomizerSettings.SaveSettings();
+                }
+            } else { 
+                bool SwitchPage = GUI.Button(new Rect(207.5f * guiScale, mystHeight, 187.5f * guiScale, 30f * guiScale), MysteryWindowPage == 0 ? "Next Page >" : "< Prev Page");
+                if (SwitchPage) {
+                    MysteryWindowPage = 1;
+                    RandomizerSettings.SaveSettings();
+                }
             }
             mystHeight += 40f * guiScale;
         }
