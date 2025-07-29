@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using static TunicRandomizer.SaveFlags;
 
@@ -356,6 +357,11 @@ namespace TunicRandomizer {
             string[] coords = Position.Split(',');
             Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
             return vector;
+        }
+
+        public static int GetIntFromString(string str) {
+            string result = Regex.Match(str, @"\d+").Value;
+            return int.Parse(result);
         }
     }
 

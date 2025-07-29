@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -145,7 +146,7 @@ namespace TunicRandomizer {
 
         public static void SetupVanillaPortalsAndTraversalReqs() {
             if (VanillaPortals.Count == 0) {
-                SetupVanillaPortals();   
+                SetupVanillaPortals();
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
         }
@@ -159,6 +160,8 @@ namespace TunicRandomizer {
             List<Portal> deadEndPortals = new List<Portal>();
             List<Portal> twoPlusPortals = new List<Portal>();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
+            bool decoupledEnabled = GetBool(Decoupled);
+            bool dirPairsEnabled = GetBool(PortalDirectionPairs);
 
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -208,21 +211,7 @@ namespace TunicRandomizer {
             // shops get added separately cause they're weird
             int shopCount = 6;
             if (GetBool(ERFixedShop)) {
-                shopCount = 0;
-                Portal windmillPortal = null;
-                foreach (Portal portal in twoPlusPortals) {
-                    if (portal.SceneDestinationTag == "Overworld Redux, Windmill_") {
-                        windmillPortal = portal;
-                        twoPlusPortals.Remove(portal);
-                        break;
-                    }
-                }
-                Portal shopPortal = new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH);
-                randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(windmillPortal, shopPortal));
-                comboNumber++;
-                
-                // manually add the shop region to the inventory since it doesn't get added the normal way
-                FullInventory.Add("Shop Entrance 1", 1);
+                shopCount = 1;
             }
             if (GetBool(PortalDirectionPairs)) {
                 // need all 8 shops to match up everything nicely
@@ -235,7 +224,7 @@ namespace TunicRandomizer {
                 if (i > 6) {
                     dir = (int)PDir.WEST;
                 }
-                // manually making a portal for the shop, because it has some special properties
+                // manually making portals for the shops because they're special
                 Portal shopPortal = new Portal(name: $"Shop Portal {i}", destination: $"Previous Region {i}", tag: "", scene: "Shop", region: $"Shop Entrance {i}", direction: dir);
                 deadEndPortals.Add(shopPortal);
                 i++;
@@ -261,8 +250,6 @@ namespace TunicRandomizer {
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
 
-            FullInventory = UpdateReachableRegions(FullInventory);
-
             // get the total number of regions to get before doing dead ends
             int total_nondeadend_count = 0;
             // used for generating useful error messages
@@ -286,11 +273,12 @@ namespace TunicRandomizer {
                 } else if (!GetBool(PortalDirectionPairs)) {
                     // if fixed shop and direction pairs are both off, there's only 6 shop entrances
                     total_nondeadend_count -= 2;
-                }   
-            } else if (GetBool(ERFixedShop)) {
-                // if decoupled is off and fixed shop is on, the shop entrance is added to full inventory early, so the shop will make it in, inflating the count by 2
-                total_nondeadend_count += 2;
+                }
             }
+            //} else if (GetBool(ERFixedShop)) {
+            //    // if decoupled is off and fixed shop is on, the shop entrance is added to full inventory early, so the shop will make it in, inflating the count by 2
+            //    total_nondeadend_count += 2;
+            //}
             // added fairy cave to the non-dead end regions, so it should increase the count here too
             if (SaveFile.GetInt(LaurelsLocation) == 3 && !GetBool(Decoupled)) {
                 total_nondeadend_count++;
@@ -304,15 +292,115 @@ namespace TunicRandomizer {
                 twoPlusPortals.AddRange(deadEndPortals);
                 deadEndPortals.Clear();
                 twoPlusPortals2 = new List<Portal>(twoPlusPortals);
-                if (GetBool(ERFixedShop)) {
-                    twoPlusPortals.Add(new Portal(name: "Shop Portal 1", destination: "Previous Region 1", tag: "", scene: "Shop", region: "Shop Entrance 1", direction: (int)PDir.SOUTH));
-                    twoPlusPortals2.Add(new Portal(name: "Windmill Entrance", destination: "Windmill", tag: "", scene: "Overworld Redux", region: "Overworld", direction: (int)PDir.NORTH));
-                }
             } else {
                 twoPlusPortals2 = twoPlusPortals;
             }
 
             TunicLogger.LogTesting("created the secondary portal lists");
+
+            // -----------------------------------------------
+            // Plando Connections (for Blue Prince stuff)
+            // -----------------------------------------------
+
+            if (GetBool(ERFixedShop) && !PlandoPortals.ContainsKey("Windmill Entrance")) {
+                PlandoPortals.Add("Windmill Entrance", "Shop Portal 1");
+            }
+
+            // PlandoPortals should contain only one direction if not decoupled
+            // PlandoPortals should be a dictionary of portal1 to portal2 names
+            // The names in this dictionary should be the display names
+            foreach (KeyValuePair<string, string> portalPair in PlandoPortals) {
+                string portal1name = portalPair.Key;
+                string portal2name = portalPair.Value;
+                Portal portal1 = null;
+                Portal portal2 = null;
+                bool portal1deadEnd = true;
+                bool portal2deadEnd = true;
+                foreach (Portal portal in twoPlusPortals) {
+                    if (portal.Name == portal1name) {
+                        portal1 = portal;
+                        portal1deadEnd = false;
+                        break;
+                    }
+                }
+                foreach (Portal portal in twoPlusPortals2) {
+                    if (portal.Name == portal2name) {
+                        portal2 = portal;
+                        portal2deadEnd = false;
+                        break;
+                    }
+                }
+
+                if (portal1 != null) {
+                    twoPlusPortals.Remove(portal1);
+                } else {
+                    if (portal2 == null && !decoupledEnabled) {
+                        TunicLogger.LogError("Error with finding portals for plando connections");
+                    }
+                    foreach (Portal portal in deadEndPortals) {
+                        if (portal.Name == portal1name) {
+                            portal1 = portal;
+                            deadEndPortals.Remove(portal1);
+                            break;
+                        }
+                    }
+                    if (portal1 == null) {
+                        // we don't need to do the shop check from AP here because we actually made portals for the shops already
+                        TunicLogger.LogError("Error finding portal for portal1 in plando connections");
+                        TunicLogger.LogError("Portal name is " + portal1name);
+                    }
+                }
+
+                if (portal2 != null) {
+                    twoPlusPortals2.Remove(portal2);
+                } else {
+                    foreach (Portal portal in deadEndPortals) {
+                        if (portal.Name == portal2name) {
+                            portal2 = portal;
+                            deadEndPortals.Remove(portal2);
+                            break;
+                        }
+                    }
+                    if (portal2 == null) {
+                        TunicLogger.LogError("Error finding portal for portal2 in plando connections");
+                        TunicLogger.LogError("Portal name is " + portal2name);
+                    }
+                }
+
+                // this probably can't get hit, remove later after confirming that
+                if (portal1 == null || portal2 == null) {
+                    TunicLogger.LogError("Error in plando connection stuff while finding the portal names!");
+                }
+
+                randomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portal1, portal2));
+                comboNumber++;
+
+                // if one of them is a dead end, we don't want to make this connection in traversal reqs, so we don't end up with too many regions during portal pairing
+                if (decoupledEnabled || (!portal1deadEnd && !portal2deadEnd)) {
+                    ModifiedTraversalReqs[portal1.Region][portal2.OutletRegion()] = new List<List<string>>();
+                    //if (ModifiedTraversalReqs.ContainsKey(portal1.Region)) {
+                    //    if (ModifiedTraversalReqs[portal1.Region].ContainsKey(portal2.OutletRegion())) {
+                    //        ModifiedTraversalReqs[portal1.Region][portal2.OutletRegion()] = new List<List<string>>();
+                    //    } else {
+                    //        ModifiedTraversalReqs[portal1.Region].Add(portal2.OutletRegion(), new List<List<string>>());
+                    //    }
+                    //} else {
+                    //    ModifiedTraversalReqs.Add(portal1.Region, new Dictionary<string, List<List<string>>> { { portal2.OutletRegion(), new List<List<string>>() } });
+                    //}
+                }
+
+                if (portal1deadEnd) {
+                    deadEndPortalDirectionTracker[portal1.Direction]--;
+                } else {
+                    twoPlusPortalDirectionTracker[portal1.Direction]--;
+                }
+                if (portal2deadEnd) {
+                    deadEndPortalDirectionTracker[portal2.Direction]--;
+                } else {
+                    twoPlusPortalDirectionTracker[portal2.Direction]--;
+                }
+            }
+
 
             bool TooFewPortalsForDirectionPairs(int direction, int offset = 0) {
                 if (twoPlusPortalDirectionTracker[direction] <= deadEndPortalDirectionTracker[directionPairs[direction]] + offset) {
@@ -328,13 +416,11 @@ namespace TunicRandomizer {
                 return portal1.Direction == directionPairs[portal2.Direction];
             }
 
-            bool decoupledEnabled = GetBool(Decoupled);
-            bool dirPairsEnabled = GetBool(PortalDirectionPairs);
-
             // -----------------------------------------------
             // Portal Pairing Starts Here
             // -----------------------------------------------
 
+            FullInventory = UpdateReachableRegions(FullInventory);
             TunicUtils.ShuffleList(twoPlusPortals, seed);
             List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
             int failCount = 0;
