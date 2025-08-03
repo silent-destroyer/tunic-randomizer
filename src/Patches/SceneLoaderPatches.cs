@@ -580,7 +580,7 @@ namespace TunicRandomizer {
                     if (IsArchipelago()) {
                         ERScripts.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     } else if (IsSinglePlayer()) {
-                        ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
+                        ERScripts.CreateRandomizedPortals(SaveFile.GetInt("seed"));
                     }
                 }
                 ERScripts.ModifyPortals(loadingScene.name);

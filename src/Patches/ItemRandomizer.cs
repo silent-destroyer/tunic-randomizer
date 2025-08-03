@@ -294,7 +294,7 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
+                ERScripts.CreateRandomizedPortals(SaveFile.GetInt("seed"));
             } else {
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
             }
