@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
 
@@ -155,8 +155,9 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
+            TestERMethods(seed);
 
-            List<PortalCombo> randomizedPortals = RandomizePortals(seed);
+            List<PortalCombo> randomizedPortals = BPRandomizePortals(seed);
 
             int comboNumber = 1000;
             // now we add it to the actual, kept portal list, based on whether decoupled is on
@@ -170,6 +171,88 @@ namespace TunicRandomizer {
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
+
+
+        public static void TestERMethods(int seed) {
+            List<List<PortalCombo>> method1Combos = new List<List<PortalCombo>>();
+            List<List<PortalCombo>> method2Combos = new List<List<PortalCombo>>();
+            int trialCount = 10;
+
+            for (int i = 0; i < trialCount; i++) {
+                method1Combos.Add(RandomizePortals(seed + (i * 100)));
+                method2Combos.Add(BPRandomizePortals(seed + (i * 100)));
+            }
+
+            List<int> totalOWDeadEnds1 = new List<int>();
+            List<int> totalOWDeadEnds2 = new List<int>();
+
+            foreach (List<PortalCombo> portalCombos in method1Combos) {
+                int OWDeadEndCount = 0;
+                int totalDeadEnds = 0;
+                int totalNonDeadEnds = 0;
+                foreach (PortalCombo portalCombo in portalCombos) {
+                    if (portalCombo.Portal1.IsDeadEnd || portalCombo.Portal2.IsDeadEnd) {
+                        totalNonDeadEnds++;
+                        totalDeadEnds++;
+                    } else {
+                        totalNonDeadEnds++;
+                        totalNonDeadEnds++;
+                    }
+                    if (portalCombo.Portal1.Scene == "Overworld Redux" && portalCombo.Portal2.IsDeadEnd) {
+                        OWDeadEndCount++;
+                    }
+                    if (portalCombo.Portal2.Scene == "Overworld Redux" && portalCombo.Portal1.IsDeadEnd) {
+                        OWDeadEndCount++;
+                    }
+                }
+                TunicLogger.LogInfo($"Total deadends = {totalDeadEnds}");
+                TunicLogger.LogInfo($"Total nondeadends = {totalNonDeadEnds}");
+                totalOWDeadEnds1.Add(OWDeadEndCount);
+            }
+            foreach (List<PortalCombo> portalCombos in method2Combos) {
+                int OWDeadEndCount = 0;
+                foreach (PortalCombo portalCombo in portalCombos) {
+                    if (portalCombo.Portal1.Scene == "Overworld Redux" && portalCombo.Portal2.IsDeadEnd) {
+                        OWDeadEndCount++;
+                    }
+                    if (portalCombo.Portal2.Scene == "Overworld Redux" && portalCombo.Portal1.IsDeadEnd) {
+                        OWDeadEndCount++;
+                    }
+                }
+                totalOWDeadEnds2.Add(OWDeadEndCount);
+            }
+
+            string results1 = "";
+            int results1total = 0;
+            string results2 = "";
+            int results2total = 0;
+
+            TunicLogger.LogInfo("############################################");
+            TunicLogger.LogInfo("Here are the results of the OW dead end comparison test");
+            TunicLogger.LogInfo("Method 1 (current method):");
+            foreach (int number in totalOWDeadEnds1) {
+                results1 += number.ToString();
+                results1 += ", ";
+                results1total += number;
+            }
+            TunicLogger.LogInfo(results1);
+            TunicLogger.LogInfo($"Total for {trialCount.ToString()} trials: {results1total}");
+            float average1 = (float)totalOWDeadEnds1.Average();
+            TunicLogger.LogInfo($"Average is {average1.ToString()}");
+            TunicLogger.LogInfo("--------------------------------------------");
+            TunicLogger.LogInfo("Method 2 (new method):");
+            foreach (int number in totalOWDeadEnds2) {
+                results2 += number.ToString();
+                results2 += ", ";
+                results2total += number;
+            }
+            TunicLogger.LogInfo(results2);
+            TunicLogger.LogInfo($"Total for {trialCount.ToString()} trials: {results2total}");
+            float average2 = (float)totalOWDeadEnds2.Average();
+            TunicLogger.LogInfo($"Average is {average2.ToString()}");
+            TunicLogger.LogInfo("############################################");
+        }
+
 
         // create a list of all portals with their information loaded in, just a slightly expanded version of the above to include destinations
         public static List<PortalCombo> RandomizePortals(int seed) {
@@ -1050,6 +1133,12 @@ namespace TunicRandomizer {
                     List<TunicPortal> region_portals = region_group.Value;
                     foreach (TunicPortal tunicPortal in region_portals) {
                         Portal portal = new Portal(name: tunicPortal.Name, destination: tunicPortal.Destination, tag: tunicPortal.Tag, scene: scene_name, region: region_name, direction: tunicPortal.Direction, isDeadEnd: RegionDict[region_name].DeadEnd == true);
+                        portalsList.Add(portal);
+                        if (RegionDict[region_name].DeadEnd == true) {
+                            deadEndPortalDirectionTracker[portal.Direction]++;
+                        } else {
+                            twoPlusPortalDirectionTracker[portal.Direction]++;
+                        }
                     }
                 }
             }
@@ -1079,8 +1168,25 @@ namespace TunicRandomizer {
                 i++;
                 deadEndPortalDirectionTracker[dir]++;
             }
-
+            // remove this section when actually doing the BP stuff
             FullInventory.Add("Overworld", 1);
+
+            TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
+            // it doesn't really matter if there's duplicates from the above for this
+            Dictionary<string, int> MaxItems = new Dictionary<string, int> {
+                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
+            };
+            TunicUtils.AddDictToDict(FullInventory, MaxItems);
+
+            // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
+            if (SaveFile.GetInt(LaurelsLocation) == 3) {
+                FullInventory.Remove("Hyperdash");
+            }
+
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
 
             // todo: make sure this doesn't duplicate anything
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
@@ -1175,6 +1281,8 @@ namespace TunicRandomizer {
             List<string> allRegions = new List<string>();
             foreach (KeyValuePair<string, RegionInfo> region in RegionDict) {
                 if (region.Value.SkipCounting) continue;
+                if (!dirPairsEnabled && (region.Key == "Shop Entrance 7" || region.Key == "Shop Entrance 8")) continue;
+                if (GetBool(ERFixedShop) && region.Key.StartsWith("Shop Entrance") && region.Key != "Shop Entrance 1") continue;
                 allRegions.Add(region.Key);
             }
             while (FullInventory.Where(region => RegionDict.ContainsKey(region.Key) && !RegionDict[region.Key].SkipCounting).ToList().Count < allRegions.Count()) {
@@ -1223,7 +1331,7 @@ namespace TunicRandomizer {
 
                 if (portal1 == null) {
                     // it will fail after this
-                    TunicLogger.LogError("something messed up in portal pairing for portal 1");
+                    TunicLogger.LogError("something messed up in portal pairing for portal 1 in BPRandomizePortals");
                     TunicLogger.LogInfo("if there are regions missing, they are as follows:");
                     foreach (string region in allRegions) {
                         if (!FullInventory.ContainsKey(region)) {
@@ -1287,6 +1395,16 @@ namespace TunicRandomizer {
                     } else {
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogError("something messed up in portal pairing for portal 2, rerolling in BPRandomizePortals");
+                        TunicLogger.LogInfo("if there are regions missing, they are as follows:");
+                        foreach (string region in allRegions) {
+                            if (!FullInventory.ContainsKey(region)) {
+                                TunicLogger.LogInfo(region);
+                            }
+                        }
+                        TunicLogger.LogInfo("remaining portals in portalsList are:");
+                        foreach (Portal debugportal in portalsList) {
+                            TunicLogger.LogInfo(debugportal.Name);
+                        }
                         // reroll, hopefully this shouldn't be common at all
                         return BPRandomizePortals(seed + 1);
                     }
