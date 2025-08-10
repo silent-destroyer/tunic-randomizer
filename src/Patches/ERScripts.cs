@@ -155,7 +155,7 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
-            TestERMethods(seed);
+            //TestERMethods(seed);
 
             List<PortalCombo> randomizedPortals = BPRandomizePortals(seed);
 

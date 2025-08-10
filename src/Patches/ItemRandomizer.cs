@@ -22,6 +22,9 @@ namespace TunicRandomizer {
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
         public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
         public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
+        // plando items, first string is the item name, second is the location id
+        public static List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
+        public static bool InitialPlandoDone = false;
         
         // Items you start with or effectively start with
         public static Dictionary<string, int> PopulatePrecollected() {
@@ -101,7 +104,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
                 ProgressionNames.AddRange(Ladders);
             }
-            if(SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+            if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
                 ProgressionNames.AddRange(Fuses);
             }
             if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
@@ -112,7 +115,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                 ProgressionNames.AddRange(GrassCutters);
             }
-            
+
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
                 if (!ProgressionNames.Contains("Trinket - Glass Cannon")) {
                     ProgressionNames.Add("Trinket - Glass Cannon");
@@ -172,7 +175,7 @@ namespace TunicRandomizer {
                     } else if (Item.Reward.Name == "Hexagon Red") {
                         Item.Reward.Name = "Vault Key (Red)";
                     }
-                } 
+                }
                 if (SaveFile.GetInt(SwordProgressionEnabled) != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
                     Item.Reward.Name = "Sword Progression";
                     Item.Reward.Type = "SPECIAL";
@@ -248,23 +251,50 @@ namespace TunicRandomizer {
                 InitialLocations.Add(Item.Location);
             }
 
-            // pre-place laurels in ProgressionLocations, so that fill can collect it as needed
-            foreach (Reward item in ProgressionRewards.ToList()) {
-                if (item.Name == "Hyperdash" && SaveFile.GetInt(LaurelsLocation) != 0) {
-                    foreach (Location location in InitialLocations.ToList()) {
-                        if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(LaurelsLocation) == 1)
-                            || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(LaurelsLocation) == 2)
-                            || (location.LocationId == "waterfall" && SaveFile.GetInt(LaurelsLocation) == 3)) {
-                            Check Check = new Check(item, location);
-                            string DictionaryId = Check.CheckId;
-                            ProgressionLocations.Add(DictionaryId, Check);
-                            InitialLocations.Remove(location);
-                            ProgressionRewards.Remove(item);
-                            break;
+            if (SaveFile.GetInt(LaurelsLocation) == 1) {
+                PlandoItems.Add(new Tuple<string, string>("Hyperdash", "Well Reward (6 Coins)"));
+            } else if (SaveFile.GetInt(LaurelsLocation) == 2) {
+                PlandoItems.Add(new Tuple<string, string>("Hyperdash", "Well Reward (10 Coins)"));
+            } else if (SaveFile.GetInt(LaurelsLocation) == 3) {
+                PlandoItems.Add(new Tuple<string, string>("Hyperdash", "waterfall"));
+            }
+
+            InitialPlandoDone = true;
+
+            foreach (Tuple<string, string> plandoPair in PlandoItems) {
+                foreach (Reward item in ProgressionRewards.ToList()) {
+                    if (item.Name == plandoPair.Item1) {
+                        foreach (Location location in InitialLocations.ToList()) {
+                            if (location.LocationId == plandoPair.Item2) {
+                                Check check = new Check(item, location);
+                                string dictionaryId = check.CheckId;
+                                ProgressionLocations.Add(dictionaryId, check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
                         }
                     }
                 }
             }
+
+            //// pre-place laurels in ProgressionLocations, so that fill can collect it as needed
+            //foreach (Reward item in ProgressionRewards.ToList()) {
+            //    if (item.Name == "Hyperdash" && SaveFile.GetInt(LaurelsLocation) != 0) {
+            //        foreach (Location location in InitialLocations.ToList()) {
+            //            if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(LaurelsLocation) == 1)
+            //                || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(LaurelsLocation) == 2)
+            //                || (location.LocationId == "waterfall" && SaveFile.GetInt(LaurelsLocation) == 3)) {
+            //                Check Check = new Check(item, location);
+            //                string DictionaryId = Check.CheckId;
+            //                ProgressionLocations.Add(DictionaryId, Check);
+            //                InitialLocations.Remove(location);
+            //                ProgressionRewards.Remove(item);
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
 
             // pre-place hexagons if keys behind bosses is on
             foreach (Reward item in InitialRewards.ToList()) {
