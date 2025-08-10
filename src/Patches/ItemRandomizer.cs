@@ -24,7 +24,6 @@ namespace TunicRandomizer {
         public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
         // plando items, first string is the item name, second is the location id
         public static List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
-        public static bool InitialPlandoDone = false;
         
         // Items you start with or effectively start with
         public static Dictionary<string, int> PopulatePrecollected() {
@@ -251,15 +250,33 @@ namespace TunicRandomizer {
                 InitialLocations.Add(Item.Location);
             }
 
-            if (SaveFile.GetInt(LaurelsLocation) == 1) {
-                PlandoItems.Add(new Tuple<string, string>("Hyperdash", "Well Reward (6 Coins)"));
-            } else if (SaveFile.GetInt(LaurelsLocation) == 2) {
-                PlandoItems.Add(new Tuple<string, string>("Hyperdash", "Well Reward (10 Coins)"));
-            } else if (SaveFile.GetInt(LaurelsLocation) == 3) {
-                PlandoItems.Add(new Tuple<string, string>("Hyperdash", "waterfall"));
+            void addToPlandoItems(string item, string location) {
+                PlandoItems.Add(new Tuple<string, string>(item, location));
             }
 
-            InitialPlandoDone = true;
+            // todo: make this something that gets set based on if blue prince mode is on
+            if (true) {
+                if (SaveFile.GetInt(LaurelsLocation) == 1) {
+                    addToPlandoItems("Hyperdash", "Well Reward (6 Coins)");
+                } else if (SaveFile.GetInt(LaurelsLocation) == 2) {
+                    addToPlandoItems("Hyperdash", "Well Reward (10 Coins)");
+                } else if (SaveFile.GetInt(LaurelsLocation) == 3) {
+                    addToPlandoItems("Hyperdash", "waterfall");
+                }
+
+                if (GetBool(KeysBehindBosses)) {
+                    List<string> hexes;
+                    if (GetBool(HexagonQuestEnabled)) {
+                        hexes = new List<string> { "Hexagon Gold", "Hexagon Gold", "Hexagon Gold" };
+                    } else {
+                        hexes = new List<string> { "Hexagon Red", "Hexagon Blue", "Hexagon Green" };
+                        TunicUtils.ShuffleList(hexes, SaveFile.GetInt("seed"));
+                    }
+                    addToPlandoItems(hexes[0], "Vault Key (Red)");
+                    addToPlandoItems(hexes[1], "Hexagon Green");
+                    addToPlandoItems(hexes[2], "Hexagon Blue");
+                }
+            }
 
             foreach (Tuple<string, string> plandoPair in PlandoItems) {
                 foreach (Reward item in ProgressionRewards.ToList()) {
@@ -273,41 +290,6 @@ namespace TunicRandomizer {
                                 ProgressionRewards.Remove(item);
                                 break;
                             }
-                        }
-                    }
-                }
-            }
-
-            //// pre-place laurels in ProgressionLocations, so that fill can collect it as needed
-            //foreach (Reward item in ProgressionRewards.ToList()) {
-            //    if (item.Name == "Hyperdash" && SaveFile.GetInt(LaurelsLocation) != 0) {
-            //        foreach (Location location in InitialLocations.ToList()) {
-            //            if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(LaurelsLocation) == 1)
-            //                || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(LaurelsLocation) == 2)
-            //                || (location.LocationId == "waterfall" && SaveFile.GetInt(LaurelsLocation) == 3)) {
-            //                Check Check = new Check(item, location);
-            //                string DictionaryId = Check.CheckId;
-            //                ProgressionLocations.Add(DictionaryId, Check);
-            //                InitialLocations.Remove(location);
-            //                ProgressionRewards.Remove(item);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-
-            // pre-place hexagons if keys behind bosses is on
-            foreach (Reward item in InitialRewards.ToList()) {
-                if (item.Name.Contains("Hexagon") && SaveFile.GetInt(KeysBehindBosses) == 1) {
-                    foreach (Location location in InitialLocations.ToList()) {
-                        Check Check = new Check(item, location);
-                        if (Check.CheckId == "Vault Key (Red) [Fortress Arena]"
-                            || Check.CheckId == "Hexagon Green [Library Arena]"
-                            || Check.CheckId == "Hexagon Blue [ziggurat2020_3]") {
-                            ProgressionLocations.Add(Check.CheckId, Check);
-                            InitialLocations.Remove(location);
-                            InitialRewards.Remove(item);
-                            break;
                         }
                     }
                 }
