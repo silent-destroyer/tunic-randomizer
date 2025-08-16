@@ -137,7 +137,9 @@ namespace TunicRandomizer {
             }
 
             // trick logic is weird, it's probably easier to manually check like this
+            if (SaveFile.GetInt(LadderStorageDifficulty) >= 1) {
 
+            }
 
             return false;
         }

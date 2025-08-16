@@ -6,17 +6,7 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> LogicTrickTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
 
-        public static Dictionary<string, List<string>> OWElevPortals = new Dictionary<string, List<string>> {
-            {"LS Elev 0", new List<string> {"Swamp Redux 2_conduit", "Overworld Cave_", "Atoll Redux_lower", "Maze Room_",
-                                           "Town Basement_beach", "Archipelagos Redux_lower", "Archipelagos Redux_lowest"}},
-            {"LS Elev 1", new List<string> {"Furnace_gyro_lower", "Furnace_gyro_west", "Swamp Redux 2_wall"}},
-            {"LS Elev 2", new List<string> {"Archipelagos Redux_upper", "Ruins Passage_east"}},
-            {"LS Elev 3", new List<string> {}},
-            {"LS Elev 4", new List<string> {"Darkwoods Tunnel_"}},
-            {"LS Elev 5", new List<string> {"PatrolCave_", "Forest Belltower_", "Fortress Courtyard_", "ShopSpecial_"}},
-            {"LS Elev 6", new List<string> {"Temple_rafters"}},
-            {"LS Elev 7", new List<string> {"Mountain_"}},
-        };
+       
 
         public class LadderInfo {
             public string Origin;  // origin region
@@ -102,15 +92,39 @@ namespace TunicRandomizer {
 
         public static List<LSElevConnect> LSElevConnections = new List<LSElevConnect> {
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Furnace_gyro_west", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Swamp Redux 2_conduit", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Overworld Cave_", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Atoll Redux_lower", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Maze Room_", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Town Basement_beach", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Archipelagos Redux_lower", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Archipelagos Redux_lowest", difficulty: 1),
+
+            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Furnace_gyro_lower", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Furnace_gyro_west", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Swamp Redux 2_wall", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, EastFiligreeCache_", difficulty: 3),
+
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Archipelagos Redux_upper", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Ruins Passage_east", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Town_FiligreeRoom_", difficulty: 3),
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Ruins Passage_west", difficulty: 3),
 
             new LSElevConnect(origin: "LS Elev 3", destination: "Overworld Redux, Sewer_west_aqueduct", difficulty: 2),
             new LSElevConnect(origin: "LS Elev 3", destination: "Overworld Redux, Furnace_gyro_upper_north", difficulty: 2),
-
-            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, EastFiligreeCache_", difficulty: 3),
-            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Town_FiligreeRoom_", difficulty: 3),
-            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Ruins Passage_west", difficulty: 3),
             new LSElevConnect(origin: "LS Elev 3", destination: "Overworld Redux, Overworld Interiors_house", difficulty: 3),
+
+            new LSElevConnect(origin: "LS Elev 4", destination: "Overworld Redux, Darkwoods Tunnel_", difficulty: 1),
+
+            new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, PatrolCave_", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, Forest Belltower_", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, Fortress Courtyard_", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, ShopSpecial_", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 5", destination: "Overworld Redux, Temple_main", difficulty: 3),
+
+            new LSElevConnect(origin: "LS Elev 6", destination: "Overworld Redux, Temple_rafters", difficulty: 1),
+
+            new LSElevConnect(origin: "LS Elev 7", destination: "Overworld Redux, Mountain_", difficulty: 1),
         };
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
@@ -125,21 +139,7 @@ namespace TunicRandomizer {
                 portalList = ERData.VanillaPortals;
             }
 
-            // add the Overworld LS regions
-            foreach (KeyValuePair<string, List<string>> keyValuePair in OWElevPortals) {
-                string lselev = keyValuePair.Key;
-                List<string> portals = keyValuePair.Value;
-
-                // traverse each portal, add the destination region and its rules
-                foreach (string destinationPortal in portals) {
-                    string destinationRegion = ERScripts.FindPairedPortalRegionFromSDT("Overworld Redux, " + destinationPortal);
-                    // this is to handle when we have a partial randomized portals list, mostly because of Blue Prince stuff
-                    if (destinationRegion == "FindPairedPortalRegionFromSDT failed to find a match") continue;
-                    traversalReqsWithLS[lselev][destinationRegion] = new List<List<string>>();
-                }
-            }
-
-            // add all the special OW LS connections
+            // add the OW LS connections
             foreach (LSElevConnect connection in LSElevConnections) {
                 string destination = ERScripts.FindPairedPortalRegionFromSDT(connection.Destination);
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
@@ -154,7 +154,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            // add all the Easy, Medium, and Hard LS connections
+            // add all the non-Overworld Easy, Medium, and Hard LS connections
             void DifficultyLS(List<LadderInfo> ladderInfos, string difficultyString) {
                 foreach (LadderInfo ladderInfo in ladderInfos) {
                     List<List<string>> rules;
