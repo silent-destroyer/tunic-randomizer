@@ -199,6 +199,7 @@ namespace TunicRandomizer {
         public static void CreateRandomizedPortals(int seed) {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
+            PlandoPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
             //TestERMethods(seed);
 
@@ -1150,7 +1151,39 @@ namespace TunicRandomizer {
         }
 
 
-
+        public static List<string> BPGetThreePortals(int seed, string currentPortalName) {
+            List<string> portalNames = new List<string>();
+            Dictionary<string, string> deplando = new Dictionary<string, string>();
+            // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
+            // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
+            int trialCount = 10;
+            for (int i = 0; i < trialCount; i++) {
+                List<PortalCombo> randomizedPortals = BPRandomizePortals(seed + i, deplando);
+                string pairedName = null;
+                foreach (PortalCombo portalCombo in randomizedPortals) {
+                    if (portalCombo.Portal1.Name == currentPortalName) {
+                        pairedName = portalCombo.Portal2.Name;
+                        break;
+                    }
+                    if (!GetBool(Decoupled) && portalCombo.Portal2.Name == currentPortalName) {
+                        pairedName = portalCombo.Portal1.Name;
+                        break;
+                    }
+                }
+                if (pairedName == null) {
+                    TunicLogger.LogError("Error in getting portal name");
+                }
+                portalNames.Add(pairedName);
+                if (portalNames.Count() == 3) {
+                    break;
+                }
+                deplando.Add(currentPortalName, pairedName);
+                if (!GetBool(Decoupled)) {
+                    deplando.Add(pairedName, currentPortalName);
+                }
+            }
+            return portalNames;
+        }
 
 
         public static List<PortalCombo> BPRandomizePortals(int seed, Dictionary<string, string> deplando = null) {
@@ -1159,12 +1192,18 @@ namespace TunicRandomizer {
             List<Portal> portalsList = new List<Portal>();
             bool decoupledEnabled = GetBool(Decoupled);
             bool dirPairsEnabled = GetBool(PortalDirectionPairs);
+            // todo: after making the option, link it in here
+            bool bluePrinceEnabled = false;
 
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
             Dictionary<int, int> deadEndPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
             // quick reference for which directions you can pair to which
             Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
+
+            if (deplando == null) {
+                deplando = new Dictionary<string, string>();
+            }
 
             // separate the portals into their respective lists
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
@@ -1398,7 +1437,7 @@ namespace TunicRandomizer {
                 foreach (Portal portal in portalsList2) {
                     if (!FullInventory.ContainsKey(portal.Region)) {
                         // if secret gathering place gets paired really late and you have the laurels plando on, you can run out pretty easily
-                        if (portalsList2.Count < 80 && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3) {
+                        if (portalsList2.Count < 80 && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3 && !bluePrinceEnabled) {
                             TunicLogger.LogTesting("Continuing to wait for Secret Gathering Place");
                             continue;
                         }
@@ -1482,7 +1521,7 @@ namespace TunicRandomizer {
             int finalPairLoopNumber = 0;
             while (portalsList.Count > 0) {
                 finalPairLoopNumber++;
-                if (finalPairLoopNumber > 10000) {
+                if (finalPairLoopNumber > 100) {
                     TunicLogger.LogError("Failed to pair portals while pairing the final entrances off to each other");
                     TunicLogger.LogInfo("Remaining portals in portalsList:");
                     foreach (Portal portal in portalsList) {
@@ -1526,9 +1565,18 @@ namespace TunicRandomizer {
                         }
                     }
                     // reroll, hopefully this shouldn't be common at all
-                    TunicLogger.LogInfo("Rrerolling portals in last phase because we couldn't find a match in BPRandomizePortals");
+                    TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in BPRandomizePortals");
                     return BPRandomizePortals(seed + 1);
                 }
+
+                if (deplando.ContainsKey(portal1.Name) && deplando[portal1.Name] == portal2.Name) {
+                    portalsList.Add(portal1);
+                    portalsList2.Add(portal2);
+                    TunicUtils.ShuffleList(portalsList, seed);
+                    TunicUtils.ShuffleList(portalsList2, seed);
+                    continue;
+                }
+
                 randomizedPortals.Add(new PortalCombo(portal1, portal2));
             }
             return randomizedPortals;
