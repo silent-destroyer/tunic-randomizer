@@ -306,6 +306,8 @@ namespace TunicRandomizer {
                     FullInventory.Add("Hyperdash", 1);
                 }
 
+                TunicUtils.AddStringToDict(FullInventory, PAIRING_ONLY);
+
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
