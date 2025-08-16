@@ -6,70 +6,16 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> LogicTrickTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
 
-        public class OWLadderInfo {
-            public List<string> Ladders = new List<string>();  // ladders where the top or bottom is at the same elevation
-            public List<string> Portals = new List<string>();  // portals at the same elevation, only those without doors
-            public List<string> Regions = new List<string>();  // regions where a melee enemy can hit you out of ladder storage
-
-            public OWLadderInfo(List<string> ladders, List<string> portals, List<string> regions) {
-                Ladders = ladders;
-                Portals = portals;
-                Regions = regions;
-            }
-        }
-
-        public static Dictionary<string, OWLadderInfo> OWLadderGroups = new Dictionary<string, OWLadderInfo> {
-            {"LS Elev 0", new OWLadderInfo(
-                ladders: new List<string> {"Ladders in Overworld Town", "Ladder to Ruined Atoll", "Ladder to Swamp"},
-                portals: new List<string> {"Swamp Redux 2_conduit", "Overworld Cave_", "Atoll Redux_lower", "Maze Room_",
-                                           "Town Basement_beach", "Archipelagos Redux_lower", "Archipelagos Redux_lowest"},
-                regions: new List<string> {"Overworld Beach"}
-                ) },
-            {"LS Elev 1", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Weathervane", "Ladders in Overworld Town", "Ladder to Swamp"},
-                portals: new List<string> {"Furnace_gyro_lower", "Furnace_gyro_west", "Swamp Redux 2_wall"},
-                regions: new List<string> {"Overworld Tunnel Turret"}
-                ) },
-            {"LS Elev 2", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Weathervane", "Ladders to West Bell"},
-                portals: new List<string> {"Archipelagos Redux_upper", "Ruins Passage_east"},
-                regions: new List<string> {"After Ruined Passage"}
-                ) },
-            {"LS Elev 3", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Weathervane", "Ladder to Quarry", "Ladders to West Bell", "Ladders in Overworld Town"},
-                portals: new List<string> {},
-                regions: new List<string> {"Overworld after Envoy", "East Overworld"}
-                ) },
-            {"LS Elev 4", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Dark Tomb", "Ladder to Quarry", "Ladders to West Bell", "Ladders in Well", "Ladders in Overworld Town"},
-                portals: new List<string> {"Darkwoods Tunnel_"},
-                regions: new List<string> {}
-                ) },
-            {"LS Elev 5", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Overworld Checkpoint", "Ladders near Patrol Cave"},
-                portals: new List<string> {"PatrolCave_", "Forest Belltower_", "Fortress Courtyard_", "ShopSpecial_"},
-                regions: new List<string> {"East Overworld"}
-                ) },
-            {"LS Elev 6", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Patrol Cave", "Ladder near Temple Rafters"},
-                portals: new List<string> {"Temple_rafters"},
-                regions: new List<string> {"Overworld above Patrol Cave"}
-                ) },
-            {"LS Elev 7", new OWLadderInfo(
-                ladders: new List<string> {"Ladders near Patrol Cave", "Ladder near Temple Rafters", "Ladders near Dark Tomb"},
-                portals: new List<string> {"Mountain_"},
-                regions: new List<string> {"Upper Overworld"}
-                ) },
-        };
-
-        public static Dictionary<string, List<string>> RegionLadders = new Dictionary<string, List<string>> {
-            {"Overworld", new List<string> {"Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladders near Dark Tomb",
-                                            "Ladders in Overworld Town", "Ladder to Swamp", "Ladders in Well"}},
-            {"Overworld Beach", new List<string> {"Ladder to Ruined Atoll"}},
-            {"Overworld at Patrol Cave", new List<string> {"Ladders near Patrol Cave"}},
-            {"Overworld Quarry Entry", new List<string> {"Ladder to Quarry"}},
-            {"Overworld Belltower", new List<string> {"Ladders to West Bell"}},
-            {"Overworld after Temple Rafters", new List<string> {"Ladders near Temple Rafters"}},
+        public static Dictionary<string, List<string>> OWElevPortals = new Dictionary<string, List<string>> {
+            {"LS Elev 0", new List<string> {"Swamp Redux 2_conduit", "Overworld Cave_", "Atoll Redux_lower", "Maze Room_",
+                                           "Town Basement_beach", "Archipelagos Redux_lower", "Archipelagos Redux_lowest"}},
+            {"LS Elev 1", new List<string> {"Furnace_gyro_lower", "Furnace_gyro_west", "Swamp Redux 2_wall"}},
+            {"LS Elev 2", new List<string> {"Archipelagos Redux_upper", "Ruins Passage_east"}},
+            {"LS Elev 3", new List<string> {}},
+            {"LS Elev 4", new List<string> {"Darkwoods Tunnel_"}},
+            {"LS Elev 5", new List<string> {"PatrolCave_", "Forest Belltower_", "Fortress Courtyard_", "ShopSpecial_"}},
+            {"LS Elev 6", new List<string> {"Temple_rafters"}},
+            {"LS Elev 7", new List<string> {"Mountain_"}},
         };
 
         public class LadderInfo {
@@ -169,80 +115,27 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
             Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
-            // add connections to the Overworld LS regions
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> keyValuePair in traversalReqs) {
-                string originRegion = keyValuePair.Key;
-                if (RegionLadders.ContainsKey(originRegion)) {
-                    foreach (string ladder in RegionLadders[originRegion]) {
-                        foreach (KeyValuePair<string, OWLadderInfo> ladderGroup in OWLadderGroups) {
-                            string lselev = ladderGroup.Key;
-                            OWLadderInfo ladderInfo = ladderGroup.Value;
-                            if (ladderInfo.Ladders.Contains(ladder)) {
-                                //traversalReqsWithLS[originRegion].SetDefault(lselev, new List<List<string>> { new List<string> { "LS1", ladder } } );
-                                if (!traversalReqsWithLS[originRegion].ContainsKey(lselev)) {
-                                    traversalReqsWithLS[originRegion].Add(lselev, new List<List<string>> { new List<string> { "LS1", ladder } });
-                                } else {
-                                    traversalReqsWithLS[originRegion][lselev].AddRange(new List<List<string>> { new List<string> { "LS1", ladder } });
-                                }
-                            }
-                        }
-                    }
+            Dictionary<string, PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
                 }
+                portalList = ERData.VanillaPortals;
             }
 
             // add the Overworld LS regions
-            foreach (KeyValuePair<string, OWLadderInfo> keyValuePair in OWLadderGroups) {
+            foreach (KeyValuePair<string, List<string>> keyValuePair in OWElevPortals) {
                 string lselev = keyValuePair.Key;
-                OWLadderInfo ladderInfo = keyValuePair.Value;
-                traversalReqsWithLS.Add(lselev, new Dictionary<string, List<List<string>>>());
+                List<string> portals = keyValuePair.Value;
 
-                Dictionary<string, List<List<string>>> destinations = new Dictionary<string, List<List<string>>>();
-                // build the rules for each destination, add them to the dictionary
-                foreach (string destinationPortal in ladderInfo.Portals) {
+                // traverse each portal, add the destination region and its rules
+                foreach (string destinationPortal in portals) {
                     string destinationRegion = ERScripts.FindPairedPortalRegionFromSDT("Overworld Redux, " + destinationPortal);
-                    List<List<string>> allReqsForDestination = new List<List<string>>();
-                    foreach (string ladder in ladderInfo.Ladders) {
-                        allReqsForDestination.Add(new List<string> { "LS1", ladder });
-                    }
-                    // add the destination region and its rules
-                    if (!destinations.ContainsKey(destinationRegion)) {
-                        destinations.Add(destinationRegion, allReqsForDestination);
-                    } else {
-                        destinations[destinationRegion].AddRange(allReqsForDestination);
-                    }
-                    //destinations.SetDefault(destinationRegion, allReqsForDestination);
-                }
-                foreach (string destinationRegion in ladderInfo.Regions) {
-                    List<List<string>> allReqsForDestination = new List<List<string>>();
-                    foreach (string ladder in ladderInfo.Ladders) {
-                        allReqsForDestination.Add(new List<string> { "LS2", ladder });
-                    }
-                    // add the destination region and its rules
-                    if (!destinations.ContainsKey(destinationRegion)) {
-                        destinations.Add(destinationRegion, allReqsForDestination);
-                    } else {
-                        destinations[destinationRegion].AddRange(allReqsForDestination);
-                    }
-                    //destinations.SetDefault(destinationRegion, allReqsForDestination);
-                }
-                foreach (KeyValuePair<string, List<List<string>>> destination in destinations) {
-                    //traversalReqsWithLS[lselev].SetDefault(destination.Key, destination.Value);
-                    if (!traversalReqsWithLS[lselev].ContainsKey(destination.Key)) {
-                        traversalReqsWithLS[lselev].Add(destination.Key, destination.Value);
-                    } else {
-                        traversalReqsWithLS[lselev][destination.Key].AddRange(destination.Value);
-                    }
-                }
-            }
-
-            // add all the connections between LS Elev regions
-            string baseString = "LS Elev ";
-            for (int i = 0; i < OWLadderGroups.Count - 1; i++) {
-                //traversalReqsWithLS.SetDefault(baseString + i.ToString(), new Dictionary<string, List<List<string>>> { { baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } } } });
-                if (!traversalReqsWithLS.ContainsKey(baseString + i.ToString())) {
-                    traversalReqsWithLS.Add(baseString + i.ToString(), new Dictionary<string, List<List<string>>> { { baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } } } });
-                } else {
-                    traversalReqsWithLS[baseString + i.ToString()].Add(baseString + (i + 1).ToString(), new List<List<string>> { new List<string> { "LS2" } });
+                    // this is to handle when we have a partial randomized portals list, mostly because of Blue Prince stuff
+                    if (destinationRegion == "FindPairedPortalRegionFromSDT failed to find a match") continue;
+                    traversalReqsWithLS[lselev][destinationRegion] = new List<List<string>>();
                 }
             }
 
@@ -250,7 +143,6 @@ namespace TunicRandomizer {
             foreach (LSElevConnect connection in LSElevConnections) {
                 string destination = ERScripts.FindPairedPortalRegionFromSDT(connection.Destination);
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
-                //traversalReqsWithLS[connection.Origin].SetDefault(destination, rules);
                 if (!traversalReqsWithLS.ContainsKey(connection.Origin)) {
                     traversalReqsWithLS.Add(connection.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
                 } else {
@@ -271,7 +163,6 @@ namespace TunicRandomizer {
                     } else {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
-                    //traversalReqsWithLS.SetDefault(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { ladderInfo.Destination, rules } });
                     string destination = ERScripts.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
                     if (!traversalReqsWithLS.ContainsKey(ladderInfo.Origin)) {
                         traversalReqsWithLS.Add(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
@@ -287,17 +178,6 @@ namespace TunicRandomizer {
             DifficultyLS(EasyLS, "LS1");
             DifficultyLS(MediumLS, "LS2");
             DifficultyLS(HardLS, "LS3");
-
-
-            Dictionary<string, PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
-                portalList = ERData.RandomizedPortals;
-            } else {
-                if (ERData.VanillaPortals.Count == 0) {
-                    ERScripts.SetupVanillaPortals();
-                }
-                portalList = ERData.VanillaPortals;
-            }
 
             // while we're here, let's just add the portal combo connections to the traversal reqs too for completion's sake
             // we could do this in another function, but ideally we always do this right after the trick logic (or right before I guess)
@@ -319,28 +199,6 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            //TunicLogger.LogInfo("Test start");
-            //foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> keyValuePair in traversalReqsWithLS) {
-            //    string originRegion = keyValuePair.Key;
-            //    TunicLogger.LogInfo("-----------------------------------------------------------");
-            //    TunicLogger.LogInfo("Origin region is " + originRegion);
-            //    foreach (KeyValuePair<string, List<List<string>>> kvp in keyValuePair.Value) {
-            //        string destRegion = kvp.Key;
-            //        List<List<string>> rules = kvp.Value;
-            //        TunicLogger.LogInfo("Destination region is " + destRegion);
-            //        TunicLogger.LogInfo("Rules are as follows:");
-            //        foreach (List<string> ruleSet in rules) {
-            //            string ruleString = "";
-            //            foreach (string rule in ruleSet) {
-            //                ruleString += rule;
-            //                ruleString += ", ";
-            //            }
-            //            TunicLogger.LogInfo(ruleString);
-            //        }
-            //        TunicLogger.LogInfo("-----------------------------------------------------------");
-            //    }
-            //    TunicLogger.LogInfo("===========================================================");
-            //}
 
             return traversalReqsWithLS;
         }

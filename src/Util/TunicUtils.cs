@@ -44,11 +44,16 @@ namespace TunicRandomizer {
             return dictionary;
         }
 
+        public static Dictionary<string, int> AddStringAndQuantityToDict(Dictionary<string, int> dictionary, string item, int quantity) {
+            dictionary.TryGetValue(item, out var count);
+            dictionary[item] = count + quantity;
+            return dictionary;
+        }
+
         // for combining dictionaries of item quantities
         public static Dictionary<string, int> AddDictToDict(Dictionary<string, int> primaryDictionary, Dictionary<string, int> secondaryDictionary) {
             foreach (KeyValuePair<string, int> pair in secondaryDictionary) {
-                primaryDictionary.TryGetValue(pair.Key, out var count);
-                primaryDictionary[pair.Key] = count + pair.Value;
+                AddStringAndQuantityToDict(primaryDictionary, pair.Key, pair.Value);
             }
             return primaryDictionary;
         }
