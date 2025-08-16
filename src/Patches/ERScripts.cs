@@ -201,7 +201,6 @@ namespace TunicRandomizer {
             RandomizedPortals.Clear();
             PlandoPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
-            //TestERMethods(seed);
 
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
 
@@ -293,19 +292,18 @@ namespace TunicRandomizer {
 
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
 
-            // todo: replace this true with checking if blue prince mode is on
             // if blue prince mode is off or this is the first time through, add all progression to the FullInventory
-            if (true) {
+            if (!bluePrinceEnabled) {
                 // it doesn't really matter if there's duplicates from the above for this
                 Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                    { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
+                    { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Mask", 1 },
                     { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
                 };
                 TunicUtils.AddDictToDict(FullInventory, MaxItems);
 
-                // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
-                if (SaveFile.GetInt(LaurelsLocation) == 3) {
-                    FullInventory.Remove("Hyperdash");
+                // if laurels is not at 10 fairies, add laurels to the inventory
+                if (SaveFile.GetInt(LaurelsLocation) != 3) {
+                    FullInventory.Add("Hyperdash", 1);
                 }
 
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
