@@ -137,8 +137,40 @@ namespace TunicRandomizer {
             }
 
             // trick logic is weird, it's probably easier to manually check like this
-            if (SaveFile.GetInt(LadderStorageDifficulty) >= 1) {
-
+            int lsdiff = SaveFile.GetInt(LadderStorageDifficulty);
+            if (lsdiff >= 1 && TunicUtils.HasReq("LS1", inventory)) {
+                foreach (TrickLogic.LSElevConnect cxn in TrickLogic.OWLSElevConnections) {
+                    if (portal.SceneDestinationTag != cxn.Destination) continue;
+                    if (!inventory.ContainsKey(cxn.Origin)) continue;
+                    if (lsdiff >= cxn.Difficulty) {
+                        return true;
+                    }
+                }
+                foreach (TrickLogic.LadderInfo cxn in TrickLogic.EasyLS) {
+                    if (portal.SceneDestinationTag != cxn.Destination) continue;
+                    if (!inventory.ContainsKey(cxn.Origin)) continue;
+                    if (cxn.LaddersReq == null || TunicUtils.HasReq(cxn.LaddersReq, inventory)) {
+                        return true;
+                    }
+                }
+                if (lsdiff >= 2) {
+                    foreach (TrickLogic.LadderInfo cxn in TrickLogic.MediumLS) {
+                        if (portal.SceneDestinationTag != cxn.Destination) continue;
+                        if (!inventory.ContainsKey(cxn.Origin)) continue;
+                        if (cxn.LaddersReq == null || TunicUtils.HasReq(cxn.LaddersReq, inventory)) {
+                            return true;
+                        }
+                    }
+                }
+                if (lsdiff >= 3) {
+                    foreach (TrickLogic.LadderInfo cxn in TrickLogic.HardLS) {
+                        if (portal.SceneDestinationTag != cxn.Destination) continue;
+                        if (!inventory.ContainsKey(cxn.Origin)) continue;
+                        if (cxn.LaddersReq == null || TunicUtils.HasReq(cxn.LaddersReq, inventory)) {
+                            return true;
+                        }
+                    }
+                }
             }
 
             return false;

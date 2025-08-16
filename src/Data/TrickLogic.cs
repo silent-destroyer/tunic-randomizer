@@ -90,7 +90,7 @@ namespace TunicRandomizer {
             }
         }
 
-        public static List<LSElevConnect> LSElevConnections = new List<LSElevConnect> {
+        public static List<LSElevConnect> OWLSElevConnections = new List<LSElevConnect> {
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Furnace_gyro_west", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Swamp Redux 2_conduit", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Overworld Cave_", difficulty: 1),
@@ -140,7 +140,7 @@ namespace TunicRandomizer {
             }
 
             // add the OW LS connections
-            foreach (LSElevConnect connection in LSElevConnections) {
+            foreach (LSElevConnect connection in OWLSElevConnections) {
                 string destination = ERScripts.FindPairedPortalRegionFromSDT(connection.Destination);
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
                 if (!traversalReqsWithLS.ContainsKey(connection.Origin)) {
