@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TunicRandomizer {
@@ -6,6 +7,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
         public static Dictionary<string, PortalCombo> VanillaPortals = new Dictionary<string, PortalCombo>();
         public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
+        public static Dictionary<string, string> PlandoPortals = new Dictionary<string, string>();
 
         public const string FUSE_SHUFFLE = "Fuse Shuffle";
         public const string NO_FUSE_SHUFFLE = "No Fuse Shuffle";
@@ -33,23 +35,23 @@ namespace TunicRandomizer {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
-                Direction = (int) PDir.NONE;
+                Direction = (int)PDir.NONE;
             }
 
             public TunicPortal(string name, string destination, string tag, PDir direction) {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
-                Direction = (int) direction;
+                Direction = (int)direction;
             }
         }
-        
+
         public class RegionInfo {
             public string Scene;
             public bool DeadEnd;
             public string OutletRegion;  // for where a portal forces you to another region immediately, example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
             public bool SkipCounting;  // for ones that we skip every time because they're weird (zig skip, ls elevation regions) and shouldn't be counted in portal pairing the same way
-            
+
 
             public RegionInfo(string scene, bool deadEnd) {
                 Scene = scene;
@@ -1309,7 +1311,7 @@ namespace TunicRandomizer {
                             new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "main", PDir.SOUTH),
                         }
                     },
-                    { 
+                    {
                         "Cathedral Elevator",
                         new List<TunicPortal> {
                             new TunicPortal("Cathedral Elevator", "Cathedral Arena", "", PDir.LADDER_DOWN),
@@ -2637,6 +2639,248 @@ namespace TunicRandomizer {
                                 "LS2"
                             },
                         }
+                    },
+                    {
+                        "LS Elev 0",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            },
+                            new List<string> {
+                                "LS1", "Ladder to Swamp"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 1",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Weathervane"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            },
+                            new List<string> {
+                                "LS1", "Ladder to Swamp"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Weathervane"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Weathervane"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Dark Tomb"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Well"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 5",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Overworld Checkpoint"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Dark Tomb"
+                            }
+                        }
+                    },
+                }
+            },
+
+            {
+                "LS Elev 0",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 1",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld Beach",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 1",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld Tunnel Turret",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 2",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "After Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 3",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld after Envoy",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 4",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 5",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 5",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 6",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 6",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld after Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 7",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Upper Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
                     }
                 }
             },
@@ -2737,6 +2981,30 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "LS Elev 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to West Bell"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to West Bell"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to West Bell"
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -2823,6 +3091,14 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG1S"
                             },
+                        }
+                    },
+                    {
+                        "LS Elev 0",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladder to Ruined Atoll"
+                            }
                         }
                     },
                 }
@@ -2932,6 +3208,30 @@ namespace TunicRandomizer {
                             }
                         }
                     },
+                    {
+                        "LS Elev 5",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Patrol Cave"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 6",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Patrol Cave"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Patrol Cave"
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -3018,6 +3318,22 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "LS Elev 6",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladder near Temple Rafters"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladder near Temple Rafters"
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -3054,7 +3370,23 @@ namespace TunicRandomizer {
                                 "Ladder to Quarry",
                             },
                         }
-                    }
+                    },
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to Quarry"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to Quarry"
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -5846,6 +6178,6 @@ namespace TunicRandomizer {
                 }
             },
         };
-        
+
     }
 }
