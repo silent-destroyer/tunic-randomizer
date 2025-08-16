@@ -1153,7 +1153,7 @@ namespace TunicRandomizer {
 
 
 
-        public static List<PortalCombo> BPRandomizePortals(int seed) {
+        public static List<PortalCombo> BPRandomizePortals(int seed, Dictionary<string, string> deplando = null) {
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> portalsList = new List<Portal>();
