@@ -256,6 +256,8 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(LaurelsLocation) == 3) {
                 FullInventory.Remove("Hyperdash");
             }
+
+            TunicUtils.AddStringToDict(FullInventory, PAIRING_ONLY);
             
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
