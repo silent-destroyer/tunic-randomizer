@@ -2,25 +2,22 @@
 
 namespace TunicRandomizer {
     public class LogicChecker {
-        // Dictionary of region names to the rules required to reach them
-        // format for the Region one is the first string key is the place you're trying to get to,
-        // the second string keys are the origins, and the lists are the rules to get from those origins to the desired destination region
-        public static Dictionary<string, Dictionary<string, List<List<string>>>> RegionLogicSummaryWithStatus = new Dictionary<string, Dictionary<string, List<List<string>>>>();
-        
-
         public static string MarkString(string text) {
             return "(x) " + text;
         }
 
 
-        public static void SetupRegionLogicSummaryWithStatus() {
-            RegionLogicSummaryWithStatus.Clear();
+        // Dictionary of region names to the rules required to reach them
+        // format for the Region one is the first string key is the place you're trying to get to,
+        // the second string keys are the origins, and the lists are the rules to get from those origins to the desired destination region
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> SetupRegionLogicSummaryWithStatus() {
+            Dictionary<string, Dictionary<string, List<List<string>>>> regionLogicSummaryWithStatus = new Dictionary<string, Dictionary<string, List<List<string>>>>();
             foreach (string regionName in ERData.RegionDict.Keys) {
                 string regionWithMarker = regionName;
                 if (!TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName)) {
                     regionWithMarker = MarkString(regionName);
                 }
-                RegionLogicSummaryWithStatus.Add(regionWithMarker, new Dictionary<string, List<List<string>>>());
+                regionLogicSummaryWithStatus.Add(regionWithMarker, new Dictionary<string, List<List<string>>>());
             }
 
             // go through and build the region logic summary, marking whatever regions and items we don't have yet
@@ -47,9 +44,10 @@ namespace TunicRandomizer {
                         }
                         markedRules.Add(markedList);
                     }
-                    RegionLogicSummaryWithStatus[destinationRegion].Add(originRegion, markedRules);
+                    regionLogicSummaryWithStatus[destinationRegion].Add(originRegion, markedRules);
                 }
             }
+            return regionLogicSummaryWithStatus;
         }
 
 
@@ -88,7 +86,7 @@ namespace TunicRandomizer {
 
         public static void WriteLogicSummaryFile() {
             SetupRegionLogicSummaryWithStatus();
-            TunicUtils.TryWriteFile(TunicRandomizer.RegionLogicPath, StringifyLogicSummary(RegionLogicSummaryWithStatus));
+            TunicUtils.TryWriteFile(TunicRandomizer.RegionLogicPath, StringifyLogicSummary(SetupRegionLogicSummaryWithStatus()));
         }
 
     }

@@ -2861,7 +2861,7 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Overworld after Patrol Cave",
+                        "Overworld above Patrol Cave",
                         new List<List<string>> {
                             new List<string> {
                                 "LS2"
