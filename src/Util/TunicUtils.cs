@@ -213,6 +213,23 @@ namespace TunicRandomizer {
             return false;
         }
 
+        public static void CheckAllLocsReachable() {
+            TunicLogger.LogInfo("Starting CheckAllLocsReachable");
+            Dictionary<string, int> inventory = new Dictionary<string, int>(ItemRandomizer.PopulatePrecollected());
+            List<Check> allInUseChecks = GetAllInUseChecks();
+            
+            AddStringToDict(inventory, "Overworld");
+            // if it worked right, then inventory should be full and alreadyGottenLocs should be all locations with progression items
+            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory);
+
+            foreach (Check check in allInUseChecks) {
+                if (!check.Location.reachable(inventory)) {
+                    TunicLogger.LogError($"{check.CheckId} is not reachable!");
+                }
+            }
+            TunicLogger.LogInfo("CheckAllLocsReachable done, if there are issues then they will be shown above");
+        }
+
         public static Dictionary<string, Dictionary<string, List<List<string>>>> DeepCopyTraversalReqs() {
             Dictionary<string, Dictionary<string, List<List<string>>>> deepCopied = new Dictionary<string, Dictionary<string, List<List<string>>>>();
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> kvp in ERData.TraversalReqs) {

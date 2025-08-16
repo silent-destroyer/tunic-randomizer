@@ -84,7 +84,7 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        // todo: make sure this works properly
+
         public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null) {
             if (alreadyCheckedLocations == null) {
                 alreadyCheckedLocations = new List<Check>();
@@ -602,12 +602,6 @@ namespace TunicRandomizer {
                     deadEndPortalDirectionTracker[portal2.Direction]--;
                 } else {
                     twoPlusPortalDirectionTracker[portal2.Direction]--;
-                }
-
-                // todo: check if this ever actually happens
-                if (!FullInventory.ContainsKey(portal1.OutletRegion())) {
-                    TunicLogger.LogInfo($"Adding {portal1.OutletRegion()} to fullinventory");
-                    FullInventory.Add(portal1.OutletRegion(), 1);
                 }
 
                 TunicUtils.ShuffleList(portalsList, seed);

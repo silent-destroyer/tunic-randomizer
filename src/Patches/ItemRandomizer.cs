@@ -508,6 +508,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
                 }
             }
+            TunicUtils.CheckAllLocsReachable();
             TunicLogger.LogInfo("Successfully randomized and placed items!");
         }
 
