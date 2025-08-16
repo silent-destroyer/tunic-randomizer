@@ -2,7 +2,6 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
 
@@ -83,6 +82,52 @@ namespace TunicRandomizer {
                 UpdateReachableRegions(inventory);
             }
             return inventory;
+        }
+
+        // todo: make sure this works properly
+        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null) {
+            if (alreadyCheckedLocations == null) {
+                alreadyCheckedLocations = new List<Check>();
+            }
+            while (true) {
+                // start count is the quantity of items in full inventory. If this stays the same between loops, then you are done getting items
+                int start_count = 0;
+                foreach (int count in inventory.Values) {
+                    start_count += count;
+                }
+
+                while (true) {
+                    // since regions always have a count of 1, we can just use .count instead of counting up all the values
+                    int start_num = inventory.Count;
+                    inventory = UpdateReachableRegions(inventory);
+                    foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+                        inventory = portalCombo.AddComboRegion(inventory);
+                    }
+                    if (start_num == inventory.Count) {
+                        break;
+                    }
+                }
+
+                // pick up all items you can reach with your current inventory
+                foreach (Check placedLocation in ItemRandomizer.ProgressionLocations.Values) {
+                    if (!alreadyCheckedLocations.Contains(placedLocation) && placedLocation.Location.reachable(inventory)) {
+                        string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
+                        TunicUtils.AddStringToDict(inventory, item_name);
+                        alreadyCheckedLocations.Add(placedLocation);
+                    }
+                }
+
+                int end_count = 0;
+                foreach (int count in inventory.Values) {
+                    end_count += count;
+                }
+
+                // if these two are equal, then we've gotten everything we have access to
+                if (start_count == end_count) {
+                    break;
+                }
+            }
+            return (inventory, alreadyCheckedLocations);
         }
 
 
@@ -1105,6 +1150,9 @@ namespace TunicRandomizer {
         }
 
 
+
+
+
         public static List<PortalCombo> BPRandomizePortals(int seed) {
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
@@ -1172,24 +1220,26 @@ namespace TunicRandomizer {
             FullInventory.Add("Overworld", 1);
 
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
-            // it doesn't really matter if there's duplicates from the above for this
-            Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
-                { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
-            };
-            TunicUtils.AddDictToDict(FullInventory, MaxItems);
 
-            // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
-            if (SaveFile.GetInt(LaurelsLocation) == 3) {
-                FullInventory.Remove("Hyperdash");
+            // todo: replace this true with checking if blue prince mode is on
+            // if blue prince mode is off or this is the first time through, add all progression to the FullInventory
+            if (true) {
+                // it doesn't really matter if there's duplicates from the above for this
+                Dictionary<string, int> MaxItems = new Dictionary<string, int> {
+                    { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 }, 
+                    { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
+                };
+                TunicUtils.AddDictToDict(FullInventory, MaxItems);
+
+                // if laurels is at 10 fairies, remove laurels until the fairy cave is connected
+                if (SaveFile.GetInt(LaurelsLocation) == 3) {
+                    FullInventory.Remove("Hyperdash");
+                }
+
+                FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
+                FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
+                FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
             }
-
-            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
-            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
-            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
-
-            // todo: make sure this doesn't duplicate anything
-            TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
 
             // making a second list if we're doing decoupled, a reference to the first list if not
             List<Portal> portalsList2;
@@ -1272,7 +1322,6 @@ namespace TunicRandomizer {
             // -----------------------------------------------
 
             FullInventory = UpdateReachableRegions(FullInventory);
-            // todo: maybe these will want an offset?
             TunicUtils.ShuffleList(portalsList, seed);
             TunicUtils.ShuffleList(portalsList2, seed);
             List<string> southProblems = new List<string> { "Ziggurat Upper to Ziggurat Entry Hallway", "Ziggurat Tower to Ziggurat Upper", "Forest Belltower to Guard Captain Room" };
@@ -1305,7 +1354,6 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("This will now reroll the entrances and try again.");
                         TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
-                        //throw new System.Exception("Failed to pair portals.");
                         // reroll, hopefully this shouldn't be common at all
                         return BPRandomizePortals(seed + 1);
                     }
@@ -1477,7 +1525,6 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo("Possible error combo: " + combo.Portal1.Name + " and " + combo.Portal2.Name);
                         }
                     }
-                    //throw new System.Exception("Failed to pair portals in the end step");
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rrerolling portals in last phase because we couldn't find a match in BPRandomizePortals");
                     return BPRandomizePortals(seed + 1);

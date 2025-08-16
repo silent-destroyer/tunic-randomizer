@@ -22,6 +22,9 @@ namespace TunicRandomizer {
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
         public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
         public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
+
+        public static Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check>();
+
         // plando items, first string is the item name, second is the location id
         public static List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
         
@@ -130,8 +133,8 @@ namespace TunicRandomizer {
             List<Reward> ProgressionRewards = new List<Reward>();
             // inventory of progression items that have not been placed yet
             Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>();
-            // locations that progression is placed at
-            Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
+            // this is set at the top now, so it can be referenced by the Blue Prince stuff
+            ProgressionLocations.Clear();
 
             int GoldHexagonsAdded = 0;
             int HexagonsToAdd = TunicUtils.GetMaxGoldHexagons();
@@ -311,9 +314,6 @@ namespace TunicRandomizer {
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
             }
 
-            // used in fill to keep checks that you've re-collected items from from being collected again
-            List<Check> checksAlreadyAdded = new List<Check>();
-
             // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
             int iteration_number = 0;
@@ -339,59 +339,8 @@ namespace TunicRandomizer {
                 }
                 TunicUtils.AddDictToDict(FullInventory, PrecollectedItems);
 
-                // cache for picking up items during fill
-                checksAlreadyAdded.Clear();
-
                 // fill method: reverse fill and anything you can get with your remaining inventory is assumed to be in your inventory for the purpose of placing the next item
-                while (true) {
-                    // start count is the quantity of items in full inventory. If this stays the same between loops, then you are done getting items
-                    int start_count = 0;
-                    foreach (int count in FullInventory.Values) {
-                        start_count += count;
-                    }
-
-                    // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
-                    while (true) {
-                        // since regions always have a count of 1, we can just use .count instead of counting up all the values
-                        int start_num = FullInventory.Count;
-                        FullInventory = ERScripts.UpdateReachableRegions(FullInventory);
-                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
-                            FullInventory = portalCombo.AddComboRegion(FullInventory);
-                        }
-                        if (start_num == FullInventory.Count) {
-                            break;
-                        }
-                    }
-
-                    // for debugging to check inventory item counts
-                    //TunicLogger.LogInfo("iteration number is " + iteration_number.ToString());
-                    //TunicLogger.LogInfo("item being placed is " + item.Name);
-                    //TunicLogger.LogInfo("Full Inventory is");
-                    //foreach (string iname in FullInventory.Keys) {
-                    //    TunicLogger.LogInfo(iname + ": " + FullInventory[iname].ToString());
-                    //}
-
-                    // pick up all items you can reach with your current inventory
-                    foreach (Check placedLocation in ProgressionLocations.Values) {
-                        if (placedLocation.Location.reachable(FullInventory) && !checksAlreadyAdded.Contains(placedLocation)) {
-                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[placedLocation.CheckId] + " is reachable");
-                            //TunicLogger.LogInfo("Adding " + placedLocation.Reward.Name + " to inventory");
-                            string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
-                            TunicUtils.AddStringToDict(FullInventory, item_name);
-                            checksAlreadyAdded.Add(placedLocation);
-                        }
-                    }
-
-                    int end_count = 0;
-                    foreach (int count in FullInventory.Values) {
-                        end_count += count;
-                    }
-
-                    // if these two are equal, then we've gotten everything we have access to
-                    if (start_count == end_count) {
-                        break;
-                    }
-                }
+                (FullInventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(FullInventory);
 
 
                 // this is for testing fill, ignore if not testing
