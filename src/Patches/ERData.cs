@@ -5550,12 +5550,17 @@ namespace TunicRandomizer {
                             }
                         }
                     },
+                    {
+                        "Rooted Ziggurat Lower Mid Checkpoint",
+                        new List<List<string>> {
+                        }
+                    }
                 }
             },
             {
                 "Rooted Ziggurat Lower Back",
                 new Dictionary<string, List<List<string>>> {
-                    {  // can't get to checkpoint if enemies aggro, gap too big
+                    {
                         "Rooted Ziggurat Lower Front",
                         new List<List<string>> {
                             new List<string> {
