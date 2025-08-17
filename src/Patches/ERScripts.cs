@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERData;
@@ -1025,8 +1026,8 @@ namespace TunicRandomizer {
         }
 
 
-        public static List<string> BPGetThreePortals(int seed, string currentPortalName) {
-            List<string> portalNames = new List<string>();
+        public static List<Tuple<string, Portal, Portal>> BPGetThreePortals(int seed, string currentPortalName) {
+            List<Tuple<string, Portal, Portal>> portalNames = new List<Tuple<string, Portal, Portal>>();
             Dictionary<string, string> deplando = new Dictionary<string, string>();
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
@@ -1034,20 +1035,26 @@ namespace TunicRandomizer {
             for (int i = 0; i < trialCount; i++) {
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando);
                 string pairedName = null;
+                Portal portal1 = null;
+                Portal portal2 = null;
                 foreach (PortalCombo portalCombo in randomizedPortals) {
                     if (portalCombo.Portal1.Name == currentPortalName) {
                         pairedName = portalCombo.Portal2.Name;
+                        portal1 = portalCombo.Portal1;
+                        portal2 = portalCombo.Portal2;
                         break;
                     }
                     if (!GetBool(Decoupled) && portalCombo.Portal2.Name == currentPortalName) {
                         pairedName = portalCombo.Portal1.Name;
+                        portal1 = portalCombo.Portal2;
+                        portal2 = portalCombo.Portal1;
                         break;
                     }
                 }
                 if (pairedName == null) {
                     TunicLogger.LogError("Error in getting portal name");
                 }
-                portalNames.Add(pairedName);
+                portalNames.Add(new Tuple<string, Portal, Portal>(pairedName, portal1, portal2));
                 if (portalNames.Count() == 3) {
                     break;
                 }

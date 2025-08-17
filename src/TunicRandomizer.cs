@@ -205,6 +205,9 @@ namespace TunicRandomizer {
             // Bells            
             Harmony.Patch(AccessTools.Method(typeof(TuningForkBell), "onStateChange"), null, new HarmonyMethod(AccessTools.Method(typeof(BellShuffle), "TuningForkBell_onStateChange_PostfixPatch")));
 
+            // Fox Prince
+            Harmony.Patch(AccessTools.Method(typeof(ScenePortal), "OnTriggerEnter"), new HarmonyMethod(AccessTools.Method(typeof(FoxPrince), "ScenePortal_OnTriggerEnter_PrefixPatch")));
+
             // Misc
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
 

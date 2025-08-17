@@ -200,6 +200,7 @@
     <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
+    <Compile Include="src\Patches\FoxPrince.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
     <Compile Include="src\Patches\GrassRandomizer.cs" />
