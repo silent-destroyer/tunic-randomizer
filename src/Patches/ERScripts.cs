@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERData;
@@ -249,6 +248,19 @@ namespace TunicRandomizer {
             PlandoPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
 
+            bool bluePrince = true;
+            if (bluePrince) {
+                TunicLogger.LogInfo("reading save file for current plando");
+                foreach (string key in SaveFile.stringStore.Keys) {
+                    if (key.StartsWith("randomizer bp ")) {
+                        string origin = key.Substring("randomizer bp ".Length);
+                        TunicLogger.LogInfo(origin);
+                        string destination = SaveFile.stringStore[key];
+                        PlandoPortals.Add(origin, destination);
+                    }
+                }
+            }
+
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
 
             int comboNumber = 1000;
@@ -467,6 +479,7 @@ namespace TunicRandomizer {
                 if (GetBool(ERFixedShop) && region.Key.StartsWith("Shop Entrance") && region.Key != "Shop Entrance 1") continue;
                 allRegions.Add(region.Key);
             }
+            // todo: change the conditin of this while loop to skip the ls regions when ls is off, but keep them when it's on
             while (FullInventory.Where(region => RegionDict.ContainsKey(region.Key) && !RegionDict[region.Key].SkipCounting).ToList().Count < allRegions.Count()) {
                 Portal portal1 = null;
                 Portal portal2 = null;
@@ -616,7 +629,7 @@ namespace TunicRandomizer {
             int finalPairLoopNumber = 0;
             while (portalsList.Count > 0) {
                 finalPairLoopNumber++;
-                if (finalPairLoopNumber > 100) {
+                if (finalPairLoopNumber > 10000) {
                     TunicLogger.LogError("Failed to pair portals while pairing the final entrances off to each other");
                     TunicLogger.LogInfo("Remaining portals in portalsList:");
                     foreach (Portal portal in portalsList) {
@@ -1016,7 +1029,7 @@ namespace TunicRandomizer {
                     return portalCombo.Portal2.OutletRegion();
                 }
             }
-            TunicLogger.LogInfo("portalSDT is " + portalSDT);
+            
             foreach (PortalCombo portalCombo in portalList.Values) {
                 TunicLogger.LogInfo(portalCombo.Portal1.SceneDestinationTag);
             }
@@ -1026,44 +1039,38 @@ namespace TunicRandomizer {
         }
 
 
-        public static List<Tuple<string, Portal, Portal>> BPGetThreePortals(int seed, string currentPortalName) {
-            List<Tuple<string, Portal, Portal>> portalNames = new List<Tuple<string, Portal, Portal>>();
+        public static List<Portal> BPGetThreePortals(int seed, string currentPortalName) {
+            List<Portal> portalChoices = new List<Portal>();
             Dictionary<string, string> deplando = new Dictionary<string, string>();
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
             int trialCount = 10;
             for (int i = 0; i < trialCount; i++) {
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando);
-                string pairedName = null;
-                Portal portal1 = null;
-                Portal portal2 = null;
+                Portal destinationPortal = null;
                 foreach (PortalCombo portalCombo in randomizedPortals) {
                     if (portalCombo.Portal1.Name == currentPortalName) {
-                        pairedName = portalCombo.Portal2.Name;
-                        portal1 = portalCombo.Portal1;
-                        portal2 = portalCombo.Portal2;
+                        destinationPortal = portalCombo.Portal2;
                         break;
                     }
                     if (!GetBool(Decoupled) && portalCombo.Portal2.Name == currentPortalName) {
-                        pairedName = portalCombo.Portal1.Name;
-                        portal1 = portalCombo.Portal2;
-                        portal2 = portalCombo.Portal1;
+                        destinationPortal = portalCombo.Portal1;
                         break;
                     }
                 }
-                if (pairedName == null) {
+                if (destinationPortal == null) {
                     TunicLogger.LogError("Error in getting portal name");
                 }
-                portalNames.Add(new Tuple<string, Portal, Portal>(pairedName, portal1, portal2));
-                if (portalNames.Count() == 3) {
+                portalChoices.Add(destinationPortal);
+                if (portalChoices.Count() == 3) {
                     break;
                 }
-                deplando.Add(currentPortalName, pairedName);
+                deplando.Add(currentPortalName, destinationPortal.Name);
                 if (!GetBool(Decoupled)) {
-                    deplando.Add(pairedName, currentPortalName);
+                    deplando.Add(destinationPortal.Name, currentPortalName);
                 }
             }
-            return portalNames;
+            return portalChoices;
         }
 
     }
