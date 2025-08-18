@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -100,7 +101,7 @@ namespace TunicRandomizer {
                     // since regions always have a count of 1, we can just use .count instead of counting up all the values
                     int start_num = inventory.Count;
                     inventory = UpdateReachableRegions(inventory);
-                    foreach (PortalCombo portalCombo in RandomizedPortals.Values) {
+                    foreach (PortalCombo portalCombo in RandomizedPortals) {
                         inventory = portalCombo.AddComboRegion(inventory);
                     }
                     if (start_num == inventory.Count) {
@@ -178,7 +179,7 @@ namespace TunicRandomizer {
 
 
         public static void SetupVanillaPortals() {
-            Dictionary<string, PortalCombo> portalCombos = new Dictionary<string, PortalCombo>();
+            List<PortalCombo> portalCombos = new List<PortalCombo>();
             Dictionary<Portal, Portal> portalPairs = new Dictionary<Portal, Portal>();
             List<Portal> portalList = new List<Portal>();
             int shop_num = 1;
@@ -227,9 +228,9 @@ namespace TunicRandomizer {
                 if (!portal2_sdt.StartsWith("Shop,")) {
                     portalList.Remove(portal2);
                 }
-                portalCombos.Add(count.ToString(), new PortalCombo(portal1, portal2));
+                portalCombos.Add(new PortalCombo(portal1, portal2));
                 count++;
-                portalCombos.Add(count.ToString(), new PortalCombo(portal2, portal1));
+                portalCombos.Add(new PortalCombo(portal2, portal1));
                 count++;
             }
             ERData.VanillaPortals = portalCombos;
@@ -256,6 +257,9 @@ namespace TunicRandomizer {
                         string origin = key.Substring("randomizer bp ".Length);
                         TunicLogger.LogInfo(origin);
                         string destination = SaveFile.stringStore[key];
+                        if (!GetBool(Decoupled) && PlandoPortals.ContainsKey(destination)) {
+                            continue;
+                        }
                         PlandoPortals.Add(origin, destination);
                     }
                 }
@@ -263,21 +267,19 @@ namespace TunicRandomizer {
 
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
 
-            int comboNumber = 1000;
             // now we add it to the actual, kept portal list, based on whether decoupled is on
             foreach (PortalCombo portalCombo in randomizedPortals) {
-                RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
-                comboNumber++;
+                RandomizedPortals.Add(portalCombo);
                 if (!GetBool(Decoupled)) {
-                    RandomizedPortals.Add(comboNumber.ToString(), new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
-                    comboNumber++;
+                    RandomizedPortals.Add(new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
                 }
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
 
 
-        public static List<PortalCombo> RandomizePortals(int seed, Dictionary<string, string> deplando = null) {
+        public static List<PortalCombo> RandomizePortals(int seed, List<Tuple<string, string>> deplando = null) {
+            TunicLogger.LogInfo($"Seed is {seed}");
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> portalsList = new List<Portal>();
@@ -294,7 +296,7 @@ namespace TunicRandomizer {
             Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
 
             if (deplando == null) {
-                deplando = new Dictionary<string, string>();
+                deplando = new List<Tuple<string, string>>();
             }
 
             // separate the portals into their respective lists
@@ -537,7 +539,7 @@ namespace TunicRandomizer {
 
                 foreach (Portal portal in portalsList2) {
                     if (!FullInventory.ContainsKey(portal.Region)) {
-
+                        if (deplando.Any(item => item.Item1 == portal1.Name && item.Item2 == portal.Name)) continue;
                         if (dirPairsEnabled) {
                             if (!VerifyDirectionPair(portal1, portal)) continue;
                             if (!decoupledEnabled) {
@@ -677,7 +679,7 @@ namespace TunicRandomizer {
                     return RandomizePortals(seed + 1);
                 }
 
-                if (deplando.ContainsKey(portal1.Name) && deplando[portal1.Name] == portal2.Name) {
+                if (deplando.Any(item => item.Item1 == portal1.Name && item.Item2 == portal2.Name)) {
                     portalsList.Add(portal1);
                     portalsList2.Add(portal2);
                     TunicUtils.ShuffleList(portalsList, seed);
@@ -690,8 +692,6 @@ namespace TunicRandomizer {
             return randomizedPortals;
         }
 
-
-
         // shops will be formatted like "Shop, 3_" for Shop Portal 3, instead of the current "Shop, Previous Region_"
         // it also needs to be able to handle an arbitrary number of shops, up to like 500 maybe
         // this is for using the info from Archipelago to pair up the portals
@@ -700,7 +700,6 @@ namespace TunicRandomizer {
             List<Portal> portalsList = new List<Portal>();
             // equivalent of doing TraversalReqs.copy() in python
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
-            int comboNumber = 1000;
 
             foreach (KeyValuePair<string, Dictionary<string, List<TunicPortal>>> scene_group in RegionPortalsList) {
                 string scene_name = scene_group.Key;
@@ -761,13 +760,11 @@ namespace TunicRandomizer {
                     }
                 }
                 PortalCombo portalCombo = new PortalCombo(portal1, portal2);
-                RandomizedPortals.Add(comboNumber.ToString(), portalCombo);
-                comboNumber++;
+                RandomizedPortals.Add(portalCombo);
                 // if decoupled is off, we want to make reverse pairs
                 if (!GetBool(Decoupled)) {
                     PortalCombo reversePortalCombo = new PortalCombo(portal2, portal1);
-                    RandomizedPortals.Add(comboNumber.ToString(), reversePortalCombo);
-                    comboNumber++;
+                    RandomizedPortals.Add(reversePortalCombo);
                 }
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
@@ -797,17 +794,15 @@ namespace TunicRandomizer {
                         newSpawn.transform.parent = newPortal.transform;
                         newPortal.AddComponent<ScenePortal>();
                         // find which portal combo led to this shop, also flip the shop if it should be flipped
-                        foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
-                            if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.Key)) {
-                                TunicLogger.LogTesting("Portal 1 is " + portalCombo.Value.Portal1.Name);
-                                TunicLogger.LogTesting("Portal 2 is " + portalCombo.Value.Portal2.Name);
-                                newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Value.Portal2.Destination;
-                                newPortal.GetComponent<ScenePortal>().id = portalCombo.Value.Portal2.Tag;
-                                if (portalCombo.Value.FlippedShop() == true) {
-                                    TunicLogger.LogTesting("Flipped shop true");
+                        foreach (PortalCombo portalCombo in RandomizedPortals) {
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.ComboTag())) {
+                                TunicLogger.LogTesting("Portal 1 is " + portalCombo.Portal1.Name);
+                                TunicLogger.LogTesting("Portal 2 is " + portalCombo.Portal2.Name);
+                                newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Portal2.Destination;
+                                newPortal.GetComponent<ScenePortal>().id = portalCombo.Portal2.Tag;
+                                if (portalCombo.FlippedShop() == true) {
                                     shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = true;
                                 } else {
-                                    TunicLogger.LogTesting("Flipped shop false");
                                     shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = false;
                                 }
                             }
@@ -849,10 +844,10 @@ namespace TunicRandomizer {
                 }
 
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
-                    string comboTag = portalCombo.Key;
-                    Portal portal1 = portalCombo.Value.Portal1;
-                    Portal portal2 = portalCombo.Value.Portal2;
+                foreach (PortalCombo portalCombo in RandomizedPortals) {
+                    string comboTag = portalCombo.ComboTag();
+                    Portal portal1 = portalCombo.Portal1;
+                    Portal portal2 = portalCombo.Portal2;
 
                     if (sending == false) {
                         if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {
@@ -895,9 +890,9 @@ namespace TunicRandomizer {
                                                     OldHouseDoorUnstuck = true;
                                                 } else {
                                                     // if you're in decoupled, we want to make sure the door leads to a problem spot, not just from a problem spot
-                                                    foreach (KeyValuePair<string, PortalCombo> portalCombo2 in RandomizedPortals) {
-                                                        if (portalCombo2.Value.Portal1.Name == "Overworld Redux, Overworld Interiors_house") {
-                                                            if (ladderPortals.Contains(portalCombo2.Value.Portal2.SceneDestinationTag)) {
+                                                    foreach (PortalCombo portalCombo2 in RandomizedPortals) {
+                                                        if (portalCombo2.Portal1.Name == "Overworld Redux, Overworld Interiors_house") {
+                                                            if (ladderPortals.Contains(portalCombo2.Portal2.SceneDestinationTag)) {
                                                                 OldHouseDoorUnstuck = true;
                                                             }
                                                             break;
@@ -923,21 +918,29 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            // todo: replace this with option check
+            bool bluePrince = true;
+            if (bluePrince) {
+                ModifyPortalNames(scene_name);
+            }
         }
 
         // for non-ER, just modifies the portal names -- this is useful for the FairyTargets for the entrance seeking spell
         public static void ModifyPortalNames(string scene_name) {
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
             && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
+            if (ERData.VanillaPortals.Count == 0) {
+                ERScripts.SetupVanillaPortals();
+            }
             foreach (var portal in Portals) {
                 // skips the extra west garden shop portal
                 if (!portal.isActiveAndEnabled) {
                     continue;
                 }
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
-                foreach (KeyValuePair<string, PortalCombo> portalCombo in ERData.VanillaPortals) {
-                    Portal portal1 = portalCombo.Value.Portal1;
-                    Portal portal2 = portalCombo.Value.Portal2;
+                foreach (PortalCombo portalCombo in ERData.VanillaPortals) {
+                    Portal portal1 = portalCombo.Portal1;
+                    Portal portal2 = portalCombo.Portal2;
 
                     if (portal1.Scene == scene_name && portal1.DestinationTag == portal.FullID) {
                         portal.name = portal1.Name;
@@ -958,21 +961,21 @@ namespace TunicRandomizer {
                     continue;
                 }
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
-                    foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
-                        if (portal.name == portalCombo.Value.Portal2.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Value.Portal1.Scene == SceneManager.GetActiveScene().name))) {
-                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 0) {
-                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name, 1);
+                    foreach (PortalCombo portalCombo in RandomizedPortals) {
+                        if (portal.name == portalCombo.Portal2.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Portal1.Scene == SceneManager.GetActiveScene().name))) {
+                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal1.Name) == 0) {
+                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal1.Name, 1);
                                 if (IsArchipelago()) {
-                                    string key = $"{portalCombo.Value.Portal1.Scene}, {portalCombo.Value.Portal1.Destination}_{portalCombo.Value.Portal1.Tag}";
+                                    string key = $"{portalCombo.Portal1.Scene}, {portalCombo.Portal1.Destination}_{portalCombo.Portal1.Tag}";
                                     Archipelago.instance.integration.UpdateDataStorage(key, true);
                                 }
                             }
                             // if decoupled is off, we can just mark the other side of the portal too
                             if (!GetBool(Decoupled)) {
-                                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 0) {
-                                    SaveFile.SetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name, 1);
+                                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal2.Name) == 0) {
+                                    SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal2.Name, 1);
                                     if (IsArchipelago()) {
-                                        string key = $"{portalCombo.Value.Portal2.Scene}, {portalCombo.Value.Portal2.Destination}_{portalCombo.Value.Portal2.Tag}";
+                                        string key = $"{portalCombo.Portal2.Scene}, {portalCombo.Portal2.Destination}_{portalCombo.Portal2.Tag}";
                                         Archipelago.instance.integration.UpdateDataStorage(key, true);
                                     }
                                 }
@@ -999,13 +1002,13 @@ namespace TunicRandomizer {
         }
 
         public static string FindPairedPortalSceneFromName(string portalName) {
-            Dictionary<string, PortalCombo> portalList;
+            List<PortalCombo> portalList;
             if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
                 portalList = ERData.VanillaPortals;
             }
-            foreach (PortalCombo portalCombo in portalList.Values) {
+            foreach (PortalCombo portalCombo in portalList) {
                 if (portalCombo.Portal1.Name == portalName) {
                     return portalCombo.Portal2.Scene;
                 }
@@ -1015,7 +1018,7 @@ namespace TunicRandomizer {
         }
 
         public static string FindPairedPortalRegionFromSDT(string portalSDT) {
-            Dictionary<string, PortalCombo> portalList;
+            List<PortalCombo> portalList;
             if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
@@ -1024,53 +1027,18 @@ namespace TunicRandomizer {
                 }
                 portalList = ERData.VanillaPortals;
             }
-            foreach (PortalCombo portalCombo in portalList.Values) {
+            foreach (PortalCombo portalCombo in portalList) {
                 if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
                     return portalCombo.Portal2.OutletRegion();
                 }
             }
             
-            foreach (PortalCombo portalCombo in portalList.Values) {
+            foreach (PortalCombo portalCombo in portalList) {
                 TunicLogger.LogInfo(portalCombo.Portal1.SceneDestinationTag);
             }
 
             // returning this if it fails, since that makes some FairyTarget stuff easier
             return "FindPairedPortalRegionFromSDT failed to find a match";
-        }
-
-
-        public static List<Portal> BPGetThreePortals(int seed, string currentPortalName) {
-            List<Portal> portalChoices = new List<Portal>();
-            Dictionary<string, string> deplando = new Dictionary<string, string>();
-            // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
-            // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
-            int trialCount = 10;
-            for (int i = 0; i < trialCount; i++) {
-                List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando);
-                Portal destinationPortal = null;
-                foreach (PortalCombo portalCombo in randomizedPortals) {
-                    if (portalCombo.Portal1.Name == currentPortalName) {
-                        destinationPortal = portalCombo.Portal2;
-                        break;
-                    }
-                    if (!GetBool(Decoupled) && portalCombo.Portal2.Name == currentPortalName) {
-                        destinationPortal = portalCombo.Portal1;
-                        break;
-                    }
-                }
-                if (destinationPortal == null) {
-                    TunicLogger.LogError("Error in getting portal name");
-                }
-                portalChoices.Add(destinationPortal);
-                if (portalChoices.Count() == 3) {
-                    break;
-                }
-                deplando.Add(currentPortalName, destinationPortal.Name);
-                if (!GetBool(Decoupled)) {
-                    deplando.Add(destinationPortal.Name, currentPortalName);
-                }
-            }
-            return portalChoices;
         }
 
     }

@@ -779,7 +779,7 @@ namespace TunicRandomizer {
 
         public static void GenerateHeirHint() {
             string heirPortal = "error finding heir";
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 if (portalCombo.Portal2.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal1.Name;
                     break;

@@ -193,13 +193,13 @@ namespace TunicRandomizer {
         }
 
         public void PopulateDiscoveredEntrances() {
-            foreach (KeyValuePair<string, PortalCombo> portalCombo in ERData.RandomizedPortals) {
-                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 1) {
-                    DiscoveredEntrances[portalCombo.Value.Portal1.SceneDestinationTag] = portalCombo.Value.Portal2.SceneDestinationTag;
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
+                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal1.Name) == 1) {
+                    DiscoveredEntrances[portalCombo.Portal1.SceneDestinationTag] = portalCombo.Portal2.SceneDestinationTag;
                 }
                 if (!GetBool(Decoupled)) {
-                    if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 1) {
-                        DiscoveredEntrances[portalCombo.Value.Portal2.SceneDestinationTag] = portalCombo.Value.Portal1.SceneDestinationTag;
+                    if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal2.Name) == 1) {
+                        DiscoveredEntrances[portalCombo.Portal2.SceneDestinationTag] = portalCombo.Portal1.SceneDestinationTag;
                     }
                 }
             }
@@ -214,7 +214,7 @@ namespace TunicRandomizer {
 
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
             int numberOfShops = 0;
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 portalNameToPair.Add(portalCombo.Portal1.Name, portalCombo);
                 if (portalCombo.Portal1.Name.Contains("Shop Portal")) {
                     numberOfShops++;
@@ -364,7 +364,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 List<string> portalPairs = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
-                foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                     portalPairs.Add(portalCombo.Portal1.Name + " --> " + portalCombo.Portal2.Name);
                 }
                 // list of all portals in order, for the purpose of sorting the portal spoiler

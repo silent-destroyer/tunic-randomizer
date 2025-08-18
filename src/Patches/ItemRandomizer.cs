@@ -368,7 +368,7 @@ namespace TunicRandomizer {
                             start_num += count;
                         }
                         testFullInventory = ERScripts.UpdateReachableRegions(testFullInventory);
-                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                             testFullInventory = portalCombo.AddComboRegion(testFullInventory);
                         }
 
@@ -515,10 +515,10 @@ namespace TunicRandomizer {
             // the intent is that after item placement, we go and change RandomizedPortals to only have the Blue Prince choices (or fixed shop)
             bool bluePrince = true;
             if (bluePrince) {
-                Dictionary<string, PortalCombo> BPRandomizedPortals = new Dictionary<string, PortalCombo>();
-                foreach (KeyValuePair<string, PortalCombo> portalComboSet in ERData.RandomizedPortals) {
-                    if (ERData.PlandoPortals.ContainsKey(portalComboSet.Value.Portal1.Name)) {
-                        BPRandomizedPortals.Add(portalComboSet.Key, portalComboSet.Value);
+                List<PortalCombo> BPRandomizedPortals = new List<PortalCombo>();
+                foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
+                    if (ERData.PlandoPortals.ContainsKey(portalCombo.Portal1.Name)) {
+                        BPRandomizedPortals.Add(portalCombo);
                     }
                 }
                 ERData.RandomizedPortals = BPRandomizedPortals;
@@ -593,7 +593,7 @@ namespace TunicRandomizer {
         // in non-ER, we want the actual sphere 1
         public static Dictionary<string, int> GetSphereOne(Dictionary<string, int> startInventory = null) {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
-            Dictionary<string, PortalCombo> vanillaPortals = ERData.GetVanillaPortals();
+            List<PortalCombo> vanillaPortals = ERData.GetVanillaPortals();
             if (startInventory == null) {
                 TunicUtils.AddDictToDict(Inventory, PrecollectedItems);
             } else {
@@ -603,7 +603,7 @@ namespace TunicRandomizer {
             while (true) {
                 int start_num = Inventory.Count;
                 Inventory = ERScripts.UpdateReachableRegions(Inventory);
-                foreach (PortalCombo portalCombo in vanillaPortals.Values) {
+                foreach (PortalCombo portalCombo in vanillaPortals) {
                     Inventory = portalCombo.AddComboRegion(Inventory);
                 }
                 int end_num = Inventory.Count;
@@ -616,7 +616,7 @@ namespace TunicRandomizer {
 
         // gets all regions that can be reached based on the current inventory
         public static Dictionary<string, int> GetReachableRegions(Dictionary<string, int> inventory = null) {
-            Dictionary<string, PortalCombo> portalList;
+            List<PortalCombo> portalList;
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 portalList = ERData.RandomizedPortals;
             } else {
@@ -626,7 +626,7 @@ namespace TunicRandomizer {
             while (true) {
                 int start_num = inventory.Count;
                 inventory = ERScripts.UpdateReachableRegions(inventory);
-                foreach (PortalCombo portalCombo in portalList.Values) {
+                foreach (PortalCombo portalCombo in portalList) {
                     inventory = portalCombo.AddComboRegion(inventory);
                 }
                 int end_num = inventory.Count;
@@ -651,7 +651,7 @@ namespace TunicRandomizer {
             Inventory = ERScripts.UpdateReachableRegions(Inventory);
             
             // find which portals you can reach from spawn without additional progression
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 if (Inventory.ContainsKey(portalCombo.Portal1.Region)) {
                     PortalInventory.Add(portalCombo.Portal2);
                 }

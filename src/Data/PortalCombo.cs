@@ -37,5 +37,9 @@ namespace TunicRandomizer {
             return false;
         }
 
+        public string ComboTag() {
+            return $"{Portal1.Name}--{Portal2.Name}";
+        }
+
     }
 }
