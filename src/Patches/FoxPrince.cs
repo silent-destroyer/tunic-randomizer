@@ -45,7 +45,9 @@ namespace TunicRandomizer {
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
             int trialCount = 10;
             for (int i = 0; i < trialCount; i++) {
+                TunicLogger.LogInfo("randomizing portals in BPGetThreePortals");
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando);
+                TunicLogger.LogInfo("randomized portals in BPGetThreePortals");
                 Portal originPortal = null;
                 Portal destinationPortal = null;
                 foreach (PortalCombo portalCombo in randomizedPortals) {
@@ -64,15 +66,14 @@ namespace TunicRandomizer {
                     TunicLogger.LogError("Error in getting portal name");
                 }
                 portalChoices.Add(new Tuple<Portal, Portal>(originPortal, destinationPortal));
+                TunicLogger.LogInfo("portal choice is " + destinationPortal.Name);
                 if (portalChoices.Count() == 3) {
                     break;
                 }
-                TunicLogger.LogInfo("before adding to deplando");
                 deplando.Add(new Tuple<string, string>(currentPortalName, destinationPortal.Name));
                 if (!GetBool(Decoupled)) {
                     deplando.Add(new Tuple<string, string>(destinationPortal.Name, currentPortalName));
                 }
-                TunicLogger.LogInfo("end of for loop in bpgetthreeportals");
             }
             TunicLogger.LogInfo("returning portal choices");
             return portalChoices;

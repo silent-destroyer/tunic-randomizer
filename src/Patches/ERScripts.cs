@@ -247,22 +247,8 @@ namespace TunicRandomizer {
         public static void CreateRandomizedPortals(int seed) {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
-            PlandoPortals.Clear();
+            FoxPrince.BPRandomizedPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
-
-            bool bluePrince = true;
-            if (bluePrince) {
-                foreach (string key in SaveFile.stringStore.Keys) {
-                    if (key.StartsWith("randomizer bp ")) {
-                        string origin = key.Substring("randomizer bp ".Length);
-                        string destination = SaveFile.stringStore[key];
-                        if (!GetBool(Decoupled) && PlandoPortals.ContainsKey(destination)) {
-                            continue;
-                        }
-                        PlandoPortals.Add(origin, destination);
-                    }
-                }
-            }
 
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
 
@@ -278,13 +264,13 @@ namespace TunicRandomizer {
 
 
         public static List<PortalCombo> RandomizePortals(int seed, List<Tuple<string, string>> deplando = null) {
-            TunicLogger.LogInfo($"Seed is {seed}");
+            TunicLogger.LogInfo("Randomize Portals started");
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> portalsList = new List<Portal>();
             bool decoupledEnabled = GetBool(Decoupled);
             bool dirPairsEnabled = GetBool(PortalDirectionPairs);
-            bool bluePrinceEnabled = GetBool(FoxPrinceEnabled);
+            bool foxPrinceEnabled = GetBool(FoxPrinceEnabled);
             
 
             // keeping track of how many portals of each are left while pairing portals
@@ -353,7 +339,7 @@ namespace TunicRandomizer {
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
 
             // if blue prince mode is off or this is the first time through, add all progression to the FullInventory
-            if (!ItemRandomizer.InitialRandomizationDone || !bluePrinceEnabled) {
+            if (!ItemRandomizer.InitialRandomizationDone || !foxPrinceEnabled) {
                 // it doesn't really matter if there's duplicates from the above for this
                 Dictionary<string, int> MaxItems = new Dictionary<string, int> {
                     { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Mask", 1 },
@@ -384,6 +370,35 @@ namespace TunicRandomizer {
             // -----------------------------------------------
             // Plando Connections (for Blue Prince stuff)
             // -----------------------------------------------
+
+            // combining this one with the next just creates pain, I promise
+            if (GetBool(FoxPrinceEnabled) && (!ItemRandomizer.InitialRandomizationDone || FoxPrince.BPRandomizedPortals.Count == 0)) {
+                foreach (string key in SaveFile.stringStore.Keys) {
+                    if (key.StartsWith("randomizer bp ")) {
+                        string origin = key.Substring("randomizer bp ".Length);
+                        string destination = SaveFile.stringStore[key];
+                        Portal portal1 = portalsList.First(portal => portal.Name == origin);
+                        Portal portal2 = portalsList.First(portal => portal.Name == destination);
+                        FoxPrince.BPRandomizedPortals.Add(new PortalCombo(portal1, portal2));
+                    }
+                }
+            }
+
+            if (GetBool(FoxPrinceEnabled) && PlandoPortals.Count == 0) {
+                foreach (string key in SaveFile.stringStore.Keys) {
+                    if (key.StartsWith("randomizer bp ")) {
+                        string origin = key.Substring("randomizer bp ".Length);
+                        string destination = SaveFile.stringStore[key];
+                        if (ItemRandomizer.InitialRandomizationDone) {
+                            // this is to avoid duplicates being made later on
+                            if (!GetBool(Decoupled) && PlandoPortals.ContainsKey(destination)) {
+                                continue;
+                            }
+                            PlandoPortals.Add(origin, destination);
+                        }
+                    }
+                }
+            }
 
             foreach (KeyValuePair<string, string> portalPair in PlandoPortals) {
                 string portal1name = portalPair.Key;
@@ -469,7 +484,7 @@ namespace TunicRandomizer {
 
             List<Check> alreadyCheckedLocations = new List<Check>();
 
-            if (bluePrinceEnabled) {
+            if (foxPrinceEnabled) {
                 foreach (Check check in ItemRandomizer.ProgressionLocations.Values) {
                     if (check.IsCompletedOrCollected) {
                         alreadyCheckedLocations.Add(check);
@@ -583,7 +598,7 @@ namespace TunicRandomizer {
                         }
 
                         // if secret gathering place gets paired really late and you have the laurels plando on, you can run out pretty easily
-                        if (portalsList2.Count < 80 && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3 && !bluePrinceEnabled) {
+                        if (portalsList2.Count < 80 && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3 && !foxPrinceEnabled) {
                             TunicLogger.LogTesting("Continuing to wait for Secret Gathering Place");
                             continue;
                         }
@@ -618,7 +633,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (bluePrinceEnabled) {
+                if (foxPrinceEnabled) {
                     (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
                 } else {
                     FullInventory = UpdateReachableRegions(FullInventory);
@@ -705,6 +720,7 @@ namespace TunicRandomizer {
 
                 randomizedPortals.Add(new PortalCombo(portal1, portal2));
             }
+            TunicLogger.LogInfo("Randomize Portals done");
             return randomizedPortals;
         }
 
