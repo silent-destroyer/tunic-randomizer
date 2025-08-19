@@ -278,6 +278,16 @@ namespace TunicRandomizer {
                 ItemTracker.PopulateSpoilerLog();
             }
 
+            // this is here for the first time you're loading in, assumes you're in Overworld
+            if (GetBool(EntranceRando)) {
+                ERScripts.ModifyPortals("Overworld Redux");
+                ERScripts.ModifyPortals("Overworld Redux", sending: true);
+                GhostHints.SpawnTorchHintGhost();
+            } else {
+                ERData.RandomizedPortals = ERData.GetVanillaPortals();
+                ERScripts.ModifyPortalNames("Overworld Redux");
+            }
+
             try {
                 Hints.PopulateHints();
             } catch (Exception e) {
@@ -301,16 +311,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
                 SaveFile.SetInt("last page viewed", 0);
-            }
-
-            // this is here for the first time you're loading in, assumes you're in Overworld
-            if (SaveFile.GetInt(EntranceRando) == 1) {
-                ERScripts.ModifyPortals("Overworld Redux");
-                ERScripts.ModifyPortals("Overworld Redux", sending: true);
-                GhostHints.SpawnTorchHintGhost();
-            } else {
-                ERData.RandomizedPortals = ERData.GetVanillaPortals();
-                ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
             TunicRandomizer.Tracker.PopulateDiscoveredEntrances();

@@ -510,19 +510,6 @@ namespace TunicRandomizer {
             }
             TunicUtils.CheckAllLocsReachable();
             TunicLogger.LogInfo("Successfully randomized and placed items!");
-
-            // this is a little hacky right now
-            // the intent is that after item placement, we go and change RandomizedPortals to only have the Blue Prince choices (or fixed shop)
-            bool bluePrince = true;
-            if (bluePrince) {
-                List<PortalCombo> BPRandomizedPortals = new List<PortalCombo>();
-                foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
-                    if (ERData.PlandoPortals.ContainsKey(portalCombo.Portal1.Name)) {
-                        BPRandomizedPortals.Add(portalCombo);
-                    }
-                }
-                ERData.RandomizedPortals = BPRandomizedPortals;
-            }
         }
 
         private static void Shuffle(List<Reward> Rewards, List<Location> Locations, System.Random random) {

@@ -10,6 +10,7 @@ namespace TunicRandomizer {
     public class FoxPrince {
         public static ScenePortal CurrentPortal = null;
         public static Collider FoxCollider = null;
+        public static List<PortalCombo> BPRandomizedPortals = new List<PortalCombo>();
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
             // the collider here is the fox's UnityEngine.CapsuleCollider
@@ -83,20 +84,18 @@ namespace TunicRandomizer {
             return portalChoices;
         }
 
-        // todo: figure out why it make a new entrance rando on scene load
         public static void BPPortalChosen(Portal originPortal, Portal destinationPortal) {
             TunicLogger.LogInfo("BPPortalChosen started");
             SaveFile.SetString($"randomizer bp {CurrentPortal.name}", destinationPortal.Name);
             if (!GetBool(Decoupled)) {
                 SaveFile.SetString($"randomizer bp {destinationPortal.Name}", CurrentPortal.name);
             }
-            TunicLogger.LogInfo($"wrote randomizer bp {CurrentPortal.name}");
-            string comboTag = $"{CurrentPortal.name}--{destinationPortal.Name}";  // to match a portalCombo's combo tag
-            TunicLogger.LogInfo($"chosen portal is {destinationPortal.Name}");
-            RandomizedPortals.Add(new PortalCombo(originPortal, destinationPortal));
+            string comboTag = $"{CurrentPortal.name}--{destinationPortal.Name}";  // to match a portal combo's combo tag
+            BPRandomizedPortals.Add(new PortalCombo(originPortal, destinationPortal));
             if (!GetBool(Decoupled)) {
-                RandomizedPortals.Add(new PortalCombo(destinationPortal, originPortal));
+                BPRandomizedPortals.Add(new PortalCombo(destinationPortal, originPortal));
             }
+            PlandoPortals.Add(originPortal.Name, destinationPortal.Name);
             CurrentPortal.destinationSceneName = destinationPortal.Scene;
             CurrentPortal.id = comboTag + comboTag;
             CurrentPortal.optionalIDToSpawnAt = comboTag;

@@ -576,8 +576,7 @@ namespace TunicRandomizer {
             EnemyRandomizer.CheckBossState();
 
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                bool bluePrince = true;
-                if (ERData.RandomizedPortals.Count == 0 && !bluePrince) {
+                if (ERData.RandomizedPortals.Count == 0) {
                     if (IsArchipelago()) {
                         ERScripts.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     } else if (IsSinglePlayer()) {

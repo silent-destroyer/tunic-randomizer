@@ -234,6 +234,7 @@ namespace TunicRandomizer {
             // Hack to make start inventory from pool'd items toggle the hero graves
             SaveFile.SetInt($"randomizer hint found 0, Server", 1);
 
+            // todo: decide if we should do something here for blue prince mode
             // make the in-game signs tell you what area they're pointing to
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {

@@ -7,7 +7,6 @@ namespace TunicRandomizer {
         public static List<PortalCombo> RandomizedPortals = new List<PortalCombo>();
         public static List<PortalCombo> VanillaPortals = new List<PortalCombo>();
         public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
-        public static Dictionary<string, string> PlandoPortals = new Dictionary<string, string>();
 
         public const string FUSE_SHUFFLE = "Fuse Shuffle";
         public const string NO_FUSE_SHUFFLE = "No Fuse Shuffle";

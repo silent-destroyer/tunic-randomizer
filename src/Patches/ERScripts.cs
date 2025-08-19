@@ -11,6 +11,7 @@ namespace TunicRandomizer {
         public static GameObject storedPortal = null;
         // just for solving the case where old house door connects to itself in decoupled
         public static bool OldHouseDoorUnstuck = false;
+        public static Dictionary<string, string> PlandoPortals = new Dictionary<string, string>();
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
@@ -435,7 +436,21 @@ namespace TunicRandomizer {
                     twoPlusPortalDirectionTracker[portal2.Direction]--;
                 }
             }
-
+            // add the plando'd connections to the traversal reqs
+            foreach (PortalCombo portalCombo in randomizedPortals) {
+                Portal p1 = portalCombo.Portal1;
+                Portal p2 = portalCombo.Portal2;
+                if (!ModifiedTraversalReqs.ContainsKey(p1.Region)) {
+                    ModifiedTraversalReqs[p1.Region] = new Dictionary<string, List<List<string>>>();
+                }
+                ModifiedTraversalReqs[portalCombo.Portal1.Region][portalCombo.Portal2.OutletRegion()] = new List<List<string>>();
+                if (!decoupledEnabled) {
+                    if (!ModifiedTraversalReqs.ContainsKey(p2.Region)) {
+                        ModifiedTraversalReqs[p2.Region] = new Dictionary<string, List<List<string>>>();
+                    }
+                    ModifiedTraversalReqs[portalCombo.Portal2.Region][portalCombo.Portal1.OutletRegion()] = new List<List<string>>();
+                }
+            }
 
             bool TooFewPortalsForDirectionPairs(int direction, int offset = 0) {
                 if (twoPlusPortalDirectionTracker[direction] <= deadEndPortalDirectionTracker[directionPairs[direction]] + offset) {
@@ -450,7 +465,7 @@ namespace TunicRandomizer {
             bool VerifyDirectionPair(Portal portal1, Portal portal2) {
                 return portal1.Direction == directionPairs[portal2.Direction];
             }
-
+            TunicLogger.LogInfo("test 6");
             // -----------------------------------------------
             // Portal Pairing Starts Here
             // -----------------------------------------------
@@ -678,7 +693,6 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }
-
                 if (deplando.Any(item => item.Item1 == portal1.Name && item.Item2 == portal2.Name)) {
                     portalsList.Add(portal1);
                     portalsList2.Add(portal2);
@@ -772,6 +786,11 @@ namespace TunicRandomizer {
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
+            // todo: replace this with option check
+            bool bluePrince = true;
+            if (bluePrince) {
+                RandomizedPortals = new List<PortalCombo>(FoxPrince.BPRandomizedPortals);
+            }
             // we turn this off to not let you walk back through before it is modified the second time
             if (sending == true && storedPortal != null) {
                 // if the old house door paired itself, move the fox outside the door so they don't get locked in an infinite loop, even though that's kinda funny
@@ -918,8 +937,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            // todo: replace this with option check
-            bool bluePrince = true;
+            
             if (bluePrince) {
                 ModifyPortalNames(scene_name);
             }
