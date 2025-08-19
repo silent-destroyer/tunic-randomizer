@@ -27,6 +27,7 @@ namespace TunicRandomizer {
 
         // plando items, first string is the item name, second is the location id
         public static List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
+        public static bool InitialRandomizationDone = false;
         
         // Items you start with or effectively start with
         public static Dictionary<string, int> PopulatePrecollected() {
@@ -80,6 +81,7 @@ namespace TunicRandomizer {
 
             Locations.RandomizedLocations.Clear();
             Locations.CheckedLocations.Clear();
+            InitialRandomizationDone = false;
 
             PopulatePrecollected();
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
@@ -257,28 +259,25 @@ namespace TunicRandomizer {
                 PlandoItems.Add(new Tuple<string, string>(item, location));
             }
 
-            // todo: make this something that gets set based on if blue prince mode is on
-            if (true) {
-                if (SaveFile.GetInt(LaurelsLocation) == 1) {
-                    addToPlandoItems("Hyperdash", "Well Reward (6 Coins)");
-                } else if (SaveFile.GetInt(LaurelsLocation) == 2) {
-                    addToPlandoItems("Hyperdash", "Well Reward (10 Coins)");
-                } else if (SaveFile.GetInt(LaurelsLocation) == 3) {
-                    addToPlandoItems("Hyperdash", "waterfall");
-                }
+            if (SaveFile.GetInt(LaurelsLocation) == 1) {
+                addToPlandoItems("Hyperdash", "Well Reward (6 Coins)");
+            } else if (SaveFile.GetInt(LaurelsLocation) == 2) {
+                addToPlandoItems("Hyperdash", "Well Reward (10 Coins)");
+            } else if (SaveFile.GetInt(LaurelsLocation) == 3) {
+                addToPlandoItems("Hyperdash", "waterfall");
+            }
 
-                if (GetBool(KeysBehindBosses)) {
-                    List<string> hexes;
-                    if (GetBool(HexagonQuestEnabled)) {
-                        hexes = new List<string> { "Hexagon Gold", "Hexagon Gold", "Hexagon Gold" };
-                    } else {
-                        hexes = new List<string> { "Hexagon Red", "Hexagon Blue", "Hexagon Green" };
-                        TunicUtils.ShuffleList(hexes, SaveFile.GetInt("seed"));
-                    }
-                    addToPlandoItems(hexes[0], "Vault Key (Red)");
-                    addToPlandoItems(hexes[1], "Hexagon Green");
-                    addToPlandoItems(hexes[2], "Hexagon Blue");
+            if (GetBool(KeysBehindBosses)) {
+                List<string> hexes;
+                if (GetBool(HexagonQuestEnabled)) {
+                    hexes = new List<string> { "Hexagon Gold", "Hexagon Gold", "Hexagon Gold" };
+                } else {
+                    hexes = new List<string> { "Hexagon Red", "Hexagon Blue", "Hexagon Green" };
+                    TunicUtils.ShuffleList(hexes, SaveFile.GetInt("seed"));
                 }
+                addToPlandoItems(hexes[0], "Vault Key (Red)");
+                addToPlandoItems(hexes[1], "Hexagon Green");
+                addToPlandoItems(hexes[2], "Hexagon Blue");
             }
 
             foreach (Tuple<string, string> plandoPair in PlandoItems) {
@@ -508,6 +507,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
                 }
             }
+            InitialRandomizationDone = true;
             TunicUtils.CheckAllLocsReachable();
             TunicLogger.LogInfo("Successfully randomized and placed items!");
         }

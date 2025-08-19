@@ -252,11 +252,9 @@ namespace TunicRandomizer {
 
             bool bluePrince = true;
             if (bluePrince) {
-                TunicLogger.LogInfo("reading save file for current plando");
                 foreach (string key in SaveFile.stringStore.Keys) {
                     if (key.StartsWith("randomizer bp ")) {
                         string origin = key.Substring("randomizer bp ".Length);
-                        TunicLogger.LogInfo(origin);
                         string destination = SaveFile.stringStore[key];
                         if (!GetBool(Decoupled) && PlandoPortals.ContainsKey(destination)) {
                             continue;
@@ -286,8 +284,7 @@ namespace TunicRandomizer {
             List<Portal> portalsList = new List<Portal>();
             bool decoupledEnabled = GetBool(Decoupled);
             bool dirPairsEnabled = GetBool(PortalDirectionPairs);
-            // todo: after making the option, link it in here
-            bool bluePrinceEnabled = false;
+            bool bluePrinceEnabled = GetBool(FoxPrinceEnabled);
             
 
             // keeping track of how many portals of each are left while pairing portals
@@ -356,7 +353,7 @@ namespace TunicRandomizer {
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
 
             // if blue prince mode is off or this is the first time through, add all progression to the FullInventory
-            if (!bluePrinceEnabled) {
+            if (!ItemRandomizer.InitialRandomizationDone || !bluePrinceEnabled) {
                 // it doesn't really matter if there's duplicates from the above for this
                 Dictionary<string, int> MaxItems = new Dictionary<string, int> {
                     { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Mask", 1 },
@@ -465,7 +462,7 @@ namespace TunicRandomizer {
             bool VerifyDirectionPair(Portal portal1, Portal portal2) {
                 return portal1.Direction == directionPairs[portal2.Direction];
             }
-            TunicLogger.LogInfo("test 6");
+
             // -----------------------------------------------
             // Portal Pairing Starts Here
             // -----------------------------------------------
@@ -494,9 +491,10 @@ namespace TunicRandomizer {
                 if (region.Value.SkipCounting) continue;
                 if (!dirPairsEnabled && (region.Key == "Shop Entrance 7" || region.Key == "Shop Entrance 8")) continue;
                 if (GetBool(ERFixedShop) && region.Key.StartsWith("Shop Entrance") && region.Key != "Shop Entrance 1") continue;
+                if (region.Key.StartsWith("LS Elev") && SaveFile.GetInt(LadderStorageDifficulty) == 0) continue;
                 allRegions.Add(region.Key);
             }
-            // todo: change the conditin of this while loop to skip the ls regions when ls is off, but keep them when it's on
+
             while (FullInventory.Where(region => RegionDict.ContainsKey(region.Key) && !RegionDict[region.Key].SkipCounting).ToList().Count < allRegions.Count()) {
                 Portal portal1 = null;
                 Portal portal2 = null;
@@ -620,7 +618,11 @@ namespace TunicRandomizer {
                     }
                 }
 
-                FullInventory = UpdateReachableRegions(FullInventory);
+                if (bluePrinceEnabled) {
+                    (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
+                } else {
+                    FullInventory = UpdateReachableRegions(FullInventory);
+                }
 
                 // add the portal combo to the randomized portals list
                 randomizedPortals.Add(new PortalCombo(portal1, portal2));
@@ -786,9 +788,7 @@ namespace TunicRandomizer {
 
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
-            // todo: replace this with option check
-            bool bluePrince = true;
-            if (bluePrince) {
+            if (GetBool(FoxPrinceEnabled)) {
                 RandomizedPortals = new List<PortalCombo>(FoxPrince.BPRandomizedPortals);
             }
             // we turn this off to not let you walk back through before it is modified the second time
@@ -938,7 +938,7 @@ namespace TunicRandomizer {
                 }
             }
             
-            if (bluePrince) {
+            if (GetBool(FoxPrinceEnabled)) {
                 ModifyPortalNames(scene_name);
             }
         }
@@ -1049,10 +1049,6 @@ namespace TunicRandomizer {
                 if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
                     return portalCombo.Portal2.OutletRegion();
                 }
-            }
-            
-            foreach (PortalCombo portalCombo in portalList) {
-                TunicLogger.LogInfo(portalCombo.Portal1.SceneDestinationTag);
             }
 
             // returning this if it fails, since that makes some FairyTarget stuff easier

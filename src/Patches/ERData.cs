@@ -2320,35 +2320,35 @@ namespace TunicRandomizer {
             },
             {
                 "LS Elev 0",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 1",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 2",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 3",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 4",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 5",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 6",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
             {
                 "LS Elev 7",
-                new RegionInfo("Overworld Redux", false, skipCounting:true)
+                new RegionInfo("Overworld Redux", false)
             },
         };
 

@@ -519,10 +519,8 @@ namespace TunicRandomizer {
                     ItemHints.Remove(ItemHint);
                 }
             }
-            // todo: replace with option
-            bool bluePrince = true;
             for (int i = 0; i < 3; i++) {
-                if (i == 0 && GetBool(EntranceRando) && !bluePrince) {
+                if (i == 0 && GetBool(EntranceRando) && !GetBool(FoxPrinceEnabled)) {
                     GenerateHeirHint();
                     Hints.Add((HeirHint, "", "", ""));
                 }

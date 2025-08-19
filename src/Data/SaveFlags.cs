@@ -38,6 +38,7 @@
         public const string ERFixedShop = "randomizer ER fixed shop enabled";
         public const string PortalDirectionPairs = "randomizer paired portal directions enabled";
         public const string Decoupled = "randomizer decoupled ER enabled";
+        public const string FoxPrinceEnabled = "randomizer fox prince enabled";
 
         // Logic Trick Flags
         public const string LaurelsZips = "randomizer laurels zips enabled";

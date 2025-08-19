@@ -14,14 +14,8 @@ namespace TunicRandomizer {
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
             // the collider here is the fox's UnityEngine.CapsuleCollider
-            // todo: check the blue prince option
-            bool bluePrince = true;
-            if (!bluePrince) return true;
+            if (!GetBool(FoxPrinceEnabled)) return true;
             if (c.transform.name != "_Fox(Clone)") return true;
-            TunicLogger.LogInfo($"now entering {__instance.name}");
-            TunicLogger.LogInfo($"destination is {__instance.destinationSceneName}");
-            TunicLogger.LogInfo($"id is {__instance.id}");
-            TunicLogger.LogInfo($"optional id to spawn at is {__instance.optionalIDToSpawnAt}");
             if (SaveFile.GetString($"randomizer bp {__instance.name}") == "") {
                 CurrentPortal = __instance;
                 FoxCollider = c;

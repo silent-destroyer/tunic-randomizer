@@ -93,6 +93,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool FoxPrinceEnabled {
+            get;
+            set;
+        }
+
         public bool Lanternless {
             get;
             set;
@@ -561,6 +566,7 @@ namespace TunicRandomizer {
             ERFixedShop = false;
             PortalDirectionPairs = false;
             DecoupledER = false;
+            FoxPrinceEnabled = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
             FixedLaurelsOption = FixedLaurelsType.RANDOM;
@@ -810,6 +816,7 @@ namespace TunicRandomizer {
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                     BreakableShuffle, FuseShuffle, BellShuffle, LaurelsZips, LadderStorageWithoutItems,
+                    FoxPrinceEnabled,
                 };
             } else {
                 return new bool[] { 
@@ -823,7 +830,7 @@ namespace TunicRandomizer {
                     GetBool(SaveFlags.Decoupled), GetBool(SaveFlags.HexagonQuestPageAbilities),
                     GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
                     GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
-                    GetBool(SaveFlags.LadderStorageWithoutItems),
+                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.FoxPrinceEnabled),
                 };
             }
         }

@@ -539,6 +539,9 @@ namespace TunicRandomizer {
                             if (TunicRandomizer.Settings.DecoupledER) {
                                 SaveFile.SetInt(Decoupled, 1);
                             }
+                            if (TunicRandomizer.Settings.FoxPrinceEnabled) {
+                                SaveFile.SetInt(SaveFlags.FoxPrinceEnabled, 1);
+                            }
                         }
                         if (TunicRandomizer.Settings.ShuffleLadders) {
                             SaveFile.SetInt(LadderRandoEnabled, 1);
