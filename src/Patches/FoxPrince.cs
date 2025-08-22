@@ -26,14 +26,17 @@ namespace TunicRandomizer {
                 }
 
                 // user input goes here somehow??
-                // let's just say they choose the first option for now
-                // the stuff below probably goes in its own function
-                Tuple<Portal, Portal> choice = portalChoices[0];
-                BPPortalChosen(choice.Item1, choice.Item2);
+                BPChoosePortal(portalChoices);
                 return false;
             }
             TunicLogger.LogInfo("returning true");
             return true;
+        }
+
+
+        public static void BPChoosePortal(List<Tuple<Portal, Portal>> portalChoices) {
+            // do something here to actually choose a portal
+            BPPortalChosen(portalChoices[0].Item1, portalChoices[0].Item2);
         }
 
 
