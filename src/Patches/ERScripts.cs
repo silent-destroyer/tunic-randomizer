@@ -263,7 +263,10 @@ namespace TunicRandomizer {
         }
 
 
-        public static List<PortalCombo> RandomizePortals(int seed, List<Tuple<string, string>> deplando = null) {
+        // randomize the portals with logic to ensure all regions are reachable
+        // deplando is for Fox Pricne, basically it says "this portal cannot connect to this other portal"
+        // canFail is to say whether it should try to reroll or just return null if it reaches a failure condition, it is also for Fox Prince
+        public static List<PortalCombo> RandomizePortals(int seed, List<Tuple<string, string>> deplando = null, bool canFail = false) {
             TunicLogger.LogInfo("Randomize Portals started");
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
@@ -448,6 +451,7 @@ namespace TunicRandomizer {
                     twoPlusPortalDirectionTracker[portal2.Direction]--;
                 }
             }
+
             // add the plando'd connections to the traversal reqs
             foreach (PortalCombo portalCombo in randomizedPortals) {
                 Portal p1 = portalCombo.Portal1;
@@ -562,6 +566,9 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling in first phase in RandomizePortals");
+                    if (canFail) {
+                        return null;
+                    }
                     return RandomizePortals(seed + 1);
                 }
 
@@ -629,6 +636,9 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo(debugportal.Name);
                         }
                         // reroll, hopefully this shouldn't be common at all
+                        if (canFail) {
+                            return null;
+                        }
                         return RandomizePortals(seed + 1);
                     }
                 }
@@ -674,6 +684,9 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo(portal.Name);
                     }
                     // reroll, hopefully this shouldn't be common at all
+                    if (canFail) {
+                        return null;
+                    }
                     TunicLogger.LogInfo("Rerolling during last phase in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }
@@ -707,6 +720,9 @@ namespace TunicRandomizer {
                         }
                     }
                     // reroll, hopefully this shouldn't be common at all
+                    if (canFail) {
+                        return null;
+                    }
                     TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }

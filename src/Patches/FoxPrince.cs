@@ -49,7 +49,8 @@ namespace TunicRandomizer {
             int trialCount = 10;
             for (int i = 0; i < trialCount; i++) {
                 TunicLogger.LogInfo("randomizing portals in BPGetThreePortals");
-                List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando);
+                List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando, canFail: true);
+                if (randomizedPortals == null) continue;
                 TunicLogger.LogInfo("randomized portals in BPGetThreePortals");
                 Portal originPortal = null;
                 Portal destinationPortal = null;
@@ -65,8 +66,9 @@ namespace TunicRandomizer {
                         break;
                     }
                 }
+                // remove this later if it doesn't ever actually show up
                 if (destinationPortal == null) {
-                    TunicLogger.LogError("Error in getting portal name");
+                    TunicLogger.LogError("Error in getting portal name in BPGetThreePortals");
                 }
                 portalChoices.Add(new Tuple<Portal, Portal>(originPortal, destinationPortal));
                 TunicLogger.LogInfo("portal choice is " + destinationPortal.Name);
