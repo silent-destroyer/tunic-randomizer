@@ -50,7 +50,20 @@ namespace TunicRandomizer {
             for (int i = 0; i < trialCount; i++) {
                 TunicLogger.LogInfo("randomizing portals in BPGetThreePortals");
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando, canFail: true);
-                if (randomizedPortals == null) continue;
+                if (randomizedPortals == null) {
+                    // this means it did not find a portal to match it with
+                    // hopefully this means it couldn't find one and there wasn't some other generation error
+                    // todo: remove these debug messages later
+                    TunicLogger.LogInfo("Did not add to portal choices in BPGetThreePortals");
+                    TunicLogger.LogInfo($"Current trial: {i}.");
+                    TunicLogger.LogInfo($"Portal we're trying to connect from: {currentPortalName}");
+                    TunicLogger.LogInfo("If any portals are currently in portal choices, they are below");
+                    foreach (PortalCombo portalCombo in portalChoices) {
+                        TunicLogger.LogInfo(portalCombo.Portal2.Name);
+                    }
+
+                    continue;
+                }
                 TunicLogger.LogInfo("randomized portals in BPGetThreePortals");
                 Portal originPortal = null;
                 Portal destinationPortal = null;
