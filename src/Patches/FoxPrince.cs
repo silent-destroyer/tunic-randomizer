@@ -97,6 +97,28 @@ namespace TunicRandomizer {
             return portalChoices;
         }
 
+        public static void BPTestDialogue() {
+            TunicLogger.LogInfo("test start");
+            GameObject testGUI = GameObject.Instantiate(GameObject.Find("_GameGUI(Clone)"));
+            TunicLogger.LogInfo("test 1");
+            GameObject testCanvas = testGUI.transform.GetChild(3).gameObject;
+            TunicLogger.LogInfo("test 2");
+            GameObject testPanel = testCanvas.transform.GetChild(0).gameObject;
+            TunicLogger.LogInfo("test 3");
+            GameObject buttonRow = testPanel.transform.GetChild(1).gameObject;
+            TunicLogger.LogInfo("test 4");
+            GameObject newButton = GameObject.Instantiate(buttonRow.transform.GetChild(0).gameObject, buttonRow.transform);
+            TunicLogger.LogInfo("test 5");
+            GameObject buttonTextObj = newButton.transform.GetChild(0).gameObject;
+            TunicLogger.LogInfo("test 6");
+            buttonTextObj.GetComponent<RTLTMPro.RTLTextMeshPro>().originalText = "words";
+            TunicLogger.LogInfo("test 7");
+            buttonTextObj.GetComponent<RTLTMPro.RTLTextMeshPro>().text = "words2";
+            TunicLogger.LogInfo("test 8");
+            testCanvas.SetActive(true);
+            TunicLogger.LogInfo("test end");
+        }
+
         public static void BPPortalChosen(PortalCombo portalCombo) {
             TunicLogger.LogInfo("BPPortalChosen started");
             Portal originPortal = portalCombo.Portal1;

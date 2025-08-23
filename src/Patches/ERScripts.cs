@@ -248,6 +248,9 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             FoxPrince.BPRandomizedPortals.Clear();
+            if (!ItemRandomizer.InitialRandomizationDone) {
+                PlandoPortals.Clear();
+            }
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
 
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);

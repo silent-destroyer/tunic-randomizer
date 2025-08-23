@@ -355,7 +355,16 @@ namespace TunicRandomizer {
             if (HintItem == null) {
                 n = 0;
                 while (HintItem == null && n < mailboxHintables.Count) {
-                    if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
+                    if (GetBool(FoxPrinceEnabled)) {
+                        string mailbox = SaveFile.GetString("randomizer mailbox hint location");
+                        if (mailbox != "") {
+                            foreach (Check itemData in TunicUtils.GetAllInUseChecks()) {
+                                if (itemData.CheckId == mailbox) {
+                                    HintItem = itemData;
+                                }
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
                         foreach (Check itemData in ItemRandomizer.FindAllRandomizedItemsByName("Trinket Coin")) {
                             if (itemData.Location.reachable(ItemRandomizer.SphereZero)) {
                                 HintItem = itemData;
