@@ -846,12 +846,12 @@ namespace TunicRandomizer {
                         newPortal.AddComponent<ScenePortal>();
                         // find which portal combo led to this shop, also flip the shop if it should be flipped
                         foreach (PortalCombo portalCombo in RandomizedPortals) {
-                            if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.ComboTag())) {
+                            if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.ComboTag)) {
                                 TunicLogger.LogTesting("Portal 1 is " + portalCombo.Portal1.Name);
                                 TunicLogger.LogTesting("Portal 2 is " + portalCombo.Portal2.Name);
                                 newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Portal2.Destination;
                                 newPortal.GetComponent<ScenePortal>().id = portalCombo.Portal2.Tag;
-                                if (portalCombo.FlippedShop() == true) {
+                                if (portalCombo.FlippedShop) {
                                     shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = true;
                                 } else {
                                     shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = false;
@@ -896,9 +896,9 @@ namespace TunicRandomizer {
 
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
                 foreach (PortalCombo portalCombo in RandomizedPortals) {
-                    string comboTag = portalCombo.ComboTag();
                     Portal portal1 = portalCombo.Portal1;
                     Portal portal2 = portalCombo.Portal2;
+                    string comboTag = portalCombo.ComboTag;
 
                     if (sending == false) {
                         if (portal2.Scene == scene_name && portal2.DestinationTag == portal.FullID) {

@@ -19,10 +19,10 @@ namespace TunicRandomizer {
             if (SaveFile.GetString($"randomizer bp {__instance.name}") == "") {
                 CurrentPortal = __instance;
                 FoxCollider = c;
-                List<Tuple<Portal, Portal>> portalChoices = BPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
+                List<PortalCombo> portalChoices = BPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
                 TunicLogger.LogInfo("portal choices below");
                 foreach (var portalChoice in portalChoices) {
-                    TunicLogger.LogInfo(portalChoice.Item2.Name);
+                    TunicLogger.LogInfo(portalChoice.Portal2.Name);
                 }
 
                 // user input goes here somehow??
@@ -34,15 +34,15 @@ namespace TunicRandomizer {
         }
 
 
-        public static void BPChoosePortal(List<Tuple<Portal, Portal>> portalChoices) {
+        public static void BPChoosePortal(List<PortalCombo> portalChoices) {
             // do something here to actually choose a portal
-            BPPortalChosen(portalChoices[0].Item1, portalChoices[0].Item2);
+            BPPortalChosen(portalChoices[0]);
         }
 
 
-        public static List<Tuple<Portal, Portal>> BPGetThreePortals(int seed, string currentPortalName) {
+        public static List<PortalCombo> BPGetThreePortals(int seed, string currentPortalName) {
             TunicLogger.LogInfo("starting BPGetThreePortals");
-            List<Tuple<Portal, Portal>> portalChoices = new List<Tuple<Portal, Portal>>();
+            List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
@@ -70,7 +70,7 @@ namespace TunicRandomizer {
                 if (destinationPortal == null) {
                     TunicLogger.LogError("Error in getting portal name in BPGetThreePortals");
                 }
-                portalChoices.Add(new Tuple<Portal, Portal>(originPortal, destinationPortal));
+                portalChoices.Add(new PortalCombo(originPortal, destinationPortal));
                 TunicLogger.LogInfo("portal choice is " + destinationPortal.Name);
                 if (portalChoices.Count() == 3) {
                     break;
@@ -84,21 +84,23 @@ namespace TunicRandomizer {
             return portalChoices;
         }
 
-        public static void BPPortalChosen(Portal originPortal, Portal destinationPortal) {
+        public static void BPPortalChosen(PortalCombo portalCombo) {
             TunicLogger.LogInfo("BPPortalChosen started");
+            Portal originPortal = portalCombo.Portal1;
+            Portal destinationPortal = portalCombo.Portal2;
             SaveFile.SetString($"randomizer bp {CurrentPortal.name}", destinationPortal.Name);
             if (!GetBool(Decoupled)) {
                 SaveFile.SetString($"randomizer bp {destinationPortal.Name}", CurrentPortal.name);
             }
-            string comboTag = $"{CurrentPortal.name}--{destinationPortal.Name}";  // to match a portal combo's combo tag
+
             BPRandomizedPortals.Add(new PortalCombo(originPortal, destinationPortal));
             if (!GetBool(Decoupled)) {
                 BPRandomizedPortals.Add(new PortalCombo(destinationPortal, originPortal));
             }
             PlandoPortals.Add(originPortal.Name, destinationPortal.Name);
             CurrentPortal.destinationSceneName = destinationPortal.Scene;
-            CurrentPortal.id = comboTag + comboTag;
-            CurrentPortal.optionalIDToSpawnAt = comboTag;
+            CurrentPortal.id = portalCombo.ComboTag + portalCombo.ComboTag;
+            CurrentPortal.optionalIDToSpawnAt = portalCombo.ComboTag;
             CurrentPortal.OnTriggerEnter(FoxCollider);
             TunicLogger.LogInfo("BPPortalChosen done");
         }
