@@ -523,6 +523,11 @@ namespace TunicRandomizer {
 
                 if (previousConnNum == FullInventory.Count) {
                     failCount++;
+                    if (canFail) {
+                        // we can let it fail a little faster if it's allowed to fail
+                        // we do intentionally use failures with direction pairs, so we don't want it going up too fast
+                        failCount += 2;
+                    }
                     if (failCount > 500) {
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("Remaining portals in portalsList are:");
@@ -537,6 +542,9 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("This will now reroll the entrances and try again.");
                         TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
+                        if (canFail) {
+                            return null;
+                        }
                         // reroll, hopefully this shouldn't be common at all
                         return RandomizePortals(seed + 1);
                     }
