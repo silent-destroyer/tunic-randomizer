@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static TunicRandomizer.ERScripts;
-using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -46,22 +45,28 @@ namespace TunicRandomizer {
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
-            int trialCount = 10;
-            for (int i = 0; i < trialCount; i++) {
+            int maxTrialCount = 10;
+            int trialCount = 0;
+            while (portalChoices.Count < 3) {
                 TunicLogger.LogInfo("randomizing portals in BPGetThreePortals");
-                List<PortalCombo> randomizedPortals = RandomizePortals(seed + i, deplando, canFail: true);
+                if (trialCount >= maxTrialCount && portalChoices.Count > 0) {
+                    // we've done enough trials to say that we probably won't find any more connections, so it's time to give the player less than 3 choices
+                    // if we don't have any choices yet, keep trying -- if it's failing, we'd wanna know that, but maybe it's just something really restrictive and weird
+                    break;
+                }
+                trialCount++;
+                List<PortalCombo> randomizedPortals = RandomizePortals(seed + trialCount, deplando, canFail: true);
                 if (randomizedPortals == null) {
                     // this means it did not find a portal to match it with
                     // hopefully this means it couldn't find one and there wasn't some other generation error
                     // todo: remove these debug messages later
                     TunicLogger.LogInfo("Did not add to portal choices in BPGetThreePortals");
-                    TunicLogger.LogInfo($"Current trial: {i}.");
+                    TunicLogger.LogInfo($"Current trial: {trialCount + 1}.");
                     TunicLogger.LogInfo($"Portal we're trying to connect from: {currentPortalName}");
                     TunicLogger.LogInfo("If any portals are currently in portal choices, they are below");
                     foreach (PortalCombo portalCombo in portalChoices) {
                         TunicLogger.LogInfo(portalCombo.Portal2.Name);
                     }
-
                     continue;
                 }
                 TunicLogger.LogInfo("randomized portals in BPGetThreePortals");
