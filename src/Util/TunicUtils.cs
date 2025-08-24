@@ -238,7 +238,7 @@ namespace TunicRandomizer {
                     List<List<string>> newListList = new List<List<string>>();
                     foreach (List<string> list in kvp2.Value) {
                         List<string> newList = new List<string>(list);
-                        newListList.Add(list);
+                        newListList.Add(newList);
                     }
                     newDict.Add(kvp2.Key, newListList);
                 }

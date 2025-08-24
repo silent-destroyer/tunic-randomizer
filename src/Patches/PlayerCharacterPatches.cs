@@ -280,12 +280,12 @@ namespace TunicRandomizer {
 
             // this is here for the first time you're loading in, assumes you're in Overworld
             if (GetBool(EntranceRando)) {
-                ERScripts.ModifyPortals("Overworld Redux");
-                ERScripts.ModifyPortals("Overworld Redux", sending: true);
+                ERScripts.ModifyPortals(SceneLoaderPatches.SceneName);
+                ERScripts.ModifyPortals(SceneLoaderPatches.SceneName, sending: true);
                 GhostHints.SpawnTorchHintGhost();
             } else {
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
-                ERScripts.ModifyPortalNames("Overworld Redux");
+                ERScripts.ModifyPortalNames(SceneLoaderPatches.SceneName);
             }
 
             try {

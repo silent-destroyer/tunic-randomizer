@@ -13,9 +13,14 @@ namespace TunicRandomizer {
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
             // the collider here is the fox's UnityEngine.CapsuleCollider
+            TunicLogger.LogInfo("ontrigger enter prefix started");
             if (!GetBool(FoxPrinceEnabled)) return true;
+            TunicLogger.LogInfo("ontrigger enter after checking if fox prince is on");
             if (c.transform.name != "_Fox(Clone)") return true;
+            TunicLogger.LogInfo("ontrigger enter after checking if it's the fox going in");
+            TunicLogger.LogInfo($"portal is {__instance.name}");
             if (SaveFile.GetString($"randomizer bp {__instance.name}") == "") {
+                TunicLogger.LogInfo("ontrigger enter after checking the save file to see if the portal is in there");
                 CurrentPortal = __instance;
                 FoxCollider = c;
                 List<PortalCombo> portalChoices = BPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
