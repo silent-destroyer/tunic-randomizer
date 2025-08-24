@@ -211,22 +211,35 @@ namespace TunicRandomizer {
 
         public void WriteEntranceFile() {
             string fileContents = "";
+            List<string> allInUsePortalNames = new List<string>();
+            if (GetBool(FoxPrinceEnabled)) {
+                
+                List<PortalCombo> allInUsePortalCombos = ERScripts.RandomizePortals(3);
+                foreach (PortalCombo portalCombo in allInUsePortalCombos) {
+                    allInUsePortalNames.Add(portalCombo.Portal1.Name);
+                    if (!GetBool(Decoupled)) {
+                        allInUsePortalNames.Add(portalCombo.Portal2.Name);
+                    }
+                }
+            } else {
+                allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Portal1.Name).ToList();
+            }
+            int numberOfShops = allInUsePortalNames.Where(p => p.StartsWith("Shop Portal")).Count();
+
+            // todo: make sure these changes work with ap with > 8 shops
 
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
-            int numberOfShops = 0;
+            
             foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 portalNameToPair.Add(portalCombo.Portal1.Name, portalCombo);
-                if (portalCombo.Portal1.Name.Contains("Shop Portal")) {
-                    numberOfShops++;
-                }
             }
 
             Dictionary<string, List<string>> regionsToPortals = new Dictionary<string, List<string>>();
 
             void addPortal(string portalName, string portalRegion) {
-                PortalCombo portalCombo = portalNameToPair[portalName];
-                string portalLine = portalCombo.Portal1.Name + ",-->,";
+                string portalLine = portalName + ",-->,";
                 if (SaveFile.GetInt("randomizer entered portal " + portalName) == 1) {
+                    PortalCombo portalCombo = portalNameToPair[portalName];
                     portalLine += portalCombo.Portal2.Name;
                 }
                 regionsToPortals[Locations.SimplifiedSceneNames[portalRegion]].Add(portalLine);
@@ -239,13 +252,14 @@ namespace TunicRandomizer {
                 }
                 foreach (List<ERData.TunicPortal> portalList in portalGroup.Value.Values) {
                     foreach (ERData.TunicPortal portal in portalList) {
-                        if (portalNameToPair.ContainsKey(portal.Name)) {
+                        if (allInUsePortalNames.Contains(portal.Name)) {
                             addPortal(portal.Name, portalGroup.Key);
-                        } else if (portal.Name == "Shop Portal") {
+                        }
+                        if (portal.Name == "Shop Portal") {
                             for (int i = 0; i < numberOfShops; i++) {
-                                addPortal($"{portal.Name} {i+1}", portalGroup.Key);
+                                addPortal($"{portal.Name} {i + 1}", portalGroup.Key);
                             }
-                        }                        
+                        }
                     }
                 }
             }

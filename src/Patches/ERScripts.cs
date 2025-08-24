@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERData;
@@ -278,7 +279,6 @@ namespace TunicRandomizer {
             bool dirPairsEnabled = GetBool(PortalDirectionPairs);
             bool foxPrinceEnabled = GetBool(FoxPrinceEnabled);
             
-
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
             Dictionary<int, int> deadEndPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -850,15 +850,9 @@ namespace TunicRandomizer {
                         // find which portal combo led to this shop, also flip the shop if it should be flipped
                         foreach (PortalCombo portalCombo in RandomizedPortals) {
                             if (PlayerCharacterSpawn.portalIDToSpawnAt.EndsWith(portalCombo.ComboTag)) {
-                                TunicLogger.LogTesting("Portal 1 is " + portalCombo.Portal1.Name);
-                                TunicLogger.LogTesting("Portal 2 is " + portalCombo.Portal2.Name);
                                 newPortal.GetComponent<ScenePortal>().destinationSceneName = portalCombo.Portal2.Destination;
                                 newPortal.GetComponent<ScenePortal>().id = portalCombo.Portal2.Tag;
-                                if (portalCombo.FlippedShop) {
-                                    shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = true;
-                                } else {
-                                    shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = false;
-                                }
+                                shopPortal.TryCast<ShopScenePortal>().flippedCameraZone.enabled = portalCombo.FlippedShop;
                             }
                         }
                         // I don't actually know if all of these are necessary, but it does work with all of them so
@@ -881,7 +875,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-
+            
             var Portals = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name
                 && !portal.FullID.Contains("customfasttravel") && !portal.id.Contains("customfasttravel"));
             foreach (var portal in Portals) {
@@ -972,7 +966,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
-            
+
             if (GetBool(FoxPrinceEnabled)) {
                 ModifyPortalNames(scene_name);
             }
