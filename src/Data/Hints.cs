@@ -234,37 +234,57 @@ namespace TunicRandomizer {
             // Hack to make start inventory from pool'd items toggle the hero graves
             SaveFile.SetInt($"randomizer hint found 0, Server", 1);
 
-            // todo: decide if we should do something here for blue prince mode
             // make the in-game signs tell you what area they're pointing to
-            if (SaveFile.GetInt(EntranceRando) == 1) {
-                foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_") {
-                        HintMessages.Add("East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Archipelagos Redux_lower") {
-                        HintMessages.Add("West Garden Sign", $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Fortress Courtyard_") {
-                        HintMessages.Add("Fortress Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}  [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Darkwoods Tunnel_") {
-                        HintMessages.Add("Quarry Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_up]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Ruins Passage_west") {
-                        HintMessages.Add("Ruined Hall Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
-                        HintMessages.Add("Town Sign", $"[arrow_left]  {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, Sword Access_lower") {
-                        HintMessages.Add("East East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, East Forest Redux Laddercave_lower") {
-                        HintMessages.Add("West East Forest Sign", $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}");
-                    }
+            if (GetBool(EntranceRando)) {
+                CreateSignHints();
+            }
+        }
+
+        public static Dictionary<string, string> PortalToSignName = new Dictionary<string, string> {
+            {"Overworld Redux, Forest Belltower_", "East Forest Sign"},
+            {"Overworld Redux, Archipelagos Redux_lower", "West Garden Sign"},
+            {"Overworld Redux, Fortress Courtyard_", "Fortress Sign"},
+            {"Overworld Redux, Darkwoods Tunnel_", "Quarry Sign"},
+            {"Overworld Redux, Ruins Passage_west", "Ruined Hall Sign"},
+            {"Overworld Redux, Overworld Interiors_house", "Town Sign"},
+            {"East Forest Redux, Sword Access_lower", "East East Forest Sign"},
+            {"East Forest Redux, East Forest Redux Laddercave_lower", "West East Forest Sign"}
+        };
+
+        public static void CreateSignHints() {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Archipelagos Redux_lower") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Fortress Courtyard_") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}  [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Darkwoods Tunnel_") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_up]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Ruins Passage_west") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"[arrow_left]  {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, Sword Access_lower") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, East Forest Redux Laddercave_lower") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}";
+                }
+            }
+            foreach (string sign in PortalToSignName.Values) {
+                if (!HintMessages.ContainsKey(sign)) {
+                    HintMessages[sign] = "???";
                 }
             }
         }
+
 
         private static List<(string, string)> CreateHeroRelicHints() {
             List<ItemData> Relics = ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.RELIC).ToList();

@@ -480,7 +480,6 @@ namespace TunicRandomizer {
 
         public static void GenerateHints() {
             HintGhosts.Clear();
-            HexQuestHintLookup.Clear();
             Dictionary<string, List<HintGhost>> Ghosts = new Dictionary<string, List<HintGhost>>(GhostLocations);
             if (GetBool(EntranceRando)) { 
                 foreach(KeyValuePair<string, List<HintGhost>> pair in EntranceRandoGhostLocations) {
@@ -664,6 +663,7 @@ namespace TunicRandomizer {
                 ItemHints.Add((prayerHint, "", "", ""));
                 ItemHints.Add((holyCrossHint, "", "", ""));
                 ItemHints.Add((iceboltHint, "", "", ""));
+                HexQuestHintLookup.Clear();
                 HexQuestHintLookup.Add(prayerHint, "Prayer");
                 HexQuestHintLookup.Add(holyCrossHint, "Holy Cross");
                 HexQuestHintLookup.Add(iceboltHint, "Icebolt");

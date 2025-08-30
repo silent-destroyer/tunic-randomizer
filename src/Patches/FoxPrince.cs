@@ -10,6 +10,8 @@ namespace TunicRandomizer {
         public static ScenePortal CurrentPortal = null;
         public static Collider FoxCollider = null;
         public static List<PortalCombo> BPRandomizedPortals = new List<PortalCombo>();
+        // flag to tell ModifyPortals to update the sign displays
+        public static bool UpdateSignsFlag = false;
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
             // the collider here is the fox's UnityEngine.CapsuleCollider
@@ -133,6 +135,9 @@ namespace TunicRandomizer {
             CurrentPortal.id = portalCombo.ComboTag + portalCombo.ComboTag;
             CurrentPortal.optionalIDToSpawnAt = portalCombo.ComboTag;
             CurrentPortal.OnTriggerEnter(FoxCollider);
+            if (Hints.PortalToSignName.ContainsKey(portalCombo.Portal1.SceneDestinationTag)) {
+                UpdateSignsFlag = true;
+            }
             TunicLogger.LogInfo("BPPortalChosen done");
         }
 

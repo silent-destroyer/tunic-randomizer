@@ -856,6 +856,11 @@ namespace TunicRandomizer {
             if (GetBool(FoxPrinceEnabled)) {
                 RandomizedPortals = new List<PortalCombo>(FoxPrince.BPRandomizedPortals);
                 ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
+                if (FoxPrince.UpdateSignsFlag) {
+                    Hints.CreateSignHints();
+                    GhostHints.GenerateItemHints();
+                    FoxPrince.UpdateSignsFlag = false;
+                }
             }
             // we turn this off to not let you walk back through before it is modified the second time
             if (sending == true && storedPortal != null) {
