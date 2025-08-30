@@ -1,8 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using static TunicRandomizer.GhostHints;
 using static TunicRandomizer.SaveFlags;
