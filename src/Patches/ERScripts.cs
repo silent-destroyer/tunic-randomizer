@@ -260,8 +260,10 @@ namespace TunicRandomizer {
             // now we add it to the actual, kept portal list, based on whether decoupled is on
             foreach (PortalCombo portalCombo in randomizedPortals) {
                 RandomizedPortals.Add(portalCombo);
+                ItemTracker.EntranceFileAllPortals.Add(portalCombo);
                 if (!GetBool(Decoupled)) {
                     RandomizedPortals.Add(new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
+                    ItemTracker.EntranceFileAllPortals.Add(new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
                 }
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
@@ -347,7 +349,7 @@ namespace TunicRandomizer {
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
 
             // if blue prince mode is off or this is the first time through, add all progression to the FullInventory
-            if (!ItemRandomizer.InitialRandomizationDone || !foxPrinceEnabled) {
+            if (!ItemRandomizer.InitialRandomizationDone || !canFail) {
                 // it doesn't really matter if there's duplicates from the above for this
                 Dictionary<string, int> MaxItems = new Dictionary<string, int> {
                     { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Mask", 1 },
@@ -493,7 +495,7 @@ namespace TunicRandomizer {
 
             List<Check> alreadyCheckedLocations = new List<Check>();
 
-            if (foxPrinceEnabled) {
+            if (canFail) {
                 foreach (Check check in ItemRandomizer.ProgressionLocations.Values) {
                     if (check.IsCompletedOrCollected) {
                         alreadyCheckedLocations.Add(check);
@@ -525,12 +527,15 @@ namespace TunicRandomizer {
 
                 if (previousConnNum == FullInventory.Count) {
                     failCount++;
-                    if (canFail) {
-                        // we can let it fail a little faster if it's allowed to fail
-                        // we do intentionally use failures with direction pairs, so we don't want it going up too fast
-                        failCount += 2;
-                    }
+                    //if (canFail) {
+                    //    // we can let it fail a little faster if it's allowed to fail
+                    //    // we do intentionally use failures with direction pairs, so we don't want it going up too fast
+                    //    failCount += 2;
+                    //}
                     if (failCount > 500) {
+                        if (canFail) {
+                            return null;
+                        }
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("Remaining portals in portalsList are:");
                         foreach (Portal debugportal in portalsList) {
@@ -547,13 +552,13 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("The contents of FullInventory are:");
                         foreach (string thing in FullInventory.Keys) {
                             TunicLogger.LogInfo(thing);
+                            if (thing == "Sword Progression") {
+                                TunicLogger.LogInfo($"Quantity: {FullInventory[thing]}");
+                            }
                         }
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("This will now reroll the entrances and try again.");
                         TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
-                        if (canFail) {
-                            return null;
-                        }
                         // reroll, hopefully this shouldn't be common at all
                         return RandomizePortals(seed + 1);
                     }
@@ -564,14 +569,7 @@ namespace TunicRandomizer {
 
                 // find a portal in a region we can currently reach
                 foreach (Portal portal in portalsList) {
-                    if (allRegions.Count() - FullInventory.Keys.Where(region => RegionDict.ContainsKey(region) && !RegionDict[region].SkipCounting).ToList().Count <= 4) {
-                        TunicLogger.LogInfo("4 regions left");
-                        TunicLogger.LogInfo("portal to be paired is " + portal.Name);
-                    }
                     if (CanUsePortal(portal, FullInventory)) {
-                        if (allRegions.Count() - FullInventory.Keys.Where(region => RegionDict.ContainsKey(region) && !RegionDict[region].SkipCounting).ToList().Count <= 4) {
-                            TunicLogger.LogInfo("portal is being paired: " + portal.Name);
-                        }
                         portal1 = portal;
                         portalsList.Remove(portal);
                         break;
@@ -579,6 +577,9 @@ namespace TunicRandomizer {
                 }
 
                 if (portal1 == null) {
+                    if (canFail) {
+                        return null;
+                    }
                     // it will fail after this
                     TunicLogger.LogError("something messed up in portal pairing for portal 1 in RandomizePortals");
                     TunicLogger.LogInfo("if there are regions missing, they are as follows:");
@@ -593,9 +594,6 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling in first phase in RandomizePortals");
-                    if (canFail) {
-                        return null;
-                    }
                     return RandomizePortals(seed + 1);
                 }
 
@@ -638,7 +636,7 @@ namespace TunicRandomizer {
                         }
 
                         // if secret gathering place gets paired really late and you have the laurels plando on, you can run out pretty easily
-                        if (portalsList2.Count < 80 && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3 && !foxPrinceEnabled) {
+                        if (((portalsList2.Count < 80 && !foxPrinceEnabled) || portalsList2.Count < 40) && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3) {
                             TunicLogger.LogTesting("Continuing to wait for Secret Gathering Place");
                             continue;
                         }
@@ -656,6 +654,9 @@ namespace TunicRandomizer {
                         portalsList.Add(portal1);
                         continue;
                     } else {
+                        if (canFail) {
+                            return null;
+                        }
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogError("something messed up in portal pairing for portal 2, rerolling in RandomizePortals");
                         TunicLogger.LogInfo("if there are regions missing, they are as follows:");
@@ -669,14 +670,11 @@ namespace TunicRandomizer {
                             TunicLogger.LogInfo(debugportal.Name);
                         }
                         // reroll, hopefully this shouldn't be common at all
-                        if (canFail) {
-                            return null;
-                        }
                         return RandomizePortals(seed + 1);
                     }
                 }
 
-                if (foxPrinceEnabled) {
+                if (canFail) {
                     (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
                 } else {
                     FullInventory = UpdateReachableRegions(FullInventory);
@@ -710,6 +708,9 @@ namespace TunicRandomizer {
             while (portalsList.Count > 0) {
                 finalPairLoopNumber++;
                 if (finalPairLoopNumber > 10000) {
+                    if (canFail) {
+                        return null;
+                    }
                     TunicLogger.LogError("Failed to pair portals while pairing the final entrances off to each other");
                     TunicLogger.LogInfo("Remaining portals in portalsList:");
                     foreach (Portal portal in portalsList) {
@@ -720,9 +721,6 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo(portal.Name);
                     }
                     // reroll, hopefully this shouldn't be common at all
-                    if (canFail) {
-                        return null;
-                    }
                     TunicLogger.LogInfo("Rerolling during last phase in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }
@@ -742,6 +740,9 @@ namespace TunicRandomizer {
                     }
                 }
                 if (portal2 == null) {
+                    if (canFail) {
+                        return null;
+                    }
                     // it will fail after this
                     TunicLogger.LogInfo("---------------------------------------");
                     TunicLogger.LogError("something went wrong with the remaining two plus portals");
@@ -756,9 +757,6 @@ namespace TunicRandomizer {
                         }
                     }
                     // reroll, hopefully this shouldn't be common at all
-                    if (canFail) {
-                        return null;
-                    }
                     TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }

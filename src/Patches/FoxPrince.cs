@@ -13,14 +13,9 @@ namespace TunicRandomizer {
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
             // the collider here is the fox's UnityEngine.CapsuleCollider
-            TunicLogger.LogInfo("ontrigger enter prefix started");
             if (!GetBool(FoxPrinceEnabled)) return true;
-            TunicLogger.LogInfo("ontrigger enter after checking if fox prince is on");
             if (c.transform.name != "_Fox(Clone)") return true;
-            TunicLogger.LogInfo("ontrigger enter after checking if it's the fox going in");
-            TunicLogger.LogInfo($"portal is {__instance.name}");
             if (SaveFile.GetString($"randomizer bp {__instance.name}") == "") {
-                TunicLogger.LogInfo("ontrigger enter after checking the save file to see if the portal is in there");
                 CurrentPortal = __instance;
                 FoxCollider = c;
                 List<PortalCombo> portalChoices = BPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
@@ -50,31 +45,22 @@ namespace TunicRandomizer {
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
-            int maxTrialCount = 10;
+            int maxTrialCount = 1000;
             int trialCount = 0;
             while (portalChoices.Count < 3) {
-                TunicLogger.LogInfo("randomizing portals in BPGetThreePortals");
                 if (trialCount >= maxTrialCount && portalChoices.Count > 0) {
                     // we've done enough trials to say that we probably won't find any more connections, so it's time to give the player less than 3 choices
                     // if we don't have any choices yet, keep trying -- if it's failing, we'd wanna know that, but maybe it's just something really restrictive and weird
                     break;
                 }
                 trialCount++;
+                TunicLogger.LogInfo($"Current trial: {trialCount}");
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + trialCount, deplando, canFail: true);
                 if (randomizedPortals == null) {
                     // this means it did not find a portal to match it with
                     // hopefully this means it couldn't find one and there wasn't some other generation error
-                    // todo: remove these debug messages later
-                    TunicLogger.LogInfo("Did not add to portal choices in BPGetThreePortals");
-                    TunicLogger.LogInfo($"Current trial: {trialCount + 1}.");
-                    TunicLogger.LogInfo($"Portal we're trying to connect from: {currentPortalName}");
-                    TunicLogger.LogInfo("If any portals are currently in portal choices, they are below");
-                    foreach (PortalCombo portalCombo in portalChoices) {
-                        TunicLogger.LogInfo(portalCombo.Portal2.Name);
-                    }
                     continue;
                 }
-                TunicLogger.LogInfo("randomized portals in BPGetThreePortals");
                 Portal originPortal = null;
                 Portal destinationPortal = null;
                 foreach (PortalCombo portalCombo in randomizedPortals) {

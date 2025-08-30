@@ -209,13 +209,12 @@ namespace TunicRandomizer {
             SaveTrackerFile();
         }
 
+        public static List<PortalCombo> EntranceFileAllPortals = new List<PortalCombo>();
         public void WriteEntranceFile() {
             string fileContents = "";
             List<string> allInUsePortalNames = new List<string>();
             if (GetBool(FoxPrinceEnabled)) {
-                TunicLogger.LogInfo("Write entrance file is randomizing portals");
-                List<PortalCombo> allInUsePortalCombos = ERScripts.RandomizePortals(5);
-                foreach (PortalCombo portalCombo in allInUsePortalCombos) {
+                foreach (PortalCombo portalCombo in EntranceFileAllPortals) {
                     allInUsePortalNames.Add(portalCombo.Portal1.Name);
                     if (!GetBool(Decoupled)) {
                         allInUsePortalNames.Add(portalCombo.Portal2.Name);
