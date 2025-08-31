@@ -135,7 +135,7 @@ namespace TunicRandomizer {
             CurrentPortal.id = portalCombo.ComboTag + portalCombo.ComboTag;
             CurrentPortal.optionalIDToSpawnAt = portalCombo.ComboTag;
             CurrentPortal.OnTriggerEnter(FoxCollider);
-            if (Hints.PortalToSignName.ContainsKey(portalCombo.Portal1.SceneDestinationTag)) {
+            if (Hints.PortalToSignName.ContainsKey(portalCombo.Portal1.SceneDestinationTag) || Hints.PortalToSignName.ContainsKey(portalCombo.Portal2.SceneDestinationTag)) {
                 UpdateSignsFlag = true;
             }
             TunicLogger.LogInfo("BPPortalChosen done");
