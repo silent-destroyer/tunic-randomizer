@@ -420,6 +420,7 @@ namespace TunicRandomizer {
                 InitialLoadDone = true;
                 TitleVersion.Initialize();
                 RecentItemsDisplay.SetupRecentItemsDisplay();
+                EntranceSelector.CreateEntranceSelector();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                     Archipelago.instance.Connect();
                 }

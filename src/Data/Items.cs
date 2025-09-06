@@ -318,6 +318,9 @@ namespace TunicRandomizer {
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
+
+            // Fox Prince Items
+            { "Soul Dice", new ItemData("Soul Dice", "filler", "Soul Dice", ItemTypes.INVENTORY, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {
@@ -576,6 +579,7 @@ namespace TunicRandomizer {
             {"Fortress Door Right Fuse", "Fortress Door Right Fuse"},
             {"East Bell", "East Bell"},
             {"West Bell", "West Bell"},
+            {"Soul Dice", "Soul Dice"},
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {

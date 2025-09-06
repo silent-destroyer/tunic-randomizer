@@ -400,6 +400,37 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupFoxPrinceItemPresentations() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "shield").First().gameObject;
+                GameObject DicePresentation = GameObject.Instantiate(PresentationBase);
+                GameObject DiceObject = Resources.FindObjectsOfTypeAll<LoadingSpinner>().First().gameObject;
+
+                DicePresentation.transform.parent = PresentationBase.transform.parent;
+                DicePresentation.transform.localPosition = Vector3.zero;
+                DicePresentation.transform.localEulerAngles = new Vector3(345f, 45f, 345f);
+                DicePresentation.transform.localScale = Vector3.one * 0.5f;
+                DicePresentation.GetComponent<MeshFilter>().mesh = DiceObject.transform.GetChild(0).GetChild(0).GetComponent<MeshFilter>().mesh;
+                DicePresentation.GetComponent<MeshRenderer>().materials = DiceObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().materials;
+
+                DicePresentation.name = "soul dice";
+                DicePresentation.layer = 5;
+
+                DicePresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Soul Dice") };
+                DicePresentation.AddComponent<Rotate>().unscaled = true;
+                DicePresentation.GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(10f, 30f, 10f);
+
+                DicePresentation.SetActive(false);
+
+                RegisterNewItemPresentation(DicePresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Soul Dice"] = DicePresentation;
+
+            } catch (Exception e) {
+                TunicLogger.LogError("Fox prince presentation error: " + e.Message);
+            }
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);

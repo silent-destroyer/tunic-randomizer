@@ -43,11 +43,12 @@ namespace TunicRandomizer {
 
         public static void BPChoosePortal(List<PortalCombo> portalChoices) {
             // do something here to actually choose a portal
-            BPPortalChosen(portalChoices[0]);
+            //BPPortalChosen(portalChoices[0]);
+            EntranceSelector.instance.ShowSelection(portalChoices);
         }
 
 
-        public static List<PortalCombo> BPGetThreePortals(int seed, string currentPortalName) {
+        public static List<PortalCombo> BPGetThreePortals(int seed, string currentPortalName, List<PortalCombo> excludedPortals = null) {
             TunicLogger.LogInfo("starting BPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
@@ -87,7 +88,20 @@ namespace TunicRandomizer {
                 if (destinationPortal == null) {
                     TunicLogger.LogError("Error in getting portal name in BPGetThreePortals");
                 }
-                portalChoices.Add(new PortalCombo(originPortal, destinationPortal));
+                bool addPortal = true;
+                if (excludedPortals != null && excludedPortals.Count > 0) {
+                    foreach (PortalCombo portalCombo in excludedPortals) {
+                        if (portalCombo.Portal1.Name == originPortal.Name && portalCombo.Portal2.Name == destinationPortal.Name) {
+                            addPortal = false; break;
+                        }
+                        if (portalCombo.Portal2.Name == originPortal.Name && portalCombo.Portal1.Name == destinationPortal.Name) {
+                            addPortal = false; break;
+                        }
+                    }
+                }
+                if (addPortal) { 
+                    portalChoices.Add(new PortalCombo(originPortal, destinationPortal));
+                }
                 TunicLogger.LogInfo("portal choice is " + destinationPortal.Name);
                 if (portalChoices.Count() == 3) {
                     break;
@@ -145,6 +159,18 @@ namespace TunicRandomizer {
                 UpdateSignsFlag = true;
             }
             TunicLogger.LogInfo("BPPortalChosen done");
+        }
+
+        public static void CreateFoxPrinceItems() {
+            Item SoulDice = ScriptableObject.CreateInstance<Item>();
+            SoulDice.name = "Soul Dice";
+            SoulDice.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+            SoulDice.collectionMessage.text = $"dE twehntE!";
+            SoulDice.controlAction = "";
+
+            Inventory.itemList.Add(SoulDice);
+
+            ItemPresentationPatches.SetupFoxPrinceItemPresentations();
         }
 
     }

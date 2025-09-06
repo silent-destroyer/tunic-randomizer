@@ -67,6 +67,7 @@ namespace TunicRandomizer {
             {"Hexagon Green", Vector3.one},
             {"Dath Stone", new Vector3(1f, 1f, 1f)},
             {"Torch", new Vector3(1f, 1f, 1f)},
+            {"Soul Dice", new Vector3(1f, 1f, 1f)},
         };
         public static Dictionary<string, Vector3> ItemPickupScales = new Dictionary<string, Vector3>() {
             {"Firecracker", new Vector3(1.5f, 1.5f, 1.5f)},
@@ -126,6 +127,7 @@ namespace TunicRandomizer {
             {"Dath Stone", new Vector3(1f, 1f, 1f)},
             {"Torch", new Vector3(1f, 1f, 1f)},
             {"Fairy", new Vector3(0.5f, 0.5f, 0.5f)},
+            {"Soul Dice", new Vector3(1f, 1f, 1f)},
         };
         public static Dictionary<string, Vector3> ItemPickupPositions = new Dictionary<string, Vector3>() {
             {"Flask Container", new Vector3(0, 0.5f, 0)},
@@ -236,6 +238,7 @@ namespace TunicRandomizer {
              { "BELL", new TransformData(new Vector3(0f, 0f, 0.175f), new Quaternion(0.7071068f, 0f, 0f, -0.7071068f), new Vector3(0.04f, 0.04f, 0.04f)) },
              { "Other World", new TransformData(new Vector3(0f, 0.03f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.02f, 0.02f, 0.02f)) },
              { "Grass", new TransformData(new Vector3(-0.025f, 0f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.06f, 0.06f, 0.06f)) },
+             { "Soul Dice", new TransformData(new Vector3(-0.025f, 0f, -0.05f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.06f, 0.06f, 0.06f)) },
         };
 
         public static Dictionary<string, TransformData> Lantern = new Dictionary<string, TransformData>() {
@@ -310,6 +313,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(-1.212726f, -0.392727f, 2.625453f), new Quaternion(-0.6715717f, -0.2238143f, -0.08710095f, 0.7009366f), new Vector3(0.6f, 0.6f, 0.6f)) },
             { "Other World", new TransformData(new Vector3(0f, 0.1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), Vector3.one) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), Vector3.one) },
         };
 
         public static Dictionary<string, TransformData> Grapple = new Dictionary<string, TransformData>() {
@@ -385,6 +389,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(-3.062726f, -1.177f, 0.02f), new Quaternion(0.5000001f, 0.5f, -0.5f, 0.5000001f), new Vector3(0.55f, 0.55f, 0.55f)) },
             { "Other World", new TransformData(new Vector3(0.1f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) },
             { "Grass", new TransformData(new Vector3(0, -1.2f, 0), new Quaternion(0f, 0f, 0f, 1f), Vector3.one) },
+            { "Soul Dice", new TransformData(new Vector3(0, -1.2f, 0), new Quaternion(0f, 0f, 0f, 1f), Vector3.one) },
         };
 
         public static Dictionary<string, TransformData> Sword = new Dictionary<string, TransformData>() {
@@ -460,6 +465,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(0.35f, 0.9230001f, -0.08f), new Quaternion(0.6830127f, -0.1830127f, -0.6830127f, -0.1830127f), new Vector3(0.2f, 0.2f, 0.2f)) },
             { "Other World", new TransformData(new Vector3(-0.3f, -0.5f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.15f, 0.15f, 0.15f)) },
             { "Grass", new TransformData(new Vector3(-0.4f, -0.7f, 0), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Soul Dice", new TransformData(new Vector3(-0.4f, -0.7f, 0), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
         };
 
         public static Dictionary<string, TransformData> Shop = new Dictionary<string, TransformData>() {
@@ -535,6 +541,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(Vector3.one, new Quaternion(0f, 0f, 0f, 1f), Vector3.one * 0.33f) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.25f, 0.25f, 0.25f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
         };
 
         public static Dictionary<string, TransformData> Techbow = new Dictionary<string, TransformData>() {
@@ -610,6 +617,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.2f, 0.2f, 0.2f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
         };
 
         public static Dictionary<string, TransformData> Key = new Dictionary<string, TransformData>() {
@@ -685,6 +693,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(-5.24727f, -0.09999999f, 0f), new Quaternion(0.5f, 0.5f, -0.5f, 0.5f), new Vector3(.9f, .9f, .9f)) },
             { "Other World", new TransformData(new Vector3(0f, 0.25f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), Vector3.one) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), Vector3.one) },
         };
 
         public static Dictionary<string, TransformData> Shield = new Dictionary<string, TransformData>() {
@@ -760,6 +769,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(0.15f, -1.377f, 0.15f), new Quaternion(-0.06879693f, -0.06079729f, 0.1171948f, 0.9888559f), new Vector3(0.33f, 0.33f, 0.33f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0.2f), new Quaternion(0.0462f, -0.7471f, -0.661f, -0.0522f), new Vector3(0.15f, 0.15f, 0.15f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(-0.6397f, 0.0469f, -0.0392f, -0.7662f), new Vector3(0.5f, 0.5f, 0.5f)) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(-0.6397f, 0.0469f, -0.0392f, -0.7662f), new Vector3(0.5f, 0.5f, 0.5f)) },
         };
 
         public static Dictionary<string, TransformData> VaultKeyRed = new Dictionary<string, TransformData>() {
@@ -835,6 +845,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0.2588f, 0f, -0.9659f), Vector3.one * 0.75f) },
             { "Other World", new TransformData(new Vector3(0f, 1f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(1.5f, 1.5f, 1.5f)) },
         };
 
         public static Dictionary<string, TransformData> HexagonRed = new Dictionary<string, TransformData>() {
@@ -910,6 +921,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(new Vector3(-0.05f, -3.399999f, -0.08f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.5f, 0.5f, 0.5f)) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.25f, 0.25f, 0.25f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
         };
 
         public static Dictionary<string, TransformData> HexagonGreen = new Dictionary<string, TransformData>() {
@@ -985,6 +997,7 @@ namespace TunicRandomizer {
             { "BELL", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), Vector3.one * 0.6f) },
             { "Other World", new TransformData(new Vector3(0f, 0f, 0f), new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.35f, 0.35f, 0.35f)) },
             { "Grass", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
+            { "Soul Dice", new TransformData(Vector3.zero, new Quaternion(0f, 0f, 0f, 1f), new Vector3(0.75f, 0.75f, 0.75f)) },
         };
 
         public static Dictionary<string, TransformData> HeroRelic = new Dictionary<string, TransformData>() {
