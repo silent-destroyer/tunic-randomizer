@@ -230,30 +230,38 @@ namespace TunicRandomizer {
             }
         }
 
+        public static List<PortalCombo> RerollAlreadySeen = new List<PortalCombo>();
+
         public void RerollChoices() {
             // todo add sfx on button press for successful or 
             Item SoulDice = Inventory.GetItemByName("Soul Dice");
             List<PortalCombo> newPortals = null;
             if (SoulDice.Quantity > 0 && EntranceOptions.Count == 3) {
-                newPortals = FoxPrince.BPGetThreePortals(SaveFile.GetInt("seed"), FoxPrince.CurrentPortal.name, EntranceOptions);
+                TunicLogger.LogInfo("rerolling");
+                foreach (PortalCombo portalCombo in EntranceOptions) {
+                    if (!RerollAlreadySeen.Contains(portalCombo)) {
+                        RerollAlreadySeen.Add(portalCombo);
+                    }
+                }
+                newPortals = FoxPrince.BPGetThreePortals(SaveFile.GetInt("seed"), FoxPrince.CurrentPortal.name, RerollAlreadySeen);
                 if (newPortals != null) {
                     SoulDice.Quantity -= 1;
                     // if it gave us less than 3 portals, we need to reuse some of the previous ones
-                    if (newPortals.Count < 3) {
-                        System.Random random = new System.Random(SaveFile.GetInt("seed"));
-                        int index1 = random.Next(0, 2);
-                        newPortals.Add(EntranceOptions[index1]);
-                        // if it only had 1 portal in it, we need another one that's different from the first one
-                        if (newPortals.Count < 3) {
-                            int index2 = random.Next(0, 2);
-                            while (index2 == index1) {
-                                index2 = random.Next(0, 2);
-                            }
-                            newPortals.Add(EntranceOptions[index2]);
+                    System.Random random = new System.Random(SaveFile.GetInt("seed"));
+                    TunicUtils.ShuffleList(RerollAlreadySeen, SaveFile.GetInt("seed"));
+                    HashSet<int> usedIndexes = new HashSet<int>();
+                    while (newPortals.Count < 3) {
+                        int index = random.Next(RerollAlreadySeen.Count);
+                        while (usedIndexes.Contains(index)) {
+                            index = random.Next(RerollAlreadySeen.Count);
                         }
+                        newPortals.Add(RerollAlreadySeen[index]);
                     }
                 }
+                EntranceOptions = newPortals;
+                ShowSelection(EntranceOptions);
             }
+            // indicates that either you have no dice left or there are less than 2 options
             if (newPortals == null) {
                 // do whatever we would do if you can't reroll
                 TunicLogger.LogInfo("Cannot reroll at this time");
@@ -296,7 +304,9 @@ namespace TunicRandomizer {
 
         public void cleanup() {
             TunicLogger.LogInfo("cleanup started");
-            //GUIMode.PopMode(this);
+            RerollAlreadySeen.Clear();
+            GUIMode.ClearStack();
+            GUIMode.PushGameMode();
             TunicLogger.LogInfo("cleanup done");
         }
 

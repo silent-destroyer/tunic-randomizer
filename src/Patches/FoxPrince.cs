@@ -68,6 +68,9 @@ namespace TunicRandomizer {
             if (excludedPortals != null) {
                 foreach (PortalCombo portalCombo in excludedPortals) {
                     deplando.Add(new Tuple<string, string>(portalCombo.Portal1.Name, portalCombo.Portal2.Name));
+                    if (!GetBool(Decoupled)) {
+                        deplando.Add(new Tuple<string, string>(portalCombo.Portal2.Name, portalCombo.Portal1.Name));
+                    }
                 }
             }
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
