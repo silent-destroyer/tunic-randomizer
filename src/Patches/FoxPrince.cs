@@ -13,7 +13,7 @@ namespace TunicRandomizer {
         // when you choose a portal, that choice showed up because there was a successful entrance rando generation that lead to that one
         // so, we might as well save that old one for the next time you go into an entrance
         public static Dictionary<PortalCombo, List<PortalCombo>> CachePairingDict = new Dictionary<PortalCombo, List<PortalCombo>>();
-        public static List<PortalCombo> CachedSuccessfulPairing = new List<PortalCombo>();
+        public static List<PortalCombo> CachedSuccessfulPairing = null;
 
         // flag to tell ModifyPortals to update the sign displays
         public static bool UpdateSignsFlag = false;
@@ -51,36 +51,12 @@ namespace TunicRandomizer {
         }
 
 
-        public static PortalCombo GetPortalComboFromRandomizedPortals(string portalName, List<PortalCombo> randomizedPortals) {
-            Portal originPortal = null;
-            Portal destinationPortal = null;
-            foreach (PortalCombo portalCombo in randomizedPortals) {
-                if (portalCombo.Portal1.Name == portalName) {
-                    originPortal = portalCombo.Portal1;
-                    destinationPortal = portalCombo.Portal2;
-                    break;
-                }
-                if (!GetBool(Decoupled) && portalCombo.Portal2.Name == portalName) {
-                    originPortal = portalCombo.Portal2;
-                    destinationPortal = portalCombo.Portal1;
-                    break;
-                }
-            }
-            // remove this later if it doesn't ever actually show up
-            if (destinationPortal == null) {
-                TunicLogger.LogError("Error in getting portal name in BPGetThreePortals");
-            }
-            PortalCombo newPortalCombo = new PortalCombo(originPortal, destinationPortal);
-            return newPortalCombo;
-        }
-
-
         public static List<PortalCombo> BPGetThreePortals(int seed, string currentPortalName, List<PortalCombo> excludedPortals = null) {
             TunicLogger.LogInfo("starting BPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
             if (CachedSuccessfulPairing != null) {
-                PortalCombo cachedPortalCombo = GetPortalComboFromRandomizedPortals(currentPortalName, CachedSuccessfulPairing);
+                PortalCombo cachedPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, CachedSuccessfulPairing);
                 portalChoices.Add(cachedPortalCombo);
                 deplando.Add(new Tuple<string, string>(currentPortalName, cachedPortalCombo.Portal2.Name));
                 if (!GetBool(Decoupled)) {
@@ -89,9 +65,10 @@ namespace TunicRandomizer {
                 CachePairingDict.Add(cachedPortalCombo, new List<PortalCombo>(CachedSuccessfulPairing));
                 CachedSuccessfulPairing = null;
             }
-            
-            foreach (PortalCombo portalCombo in excludedPortals) {
-                deplando.Add(new Tuple<string, string>(portalCombo.Portal1.Name, portalCombo.Portal2.Name));
+            if (excludedPortals != null) {
+                foreach (PortalCombo portalCombo in excludedPortals) {
+                    deplando.Add(new Tuple<string, string>(portalCombo.Portal1.Name, portalCombo.Portal2.Name));
+                }
             }
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
@@ -111,11 +88,16 @@ namespace TunicRandomizer {
                     continue;
                 }
 
-                PortalCombo newPortalCombo = GetPortalComboFromRandomizedPortals(currentPortalName, randomizedPortals);
+                PortalCombo newPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, randomizedPortals);
                 portalChoices.Add(newPortalCombo);
                 CachePairingDict.Add(newPortalCombo, randomizedPortals);
 
                 TunicLogger.LogInfo("portal choice is " + newPortalCombo.Portal2.Name);
+
+                // todo: remove this later when confident that it's not going to be a problem
+                TunicLogger.LogInfo($"Starting check all reachable in trials for {newPortalCombo.Portal2.Name}");
+                TunicUtils.CheckAllLocsReachable(randomizedPortals);
+
                 if (portalChoices.Count() == 3) {
                     break;
                 }

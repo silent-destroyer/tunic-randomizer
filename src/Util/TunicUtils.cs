@@ -213,14 +213,18 @@ namespace TunicRandomizer {
             return false;
         }
 
-        public static void CheckAllLocsReachable() {
+        public static void CheckAllLocsReachable(List<PortalCombo> randomizedPortals = null) {
             TunicLogger.LogInfo("Starting CheckAllLocsReachable");
             Dictionary<string, int> inventory = new Dictionary<string, int>(ItemRandomizer.PopulatePrecollected());
             List<Check> allInUseChecks = GetAllInUseChecks();
             
             AddStringToDict(inventory, "Overworld");
+
+            if (randomizedPortals == null) {
+                randomizedPortals = ERData.RandomizedPortals;
+            }
             // if it worked right, then inventory should be full and alreadyGottenLocs should be all locations with progression items
-            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory);
+            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory, randomizedPortals: randomizedPortals);
 
             foreach (Check check in allInUseChecks) {
                 if (!check.Location.reachable(inventory)) {
@@ -385,6 +389,24 @@ namespace TunicRandomizer {
             string result = Regex.Match(str, @"\d+").Value;
             return int.Parse(result);
         }
+
+        public static PortalCombo GetPortalComboFromRandomizedPortals(string portalName, List<PortalCombo> randomizedPortals) {
+            Portal originPortal = null;
+            Portal destinationPortal = null;
+            foreach (PortalCombo portalCombo in randomizedPortals) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    originPortal = portalCombo.Portal1;
+                    destinationPortal = portalCombo.Portal2;
+                    break;
+                }
+            }
+            if (destinationPortal == null) {
+                TunicLogger.LogError("Error in getting portal name in BPGetThreePortals");
+            }
+            PortalCombo newPortalCombo = new PortalCombo(originPortal, destinationPortal);
+            return newPortalCombo;
+        }
+
     }
 
 }

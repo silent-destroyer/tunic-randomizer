@@ -87,9 +87,12 @@ namespace TunicRandomizer {
         }
 
 
-        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null) {
+        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null, List<PortalCombo> randomizedPortals = null) {
             if (alreadyCheckedLocations == null) {
                 alreadyCheckedLocations = new List<Check>();
+            }
+            if (randomizedPortals == null) {
+                randomizedPortals = RandomizedPortals;
             }
             while (true) {
                 // start count is the quantity of items in full inventory. If this stays the same between loops, then you are done getting items
@@ -102,7 +105,7 @@ namespace TunicRandomizer {
                     // since regions always have a count of 1, we can just use .count instead of counting up all the values
                     int start_num = inventory.Count;
                     inventory = UpdateReachableRegions(inventory);
-                    foreach (PortalCombo portalCombo in RandomizedPortals) {
+                    foreach (PortalCombo portalCombo in randomizedPortals) {
                         inventory = portalCombo.AddComboRegion(inventory);
                     }
                     if (start_num == inventory.Count) {
@@ -256,14 +259,9 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("Create randomized portals is randomizing portals");
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
 
-            // now we add it to the actual, kept portal list, based on whether decoupled is on
             foreach (PortalCombo portalCombo in randomizedPortals) {
                 RandomizedPortals.Add(portalCombo);
                 ItemTracker.EntranceFileAllPortals.Add(portalCombo);
-                if (!GetBool(Decoupled)) {
-                    RandomizedPortals.Add(new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
-                    ItemTracker.EntranceFileAllPortals.Add(new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
-                }
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
             TunicLogger.LogInfo("CreateRandomizedPortals done");
@@ -526,11 +524,6 @@ namespace TunicRandomizer {
 
                 if (previousConnNum == FullInventory.Count) {
                     failCount++;
-                    //if (canFail) {
-                    //    // we can let it fail a little faster if it's allowed to fail
-                    //    // we do intentionally use failures with direction pairs, so we don't want it going up too fast
-                    //    failCount += 2;
-                    //}
                     if (failCount > 500) {
                         if (canFail) {
                             return null;
@@ -768,6 +761,14 @@ namespace TunicRandomizer {
                 }
 
                 randomizedPortals.Add(new PortalCombo(portal1, portal2));
+            }
+            // if we're not in decoupled, we want to make the portal list include both directions
+            if (!decoupledEnabled) {
+                List<PortalCombo> allRandomizedPortals = new List<PortalCombo>(randomizedPortals);
+                foreach (PortalCombo portalCombo in randomizedPortals) {
+                    allRandomizedPortals.Add(new PortalCombo(portalCombo.Portal2, portalCombo.Portal1));
+                }
+                randomizedPortals = allRandomizedPortals;
             }
             TunicLogger.LogInfo("Randomize Portals done");
             return randomizedPortals;
