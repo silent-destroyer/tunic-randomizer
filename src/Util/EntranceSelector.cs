@@ -307,7 +307,7 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
-
+            Time.timeScale = 0f;
         }
     }
 }

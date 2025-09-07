@@ -1949,7 +1949,7 @@ namespace TunicRandomizer {
             },
             {
                 "Library Lab to Librarian",
-                new RegionInfo("Library Arena", false)
+                new RegionInfo("Library Lab", false)
             },
             {
                 "Library Arena",
