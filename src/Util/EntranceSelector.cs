@@ -39,14 +39,6 @@ namespace TunicRandomizer {
         public static GameObject SceneText2;
         public static GameObject SceneText3;
 
-        
-        // todo figure out why this doesn't work/how to actually make it pause time
-        public override bool pauseTime {
-            get {
-                return true;
-            }
-        }
-
         public static void CreateEntranceSelector() {
             InputSequenceAssistanceMenu menuBase = Resources.FindObjectsOfTypeAll<InputSequenceAssistanceMenu>().First();
             GameObject newMenu = GameObject.Instantiate(menuBase.gameObject);
@@ -303,7 +295,9 @@ namespace TunicRandomizer {
         }
 
         public void cleanup() {
-            GUIMode.PopMode(this);
+            TunicLogger.LogInfo("cleanup started");
+            //GUIMode.PopMode(this);
+            TunicLogger.LogInfo("cleanup done");
         }
 
         public void Update() {
