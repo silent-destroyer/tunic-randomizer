@@ -241,9 +241,30 @@ namespace TunicRandomizer {
         public void RerollChoices() {
             // todo add sfx on button press for successful or 
             Item SoulDice = Inventory.GetItemByName("Soul Dice");
-            if (SoulDice.Quantity > 0) {
-                SoulDice.Quantity -= 1;
-                ShowSelection(FoxPrince.BPGetThreePortals(SaveFile.GetInt("seed"), FoxPrince.CurrentPortal.name, EntranceOptions));
+            List<PortalCombo> newPortals = null;
+            if (SoulDice.Quantity > 0 && EntranceOptions.Count == 3) {
+                newPortals = FoxPrince.BPGetThreePortals(SaveFile.GetInt("seed"), FoxPrince.CurrentPortal.name, EntranceOptions);
+                if (newPortals != null) {
+                    SoulDice.Quantity -= 1;
+                    // if it gave us less than 3 portals, we need to reuse some of the previous ones
+                    if (newPortals.Count < 3) {
+                        System.Random random = new System.Random(SaveFile.GetInt("seed"));
+                        int index1 = random.Next(0, 2);
+                        newPortals.Add(EntranceOptions[index1]);
+                        // if it only had 1 portal in it, we need another one that's different from the first one
+                        if (newPortals.Count < 3) {
+                            int index2 = random.Next(0, 2);
+                            while (index2 == index1) {
+                                index2 = random.Next(0, 2);
+                            }
+                            newPortals.Add(EntranceOptions[index2]);
+                        }
+                    }
+                }
+            }
+            if (newPortals == null) {
+                // do whatever we would do if you can't reroll
+                TunicLogger.LogInfo("Cannot reroll at this time");
             }
         }
 
