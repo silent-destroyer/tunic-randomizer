@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
 
@@ -44,6 +45,8 @@ namespace TunicRandomizer {
         private const int BREAKABLE_SHUFFLE = 65536;
         private const int FUSE_SHUFFLE = 131072;
         private const int BELL_SHUFFLE = 262144;
+        private const int LAURELS_ZIPS = 524288;
+        private const int LS_WITHOUT_ITEMS = 1048576;
 
         public GameModes GameMode {
             get;
@@ -95,6 +98,23 @@ namespace TunicRandomizer {
             set;
         }
         public bool Maskless {
+            get;
+            set;
+        }
+
+        public bool LaurelsZips {
+            get;
+            set;
+        }
+        public IceGrapplingType IceGrappling {
+            get;
+            set;
+        }
+        public LadderStorageType LadderStorage {
+            get;
+            set;
+        }
+        public bool LadderStorageWithoutItems {
             get;
             set;
         }
@@ -512,6 +532,19 @@ namespace TunicRandomizer {
             TENFAIRIES,
         }
 
+        public enum IceGrapplingType {
+            OFF,
+            EASY,
+            MEDIUM,
+            HARD,
+        }
+        public enum LadderStorageType {
+            OFF,
+            EASY,
+            MEDIUM,
+            HARD,
+        }
+
         public RandomizerSettings() {
 
             ConnectionSettings = new ConnectionSettings();
@@ -544,6 +577,12 @@ namespace TunicRandomizer {
             HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
             HexagonQuestRandomExtras = HexQuestValue.RANDOM;
+
+            // Trick & Glitch Logic
+            LaurelsZips = false;
+            IceGrappling = IceGrapplingType.OFF;
+            LadderStorage = LadderStorageType.OFF;
+            LadderStorageWithoutItems = false;
 
             // Archipelago 
             DeathLinkEnabled = false;
@@ -622,13 +661,16 @@ namespace TunicRandomizer {
         }
 
         public string GetSettingsString() {
+            bool getFromSave = SceneManager.GetActiveScene().name != "TitleScreen";
             string EncodedSettings = Convert.ToBase64String(Encoding.UTF8.GetBytes(
-                $"{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.HexagonQuestGoal) : HexagonQuestGoal)}" +
-                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.HexagonQuestExtras) : HexagonQuestExtraPercentage)}" +
+                $"{(getFromSave ? SaveFile.GetInt(SaveFlags.HexagonQuestGoal) : HexagonQuestGoal)}" +
+                $":{(getFromSave ? SaveFile.GetInt(SaveFlags.HexagonQuestExtras) : HexagonQuestExtraPercentage)}" +
                 $":{(int)FoolTrapIntensity}" +
-                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt(SaveFlags.LaurelsLocation) : (int)FixedLaurelsOption)}" +
-                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt("randomizer hexagon quest random goal") : (int)HexagonQuestRandomGoal)}" +
-                $":{(SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetInt("randomizer hexagon quest random extras") : (int)HexagonQuestRandomExtras)}" +
+                $":{(getFromSave ? SaveFile.GetInt(SaveFlags.LaurelsLocation) : (int)FixedLaurelsOption)}" +
+                $":{(getFromSave ? SaveFile.GetInt(SaveFlags.HexagonQuestRandomGoal) : (int)HexagonQuestRandomGoal)}" +
+                $":{(getFromSave ? SaveFile.GetInt(SaveFlags.HexagonQuestRandomExtras) : (int)HexagonQuestRandomExtras)}" +
+                $":{(getFromSave ? SaveFile.GetInt(SaveFlags.IceGrapplingDifficulty) : (int)IceGrappling)}" +
+                $":{(getFromSave ? SaveFile.GetInt(SaveFlags.LadderStorageDifficulty) : (int)LadderStorage)}" +
                 $":{Convert.ToInt32(sToB(logicSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(generalSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(hintSettings()), 2)}" +
@@ -636,9 +678,9 @@ namespace TunicRandomizer {
                 $":{Convert.ToInt32(sToB(raceSettings()), 2)}" +
                 $":{Convert.ToInt32(sToB(otherSettings()), 2)}" +
                 $":{ConvertEnemyToggles()}" +
-                $":{(MysterySeed ? SceneManager.GetActiveScene().name != "TitleScreen" ? SaveFile.GetString("randomizer mystery seed weights") : MysterySeedWeights.ToSettingsString() : "")}"));
+                $":{(MysterySeed ? getFromSave ? SaveFile.GetString("randomizer mystery seed weights") : MysterySeedWeights.ToSettingsString() : "")}"));
             string seed;
-            if (SceneManager.GetActiveScene().name != "TitleScreen") {
+            if (getFromSave) {
                 seed = SaveFile.GetInt("seed").ToString();
             } else {
                 seed = QuickSettings.CustomSeed == "" ? new System.Random().Next().ToString() : QuickSettings.CustomSeed;
@@ -667,8 +709,10 @@ namespace TunicRandomizer {
                 FixedLaurelsOption = (FixedLaurelsType)int.Parse(decodedSplit[3]);
                 HexagonQuestRandomGoal = (HexQuestValue)int.Parse(decodedSplit[4]);
                 HexagonQuestRandomExtras = (HexQuestValue)int.Parse(decodedSplit[5]);
+                IceGrappling = (IceGrapplingType)int.Parse(decodedSplit[6]);
+                LadderStorage = (LadderStorageType)int.Parse(decodedSplit[7]);
 
-                int logic = int.Parse(decodedSplit[6]);
+                int logic = int.Parse(decodedSplit[8]);
                 GameMode = eval(logic, HEXAGON_QUEST) ? GameModes.HEXAGONQUEST : GameModes.RANDOMIZER;
                 KeysBehindBosses = eval(logic, KEYS_BEHIND_BOSSES);
                 StartWithSwordEnabled = eval(logic, START_WITH_SWORD);
@@ -688,8 +732,10 @@ namespace TunicRandomizer {
                 BreakableShuffle = eval(logic, BREAKABLE_SHUFFLE);
                 FuseShuffle = eval(logic, FUSE_SHUFFLE);
                 BellShuffle = eval(logic, BELL_SHUFFLE);
+                LaurelsZips = eval(logic, LAURELS_ZIPS);
+                LadderStorageWithoutItems = eval(logic, LS_WITHOUT_ITEMS);
 
-                int general = int.Parse(decodedSplit[7]);
+                int general = int.Parse(decodedSplit[9]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
                 ClearEarlyBushes = eval(general, CLEAR_BUSHES);
                 EnableAllCheckpoints = eval(general, ENABLE_CHECKPOINTS);
@@ -699,7 +745,7 @@ namespace TunicRandomizer {
                 SkipItemAnimations = eval(general, SKIP_ITEM_POPUPS);
                 FasterUpgrades = eval(general, FASTER_UPGRADES);
 
-                int hints = int.Parse(decodedSplit[8]);
+                int hints = int.Parse(decodedSplit[10]);
                 HeroPathHintsEnabled = eval(hints, PATH_OF_HERO);
                 GhostFoxHintsEnabled = eval(hints, GHOST_FOXES);
                 ShowItemsEnabled = eval(hints, SHOW_ITEMS);
@@ -707,7 +753,7 @@ namespace TunicRandomizer {
                 UseTrunicTranslations = eval(hints, USE_TRUNIC);
                 CreateSpoilerLog = eval(hints, SPOILER_LOG);
 
-                int enemies = int.Parse(decodedSplit[9]);
+                int enemies = int.Parse(decodedSplit[11]);
                 EnemyRandomizerEnabled = eval(enemies, ENEMY_RANDOMIZER);
                 ExtraEnemiesEnabled = eval(enemies, EXTRA_ENEMIES);
                 BalancedEnemies = eval(enemies, BALANCED_ENEMIES);
@@ -717,7 +763,7 @@ namespace TunicRandomizer {
                 OopsAllEnemy = eval(enemies, OOPS_ALL_ENEMY);
                 RandomEnemySizes = eval(enemies, RANDOM_ENEMY_SIZES);
 
-                int race = int.Parse(decodedSplit[10]);
+                int race = int.Parse(decodedSplit[12]);
                 RaceMode = eval(race, RACE_MODE);
                 DisableIceboltInHeirFight = eval(race, HEIR_ICEBOLT);
                 DisableDistantBellShots = eval(race, DISTANT_BELLS);
@@ -725,8 +771,8 @@ namespace TunicRandomizer {
                 DisableLadderStorage = eval(race, LADDER_STORAGE);
                 DisableUpgradeStealing = eval(race, UPGRADE_STEALING);
 
-                if (decodedSplit.Length >= 11) {
-                    int other = int.Parse(decodedSplit[11]);
+                if (decodedSplit.Length >= 12) {
+                    int other = int.Parse(decodedSplit[13]);
                     CameraFlip = eval(other, CAMERA_FLIP);
                     MoreSkulls = eval(other, MORE_SKULLS);
                     ArachnophobiaMode = eval(other, ARACHNOPHOBIA_MODE);
@@ -734,10 +780,10 @@ namespace TunicRandomizer {
                     BiggerHeadMode = eval(other, BIGGER_HEAD_MODE);
                     TinierFoxMode = eval(other, TINIER_FOX_MODE);
 
-                    ParseEnemyToggles(decodedSplit[12]);
+                    ParseEnemyToggles(decodedSplit[14]);
                 }
                 if (MysterySeed) {
-                    MysterySeedWeights.FromSettingsString(decodedSplit[13]);
+                    MysterySeedWeights.FromSettingsString(decodedSplit[15]);
                 }
 
                 RandomizerSettings.SaveSettings();
@@ -763,20 +809,21 @@ namespace TunicRandomizer {
                     Lanternless, Maskless, MysterySeed, ShuffleLadders,
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
-                    BreakableShuffle, FuseShuffle, BellShuffle,
+                    BreakableShuffle, FuseShuffle, BellShuffle, LaurelsZips, LadderStorageWithoutItems,
                 };
             } else {
                 return new bool[] { 
-                    SaveFile.GetInt(SaveFlags.HexagonQuestEnabled) == 1, SaveFile.GetInt(SaveFlags.KeysBehindBosses) == 1,
-                    SaveFile.GetInt("randomizer started with sword") == 1, SaveFile.GetInt(SaveFlags.SwordProgressionEnabled) == 1,
-                    SaveFile.GetInt(SaveFlags.AbilityShuffle) == 1, SaveFile.GetInt(SaveFlags.EntranceRando) == 1,
-                    SaveFile.GetInt(SaveFlags.ERFixedShop) == 1, SaveFile.GetInt(SaveFlags.LanternlessLogic) == 1,
-                    SaveFile.GetInt(SaveFlags.MasklessLogic) == 1, SaveFile.GetInt("randomizer mystery seed") == 1, 
-                    SaveFile.GetInt(SaveFlags.LadderRandoEnabled) == 1, SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1,
-                    SaveFile.GetInt(SaveFlags.HexagonQuestRandomizedValues) == 1, SaveFile.GetInt(SaveFlags.PortalDirectionPairs) == 1,
-                    SaveFile.GetInt(SaveFlags.Decoupled) == 1, SaveFile.GetInt(SaveFlags.HexagonQuestPageAbilities) == 1,
-                    SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1, SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1,
-                    SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1,
+                    GetBool(SaveFlags.HexagonQuestEnabled), GetBool(SaveFlags.KeysBehindBosses),
+                    GetBool(SaveFlags.StartWithSword), GetBool(SaveFlags.SwordProgressionEnabled),
+                    GetBool(SaveFlags.AbilityShuffle), GetBool(SaveFlags.EntranceRando),
+                    GetBool(SaveFlags.ERFixedShop), GetBool(SaveFlags.LanternlessLogic),
+                    GetBool(SaveFlags.MasklessLogic), GetBool(MysterySeedEnabled),
+                    GetBool(SaveFlags.LadderRandoEnabled), GetBool(SaveFlags.GrassRandoEnabled),
+                    GetBool(SaveFlags.HexagonQuestRandomizedValues), GetBool(SaveFlags.PortalDirectionPairs),
+                    GetBool(SaveFlags.Decoupled), GetBool(SaveFlags.HexagonQuestPageAbilities),
+                    GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
+                    GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
+                    GetBool(SaveFlags.LadderStorageWithoutItems),
                 };
             }
         }
