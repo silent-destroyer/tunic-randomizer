@@ -420,6 +420,15 @@ namespace TunicRandomizer {
                 DicePresentation.AddComponent<Rotate>().unscaled = true;
                 DicePresentation.GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(10f, 30f, 10f);
 
+                GameObject SubLayer = GameObject.Instantiate(DicePresentation);
+                SubLayer.transform.parent = DicePresentation.transform;
+                GameObject.Destroy(SubLayer.GetComponent<Rotate>());
+                GameObject.Destroy(SubLayer.GetComponent<ItemPresentationGraphic>());
+                SubLayer.layer = 5;
+                SubLayer.GetComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("tunic knight obsidian");
+                SubLayer.transform.localRotation = new Quaternion(0, 0, 0, 0);
+                SubLayer.transform.localPosition = Vector3.zero;
+
                 DicePresentation.SetActive(false);
 
                 RegisterNewItemPresentation(DicePresentation.GetComponent<ItemPresentationGraphic>());

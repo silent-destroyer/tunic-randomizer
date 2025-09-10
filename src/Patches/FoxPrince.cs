@@ -18,6 +18,11 @@ namespace TunicRandomizer {
         // flag to tell ModifyPortals to update the sign displays
         public static bool UpdateSignsFlag = false;
 
+        public static void Setup() {
+            EntranceSelector.CreateEntranceSelector();
+            ItemPresentationPatches.SetupFoxPrinceItemPresentations();
+        }
+
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
             // the collider here is the fox's UnityEngine.CapsuleCollider
             if (!GetBool(FoxPrinceEnabled)) return true;
@@ -171,9 +176,6 @@ namespace TunicRandomizer {
             SoulDice.controlAction = "";
 
             Inventory.itemList.Add(SoulDice);
-
-            ItemPresentationPatches.SetupFoxPrinceItemPresentations();
         }
-
     }
 }
