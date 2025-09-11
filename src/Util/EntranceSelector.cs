@@ -311,7 +311,16 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
-            Time.timeScale = 0f;
+        }
+
+        public static bool GUIMode_PauseTime_GetterPatch(GUIMode __instance, ref bool __result) {
+
+            if (GUIMode.topMode != null && GUIMode.topMode.TryCast<EntranceSelector>() != null) {
+                __result = true;
+                return false;
+            }
+
+            return true;
         }
     }
 }

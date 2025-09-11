@@ -211,6 +211,8 @@ namespace TunicRandomizer {
             // Fox Prince
             Harmony.Patch(AccessTools.Method(typeof(ScenePortal), "OnTriggerEnter"), new HarmonyMethod(AccessTools.Method(typeof(FoxPrince), "ScenePortal_OnTriggerEnter_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.PropertyGetter(typeof(GUIMode), "PauseTime"), new HarmonyMethod(AccessTools.Method(typeof(EntranceSelector), "GUIMode_PauseTime_GetterPatch")));
+
             // Misc
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));
 
