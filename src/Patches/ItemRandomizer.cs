@@ -656,5 +656,14 @@ namespace TunicRandomizer {
             Inventory = ERScripts.UpdateReachableRegions(Inventory);
             return Inventory;
         }
+
+        // for testing item model appearances everywhere
+        public static void testChangeEveryItem(string itemName, int quantity, string type) {
+            foreach (Check check in Locations.RandomizedLocations.Values) { 
+                check.Reward.Name = itemName;
+                check.Reward.Amount = quantity;
+                check.Reward.Type = type;
+            }
+        }
     }
 }

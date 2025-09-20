@@ -235,7 +235,7 @@
     <Compile Include="src\Util\EntranceSelector.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
-    <Compile Include="src\Util\ImageButton.cs" />
+    <Compile Include="src\Util\SceneSelectionButton.cs" />
     <Compile Include="src\Util\LogicChecker.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />

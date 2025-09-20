@@ -7,10 +7,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace TunicRandomizer {
-    public class ImageButton : MonoBehaviour {
+    public class SceneSelectionButton : MonoBehaviour {
         public Image image;
         public Button button;
         public Color colorWhenSelected = new Color(0.92f, 0.65f, 0.08f);
+        public bool isSceneButton = false;
+        public Image dartIcon;
 
         public void Update() {
             if (image == null && GetComponent<Image>() != null) {
@@ -21,9 +23,19 @@ namespace TunicRandomizer {
             }
             if (button != null && image != null && button.hasSelection && colorWhenSelected != null) {
                 image.color = colorWhenSelected;
+                if (isSceneButton && EntranceSelector.WaitingForDartSelection) {
+                    image.color = Color.cyan;
+                }
+                if (dartIcon != null) {
+                    dartIcon.gameObject.SetActive(EntranceSelector.WaitingForDartSelection); // Todo add logic to show the icon if the entrance is the pinned entrance
+                }
             } else {
                 image.color = Color.white;
+                if (dartIcon != null) {
+                    dartIcon.gameObject.SetActive(false); // Todo add logic to show the icon if the entrance is the pinned entrance
+                }
             }
+            GetComponent<Button>().enabled = isSceneButton || !EntranceSelector.WaitingForDartSelection;
         }
     }
 }

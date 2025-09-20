@@ -402,6 +402,8 @@ namespace TunicRandomizer {
 
         public static void SetupFoxPrinceItemPresentations() {
             try {
+                // Soul Dice
+
                 GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "shield").First().gameObject;
                 GameObject DicePresentation = GameObject.Instantiate(PresentationBase);
                 GameObject DiceObject = Resources.FindObjectsOfTypeAll<LoadingSpinner>().First().gameObject;
@@ -434,6 +436,29 @@ namespace TunicRandomizer {
                 RegisterNewItemPresentation(DicePresentation.GetComponent<ItemPresentationGraphic>());
 
                 ModelSwaps.Items["Soul Dice"] = DicePresentation;
+
+                // Dart
+                GameObject fox = Resources.Load("_PlayerCharacter").Cast<GameObject>();
+                TunicLogger.LogInfo(fox.name);
+                GameObject.DontDestroyOnLoad(fox);
+                GameObject Dart = fox.transform.GetChild(3).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(6).gameObject;
+                // torch is 2
+                GameObject DartPresentation = GameObject.Instantiate(Dart);
+
+                DartPresentation.transform.parent = PresentationBase.transform.parent;
+                DartPresentation.transform.localPosition = Vector3.zero;
+                DartPresentation.transform.localEulerAngles = new Vector3(315f, 90f, 0f);
+                DartPresentation.transform.localScale = Vector3.one;
+
+                DartPresentation.name = "dart";
+                DartPresentation.layer = 5;
+
+                DartPresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Dart") };
+
+                DartPresentation.SetActive(false);
+                RegisterNewItemPresentation(DartPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Dart"] = DartPresentation;
 
             } catch (Exception e) {
                 TunicLogger.LogError("Fox prince presentation error: " + e.Message);

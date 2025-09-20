@@ -259,6 +259,7 @@ namespace TunicRandomizer {
             switch (__instance.name) {
                 case "Cape":
                 case "Soul Dice":
+                case "Dart":
                     __result = false;
                     return false;
                 default:

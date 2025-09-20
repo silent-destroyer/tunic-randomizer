@@ -175,6 +175,11 @@ namespace TunicRandomizer {
             SoulDice.collectionMessage.text = $"dE twehntE!";
             SoulDice.controlAction = "";
 
+            // TODO maybe think of a better name for this item lol
+            Item Dart = Inventory.GetItemByName("Dart");
+            Dart.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
+            Dart.collectionMessage.text = "boulzI!";
+        
             Inventory.itemList.Add(SoulDice);
         }
     }

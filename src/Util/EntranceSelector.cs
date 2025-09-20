@@ -39,6 +39,8 @@ namespace TunicRandomizer {
         public static GameObject SceneText2;
         public static GameObject SceneText3;
 
+        public static bool WaitingForDartSelection = false;
+
         public static void CreateEntranceSelector() {
             InputSequenceAssistanceMenu menuBase = Resources.FindObjectsOfTypeAll<InputSequenceAssistanceMenu>().First();
             GameObject newMenu = GameObject.Instantiate(menuBase.gameObject);
@@ -60,6 +62,7 @@ namespace TunicRandomizer {
             mainBox.transform.GetChild(1).localPosition = new Vector3(0f, -20f, 0f);
 
             Sprite box = ModelSwaps.FindSprite("UI_box");
+            Material UIAdd = ModelSwaps.FindMaterial("UI Add");
             TMP_FontAsset odin = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
 
             GameObject ButtonsRoot = new GameObject("Scene Image Buttons");
@@ -77,6 +80,14 @@ namespace TunicRandomizer {
             LayoutElement le = ButtonObj1.AddComponent<LayoutElement>();
             le.minHeight = 180;
             le.minWidth = 240;
+            GameObject DartIcon1 = new GameObject("dart icon");
+            DartIcon1.AddComponent<Image>().sprite = Inventory.GetItemByName("Dart").icon;
+            DartIcon1.GetComponent<Image>().material = UIAdd;
+            DartIcon1.transform.parent = ButtonObj1.transform;
+            DartIcon1.layer = 5;
+            DartIcon1.transform.localScale = Vector3.one * 0.5f;
+            DartIcon1.transform.localPosition = new Vector3(66, 55, 0);
+            DartIcon1.SetActive(false);
 
             ButtonObj2 = new GameObject("Button 2");
             ButtonObj2.transform.parent = ButtonsRoot.transform;
@@ -87,6 +98,8 @@ namespace TunicRandomizer {
             LayoutElement le2 = ButtonObj2.AddComponent<LayoutElement>();
             le2.minHeight = 180;
             le2.minWidth = 240;
+            GameObject.Instantiate(DartIcon1).transform.parent = ButtonObj2.transform;
+            ButtonObj2.transform.GetChild(0).localPosition = new Vector3(66, 55, 0);
 
             ButtonObj3 = new GameObject("Button 3");
             ButtonObj3.transform.parent = ButtonsRoot.transform;
@@ -97,6 +110,8 @@ namespace TunicRandomizer {
             LayoutElement le3 = ButtonObj3.AddComponent<LayoutElement>();
             le3.minHeight = 180;
             le3.minWidth = 240;
+            GameObject.Instantiate(DartIcon1).transform.parent = ButtonObj3.transform;
+            ButtonObj3.transform.GetChild(0).localPosition = new Vector3(66, 55, 0);
 
             GameObject SceneNamesRoot = new GameObject("Scene Names");
             SceneNamesRoot.transform.parent = mainBox.transform;
@@ -168,15 +183,16 @@ namespace TunicRandomizer {
             GameObject RerollIcon = new GameObject("item icon");
             RerollIcon.transform.parent = RerollButtonObj.transform;
             RerollIcon.transform.localScale = Vector3.one;
-            RerollIcon.transform.localPosition = new Vector3(-23f, 0f, 0f);
-            RerollIcon.transform.localScale = Vector3.one * 0.35f;
+            RerollIcon.transform.localPosition = new Vector3(-23f, 3f, 0f);
+            RerollIcon.transform.localScale = Vector3.one * 0.5f;
             RerollIcon.layer = 5;
             RerollIcon.AddComponent<Image>();
+            RerollIcon.GetComponent<Image>().material = UIAdd;
 
             GameObject RerollText = new GameObject("item quantity");
             RerollText.transform.localScale = Vector3.one;
             RerollText.transform.parent = RerollButtonObj.transform;
-            RerollText.transform.localPosition = new Vector3(110.6092f, -3.9782f, -76.9091f);
+            RerollText.transform.localPosition = new Vector3(110.6092f, 0f, -76.9091f);
             RerollText.transform.localScale = Vector3.one;
             RerollText.layer = 5;
             RTLTextMeshPro rerollText = RerollText.AddComponent<RTLTextMeshPro>();
@@ -186,6 +202,7 @@ namespace TunicRandomizer {
             ItemButtonObj2.transform.parent = ItemButtons.transform;
             ItemButtonObj2.transform.localScale = Vector3.one;
             ItemButtonObj2.transform.localPosition = new Vector3(ItemButtonObj2.transform.localPosition.x, ItemButtonObj2.transform.localPosition.y, 200);
+            ItemButtonObj2.transform.GetChild(0).transform.localScale = Vector3.one * 0.75f;
             ItemButton2 = ItemButtonObj2.GetComponent<Button>();
 
             GameObject ItemButtonObj3 = GameObject.Instantiate(RerollButtonObj);
@@ -204,8 +221,13 @@ namespace TunicRandomizer {
         }
 
         public void FirstChoice() {
-            TunicLogger.LogInfo("Chose first scene");
+            if (WaitingForDartSelection) {
+                // TODO save the pinned entrance in save file or something
+                WaitingForDartSelection = false;
+                return;
+            }
             if (EntranceOptions.Count > 0) {
+                TunicLogger.LogInfo("Chose first scene");
                 Notifications.Show($"\"Chose first option.\"", $"\"{EntranceOptions[0].Portal1.Name} -> {EntranceOptions[0].Portal2.Name}\"");
                 FoxPrince.BPPortalChosen(EntranceOptions[0]);
                 cleanup();
@@ -213,6 +235,10 @@ namespace TunicRandomizer {
         }
 
         public void SecondChoice() {
+            if (WaitingForDartSelection) {
+                WaitingForDartSelection = false;
+                return;
+            }
             if (EntranceOptions.Count > 0) {
             TunicLogger.LogInfo("Chose second scene");
                 Notifications.Show($"\"Chose second option.\"", $"\"{EntranceOptions[1].Portal1.Name} -> {EntranceOptions[1].Portal2.Name}\"");
@@ -222,6 +248,10 @@ namespace TunicRandomizer {
         }
 
         public void ThirdChoice() {
+            if (WaitingForDartSelection) {
+                WaitingForDartSelection = false;
+                return;
+            }
             TunicLogger.LogInfo("Chose third scene");
             if (EntranceOptions.Count > 0) {
                 Notifications.Show($"\"Chose third option.\"", $"\"{EntranceOptions[2].Portal1.Name} -> {EntranceOptions[2].Portal2.Name}\"");
@@ -268,20 +298,38 @@ namespace TunicRandomizer {
             }
         }
 
-        public void Awake() {
+        public void PinSelection() {
+            WaitingForDartSelection = true;
+            EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
+        }
 
-            ButtonObj1.AddComponent<ImageButton>();
-            ButtonObj2.AddComponent<ImageButton>();
-            ButtonObj3.AddComponent<ImageButton>();
-            RerollButton.gameObject.AddComponent<ImageButton>();
-            ItemButton3.gameObject.AddComponent<ImageButton>();
-            ItemButton3.gameObject.AddComponent<ImageButton>();
-            ItemButton4.gameObject.AddComponent<ImageButton>();
+        public void Item3() {
+
+        }
+
+        public void Item4() {
+        
+        }
+
+        public void Awake() {
+            ButtonObj1.AddComponent<SceneSelectionButton>().isSceneButton = true;
+            ButtonObj1.GetComponent<SceneSelectionButton>().dartIcon = ButtonObj1.transform.GetChild(0).GetComponent<Image>();
+            ButtonObj2.AddComponent<SceneSelectionButton>().isSceneButton = true;
+            ButtonObj2.GetComponent<SceneSelectionButton>().dartIcon = ButtonObj2.transform.GetChild(0).GetComponent<Image>();
+            ButtonObj3.AddComponent<SceneSelectionButton>().isSceneButton = true;
+            ButtonObj3.GetComponent<SceneSelectionButton>().dartIcon = ButtonObj3.transform.GetChild(0).GetComponent<Image>();
+            RerollButton.gameObject.AddComponent<SceneSelectionButton>();
+            ItemButton3.gameObject.AddComponent<SceneSelectionButton>();
+            ItemButton3.gameObject.AddComponent<SceneSelectionButton>();
+            ItemButton4.gameObject.AddComponent<SceneSelectionButton>();
 
             SceneButton1.onClick.AddListener((UnityAction)FirstChoice);
             SceneButton2.onClick.AddListener((UnityAction)SecondChoice);
             SceneButton3.onClick.AddListener((UnityAction)ThirdChoice);
             RerollButton.onClick.AddListener((UnityAction)RerollChoices);
+            ItemButton2.onClick.AddListener((UnityAction)PinSelection);
+            ItemButton3.onClick.AddListener((UnityAction)Item3);
+            ItemButton4.onClick.AddListener((UnityAction)Item4);
         }
 
         public void ShowSelection(List<PortalCombo> portalChoices) {
@@ -298,6 +346,8 @@ namespace TunicRandomizer {
 
             RerollButton.transform.GetChild(0).GetComponent<Image>().sprite = Inventory.GetItemByName("Soul Dice").icon;
             RerollButton.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Soul Dice").Quantity.ToString();
+            ItemButton2.transform.GetChild(0).GetComponent<Image>().sprite = Inventory.GetItemByName("Dart").icon;
+            ItemButton2.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Dart").Quantity.ToString();
             GUIMode.PushMode(EntranceSelector.instance);
             EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
         }
