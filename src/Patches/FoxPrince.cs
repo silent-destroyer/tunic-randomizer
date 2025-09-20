@@ -15,6 +15,9 @@ namespace TunicRandomizer {
         public static Dictionary<PortalCombo, List<PortalCombo>> CachePairingDict = new Dictionary<PortalCombo, List<PortalCombo>>();
         public static List<PortalCombo> CachedSuccessfulPairing = null;
 
+        // for use with the pin system
+        public static string PinnedPortal = null;
+
         // flag to tell ModifyPortals to update the sign displays
         public static bool UpdateSignsFlag = false;
 
@@ -60,6 +63,12 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("starting BPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
+            if (PinnedPortal != null) {
+                // todo: put this together
+                // if direction pairs is on, check that this portal is a pairable direction
+                // if so, run some number of trials to see if this portal is viable, and have it be first
+                // also find a spot to check the save file and setup PinnedPortal in the first place (not here, somewhere else)
+            }
             if (CachedSuccessfulPairing != null) {
                 PortalCombo cachedPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, CachedSuccessfulPairing);
                 portalChoices.Add(cachedPortalCombo);
@@ -118,28 +127,6 @@ namespace TunicRandomizer {
             return portalChoices;
         }
 
-        public static void BPTestDialogue() {
-            TunicLogger.LogInfo("test start");
-            GameObject testGUI = GameObject.Instantiate(GameObject.Find("_GameGUI(Clone)"));
-            TunicLogger.LogInfo("test 1");
-            GameObject testCanvas = testGUI.transform.GetChild(3).gameObject;
-            TunicLogger.LogInfo("test 2");
-            GameObject testPanel = testCanvas.transform.GetChild(0).gameObject;
-            TunicLogger.LogInfo("test 3");
-            GameObject buttonRow = testPanel.transform.GetChild(1).gameObject;
-            TunicLogger.LogInfo("test 4");
-            GameObject newButton = GameObject.Instantiate(buttonRow.transform.GetChild(0).gameObject, buttonRow.transform);
-            TunicLogger.LogInfo("test 5");
-            GameObject buttonTextObj = newButton.transform.GetChild(0).gameObject;
-            TunicLogger.LogInfo("test 6");
-            buttonTextObj.GetComponent<RTLTMPro.RTLTextMeshPro>().originalText = "words";
-            TunicLogger.LogInfo("test 7");
-            buttonTextObj.GetComponent<RTLTMPro.RTLTextMeshPro>().text = "words2";
-            TunicLogger.LogInfo("test 8");
-            testCanvas.SetActive(true);
-            TunicLogger.LogInfo("test end");
-        }
-
         public static void BPPortalChosen(PortalCombo portalCombo) {
             TunicLogger.LogInfo("BPPortalChosen started");
             if (CachePairingDict.ContainsKey(portalCombo)) {
@@ -165,6 +152,9 @@ namespace TunicRandomizer {
             if (Hints.PortalToSignName.ContainsKey(portalCombo.Portal1.SceneDestinationTag) || Hints.PortalToSignName.ContainsKey(portalCombo.Portal2.SceneDestinationTag)) {
                 UpdateSignsFlag = true;
             }
+
+            // todo: check the pinned portal
+            // if the paired portal is the pinned portal, clear the save file string, set PinnedPortal to null
             TunicLogger.LogInfo("BPPortalChosen done");
         }
 

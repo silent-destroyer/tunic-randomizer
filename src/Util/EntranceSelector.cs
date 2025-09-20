@@ -234,6 +234,10 @@ namespace TunicRandomizer {
             }
         }
 
+        public void PinSelection(string portalName) {
+            SaveFile.SetString($"randomizer bp pinned portal", portalName);
+        }
+
         public void SecondChoice() {
             if (WaitingForDartSelection) {
                 WaitingForDartSelection = false;
@@ -298,7 +302,7 @@ namespace TunicRandomizer {
             }
         }
 
-        public void PinSelection() {
+        public void ActivatePin() {
             WaitingForDartSelection = true;
             EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
         }
@@ -327,7 +331,7 @@ namespace TunicRandomizer {
             SceneButton2.onClick.AddListener((UnityAction)SecondChoice);
             SceneButton3.onClick.AddListener((UnityAction)ThirdChoice);
             RerollButton.onClick.AddListener((UnityAction)RerollChoices);
-            ItemButton2.onClick.AddListener((UnityAction)PinSelection);
+            ItemButton2.onClick.AddListener((UnityAction)ActivatePin);
             ItemButton3.onClick.AddListener((UnityAction)Item3);
             ItemButton4.onClick.AddListener((UnityAction)Item4);
         }
