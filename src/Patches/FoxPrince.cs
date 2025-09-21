@@ -90,7 +90,7 @@ namespace TunicRandomizer {
                 // todo: put this together
                 // if direction pairs is on, check that this portal is a pairable direction
                 // if so, run some number of trials to see if this portal is viable, and have it be first
-
+                if (TunicUtils.VerifyDirectionPair())
 
             }
 

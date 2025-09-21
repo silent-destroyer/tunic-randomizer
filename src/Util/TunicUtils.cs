@@ -397,8 +397,30 @@ namespace TunicRandomizer {
         // quick reference for which directions you can pair to which
         public static Dictionary<int, int> DirectionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
 
+        public static int FindPortalDirectionFromName(string portalName) {
+            // todo: extra stuff for the shop
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return portal.Direction;
+                        }
+                    }
+                }
+            }
+            return (int)PDir.NONE;
+        }
+
+        private static bool CheckDirections(int dir1, int dir2) {
+            return dir1 == DirectionPairs[dir2];
+        }
+
         public static bool VerifyDirectionPair(Portal portal1, Portal portal2) {
-            return portal1.Direction == DirectionPairs[portal2.Direction];
+            return CheckDirections(portal1.Direction, portal2.Direction);
+        }
+        public static bool VerifyDirectionPair(string portal1, string portal2) {
+            return CheckDirections(FindPortalDirectionFromName(portal1), FindPortalDirectionFromName(portal2));
         }
 
         public static PortalCombo GetPortalComboFromRandomizedPortals(string portalName, List<PortalCombo> randomizedPortals) {
@@ -469,20 +491,7 @@ namespace TunicRandomizer {
             return "FindPairedPortalRegionFromSDT failed to find a match";
         }
 
-        public static PDir FindPortalDirectionFromName(string portalName) {
-            // todo: extra stuff for the shop
-            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
-                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
-                    string regionName = regionGroup.Key;
-                    foreach (TunicPortal portal in regionGroup.Value) {
-                        if (portal.Name == portalName) {
-                            return portal.RawDirection;
-                        }
-                    }
-                }
-            }
-            return PDir.NONE;
-        }
+        
 
     }
 
