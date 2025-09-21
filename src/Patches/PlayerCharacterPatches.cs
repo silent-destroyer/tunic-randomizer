@@ -120,6 +120,7 @@ namespace TunicRandomizer {
                     try {
                         Inventory.GetItemByName("Soul Dice").Quantity = 3;
                         ItemPresentation.PresentItem(Inventory.GetItemByName("Soul Dice"), 3);
+                        Inventory.GetItemByName("Dart").Quantity = 3;
                     } catch (Exception e) {
                         TunicLogger.LogInfo("Error showing dice item");
                     }

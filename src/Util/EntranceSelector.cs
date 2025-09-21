@@ -217,8 +217,8 @@ namespace TunicRandomizer {
 
         public void FirstChoice() {
             if (WaitingForDartSelection) {
-                // TODO save the pinned entrance in save file or something
-                WaitingForDartSelection = false;
+                PinSelection(EntranceOptions[0].Portal2.Name);
+                // todo: maybe also some way to graphically show that it's pinned
                 return;
             }
             if (EntranceOptions.Count > 0) {
@@ -229,13 +229,9 @@ namespace TunicRandomizer {
             }
         }
 
-        public void PinSelection(string portalName) {
-            SaveFile.SetString(SaveFlags.FPPinnedPortalFlag, portalName);
-        }
-
         public void SecondChoice() {
             if (WaitingForDartSelection) {
-                WaitingForDartSelection = false;
+                PinSelection(EntranceOptions[1].Portal2.Name);
                 return;
             }
             if (EntranceOptions.Count > 0) {
@@ -248,7 +244,7 @@ namespace TunicRandomizer {
 
         public void ThirdChoice() {
             if (WaitingForDartSelection) {
-                WaitingForDartSelection = false;
+                PinSelection(EntranceOptions[2].Portal2.Name);
                 return;
             }
             TunicLogger.LogInfo("Chose third scene");
@@ -298,8 +294,18 @@ namespace TunicRandomizer {
         }
 
         public void ActivatePin() {
+            Item Pin = Inventory.GetItemByName("Dart");
+            if (Pin.Quantity == 0) { return; }
             WaitingForDartSelection = true;
             EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
+        }
+
+        public void PinSelection(string portalName) {
+            SaveFile.SetString(SaveFlags.FPPinnedPortalFlag, portalName);
+            FoxPrince.PinnedPortal = portalName;
+            Item Pin = Inventory.GetItemByName("Dart");
+            Pin.Quantity -= 1;
+            WaitingForDartSelection = false;
         }
 
         public void Item3() {

@@ -19,7 +19,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, string> CachedPlandoPortals = new Dictionary<string, string>();
 
         // for use with the pin system
-        public static string PinnedPortal = null;
+        public static string PinnedPortal = "";
 
         // flag to tell ModifyPortals to update the sign displays
         public static bool UpdateSignsFlag = false;
@@ -65,7 +65,15 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("starting FPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
+
+            void updateDeplando(string pname1, string pname2) {
+                deplando.Add(new Tuple<string, string>(pname1, pname2));
+                if (!GetBool(Decoupled)) {
+                    deplando.Add(new Tuple<string, string>(pname2, pname1));
+                }
+            }
             
+            // todo: the cache seems probably unnecessary
             Dictionary<string, string> plando = new Dictionary<string, string>();
             if (CachedPlandoPortals.Count > 0) {
                 plando = CachedPlandoPortals;
@@ -86,31 +94,39 @@ namespace TunicRandomizer {
                 CachedPlandoPortals = plando;
             }
 
-            if (PinnedPortal != null) {
-                // todo: put this together
-                // if direction pairs is on, check that this portal is a pairable direction
-                // if so, run some number of trials to see if this portal is viable, and have it be first
-                if (TunicUtils.VerifyDirectionPair())
-
+            // check if there's a pinned portal, if there is check if it's a valid direction pair if direction pairs, and check if it's been rerolled from already
+            // if the pinned portal is valid for the current choice, then it will be the first choice
+            if (PinnedPortal != ""
+                && (!GetBool(PortalDirectionPairs) || TunicUtils.VerifyDirectionPair(currentPortalName, PinnedPortal))
+                && excludedPortals == null) {
+                // todo: this is duplicate of below, could probably deduplicate it
+                int maxCount = 100;
+                int curCount = 0;
+                Dictionary<string, string> pinPlando = new Dictionary<string, string>(plando) { {currentPortalName, PinnedPortal} };
+                while (true) {
+                    if (curCount >= maxCount) { break; }
+                    curCount++;
+                    List<PortalCombo> randomizedPortals = RandomizePortals(seed + curCount, pinPlando, deplando, canFail: true);
+                    if (randomizedPortals == null) { continue; }
+                    PortalCombo newPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, randomizedPortals);
+                    portalChoices.Add(newPortalCombo);
+                    CachePairingDict.Add(newPortalCombo, randomizedPortals);
+                    updateDeplando(currentPortalName, PinnedPortal);
+                    break;
+                }
             }
 
             if (CachedSuccessfulPairing != null) {
                 PortalCombo cachedPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, CachedSuccessfulPairing);
                 portalChoices.Add(cachedPortalCombo);
-                deplando.Add(new Tuple<string, string>(currentPortalName, cachedPortalCombo.Portal2.Name));
-                if (!GetBool(Decoupled)) {
-                    deplando.Add(new Tuple<string, string>(cachedPortalCombo.Portal2.Name, currentPortalName));
-                }
+                updateDeplando(currentPortalName, cachedPortalCombo.Portal2.Name);
                 CachePairingDict.Add(cachedPortalCombo, new List<PortalCombo>(CachedSuccessfulPairing));
                 CachedSuccessfulPairing = null;
             }
 
             if (excludedPortals != null) {
                 foreach (PortalCombo portalCombo in excludedPortals) {
-                    deplando.Add(new Tuple<string, string>(portalCombo.Portal1.Name, portalCombo.Portal2.Name));
-                    if (!GetBool(Decoupled)) {
-                        deplando.Add(new Tuple<string, string>(portalCombo.Portal2.Name, portalCombo.Portal1.Name));
-                    }
+                    updateDeplando(portalCombo.Portal1.Name, portalCombo.Portal2.Name);
                 }
             }
 
@@ -119,6 +135,9 @@ namespace TunicRandomizer {
             int maxTrialCount = 1000;
             int trialCount = 0;
             while (portalChoices.Count < 3) {
+                if (portalChoices.Count() == 3) {
+                    break;
+                }
                 if (trialCount >= maxTrialCount && portalChoices.Count > 0) {
                     // we've done enough trials to say that we probably won't find any more connections, so it's time to give the player less than 3 choices
                     // if we don't have any choices yet, keep trying -- if it's failing, we'd wanna know that, but maybe it's just something really restrictive and weird
@@ -142,13 +161,7 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo($"Starting check all reachable in trials for {newPortalCombo.Portal2.Name}");
                 TunicUtils.CheckAllLocsReachable(randomizedPortals);
 
-                if (portalChoices.Count() == 3) {
-                    break;
-                }
-                deplando.Add(new Tuple<string, string>(currentPortalName, newPortalCombo.Portal2.Name));
-                if (!GetBool(Decoupled)) {
-                    deplando.Add(new Tuple<string, string>(newPortalCombo.Portal2.Name, currentPortalName));
-                }
+                updateDeplando(currentPortalName, newPortalCombo.Portal2.Name);
             }
             TunicLogger.LogInfo("returning portal choices");
             return portalChoices;
@@ -180,8 +193,11 @@ namespace TunicRandomizer {
                 UpdateSignsFlag = true;
             }
 
-            // todo: check the pinned portal
-            // if the paired portal is the pinned portal, clear the save file string, set PinnedPortal to null
+            if (portalCombo.Portal2.Name == PinnedPortal) {
+                SaveFile.SetString(SaveFlags.FPPinnedPortalFlag, "");
+                PinnedPortal = "";
+            }
+
             TunicLogger.LogInfo("FPPortalChosen done");
         }
 
