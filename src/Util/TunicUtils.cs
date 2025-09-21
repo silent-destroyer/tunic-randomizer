@@ -401,7 +401,7 @@ namespace TunicRandomizer {
                 }
             }
             if (destinationPortal == null) {
-                TunicLogger.LogError("Error in getting portal name in BPGetThreePortals");
+                TunicLogger.LogError("Error in getting portal name in FPGetThreePortals");
             }
             PortalCombo newPortalCombo = new PortalCombo(originPortal, destinationPortal);
             return newPortalCombo;

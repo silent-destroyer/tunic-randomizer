@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InControl;
 using RTLTMPro;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace TunicRandomizer {
@@ -229,13 +224,13 @@ namespace TunicRandomizer {
             if (EntranceOptions.Count > 0) {
                 TunicLogger.LogInfo("Chose first scene");
                 Notifications.Show($"\"Chose first option.\"", $"\"{EntranceOptions[0].Portal1.Name} -> {EntranceOptions[0].Portal2.Name}\"");
-                FoxPrince.BPPortalChosen(EntranceOptions[0]);
+                FoxPrince.FPPortalChosen(EntranceOptions[0]);
                 cleanup();
             }
         }
 
         public void PinSelection(string portalName) {
-            SaveFile.SetString($"randomizer bp pinned portal", portalName);
+            SaveFile.SetString(SaveFlags.FPPinnedPortalFlag, portalName);
         }
 
         public void SecondChoice() {
@@ -246,7 +241,7 @@ namespace TunicRandomizer {
             if (EntranceOptions.Count > 0) {
             TunicLogger.LogInfo("Chose second scene");
                 Notifications.Show($"\"Chose second option.\"", $"\"{EntranceOptions[1].Portal1.Name} -> {EntranceOptions[1].Portal2.Name}\"");
-                FoxPrince.BPPortalChosen(EntranceOptions[1]);
+                FoxPrince.FPPortalChosen(EntranceOptions[1]);
                 cleanup();
             }
         }
@@ -259,7 +254,7 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("Chose third scene");
             if (EntranceOptions.Count > 0) {
                 Notifications.Show($"\"Chose third option.\"", $"\"{EntranceOptions[2].Portal1.Name} -> {EntranceOptions[2].Portal2.Name}\"");
-                FoxPrince.BPPortalChosen(EntranceOptions[2]);
+                FoxPrince.FPPortalChosen(EntranceOptions[2]);
                 cleanup();
             }
         }
@@ -277,7 +272,7 @@ namespace TunicRandomizer {
                         RerollAlreadySeen.Add(portalCombo);
                     }
                 }
-                newPortals = FoxPrince.BPGetThreePortals(SaveFile.GetInt("seed"), FoxPrince.CurrentPortal.name, RerollAlreadySeen);
+                newPortals = FoxPrince.FPGetThreePortals(SaveFile.GetInt("seed"), FoxPrince.CurrentPortal.name, RerollAlreadySeen);
                 if (newPortals != null) {
                     SoulDice.Quantity -= 1;
                     // if it gave us less than 3 portals, we need to reuse some of the previous ones

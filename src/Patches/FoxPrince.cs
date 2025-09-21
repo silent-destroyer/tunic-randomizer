@@ -9,7 +9,7 @@ namespace TunicRandomizer {
     public class FoxPrince {
         public static ScenePortal CurrentPortal = null;
         public static Collider FoxCollider = null;
-        public static List<PortalCombo> BPRandomizedPortals = new List<PortalCombo>();
+        public static List<PortalCombo> FPRandomizedPortals = new List<PortalCombo>();
         // when you choose a portal, that choice showed up because there was a successful entrance rando generation that lead to that one
         // so, we might as well save that old one for the next time you go into an entrance
         public static Dictionary<PortalCombo, List<PortalCombo>> CachePairingDict = new Dictionary<PortalCombo, List<PortalCombo>>();
@@ -36,17 +36,17 @@ namespace TunicRandomizer {
             if (SceneLoaderPatches.SceneName == "Crypt" || SceneLoaderPatches.SceneName == "Quarry") return true;
             // skip zig skip too
             if (__instance.id == "zig2_skip") return true;
-            if (SaveFile.GetString($"randomizer bp {__instance.name}") == "") {
+            if (SaveFile.GetString($"{FPChosenPortalPrefix} {__instance.name}") == "") {
                 CurrentPortal = __instance;
                 FoxCollider = c;
-                List<PortalCombo> portalChoices = BPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
+                List<PortalCombo> portalChoices = FPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
                 TunicLogger.LogInfo("portal choices below");
                 foreach (var portalChoice in portalChoices) {
                     TunicLogger.LogInfo(portalChoice.Portal2.Name);
                 }
 
                 // user input goes here somehow??
-                BPChoosePortal(portalChoices);
+                FPChoosePortal(portalChoices);
                 return false;
             }
             TunicLogger.LogInfo("returning true");
@@ -54,13 +54,13 @@ namespace TunicRandomizer {
         }
 
 
-        public static void BPChoosePortal(List<PortalCombo> portalChoices) {
+        public static void FPChoosePortal(List<PortalCombo> portalChoices) {
             EntranceSelector.instance.ShowSelection(portalChoices);
         }
 
 
-        public static List<PortalCombo> BPGetThreePortals(int seed, string currentPortalName, List<PortalCombo> excludedPortals = null) {
-            TunicLogger.LogInfo("starting BPGetThreePortals");
+        public static List<PortalCombo> FPGetThreePortals(int seed, string currentPortalName, List<PortalCombo> excludedPortals = null) {
+            TunicLogger.LogInfo("starting FPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
             if (PinnedPortal != null) {
@@ -127,22 +127,22 @@ namespace TunicRandomizer {
             return portalChoices;
         }
 
-        public static void BPPortalChosen(PortalCombo portalCombo) {
-            TunicLogger.LogInfo("BPPortalChosen started");
+        public static void FPPortalChosen(PortalCombo portalCombo) {
+            TunicLogger.LogInfo("FPPortalChosen started");
             if (CachePairingDict.ContainsKey(portalCombo)) {
                 CachedSuccessfulPairing = CachePairingDict[portalCombo];
             }
             CachePairingDict.Clear();
             Portal originPortal = portalCombo.Portal1;
             Portal destinationPortal = portalCombo.Portal2;
-            SaveFile.SetString($"randomizer bp {CurrentPortal.name}", destinationPortal.Name);
+            SaveFile.SetString($"{FPChosenPortalPrefix} {CurrentPortal.name}", destinationPortal.Name);
             if (!GetBool(Decoupled)) {
-                SaveFile.SetString($"randomizer bp {destinationPortal.Name}", CurrentPortal.name);
+                SaveFile.SetString($"{FPChosenPortalPrefix} {destinationPortal.Name}", CurrentPortal.name);
             }
 
-            BPRandomizedPortals.Add(new PortalCombo(originPortal, destinationPortal));
+            FPRandomizedPortals.Add(new PortalCombo(originPortal, destinationPortal));
             if (!GetBool(Decoupled)) {
-                BPRandomizedPortals.Add(new PortalCombo(destinationPortal, originPortal));
+                FPRandomizedPortals.Add(new PortalCombo(destinationPortal, originPortal));
             }
             PlandoPortals.Add(originPortal.Name, destinationPortal.Name);
             CurrentPortal.destinationSceneName = destinationPortal.Scene;
@@ -155,7 +155,7 @@ namespace TunicRandomizer {
 
             // todo: check the pinned portal
             // if the paired portal is the pinned portal, clear the save file string, set PinnedPortal to null
-            TunicLogger.LogInfo("BPPortalChosen done");
+            TunicLogger.LogInfo("FPPortalChosen done");
         }
 
         public static void CreateFoxPrinceItems() {

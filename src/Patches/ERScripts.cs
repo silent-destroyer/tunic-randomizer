@@ -251,7 +251,7 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("CreateRandomizedPortals started");
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
-            FoxPrince.BPRandomizedPortals.Clear();
+            FoxPrince.FPRandomizedPortals.Clear();
             if (!ItemRandomizer.InitialRandomizationDone) {
                 PlandoPortals.Clear();
             }
@@ -379,22 +379,22 @@ namespace TunicRandomizer {
             // -----------------------------------------------
 
             // combining this one with the next just creates pain, I promise
-            if (GetBool(FoxPrinceEnabled) && (!ItemRandomizer.InitialRandomizationDone || FoxPrince.BPRandomizedPortals.Count == 0)) {
+            if (GetBool(FoxPrinceEnabled) && (!ItemRandomizer.InitialRandomizationDone || FoxPrince.FPRandomizedPortals.Count == 0)) {
                 foreach (string key in SaveFile.stringStore.Keys) {
-                    if (key.StartsWith("randomizer bp ")) {
-                        string origin = key.Substring("randomizer bp ".Length);
+                    if (key.StartsWith(FPChosenPortalPrefix)) {
+                        string origin = key.Substring($"{FPChosenPortalPrefix} ".Length);
                         string destination = SaveFile.stringStore[key];
                         Portal portal1 = portalsList.First(portal => portal.Name == origin);
                         Portal portal2 = portalsList.First(portal => portal.Name == destination);
-                        FoxPrince.BPRandomizedPortals.Add(new PortalCombo(portal1, portal2));
+                        FoxPrince.FPRandomizedPortals.Add(new PortalCombo(portal1, portal2));
                     }
                 }
             }
 
             if (GetBool(FoxPrinceEnabled) && PlandoPortals.Count == 0) {
                 foreach (string key in SaveFile.stringStore.Keys) {
-                    if (key.StartsWith("randomizer bp ")) {
-                        string origin = key.Substring("randomizer bp ".Length);
+                    if (key.StartsWith(FPChosenPortalPrefix)) {
+                        string origin = key.Substring($"{FPChosenPortalPrefix} ".Length);
                         string destination = SaveFile.stringStore[key];
                         if (ItemRandomizer.InitialRandomizationDone) {
                             // this is to avoid duplicates being made later on
@@ -855,7 +855,7 @@ namespace TunicRandomizer {
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
             if (GetBool(FoxPrinceEnabled)) {
-                RandomizedPortals = new List<PortalCombo>(FoxPrince.BPRandomizedPortals);
+                RandomizedPortals = new List<PortalCombo>(FoxPrince.FPRandomizedPortals);
                 ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
                 if (FoxPrince.UpdateSignsFlag) {
                     Hints.CreateSignHints();
