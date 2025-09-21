@@ -563,6 +563,7 @@ namespace TunicRandomizer {
                             }
                             if (TunicRandomizer.Settings.FoxPrinceEnabled) {
                                 SaveFile.SetInt(SaveFlags.FoxPrinceEnabled, 1);
+                                FoxPrince.PinnedPortal = SaveFile.GetString(FPPinnedPortalFlag);
                             }
                         }
                         if (TunicRandomizer.Settings.ShuffleLadders) {

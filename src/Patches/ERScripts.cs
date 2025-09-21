@@ -5,13 +5,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
+using static TunicRandomizer.TunicUtils;
 
 namespace TunicRandomizer {
     public class ERScripts {
         public static GameObject storedPortal = null;
         // just for solving the case where old house door connects to itself in decoupled
         public static bool OldHouseDoorUnstuck = false;
-        public static Dictionary<string, string> PlandoPortals = new Dictionary<string, string>();
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
@@ -252,9 +252,6 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             FoxPrince.FPRandomizedPortals.Clear();
-            if (!ItemRandomizer.InitialRandomizationDone) {
-                PlandoPortals.Clear();
-            }
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
             TunicLogger.LogInfo("Create randomized portals is randomizing portals");
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
@@ -271,7 +268,7 @@ namespace TunicRandomizer {
         // randomize the portals with logic to ensure all regions are reachable
         // deplando is for Fox Pricne, basically it says "this portal cannot connect to this other portal"
         // canFail is to say whether it should try to reroll or just return null if it reaches a failure condition, it is also for Fox Prince
-        public static List<PortalCombo> RandomizePortals(int seed, List<Tuple<string, string>> deplando = null, bool canFail = false) {
+        public static List<PortalCombo> RandomizePortals(int seed, Dictionary<string, string> plando = null, List<Tuple<string, string>> deplando = null, bool canFail = false) {
             TunicLogger.LogInfo("Randomize Portals started");
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
@@ -283,9 +280,10 @@ namespace TunicRandomizer {
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
             Dictionary<int, int> deadEndPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
-            // quick reference for which directions you can pair to which
-            Dictionary<int, int> directionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
 
+            if (plando == null) {
+                plando = new Dictionary<string, string>();
+            }
             if (deplando == null) {
                 deplando = new List<Tuple<string, string>>();
             }
@@ -391,23 +389,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (GetBool(FoxPrinceEnabled) && PlandoPortals.Count == 0) {
-                foreach (string key in SaveFile.stringStore.Keys) {
-                    if (key.StartsWith(FPChosenPortalPrefix)) {
-                        string origin = key.Substring($"{FPChosenPortalPrefix} ".Length);
-                        string destination = SaveFile.stringStore[key];
-                        if (ItemRandomizer.InitialRandomizationDone) {
-                            // this is to avoid duplicates being made later on
-                            if (!GetBool(Decoupled) && PlandoPortals.ContainsKey(destination)) {
-                                continue;
-                            }
-                            PlandoPortals.Add(origin, destination);
-                        }
-                    }
-                }
-            }
-
-            foreach (KeyValuePair<string, string> portalPair in PlandoPortals) {
+            foreach (KeyValuePair<string, string> portalPair in plando) {
                 string portal1name = portalPair.Key;
                 string portal2name = portalPair.Value;
                 Portal portal1 = null;
@@ -473,18 +455,15 @@ namespace TunicRandomizer {
             }
 
             bool TooFewPortalsForDirectionPairs(int direction, int offset = 0) {
-                if (twoPlusPortalDirectionTracker[direction] <= deadEndPortalDirectionTracker[directionPairs[direction]] + offset) {
+                if (twoPlusPortalDirectionTracker[direction] <= deadEndPortalDirectionTracker[DirectionPairs[direction]] + offset) {
                     return true;
                 }
-                if (twoPlusPortalDirectionTracker[directionPairs[direction]] <= deadEndPortalDirectionTracker[direction] + offset) {
+                if (twoPlusPortalDirectionTracker[DirectionPairs[direction]] <= deadEndPortalDirectionTracker[direction] + offset) {
                     return true;
                 }
                 return false;
             }
 
-            bool VerifyDirectionPair(Portal portal1, Portal portal2) {
-                return portal1.Direction == directionPairs[portal2.Direction];
-            }
 
             // -----------------------------------------------
             // Portal Pairing Starts Here
@@ -724,7 +703,7 @@ namespace TunicRandomizer {
                     portalsList2.RemoveAt(0);
                 } else {
                     foreach (Portal portal in portalsList2) {
-                        if (directionPairs[portal1.Direction] == portal.Direction) {
+                        if (DirectionPairs[portal1.Direction] == portal.Direction) {
                             portal2 = portal;
                             portalsList2.Remove(portal);
                             break;
@@ -1068,57 +1047,6 @@ namespace TunicRandomizer {
                     }
                 }
             }
-        }
-
-        public static string FindPortalRegionFromName(string portalName) {
-            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
-                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
-                    string regionName = regionGroup.Key;
-                    foreach (TunicPortal portal in  regionGroup.Value) {
-                        if (portal.Name == portalName) {
-                            return regionName;
-                        }
-                    }
-                }
-            }
-            // returning this if it fails, since that makes some FairyTarget stuff easier
-            return "FindPortalRegionFromName failed to find a match";
-        }
-
-        public static string FindPairedPortalSceneFromName(string portalName) {
-            List<PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
-                portalList = ERData.RandomizedPortals;
-            } else {
-                portalList = ERData.VanillaPortals;
-            }
-            foreach (PortalCombo portalCombo in portalList) {
-                if (portalCombo.Portal1.Name == portalName) {
-                    return portalCombo.Portal2.Scene;
-                }
-            }
-            // returning this if it fails, since that makes some FairyTarget stuff easier
-            return "FindPairedPortalSceneFromName failed to find a match";
-        }
-
-        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
-            List<PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
-                portalList = ERData.RandomizedPortals;
-            } else {
-                if (ERData.VanillaPortals.Count == 0) {
-                    SetupVanillaPortals();
-                }
-                portalList = ERData.VanillaPortals;
-            }
-            foreach (PortalCombo portalCombo in portalList) {
-                if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
-                    return portalCombo.Portal2.OutletRegion();
-                }
-            }
-
-            // returning this if it fails, since that makes some FairyTarget stuff easier
-            return "FindPairedPortalRegionFromSDT failed to find a match";
         }
 
     }

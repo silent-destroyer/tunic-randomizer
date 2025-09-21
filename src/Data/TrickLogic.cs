@@ -141,7 +141,7 @@ namespace TunicRandomizer {
 
             // add the OW LS connections
             foreach (LSElevConnect connection in OWLSElevConnections) {
-                string destination = ERScripts.FindPairedPortalRegionFromSDT(connection.Destination);
+                string destination = TunicUtils.FindPairedPortalRegionFromSDT(connection.Destination);
                 if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
                     // this should only happen as a result of fox prince making the randomized portals list not contain every portal
                     continue;
@@ -167,7 +167,7 @@ namespace TunicRandomizer {
                     } else {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
-                    string destination = ERScripts.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
+                    string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
                     if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
                         // this should only happen as a result of fox prince making the randomized portals list not contain every portal
                         continue;

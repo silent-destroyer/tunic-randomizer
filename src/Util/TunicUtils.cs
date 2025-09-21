@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -390,6 +391,16 @@ namespace TunicRandomizer {
             return int.Parse(result);
         }
 
+
+        // ER-related stuff
+
+        // quick reference for which directions you can pair to which
+        public static Dictionary<int, int> DirectionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
+
+        public static bool VerifyDirectionPair(Portal portal1, Portal portal2) {
+            return portal1.Direction == DirectionPairs[portal2.Direction];
+        }
+
         public static PortalCombo GetPortalComboFromRandomizedPortals(string portalName, List<PortalCombo> randomizedPortals) {
             Portal originPortal = null;
             Portal destinationPortal = null;
@@ -405,6 +416,72 @@ namespace TunicRandomizer {
             }
             PortalCombo newPortalCombo = new PortalCombo(originPortal, destinationPortal);
             return newPortalCombo;
+        }        
+
+        public static string FindPairedPortalSceneFromName(string portalName) {
+            List<PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    return portalCombo.Portal2.Scene;
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalSceneFromName failed to find a match";
+        }
+
+        public static string FindPortalRegionFromName(string portalName) {
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return regionName;
+                        }
+                    }
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPortalRegionFromName failed to find a match";
+        }
+
+        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
+            List<PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList) {
+                if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
+                    return portalCombo.Portal2.OutletRegion();
+                }
+            }
+
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalRegionFromSDT failed to find a match";
+        }
+
+        public static PDir FindPortalDirectionFromName(string portalName) {
+            // todo: extra stuff for the shop
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return portal.RawDirection;
+                        }
+                    }
+                }
+            }
+            return PDir.NONE;
         }
 
     }

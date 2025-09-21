@@ -14,6 +14,9 @@ namespace TunicRandomizer {
         // so, we might as well save that old one for the next time you go into an entrance
         public static Dictionary<PortalCombo, List<PortalCombo>> CachePairingDict = new Dictionary<PortalCombo, List<PortalCombo>>();
         public static List<PortalCombo> CachedSuccessfulPairing = null;
+        // so we aren't just reading them off the save file every time
+        // this might be overengineering it though, idk
+        public static Dictionary<string, string> CachedPlandoPortals = new Dictionary<string, string>();
 
         // for use with the pin system
         public static string PinnedPortal = null;
@@ -45,7 +48,6 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo(portalChoice.Portal2.Name);
                 }
 
-                // user input goes here somehow??
                 FPChoosePortal(portalChoices);
                 return false;
             }
@@ -63,12 +65,35 @@ namespace TunicRandomizer {
             TunicLogger.LogInfo("starting FPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
+            
+            Dictionary<string, string> plando = new Dictionary<string, string>();
+            if (CachedPlandoPortals.Count > 0) {
+                plando = CachedPlandoPortals;
+            } else {
+                foreach (string key in SaveFile.stringStore.Keys) {
+                    if (key.StartsWith(FPChosenPortalPrefix)) {
+                        string origin = key.Substring($"{FPChosenPortalPrefix} ".Length);
+                        string destination = SaveFile.stringStore[key];
+                        if (ItemRandomizer.InitialRandomizationDone) {
+                            // this is to avoid duplicates being made later on
+                            if (!GetBool(Decoupled) && plando.ContainsKey(destination)) {
+                                continue;
+                            }
+                            plando.Add(origin, destination);
+                        }
+                    }
+                }
+                CachedPlandoPortals = plando;
+            }
+
             if (PinnedPortal != null) {
                 // todo: put this together
                 // if direction pairs is on, check that this portal is a pairable direction
                 // if so, run some number of trials to see if this portal is viable, and have it be first
-                // also find a spot to check the save file and setup PinnedPortal in the first place (not here, somewhere else)
+
+
             }
+
             if (CachedSuccessfulPairing != null) {
                 PortalCombo cachedPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, CachedSuccessfulPairing);
                 portalChoices.Add(cachedPortalCombo);
@@ -79,6 +104,7 @@ namespace TunicRandomizer {
                 CachePairingDict.Add(cachedPortalCombo, new List<PortalCombo>(CachedSuccessfulPairing));
                 CachedSuccessfulPairing = null;
             }
+
             if (excludedPortals != null) {
                 foreach (PortalCombo portalCombo in excludedPortals) {
                     deplando.Add(new Tuple<string, string>(portalCombo.Portal1.Name, portalCombo.Portal2.Name));
@@ -87,6 +113,7 @@ namespace TunicRandomizer {
                     }
                 }
             }
+
             // as portals get chosen, set the contents of PlandoPortals, and reload from the save file or somewhere when needed
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
             int maxTrialCount = 1000;
@@ -99,7 +126,7 @@ namespace TunicRandomizer {
                 }
                 trialCount++;
                 TunicLogger.LogInfo($"Current trial: {trialCount}");
-                List<PortalCombo> randomizedPortals = RandomizePortals(seed + trialCount, deplando, canFail: true);
+                List<PortalCombo> randomizedPortals = RandomizePortals(seed + trialCount, plando, deplando, canFail: true);
                 if (randomizedPortals == null) {
                     // this means the generation was not successful, which is fine and intended to happen, especially with restrictive logic
                     continue;
@@ -144,7 +171,7 @@ namespace TunicRandomizer {
             if (!GetBool(Decoupled)) {
                 FPRandomizedPortals.Add(new PortalCombo(destinationPortal, originPortal));
             }
-            PlandoPortals.Add(originPortal.Name, destinationPortal.Name);
+            CachedPlandoPortals.Add(originPortal.Name, destinationPortal.Name);
             CurrentPortal.destinationSceneName = destinationPortal.Scene;
             CurrentPortal.id = portalCombo.ComboTag + portalCombo.ComboTag;
             CurrentPortal.optionalIDToSpawnAt = portalCombo.ComboTag;

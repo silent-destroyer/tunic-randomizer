@@ -27,12 +27,14 @@ namespace TunicRandomizer {
             public string Destination;
             public string Tag;
             public int Direction;
+            public PDir RawDirection;
 
             public TunicPortal(string name, string destination, string tag) {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
                 Direction = (int) PDir.NONE;
+                RawDirection = PDir.NONE;
             }
 
             public TunicPortal(string name, string destination, string tag, PDir direction) {
@@ -40,6 +42,7 @@ namespace TunicRandomizer {
                 Destination = destination;
                 Tag = tag;
                 Direction = (int) direction;
+                RawDirection = direction;
             }
         }
         
