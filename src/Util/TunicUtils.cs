@@ -398,7 +398,13 @@ namespace TunicRandomizer {
         public static Dictionary<int, int> DirectionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
 
         public static int FindPortalDirectionFromName(string portalName) {
-            // todo: extra stuff for the shop
+            if (portalName.StartsWith("Shop Portal")) {
+                if (portalName.EndsWith("7") || portalName.EndsWith("8")) {
+                    return (int)PDir.WEST;
+                } else {
+                    return (int)PDir.SOUTH;
+                }
+            }
             foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
                 foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
                     string regionName = regionGroup.Key;
