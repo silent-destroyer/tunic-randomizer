@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static TunicRandomizer.SceneImageData;
 
 namespace TunicRandomizer {
     public class EntranceSelector : GUIMode {
@@ -34,6 +35,10 @@ namespace TunicRandomizer {
         public static GameObject SceneText2;
         public static GameObject SceneText3;
 
+        public static SpriteRenderer SceneSprite1;
+        public static SpriteRenderer SceneSprite2;
+        public static SpriteRenderer SceneSprite3;
+
         public static bool WaitingForDartSelection = false;
 
         public static void CreateEntranceSelector() {
@@ -45,6 +50,8 @@ namespace TunicRandomizer {
             EntranceSelector entranceSelector = newMenu.AddComponent<EntranceSelector>();
             EntranceSelector.instance = entranceSelector;
             GUIMode.guiModes.Add(entranceSelector);
+            newMenu.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.5f;
+            newMenu.GetComponent<CanvasScaler>().scaleFactor = 0.5f;
             GameObject mainBox = newMenu.transform.GetChild(0).gameObject;
             
             GameObject.Destroy(mainBox.GetComponent<Image>());
@@ -62,19 +69,26 @@ namespace TunicRandomizer {
 
             GameObject ButtonsRoot = new GameObject("Scene Image Buttons");
             ButtonsRoot.transform.parent = mainBox.transform;
+            ButtonsRoot.transform.localScale = Vector3.one * 2;
             ButtonsRoot.AddComponent<HorizontalLayoutGroup>();
+            ButtonsRoot.GetComponent<RectTransform>().sizeDelta = new Vector2(950, 250);
             ButtonsRoot.layer = 5;
-            ButtonsRoot.transform.localPosition = new Vector3(-825f, 150f, 0f);
+            ButtonsRoot.transform.localPosition = new Vector3(0, 50, 0);
 
-            ButtonObj1 = new GameObject("Button 1");
-            ButtonObj1.transform.parent = ButtonsRoot.transform;
+            GameObject Layout1 = new GameObject("Layout");
+            Layout1.AddComponent<VerticalLayoutGroup>();
+            Layout1.transform.parent = ButtonsRoot.transform;
+            Layout1.layer = 5;
+            Layout1.SetActive(true);
+
+            ButtonObj1 = new GameObject("Button");
+            ButtonObj1.transform.parent = Layout1.transform;
             ButtonObj1.layer = 5;
             ButtonObj1.AddComponent<Image>().sprite = box;
             ButtonObj1.transform.localPosition = Vector3.zero;
+            ButtonObj1.transform.localScale = Vector3.one;
+            ButtonObj1.SetActive(true);
             SceneButton1 = ButtonObj1.AddComponent<Button>();
-            LayoutElement le = ButtonObj1.AddComponent<LayoutElement>();
-            le.minHeight = 180;
-            le.minWidth = 240;
             GameObject DartIcon1 = new GameObject("dart icon");
             DartIcon1.AddComponent<Image>().sprite = Inventory.GetItemByName("Dart").icon;
             DartIcon1.GetComponent<Image>().material = UIAdd;
@@ -84,43 +98,11 @@ namespace TunicRandomizer {
             DartIcon1.transform.localPosition = new Vector3(66, 55, 0);
             DartIcon1.SetActive(false);
 
-            ButtonObj2 = new GameObject("Button 2");
-            ButtonObj2.transform.parent = ButtonsRoot.transform;
-            ButtonObj2.layer = 5;
-            ButtonObj2.AddComponent<Image>().sprite = box;
-            ButtonObj2.transform.localPosition = Vector3.zero;
-            SceneButton2 = ButtonObj2.AddComponent<Button>();
-            LayoutElement le2 = ButtonObj2.AddComponent<LayoutElement>();
-            le2.minHeight = 180;
-            le2.minWidth = 240;
-            GameObject.Instantiate(DartIcon1).transform.parent = ButtonObj2.transform;
-            ButtonObj2.transform.GetChild(0).localPosition = new Vector3(66, 55, 0);
-
-            ButtonObj3 = new GameObject("Button 3");
-            ButtonObj3.transform.parent = ButtonsRoot.transform;
-            ButtonObj3.layer = 5;
-            ButtonObj3.AddComponent<Image>().sprite = box;
-            ButtonObj3.transform.localPosition = Vector3.zero;
-            SceneButton3 = ButtonObj3.AddComponent<Button>();
-            LayoutElement le3 = ButtonObj3.AddComponent<LayoutElement>();
-            le3.minHeight = 180;
-            le3.minWidth = 240;
-            GameObject.Instantiate(DartIcon1).transform.parent = ButtonObj3.transform;
-            ButtonObj3.transform.GetChild(0).localPosition = new Vector3(66, 55, 0);
-
-            GameObject SceneNamesRoot = new GameObject("Scene Names");
-            SceneNamesRoot.transform.parent = mainBox.transform;
-            SceneNamesRoot.AddComponent<HorizontalLayoutGroup>().spacing = 40;
-            SceneNamesRoot.layer = 5;
-            SceneNamesRoot.transform.localPosition = new Vector3(-760f, -150f, 0f);
-
-            SceneText1 = new GameObject("Scene Text 1");
+            SceneText1 = new GameObject("Scene Text");
             SceneText1.layer = 5;
-            SceneText1.transform.parent = SceneNamesRoot.transform;
+            SceneText1.transform.parent = Layout1.transform;
             SceneText1.transform.localPosition = Vector3.zero;
-            LayoutElement le4 = SceneText1.AddComponent<LayoutElement>();
-            le4.minHeight = 150;
-            le4.minWidth = 200;
+            SceneText1.SetActive(true);
             RTLTextMeshPro st1 = SceneText1.AddComponent<RTLTextMeshPro>();
             st1.fontSize = 12;
             st1.fontMaterial = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
@@ -129,35 +111,31 @@ namespace TunicRandomizer {
             st1.text = "Scene Choice 1 Scene Choice 1 Scene Choice 1 Scene Choice 1";
             st1.enableWordWrapping = true;
 
-            SceneText2 = new GameObject("Scene Text 2");
-            SceneText2.layer = 5;
-            SceneText2.transform.parent = SceneNamesRoot.transform;
-            SceneText2.transform.localPosition = Vector3.zero;
-            LayoutElement le5 = SceneText2.AddComponent<LayoutElement>();
-            le5.minHeight = 150;
-            le5.minWidth = 200;
-            RTLTextMeshPro st2 = SceneText2.AddComponent<RTLTextMeshPro>();
-            st2.fontSize = 12;
-            st2.fontMaterial = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
-            st2.font = odin;
-            st2.alignment = TextAlignmentOptions.Center;
-            st2.text = "Scene Choice 2 Scene Choice 2 Scene Choice 2 Scene Choice 2";
-            st2.enableWordWrapping = true;
+            GameObject sceneImage = new GameObject("scene image");
+            SceneSprite1 = sceneImage.AddComponent<SpriteRenderer>();
+            sceneImage.transform.parent = ButtonObj1.transform;
+            sceneImage.layer = 5;
+            sceneImage.transform.localScale = new Vector3(70, 80, 70);
+            sceneImage.transform.localPosition = new Vector3(0, 12, 7);
+            sceneImage.SetActive(true);
 
-            SceneText3 = new GameObject("Scene Text 3");
-            SceneText3.layer = 5;
-            SceneText3.transform.parent = SceneNamesRoot.transform;
-            SceneText3.transform.localPosition = Vector3.zero;
-            LayoutElement le6 = SceneText3.AddComponent<LayoutElement>();
-            le6.minHeight = 150;
-            le6.minWidth = 200;
-            RTLTextMeshPro st3 = SceneText3.AddComponent<RTLTextMeshPro>();
-            st3.fontSize = 12;
-            st3.fontMaterial = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
-            st3.font = odin;
-            st3.alignment = TextAlignmentOptions.Center;
-            st3.text = "Scene Choice 3 Scene Choice 3 Scene Choice 3 Scene Choice 3";
-            st3.enableWordWrapping = true;
+            GameObject Layout2 = GameObject.Instantiate(Layout1);
+            Layout2.transform.parent = Layout1.transform.parent;
+            ButtonObj2 = Layout2.transform.GetChild(0).gameObject;
+            SceneButton2 = ButtonObj2.GetComponent<Button>();
+            SceneSprite2 = ButtonObj2.transform.GetChild(1).GetComponent<SpriteRenderer>(); 
+            SceneText2 = Layout2.transform.GetChild(1).gameObject;
+
+            GameObject Layout3 = GameObject.Instantiate(Layout1);
+            Layout3.transform.parent = Layout1.transform.parent;
+            ButtonObj3 = Layout3.transform.GetChild(0).gameObject;
+            SceneButton3 = ButtonObj3.GetComponent<Button>();
+            SceneSprite3 = ButtonObj3.transform.GetChild(1).GetComponent<SpriteRenderer>();
+            SceneText3 = Layout3.transform.GetChild(1).gameObject;
+
+            Layout1.transform.localPosition = new Vector3(Layout1.transform.localPosition.x, Layout1.transform.localPosition.y, 0);
+            Layout2.transform.localPosition = new Vector3(Layout2.transform.localPosition.x, Layout2.transform.localPosition.y, 0);
+            Layout3.transform.localPosition = new Vector3(Layout3.transform.localPosition.x, Layout3.transform.localPosition.y, 0);
 
             GameObject ItemButtons = new GameObject("Item Buttons");
             ItemButtons.layer = 5;
@@ -204,13 +182,13 @@ namespace TunicRandomizer {
             ItemButtonObj3.transform.parent = ItemButtons.transform;
             ItemButtonObj3.transform.localScale = Vector3.one;
             ItemButtonObj3.transform.localPosition = new Vector3(ItemButtonObj3.transform.localPosition.x, ItemButtonObj3.transform.localPosition.y, 200);
-            ItemButton3 = ItemButtonObj2.GetComponent<Button>();
+            ItemButton3 = ItemButtonObj3.GetComponent<Button>();
 
             GameObject ItemButtonObj4 = GameObject.Instantiate(RerollButtonObj);
             ItemButtonObj4.transform.parent = ItemButtons.transform;
             ItemButtonObj4.transform.localPosition = new Vector3(ItemButtonObj4.transform.localPosition.x, ItemButtonObj4.transform.localPosition.y, 200);
             ItemButtonObj4.transform.localScale = Vector3.one;
-            ItemButton4 = ItemButtonObj2.GetComponent<Button>();
+            ItemButton4 = ItemButtonObj4.GetComponent<Button>();
 
             RerollButtonObj.transform.localScale = Vector3.one;
         }
@@ -324,7 +302,7 @@ namespace TunicRandomizer {
             ButtonObj3.AddComponent<SceneSelectionButton>().isSceneButton = true;
             ButtonObj3.GetComponent<SceneSelectionButton>().dartIcon = ButtonObj3.transform.GetChild(0).GetComponent<Image>();
             RerollButton.gameObject.AddComponent<SceneSelectionButton>();
-            ItemButton3.gameObject.AddComponent<SceneSelectionButton>();
+            ItemButton2.gameObject.AddComponent<SceneSelectionButton>();
             ItemButton3.gameObject.AddComponent<SceneSelectionButton>();
             ItemButton4.gameObject.AddComponent<SceneSelectionButton>();
 
@@ -346,6 +324,21 @@ namespace TunicRandomizer {
                 SceneText1.GetComponent<RTLTextMeshPro>().text = portalChoices[0].Portal2.Name;
                 SceneText2.GetComponent<RTLTextMeshPro>().text = portalChoices[1].Portal2.Name;
                 SceneText3.GetComponent<RTLTextMeshPro>().text = portalChoices[2].Portal2.Name;
+                if (SceneImageData.SceneImages.ContainsKey(portalChoices[0].Portal2.Name)) {
+                    SceneImage image = SceneImageData.SceneImages[portalChoices[0].Portal2.Name];
+                    SceneSprite1.sprite = SceneImageData.createSprite(SceneImageData.SceneImages[portalChoices[0].Portal2.Name]);
+                    ResizeImage(image, SceneSprite1);
+                }
+                if (SceneImageData.SceneImages.ContainsKey(portalChoices[1].Portal2.Name)) {
+                    SceneImage image = SceneImageData.SceneImages[portalChoices[1].Portal2.Name];
+                    SceneSprite2.sprite = SceneImageData.createSprite(image);
+                    ResizeImage(image, SceneSprite2);
+                }
+                if (SceneImageData.SceneImages.ContainsKey(portalChoices[2].Portal2.Name)) {
+                    SceneImage image = SceneImageData.SceneImages[portalChoices[2].Portal2.Name];
+                    SceneSprite3.sprite = SceneImageData.createSprite(image);
+                    ResizeImage(image, SceneSprite3);
+                }
             }
             EntranceOptions = portalChoices;
 
@@ -355,6 +348,14 @@ namespace TunicRandomizer {
             ItemButton2.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Dart").Quantity.ToString();
             GUIMode.PushMode(EntranceSelector.instance);
             EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
+        }
+
+        private void ResizeImage(SceneImage image, SpriteRenderer sr) {
+            if (image.Width > 300) {
+                sr.transform.localScale = new Vector3(35, 40, 35);
+            } else {
+                sr.transform.localScale = new Vector3(70, 80, 70);
+            }
         }
 
         public void cleanup() {

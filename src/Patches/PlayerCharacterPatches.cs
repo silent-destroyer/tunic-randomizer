@@ -108,7 +108,6 @@ namespace TunicRandomizer {
                     }
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha9)) {
-                    // can't think of why it would fail right now, but if it fails I don't really want it to break anything
                     try {
                         EntranceSelector.instance.ShowSelection(new List<PortalCombo>());
                     } catch (Exception e) {
@@ -116,13 +115,49 @@ namespace TunicRandomizer {
                     }
                 }
                 if (Input.GetKeyDown(KeyCode.I)) {
-                    // can't think of why it would fail right now, but if it fails I don't really want it to break anything
                     try {
                         Inventory.GetItemByName("Soul Dice").Quantity = 3;
                         ItemPresentation.PresentItem(Inventory.GetItemByName("Soul Dice"), 3);
                         Inventory.GetItemByName("Dart").Quantity = 3;
                     } catch (Exception e) {
                         TunicLogger.LogInfo("Error showing dice item");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.O)) {
+                    try {
+                        Inventory.GetItemByName("Dart").Quantity = 3;
+                        ItemPresentation.PresentItem(Inventory.GetItemByName("Dart"), 3);
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing dice item");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.LeftBracket)) {
+                    try {
+                        if (SceneImageData.index > 0) {
+                            SceneImageData.index--;
+                            SceneImageData.ShowPortalImage(SceneImageData.SceneImages.Values.ToList()[SceneImageData.index]);
+                        }
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing scene image");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.RightBracket)) {
+                    try {
+                        if (SceneImageData.index < SceneImageData.SceneImages.Count) { 
+                            SceneImageData.ShowPortalImage(SceneImageData.SceneImages.Values.ToList()[SceneImageData.index]);
+                            SceneImageData.index++;
+                        }
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing scene image");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.Pause)) {
+                    // resets the gui
+                    try {
+                        GUIMode.ClearStack();
+                        GUIMode.PushGameMode();
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing scene image");
                     }
                 }
             }

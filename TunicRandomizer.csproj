@@ -193,6 +193,7 @@
     <Compile Include="src\Data\PortalCombo.cs" />
     <Compile Include="src\Data\RandomizerSettings.cs" />
     <Compile Include="src\Data\SaveFlags.cs" />
+    <Compile Include="src\Data\SceneImageData.cs" />
     <Compile Include="src\Data\Tooltips.cs" />
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Data\TrickLogic.cs" />
