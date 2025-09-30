@@ -51,7 +51,6 @@ namespace TunicRandomizer {
                 FPChoosePortal(portalChoices);
                 return false;
             }
-            TunicLogger.LogInfo("returning true");
             return true;
         }
 
@@ -199,6 +198,12 @@ namespace TunicRandomizer {
             }
 
             TunicLogger.LogInfo("FPPortalChosen done");
+        }
+
+        public static void ClearFoxPrinceCaches() {
+            FPRandomizedPortals.Clear();
+            CachedSuccessfulPairing = null;
+            CachedPlandoPortals.Clear();
         }
 
         public static void CreateFoxPrinceItems() {
