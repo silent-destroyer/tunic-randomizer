@@ -108,9 +108,13 @@ namespace TunicRandomizer {
             }
         }
 
-        // specifically for fairy seeking spell with logic
+        // specifically for fairy seeking spell with logic, for the normal seeking spell, not the entrance seeking spell
         public static void CreateLogicLoadZoneTargets() {
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
+                // hopefully this will skip portals that haven't been connected in yet in Fox Prince
+                if (SaveFlags.GetBool(SaveFlags.FoxPrinceEnabled) && !FoxPrince.FPRandomizedPortals.Any(p => p.Portal1.Name == ScenePortal.name)) {
+                    continue;
+                }
                 string portalRegion = TunicUtils.FindPortalRegionFromName(ScenePortal.name);
                 string destScene = TunicUtils.FindPairedPortalSceneFromName(ScenePortal.name);
                 // check if the entrance is logically accessible and if the adjacent scene has checks in logic
