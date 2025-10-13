@@ -13,16 +13,15 @@ namespace TunicRandomizer {
 
         public static List<PortalCombo> EntranceOptions;
         public static EntranceSelector instance;
+        public static GameObject Layout1;
+        public static GameObject Layout2;
+        public static GameObject Layout3;
         public static GameObject ButtonObj1;
         public static GameObject ButtonObj2;
         public static GameObject ButtonObj3;
         public static Button SceneButton1;
         public static Button SceneButton2;
         public static Button SceneButton3;
-
-        public static Image SceneImage1;
-        public static Image SceneImage2;
-        public static Image SceneImage3;
 
         public static Button RerollButton;
 
@@ -40,6 +39,9 @@ namespace TunicRandomizer {
         public static SpriteRenderer SceneSprite3;
 
         public static bool WaitingForDartSelection = false;
+
+        private IEnumerator<bool> animationHandler;
+        private bool readyForInputs = false;
 
         public static void CreateEntranceSelector() {
             InputSequenceAssistanceMenu menuBase = Resources.FindObjectsOfTypeAll<InputSequenceAssistanceMenu>().First();
@@ -61,7 +63,8 @@ namespace TunicRandomizer {
 
             GameObject.Destroy(mainBox.transform.GetChild(0).GetChild(0).GetComponent<LocalizeTMP>());
             mainBox.transform.GetChild(0).GetChild(0).GetComponent<RTLTextMeshPro>().text = $"choose wisely, tiny fox...";
-            mainBox.transform.GetChild(1).localPosition = new Vector3(0f, -20f, 0f);
+            mainBox.transform.GetChild(1).localPosition = Vector3.zero;
+            mainBox.transform.GetChild(1).localScale = new Vector3(1.3f, 1f, 1f);
 
             Sprite box = ModelSwaps.FindSprite("UI_box");
             Material UIAdd = ModelSwaps.FindMaterial("UI Add");
@@ -73,9 +76,9 @@ namespace TunicRandomizer {
             ButtonsRoot.AddComponent<HorizontalLayoutGroup>();
             ButtonsRoot.GetComponent<RectTransform>().sizeDelta = new Vector2(950, 250);
             ButtonsRoot.layer = 5;
-            ButtonsRoot.transform.localPosition = new Vector3(0, 50, 0);
+            ButtonsRoot.transform.localPosition = new Vector3(0, -850, 0);
 
-            GameObject Layout1 = new GameObject("Layout");
+            Layout1 = new GameObject("Layout");
             Layout1.AddComponent<VerticalLayoutGroup>();
             Layout1.transform.parent = ButtonsRoot.transform;
             Layout1.layer = 5;
@@ -119,23 +122,21 @@ namespace TunicRandomizer {
             sceneImage.transform.localPosition = new Vector3(0, 12, 7);
             sceneImage.SetActive(true);
 
-            GameObject Layout2 = GameObject.Instantiate(Layout1);
+            Layout2 = GameObject.Instantiate(Layout1);
             Layout2.transform.parent = Layout1.transform.parent;
+            Layout2.SetActive(true);
             ButtonObj2 = Layout2.transform.GetChild(0).gameObject;
             SceneButton2 = ButtonObj2.GetComponent<Button>();
             SceneSprite2 = ButtonObj2.transform.GetChild(1).GetComponent<SpriteRenderer>(); 
             SceneText2 = Layout2.transform.GetChild(1).gameObject;
 
-            GameObject Layout3 = GameObject.Instantiate(Layout1);
+            Layout3 = GameObject.Instantiate(Layout1);
             Layout3.transform.parent = Layout1.transform.parent;
+            Layout3.SetActive(true);
             ButtonObj3 = Layout3.transform.GetChild(0).gameObject;
             SceneButton3 = ButtonObj3.GetComponent<Button>();
             SceneSprite3 = ButtonObj3.transform.GetChild(1).GetComponent<SpriteRenderer>();
             SceneText3 = Layout3.transform.GetChild(1).gameObject;
-
-            Layout1.transform.localPosition = new Vector3(Layout1.transform.localPosition.x, Layout1.transform.localPosition.y, 0);
-            Layout2.transform.localPosition = new Vector3(Layout2.transform.localPosition.x, Layout2.transform.localPosition.y, 0);
-            Layout3.transform.localPosition = new Vector3(Layout3.transform.localPosition.x, Layout3.transform.localPosition.y, 0);
 
             GameObject ItemButtons = new GameObject("Item Buttons");
             ItemButtons.layer = 5;
@@ -194,6 +195,9 @@ namespace TunicRandomizer {
         }
 
         public void FirstChoice() {
+            if (!readyForInputs) {
+                return;
+            }
             if (WaitingForDartSelection) {
                 PinSelection(EntranceOptions[0].Portal2.Name);
                 // todo: maybe also some way to graphically show that it's pinned
@@ -208,6 +212,9 @@ namespace TunicRandomizer {
         }
 
         public void SecondChoice() {
+            if (!readyForInputs) {
+                return;
+            }
             if (WaitingForDartSelection) {
                 PinSelection(EntranceOptions[1].Portal2.Name);
                 return;
@@ -221,6 +228,9 @@ namespace TunicRandomizer {
         }
 
         public void ThirdChoice() {
+            if (!readyForInputs) {
+                return;
+            }
             if (WaitingForDartSelection) {
                 PinSelection(EntranceOptions[2].Portal2.Name);
                 return;
@@ -236,6 +246,9 @@ namespace TunicRandomizer {
         public static List<PortalCombo> RerollAlreadySeen = new List<PortalCombo>();
 
         public void RerollChoices() {
+            if (!readyForInputs) {
+                return;
+            }
             // todo add sfx on button press for successful or 
             Item SoulDice = Inventory.GetItemByName("Soul Dice");
             List<PortalCombo> newPortals = null;
@@ -272,6 +285,9 @@ namespace TunicRandomizer {
         }
 
         public void ActivatePin() {
+            if (!readyForInputs) {
+                return;
+            }
             Item Pin = Inventory.GetItemByName("Dart");
             if (Pin.Quantity == 0) { return; }
             WaitingForDartSelection = true;
@@ -313,6 +329,8 @@ namespace TunicRandomizer {
             ItemButton2.onClick.AddListener((UnityAction)ActivatePin);
             ItemButton3.onClick.AddListener((UnityAction)Item3);
             ItemButton4.onClick.AddListener((UnityAction)Item4);
+
+            animationHandler = AnimationHandler();
         }
 
         public void ShowSelection(List<PortalCombo> portalChoices) {
@@ -346,8 +364,11 @@ namespace TunicRandomizer {
             RerollButton.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Soul Dice").Quantity.ToString();
             ItemButton2.transform.GetChild(0).GetComponent<Image>().sprite = Inventory.GetItemByName("Dart").icon;
             ItemButton2.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Dart").Quantity.ToString();
+            ToggleItemRow(false);
+            readyForInputs = false;
+            animationHandler = AnimationHandler();
             GUIMode.PushMode(EntranceSelector.instance);
-            EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
+            EventSystem.current.SetSelectedGameObject(ButtonObj1);
         }
 
         private void ResizeImage(SceneImage image, SpriteRenderer sr) {
@@ -359,6 +380,11 @@ namespace TunicRandomizer {
         }
 
         public void cleanup() {
+            Layout1.transform.localPosition = new Vector3(Layout1.transform.localPosition.x, 0, 200);
+            Layout2.transform.localPosition = new Vector3(Layout2.transform.localPosition.x, 0, 200);
+            Layout3.transform.localPosition = new Vector3(Layout3.transform.localPosition.x, 0, 200);
+            ToggleItemRow(false);
+            readyForInputs = false;
             TunicLogger.LogInfo("cleanup started");
             RerollAlreadySeen.Clear();
             GUIMode.ClearStack();
@@ -367,6 +393,41 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
+            if (animationHandler != null) {
+                animationHandler.MoveNext();
+            }
+        }
+
+        private IEnumerator<bool> AnimationHandler() {
+            yield return true;
+            Layout1.transform.localPosition = new Vector3(Layout1.transform.localPosition.x, 0, 200);
+            Layout2.transform.localPosition = new Vector3(Layout2.transform.localPosition.x, 0, 200);
+            Layout3.transform.localPosition = new Vector3(Layout3.transform.localPosition.x, 0, 200);
+            SceneSprite1.transform.localPosition = new Vector3(SceneSprite1.transform.localPosition.x, SceneSprite1.transform.localPosition.y, 200);
+            SceneSprite2.transform.localPosition = new Vector3(SceneSprite2.transform.localPosition.x, SceneSprite2.transform.localPosition.y, 200);
+            SceneSprite3.transform.localPosition = new Vector3(SceneSprite3.transform.localPosition.x, SceneSprite3.transform.localPosition.y, 200);
+            yield return true;
+            while (Layout3.transform.localPosition.y < 435) {
+                if (Layout1.transform.localPosition.y < 435) {
+                    Layout1.transform.localPosition += new Vector3(0, 15, 0);
+                }
+                if (Layout2.transform.localPosition.y < 435 && Layout1.transform.localPosition.y > 100) {
+                    Layout2.transform.localPosition += new Vector3(0, 15, 0);
+                }
+                if (Layout3.transform.localPosition.y < 435 && Layout2.transform.localPosition.y > 100) {
+                    Layout3.transform.localPosition += new Vector3(0, 15, 0);
+                }
+                yield return true;
+            }
+            ToggleItemRow(true);
+            readyForInputs = true;
+        }
+
+        private static void ToggleItemRow(bool state) {
+            RerollButton.gameObject.SetActive(state);
+            ItemButton2.gameObject.SetActive(state);
+            ItemButton3.gameObject.SetActive(state);
+            ItemButton4.gameObject.SetActive(state);
         }
 
         public static bool GUIMode_PauseTime_GetterPatch(GUIMode __instance, ref bool __result) {

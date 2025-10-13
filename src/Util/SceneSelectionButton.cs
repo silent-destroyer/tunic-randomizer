@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace TunicRandomizer {
@@ -21,7 +22,7 @@ namespace TunicRandomizer {
             if (button == null && GetComponent<Button>() != null) {
                 button = GetComponent<Button>();
             }
-            if (button != null && image != null && button.hasSelection && colorWhenSelected != null) {
+            if (button != null && image != null && EventSystem.current.currentSelectedGameObject == this.gameObject && colorWhenSelected != null) {
                 image.color = colorWhenSelected;
                 if (isSceneButton && EntranceSelector.WaitingForDartSelection) {
                     image.color = Color.cyan;

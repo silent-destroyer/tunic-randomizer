@@ -439,7 +439,6 @@ namespace TunicRandomizer {
 
                 // Dart
                 GameObject fox = Resources.Load("_PlayerCharacter").Cast<GameObject>();
-                TunicLogger.LogInfo(fox.name);
                 GameObject.DontDestroyOnLoad(fox);
                 GameObject Dart = fox.transform.GetChild(3).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(6).gameObject;
                 // torch is 2
