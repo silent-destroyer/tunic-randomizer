@@ -252,6 +252,7 @@ namespace TunicRandomizer {
             TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             FoxPrince.FPRandomizedPortals.Clear();
+            ItemTracker.EntranceFileAllPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
             TunicLogger.LogInfo("Create randomized portals is randomizing portals");
             List<PortalCombo> randomizedPortals = RandomizePortals(seed);
@@ -835,6 +836,12 @@ namespace TunicRandomizer {
         public static void ModifyPortals(string scene_name, bool sending = false) {
             if (GetBool(FoxPrinceEnabled)) {
                 RandomizedPortals = new List<PortalCombo>(FoxPrince.FPRandomizedPortals);
+                TunicLogger.LogInfo("modifying portal names");
+                foreach (PortalCombo pc in RandomizedPortals) {
+                    TunicLogger.LogInfo(pc.Portal1.Name);
+                    TunicLogger.LogInfo(pc.Portal2.Name);
+                    TunicLogger.LogInfo("--");
+                }
                 ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
                 if (FoxPrince.UpdateSignsFlag) {
                     Hints.CreateSignHints();

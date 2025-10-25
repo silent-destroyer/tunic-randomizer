@@ -308,10 +308,10 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                ERScripts.CreateRandomizedPortals(SaveFile.GetInt("seed"));
                 if (GetBool(FoxPrinceEnabled)) {
                     FoxPrince.ClearFoxPrinceCaches();
                 }
+                ERScripts.CreateRandomizedPortals(SaveFile.GetInt("seed"));
             } else {
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
             }
