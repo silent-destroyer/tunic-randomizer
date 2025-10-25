@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -13,7 +8,8 @@ namespace TunicRandomizer {
         public Button button;
         public Color colorWhenSelected = new Color(0.92f, 0.65f, 0.08f);
         public bool isSceneButton = false;
-        public Image dartIcon;
+        public GameObject dart;
+        public string EntranceName;
 
         public void Update() {
             if (image == null && GetComponent<Image>() != null) {
@@ -27,13 +23,13 @@ namespace TunicRandomizer {
                 if (isSceneButton && EntranceSelector.WaitingForDartSelection) {
                     image.color = Color.cyan;
                 }
-                if (dartIcon != null) {
-                    dartIcon.gameObject.SetActive(EntranceSelector.WaitingForDartSelection); // Todo add logic to show the icon if the entrance is the pinned entrance
+                if (dart != null) {
+                    dart.SetActive(EntranceSelector.WaitingForDartSelection || (FoxPrince.PinnedPortal != "" && FoxPrince.PinnedPortal == EntranceName));
                 }
             } else {
                 image.color = Color.white;
-                if (dartIcon != null) {
-                    dartIcon.gameObject.SetActive(false); // Todo add logic to show the icon if the entrance is the pinned entrance
+                if (dart != null) {
+                    dart.SetActive(FoxPrince.PinnedPortal != "" && FoxPrince.PinnedPortal == EntranceName);
                 }
             }
             GetComponent<Button>().enabled = isSceneButton || !EntranceSelector.WaitingForDartSelection;

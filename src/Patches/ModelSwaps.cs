@@ -1979,5 +1979,14 @@ namespace TunicRandomizer {
                 return null;
             }
         }
+
+        public static Shader FindShader(string ShaderName) {
+            List<Shader> Shaders = Resources.FindObjectsOfTypeAll<Shader>().Where(Shader => Shader.name == ShaderName).ToList();
+            if (Shaders != null && Shaders.Count > 0) {
+                return Shaders[0];
+            } else {
+                return null;
+            }
+        }
     }
 }

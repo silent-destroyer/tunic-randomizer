@@ -19,14 +19,17 @@ namespace TunicRandomizer {
         public static Dictionary<string, string> CachedPlandoPortals = new Dictionary<string, string>();
 
         // for use with the pin system
-        public static string PinnedPortal = "";
+        public static string PinnedPortal {
+            get => SaveFile.GetString(FPPinnedPortalFlag);
+            set => SaveFile.SetString(FPPinnedPortalFlag, value);
+        }
 
         // flag to tell ModifyPortals to update the sign displays
         public static bool UpdateSignsFlag = false;
 
         public static void Setup() {
-            EntranceSelector.CreateEntranceSelector();
             ItemPresentationPatches.SetupFoxPrinceItemPresentations();
+            EntranceSelector.CreateEntranceSelector();
         }
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
@@ -193,7 +196,6 @@ namespace TunicRandomizer {
             }
 
             if (portalCombo.Portal2.Name == PinnedPortal) {
-                SaveFile.SetString(SaveFlags.FPPinnedPortalFlag, "");
                 PinnedPortal = "";
             }
 
