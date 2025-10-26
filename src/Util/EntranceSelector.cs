@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FMODUnity;
 using RTLTMPro;
 using TMPro;
 using UnityEngine;
@@ -39,6 +40,9 @@ namespace TunicRandomizer {
         public static SpriteRenderer SceneSprite3;
 
         public static RTLTextMeshPro Title;
+
+        public const string InvalidSelection = "event:/main/ui/inventory/assign_invalid";
+        public static EventReference CoinSFX = MusicShuffler.CreateEventReference("ae16a03f-29fb-4eea-877f-eb7acb66b0dc");
 
         public static bool WaitingForDartSelection = false;
 
@@ -211,7 +215,7 @@ namespace TunicRandomizer {
             }
             if (EntranceOptions.Count > 0) {
                 TunicLogger.LogInfo("Chose first scene");
-                Notifications.Show($"\"Chose first option.\"", $"\"{EntranceOptions[0].Portal1.Name} -> {EntranceOptions[0].Portal2.Name}\"");
+                //Notifications.Show($"\"Chose first option.\"", $"\"{EntranceOptions[0].Portal1.Name} -> {EntranceOptions[0].Portal2.Name}\"");
                 FoxPrince.FPPortalChosen(EntranceOptions[0]);
                 cleanup();
             }
@@ -227,7 +231,7 @@ namespace TunicRandomizer {
             }
             if (EntranceOptions.Count > 0) {
             TunicLogger.LogInfo("Chose second scene");
-                Notifications.Show($"\"Chose second option.\"", $"\"{EntranceOptions[1].Portal1.Name} -> {EntranceOptions[1].Portal2.Name}\"");
+                //Notifications.Show($"\"Chose second option.\"", $"\"{EntranceOptions[1].Portal1.Name} -> {EntranceOptions[1].Portal2.Name}\"");
                 FoxPrince.FPPortalChosen(EntranceOptions[1]);
                 cleanup();
             }
@@ -243,7 +247,7 @@ namespace TunicRandomizer {
             }
             TunicLogger.LogInfo("Chose third scene");
             if (EntranceOptions.Count > 0) {
-                Notifications.Show($"\"Chose third option.\"", $"\"{EntranceOptions[2].Portal1.Name} -> {EntranceOptions[2].Portal2.Name}\"");
+                //Notifications.Show($"\"Chose third option.\"", $"\"{EntranceOptions[2].Portal1.Name} -> {EntranceOptions[2].Portal2.Name}\"");
                 FoxPrince.FPPortalChosen(EntranceOptions[2]);
                 cleanup();
             }
@@ -258,6 +262,10 @@ namespace TunicRandomizer {
             // todo add sfx on button press for successful or 
             Item SoulDice = Inventory.GetItemByName("Soul Dice");
             List<PortalCombo> newPortals = null;
+            if (SoulDice.Quantity == 0) {
+                SFX.PlayPositionlessByString(InvalidSelection);
+                return;
+            }
             if (SoulDice.Quantity > 0 && EntranceOptions.Count == 3) {
                 TunicLogger.LogInfo("rerolling");
                 foreach (PortalCombo portalCombo in EntranceOptions) {
@@ -297,7 +305,10 @@ namespace TunicRandomizer {
                 return;
             }
             Item Pin = Inventory.GetItemByName("Dart");
-            if (Pin.Quantity == 0) { return; }
+            if (Pin.Quantity == 0) {
+                SFX.PlayPositionlessByString(InvalidSelection);
+                return; 
+            }
             WaitingForDartSelection = true;
             Title.text = $"select a scene to pin";
             EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
@@ -308,6 +319,7 @@ namespace TunicRandomizer {
             Item Pin = Inventory.GetItemByName("Dart");
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.blockSFX);
             Pin.Quantity -= 1;
+            PinButton.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Pin.Quantity.ToString();
             WaitingForDartSelection = false;
         }
 
@@ -360,21 +372,9 @@ namespace TunicRandomizer {
                 ButtonObj2.GetComponent<SceneSelectionButton>().EntranceName= portalChoices[1].Portal2.Name;
                 SceneText3.GetComponent<RTLTextMeshPro>().text = portalChoices[2].Portal2.Name;
                 ButtonObj3.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[2].Portal2.Name;
-                if (SceneImageData.SceneImages.ContainsKey(portalChoices[0].Portal2.Name)) {
-                    SceneImage image = SceneImageData.SceneImages[portalChoices[0].Portal2.Name];
-                    SceneSprite1.sprite = SceneImageData.createSprite(SceneImageData.SceneImages[portalChoices[0].Portal2.Name]);
-                    ResizeImage(image, SceneSprite1);
-                }
-                if (SceneImageData.SceneImages.ContainsKey(portalChoices[1].Portal2.Name)) {
-                    SceneImage image = SceneImageData.SceneImages[portalChoices[1].Portal2.Name];
-                    SceneSprite2.sprite = SceneImageData.createSprite(image);
-                    ResizeImage(image, SceneSprite2);
-                }
-                if (SceneImageData.SceneImages.ContainsKey(portalChoices[2].Portal2.Name)) {
-                    SceneImage image = SceneImageData.SceneImages[portalChoices[2].Portal2.Name];
-                    SceneSprite3.sprite = SceneImageData.createSprite(image);
-                    ResizeImage(image, SceneSprite3);
-                }
+                UpdateSceneSprite(SceneSprite1, portalChoices[0].Portal2.Name);
+                UpdateSceneSprite(SceneSprite2, portalChoices[1].Portal2.Name);
+                UpdateSceneSprite(SceneSprite3, portalChoices[2].Portal2.Name);
             }
             EntranceOptions = portalChoices;
 
@@ -389,6 +389,18 @@ namespace TunicRandomizer {
             animationHandler = AnimationHandler();
             GUIMode.PushMode(EntranceSelector.instance);
             EventSystem.current.SetSelectedGameObject(ButtonObj1);
+        }
+
+        private void UpdateSceneSprite(SpriteRenderer sceneSprite, string entranceName) {
+            if (SceneImageData.SceneImages.ContainsKey(entranceName)) {
+                SceneImage image = SceneImageData.SceneImages[entranceName];
+                sceneSprite.sprite = SceneImageData.createSprite(image);
+                ResizeImage(image, sceneSprite);
+            } else if (entranceName.Contains("Shop Portal")) {
+                SceneImage image = SceneImageData.SceneImages["Shop Portal"];
+                sceneSprite.sprite = SceneImageData.createSprite(image);
+                ResizeImage(image, sceneSprite);
+            }
         }
 
         private void ResizeImage(SceneImage image, SpriteRenderer sr) {
