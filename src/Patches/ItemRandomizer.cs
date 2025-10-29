@@ -17,45 +17,49 @@ namespace TunicRandomizer {
         public static bool testBool2 = false;
         
         // essentially fake items for the purpose of logic
-        public static List<string> PrecollectedItems = new List<string>();
+        public static Dictionary<string, int> PrecollectedItems = new Dictionary<string, int>();
 
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
         public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
         public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
-        public static void PopulatePrecollected() {
-            PrecollectedItems.Clear();
-            if (SaveFile.GetInt(LadderRandoEnabled) == 0) {
-                PrecollectedItems.AddRange(LadderItems);
+        
+        // Items you start with or effectively start with
+        public static Dictionary<string, int> PopulatePrecollected() {
+            Dictionary<string, int> precollectedItems = new Dictionary<string, int>();
+            if (!GetBool(LadderRandoEnabled)) {
+                TunicUtils.AddListToDict(precollectedItems, LadderItems);
             }
-            if (SaveFile.GetInt(MasklessLogic) == 1) {
-                PrecollectedItems.Add("Mask");
+            if (GetBool(MasklessLogic)) {
+                precollectedItems.Add("Mask", 1);
             }
-            if (SaveFile.GetInt(LanternlessLogic) == 1) {
-                PrecollectedItems.Add("Lantern");
+            if (GetBool(LanternlessLogic)) {
+                precollectedItems.Add("Lantern", 1);
             }
-            if (SaveFile.GetInt(AbilityShuffle) == 0) {
-                PrecollectedItems.AddRange(new List<string> { "12", "21", "26" });
+            if (!GetBool(AbilityShuffle)) {
+                TunicUtils.AddListToDict(precollectedItems, new List<string> { "12", "21", "26" });
             }
-            if (SaveFile.GetInt(StartWithSword) == 1) {
-                PrecollectedItems.Add("Sword");
+            if (GetBool(StartWithSword)) {
+                precollectedItems.Add("Sword", 1);
             }
 
             // Fake items to differentiate between fuse/non-fuse rules
-            if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
-                PrecollectedItems.Add(ERData.FUSE_SHUFFLE);
-                if (SaveFile.GetInt(EntranceRando) == 1) {
+            if (GetBool(FuseShuffleEnabled)) {
+                precollectedItems.Add(ERData.FUSE_SHUFFLE, 1);
+                if (GetBool(EntranceRando)) {
                     // Since the elevator is always active in ER, just ignore it in logic
-                    PrecollectedItems.Add("Cathedral Elevator Fuse");
+                    precollectedItems.Add("Cathedral Elevator Fuse", 1);
                 }
             } else {
-                PrecollectedItems.Add(ERData.NO_FUSE_SHUFFLE);
+                precollectedItems.Add(ERData.NO_FUSE_SHUFFLE, 1);
             }
 
-            if (SaveFile.GetInt(BellShuffleEnabled) == 1) { 
-                PrecollectedItems.Add(ERData.BELL_SHUFFLE);
+            if (GetBool(BellShuffleEnabled)) {
+                precollectedItems.Add(ERData.BELL_SHUFFLE, 1);
             } else {
-                PrecollectedItems.Add(ERData.NO_BELL_SHUFFLE);
+                precollectedItems.Add(ERData.NO_BELL_SHUFFLE, 1);
             }
+
+            return precollectedItems;
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
@@ -321,7 +325,7 @@ namespace TunicRandomizer {
                 foreach (KeyValuePair<string, int> unplacedItem in UnplacedInventory) {
                     FullInventory.Add(unplacedItem.Key, unplacedItem.Value);
                 }
-                TunicUtils.AddListToDict(FullInventory, PrecollectedItems);
+                TunicUtils.AddDictToDict(FullInventory, PrecollectedItems);
 
                 // cache for picking up items during fill
                 checksAlreadyAdded.Clear();
@@ -394,7 +398,7 @@ namespace TunicRandomizer {
                     testFullInventory.Clear();
                     testFullInventory.Add("Overworld", 1);
                     TunicUtils.AddDictToDict(testFullInventory, testUnplacedInventory);
-                    TunicUtils.AddListToDict(testFullInventory, PrecollectedItems);
+                    TunicUtils.AddDictToDict(testFullInventory, PrecollectedItems);
 
                     // fill up our FullInventory with regions until we stop getting new regions -- these are the portals and regions we can currently reach
                     while (true) {
@@ -449,6 +453,8 @@ namespace TunicRandomizer {
                     // This is almost exclusively for ladder shuffle due to the small sphere one size, and will likely never get called otherwise
                     if (counter >= InitialLocations.Count) {
                         TunicLogger.LogInfo("Failed to find more spots to place items. Debug info below. It will attempt to re-randomize afterwards. If you see this, please report it to the TUNIC devs along with the seed paste.");
+                        LogicChecker.WriteLogicSummaryFile();
+                        TunicLogger.LogInfo("Logic file has been written");
                         TunicLogger.LogInfo("item being placed is " + item.Name);
                         TunicLogger.LogInfo("unplaced inventory contents:");
                         foreach (KeyValuePair<string, int> itemgroup in UnplacedInventory) {
@@ -541,6 +547,7 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
                 }
             }
+            TunicLogger.LogInfo("Successfully randomized and placed items!");
         }
 
         private static void Shuffle(List<Reward> Rewards, List<Location> Locations, System.Random random) {
@@ -613,7 +620,7 @@ namespace TunicRandomizer {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
             Dictionary<string, PortalCombo> vanillaPortals = ERData.GetVanillaPortals();
             if (startInventory == null) {
-                TunicUtils.AddListToDict(Inventory, PrecollectedItems);
+                TunicUtils.AddDictToDict(Inventory, PrecollectedItems);
             } else {
                 TunicUtils.AddDictToDict(Inventory, startInventory);
             }
@@ -661,12 +668,12 @@ namespace TunicRandomizer {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
 
             if (startInventory == null) {
-                TunicUtils.AddListToDict(Inventory, PrecollectedItems);
+                TunicUtils.AddDictToDict(Inventory, PrecollectedItems);
             } else {
                 TunicUtils.AddDictToDict(Inventory, startInventory);
             }
             
-            Inventory = ERScripts.FirstStepsUpdateReachableRegions(Inventory);
+            Inventory = ERScripts.UpdateReachableRegions(Inventory);
             
             // find which portals you can reach from spawn without additional progression
             foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
@@ -684,7 +691,7 @@ namespace TunicRandomizer {
                     Inventory.Add(portal.Region, 1);
                 }
             }
-            Inventory = ERScripts.FirstStepsUpdateReachableRegions(Inventory);
+            Inventory = ERScripts.UpdateReachableRegions(Inventory);
             return Inventory;
         }
     }

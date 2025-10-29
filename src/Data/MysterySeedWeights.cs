@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TunicRandomizer {
     public class MysterySeedWeights {
@@ -21,6 +18,19 @@ namespace TunicRandomizer {
         public int ShuffleBreakables;
         public int ShuffleFuses;
         public int ShuffleBells;
+
+        public int LaurelsZips;
+        public int LadderStorageWithoutItems;
+
+        public bool IceGrappleOff;
+        public bool IceGrappleEasy;
+        public bool IceGrappleMedium;
+        public bool IceGrappleHard;
+
+        public bool LadderStorageOff;
+        public bool LadderStorageEasy;
+        public bool LadderStorageMedium;
+        public bool LadderStorageHard;
 
         public bool FoolTrapNone;
         public bool FoolTrapNormal;
@@ -59,6 +69,19 @@ namespace TunicRandomizer {
             ShuffleBreakables = 50;
             ShuffleFuses = 50;
             ShuffleBells = 50;
+
+            LaurelsZips = 0;
+            LadderStorageWithoutItems = 0;
+
+            IceGrappleOff = true;
+            IceGrappleEasy = false;
+            IceGrappleMedium = false;
+            IceGrappleHard = false;
+
+            LadderStorageOff = true;
+            LadderStorageEasy = false;
+            LadderStorageMedium = false;
+            LadderStorageHard = false;
 
             FoolTrapNone = true;
             FoolTrapNormal = true;
@@ -100,8 +123,11 @@ namespace TunicRandomizer {
                 $"&{ShuffleBells}" +
                 $"&{HexagonQuest}" +
                 $"&{HexQuestAbilityShufflePages}" +
+                $"&{LaurelsZips}" +
+                $"&{LadderStorageWithoutItems}" +
                 $"&{Convert.ToInt32(sToB(new bool[] { FoolTrapNone, FoolTrapNormal, FoolTrapDouble, FoolTrapOnslaught, LaurelsRandom, LaurelsSixCoins, LaurelsTenCoins, LaurelsTenFairies }), 2)}" +
-                $"&{Convert.ToInt32(sToB(new bool[] { HexQuestGoalRandom, HexQuestGoalLow, HexQuestGoalMedium, HexQuestGoalHigh, HexQuestExtrasRandom, HexQuestExtrasLow, HexQuestExtrasMedium, HexQuestExtrasHigh }), 2)}";
+                $"&{Convert.ToInt32(sToB(new bool[] { HexQuestGoalRandom, HexQuestGoalLow, HexQuestGoalMedium, HexQuestGoalHigh, HexQuestExtrasRandom, HexQuestExtrasLow, HexQuestExtrasMedium, HexQuestExtrasHigh }), 2)}" +
+                $"&{Convert.ToInt32(sToB(new bool[] { IceGrappleOff, IceGrappleEasy, IceGrappleMedium, IceGrappleHard, LadderStorageOff, LadderStorageEasy, LadderStorageMedium, LadderStorageHard }), 2)}";
             return s;
         }
 
@@ -124,6 +150,8 @@ namespace TunicRandomizer {
             ShuffleBells = int.Parse(split[i++]);
             HexagonQuest = int.Parse(split[i++]);
             HexQuestAbilityShufflePages = int.Parse(split[i++]);
+            LaurelsZips = int.Parse(split[i++]);
+            LadderStorageWithoutItems = int.Parse(split[i++]);
             int foolLaurels = int.Parse(split[i++]);
             FoolTrapNone = eval(foolLaurels, 1);
             FoolTrapNormal = eval(foolLaurels, 2);
@@ -142,6 +170,15 @@ namespace TunicRandomizer {
             HexQuestExtrasLow = eval(hexQuest, 32);
             HexQuestExtrasMedium = eval(hexQuest, 64);
             HexQuestExtrasHigh = eval(hexQuest, 128);
+            int trickLogic = int.Parse(split[i++]);
+            IceGrappleOff = eval(trickLogic, 1);
+            IceGrappleEasy = eval(trickLogic, 2);
+            IceGrappleMedium = eval(trickLogic, 4);
+            IceGrappleHard = eval(trickLogic, 8);
+            LadderStorageOff = eval(trickLogic, 16);
+            LadderStorageEasy = eval(trickLogic, 32);
+            LadderStorageMedium = eval(trickLogic, 64);
+            LadderStorageHard = eval(trickLogic, 128);
         }
 
         public string sToB(bool[] settings) {
@@ -170,6 +207,19 @@ namespace TunicRandomizer {
             ShuffleBells = random.Next(101);
             HexagonQuest = random.Next(101);
             HexQuestAbilityShufflePages = random.Next(101);
+
+            LaurelsZips = random.Next(101);
+            LadderStorageWithoutItems = random.Next(101);
+
+            IceGrappleOff = random.Next(2) == 1;
+            IceGrappleEasy = random.Next(2) == 1;
+            IceGrappleMedium = random.Next(2) == 1;
+            IceGrappleHard = random.Next(2) == 1;
+
+            LadderStorageOff = random.Next(2) == 1;
+            LadderStorageEasy = random.Next(2) == 1;
+            LadderStorageMedium = random.Next(2) == 1;
+            LadderStorageHard = random.Next(2) == 1;
 
             FoolTrapNone = random.Next(2) == 1;
             FoolTrapNormal = random.Next(2) == 1;

@@ -37,6 +37,18 @@ namespace TunicRandomizer {
             { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, bombable walls, and more." },
             { "Shuffle Fuses", "Praying at a fuse now rewards an item instead of turning on the power.\nInstead, the power connections between fuses are shuffled into the item pool and unlocked separately." },
             { "Shuffle Bells", "The East and West bells are shuffled into the item pool and must be found in order to unlock the Sealed Temple.\nRinging the bells will instead now reward a random item." },
+            { "Laurels Zips", "Adds a number of gates, doors, and other tricky spots that can be bypassed using the Hero's Laurels into logic. Notable inclusions are the Monastery gate, Ruined Passage door, Old House gate, Forest Grave Path gate, and going between the back and middle of Swamp." },
+            { "Ice Grapples", "Adds logic for grappling to frozen enemies to reach new areas.\nMay include pushing enemies through walls or luring them far distances." },
+            { "Ice Grapples Off", "Off: Ice Grapples are not in logic, except for the chest in East Forest." },
+            { "Ice Grapples Easy", "Adds logic for grappling to frozen enemies to reach new areas.\nEasy: Includes enemies that can be targered or are in range without luring them." },
+            { "Ice Grapples Medium", "Adds logic for grappling to frozen enemies to reach new areas.\nMedium: Includes Easy difficulty plus pushing nearby enemies through walls/doors or off ledges. Also includes luring an enemy to the Sealed Temple door." },
+            { "Ice Grapples Hard", "Adds logic for grappling to frozen enemies to reach new areas.\nHard: Includes Easy and Medium difficulties plus luring enemies to get to where you want to go." },
+            { "Ladder Storage", "Adds ladder storage to the logic. Ladder storage is performed by using an item (logically Stick, Sword, Magic Orb, or Shield) and climbing a ladder at the same time, then quickly rolling away from the ladder to store the ladder state." },
+            { "Ladder Storage Off", "Off: Ladder storage is not considered in logic." },
+            { "Ladder Storage Easy", "Easy: Includes uses of Ladder Storage to get to open doors over a long distance without too much difficulty. May include convenient elevation changes (going up Mountain stairs, stairs in front of Special Shop, etc.)." },
+            { "Ladder Storage Medium", "Medium: Includes Easy difficulty plus changing your elevation using the environment and getting knocked out of ladder storage by melee attacks from enemies." },
+            { "Ladder Storage Hard", "Hard: Includes Easy and Medium difficulties plus going out of bounds to enter closed doors from behind and shooting fuses up close with the Magic Wand to knock yourself out of ladder storage." },
+            { "Ladder Storage Without Items", "If enabled, you will be expected to perform Ladder Storage without any specific items. This can be done with the plushie code, a Golden Coin, Prayer, and more. This option has no effect if you do not have Ladder Storage Logic enabled." },
         };
     }
 }
