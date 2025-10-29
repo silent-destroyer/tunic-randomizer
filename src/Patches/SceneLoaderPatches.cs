@@ -499,6 +499,10 @@ namespace TunicRandomizer {
                 SignpostHint.AddComponent<BoxCollider>();
                 SignpostHint.SetActive(true);
 
+                GameObject LightSource = new GameObject("rando chest light source");
+                LightSource.AddComponent<Light>();
+                LightSource.transform.position = new Vector3(75f, 22f, 172.625f);
+
                 if (TunicRandomizer.Settings.MoreSkulls) {
                     InteractionPatches.SpawnMoreSkulls();
                 }
