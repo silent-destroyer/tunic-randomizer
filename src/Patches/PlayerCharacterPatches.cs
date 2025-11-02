@@ -1,4 +1,5 @@
 ﻿using Archipelago.MultiClient.Net.Models;
+using InControl;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace TunicRandomizer {
         public static bool WearHat = false;
         public static float TimeWhenLastChangedDayNight = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
+        public static bool LeftCommandPressed = false;
         public static LadderEnd LastLadder = null;
 
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
@@ -50,12 +52,12 @@ namespace TunicRandomizer {
                     DiedToDeathLink = false;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            if (Input.GetKeyDown(KeyCode.H) || (InputManager.ActiveDevice.LeftCommand.WasPressed && !LeftCommandPressed)) {
                 if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
                     SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
                 }
             }
-
+            LeftCommandPressed = InputManager.ActiveDevice.LeftCommand.WasPressed;
             if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
                 if (SaveFile.GetInt("randomizer mystery seed") == 1) {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
@@ -75,11 +77,11 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && IsArchipelago()) {
+            if ((Input.GetKeyDown(KeyCode.R) || InputManager.ActiveDevice.LeftStickButton.WasPressed) && IsArchipelago()) {
                 Archipelago.instance.Release();
             }
 
-            if (Input.GetKeyDown(KeyCode.C) && IsArchipelago()) {
+            if ((Input.GetKeyDown(KeyCode.C) || InputManager.ActiveDevice.RightStickButton.WasPressed) && IsArchipelago()) {
                 Archipelago.instance.Collect();
             }
 

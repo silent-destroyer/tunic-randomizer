@@ -1,5 +1,5 @@
 ﻿using FMODUnity;
-using TMPro;
+using InControl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,7 +14,7 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
-            if (Input.GetKey(KeyCode.S)) { 
+            if (Input.GetKey(KeyCode.Space) || InputManager.ActiveDevice.Command.IsPressed || InputManager.ActiveDevice.RightCommand.IsPressed) { 
                 if (holdTime >= 3f && SpeedrunData.gameComplete != 0 && SceneManager.GetActiveScene().name != "GameOverDecision") {
                     TunicLogger.LogInfo("Skipping credits!");
                     foreach(StudioEventEmitter sfx in GameObject.FindObjectsOfType<StudioEventEmitter>()) {
