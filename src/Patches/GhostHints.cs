@@ -277,7 +277,7 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Waterfall", "Waterfall", new Vector3(-41.13461f, 44.9833f, -0.6913f), new Quaternion(0f, 0.6755902f, 0f, -0.7372773f), NPC.NPCAnimState.IDLE, $"doo yoo nO wuht #uh fArEz R sAi^?") }
             },
             { "Hourglass Cave", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Hourglass Cave", "Town Basement", new Vector3(-211.3147f, 1.0833f, 35.7667f), new Quaternion(0f, 0.4226183f, 0f, 0.9063078f), NPC.NPCAnimState.GAZE, $"dOnt gO in #Ar. kahnt yoo rEd %uh sIn?") }
+                new HintGhost("Hint Ghost Hourglass Cave", "Town Basement", new Vector3(-211.3147f, 1.0833f, 35.7667f), new Quaternion(0f, 0.4226183f, 0f, 0.9063078f), NPC.NPCAnimState.GAZE, $"dOnt gO in #Ar. kahnt yoo rEd #uh sIn?") }
             },
             { "Overworld Cave", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Overworld Cave", "Overworld Cave", new Vector3(-88.0794f, 515.1076f, -741.0837f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"sO pritE!" ) }
@@ -376,7 +376,7 @@ namespace TunicRandomizer {
             },
             { "Library Rotunda", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Rotunda 1", "Library Rotunda", new Vector3(-25.3f, -8.2f, 38.7f), new Quaternion(0f, .9343f, 0f, -.3566f), NPC.NPCAnimState.PRAY, $"wI did #uh lIbrArEuhn Evehn bild awl #Ez lahdurz?\nkahnt hE flI?"),
-                new HintGhost("Hint Ghost Library Rotunda 2", "Library Rotunda", new Vector3(-3.3693f, -6.9867f, 2.2492f), new Quaternion(0f, .9973f, 0f, .0738f), NPC.NPCAnimState.SIT, $"#is yoosd too bE uh bAbE slorm rAstrahk bahk in %uh dA,\ngood tImz...") }
+                new HintGhost("Hint Ghost Library Rotunda 2", "Library Rotunda", new Vector3(-3.3693f, -6.9867f, 2.2492f), new Quaternion(0f, .9973f, 0f, .0738f), NPC.NPCAnimState.SIT, $"#is yoosd too bE uh bAbE slorm rAstrahk bahk in #uh dA,\ngood tImz...") }
             },
             { "Library Lab", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Library Lab 1", "Library Lab", new Vector3(139.3969f, 93.5073f, -74.8239f), new Quaternion(0f, 1f, 0f, 0.0089f), NPC.NPCAnimState.SIT, $"Im #uh lIbrArEuhn!---... juhst kidi^, I kahnt rEd."),
@@ -813,7 +813,9 @@ namespace TunicRandomizer {
                 TorchFox.transform.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
 
                 LanguageLine TorchFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
-                TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm.---I sE yoo hahv A torJ [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
+                TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm." +
+                $"---if yoo nEd hehlp, trI si^i^ #uh \"SEEKING-SPELL\"\nin rivurs. #uh fArEz wil \"FIND ENTRANCES\" #aht yoo\nhahvuhnt bin too yeht: [arrow_right] [arrow_down] [arrow_right] [arrow_up] [arrow_left] [arrow_up]" +
+                $"---awlsO, I sE yoo hahv A \"TORCH\" [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
                 TorchFox.GetComponent<NPC>().script = TorchFoxScript;
 
                 TorchFox.name = "torch hint ghost";

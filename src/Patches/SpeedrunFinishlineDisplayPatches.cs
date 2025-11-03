@@ -1,4 +1,5 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
+using InControl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,6 +74,9 @@ namespace TunicRandomizer {
 
         public static bool ShowCompletionStatsAfterDelay = false;
         public static bool GameCompleted = false;
+
+        public static GameObject Release;
+        public static GameObject Collect;
 
         public static Dictionary<string, GameObject> StatSections = new Dictionary<string, GameObject>();
 
@@ -256,6 +260,67 @@ namespace TunicRandomizer {
             StatSections.Add("Timer", TimeText);
 
             StatSections.Add("Total Completion", TotalCompletion);
+
+            RandoActionSet randoActionSet = RandoActionSet.CreateWithDefaultBindings();
+            InputManager.AttachPlayerActionSet(randoActionSet);
+            InputSequenceAssistanceMenu menuBase = Resources.FindObjectsOfTypeAll<InputSequenceAssistanceMenu>().First();
+            GameObject PlatformIcon = menuBase.transform.GetChild(0).GetChild(6).gameObject;
+            GameObject HideStats = new GameObject("Hide Stats");
+            HideStats.transform.parent = CompletionCanvas.transform;
+            HideStats.layer = 5;
+            HideStats.AddComponent<CanvasRenderer>();
+
+            GameObject NewButton = GameObject.Instantiate(PlatformIcon);
+            NewButton.layer = 5;
+            NewButton.transform.parent = HideStats.transform;
+            NewButton.name = "button icon";
+            NewButton.GetComponent<PlatformSprite>().ActionName = "Hide Stats";
+            NewButton.GetComponent<PlatformSprite>().actionSet = randoActionSet;
+            NewButton.GetComponent<PlatformSprite>().action = randoActionSet.actionsByName["Hide Stats"];
+            NewButton.transform.localScale = Vector3.one * 0.2f;
+
+            GameObject ActionText = GameObject.Instantiate(CompletionCanvas.transform.GetChild(1)).gameObject;
+            ActionText.name = "text";
+            ActionText.layer = 5;
+            ActionText.transform.parent = HideStats.transform;
+            ActionText.GetComponent<TextMeshPro>().text = "Hide Stats";
+            ActionText.transform.localPosition = new Vector3(145f, -147.5f, 0);
+
+            GameObject SkipCredits = GameObject.Instantiate(HideStats);
+            SkipCredits.name = "Skip Credits";
+            SkipCredits.layer = 5;
+            SkipCredits.transform.parent = HideStats.transform.parent;
+            SkipCredits.transform.GetChild(0).GetComponent<PlatformSprite>().ActionName = "Skip Credits";
+            SkipCredits.transform.GetChild(0).GetComponent<PlatformSprite>().actionSet = randoActionSet;
+            SkipCredits.transform.GetChild(0).GetComponent<PlatformSprite>().action = randoActionSet.actionsByName["Skip Credits"];
+            SkipCredits.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Skip Credits\n<size=80%>(Hold 3s)";
+            SkipCredits.transform.GetChild(1).localPosition = new Vector3(145f, -142.5f, 0);
+
+            Release = GameObject.Instantiate(HideStats);
+            Release.name = "Release";
+            Release.layer = 5;
+            Release.transform.parent = HideStats.transform.parent;
+            Release.transform.GetChild(0).GetComponent<PlatformSprite>().ActionName = "Release";
+            Release.transform.GetChild(0).GetComponent<PlatformSprite>().actionSet = randoActionSet;
+            Release.transform.GetChild(0).GetComponent<PlatformSprite>().action = randoActionSet.actionsByName["Release"];
+            Release.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Release";
+            Release.transform.GetChild(1).localPosition = new Vector3(145f, -147.5f, 0);
+
+            Collect = GameObject.Instantiate(HideStats);
+            Collect.name = "Collect";
+            Collect.layer = 5;
+            Collect.transform.parent = HideStats.transform.parent;
+            Collect.transform.GetChild(0).GetComponent<PlatformSprite>().ActionName = "Collect";
+            Collect.transform.GetChild(0).GetComponent<PlatformSprite>().actionSet = randoActionSet;
+            Collect.transform.GetChild(0).GetComponent<PlatformSprite>().action = randoActionSet.actionsByName["Collect"];
+            Collect.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Collect";
+            Collect.transform.GetChild(1).localPosition = new Vector3(145f, -147.5f, 0);
+
+            HideStats.transform.position = new Vector3(-460, 75, 200);
+            SkipCredits.transform.position = new Vector3(-355, 75, 200);
+            Release.transform.position = new Vector3(-460, 35, 0);
+            Collect.transform.position = new Vector3(-355, 35, 200);
+
             UpdateCounters();
         }
 
@@ -327,20 +392,35 @@ namespace TunicRandomizer {
                     AreaCount.GetComponent<TextMeshPro>().text = $"{(AreaChecksFound == TotalAreaChecks ? StatsScreenSecret[Area] : Area)}\n<size=80%>{TimeString}\n{Color}{AreaChecksFound} / {TotalAreaChecks} ({(int)Percentage}%)";
 
                     if (Area == "Swamp") {
-                        AreaCount.GetComponent<TextMeshPro>().text += "\n<size=100%><#FFFFFF>Press 1 to hide stats.";
                         if (IsArchipelago()) {
+                            Release.SetActive(true);
+                            Collect.SetActive(true);
                             if (Archipelago.instance.integration.session.RoomState.ReleasePermissions == Permissions.Disabled) {
-                                AreaCount.GetComponent<TextMeshPro>().text += "\nReleasing is disabled by host.";
+                                Release.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Release\n<size=80%>(disabled by host)";
+                                Release.transform.GetChild(1).localPosition = new Vector3(145f, -142.5f, 0);
+                                Release.transform.GetChild(0).GetComponent<PlatformSprite>().keySpriteStyle = KeySpriteStyle.Dark;
+                                Release.transform.GetChild(0).GetComponent<PlatformSprite>().buttonStyle = KeySpriteStyle.Dark;
                             } else {
-                                AreaCount.GetComponent<TextMeshPro>().text += "\nPress R to release items.";
+                                Release.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Release";
+                                Release.transform.GetChild(1).localPosition = new Vector3(145f, -147.5f, 0);
+                                Release.transform.GetChild(0).GetComponent<PlatformSprite>().keySpriteStyle = KeySpriteStyle.Light;
+                                Release.transform.GetChild(0).GetComponent<PlatformSprite>().buttonStyle = KeySpriteStyle.Light;
                             }
                             if (Archipelago.instance.integration.session.RoomState.CollectPermissions == Permissions.Disabled) {
-                                AreaCount.GetComponent<TextMeshPro>().text += "\nCollecting disabled by host.";
+                                Collect.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Collect\n<size=80%>(disabled by host)";
+                                Collect.transform.GetChild(1).localPosition = new Vector3(145f, -142.5f, 0);
+                                Collect.transform.GetChild(0).GetComponent<PlatformSprite>().keySpriteStyle = KeySpriteStyle.Dark;
+                                Collect.transform.GetChild(0).GetComponent<PlatformSprite>().buttonStyle = KeySpriteStyle.Dark;
                             } else {
-                                AreaCount.GetComponent<TextMeshPro>().text += "\nPress C to collect items.";
+                                Collect.transform.GetChild(1).GetComponent<TextMeshPro>().text = "Collect";
+                                Collect.transform.GetChild(1).localPosition = new Vector3(145f, -147.5f, 0);
+                                Collect.transform.GetChild(0).GetComponent<PlatformSprite>().keySpriteStyle = KeySpriteStyle.Light;
+                                Collect.transform.GetChild(0).GetComponent<PlatformSprite>().buttonStyle = KeySpriteStyle.Light;
                             }
+                        } else {
+                            Release.SetActive(false);
+                            Collect.SetActive(false);
                         }
-                        AreaCount.GetComponent<TextMeshPro>().text += "\nHold S to skip credits.";
                     }
                     if (Area == "Far Shore/Hero's Grave") {
                         AreaCount.GetComponent<TextMeshPro>().text = $"<size=90%>{AreaCount.GetComponent<TextMeshPro>().text}";

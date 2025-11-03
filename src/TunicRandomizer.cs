@@ -44,6 +44,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuseItem>();
             ClassInjector.RegisterTypeInIl2Cpp<FuseTrapAppearanceHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<AllowHolyCross>();
+            ClassInjector.RegisterTypeInIl2Cpp<RandoActionSet>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");

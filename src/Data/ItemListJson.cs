@@ -2517,6 +2517,7 @@
                     ""Requirements"": [
                         {
                             ""Library Arena"": 1,
+                            ""Ladders in Library"": 1,
                             ""Sword"": 1
                         }
                     ]
