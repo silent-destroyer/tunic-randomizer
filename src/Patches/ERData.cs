@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TunicRandomizer {
     public class ERData {
         public static List<PortalCombo> RandomizedPortals = new List<PortalCombo>();
         public static List<PortalCombo> VanillaPortals = new List<PortalCombo>();
         public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
+        public static Dictionary<string, string> PlandoPortals = new Dictionary<string, string>();
 
         public const string FUSE_SHUFFLE = "Fuse Shuffle";
         public const string NO_FUSE_SHUFFLE = "No Fuse Shuffle";
@@ -32,23 +35,22 @@ namespace TunicRandomizer {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
-                Direction = (int) PDir.NONE;
+                Direction = (int)PDir.NONE;
             }
 
             public TunicPortal(string name, string destination, string tag, PDir direction) {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
-                Direction = (int) direction;
+                Direction = (int)direction;
             }
         }
-        
+
         public class RegionInfo {
             public string Scene;
             public bool DeadEnd;
             public string OutletRegion;  // for where a portal forces you to another region immediately, example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
             public bool SkipCounting;  // for ones that we skip every time because they're weird (zig skip, ls elevation regions) and shouldn't be counted in portal pairing the same way
-            
 
             public RegionInfo(string scene, bool deadEnd) {
                 Scene = scene;
@@ -1308,7 +1310,7 @@ namespace TunicRandomizer {
                             new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "main", PDir.SOUTH),
                         }
                     },
-                    { 
+                    {
                         "Cathedral Elevator",
                         new List<TunicPortal> {
                             new TunicPortal("Cathedral Elevator", "Cathedral Arena", "", PDir.LADDER_DOWN),
@@ -2318,35 +2320,35 @@ namespace TunicRandomizer {
             },
             {
                 "LS Elev 0",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 1",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 2",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 3",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 4",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 5",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 6",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
             {
                 "LS Elev 7",
-                new RegionInfo("Overworld Redux", false)
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
             },
         };
 
@@ -6180,6 +6182,5 @@ namespace TunicRandomizer {
                 }
             },
         };
-        
     }
 }

@@ -502,6 +502,10 @@ namespace TunicRandomizer {
                 SignpostHint.AddComponent<BoxCollider>();
                 SignpostHint.SetActive(true);
 
+                GameObject LightSource = new GameObject("rando chest light source");
+                LightSource.AddComponent<Light>();
+                LightSource.transform.position = new Vector3(75f, 22f, 172.625f);
+
                 if (TunicRandomizer.Settings.MoreSkulls) {
                     InteractionPatches.SpawnMoreSkulls();
                 }
@@ -521,11 +525,11 @@ namespace TunicRandomizer {
                     GameObject.Find("Environment").transform.GetChild(3).gameObject.SetActive(true);
                 }
             } else if (SceneName == "Cathedral Arena") {
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                if (GetBool(EntranceRando) || (GetBool(FuseShuffleEnabled) && Inventory.GetItemByName("Cathedral Elevator Fuse").Quantity > 0)) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = false;
                 }
             } else if (SceneName == "Cathedral Redux") {
-                if (SaveFile.GetInt("randomizer entrance rando enabled") == 1) {
+                if (GetBool(EntranceRando) || (GetBool(FuseShuffleEnabled) && Inventory.GetItemByName("Cathedral Elevator Fuse").Quantity > 0)) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = true;
                 }
                 if (GameObject.FindObjectOfType<ToggleObjectBySpell>() != null) {

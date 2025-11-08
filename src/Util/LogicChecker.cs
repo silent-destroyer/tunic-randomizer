@@ -7,7 +7,6 @@ namespace TunicRandomizer {
         // the second string keys are the origins, and the lists are the rules to get from those origins to the desired destination region
         public static Dictionary<string, Dictionary<string, List<List<string>>>> RegionLogicSummaryWithStatus = new Dictionary<string, Dictionary<string, List<List<string>>>>();
         
-
         public static string MarkString(string text) {
             return "(x) " + text;
         }

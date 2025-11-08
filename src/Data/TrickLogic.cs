@@ -6,8 +6,6 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> LogicTrickTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
 
-       
-
         public class LadderInfo {
             public string Origin;  // origin region
             public string Destination;  // destination portal
@@ -130,6 +128,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
             Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
             List<PortalCombo> portalList;
+
             if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
@@ -146,6 +145,7 @@ namespace TunicRandomizer {
                     // this should only happen as a result of fox prince making the randomized portals list not contain every portal
                     continue;
                 }
+
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
                 if (!traversalReqsWithLS.ContainsKey(connection.Origin)) {
                     traversalReqsWithLS.Add(connection.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
@@ -167,11 +167,13 @@ namespace TunicRandomizer {
                     } else {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
+
                     string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
                     if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
                         // this should only happen as a result of fox prince making the randomized portals list not contain every portal
                         continue;
                     }
+
                     if (!traversalReqsWithLS.ContainsKey(ladderInfo.Origin)) {
                         traversalReqsWithLS.Add(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
                     } else {

@@ -86,7 +86,6 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-
         public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null, List<PortalCombo> randomizedPortals = null) {
             if (alreadyCheckedLocations == null) {
                 alreadyCheckedLocations = new List<Check>();
@@ -134,7 +133,6 @@ namespace TunicRandomizer {
             }
             return (inventory, alreadyCheckedLocations);
         }
-
 
         public static bool CanUsePortal(Portal portal, Dictionary<string, int> inventory) {
             if (inventory.ContainsKey(portal.Region)) {
@@ -464,7 +462,6 @@ namespace TunicRandomizer {
                 }
                 return false;
             }
-
 
             // -----------------------------------------------
             // Portal Pairing Starts Here
@@ -1055,7 +1052,6 @@ namespace TunicRandomizer {
                 }
             }
         }
-
     }
 
     public class FoxgodDecoupledTeleporter : MonoBehaviour {
