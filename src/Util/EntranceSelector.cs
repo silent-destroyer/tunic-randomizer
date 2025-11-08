@@ -90,6 +90,7 @@ namespace TunicRandomizer {
             Layout1.transform.parent = ButtonsRoot.transform;
             Layout1.layer = 5;
             Layout1.SetActive(true);
+            Layout1.transform.localScale = Vector3.one;
 
             ButtonObj1 = new GameObject("Button");
             ButtonObj1.transform.parent = Layout1.transform;
@@ -135,6 +136,7 @@ namespace TunicRandomizer {
             Layout2 = GameObject.Instantiate(Layout1);
             Layout2.transform.parent = Layout1.transform.parent;
             Layout2.SetActive(true);
+            Layout2.transform.localScale = Vector3.one;
             ButtonObj2 = Layout2.transform.GetChild(0).gameObject;
             SceneButton2 = ButtonObj2.GetComponent<Button>();
             SceneSprite2 = ButtonObj2.transform.GetChild(0).GetComponent<SpriteRenderer>(); 
@@ -143,6 +145,7 @@ namespace TunicRandomizer {
             Layout3 = GameObject.Instantiate(Layout1);
             Layout3.transform.parent = Layout1.transform.parent;
             Layout3.SetActive(true);
+            Layout3.transform.localScale = Vector3.one;
             ButtonObj3 = Layout3.transform.GetChild(0).gameObject;
             SceneButton3 = ButtonObj3.GetComponent<Button>();
             SceneSprite3 = ButtonObj3.transform.GetChild(0).GetComponent<SpriteRenderer>();
