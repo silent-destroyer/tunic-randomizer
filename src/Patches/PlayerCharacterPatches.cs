@@ -59,7 +59,7 @@ namespace TunicRandomizer {
             }
             LeftCommandPressed = InputManager.ActiveDevice.LeftCommand.WasPressed;
             if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
-                if (SaveFile.GetInt("randomizer mystery seed") == 1) {
+                if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
                     $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
                     $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
@@ -95,6 +95,14 @@ namespace TunicRandomizer {
             }
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                // can't think of why it would fail right now, but if it fails I don't really want it to break anything
+                try {
+                    LogicChecker.WriteLogicSummaryFile();
+                } catch (Exception e) {
+                    TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
+                }
             }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
@@ -428,7 +436,7 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("randomizer", 1);
 
                 if (TunicRandomizer.Settings.MysterySeed) {
-                    SaveFile.SetInt("randomizer mystery seed", 1);
+                    SaveFile.SetInt(MysterySeedEnabled, 1);
                     GenerateMysterySettings();
                 } else {
                     System.Random random = new System.Random(seed);
@@ -488,8 +496,8 @@ namespace TunicRandomizer {
                                         SaveFile.SetInt(HexagonQuestExtras, random.Next(67, 101));
                                         break;
                                 }
-                                SaveFile.SetInt("randomizer hexagon quest random goal", (int)TunicRandomizer.Settings.HexagonQuestRandomGoal);
-                                SaveFile.SetInt("randomizer hexagon quest random extras", (int)TunicRandomizer.Settings.HexagonQuestRandomExtras);
+                                SaveFile.SetInt(HexagonQuestRandomGoal, (int)TunicRandomizer.Settings.HexagonQuestRandomGoal);
+                                SaveFile.SetInt(HexagonQuestRandomExtras, (int)TunicRandomizer.Settings.HexagonQuestRandomExtras);
                             } else {
                                 SaveFile.SetInt(HexagonQuestGoal, TunicRandomizer.Settings.HexagonQuestGoal);
                                 SaveFile.SetInt(HexagonQuestExtras, TunicRandomizer.Settings.HexagonQuestExtraPercentage);
@@ -548,6 +556,18 @@ namespace TunicRandomizer {
                         }
                         if (TunicRandomizer.Settings.BellShuffle) {
                             SaveFile.SetInt(BellShuffleEnabled, 1);
+                        }
+                        if (TunicRandomizer.Settings.LaurelsZips) {
+                            SaveFile.SetInt(LaurelsZips, 1);
+                        }
+                        SaveFile.SetInt(IceGrapplingDifficulty, (int)TunicRandomizer.Settings.IceGrappling);
+                        SaveFile.SetInt(LadderStorageDifficulty, (int)TunicRandomizer.Settings.LadderStorage);
+                        if (TunicRandomizer.Settings.IceGrappling >= RandomizerSettings.IceGrapplingType.EASY
+                            || TunicRandomizer.Settings.LadderStorage >= RandomizerSettings.LadderStorageType.EASY) {
+                            Inventory.GetItemByName("Torch").Quantity = 1;
+                        }
+                        if (TunicRandomizer.Settings.LadderStorageWithoutItems) {
+                            SaveFile.SetInt(LadderStorageWithoutItems, 1);
                         }
 
                         if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {
@@ -788,31 +808,31 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("randomizer started with sword", 1);
             }
 
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.SwordProgression) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.SwordProgression) {
                 SaveFile.SetInt(SwordProgressionEnabled, 1);
                 SaveFile.SetInt(SwordProgressionLevel, 0);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.KeysBehindBosses) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.KeysBehindBosses) {
                 SaveFile.SetInt(KeysBehindBosses, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleAbilities) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleAbilities) {
                 SaveFile.SetInt(AbilityShuffle, 1);
             } else {
                 SaveFile.SetInt(PrayerUnlocked, 1);
                 SaveFile.SetInt(HolyCrossUnlocked, 1);
                 SaveFile.SetInt(IceBoltUnlocked, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleLadders) {
                 SaveFile.SetInt(LadderRandoEnabled, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.EntranceRando) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.EntranceRando) {
                 SaveFile.SetInt(EntranceRando, 1);
                 Inventory.GetItemByName("Torch").Quantity = 1;
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop) {
                 SaveFile.SetInt(ERFixedShop, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs) {
                 SaveFile.SetInt(PortalDirectionPairs, 1);
             }
             if (SaveFile.GetInt(ERFixedShop) == 1 && SaveFile.GetInt(PortalDirectionPairs) == 1) {
@@ -820,28 +840,34 @@ namespace TunicRandomizer {
                 SaveFile.SetInt(ERFixedShop, chooseOne ? 1 : 0);
                 SaveFile.SetInt(PortalDirectionPairs, !chooseOne ? 1 : 0);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled) {
                 SaveFile.SetInt(Decoupled, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.Maskless) {
                 SaveFile.SetInt(MasklessLogic, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.Lanternless) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.Lanternless) {
                 SaveFile.SetInt(LanternlessLogic, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.GrassRando) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.GrassRando) {
                 SaveFile.SetInt(GrassRandoEnabled, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleBreakables) {
                 SaveFile.SetInt(BreakableShuffleEnabled, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleFuses) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleFuses) {
                 SaveFile.SetInt(FuseShuffleEnabled, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.ShuffleBells) { 
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleBells) { 
                 SaveFile.SetInt(BellShuffleEnabled, 1);
             }
-            if (random.Next(100) <= TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips) {
+                SaveFile.SetInt(LaurelsZips, 1);
+            }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems) { 
+                SaveFile.SetInt(LadderStorageWithoutItems, 1);
+            }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);
                 if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.HexQuestAbilityShufflePages) {
                     SaveFile.SetInt(HexagonQuestPageAbilities, 1);
@@ -946,6 +972,38 @@ namespace TunicRandomizer {
                     laurelsIndex = random.Next(laurelsOptions.Length);
                 }
                 SaveFile.SetInt(LaurelsLocation, laurelsIndex);
+            }
+
+            bool[] iceGrappleOptions = new bool[4] {
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleOff,
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleEasy,
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleMedium,
+                TunicRandomizer.Settings.MysterySeedWeights.IceGrappleHard,
+            };
+            int iceGrappleIndex = random.Next(iceGrappleOptions.Length);
+            if (iceGrappleOptions.All(x => !x)) {
+                SaveFile.SetInt(IceGrapplingDifficulty, 0);
+            } else {
+                while (!iceGrappleOptions[iceGrappleIndex]) {
+                    iceGrappleIndex = random.Next(iceGrappleOptions.Length);
+                }
+                SaveFile.SetInt(IceGrapplingDifficulty, iceGrappleIndex);
+            }
+
+            bool[] ladderStorageOptions = new bool[4] {
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageOff,
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageEasy,
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageMedium,
+                TunicRandomizer.Settings.MysterySeedWeights.LadderStorageHard,
+            };
+            int ladderStorageIndex = random.Next(ladderStorageOptions.Length);
+            if (ladderStorageOptions.All(x => !x)) {
+                SaveFile.SetInt(LadderStorageDifficulty, 0);
+            } else {
+                while (!ladderStorageOptions[ladderStorageIndex]) {
+                    ladderStorageIndex = random.Next(ladderStorageOptions.Length);
+                }
+                SaveFile.SetInt(LadderStorageDifficulty, ladderStorageIndex);
             }
 
             if (GetBool(HexagonQuestEnabled) && GetBool(AbilityShuffle) && !GetBool(HexagonQuestPageAbilities)) {

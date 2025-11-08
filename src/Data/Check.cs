@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TunicRandomizer {
 
@@ -31,10 +32,6 @@ namespace TunicRandomizer {
             if (itemsRequired.Count == 0) {
                 return true;
             }
-
-            //if (ItemRandomizer.testBool) {
-            //    TunicLogger.LogInfo("Location is " + this.LocationId);
-            //}
 
             //if there are requirements, loop through each requirement to see if any are fully met
             foreach (Dictionary<string, int> req in itemsRequired) {
@@ -69,17 +66,24 @@ namespace TunicRandomizer {
                                     && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)) {
                                 met++;
                             }
-                        //} else {
-                        //    if (ItemRandomizer.testBool) {
-                        //        TunicLogger.LogInfo("Failed: " + item + " not in inventory");
-                        //    }
+                        } else if (item.StartsWith("IG")) {
+                            int difficulty = Convert.ToInt32(item.Substring(2, 1));
+                            string range = item.Substring(3, 1);
+                            bool met_difficulty = SaveFile.GetInt(SaveFlags.IceGrapplingDifficulty) >= difficulty;
+                            if (met_difficulty && inventory.ContainsKey("Wand") && inventory.ContainsKey("Stundagger")) {
+                                if (range == "S") {
+                                    met++;
+                                } else {
+                                    if (inventory.ContainsKey("Techbow")
+                                        && (inventory.ContainsKey("26")
+                                            || (SaveFlags.IsHexQuestWithHexAbilities() && inventory.ContainsKey("Hexagon Gold") && inventory["Hexagon Gold"] >= SaveFile.GetInt(SaveFlags.HexagonQuestIcebolt)))) {
+                                        met++;
+                                    }
+                                }
+                            }
                         }
                     } else if (inventory[item] >= req[item]) {
-                        met += 1;
-                    //} else if (inventory[item] < req[item]) {
-                    //    if (ItemRandomizer.testBool) {
-                    //        TunicLogger.LogInfo("Failed: Not enough of " + item);
-                    //    }
+                        met++;
                     }
                 }
                 if (met == req.Count) {

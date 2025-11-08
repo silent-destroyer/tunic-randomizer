@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class ERData {
         public static Dictionary<string, PortalCombo> RandomizedPortals = new Dictionary<string, PortalCombo>();
         public static Dictionary<string, PortalCombo> VanillaPortals = new Dictionary<string, PortalCombo>();
         public static Dictionary<string, Dictionary<string, List<List<string>>>> ModifiedTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
+        public static Dictionary<string, string> PlandoPortals = new Dictionary<string, string>();
 
         public const string FUSE_SHUFFLE = "Fuse Shuffle";
         public const string NO_FUSE_SHUFFLE = "No Fuse Shuffle";
@@ -35,33 +35,50 @@ namespace TunicRandomizer {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
-                Direction = (int) PDir.NONE;
+                Direction = (int)PDir.NONE;
             }
 
             public TunicPortal(string name, string destination, string tag, PDir direction) {
                 Name = name;
                 Destination = destination;
                 Tag = tag;
-                Direction = (int) direction;
+                Direction = (int)direction;
             }
         }
-        
+
         public class RegionInfo {
             public string Scene;
             public bool DeadEnd;
-            public string OutletRegion;  // for where a portal forces you to another region immediately
-            // example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
+            public string OutletRegion;  // for where a portal forces you to another region immediately, example: Forest Hero's Grave immediately sends you to Forest Grave Path by Grave
+            public bool SkipCounting;  // for ones that we skip every time because they're weird (zig skip, ls elevation regions) and shouldn't be counted in portal pairing the same way
+
 
             public RegionInfo(string scene, bool deadEnd) {
                 Scene = scene;
                 DeadEnd = deadEnd;
                 OutletRegion = null;
+                SkipCounting = false;
             }
 
             public RegionInfo(string scene, bool deadEnd, string outletRegion) {
                 Scene = scene;
                 DeadEnd = deadEnd;
                 OutletRegion = outletRegion;
+                SkipCounting = false;
+            }
+
+            public RegionInfo(string scene, bool deadEnd, bool skipCounting) {
+                Scene = scene;
+                DeadEnd = deadEnd;
+                OutletRegion = null;
+                SkipCounting = skipCounting;
+            }
+
+            public RegionInfo(string scene, bool deadEnd, string outletRegion, bool skipCounting) {
+                Scene = scene;
+                DeadEnd = deadEnd;
+                OutletRegion = outletRegion;
+                SkipCounting = skipCounting;
             }
 
         }
@@ -1294,7 +1311,7 @@ namespace TunicRandomizer {
                             new TunicPortal("Cathedral Main Exit", "Swamp Redux 2", "main", PDir.SOUTH),
                         }
                     },
-                    { 
+                    {
                         "Cathedral Elevator",
                         new List<TunicPortal> {
                             new TunicPortal("Cathedral Elevator", "Cathedral Arena", "", PDir.LADDER_DOWN),
@@ -2086,6 +2103,10 @@ namespace TunicRandomizer {
                 new RegionInfo("Quarry Redux", false)
             },
             {
+                "Even Lower Quarry Isolated Chest",
+                new RegionInfo("Quarry Redux", false)
+            },
+            {
                 "Lower Quarry Zig Door",
                 new RegionInfo("Quarry Redux", false)
             },
@@ -2118,12 +2139,16 @@ namespace TunicRandomizer {
                 new RegionInfo("ziggurat2020_3", false)
             },
             {
+                "Rooted Ziggurat Lower Mid Checkpoint",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
                 "Rooted Ziggurat Lower Back",
                 new RegionInfo("ziggurat2020_3", false)
             },
             {
                 "Zig Skip Exit",
-                new RegionInfo("ziggurat2020_3", false, outletRegion:"Rooted Ziggurat Lower Front")
+                new RegionInfo("ziggurat2020_3", false, outletRegion:"Rooted Ziggurat Lower Front", skipCounting:true)
             },
             {
                 "Rooted Ziggurat Portal Room Entrance",
@@ -2294,7 +2319,44 @@ namespace TunicRandomizer {
                 "Spirit Arena",
                 new RegionInfo("Spirit Arena", true)
             },
+            {
+                "LS Elev 0",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 1",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 2",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 3",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 4",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 5",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 6",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
+            {
+                "LS Elev 7",
+                new RegionInfo("Overworld Redux", false, skipCounting:true)
+            },
         };
+
+        // LS gets you to a portal rather than a region usually, but during portal pairing that doesn't actually matter since we only have one portal you cannot walk out from (zig skip)
+        // so, special keyword for when we just want to care about a connection during portal pairing, for use with LS
+        // it should not be used for connections where you can do the connection with something other than Laurels, LS, or IG (since it'll auto-succeed during pairing)
+        public static string PAIRING_ONLY = "Portal Pairing Only";
 
         // these are the traversal rules for getting from one region to another
         // for example, with the first one on the list, if you are in Overworld, you can get to Overworld Beach if you have Laurels, Orb, or Ladders in Overworld Town
@@ -2330,6 +2392,20 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG2S"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Special Shop Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2338,6 +2414,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2345,6 +2424,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladder to Swamp",
+                            },
+                            new List<string> {
+                                "IG3S"
                             },
                         }
                     },
@@ -2362,6 +2444,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Key",
                             },
+                            new List<string> {
+                                "Zip"
+                            },
                         }
                     },
                     {
@@ -2370,6 +2455,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders near Weathervane",
                             },
+                            new List<string> {
+                                "IG1L"
+                            }
                         }
                     },
                     {
@@ -2381,6 +2469,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG1L"
+                            }
                         }
                     },
                     {
@@ -2388,6 +2479,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders near Overworld Checkpoint",
+                            },
+                            new List<string> {
+                                "IG1L"
                             },
                         }
                     },
@@ -2433,6 +2527,17 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Overworld to West Garden from Furnace",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG3L"
+                            },
                         }
                     },
                     {
@@ -2440,6 +2545,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "21",
+                            },
+                            new List<string> {
+                                "IG2S"
                             },
                         }
                     },
@@ -2454,7 +2562,24 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "West Bell", "East Bell", BELL_SHUFFLE,
-                            }
+                            },
+                            new List<string> {
+                                "IG2S"
+                            },
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Overworld Quarry Entry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG2S"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2462,6 +2587,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "21",
+                            },
+                            new List<string> {
+                                "IG2S"
                             },
                         }
                     },
@@ -2487,6 +2615,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Key (House)",
                             },
+                            new List<string> {
+                                "IG2S"
+                            },
                         }
                     },
                     {
@@ -2500,8 +2631,260 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Overworld Well to Furnace Rail",
+                        new List<List<string>> {
+                            // because you can get to either end of the rail in LS, and the middle of the rail is worthless, this doesn't need pairing only on it
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 0",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            },
+                            new List<string> {
+                                "LS1", "Ladder to Swamp"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 1",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Weathervane"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            },
+                            new List<string> {
+                                "LS1", "Ladder to Swamp"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Weathervane"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Weathervane"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Dark Tomb"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Overworld Town"
+                            },
+                            new List<string> {
+                                "LS1", "Ladders in Well"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 5",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Overworld Checkpoint"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Dark Tomb"
+                            }
+                        }
+                    },
                 }
             },
+
+            {
+                "LS Elev 0",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 1",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld Beach",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 1",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld Tunnel Turret",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 2",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "After Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 3",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld after Envoy",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 4",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 5",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 5",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 6",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 6",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    },
+                    {
+                        "Overworld above Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
+            {
+                "LS Elev 7",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Upper Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            }
+                        }
+                    }
+                }
+            },
+
             {
                 "East Overworld",
                 new Dictionary<string, List<List<string>>> {
@@ -2510,6 +2893,17 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders near Weathervane",
+                            },
+                        }
+                    },
+                    {
+                        "After Ruined Passage",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -2527,10 +2921,24 @@ namespace TunicRandomizer {
                         }
                     },
                     {
+                        "Overworld above Patrol Cave",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Ladders near Overworld Checkpoint"
+                            },
+                            new List<string> {
+                                "IG1L"
+                            },
+                        }
+                    },
+                    {
                         "Overworld Special Shop Entry",
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -2570,6 +2978,30 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders to West Bell",
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to West Bell"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to West Bell"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to West Bell"
                             },
                         }
                     },
@@ -2637,6 +3069,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2653,6 +3088,17 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders in Overworld Town",
                             },
+                            new List<string> {
+                                "IG1S"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 0",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladder to Ruined Atoll"
+                            }
                         }
                     },
                 }
@@ -2743,6 +3189,12 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -2751,6 +3203,33 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders near Patrol Cave",
                             },
+                            new List<string> {
+                                "IG1L"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 5",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Patrol Cave"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 6",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Patrol Cave"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders near Patrol Cave"
+                            }
                         }
                     },
                 }
@@ -2772,6 +3251,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders near Patrol Cave",
                             },
+                            new List<string> {
+                                "IG1L"
+                            }
                         }
                     },
                     {
@@ -2815,6 +3297,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladder near Temple Rafters",
                             },
+                            new List<string> {
+                                "IG2L"
+                            },
                         }
                     },
                 }
@@ -2827,6 +3312,25 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladder near Temple Rafters",
+                            },
+                            new List<string> {
+                                "IG1L"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 6",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladder near Temple Rafters"
+                            },
+                        }
+                    },
+                    {
+                        "LS Elev 7",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladder near Temple Rafters"
                             },
                         }
                     },
@@ -2866,7 +3370,23 @@ namespace TunicRandomizer {
                                 "Ladder to Quarry",
                             },
                         }
-                    }
+                    },
+                    {
+                        "LS Elev 3",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to Quarry"
+                            }
+                        }
+                    },
+                    {
+                        "LS Elev 4",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", "Ladders to Quarry"
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -2918,6 +3438,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "East Overworld",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1L"
+                            }
+                        }
+                    }
                 }
             },
             {
@@ -2948,6 +3476,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders near Weathervane",
                             },
+                            new List<string> {
+                                "IG1L"
+                            }
                         }
                     },
                 }
@@ -2968,6 +3499,19 @@ namespace TunicRandomizer {
                     {
                         "Old House Back",
                         new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Old House Back",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Old House Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Zip"
+                            }
                         }
                     },
                 }
@@ -2995,6 +3539,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -3002,6 +3549,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -3108,6 +3658,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Stick", "Trinket - Glass Cannon",
                             },
+                            new List<string> {
+                                "IG1S"
+                            },
                         }
                     },
                 }
@@ -3121,6 +3674,15 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2"
                             },
                         }
                     },
@@ -3138,6 +3700,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders to Lower Forest",
                             },
+                            new List<string> {
+                                "IG1L"
+                            },
                         }
                     },
                 }
@@ -3150,6 +3715,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "IG1L"
                             },
                         }
                     },
@@ -3197,6 +3765,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -3284,6 +3855,12 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG3S"
+                            },
+                            new List<string> {
+                                "LS2", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -3302,6 +3879,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG1L"
+                            },
                         }
                     },
                 }
@@ -3314,6 +3894,17 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "12",
+                            },
+                        }
+                    },
+                    {
+                        "Forest Grave Path Main",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1S"
+                            },
+                            new List<string> {
+                                "Zip"
                             },
                         }
                     },
@@ -3365,6 +3956,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Beneath the Well Back",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS3", "Ladders in Well"
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -3412,6 +4011,19 @@ namespace TunicRandomizer {
                     },
                 }
             },
+            {
+                "Dark Tomb Checkpoint",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Well Boss",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Zip"
+                            }
+                        }
+                    }
+                }
+            },
 
             {
                 "Dark Tomb Entry Point",
@@ -3439,6 +4051,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladder in Dark Tomb"
+                            },
+                            new List<string> {
+                                "IG3S"
                             },
                         }
                     },
@@ -3485,6 +4100,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash"
                             },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -3496,6 +4114,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash"
                             },
+                            new List<string> {
+                                "IG2S"
+                            },
                         }
                     },
                     {
@@ -3503,6 +4124,14 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "12"
+                            },
+                        }
+                    },
+                    {
+                        "West Garden Portal Item",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG2L"
                             },
                         }
                     },
@@ -3530,6 +4159,14 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash"
                             },
+                            // ice grapple to the boss, then ice grapple them off
+                            new List<string> {
+                                "IG2S"
+                            },
+                            // ice grapple to the boss, then fight
+                            new List<string> {
+                                "IG1S", "Sword"
+                            }
                         }
                     },
                 }
@@ -3545,6 +4182,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "West Garden",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1L"
+                            },
+                        }
+                    }
                 }
             },
             {
@@ -3601,6 +4246,12 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -3642,7 +4293,25 @@ namespace TunicRandomizer {
                         "Ruined Atoll Statue",
                         new List<List<string>> {
                             new List<string> {
-                                "12", "Ladders in South Atoll", NO_FUSE_SHUFFLE,
+                                "12", "Ladders in South Atoll", "Hyperdash", "Sword", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Ladders in South Atoll", "Hyperdash", "Shotgun", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Ladders in South Atoll", "Hyperdash", "Techbow", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Ladders in South Atoll", "Wand", "Sword", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Ladders in South Atoll", "Wand", "Bow", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "Ladders in South Atoll", "Wand", "Techbow", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "12", "LS3", "Techbow", NO_FUSE_SHUFFLE
                             },
                             new List<string> {
                                 "12",
@@ -3651,7 +4320,7 @@ namespace TunicRandomizer {
                                 "Atoll Southeast Fuse",
                                 "Atoll Southwest Fuse",
                                 FUSE_SHUFFLE,
-                            }
+                            },
                         }
                     },
                 }
@@ -3730,6 +4399,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders to Frog's Domain",
+                            },
+                            new List<string> {
+                                "IG1L"
                             },
                         }
                     },
@@ -3812,6 +4484,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Wand",
+                            },
+                            new List<string> {
+                                "LS3", "Ladders to Frog's Domain"
                             },
                         }
                     },
@@ -4093,6 +4768,18 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                "LS2"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -4126,6 +4813,23 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG1L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            },
                         }
                     },
                 }
@@ -4141,7 +4845,10 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "12", "Fortress Exterior Fuse 1", FUSE_SHUFFLE,
-                            }
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -4149,6 +4856,29 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladder to Beneath the Vault",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG3L"
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2", "Ladder to Beneath the Vault"
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                "LS2"
                             },
                         }
                     },
@@ -4175,6 +4905,14 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1L"
                             },
                         }
                     },
@@ -4287,6 +5025,19 @@ namespace TunicRandomizer {
                     },
                 }
             },
+            {
+                "Fortress East Shortcut Lower",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress East Shortcut Upper",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1L"
+                            }
+                        }
+                    },
+                }
+            },
 
             {
                 "Eastern Vault Fortress",
@@ -4295,9 +5046,9 @@ namespace TunicRandomizer {
                         "Eastern Vault Fortress Gold Door",
                         new List<List<string>> {
                             new List<string> {
-                                "12", 
-                                "Fortress Exterior from Overworld", 
-                                "Beneath the Vault Back", 
+                                "12",
+                                "Fortress Exterior from Overworld",
+                                "Beneath the Vault Back",
                                 "Fortress Courtyard Upper",
                                 NO_FUSE_SHUFFLE
                             },
@@ -4311,9 +5062,36 @@ namespace TunicRandomizer {
                                 "Fortress Door Left Fuse",
                                 "Fortress Door Right Fuse",
                                 FUSE_SHUFFLE,
-                            }
+                            },
+                            new List<string> {
+                                "IG2S"
+                            },
                         }
                     },
+                }
+            },
+            {
+                "Eastern Vault Fortress Gold Door",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Eastern Vault Fortress",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1S"
+                            },
+                            new List<string> {
+                                FUSE_SHUFFLE,
+                                "Fortress Exterior Fuse 1",
+                                "Fortress Exterior Fuse 2",
+                                "Fortress Courtyard Upper Fuse",
+                                "Fortress Courtyard Fuse",
+                                "Beneath the Vault Fuse",
+                                "Fortress Candles Fuse",
+                                "Fortress Door Left Fuse",
+                                "Fortress Door Right Fuse",
+                            },
+                        }
+                    }
                 }
             },
 
@@ -4333,6 +5111,19 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Hyperdash",
+                            },
+                        }
+                    },
+                }
+            },
+            {
+                "Fortress Grave Path Upper",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Fortress Grave Path",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG1L",
                             },
                         }
                     },
@@ -4369,9 +5160,9 @@ namespace TunicRandomizer {
                         "Fortress Arena Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "12", 
-                                "Fortress Exterior from Overworld", 
-                                "Beneath the Vault Back", 
+                                "12",
+                                "Fortress Exterior from Overworld",
+                                "Beneath the Vault Back",
                                 "Eastern Vault Fortress",
                                 NO_FUSE_SHUFFLE,
                             },
@@ -4438,6 +5229,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Sword",
                             },
+                            new List<string> {
+                                "Zip"
+                            }
                         }
                     },
                 }
@@ -4453,6 +5247,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Monastery Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Zip"
+                            }
+                        }
+                    }
                 }
             },
             {
@@ -4491,6 +5293,14 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Monastery Rope",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2", PAIRING_ONLY,
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -4523,6 +5333,14 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                        }
+                    },
+                    {
+                        "Monastery Rope",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2", PAIRING_ONLY,
+                            }
                         }
                     },
                 }
@@ -4577,6 +5395,14 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                         }
                     },
+                    {
+                        "Even Lower Quarry Isolated Chest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG3S"
+                            }
+                        }
+                    },
                 }
             },
             {
@@ -4587,13 +5413,26 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders in Lower Quarry",
-                            }
+                            },
+                            new List<string> {
+                                "IG1L"
+                            },
                         }
                     },
                 }
             },
             {
                 "Even Lower Quarry",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Even Lower Quarry Isolated Chest",
+                        new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "Even Lower Quarry Isolated Chest",
                 new Dictionary<string, List<List<string>>> {
                     {
                         "Lower Quarry Zig Door",
@@ -4604,6 +5443,17 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "IG3S"
+                            },
+                        }
+                    },
+                    {
+                        "Even Lower Quarry",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Mask"
+                            }
                         }
                     },
                 }
@@ -4700,12 +5550,17 @@ namespace TunicRandomizer {
                             }
                         }
                     },
+                    {
+                        "Rooted Ziggurat Lower Mid Checkpoint",
+                        new List<List<string>> {
+                        }
+                    }
                 }
             },
             {
                 "Rooted Ziggurat Lower Back",
                 new Dictionary<string, List<List<string>>> {
-                    {  // can't get to checkpoint if enemies aggro, gap too big
+                    {
                         "Rooted Ziggurat Lower Front",
                         new List<List<string>> {
                             new List<string> {
@@ -4713,7 +5568,22 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "Ziggurat Miniboss Fuse", FUSE_SHUFFLE
-                            }
+                            },
+                            new List<string> {
+                                "IG1L"
+                            },
+                            // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    },
+                    {  // can't get to checkpoint if enemies aggro, gap too big
+                        "Rooted Ziggurat Lower Mid Checkpoint",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS2"
+                            },
                         }
                     },
                     {
@@ -4799,8 +5669,19 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG3S"
+                            }
                         }
                     },
+                    {
+                        "Back of Swamp Laurels Area",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Zip"
+                            }
+                        }
+                    }
                 }
             },
             {
@@ -4815,6 +5696,9 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Hyperdash",
                             },
+                            new List<string> {
+                                "IG3S"
+                            },
                         }
                     },
                     {
@@ -4827,6 +5711,12 @@ namespace TunicRandomizer {
                                 "Swamp Fuse 1", "Swamp Fuse 2",
                                 "Swamp Fuse 3", FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "IG2S"
+                            },
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
                         }
                     },
                     {
@@ -4834,6 +5724,17 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders in Swamp",
+                            },
+                            new List<string> {
+                                "IG3L"
+                            }
+                        }
+                    },
+                    {
+                        "Back of Swamp",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
                             },
                         }
                     },
@@ -4849,6 +5750,9 @@ namespace TunicRandomizer {
                                 "Swamp Fuse 1", "Swamp Fuse 2",
                                 "Swamp Fuse 3", FUSE_SHUFFLE,
                             },
+                            new List<string> {
+                                "IG1S"
+                            },
                         }
                     }
                 }
@@ -4861,6 +5765,9 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Ladders in Swamp",
+                            },
+                            new List<string> {
+                                "IG1L"
                             },
                         }
                     },
@@ -4903,6 +5810,42 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Swamp Mid",
+                        new List<List<string>> {
+                            new List<string> {
+                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                "LS2",
+                            },
+                        }
+                    },
+                    {
+                        "Swamp Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2"
+                            },
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Main Entrance",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Swamp to Cathedral Treasure Room",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS3", PAIRING_ONLY
+                            },
+                        }
+                    },
                 }
             },
             {
@@ -4916,6 +5859,25 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                    {
+                        "Swamp Front",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Zip"
+                            }
+                        }
+                    },
+                    {
+                        "Swamp Mid",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Zip"
+                            },
+                            new List<string> {
+                                "Hyperdash", "IG1L"
+                            },
+                        }
+                    }
                 }
             },
             {
@@ -4939,8 +5901,14 @@ namespace TunicRandomizer {
                                 "Cathedral Elevator Fuse", FUSE_SHUFFLE
                             },
                             new List<string> {
-                                NO_FUSE_SHUFFLE
-                            }
+                                "12", NO_FUSE_SHUFFLE
+                            },
+                            new List<string> {
+                                "IG2S"
+                            },
+                            new List<string> {
+                                "ER on"
+                            },
                         }
                     }
                 }
@@ -5049,9 +6017,9 @@ namespace TunicRandomizer {
                         "Far Shore to Fortress",
                         new List<List<string>> {
                             new List<string> {  // only left fuses required
-                                "12", 
-                                "Fortress Exterior from Overworld", 
-                                "Beneath the Vault Back", 
+                                "12",
+                                "Fortress Exterior from Overworld",
+                                "Beneath the Vault Back",
                                 "Eastern Vault Fortress",
                                 NO_FUSE_SHUFFLE,
                             },
@@ -5215,6 +6183,6 @@ namespace TunicRandomizer {
                 }
             },
         };
-        
+
     }
 }

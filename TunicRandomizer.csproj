@@ -195,6 +195,7 @@
     <Compile Include="src\Data\SaveFlags.cs" />
     <Compile Include="src\Data\Tooltips.cs" />
     <Compile Include="src\Data\Translations.cs" />
+    <Compile Include="src\Data\TrickLogic.cs" />
     <Compile Include="src\Patches\ArachnophobiaMode.cs" />
     <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
+    <Compile Include="src\Util\LogicChecker.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
     <Compile Include="src\Util\Notifications.cs" />
     <Compile Include="src\Util\RandoActionSet.cs" />

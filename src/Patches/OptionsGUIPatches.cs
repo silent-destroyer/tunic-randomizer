@@ -1,5 +1,4 @@
 ﻿using FMODUnity;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,6 +56,9 @@ namespace TunicRandomizer {
             Il2CppStringArray GameModes = (Il2CppStringArray)new string[] { "<#FFA300>Randomizer", "<#ffd700>Hexagon Quest", "<#4FF5D4>Vanilla" };
             Il2CppStringArray LaurelsLocations = (Il2CppStringArray)new string[] { "<#FFA300>Random", "<#ffd700>6 Coins", "<#ffd700>10 Coins", "<#ffd700>10 Fairies" };
             Il2CppStringArray FoolTrapOptions = (Il2CppStringArray)new string[] { "<#FFFFFF>None", "<#4FF5D4>Normal", "<#E3D457>Double", "<#FF3333>Onslaught" };
+            // I just copied these down without considering the color much, feel free to recolor then delete this comment
+            Il2CppStringArray IceGrapplingOptions = (Il2CppStringArray)new string[] { "<#FFFFFF>None", "<#4FF5D4>Easy", "<#E3D457>Medium", "<#FF3333>Hard" };
+            Il2CppStringArray LadderStorageOptions = (Il2CppStringArray)new string[] { "<#FFFFFF>None", "<#4FF5D4>Easy", "<#E3D457>Medium", "<#FF3333>Hard" };
 
             OptionsGUI.setHeading("Single Player");
 
@@ -80,8 +82,20 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Lanternless Logic", "Off", "On", TunicRandomizer.Settings.Lanternless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleLanternless);
                 OptionsGUI.addToggle("Maskless Logic", "Off", "On", TunicRandomizer.Settings.Maskless ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMaskless);
                 OptionsGUI.addToggle("Mystery Seed", "Off", "On", TunicRandomizer.Settings.MysterySeed ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMysterySeed);
+                
+                OptionsGUI.addToggle("Laurels Zips Logic", "Off", "On", TunicRandomizer.Settings.LaurelsZips ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                    TunicRandomizer.Settings.LaurelsZips = !TunicRandomizer.Settings.LaurelsZips;
+                    SaveSettings();
+                }));
+                OptionsGUI.addMultiSelect("Ice Grappling Difficulty", IceGrapplingOptions, GetIceGrapplingIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeIceGrapplingDifficulty).wrap = true;
+                OptionsGUI.addMultiSelect("Ladder Storage Difficulty", LadderStorageOptions, GetLadderStorageIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLadderStorageDifficulty).wrap = true;
+                OptionsGUI.addToggle("Ladder Storage Without Items", "Off", "On", TunicRandomizer.Settings.LadderStorageWithoutItems ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                    TunicRandomizer.Settings.LadderStorageWithoutItems = !TunicRandomizer.Settings.LadderStorageWithoutItems;
+                    SaveSettings();
+                }));
+
             } else {
-                if (SaveFile.GetInt("randomizer mystery seed") == 1) {
+                if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     OptionsGUI.addButton("Mystery Seed", "<#00ff00>On", null);
                     return;
                 }
@@ -475,6 +489,24 @@ namespace TunicRandomizer {
 
         public static void ToggleMaskless(int index) {
             TunicRandomizer.Settings.Maskless = !TunicRandomizer.Settings.Maskless;
+            SaveSettings();
+        }
+
+        public static int GetIceGrapplingIndex() {
+            return (int)TunicRandomizer.Settings.IceGrappling;
+        }
+
+        public static void ChangeIceGrapplingDifficulty(int index) {
+            TunicRandomizer.Settings.IceGrappling = (RandomizerSettings.IceGrapplingType)index;
+            SaveSettings();
+        }
+
+        public static int GetLadderStorageIndex() {
+            return (int)TunicRandomizer.Settings.LadderStorage;
+        }
+
+        public static void ChangeLadderStorageDifficulty(int index) {
+            TunicRandomizer.Settings.LadderStorage = (RandomizerSettings.LadderStorageType)index;
             SaveSettings();
         }
 
