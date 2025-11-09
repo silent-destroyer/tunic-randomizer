@@ -610,7 +610,7 @@ namespace TunicRandomizer {
 
             // General
             HeirAssistModeEnabled = false;
-            ClearEarlyBushes = false;
+            ClearEarlyBushes = true;
             EnableAllCheckpoints = true;
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
