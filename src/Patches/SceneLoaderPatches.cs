@@ -476,6 +476,9 @@ namespace TunicRandomizer {
                     GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(-183.9852f, 1f, -79.4829f), new Quaternion(0, 0, 0, 0)).SetActive(true);
                     GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(-166.9155f, 1f, -72.0338f), new Quaternion(0, 0, 0, 0)).SetActive(true);
                 }
+                if (GetBool(LadderRandoEnabled)) {
+                    GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(11.5f, 44f, -12f), new Quaternion(0, 0, 0, 0)).SetActive(true);
+                }
             } else if (SceneName == "Swamp Redux 2") {
                 GhostHints.SpawnCathedralDoorGhost();
 

@@ -98,7 +98,7 @@ namespace TunicRandomizer {
         }
 
         public static bool SpawnedGhosts = false;
-        public static bool FoxMaskSetup = false;
+        public static bool FoxExtrasSetup = false;
 
         public static GameObject GhostFox;
 
@@ -403,7 +403,7 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void SetupFoxMask() {
+        public static void SetupFoxExtras() {
             GameObject ScavMask = new GameObject("ghost fox scavenger mask");
             ScavMask.transform.parent = GhostFox.GetComponentInChildren<BHMBone>().transform;
             ScavMask.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("scavenger_mask");
@@ -412,11 +412,20 @@ namespace TunicRandomizer {
             ScavMask.transform.localEulerAngles = new Vector3(22.5f, 0, 0);
             ScavMask.transform.localPosition = new Vector3(0f, -1.3f, -0.45f);
             ScavMask.SetActive(false);
-            FoxMaskSetup = true;
+
+            GameObject Laurels = new GameObject("ghost fox laurels");
+            Laurels.transform.parent = GhostFox.GetComponentInChildren<BHMBone>().transform;
+            Laurels.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("laurels");
+            Laurels.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("Shader Forge_laurels") ?? ModelSwaps.FindMaterial("Shader Forge_laurels (Instance)");
+            Laurels.transform.localScale = Vector3.one * 1.15f;
+            Laurels.transform.localEulerAngles = Vector3.zero;
+            Laurels.transform.localPosition = new Vector3(0f, 1.1f, 0.2f);
+            Laurels.SetActive(false);
+            FoxExtrasSetup = true;
         }
 
         public static void SpawnHintGhosts(string SceneName) {
-            if (!FoxMaskSetup) { SetupFoxMask(); }
+            if (!FoxExtrasSetup) { SetupFoxExtras(); }
             bool spawnAllTest = false;
             if (spawnAllTest) {
                 foreach (List<HintGhost> list in GhostLocations.Values) {
@@ -466,6 +475,10 @@ namespace TunicRandomizer {
 
             if (hintGhost.WearScavMask || hintGhost.HintedItem == "Scavenger Mask") {
                 NewGhostFox.GetComponentInChildren<BHMBone>().transform.GetChild(2).gameObject.SetActive(true);
+            }
+
+            if (hintGhost.HintedItem == "Hero's Laurels") {
+                NewGhostFox.GetComponentInChildren<BHMBone>().transform.GetChild(3).gameObject.SetActive(true);
             }
 
             if (hintGhost.SceneName == "Library Lab") {
