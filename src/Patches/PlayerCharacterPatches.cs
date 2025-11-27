@@ -20,17 +20,13 @@ namespace TunicRandomizer {
         public static string DeathLinkMessage = "";
         public static int index = 0;
 
-        public static bool LoadSwords = false;
-        public static float LoadSwordTimer = 0.0f;
-        public static bool LoadCustomTexture = false;
-        public static bool WearHat = false;
         public static float TimeWhenLastChangedDayNight = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
         public static bool LeftCommandPressed = false;
         public static LadderEnd LastLadder = null;
+        public static Renderer foxHair = null;
 
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
-
             __instance.gameObject.AddComponent<WaveSpell>();
             __instance.gameObject.AddComponent<EntranceSeekerSpell>();
             __instance.gameObject.AddComponent<DDRSpell>();
@@ -105,22 +101,6 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
-                try {
-                    SwordProgression.CreateSwordItemBehaviours(__instance);
-                    LoadSwords = false;
-                } catch (Exception ex) {
-                    TunicLogger.LogError("Error applying upgraded sword!");
-                }
-            }
-            if (WearHat && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat") != null)) {
-                GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat").SetActive(true);
-                WearHat = false;
-            }
-            if (LoadCustomTexture && GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/GameObject") != null) {
-                PaletteEditor.LoadCustomTexture();
-                LoadCustomTexture = false;
-            }
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
                 CycleController.IsNight = false;
@@ -160,7 +140,9 @@ namespace TunicRandomizer {
                 __instance.gameObject.transform.localScale = new Vector3(2f, scale.y, scale.z);
             }
 
-            __instance.gameObject.transform.Find("fox hair").GetComponent<Renderer>().enabled = !FoolTrap.BaldFox;
+            if (foxHair != null) {
+                foxHair.enabled = !FoolTrap.BaldFox;
+            }
 
             if (SaveFile.GetInt(AbilityShuffle) == 1) { 
                 if(SaveFile.GetInt(PrayerUnlocked) == 0) {
@@ -254,7 +236,7 @@ namespace TunicRandomizer {
 
             CalculateHeirAssistDamage();
 
-            LoadSwords = true;
+            SwordProgression.CreateSwordItemBehaviours(__instance);
 
             ItemPresentationPatches.SwitchDathStonePresentation();
 
@@ -331,6 +313,8 @@ namespace TunicRandomizer {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
 
+            InventoryCounter.UpdateCounters();
+
             InventoryDisplayPatches.UpdateAbilitySection();
 
             RandomizerSettings.SaveSettings();
@@ -397,7 +381,7 @@ namespace TunicRandomizer {
             }
 
             if (TunicRandomizer.Settings.UseCustomTexture) {
-                LoadCustomTexture = true;
+                PaletteEditor.LoadCustomTexture();
             }
 
             if (TunicRandomizer.Settings.RealestAlwaysOn) {
@@ -409,8 +393,10 @@ namespace TunicRandomizer {
             }
 
             if (PaletteEditor.PartyHatEnabled) {
-                WearHat = true;
+                __instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(9).gameObject.SetActive(true);
             }
+
+            foxHair = __instance.gameObject.transform.GetChild(3).GetComponent<Renderer>();
 
             List<MagicSpell> spells = __instance.spells.ToList();
             spells.Reverse();

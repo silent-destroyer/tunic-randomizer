@@ -33,7 +33,6 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<VisibleByNotHavingItem>();
             ClassInjector.RegisterTypeInIl2Cpp<HeroGraveToggle>();
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();
-            ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
             ClassInjector.RegisterTypeInIl2Cpp<FoxgodCutscenePatch>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
@@ -46,6 +45,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<FuseTrapAppearanceHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<AllowHolyCross>();
             ClassInjector.RegisterTypeInIl2Cpp<RandoActionSet>();
+            ClassInjector.RegisterTypeInIl2Cpp<LadderManager>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");

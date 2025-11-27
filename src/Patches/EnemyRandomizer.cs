@@ -1238,6 +1238,8 @@ namespace TunicRandomizer {
                     SaveFile.SetInt("randomizer defeated boss scavenger", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Boss Scavenger", true);
                 }
+
+                InventoryCounter.UpdateCounters();
             }
 
             if (__instance.__4__this.GetComponent<TunicKnightVoid>() != null) {
@@ -1341,10 +1343,10 @@ namespace TunicRandomizer {
             }
             if (__instance.name == "_Fox(Clone)") {
                 if (CustomItemBehaviors.CanTakeGoldenHit) {
-                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
                     PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
                     PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxCape.GetComponent<MeshRenderer>().materials;
 

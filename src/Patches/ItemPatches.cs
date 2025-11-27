@@ -504,6 +504,8 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
 
+            InventoryCounter.UpdateCounters();
+
             RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
 
             return ItemResult.Success;
@@ -753,6 +755,8 @@ namespace TunicRandomizer {
             Locations.CheckedLocations[CheckId] = true;
             SaveFile.SetInt($"randomizer picked up {CheckId}", 1);
             FairyTargets.RemoveFairyTarget(CheckId);
+
+            InventoryCounter.UpdateCounters();
 
             RecentItemsDisplay.instance.EnqueueItem(Check);
 

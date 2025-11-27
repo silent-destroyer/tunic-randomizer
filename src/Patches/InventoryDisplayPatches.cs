@@ -13,178 +13,158 @@ namespace TunicRandomizer {
 
         private IEnumerator<bool> counterManager;
         private IEnumerator<bool> imageManager;
+        private static InventoryCounter instance;
 
         private IEnumerator<bool> UpdateInventoryCounts() {
-            while(true) {
-                if (!InventoryDisplayPatches.Loaded) {
-                    yield return true;
-                    continue;
-                }
-
-                if (!PlayerCharacter.Instanced) {
-                    yield return true;
-                    continue;
-                }
-
-                if (Locations.RandomizedLocations.Count == 0 && ItemLookup.ItemList.Count == 0) {
-                    yield return true;
-                    continue;
-                }
-
-                InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
-                InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  {TunicRandomizer.Tracker.ImportantItems["Fairies"]}/20";
-                InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t{TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]}/12";
-                InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().text = $"Coins Tossed: {TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]}/15";
-                InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                List<Check> allChecks = TunicUtils.GetAllInUseChecks(exceptGrass: true);
-                int ObtainedItemCount = 0;
-                int ObtainedItemCountInCurrentScene = 0;
-                int TotalItemCountInCurrentScene = 0;
-                int TotalItemCount = allChecks.Count;
-                string sceneName = SceneLoaderPatches.SceneName;
-                yield return true;
-
-                for (int i = 0; i < allChecks.Count; i++) {
-                    Check check = allChecks[i];
-
-                    if (check.IsCompletedOrCollected) { 
-                        ObtainedItemCount++;
-                        if (check.Location.SceneName == sceneName) {
-                            TotalItemCountInCurrentScene++;
-                            ObtainedItemCountInCurrentScene++;
-                        }
-                    } else {
-                        if (check.Location.SceneName == sceneName) {
-                            TotalItemCountInCurrentScene++;
-                        }
-                    }
-                    if (i % (allChecks.Count / 5) == 0) {
-                        yield return true;
-                    }
-                }
-                yield return true;
-                
-                if (GetBool(GrassRandoEnabled)) {
-                    TotalItemCount += GrassRandomizer.GrassChecks.Count;
-                    ObtainedItemCount += GrassRandomizer.GrassCut;
-                    if (GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "Loading" && InventoryDisplayPatches.GrassText != null) {
-                        TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[sceneName];
-                        ObtainedItemCountInCurrentScene += GrassRandomizer.GrassCutScene;
-                        InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(GrassRandomizer.GrassCutScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCutScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
-                            $"<#ffffff> • {(GrassRandomizer.GrassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCut}/{GrassRandomizer.GrassChecks.Count}";
-                    }
-                }
-                yield return true;
-                InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:{(TotalItemCountInCurrentScene >= 1000 ? $"  {ObtainedItemCountInCurrentScene.ToString().PadLeft(4)}" : $"\t{ObtainedItemCountInCurrentScene}")}/{TotalItemCountInCurrentScene}";
-                InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
-                InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().text = $"Total:{(TotalItemCount >= 1000 ? $"\t   {ObtainedItemCount.ToString().PadLeft(4)}" : $"\t\t  {ObtainedItemCount}")}/{TotalItemCount}";
-                yield return true;
-                if (InventoryDisplayPatches.GoldHexagons != null) {
-                    InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
-                    InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
-                }
-                InventoryDisplayPatches.QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
-                InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
-            
-                yield return true;
+            if (!InventoryDisplayPatches.Loaded) {
+                yield break;
             }
+
+            if (!PlayerCharacter.Instanced) {
+                yield break;
+            }
+
+            if (Locations.RandomizedLocations.Count == 0 && ItemLookup.ItemList.Count == 0) {
+                yield break;
+            }
+
+            InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
+            InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  {TunicRandomizer.Tracker.ImportantItems["Fairies"]}/20";
+            InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t{TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]}/12";
+            InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().text = $"Coins Tossed: {TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]}/15";
+            InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            List<Check> allChecks = TunicUtils.GetAllInUseChecks(exceptGrass: true);
+            int ObtainedItemCount = 0;
+            int ObtainedItemCountInCurrentScene = 0;
+            int TotalItemCountInCurrentScene = 0;
+            int TotalItemCount = allChecks.Count;
+            string sceneName = SceneLoaderPatches.SceneName;
+            yield return true;
+
+            for (int i = 0; i < allChecks.Count; i++) {
+                Check check = allChecks[i];
+
+                if (check.IsCompletedOrCollected) {
+                    ObtainedItemCount++;
+                    if (check.Location.SceneName == sceneName) {
+                        TotalItemCountInCurrentScene++;
+                        ObtainedItemCountInCurrentScene++;
+                    }
+                } else {
+                    if (check.Location.SceneName == sceneName) {
+                        TotalItemCountInCurrentScene++;
+                    }
+                }
+                if (i % (allChecks.Count / 10) == 0) {
+                    yield return true;
+                }
+            }
+           
+            yield return true;
+
+            if (GetBool(GrassRandoEnabled)) {
+                TotalItemCount += GrassRandomizer.GrassChecks.Count;
+                ObtainedItemCount += GrassRandomizer.GrassCut;
+                if (GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "Loading" && InventoryDisplayPatches.GrassText != null) {
+                    TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[sceneName];
+                    ObtainedItemCountInCurrentScene += GrassRandomizer.GrassCutScene;
+                }
+            }
+            yield return true;
+            InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:{(TotalItemCountInCurrentScene >= 1000 ? $"  {ObtainedItemCountInCurrentScene.ToString().PadLeft(4)}" : $"\t{ObtainedItemCountInCurrentScene}")}/{TotalItemCountInCurrentScene}";
+            InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
+            InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().text = $"Total:{(TotalItemCount >= 1000 ? $"\t   {ObtainedItemCount.ToString().PadLeft(4)}" : $"\t\t  {ObtainedItemCount}")}/{TotalItemCount}";
+            yield return true;
+            if (InventoryDisplayPatches.GoldHexagons != null) {
+                InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
+                InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
+            }
+            InventoryDisplayPatches.QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
+            InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
+            
+            yield return true;
         }
 
         private IEnumerator<bool> UpdateInventoryImages() {
+            if (!InventoryDisplayPatches.Loaded) {
+                yield break;
+            }
 
-            while(true) {
-                if (!InventoryDisplayPatches.Loaded) {
-                    yield return true;
-                    continue;
-                }
-                if (!InventoryDisplay.InventoryOpen) {
-                    yield return true;
-                    continue;
-                }
+            if (Inventory.GetItemByName("Hexagon Red").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 1 Red") == 1) {
+                InventoryDisplay.instance.hexagonImages[0].enabled = true;
+                InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.RedMarkerColor;
+            } else {
+                InventoryDisplay.instance.hexagonImages[0].enabled = false;
+                InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = Color.white;
+            }
 
-                if (Inventory.GetItemByName("Hexagon Red").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 1 Red") == 1) {
-                    InventoryDisplay.instance.hexagonImages[0].enabled = true;
-                    InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.RedMarkerColor;
-                } else {
-                    InventoryDisplay.instance.hexagonImages[0].enabled = false;
-                    InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = Color.white;
-                }
+            yield return true;
+            if (Inventory.GetItemByName("Hexagon Green").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 2 Green") == 1) {
+                InventoryDisplay.instance.hexagonImages[1].enabled = true;
+                InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.GreenMarkerColor;
+            } else {
+                InventoryDisplay.instance.hexagonImages[1].enabled = false;
+                InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = Color.white;
+            }
 
+            yield return true;
+            if (Inventory.GetItemByName("Hexagon Blue").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 3 Blue") == 1) {
+                InventoryDisplay.instance.hexagonImages[2].enabled = true;
+                InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : Color.blue;
+            } else {
+                InventoryDisplay.instance.hexagonImages[2].enabled = false;
+                InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = Color.white;
+            }
+
+            yield return true;
+            InventoryDisplayPatches.GuardCaptain.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1 ? InventoryDisplayPatches.GuardCaptainColor : Color.white;
+            InventoryDisplayPatches.GardenKnight.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1 ? Color.cyan : Color.white;
+            if (GetBool(BellShuffleEnabled)) {
+                InventoryDisplayPatches.Ding.GetComponent<Image>().color = Inventory.GetItemByName("East Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                InventoryDisplayPatches.Dong.GetComponent<Image>().color = Inventory.GetItemByName("West Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+            } else {
+                InventoryDisplayPatches.Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                InventoryDisplayPatches.Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+            }
+            yield return true;
+            InventoryDisplayPatches.SiegeEngine.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1 ? InventoryDisplayPatches.RedMarkerColor : Color.white;
+            InventoryDisplayPatches.Librarian.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1 ? InventoryDisplayPatches.GreenMarkerColor : Color.white;
+            InventoryDisplayPatches.BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;
+
+            yield return true;
+            if (InventoryDisplayPatches.AbilityShuffle.active) {
+                InventoryDisplayPatches.AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
+                InventoryDisplayPatches.AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
                 yield return true;
-                if (Inventory.GetItemByName("Hexagon Green").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 2 Green") == 1) {
-                    InventoryDisplay.instance.hexagonImages[1].enabled = true;
-                    InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.GreenMarkerColor;
-                } else {
-                    InventoryDisplay.instance.hexagonImages[1].enabled = false;
-                    InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = Color.white;
-                }
-
-                yield return true;
-                if (Inventory.GetItemByName("Hexagon Blue").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 3 Blue") == 1) {
-                    InventoryDisplay.instance.hexagonImages[2].enabled = true;
-                    InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : Color.blue;
-                } else {
-                    InventoryDisplay.instance.hexagonImages[2].enabled = false;
-                    InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = Color.white;
-                }
-
-                yield return true;
-                InventoryDisplayPatches.GuardCaptain.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1 ? InventoryDisplayPatches.GuardCaptainColor : Color.white;
-                InventoryDisplayPatches.GardenKnight.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1 ? Color.cyan : Color.white;
-                if (GetBool(BellShuffleEnabled)) {
-                    InventoryDisplayPatches.Ding.GetComponent<Image>().color = Inventory.GetItemByName("East Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                    InventoryDisplayPatches.Dong.GetComponent<Image>().color = Inventory.GetItemByName("West Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                } else {
-                    InventoryDisplayPatches.Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                    InventoryDisplayPatches.Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                }
-                InventoryDisplayPatches.SiegeEngine.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1 ? InventoryDisplayPatches.RedMarkerColor : Color.white;
-                InventoryDisplayPatches.Librarian.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1 ? InventoryDisplayPatches.GreenMarkerColor : Color.white;
-                InventoryDisplayPatches.BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;
-
-                yield return true;
-                if (InventoryDisplayPatches.AbilityShuffle.active) {
-                    InventoryDisplayPatches.AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
-                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
-                    yield return true;
-                    bool hexQuest = IsHexQuestWithHexAbilities();
-                    for (int i = 16; i < 19; i++) {
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(!hexQuest);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(!hexQuest);
-                    }
-                    yield return true;
-                    for (int i = 19; i < InventoryDisplayPatches.AbilityShuffle.transform.childCount; i++) {
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(77, -197 - ((i - 19) * 96), 0f);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(hexQuest);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
-                    }
+                bool hexQuest = IsHexQuestWithHexAbilities();
+                for (int i = 16; i < 19; i++) {
+                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
+                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(!hexQuest);
+                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(!hexQuest);
                 }
                 yield return true;
-                InventoryDisplayPatches.ItemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
-                yield return true;
-                if (InventoryDisplayPatches.ItemIcons.Count == 2) {
-                    InventoryDisplayPatches.ItemIcons[1].transform.position = InventoryDisplayPatches.ItemIcons[0].transform.position;
-                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
-                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
+                for (int i = 19; i < InventoryDisplayPatches.AbilityShuffle.transform.childCount; i++) {
+                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(77, -197 - ((i - 19) * 96), 0f);
+                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(hexQuest);
+                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
                 }
             }
+            yield return true;
         }
 
         public void Start() {
-            counterManager = UpdateInventoryCounts();
-            imageManager = UpdateInventoryImages();
+            instance = this;
         }
 
         public void Update() {
@@ -193,6 +173,13 @@ namespace TunicRandomizer {
             }
             if (imageManager != null) {
                 imageManager.MoveNext();
+            }
+        }
+
+        public static void UpdateCounters() {
+            if (instance != null) {
+                instance.counterManager = instance.UpdateInventoryCounts();
+                instance.imageManager = instance.UpdateInventoryImages();
             }
         }
     }
@@ -375,6 +362,9 @@ namespace TunicRandomizer {
                 if ((float)Screen.width/Screen.height < 1.7f) {
                     Stats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
                 }
+
+                InventoryCounter.UpdateCounters();
+                GrassRandomizer.UpdateGrassCounters();
             }
             Loaded = true;
         }
@@ -621,6 +611,13 @@ namespace TunicRandomizer {
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
                     InventoryDisplayPatches.EquipmentRoot.transform.GetChild(InventoryDisplayPatches.EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
                     InventoryDisplayPatches.EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
+                }
+                // TODO fix this
+                InventoryDisplayPatches.ItemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
+                if (InventoryDisplayPatches.ItemIcons.Count == 2) {
+                    InventoryDisplayPatches.ItemIcons[1].transform.position = InventoryDisplayPatches.ItemIcons[0].transform.position;
+                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
+                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
                 }
             }
 
