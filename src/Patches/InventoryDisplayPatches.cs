@@ -188,6 +188,7 @@ namespace TunicRandomizer {
 
         public static bool Loaded = false;
         public static bool GridSetup = false;
+        public static GameObject RandomizerStats;
         public static GameObject Title;
         public static GameObject Pages;
         public static GameObject Fairies;
@@ -226,8 +227,8 @@ namespace TunicRandomizer {
             if (!Loaded) {
                 TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
                 Material FontMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(Material => Material.name == "Latin Rounded - Quantity Outline").ToList()[0];
-                GameObject Stats = new GameObject("randomizer stats");
-                Stats.transform.parent = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/").transform;
+                RandomizerStats = new GameObject("randomizer stats");
+                RandomizerStats.transform.parent = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/").transform;
 
                 GameObject Backing = new GameObject("backing");
                 Backing.AddComponent<Image>().sprite = Resources.FindObjectsOfTypeAll<Sprite>().Where(Sprite => Sprite.name == "UI_offeringBacking").ToList()[0];
@@ -235,31 +236,31 @@ namespace TunicRandomizer {
                 Backing.transform.localScale = new Vector3(5f, 3.75f, 0f);
                 Backing.transform.position = new Vector3(220f, -35f, 0);
                 Backing.layer = 5;
-                Backing.transform.parent = Stats.transform;
+                Backing.transform.parent = RandomizerStats.transform;
                 GameObject.DontDestroyOnLoad(Backing);
 
-                Title = SetupText("title", new Vector3(275f, 35f, 0f), Stats.transform, 24f, FontAsset, FontMaterial);
+                Title = SetupText("title", new Vector3(275f, 35f, 0f), RandomizerStats.transform, 24f, FontAsset, FontMaterial);
                 Title.GetComponent<TextMeshProUGUI>().text = $"Randomizer Stats";
                 //Title = SetupTitle(Stats.transform);
                 // sep line 3.4464 -0.0155 0.05, 217.3751 27.471 0
                 Sprite SepLine = Resources.FindObjectsOfTypeAll<Sprite>().Where(Sprite => Sprite.name == "UI_separator_line_single").ToList()[0];
                 GameObject SepLine1 = new GameObject("sep line");
                 SepLine1.AddComponent<Image>().sprite = SepLine;
-                SepLine1.transform.parent = Stats.transform;
+                SepLine1.transform.parent = RandomizerStats.transform;
                 SepLine1.transform.localScale = new Vector3(1.0337f, -0.0155f, 0.05f);
                 SepLine1.transform.position = new Vector3(97.41f, 29.9839f, 0f);
                 GameObject SepLine2 = new GameObject("sep line");
                 SepLine2.AddComponent<Image>().sprite = SepLine;
-                SepLine2.transform.parent = Stats.transform;
+                SepLine2.transform.parent = RandomizerStats.transform;
                 SepLine2.transform.localScale = new Vector3(3.4464f, -0.0155f, 0.05f);
                 SepLine2.transform.position = new Vector3(217.3751f, 27.471f, 0f);
                 // sep line 1.0337 -0.0155 0.05, 97.41 29.9839 0
-                Pages = SetupText("pages", new Vector3(195f, 0f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                Fairies = SetupText("fairies", new Vector3(370f, 0f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                Treasures = SetupText("treasures", new Vector3(195f, -30f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                CoinsTossed = SetupText("coins tossed", new Vector3(370f, -30f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                ThisArea = SetupText("this area", new Vector3(195f, -60f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                Total = SetupText("total", new Vector3(370f, -60f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
+                Pages = SetupText("pages", new Vector3(195f, 0f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                Fairies = SetupText("fairies", new Vector3(370f, 0f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                Treasures = SetupText("treasures", new Vector3(195f, -30f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                CoinsTossed = SetupText("coins tossed", new Vector3(370f, -30f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                ThisArea = SetupText("this area", new Vector3(195f, -60f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                Total = SetupText("total", new Vector3(370f, -60f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
                 Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t0/28";
                 Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  0/20";
                 Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t0/12";
@@ -324,16 +325,16 @@ namespace TunicRandomizer {
 
                 Material ImageMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
 
-                GuardCaptain = SetupImage("guard captain", "Alphabet New_91", Stats.transform, new Vector3(57.5f, -85f, 0f), ImageMaterial);
-                Ding = SetupImage("ding", "Alphabet New_93", Stats.transform, new Vector3(92.5f, -85f, 0f), ImageMaterial);
-                GardenKnight = SetupImage("garden knight", "Alphabet New_91", Stats.transform, new Vector3(127.5f, -85f, 0f), ImageMaterial);
+                GuardCaptain = SetupImage("guard captain", "Alphabet New_91", RandomizerStats.transform, new Vector3(57.5f, -85f, 0f), ImageMaterial);
+                Ding = SetupImage("ding", "Alphabet New_93", RandomizerStats.transform, new Vector3(92.5f, -85f, 0f), ImageMaterial);
+                GardenKnight = SetupImage("garden knight", "Alphabet New_91", RandomizerStats.transform, new Vector3(127.5f, -85f, 0f), ImageMaterial);
                 //Dong = SetupImage("dong", "Alphabet New_93", Stats.transform, new Vector3(162.5f, -85f, 0f), ImageMaterial);
-                SiegeEngine = SetupImage("siege engine", "Alphabet New_91", Stats.transform, new Vector3(197.5f, -85f, 0f), ImageMaterial);
-                RedHexagon = SetupImage("red hexagon", "Alphabet New_98", Stats.transform, new Vector3(232.5f, -84f, 0f), ImageMaterial);
-                Librarian = SetupImage("librarian", "Alphabet New_91", Stats.transform, new Vector3(267.5f, -85f, 0f), ImageMaterial);
-                GreenHexagon = SetupImage("green hexagon", "Alphabet New_98", Stats.transform, new Vector3(302.5f, -84f, 0f), ImageMaterial);
-                BossScavenger = SetupImage("boss scavenger", "Alphabet New_91", Stats.transform, new Vector3(337.5f, -85f, 0f), ImageMaterial);
-                BlueHexagon = SetupImage("blue hexagon", "Alphabet New_98", Stats.transform, new Vector3(372.5f, -84f, 0f), ImageMaterial);
+                SiegeEngine = SetupImage("siege engine", "Alphabet New_91", RandomizerStats.transform, new Vector3(197.5f, -85f, 0f), ImageMaterial);
+                RedHexagon = SetupImage("red hexagon", "Alphabet New_98", RandomizerStats.transform, new Vector3(232.5f, -84f, 0f), ImageMaterial);
+                Librarian = SetupImage("librarian", "Alphabet New_91", RandomizerStats.transform, new Vector3(267.5f, -85f, 0f), ImageMaterial);
+                GreenHexagon = SetupImage("green hexagon", "Alphabet New_98", RandomizerStats.transform, new Vector3(302.5f, -84f, 0f), ImageMaterial);
+                BossScavenger = SetupImage("boss scavenger", "Alphabet New_91", RandomizerStats.transform, new Vector3(337.5f, -85f, 0f), ImageMaterial);
+                BlueHexagon = SetupImage("blue hexagon", "Alphabet New_98", RandomizerStats.transform, new Vector3(372.5f, -84f, 0f), ImageMaterial);
 
                 RedHexagon.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 GreenHexagon.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
@@ -344,13 +345,13 @@ namespace TunicRandomizer {
                 I.transform.localScale = Vector3.one;
                 GameObject NG = SetupImage("ng", "Alphabet New_20", Ding.transform, new Vector3(98f, -110f, 0f), ImageMaterial);
                 NG.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-                Dong = GameObject.Instantiate(Ding, Stats.transform);
+                Dong = GameObject.Instantiate(Ding, RandomizerStats.transform);
                 Dong.transform.position = new Vector3(162.5f, -85f, 0f);
                 Dong.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.FindObjectsOfTypeAll<Sprite>().Where(sprite => sprite.name == "Alphabet New_1").ToList()[0];
                 Dong.transform.GetChild(1).transform.position = new Vector3(167f, -110f, 0f);
 
                 QuestionMark = new GameObject("question mark");
-                QuestionMark.transform.parent = Stats.transform;
+                QuestionMark.transform.parent = RandomizerStats.transform;
                 QuestionMark.transform.position = new Vector3(25f, -17f, 0f);
                 QuestionMark.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 QuestionMark.transform.localRotation = new Quaternion(0f, 0f, 0.1305f, -0.9914f);
@@ -358,9 +359,9 @@ namespace TunicRandomizer {
                 GameObject.DontDestroyOnLoad(QuestionMark);
                 CreateAbilitySection();
 
-                Stats.transform.SetAsFirstSibling();
+                RandomizerStats.transform.SetAsFirstSibling();
                 if ((float)Screen.width/Screen.height < 1.7f) {
-                    Stats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
+                    RandomizerStats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
                 }
 
                 InventoryCounter.UpdateCounters();
@@ -619,6 +620,12 @@ namespace TunicRandomizer {
                     InventoryDisplayPatches.ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
                     InventoryDisplayPatches.ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
                 }
+
+                RecentItemsDisplay.instance.gameObject.SetActive(false);
+                RandomizerStats.SetActive(true);
+            } else {
+                RecentItemsDisplay.instance.gameObject.SetActive(TunicRandomizer.Settings.ShowRecentItems);
+                RandomizerStats.SetActive(false);
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1 && SpeedrunData.gameComplete == 0 && !InventoryDisplay.InventoryOpen);

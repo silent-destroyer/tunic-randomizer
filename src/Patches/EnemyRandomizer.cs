@@ -8,23 +8,11 @@ using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
-
-    public class BossEnemy : MonoBehaviour { }
-    public class FleemerQuartet : MonoBehaviour {
-        public int GroupId;
-        public List<GameObject> Quartet;
-        public void Awake() {
-            GroupId = -1;
-            Quartet = new List<GameObject>();
-        }
-
-        public void Update() {
-            Quartet = Quartet.Where(monster => monster != null).ToList();
-        }
-    }
     public class EnemyRandomizer {
 
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
+
+        public static List<string> EnemyNames = new List<string>();
 
         public static Dictionary<string, List<string>> DefeatedEnemyTracker = new Dictionary<string, List<string>>();
 
@@ -686,6 +674,7 @@ namespace TunicRandomizer {
                 Enemies["Hedgehog Trap"].name = "Hedgehog Trap Prefab";
             }
 
+            EnemyNames = Enemies.Keys.ToList();
         }
 
         public static void DoEnemyRandomization() {
@@ -1445,6 +1434,42 @@ namespace TunicRandomizer {
                 hat.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("floppy hat");
                 hat.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("fox redux");
                 hat.SetActive(true);
+            }
+        }
+    }
+    public class BossEnemy : MonoBehaviour { }
+    public class FleemerQuartet : MonoBehaviour {
+        public int GroupId;
+        public List<GameObject> Quartet;
+        public void Awake() {
+            GroupId = -1;
+            Quartet = new List<GameObject>();
+        }
+
+        public void Update() {
+            Quartet = Quartet.Where(monster => monster != null).ToList();
+        }
+    }
+    public class EnemyManager : MonoBehaviour {
+        public IEnumerator<bool> manager;
+        public void Awake() {
+            manager = ManageEnemies();
+        }
+
+        public void Update() {
+            if (manager != null) {
+                manager.MoveNext();
+            }
+        }
+        public IEnumerator<bool> ManageEnemies() {
+            while (true) {
+                for (int i = 0; i < EnemyRandomizer.EnemyNames.Count; i++) {
+                    EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].SetActive(false);
+                    yield return true;
+                    EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].transform.position = new Vector3(-30000f, -30000f, -30000f);
+                    yield return true;
+                }
+                yield return true;
             }
         }
     }

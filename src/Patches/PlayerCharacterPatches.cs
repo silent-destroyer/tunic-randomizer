@@ -22,7 +22,6 @@ namespace TunicRandomizer {
 
         public static float TimeWhenLastChangedDayNight = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
-        public static bool LeftCommandPressed = false;
         public static LadderEnd LastLadder = null;
         public static Renderer foxHair = null;
 
@@ -48,58 +47,45 @@ namespace TunicRandomizer {
                     DiedToDeathLink = false;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.H) || (InputManager.ActiveDevice.LeftCommand.WasPressed && !LeftCommandPressed)) {
-                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
-                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
-                }
-            }
-            LeftCommandPressed = InputManager.ActiveDevice.LeftCommand.WasPressed;
-            if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
-                if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
-                    GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
-                    $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
-                    $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
-                } else {
-                    GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
-                    $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
-                    $"\"Hexagon Quest........{(SaveFile.GetInt(HexagonQuestEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Keys Behind Bosses...{(SaveFile.GetInt(KeysBehindBosses) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Sword Progression....{(SaveFile.GetInt(SwordProgressionEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Abilities...{(SaveFile.GetInt(AbilityShuffle) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Ladders.....{(SaveFile.GetInt(LadderRandoEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
-                }
-            }
 
-            if ((Input.GetKeyDown(KeyCode.R) || InputManager.ActiveDevice.LeftStickButton.WasPressed) && IsArchipelago()) {
-                Archipelago.instance.Release();
-            }
+            //if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
+            //    if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
+            //        GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
+            //        $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
+            //        $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
+            //        (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
+            //    } else {
+            //        GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
+            //        $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
+            //        $"\"Hexagon Quest........{(SaveFile.GetInt(HexagonQuestEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+            //        $"\"Keys Behind Bosses...{(SaveFile.GetInt(KeysBehindBosses) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+            //        $"\"Sword Progression....{(SaveFile.GetInt(SwordProgressionEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+            //        $"\"Shuffled Abilities...{(SaveFile.GetInt(AbilityShuffle) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+            //        $"\"Shuffled Ladders.....{(SaveFile.GetInt(LadderRandoEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+            //        $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
+            //        (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
+            //    }
+            //}
 
-            if ((Input.GetKeyDown(KeyCode.C) || InputManager.ActiveDevice.RightStickButton.WasPressed) && IsArchipelago()) {
-                Archipelago.instance.Collect();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                if (OptionsGUIPatches.BonusOptionsUnlocked) {
-                    PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha5)) {
-                PaletteEditor.RandomizeFoxColors();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha6)) {
-                PaletteEditor.LoadCustomTexture();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha8)) {
-                // can't think of why it would fail right now, but if it fails I don't really want it to break anything
-                try {
-                    LogicChecker.WriteLogicSummaryFile();
-                } catch (Exception e) {
-                    TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
-                }
-            }
+            //if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            //    if (OptionsGUIPatches.BonusOptionsUnlocked) {
+            //        PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
+            //    }
+            //}
+            //if (Input.GetKeyDown(KeyCode.Alpha5)) {
+            //    PaletteEditor.RandomizeFoxColors();
+            //}
+            //if (Input.GetKeyDown(KeyCode.Alpha6)) {
+            //    PaletteEditor.LoadCustomTexture();
+            //}
+            //if (Input.GetKeyDown(KeyCode.Alpha8)) {
+            //    // can't think of why it would fail right now, but if it fails I don't really want it to break anything
+            //    try {
+            //        LogicChecker.WriteLogicSummaryFile();
+            //    } catch (Exception e) {
+            //        TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
+            //    }
+            //}
 
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
@@ -111,8 +97,7 @@ namespace TunicRandomizer {
                 }
             }
             if (SpeedrunData.timerRunning && SceneLoaderPatches.SceneName != null && Locations.AllScenes.Count > 0) {
-                float AreaPlaytime = SaveFile.GetFloat($"randomizer play time {SceneLoaderPatches.SceneName}");
-                SaveFile.SetFloat($"randomizer play time {SceneLoaderPatches.SceneName}", AreaPlaytime + Time.unscaledDeltaTime);
+                SaveFile.SetFloat($"randomizer play time {SceneLoaderPatches.SceneName}", SaveFile.GetFloat($"randomizer play time {SceneLoaderPatches.SceneName}") + Time.unscaledDeltaTime);
             }
             if (IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = true;
@@ -187,15 +172,6 @@ namespace TunicRandomizer {
 
             if (PaletteEditor.FoxCape != null) {
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().UseSpecialGhostMat = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().UseSpecialGhostMat;
-            }
-
-            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<FoxgodCutscenePatch>() == null) {
-                new GameObject("foxgod cutscene patcher").gameObject.AddComponent<FoxgodCutscenePatch>();
-            }
-
-            foreach (string Key in EnemyRandomizer.Enemies.Keys.ToList()) {
-                EnemyRandomizer.Enemies[Key].SetActive(false);
-                EnemyRandomizer.Enemies[Key].transform.position = new Vector3(-30000f, -30000f, -30000f);
             }
 
         }

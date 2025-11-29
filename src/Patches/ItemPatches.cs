@@ -506,7 +506,9 @@ namespace TunicRandomizer {
 
             InventoryCounter.UpdateCounters();
 
-            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+            if (TunicRandomizer.Settings.ShowRecentItems) {
+                RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+            }
 
             return ItemResult.Success;
         }
@@ -758,7 +760,9 @@ namespace TunicRandomizer {
 
             InventoryCounter.UpdateCounters();
 
-            RecentItemsDisplay.instance.EnqueueItem(Check);
+            if (TunicRandomizer.Settings.ShowRecentItems) {
+                RecentItemsDisplay.instance.EnqueueItem(Check);
+            }
 
             if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
                 ModelSwaps.SwapItemsInScene();
