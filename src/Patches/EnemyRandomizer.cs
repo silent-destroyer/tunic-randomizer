@@ -1017,6 +1017,9 @@ namespace TunicRandomizer {
 
                     if (NewEnemy.name.Contains("Spinnerbot Corrupted") && Random.Next(100) == 99) {
                         NewEnemy.transform.localScale = new Vector3(2f, 2f, 2f);
+                        if (NewEnemy.GetComponent<Monster>().defaultStartingMaxHP == null) {
+                            NewEnemy.GetComponent<Monster>().Awake();
+                        }
                         NewEnemy.GetComponent<Monster>().defaultStartingMaxHP._value = 30;
                     }
 
