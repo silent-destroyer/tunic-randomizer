@@ -102,28 +102,22 @@ namespace TunicRandomizer {
             }
 
             if (Inventory.GetItemByName("Hexagon Red").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 1 Red") == 1) {
-                InventoryDisplay.instance.hexagonImages[0].enabled = true;
                 InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.RedMarkerColor;
             } else {
-                InventoryDisplay.instance.hexagonImages[0].enabled = false;
                 InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = Color.white;
             }
 
             yield return true;
             if (Inventory.GetItemByName("Hexagon Green").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 2 Green") == 1) {
-                InventoryDisplay.instance.hexagonImages[1].enabled = true;
                 InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.GreenMarkerColor;
             } else {
-                InventoryDisplay.instance.hexagonImages[1].enabled = false;
                 InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = Color.white;
             }
 
             yield return true;
             if (Inventory.GetItemByName("Hexagon Blue").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 3 Blue") == 1) {
-                InventoryDisplay.instance.hexagonImages[2].enabled = true;
                 InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : Color.blue;
             } else {
-                InventoryDisplay.instance.hexagonImages[2].enabled = false;
                 InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = Color.white;
             }
 
@@ -620,7 +614,9 @@ namespace TunicRandomizer {
                     InventoryDisplayPatches.ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
                     InventoryDisplayPatches.ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
                 }
-
+                __instance.hexagonImages[0].enabled = Inventory.GetItemByName("Hexagon Red").Quantity > 0 || GetBool("Placed Hexagon 1 Red");
+                __instance.hexagonImages[1].enabled = Inventory.GetItemByName("Hexagon Green").Quantity > 0 || GetBool("Placed Hexagon 2 Green");
+                __instance.hexagonImages[2].enabled = Inventory.GetItemByName("Hexagon Blue").Quantity > 0 || GetBool("Placed Hexagon 3 Blue");
                 RecentItemsDisplay.instance.gameObject.SetActive(false);
                 RandomizerStats.SetActive(true);
             } else {

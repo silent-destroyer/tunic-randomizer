@@ -992,7 +992,6 @@ namespace TunicRandomizer {
                         int bombChance = Random.Next(100);
                         Rigidbody randomBomb;
                         if (bombChance < 4) {
-
                             randomBomb = bombFlasks.Where(bomb => bomb.name == "centipede_detritus_head").ToList()[0].gameObject.GetComponent<Rigidbody>();
                         } else {
                             List<BombFlask> possibleBombs = bombFlasks.Where(bomb => bomb.name != "Firecracker" && bomb.name != "centipede_detritus_head").ToList();
