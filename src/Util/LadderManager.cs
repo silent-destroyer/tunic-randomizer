@@ -148,6 +148,42 @@ namespace TunicRandomizer {
                 ladderZones.Add(ladderItem.name, new List<LadderZone>());
             }
             ladderZones[ladderItem.name].Add(ladderZone);
+            UpdateLadderZone(ladderZone);
+        }
+
+        private void UpdateLadderZone(LadderZone zone) {
+            if (zone.LadderItem == null) {
+                return;
+            }
+            bool hasLadder = zone.LadderItem.Quantity > 0;
+            for (int i = 0; i < zone.ConstructionItems.Count; i++) {
+                zone.ConstructionItems[i].SetActive(!hasLadder);
+            }
+
+            for (int i = 0; i < zone.OptionalObjectsToDisable.Count; i++) {
+                zone.OptionalObjectsToDisable[i].SetActive(hasLadder);
+            }
+
+            for (int i = 0; i < zone.Ladder.transform.childCount; i++) {
+                if (PlayerCharacter.instance.currentLadder == zone.Ladder.GetComponent<Ladder>() && zone.Ladder.GetComponent<Ladder>() != null) {
+                    continue;
+                }
+                zone.Ladder.transform.GetChild(i).gameObject.SetActive(hasLadder);
+            }
+
+            if (zone.Ladder.GetComponent<Renderer>() != null) {
+                zone.Ladder.GetComponent<Renderer>().enabled = hasLadder;
+            }
+
+            for (int i = 0; i < zone.ExtraColliders.Count; i++) {
+                if (zone.ExtraColliders[i] != null) {
+                    zone.ExtraColliders[i].enabled = !hasLadder;
+                }
+            }
+
+            if (zone.StateVariable != null && zone.StateVariable.BoolValue != hasLadder) {
+                zone.StateVariable.BoolValue = hasLadder;
+            }
         }
     }
 }
