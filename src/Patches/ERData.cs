@@ -1772,7 +1772,7 @@ namespace TunicRandomizer {
             },
             {
                 "Dark Tomb Upper",
-                new RegionInfo("East Forest Redux Interior", false)
+                new RegionInfo("Crypt Redux", false)
             },
             {
                 "Dark Tomb Main",
