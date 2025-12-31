@@ -19,8 +19,7 @@ namespace TunicRandomizer {
 
         public static bool SceneLoader_OnSceneLoaded_PrefixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
             // ladder storage fix
-            if (PlayerCharacter.instance != null)
-            {
+            if (PlayerCharacter.instance != null) {
                 PlayerCharacter.instance.currentLadder = null;
                 PlayerCharacter.instance.GetComponent<Animator>().SetBool("climbing", false);
             }
@@ -43,7 +42,7 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
-                foreach(Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name)) {
+                foreach (Grass grass in Resources.FindObjectsOfTypeAll<Grass>().Where(grass => grass.gameObject.scene.name == loadingScene.name)) {
                     string grassId = GrassRandomizer.getGrassGameObjectId(grass);
                     if (GrassRandomizer.GrassChecks.ContainsKey(grassId)) {
                         if (TunicUtils.IsCheckCompletedOrCollected(grassId)) {
@@ -316,7 +315,7 @@ namespace TunicRandomizer {
                 PlayerCharacterPatches.ResetDayNightTimer = 0.0f;
                 SaveFile.SetString("last campfire scene name", "Overworld Redux");
                 SaveFile.SetString("last campfire id", "checkpoint");
-                TunicLogger.LogInfo("Resetting time of day to daytime!"); 
+                TunicLogger.LogInfo("Resetting time of day to daytime!");
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
             }
             FoolTrap.StungByBee = false;
@@ -420,6 +419,8 @@ namespace TunicRandomizer {
                 InitialLoadDone = true;
                 TitleVersion.Initialize();
                 RecentItemsDisplay.SetupRecentItemsDisplay();
+
+                Archipelago.instance.CheckForArchipelagoLauncherArgs();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                     Archipelago.instance.Connect();
                 }
@@ -751,7 +752,7 @@ namespace TunicRandomizer {
 
         public static void SetupFrogDomainSecret() {
             GameObject Plinth = GameObject.Find("_DR: Questagon Room/hexagon plinth/");
-            if(SceneManager.GetActiveScene().name == "frog cave main" && Plinth != null) {
+            if (SceneManager.GetActiveScene().name == "frog cave main" && Plinth != null) {
                 GameObject CapeSecret = GameObject.Instantiate(ModelSwaps.StarburstEffect);
                 CapeSecret.transform.parent = Plinth.transform;
                 CapeSecret.name = "cape secret";
@@ -814,7 +815,7 @@ namespace TunicRandomizer {
             signpost.transform.localEulerAngles = Vector3.zero;
             signpost.GetComponent<SphereCollider>().radius = 0.75f;
             signpost.transform.GetComponent<UnderConstruction>().message = ScriptableObject.CreateInstance<LanguageLine>();
-            signpost.transform.GetComponent<UnderConstruction>().message.text = 
+            signpost.transform.GetComponent<UnderConstruction>().message.text =
                 $"[arrow_up] [arrow_right] [arrow_down] [arrow_left] [arrow_up] [arrow_right] [arrow_down] [arrow_left]\n" +
                 $"[arrow_up] [arrow_right] [arrow_down] [arrow_left] [arrow_up] [arrow_right] [arrow_down] [arrow_left]";
             signpost.SetActive(true);
