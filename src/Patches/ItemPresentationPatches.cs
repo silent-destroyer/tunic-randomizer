@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace TunicRandomizer {
     public class ItemPresentationPatches {
@@ -397,6 +398,91 @@ namespace TunicRandomizer {
 
             } catch (Exception e) {
                 TunicLogger.LogError("Bell presentation error: " + e.Message);
+            }
+        }
+
+        public static void SetupEnemyPresentation() {
+            try {
+                TunicLogger.LogInfo("here");
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "berry_HP").First().gameObject;
+                GameObject EnemyPresentation = GameObject.Instantiate(PresentationBase);
+                EnemyPresentation.transform.parent = PresentationBase.transform.parent;
+                EnemyPresentation.layer = 5;
+                EnemyPresentation.transform.localPosition = Vector3.zero;
+                EnemyPresentation.transform.localEulerAngles = new Vector3(0, 180, 0);
+                EnemyPresentation.name = "enemies";
+
+                if (EnemyPresentation.GetComponent<MeshFilter>() != null && EnemyPresentation.GetComponent<MeshRenderer>() != null) {
+                    GameObject.Destroy(EnemyPresentation.GetComponent<MeshFilter>());
+                    GameObject.Destroy(EnemyPresentation.GetComponent<MeshRenderer>());
+                }
+
+                GameObject Skuladin = GameObject.Instantiate(GameObject.Find("Group/Skuladot"));
+                Skuladin.layer = 5;
+                Skuladin.transform.GetChild(0).gameObject.layer = 5;
+                Skuladin.transform.GetChild(0).GetChild(0).gameObject.layer = 5;
+                Skuladin.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.layer = 5;
+                Skuladin.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.layer = 5;
+                Skuladin.transform.GetChild(1).gameObject.layer = 5;
+                Skuladin.transform.parent = EnemyPresentation.transform;
+                Skuladin.transform.localPosition = new Vector3(-1.7f, 0f, 9f);
+                Skuladin.transform.localEulerAngles = new Vector3(344.5636f, 321.3998f, 0f);
+                Skuladin.transform.localScale = Vector3.one * 1.25f;
+                GameObject.Destroy(Skuladin.GetComponent<Skuladin>());
+                GameObject.Destroy(Skuladin.GetComponent<Animator>());
+                GameObject.Destroy(Skuladin.GetComponent<Rigidbody>());
+                GameObject.Destroy(Skuladin.GetComponent<RuntimeStableID>());
+                GameObject.Destroy(Skuladin.GetComponent<CapsuleCollider>());
+                GameObject.Destroy(Skuladin.GetComponent<AnimationEvents>());
+                GameObject.Destroy(Skuladin.GetComponent<NavMeshAgent>());
+                Skuladin.SetActive(true);
+
+                GameObject Blob = GameObject.Instantiate(GameObject.Find("Group/Blob 7"));
+                Blob.layer = 5;
+                Blob.transform.GetChild(1).gameObject.layer = 5;
+                Blob.transform.parent = EnemyPresentation.transform;
+                Blob.transform.localPosition = new Vector3(2.0376f, 0.2515f, 6.5034f);
+                Blob.transform.localEulerAngles = new Vector3(33.9105f, 318.964f, 0f);
+                Blob.transform.localScale = Vector3.one * 1.5f;
+                GameObject.Destroy(Blob.GetComponent<Blob>());
+                GameObject.Destroy(Blob.GetComponent<Animator>());
+                GameObject.Destroy(Blob.GetComponent<Rigidbody>());
+                GameObject.Destroy(Blob.GetComponent<RuntimeStableID>());
+                GameObject.Destroy(Blob.GetComponent<CapsuleCollider>());
+                GameObject.Destroy(Blob.GetComponent<AnimationEvents>());
+                GameObject.Destroy(Blob.GetComponent<NavMeshAgent>());
+                Blob.SetActive(true);
+
+                GameObject Wolf = GameObject.Instantiate(GameObject.Find("Group/Wolf baby"));
+                Wolf.layer = 5;
+                Wolf.transform.GetChild(1).gameObject.layer = 5;
+                Wolf.transform.parent = EnemyPresentation.transform;
+                Wolf.transform.localPosition = new Vector3(1.0564f, 2.2182f, 4f);
+                Wolf.transform.localEulerAngles = new Vector3(12.163f, 38.6728f, 0f);
+                Wolf.transform.localScale = Vector3.one * 1.2f;
+                GameObject.Destroy(Wolf.GetComponent<Wolf>());
+                GameObject.Destroy(Wolf.GetComponent<Animator>());
+                GameObject.Destroy(Wolf.GetComponent<Rigidbody>());
+                GameObject.Destroy(Wolf.GetComponent<RuntimeStableID>());
+                GameObject.Destroy(Wolf.GetComponent<CapsuleCollider>());
+                GameObject.Destroy(Wolf.GetComponent<AnimationEvents>());
+                GameObject.Destroy(Wolf.GetComponent<NavMeshAgent>());
+                Wolf.SetActive(true);
+
+
+                EnemyPresentation.transform.localPosition = new Vector3(0.05f, -0.5f, 0);
+                EnemyPresentation.transform.localEulerAngles = new Vector3(0, 180, 0);
+                EnemyPresentation.transform.localScale = Vector3.one * 0.22f;
+
+                EnemyPresentation.GetComponent<ItemPresentationGraphic>().items = ItemLookup.Items.Values.Where(enemy => enemy.Type == ItemTypes.ENEMY).Select(item => Inventory.GetItemByName(item.Name)).ToArray();
+
+                EnemyPresentation.SetActive(false);
+
+                RegisterNewItemPresentation(EnemyPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Enemy"] = EnemyPresentation;
+            } catch (Exception e) {
+                TunicLogger.LogError("Enemy presentation error: " + e.Message);
             }
         }
 

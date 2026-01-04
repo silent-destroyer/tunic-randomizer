@@ -885,6 +885,8 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
             Inventory.GetItemByName("Key (House)").Quantity = 1;
             Inventory.GetItemByName("Vault Key (Red)").Quantity = 1;
+            Inventory.GetItemByName("Level Up - Attack").Quantity = 10;
+            Inventory.GetItemByName("Relic - Hero Sword").Quantity = 1;
         }
     }
 }

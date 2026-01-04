@@ -1053,8 +1053,12 @@ namespace TunicRandomizer {
             moveUp.layer = 0;
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
-            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
-
+            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null || transform.GetComponent<Monster>() != null);
+            if (transform.GetComponent<Monster>() != null) {
+                moveUp.transform.parent = null;
+            }
+            moveUp.SetActive(true);
+           
             if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null || transform.GetComponent<SecretPassagePanel>() != null) {
                 moveUp.transform.parent = transform;
                 // so we can rotate it properly
@@ -1190,7 +1194,7 @@ namespace TunicRandomizer {
                                 int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                                 TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][$"Sword Progression {SwordLevel}"] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory];
                             } else {
-                                TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(ItemData.ItemNameForInventory) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Enum.GetName(typeof(ItemTypes), ItemData.Type)];
+                                TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(ItemData.ItemNameForInventory) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(Enum.GetName(typeof(ItemTypes), ItemData.Type)) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Enum.GetName(typeof(ItemTypes), ItemData.Type)] : ItemPositions.SpecificItemPlacement["Techbow"]["Key"];
                             }
 
                         }
@@ -1276,7 +1280,7 @@ namespace TunicRandomizer {
                             int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                             TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.ItemNameForInventory];
                         } else {
-                            TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
+                            TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow.ContainsKey(Enum.GetName(typeof(ItemTypes), Item.Type)) ? ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)] : ItemPositions.Techbow["Key"];
                         }
                         if (Item.Type == ItemTypes.FUSE) {
                             PagePickup.GetComponent<SphereCollider>().radius = 2f;
@@ -1355,6 +1359,8 @@ namespace TunicRandomizer {
                     GameObject.Destroy(NewItem.GetComponent<TuningForkBell>());
                     GameObject.Destroy(NewItem.GetComponent<SphereCollider>());
                     GameObject.Destroy(NewItem.GetComponent<BoxCollider>());
+                } else if (Item.Type == ItemTypes.ENEMY) {
+                    NewItem = GameObject.Instantiate(Items["Enemy"], Parent.transform.position, Parent.transform.rotation);
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }

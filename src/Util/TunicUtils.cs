@@ -81,7 +81,15 @@ namespace TunicRandomizer {
             "Fortress Courtyard Fuse", "Beneath the Vault Fuse", "Fortress Candles Fuse",
             "Fortress Door Left Fuse", "Fortress Door Right Fuse", "West Furnace Fuse",
             "West Garden Fuse", "Atoll Northeast Fuse", "Atoll Northwest Fuse", "Atoll Southeast Fuse",
-            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell"
+            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell",
+            "Enemy Soul (Administrator)", "Enemy Soul (Phrend)", "Enemy Soul (Beefboy)", "Enemy Soul (Blob)",
+            "Enemy Soul (Fleemer)", "Enemy Soul (Crabbit)", "Enemy Soul (Crabbo)", "Enemy Soul (Chompignom)",
+            "Enemy Soul (Husher)", "Enemy Soul (Autobolt)", "Enemy Soul (Zombie Fox)", "Enemy Soul (Frog)",
+            "Enemy Soul (Lost Echo)", "Enemy Soul (Gunslinger)", "Enemy Soul (Hedgehog)", "Enemy Soul (Laser Trap)",
+            "Enemy Soul (Envoy)", "Enemy Soul (Garden Knight)", "Enemy Soul (Librarian)", "Enemy Soul (Plover)",
+            "Enemy Soul (Fairy)", "Enemy Soul (Scavenger)", "Enemy Soul (Boss Scavenger)", "Enemy Soul (Tentacle)",
+            "Enemy Soul (Rudeling)", "Enemy Soul (Spider)", "Enemy Soul (Siege Engine)", "Enemy Soul (Slorm)",
+            "Enemy Soul (Baby Slorm)", "Enemy Soul (Voidling)", "Enemy Soul (Voidtouched)", "Enemy Soul (Custodian)"
         };
 
 
@@ -262,6 +270,9 @@ namespace TunicRandomizer {
             }
             if (SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1 || getAll) {
                 checks.AddRange(BellShuffle.BellChecks.Values.ToList());
+            }
+            if (SaveFile.GetInt(SaveFlags.EnemyDropsEnabled) == 1 || getAll) { 
+                checks.AddRange(EnemyDropShuffle.EnemyDropChecks.Values.ToList());
             }
             return CopyListOfChecks(checks);
         }

@@ -55,6 +55,9 @@
         public const string BreakableShuffleEnabled = "randomizer breakable shuffle enabled";
         public const string FuseShuffleEnabled = "randomizer fuse shuffle enabled";
         public const string BellShuffleEnabled = "randomizer bell shuffle enabled";
+        public const string EnemyDropsEnabled = "randomizer enemy drop shuffle enabled";
+        public const string ExtraEnemyDropsEnabled = "randomizer extra enemy drops enabled";
+        public const string ShuffleEnemySoulsEnabled = "randomizer shuffle enemy souls enabled";
         public const string MysterySeedEnabled = "randomizer mystery seed";
 
         // Special Flags

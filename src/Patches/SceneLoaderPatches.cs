@@ -119,6 +119,7 @@ namespace TunicRandomizer {
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 ModelSwaps.CreateOtherWorldItemBlocks();
+                EnemyDropShuffle.LoadEnemyData();
                 TunicLogger.LogInfo("Done loading resources!");
                 SceneLoader.LoadScene("TitleScreen");
                 return;
@@ -298,6 +299,7 @@ namespace TunicRandomizer {
                 SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
                 GrassRandomizer.LoadGrassChecks();
                 BreakableShuffle.LoadBreakableChecks();
+                //EnemyDropShuffle.LoadEnemyData();
                 PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
                 SceneLoader.LoadScene("Overworld Redux");
                 return;
@@ -581,7 +583,7 @@ namespace TunicRandomizer {
             }
 
             EnemyRandomizer.CheckBossState();
-
+            //EnemyDropShuffle.RemoveRecordedEnemies();
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 if (ERData.RandomizedPortals.Count == 0) {
                     if (IsArchipelago()) {
@@ -656,6 +658,12 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
+                EnemyDropShuffle.SetupEnemyChecks();
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {

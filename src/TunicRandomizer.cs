@@ -46,6 +46,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<FuseTrapAppearanceHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<AllowHolyCross>();
             ClassInjector.RegisterTypeInIl2Cpp<RandoActionSet>();
+            ClassInjector.RegisterTypeInIl2Cpp<EnemyCheck>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
@@ -54,6 +55,7 @@ namespace TunicRandomizer {
             RegisterTypeAndCreateObject(typeof(InventoryCounter), "inventory counter");
             RegisterTypeAndCreateObject(typeof(PlayerPositionDisplay), "player position display");
             RegisterTypeAndCreateObject(typeof(ArachnophobiaMode), "arachnophobia mode helper");
+            RegisterTypeAndCreateObject(typeof(RegionSelector), "region selector");
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");

@@ -22,7 +22,7 @@ namespace TunicRandomizer {
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
         public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
         public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
-        
+        public static List<string> EnemyItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.ENEMY).Select(item => item.Value.Name).ToList();
         // Items you start with or effectively start with
         public static Dictionary<string, int> PopulatePrecollected() {
             Dictionary<string, int> precollectedItems = new Dictionary<string, int>();
@@ -37,6 +37,9 @@ namespace TunicRandomizer {
             }
             if (!GetBool(AbilityShuffle)) {
                 TunicUtils.AddListToDict(precollectedItems, new List<string> { "12", "21", "26" });
+            }
+            if (!GetBool(ShuffleEnemySoulsEnabled)) { 
+                TunicUtils.AddListToDict(precollectedItems, EnemyItems);
             }
             if (GetBool(StartWithSword)) {
                 precollectedItems.Add("Sword", 1);
@@ -81,6 +84,7 @@ namespace TunicRandomizer {
             List<string> Ladders = new List<string>(LadderItems);
             List<string> Fuses = new List<string>(FuseItems);
             List<string> Bells = new List<string>(BellItems);
+            List<string> EnemySouls = new List<string>(EnemyItems);
             List<string> GrassCutters = new List<string>() { "Trinket - Glass Cannon", };
             List<string> abilityPages = new List<string>() { "12", "21", "26" };
             if (SaveFile.GetInt(AbilityShuffle) == 1) {
@@ -119,6 +123,19 @@ namespace TunicRandomizer {
                 }
                 foreach (Check check in InitialItems.Where(check => BreakableShuffle.BreakableChecks.ContainsKey(check.CheckId))) {
                     check.Reward.Amount = random.Next(1, 6);
+                }
+            }
+            if (GetBool(EnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
+                ProgressionNames.AddRange(EnemySouls);
+
+                for (int i = 0; i < InitialItems.Count; i++) { 
+                    Check check = InitialItems[i];
+                    if (EnemyDropShuffle.EnemyDropChecks.ContainsKey(check.CheckId) && EnemySouls.Count > 0) {
+                        check.Reward.Name = EnemySouls[random.Next(EnemySouls.Count)];
+                        check.Reward.Amount = 1;
+                        check.Reward.Type = "INVENTORY";
+                        EnemySouls.Remove(check.Reward.Name);
+                    }
                 }
             }
 

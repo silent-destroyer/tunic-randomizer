@@ -21,6 +21,7 @@ namespace TunicRandomizer {
         GRASS,
         FUSE,
         BELL,
+        ENEMY,
     }
 
     public struct BonusUpgrade {
@@ -318,6 +319,40 @@ namespace TunicRandomizer {
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
+
+            // Enemy Souls
+            { "Enemy Soul (Administrator)", new ItemData("Enemy Soul (Administrator)", "progression", "Enemy Soul (Administrator)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Phrend)", new ItemData("Enemy Soul (Phrend)", "progression", "Enemy Soul (Phrend)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Beefboy)", new ItemData("Enemy Soul (Beefboy)", "progression", "Enemy Soul (Beefboy)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Blob)", new ItemData("Enemy Soul (Blob)", "progression", "Enemy Soul (Blob)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Fleemer)", new ItemData("Enemy Soul (Fleemer)", "progression", "Enemy Soul (Fleemer)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Crabbit)", new ItemData("Enemy Soul (Crabbit)", "progression", "Enemy Soul (Crabbit)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Crabbo)", new ItemData("Enemy Soul (Crabbo)", "progression", "Enemy Soul (Crabbo)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Chompignom)", new ItemData("Enemy Soul (Chompignom)", "progression", "Enemy Soul (Chompignom)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Husher)", new ItemData("Enemy Soul (Husher)", "progression", "Enemy Soul (Husher)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Autobolt)", new ItemData("Enemy Soul (Autobolt)", "progression", "Enemy Soul (Autobolt)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Zombie Fox)", new ItemData("Enemy Soul (Zombie Fox)", "progression", "Enemy Soul (Zombie Fox)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Frog)", new ItemData("Enemy Soul (Frog)", "progression", "Enemy Soul (Frog)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Lost Echo)", new ItemData("Enemy Soul (Lost Echo)", "progression", "Enemy Soul (Lost Echo)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Gunslinger)", new ItemData("Enemy Soul (Gunslinger)", "progression", "Enemy Soul (Gunslinger)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Hedgehog)", new ItemData("Enemy Soul (Hedgehog)", "progression", "Enemy Soul (Hedgehog)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Laser Trap)", new ItemData("Enemy Soul (Laser Trap)", "progression", "Enemy Soul (Laser Trap)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Envoy)", new ItemData("Enemy Soul (Envoy)", "progression", "Enemy Soul (Envoy)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Garden Knight)", new ItemData("Enemy Soul (Garden Knight)", "progression", "Enemy Soul (Garden Knight)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Librarian)", new ItemData("Enemy Soul (Librarian)", "progression", "Enemy Soul (Librarian)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Plover)", new ItemData("Enemy Soul (Plover)", "progression", "Enemy Soul (Plover)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Fairy)", new ItemData("Enemy Soul (Fairy)", "progression", "Enemy Soul (Fairy)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Scavenger)", new ItemData("Enemy Soul (Scavenger)", "progression", "Enemy Soul (Scavenger)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Boss Scavenger)", new ItemData("Enemy Soul (Boss Scavenger)", "progression", "Enemy Soul (Boss Scavenger)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Tentacle)", new ItemData("Enemy Soul (Tentacle)", "progression", "Enemy Soul (Tentacle)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Rudeling)", new ItemData("Enemy Soul (Rudeling)", "progression", "Enemy Soul (Rudeling)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Spider)", new ItemData("Enemy Soul (Spider)", "progression", "Enemy Soul (Spider)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Siege Engine)", new ItemData("Enemy Soul (Siege Engine)", "progression", "Enemy Soul (Siege Engine)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Slorm)", new ItemData("Enemy Soul (Slorm)", "progression", "Enemy Soul (Slorm)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Baby Slorm)", new ItemData("Enemy Soul (Baby Slorm)", "progression", "Enemy Soul (Baby Slorm)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Voidling)", new ItemData("Enemy Soul (Voidling)", "progression", "Enemy Soul (Voidling)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Voidtouched)", new ItemData("Enemy Soul (Voidtouched)", "progression", "Enemy Soul (Voidtouched)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Custodian)", new ItemData("Enemy Soul (Custodian)", "progression", "Enemy Soul (Custodian)", ItemTypes.ENEMY, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {

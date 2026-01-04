@@ -397,7 +397,7 @@ namespace TunicRandomizer {
             HintMessages.Add("Mailbox", HintMessage);
             return HintItem == null ? "" : ItemLookup.SimplifiedItemNames[HintItem.Reward.Name];
         }
-
+         
         public static string CreateAPMailboxHint(System.Random random) {
             string Scene = "";
             string Prefix = "";

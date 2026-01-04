@@ -96,6 +96,7 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
+
             if (Input.GetKeyDown(KeyCode.Alpha8)) {
                 // can't think of why it would fail right now, but if it fails I don't really want it to break anything
                 try {
@@ -103,6 +104,13 @@ namespace TunicRandomizer {
                 } catch (Exception e) {
                     TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+                foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name && m.gameObject.active)) {
+                    TunicLogger.LogInfo($"Monster: {monster.name} ({monster.GetComponent<RuntimeStableID>().ID})");
+                }
+                ItemPresentation.PresentItem(Inventory.GetItemByName("Enemy Soul (Blob)"));
+                //EnemyDropShuffle.LoadEnemyData();
             }
 
             if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
@@ -557,6 +565,15 @@ namespace TunicRandomizer {
                         if (TunicRandomizer.Settings.BellShuffle) {
                             SaveFile.SetInt(BellShuffleEnabled, 1);
                         }
+                        if (TunicRandomizer.Settings.EnemyDropShuffle) { 
+                            SaveFile.SetInt(EnemyDropsEnabled, 1);
+                            if (TunicRandomizer.Settings.ExtraEnemyDrops) {
+                                SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
+                            }
+                            if (TunicRandomizer.Settings.ShuffleEnemySouls) { 
+                                SaveFile.SetInt(ShuffleEnemySoulsEnabled, 1);
+                            }
+                        }
                         if (TunicRandomizer.Settings.LaurelsZips) {
                             SaveFile.SetInt(LaurelsZips, 1);
                         }
@@ -964,6 +981,7 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenCoins,
                 TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenFairies,
             };
+            
             int laurelsIndex = random.Next(laurelsOptions.Length);
             if (laurelsOptions.All(x => !x)) {
                 SaveFile.SetInt(LaurelsLocation, 0);

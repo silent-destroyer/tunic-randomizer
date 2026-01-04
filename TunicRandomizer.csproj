@@ -199,6 +199,7 @@
     <Compile Include="src\Patches\ArachnophobiaMode.cs" />
     <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
+    <Compile Include="src\Patches\EnemyDropShuffle.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
@@ -256,6 +257,7 @@
     <EmbeddedResource Include="src\Data\Breakables.json" />
     <EmbeddedResource Include="src\Data\BreakableDescriptions.json" />
     <EmbeddedResource Include="src\Data\FuseDescriptions.json" />
+    <EmbeddedResource Include="src\Data\EnemyData.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
