@@ -63,7 +63,8 @@ namespace TunicRandomizer {
             GameObject.DontDestroyOnLoad(VersionString);
             System.Random Random = new System.Random();
             Logo = GameObject.Find("_GameGUI(Clone)/Title Canvas/Title Screen Root/Image");
-            if (Random.Next(100) < 10) {
+            string[] args = Il2CppSystem.Environment.GetCommandLineArgs();
+            if (Random.Next(100) < 10 || args.Contains("-tunc")) {
                 Logo.GetComponent<Image>().sprite = ModelSwaps.TuncTitleImage.GetComponent<Image>().sprite;
             }
 

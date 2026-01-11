@@ -1,6 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Helpers;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace TunicRandomizer {
@@ -89,6 +88,36 @@ namespace TunicRandomizer {
 
         public bool IsConnected() {
             return integration != null ? integration.connected : false;
+        }
+
+        public void CheckForArchipelagoLauncherArgs() {
+            string[] args = Il2CppSystem.Environment.GetCommandLineArgs();
+
+            if (args.Length > 0) {
+                foreach (string arg in args) {
+                    try {
+                        Uri uri = new Uri(arg);
+
+                        if (uri.Scheme == "archipelago") {
+                            string[] UserInfo = uri.UserInfo.Split(':');
+                            
+                            TunicRandomizer.Settings.ConnectionSettings.Player = UserInfo[0];
+                            TunicRandomizer.Settings.ConnectionSettings.Hostname = uri.Host;
+                            TunicRandomizer.Settings.ConnectionSettings.Port = uri.Port.ToString();
+                            
+                            if (UserInfo.Length > 1 && UserInfo[1] != "None") {
+                                TunicRandomizer.Settings.ConnectionSettings.Password = UserInfo[1];
+                            }
+
+                            TunicRandomizer.Settings.Mode = RandomizerSettings.RandomizerType.ARCHIPELAGO;
+                            RandomizerSettings.SaveSettings();
+                            break;
+                        }
+                    } catch {
+                        continue;
+                    }
+                }
+            }
         }
 
     }
