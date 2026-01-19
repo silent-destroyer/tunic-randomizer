@@ -267,7 +267,7 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost East Filigree", "EastFiligreeCache", new Vector3(14.3719f, 0.0167f, -8.8614f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"wAt, how did yoo Opehn #aht dOr?") }
             },
             { "Maze Room", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Maze Room", "Maze Room", new Vector3(3.5129f,-0.1167f,-9.4481f), new Quaternion(0f,0f,0f,1f), NPC.NPCAnimState.IDLE, $"wAt... how kahn yoo wahk in hEr? #Arz nO flOr!" ) }
+                new HintGhost("Hint Ghost Maze Room", "Maze Room", new Vector3(3.5129f,-0.1167f,-9.4481f), new Quaternion(0f,0f,0f,1f), NPC.NPCAnimState.IDLE, $"wAt... how kahn yoo wawk in hEr? #Arz nO flOr!" ) }
             },
             { "Changing Room", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Changing Room 1", "Changing Room", new Vector3(14.9876f, 6.9379f, 14.6771f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.PRAY, $"doo yoo %ink #is louks goud awn mE?"),
@@ -668,11 +668,11 @@ namespace TunicRandomizer {
             if (IsHexQuestWithHexAbilities()) {
                 string prayerHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestPrayer)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh powur uhv \"PRAYER.\"";
                 string holyCrossHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestHolyCross)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh powur uhv #uh \"HOLY CROSS.\"";
-                string iceboltHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestIcebolt)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh #uh powur uhv #uh \"ICEBOLT.\"";
+                string iceboltHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestIcebolt)} GOLD QUESTAGONS\"\nwil grahnt yoo #uh powur uhv #uh \"ICEBOLT.\"";
                 if (TunicRandomizer.Settings.UseTrunicTranslations) {
                     prayerHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestPrayer)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh powur uhv prAr.";
                     holyCrossHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestHolyCross)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh powur uhv #uh hOlE kraws.";
-                    iceboltHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestIcebolt)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh #uh powur uhv #uh IsbOlt.";
+                    iceboltHint = $"bI #uh wA, I hurd #aht [goldhex] \"{SaveFile.GetInt(HexagonQuestIcebolt)}\" gOld kwehstuhgawn\nwil grahnt yoo #uh powur uhv #uh IsbOlt.";
                 }
                 ItemHints.Add((prayerHint, "", "", ""));
                 ItemHints.Add((holyCrossHint, "", "", ""));
