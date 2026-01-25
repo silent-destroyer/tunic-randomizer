@@ -116,7 +116,8 @@ namespace TunicRandomizer {
                 .ToDictionary(kvp => kvp[0], kvp => kvp[1]);
 
             if (queryParams.ContainsKey("game") && queryParams["game"] == "TUNIC") {
-                string[] UserInfo = uri.UserInfo.Split(':');
+
+                string[] UserInfo = uri.UserInfo.Replace("%20", " ").Split(':');
                 if (UserInfo[0] != "") {
                     TunicRandomizer.Settings.ConnectionSettings.Player = UserInfo[0];
                 }
