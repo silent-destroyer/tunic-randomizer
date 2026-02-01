@@ -10,12 +10,13 @@ For discussion around the Archipelago side of things, please visit the dedicated
 
 ## Installation
 - Must use a compatible PC version of TUNIC on the latest update. The mod has been tested on Steam and PC Game Pass versions, but should realistically work on any PC version (including Steam Deck).
-    - If playing on Steam Deck or Linux, first follow this guide to [setting up BepInEx via Proton/Wine](https://docs.bepinex.dev/articles/advanced/proton_wine.html).
 
 - Download the appropriate IL2CPP release of [BepInEx 6](https://github.com/BepInEx/BepInEx/releases/download/v6.0.0-pre.1/BepInEx_UnityIL2CPP_x64_6.0.0-pre.1.zip).
 
 - Extract the BepInEx zip folder you downloaded from the previous step into your game's install directory (For example: C:\Program Files (x86)\Steam\steamapps\common\TUNIC)
   - For the PC Game Pass version, extract the zip into the `Content` folder, i.e. C:\XboxGames\Tunic\Content
+  - For Steam Deck or Linux under Steam, enable BepInEx by setting the launch options in the game properties to `WINEDLLOVERRIDES="winhttp.dll=n,b" %command%`
+  - For other Steam Deck or Linux installs, or if the above does not work, follow the instructions under [setting up BepInEx via Proton/Wine](https://docs.bepinex.dev/articles/advanced/proton_wine.html).
 - Launch the game and close it. This will finalize the BepInEx installation.
 - [Download and extract the `Tunic Randomizer.zip` file from the latest release.](https://github.com/silent-destroyer/tunic-randomizer/releases/latest)
   - Copy the `Tunic Randomizer` folder from the release zip into `BepInEx/plugins` under your game's install directory.
