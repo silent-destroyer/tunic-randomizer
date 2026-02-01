@@ -193,13 +193,13 @@ namespace TunicRandomizer {
         }
 
         public void PopulateDiscoveredEntrances() {
-            foreach (KeyValuePair<string, PortalCombo> portalCombo in ERData.RandomizedPortals) {
-                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal1.Name) == 1) {
-                    DiscoveredEntrances[portalCombo.Value.Portal1.SceneDestinationTag] = portalCombo.Value.Portal2.SceneDestinationTag;
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal1.Name) == 1) {
+                    DiscoveredEntrances[portalCombo.Portal1.SceneDestinationTag] = portalCombo.Portal2.SceneDestinationTag;
                 }
                 if (!GetBool(Decoupled)) {
-                    if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Value.Portal2.Name) == 1) {
-                        DiscoveredEntrances[portalCombo.Value.Portal2.SceneDestinationTag] = portalCombo.Value.Portal1.SceneDestinationTag;
+                    if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal2.Name) == 1) {
+                        DiscoveredEntrances[portalCombo.Portal2.SceneDestinationTag] = portalCombo.Portal1.SceneDestinationTag;
                     }
                 }
             }
@@ -209,16 +209,18 @@ namespace TunicRandomizer {
             SaveTrackerFile();
         }
 
+        public static List<PortalCombo> EntranceFileAllPortals = new List<PortalCombo>();
         public void WriteEntranceFile() {
             string fileContents = "";
 
+            List<string> allInUsePortalNames = new List<string>();
+
+            allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Value.Portal1.Name).ToList();
+
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
-            int numberOfShops = 0;
+
             foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
                 portalNameToPair.Add(portalCombo.Portal1.Name, portalCombo);
-                if (portalCombo.Portal1.Name.Contains("Shop Portal")) {
-                    numberOfShops++;
-                }
             }
 
             Dictionary<string, List<string>> regionsToPortals = new Dictionary<string, List<string>>();
@@ -239,13 +241,9 @@ namespace TunicRandomizer {
                 }
                 foreach (List<ERData.TunicPortal> portalList in portalGroup.Value.Values) {
                     foreach (ERData.TunicPortal portal in portalList) {
-                        if (portalNameToPair.ContainsKey(portal.Name)) {
+                        if (allInUsePortalNames.Contains(portal.Name)) {
                             addPortal(portal.Name, portalGroup.Key);
-                        } else if (portal.Name == "Shop Portal") {
-                            for (int i = 0; i < numberOfShops; i++) {
-                                addPortal($"{portal.Name} {i+1}", portalGroup.Key);
-                            }
-                        }                        
+                        }
                     }
                 }
             }
