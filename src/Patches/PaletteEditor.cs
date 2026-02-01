@@ -27,7 +27,7 @@ namespace TunicRandomizer {
             {11, "Tunic\n(Belt)"},
             {12, "Eye"},
             {13, "Eye\n(Pupil)"},
-            {14, "Glasses\n(Custom)"},
+            {14, "Glasses"},
             {15, "Scarf,\nMouth"},
         };
         public static Dictionary<int, int[]> ColorIndices = new Dictionary<int, int[]>() {
@@ -214,6 +214,9 @@ namespace TunicRandomizer {
         private static string PasteHexValue(string hexValue) {
 
             try {
+                if (!hexValue.StartsWith("#")) {
+                    hexValue = $"#{hexValue}"; // Parser expects a #, so add it if not present
+                }
                 if (ColorUtility.TryParseHtmlString(hexValue, out var parsedColor)) {
                     SelectedColor = parsedColor;
                     PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], parsedColor);
