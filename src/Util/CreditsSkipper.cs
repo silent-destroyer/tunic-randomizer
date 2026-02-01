@@ -7,6 +7,7 @@ namespace TunicRandomizer {
     public class CreditsSkipper : MonoBehaviour {
 
         public float holdTime;
+        public bool LeftCommandPressed = false;
         public static float CompletionTimer = 0.0f;
 
         public void Awake() {
@@ -14,6 +15,14 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
+            if (SpeedrunData.gameComplete == 0) { return; }
+
+            if (Input.GetKeyDown(KeyCode.H) || (InputManager.ActiveDevice.LeftCommand.WasPressed && !LeftCommandPressed)) {
+                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
+                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
+                }
+            }
+            LeftCommandPressed = InputManager.ActiveDevice.LeftCommand.WasPressed;
             if (Input.GetKey(KeyCode.Space) || InputManager.ActiveDevice.Command.IsPressed || InputManager.ActiveDevice.RightCommand.IsPressed) { 
                 if (holdTime >= 3f && SpeedrunData.gameComplete != 0 && SceneManager.GetActiveScene().name != "GameOverDecision") {
                     TunicLogger.LogInfo("Skipping credits!");
@@ -26,6 +35,19 @@ namespace TunicRandomizer {
             } else {
                 holdTime = 0f;
             }
+
+            if ((Input.GetKeyDown(KeyCode.R) || InputManager.ActiveDevice.LeftStickButton.WasPressed) && SaveFlags.IsArchipelago()) {
+                Archipelago.instance.Release();
+            }
+
+            if ((Input.GetKeyDown(KeyCode.C) || InputManager.ActiveDevice.RightStickButton.WasPressed) && SaveFlags.IsArchipelago()) {
+                Archipelago.instance.Collect();
+            }
+
+            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<FoxgodCutscenePatch>() == null) {
+                new GameObject("foxgod cutscene patcher").gameObject.AddComponent<FoxgodCutscenePatch>();
+            }
+
             if (SpeedrunData.gameComplete != 0 && !SpeedrunFinishlineDisplayPatches.GameCompleted) {
                 SpeedrunFinishlineDisplayPatches.GameCompleted = true;
                 SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = true;

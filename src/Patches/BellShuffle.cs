@@ -213,7 +213,9 @@ namespace TunicRandomizer {
                         ItemPatches.GiveItem(check);
                     }                
                 }
-            }            
+            }
+
+            InventoryCounter.UpdateCounters();
         }
     }
 }
