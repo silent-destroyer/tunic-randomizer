@@ -488,7 +488,8 @@ namespace TunicRandomizer {
                             playerCount++;
                         }
                     }
-                    GUI.Label(scRect(250f, y, 400f, 30f), $"(world {Archipelago.instance.integration.session.ConnectionInfo.Slot} of {playerCount})");
+                    bool shrinkText = playerCount > 1000 || (playerCount > 100 && Archipelago.instance.integration.session.Locations.AllLocations.Count > 1000);
+                    GUI.Label(scRect(250f, y, 408f, 30f), $"<size={scFont(shrinkText ? 21f : 23f)}>(world: {Archipelago.instance.integration.session.ConnectionInfo.Slot} of {playerCount}, checks: {Archipelago.instance.integration.session.Locations.AllLocationsChecked.Count} of {Archipelago.instance.integration.session.Locations.AllLocations.Count})</size>");
                 } else {
                     GUI.Label(scRect(95f, y, 300f, 30f), $"<color=#FF0000>Disconnected</color>");
                 }
