@@ -126,6 +126,12 @@ namespace TunicRandomizer {
             { "Tooltips", "Display tooltips when hovering over settings on the main menu." },
             { "Run Game in Background", "Allows the game to continue running when tabbed out." },
             { "Deathplane/OoB Patch", "Enables a patch to save the fox from dying if they accidentally fall out of bounds." },
+
+            // Resources
+            { "Randomizer Website", "Check out the Randomizer website for more tips and hints!" },
+            { "Community Discord", "Have a question or want to discuss the TUNIC Randomizer and/or Speedruns? Join our community Discord!" },
+            { "Speedrun Leaderboards", "Check out the speedrun leaderboards for the TUNIC Randomizer!" },
+            { "Report An Issue", "Experiencing an issue? Report it in the Discord server or on the project's Github." },
         };
     }
 }

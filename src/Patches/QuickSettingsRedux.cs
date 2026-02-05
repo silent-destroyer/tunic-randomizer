@@ -1154,18 +1154,37 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.DisableLadderStorage = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Disable Ladder Storage"), TunicRandomizer.Settings.DisableLadderStorage, "Disable Ladder Storage");
             TunicRandomizer.Settings.DisableUpgradeStealing = GUI.Toggle(scRect(226f, y, 300f, 30f, tooltip: "Disable Upgrade Stealing"), TunicRandomizer.Settings.DisableUpgradeStealing, "Disable Upgrade Stealing");
             y += 40f;
-            GUI.Label(scRect(10f, y, 500f, 30f), "Misc. Settings / Debug");
+            GUI.Label(scRect(10f, y, 500f, 30f), "Misc. Settings");
             y += 40f;
             TunicRandomizer.Settings.OptionTooltips = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Tooltips"), TunicRandomizer.Settings.OptionTooltips, "Main Menu Tooltips");
             TunicRandomizer.Settings.RunInBackground = GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Run Game in Background"), TunicRandomizer.Settings.RunInBackground, "Run In Background");
             Application.runInBackground = TunicRandomizer.Settings.RunInBackground;
             TunicRandomizer.Settings.DeathplanePatch = GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Deathplane/OoB Patch"), TunicRandomizer.Settings.DeathplanePatch, "Deathplane/OoB Patch");
             y += 40f;
-            bool openLogFile = GUI.Button(scRect(10f, y, 206f, 30f), "Open Log File");
+            GUI.Label(scRect(10f, y, 500f, 30f), "Links & Resources");
+            y += 40f;
+            bool openRandomizerWebsite = GUI.Button(scRect(10f, y, 206f, 30f, tooltip: "Randomizer Website"), "Randomizer Website");
+            if (openRandomizerWebsite) {
+                System.Diagnostics.Process.Start("https://rando.tunic.run/");
+            }
+            bool discordLink = GUI.Button(scRect(226f, y, 206f, 30f, tooltip: "Community Discord"), "Community Discord");
+            if (discordLink) {
+                System.Diagnostics.Process.Start("https://discord.gg/HXkztJgQWj");
+            }
+            bool leaderboards = GUI.Button(scRect(442f, y, 206f, 30f, tooltip: "Speedrun Leaderboards"), "Speedrun Leaderboards");
+            if (leaderboards) {
+                System.Diagnostics.Process.Start("https://www.speedrun.com/tunic_rando");
+            }
+            y += 40f;
+            bool reportAnIssue = GUI.Button(scRect(10f, y, 206f, 30f, tooltip: "Report An Issue"), "Report An Issue");
+            if (reportAnIssue) {
+                System.Diagnostics.Process.Start("https://github.com/silent-destroyer/tunic-randomizer/issues");
+            }
+            bool openLogFile = GUI.Button(scRect(226f, y, 206f, 30f), "Open Log File");
             if (openLogFile) {
                 System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log");
             }
-            bool openSavesFolder = GUI.Button(scRect(226f, y, 206f, 30f), "Open Saves Folder");
+            bool openSavesFolder = GUI.Button(scRect(442f, y, 206f, 30f), "Open Saves Folder");
             if (openSavesFolder) { System.Diagnostics.Process.Start(Application.persistentDataPath + "/SAVES");
             }
             y += 40f;
