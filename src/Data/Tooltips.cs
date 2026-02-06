@@ -59,7 +59,7 @@ namespace TunicRandomizer {
             { "Trap Link", "Enables Trap Link when playing on Archipelago. When someone with Trap Link enabled receives a trap item, everyone else that has it enabled will receive the same or a similar trap (if their game supports it)." },
             { "Send Hints to Server", "Records certain items and locations as hints on the server when interacted with. This includes the randomized shop items and certain Ghost Fox hints.\n" },
             { "Hide Collected Items", "Makes checks that have been collected by another player (such as via !collect or slot co-op) appear as already opened/completed. Inventory and ending screen counts will also reflect this.\nCan be toggled on/off at any point and the game will update/revert accordingly." },
-            { "Connect via Room Link", "On the Archipelago room page, right click your Player Name and click Copy Link. Then click this button to import the room info and automatically connect. (May not work if your player name has special characters.)" +
+            { "Connect via Player Link", "On the Archipelago room page, right click your Player Name and click Copy Link. Then click this button to import the room info and automatically connect. (May not work if your player name has special characters.)" +
                 "\nIf the room requires a password, you will have to type it manually and then connect." },
             
             // General

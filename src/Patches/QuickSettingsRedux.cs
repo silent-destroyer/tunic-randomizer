@@ -199,6 +199,8 @@ namespace TunicRandomizer {
                 GameObject.Find("__Spirit").transform.GetChild(2).gameObject.SetActive(!showFoxCustomization);
                 GameObject.Find("soft edged plane (3)").GetComponent<Renderer>().enabled = !showFoxCustomization;
                 GameObject.Find("PS: dust motes").GetComponent<Renderer>().enabled = !showFoxCustomization;
+
+                CameraController.Flip = TunicRandomizer.Settings.CameraFlip && !showFoxCustomization;
             }
         }
 
@@ -363,6 +365,8 @@ namespace TunicRandomizer {
             bool ToggleSinglePlayer = GUI.Toggle(scRect(10f, y, 130f, 30f), TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER, "Single Player");
             if (ToggleSinglePlayer && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
                 TunicRandomizer.Settings.Mode = RandomizerSettings.RandomizerType.SINGLEPLAYER;
+                Archipelago.instance.Disconnect();
+                CloseAPSettingsWindow();
                 RandomizerSettings.SaveSettings();
             }
             bool ToggleArchipelago = GUI.Toggle(scRect(150f, y, 150f, 30f), TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO, "Archipelago");
@@ -514,7 +518,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            bool OpenAPSettings = GUI.Button(scRect(180f, y, 240f, 30f), ShowAPSettingsWindow ? "Close Connection Info" : "Edit Connection Info");
+            bool OpenAPSettings = GUI.Button(scRect(180f, y, 220f, 30f), ShowAPSettingsWindow ? "Close Connection Info" : "Edit Connection Info");
             if (OpenAPSettings) {
                 if (ShowAPSettingsWindow) {
                     CloseAPSettingsWindow();
@@ -523,7 +527,7 @@ namespace TunicRandomizer {
                     ShowAPSettingsWindow = true;
                 }
             }
-            bool ConnectViaRoomLink = GUI.Button(ShowTooltip(scRect(430f, y, 218f, 30f), "Connect via Room Link"), "Connect via Room Link");
+            bool ConnectViaRoomLink = GUI.Button(ShowTooltip(scRect(410f, y, 238f, 30f), "Connect via Player Link"), "Connect via Player Link");
             if (ConnectViaRoomLink) {
                 try {
                     Archipelago.instance.Disconnect();
@@ -1043,7 +1047,6 @@ namespace TunicRandomizer {
             y += 40f;
             TunicRandomizer.Settings.MoreSkulls = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "More Skulls"), TunicRandomizer.Settings.MoreSkulls, "More Skulls");
             TunicRandomizer.Settings.CameraFlip = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "???"), TunicRandomizer.Settings.CameraFlip, "???");
-            CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
             y += 40f;
 
             GUI.Label(scRect(10f, y, 200f, 30f), $"Music Shuffle");
@@ -1348,6 +1351,17 @@ namespace TunicRandomizer {
             foxHead = head.transform;
             laurels = head.transform.GetChild(7).gameObject;
             GameObject.Destroy(laurels.GetComponent<VisibleByHavingInventoryItem>());
+            foreach (ItemBehaviour itemBehavior in fox.GetComponents<ItemBehaviour>()) { 
+                GameObject.Destroy(itemBehavior);
+            }
+            foreach (MagicSpell spell in fox.GetComponents<MagicSpell>()) {
+                GameObject.Destroy(spell);
+            }
+            GameObject.Destroy(fox.GetComponent<DPADTester>());
+            GameObject.Destroy(fox.GetComponent<FireController>());
+            GameObject.Destroy(fox.GetComponent<TrapTileTrigger>());
+            GameObject.Destroy(fox.GetComponent<HitReceiver>());
+
             sunglasses = head.transform.GetChild(8).gameObject;
             fox.layer = 0;
             fox.name = "quick settings fox model";
