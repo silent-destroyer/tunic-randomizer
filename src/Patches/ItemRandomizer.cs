@@ -515,7 +515,6 @@ namespace TunicRandomizer {
                     }
                     if (swapCheck) { 
                         if (diceAdded < 6) {
-                            TunicLogger.LogInfo("swapping item");
                             check.Reward.Name = "Soul Dice";
                             check.Reward.Type = "INVENTORY";
                             check.Reward.Amount = 1;

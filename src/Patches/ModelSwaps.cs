@@ -1810,9 +1810,50 @@ namespace TunicRandomizer {
                 List<ShopItem> items = ShopManager.cachedShopItems != null ? ShopManager.cachedShopItems.ToList() : new List<ShopItem>();
                 items.Add(IceBombs.GetComponent<ShopItem>());
                 items.Add(Pepper.GetComponent<ShopItem>());
+
+                if (GetBool(FoxPrinceEnabled)) {
+                    GameObject SoulDice = GameObject.Instantiate(IceBombs);
+                    SoulDice.name = "Soul Dice";
+                    SoulDice.transform.parent = Pepper.transform.parent;
+                    SoulDice.GetComponent<ShopItem>().itemToGive = Inventory.GetItemByName("Soul Dice");
+                    SoulDice.GetComponent<ShopItem>().price = 120;
+                    SoulDice.GetComponent<ShopItem>().quantityToGive = 1;
+                    for (int i = SoulDice.transform.GetChild(0).childCount - 1; i >= 0; i--) {
+                        GameObject.Destroy(SoulDice.transform.GetChild(0).GetChild(i).gameObject);
+                    }
+                    GameObject model = GameObject.Instantiate(Items["Soul Dice"]);
+                    model.layer = 12;
+                    model.transform.GetChild(0).gameObject.layer = 12;
+                    model.transform.parent = SoulDice.transform.GetChild(0);
+                    GameObject.DestroyImmediate(model.GetComponent<Rotate>());
+                    model.transform.localScale = Vector3.one * 0.65f;
+                    model.transform.localPosition = Vector3.zero;
+                    model.SetActive(true);
+
+                    GameObject Dart = GameObject.Instantiate(SoulDice);
+                    Dart.name = "Dart";
+                    Dart.transform.parent = Pepper.transform.parent;
+                    Dart.GetComponent<ShopItem>().itemToGive = Inventory.GetItemByName("Dart");
+                    Dart.GetComponent<ShopItem>().price = 180;
+                    Dart.GetComponent<ShopItem>().quantityToGive = 1;
+                    for (int i = Dart.transform.GetChild(0).childCount - 1; i >= 0; i--) {
+                        GameObject.Destroy(Dart.transform.GetChild(0).GetChild(i).gameObject);
+                    } 
+                    GameObject dartModel = new GameObject("Dart");
+                    dartModel.layer = 12;
+                    dartModel.transform.parent = Dart.transform.GetChild(0);
+                    dartModel.transform.localPosition = Vector3.zero;
+                    dartModel.AddComponent<MeshFilter>().mesh = Items["Dart"].GetComponent<MeshFilter>().mesh;
+                    dartModel.AddComponent<MeshRenderer>().materials = Items["Dart"].GetComponent<MeshRenderer>().materials;
+                    dartModel.transform.localScale = Vector3.one * 1.25f;
+                    dartModel.transform.localEulerAngles = new Vector3(315f, 0f, 0f);
+                    items.Add(SoulDice.GetComponent<ShopItem>());
+                    items.Add(Dart.GetComponent<ShopItem>());
+                }
+
                 ShopManager.cachedShopItems = items.ToArray();
             } catch (Exception e) {
-                TunicLogger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
+                TunicLogger.LogError("Failed to add new items to the shop.");
             }
         }
 
