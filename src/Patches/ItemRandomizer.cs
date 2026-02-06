@@ -495,6 +495,42 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFlags.GetBool(FoxPrinceEnabled)) {
+                int diceAdded = 0;
+                int dartsAdded = 0;
+                foreach (string key in Locations.RandomizedLocations.Keys.ToList()) {
+                    Check check = Locations.RandomizedLocations[key];
+                    bool swapCheck = false;
+                    // prioritize swapping grass/money first on other settings, then swap filler items
+                    if (GetBool(GrassRandoEnabled)) {
+                        if (check.Reward.Name == "Grass" && !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)) {
+                            swapCheck = true;
+                        }
+                    } else if (GetBool(BreakableShuffleEnabled)) {
+                        if (check.Reward.Name == "money" && check.Reward.Amount < 10) {
+                            swapCheck = true;
+                        }
+                    } else if (ItemLookup.FillerItems.ContainsKey(check.Reward.Name)) {
+                        swapCheck = true;
+                    }
+                    if (swapCheck) { 
+                        if (diceAdded < 6) {
+                            TunicLogger.LogInfo("swapping item");
+                            check.Reward.Name = "Soul Dice";
+                            check.Reward.Type = "INVENTORY";
+                            check.Reward.Amount = 1;
+                            diceAdded++;
+                        } else if (dartsAdded < 3) {
+                            TunicLogger.LogInfo("swapping item");
+                            check.Reward.Name = "Dart";
+                            check.Reward.Type = "INVENTORY";
+                            check.Reward.Amount = 1;
+                            dartsAdded++;
+                        }
+                    }
+                }
+            }
+
             foreach (string Key in Locations.RandomizedLocations.Keys) {
                 int ItemPickedUp = SaveFile.GetInt($"randomizer picked up {Key}");
                 Locations.CheckedLocations.Add(Key, ItemPickedUp == 1 ? true : false);
