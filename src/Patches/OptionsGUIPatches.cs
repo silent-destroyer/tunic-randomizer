@@ -16,6 +16,27 @@ namespace TunicRandomizer {
         public static bool BonusOptionsUnlocked = false;
 
         public static bool OptionsGUI_page_root_PrefixPatch(OptionsGUI __instance) {
+            if (QuickSettingsRedux.titleScreenShowMusicToggles) {
+                QuickSettingsRedux.titleScreenShowMusicToggles = false;
+                MusicTogglesPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
+            if (QuickSettingsRedux.titleScreenShowJukebox) {
+                QuickSettingsRedux.titleScreenShowJukebox = false;
+                JukeboxPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
+            if (QuickSettingsRedux.titleScreenShowEnemyToggles) {
+                QuickSettingsRedux.titleScreenShowEnemyToggles = false;
+                EnemyTogglesPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
             addPageButton("Randomizer Settings", RandomizerSettingsPage);
             return true;
         }
@@ -409,6 +430,12 @@ namespace TunicRandomizer {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.pushPage(DelegateSupport.ConvertDelegate<OptionsGUI.PageMethod>(pageMethod));
             OptionsGUI.addButton("Return", new Action(OptionsGUI.popPage));
+        }
+
+        public static void addReturnButton(OptionsGUI optionsGUI) {
+            optionsGUI.addButton("Return", (Action)(() => {
+                optionsGUI.exitOptions();
+            }));
         }
 
         // Logic Settings

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
+    [Obsolete]
     public class QuickSettings : MonoBehaviour {
 
         public static string CustomSeed = "";
@@ -1129,66 +1130,66 @@ namespace TunicRandomizer {
             }
         }
 
-        public static bool TitleScreen___NewGame_PrefixPatch(TitleScreen __instance) {
-            CloseAPSettingsWindow();
-            RecentItemsDisplay.instance.ResetQueue();
-            if (SaveFlags.IsArchipelago()) {
-                Archipelago.instance.integration.ItemIndex = 0;
-                Archipelago.instance.integration.ClearQueue();
-            }
-            return true;
-        }
+    //    public static bool TitleScreen___NewGame_PrefixPatch(TitleScreen __instance) {
+    //        CloseAPSettingsWindow();
+    //        RecentItemsDisplay.instance.ResetQueue();
+    //        if (SaveFlags.IsArchipelago()) {
+    //            Archipelago.instance.integration.ItemIndex = 0;
+    //            Archipelago.instance.integration.ClearQueue();
+    //        }
+    //        return true;
+    //    }
 
-        public static bool FileManagement_LoadFileAndStart_PrefixPatch(FileManagementGUI __instance, string filename) {
-            CloseAPSettingsWindow();
-            SaveFile.LoadFromFile(filename);
-            if (SaveFile.GetInt("archipelago") == 0 && SaveFile.GetInt("randomizer") == 0) {
-                TunicLogger.LogInfo("Non-Randomizer file selected!");
-                GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Non-Randomizer file selected.\"\n\"Returning to menu.\"");
-                return false;
-            }
-            string errorMessage = "";
-            if (SaveFile.GetInt("archipelago") == 1 && SaveFile.GetString("archipelago player name") != "") {
-                if (!Archipelago.instance.IsConnected() || (Archipelago.instance.integration.connected && (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")))) {
-                    if (SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) { 
-                        TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
-                    }
-                    Archipelago.instance.Disconnect();
-                    errorMessage = Archipelago.instance.Connect();
-                }
-                if (!Archipelago.instance.IsConnected()) {
-                    GenericMessage.ShowMessage($"<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago:\"\n{errorMessage}\n\"Returning to title screen.\"");
-                    return false;
-                } else if (SaveFlags.IsArchipelago()) {
-                    if (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")) {
-                        TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
-                        GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
-                        return false;
-                    }
-                    PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
-                        List<long> locationsInLimbo = new List<long>();
-                        foreach (KeyValuePair<string, long> pair in Locations.LocationIdToArchipelagoId) {
-                            if (SaveFile.GetInt("randomizer picked up " + pair.Key) == 1 && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(pair.Value) && Archipelago.instance.integration.session.Locations.AllMissingLocations.Contains(pair.Value)) {
-                                locationsInLimbo.Add(pair.Value);
-                            }
-                        }
-                        if (locationsInLimbo.Count > 0) {
-                            LanguageLine line = ScriptableObject.CreateInstance<LanguageLine>();
-                            line.text = $"<#FFFF00>[death] \"<#FFFF00>attention!\" <#FFFF00>[death]\n" +
-                                $"\"Found {locationsInLimbo.Count} location{(locationsInLimbo.Count != 1 ? "s": "")} in the save file\"\n\"that {(locationsInLimbo.Count != 1 ? "were" : "was")} not sent to Archipelago.\"\n" +
-                                $"\"Send {(locationsInLimbo.Count != 1 ? "these" : "this")} location{(locationsInLimbo.Count != 1 ? "s" : "")} now?\"";
-                            if (TunicRandomizer.Settings.UseTrunicTranslations) {
-                                line.text = $"<#FFFF00>[death] <#FFFF00>uhtehn$uhn! <#FFFF00>[death]\nfownd \"{locationsInLimbo.Count}\" lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} in #uh sAv fIl #aht\n{(locationsInLimbo.Count != 1 ? "wur" : "wawz")} nawt sehnt too RkipehluhgO.\nsehnd {(locationsInLimbo.Count != 1 ? "#Ez" : "#is")} lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} now?";
-                            }
-                            GenericPrompt.ShowPrompt(line, (Action)(() => { Archipelago.instance.integration.session.Locations.CompleteLocationChecks(locationsInLimbo.ToArray()); }), (Action)(() => { }));
-                        }
-                    });
-                }
-            }
-            // if this isn't here then it'll fail to place you at an entrance when you hit load
-            ERData.RandomizedPortals.Clear();
-            return true;
-        }
+    //    public static bool FileManagement_LoadFileAndStart_PrefixPatch(FileManagementGUI __instance, string filename) {
+    //        CloseAPSettingsWindow();
+    //        SaveFile.LoadFromFile(filename);
+    //        if (SaveFile.GetInt("archipelago") == 0 && SaveFile.GetInt("randomizer") == 0) {
+    //            TunicLogger.LogInfo("Non-Randomizer file selected!");
+    //            GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Non-Randomizer file selected.\"\n\"Returning to menu.\"");
+    //            return false;
+    //        }
+    //        string errorMessage = "";
+    //        if (SaveFile.GetInt("archipelago") == 1 && SaveFile.GetString("archipelago player name") != "") {
+    //            if (!Archipelago.instance.IsConnected() || (Archipelago.instance.integration.connected && (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")))) {
+    //                if (SaveFile.GetString(SaveFlags.ArchipelagoHostname) != "" && SaveFile.GetInt(SaveFlags.ArchipelagoPort) != 0) { 
+    //                    TunicRandomizer.Settings.ReadConnectionSettingsFromSaveFile();
+    //                }
+    //                Archipelago.instance.Disconnect();
+    //                errorMessage = Archipelago.instance.Connect();
+    //            }
+    //            if (!Archipelago.instance.IsConnected()) {
+    //                GenericMessage.ShowMessage($"<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Failed to connect to Archipelago:\"\n{errorMessage}\n\"Returning to title screen.\"");
+    //                return false;
+    //            } else if (SaveFlags.IsArchipelago()) {
+    //                if (SaveFile.GetString("archipelago player name") != Archipelago.instance.GetPlayerName(Archipelago.instance.GetPlayerSlot()) || int.Parse(Archipelago.instance.integration.slotData["seed"].ToString()) != SaveFile.GetInt("seed")) {
+    //                    TunicLogger.LogInfo("Save does not match connected slot! Connected to " + TunicRandomizer.Settings.ConnectionSettings.Player + " [seed " + Archipelago.instance.integration.slotData["seed"].ToString() + "] but slot name in save file is " + SaveFile.GetString("archipelago player name") + " [seed " + SaveFile.GetInt("seed") + "]");
+    //                    GenericMessage.ShowMessage("<#FF0000>[death] \"<#FF0000>warning!\" <#FF0000>[death]\n\"Save does not match connected slot.\"\n\"Returning to menu.\"");
+    //                    return false;
+    //                }
+    //                PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+    //                    List<long> locationsInLimbo = new List<long>();
+    //                    foreach (KeyValuePair<string, long> pair in Locations.LocationIdToArchipelagoId) {
+    //                        if (SaveFile.GetInt("randomizer picked up " + pair.Key) == 1 && !Archipelago.instance.integration.session.Locations.AllLocationsChecked.Contains(pair.Value) && Archipelago.instance.integration.session.Locations.AllMissingLocations.Contains(pair.Value)) {
+    //                            locationsInLimbo.Add(pair.Value);
+    //                        }
+    //                    }
+    //                    if (locationsInLimbo.Count > 0) {
+    //                        LanguageLine line = ScriptableObject.CreateInstance<LanguageLine>();
+    //                        line.text = $"<#FFFF00>[death] \"<#FFFF00>attention!\" <#FFFF00>[death]\n" +
+    //                            $"\"Found {locationsInLimbo.Count} location{(locationsInLimbo.Count != 1 ? "s": "")} in the save file\"\n\"that {(locationsInLimbo.Count != 1 ? "were" : "was")} not sent to Archipelago.\"\n" +
+    //                            $"\"Send {(locationsInLimbo.Count != 1 ? "these" : "this")} location{(locationsInLimbo.Count != 1 ? "s" : "")} now?\"";
+    //                        if (TunicRandomizer.Settings.UseTrunicTranslations) {
+    //                            line.text = $"<#FFFF00>[death] <#FFFF00>uhtehn$uhn! <#FFFF00>[death]\nfownd \"{locationsInLimbo.Count}\" lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} in #uh sAv fIl #aht\n{(locationsInLimbo.Count != 1 ? "wur" : "wawz")} nawt sehnt too RkipehluhgO.\nsehnd {(locationsInLimbo.Count != 1 ? "#Ez" : "#is")} lOkA$uhn{(locationsInLimbo.Count != 1 ? "z" : "")} now?";
+    //                        }
+    //                        GenericPrompt.ShowPrompt(line, (Action)(() => { Archipelago.instance.integration.session.Locations.CompleteLocationChecks(locationsInLimbo.ToArray()); }), (Action)(() => { }));
+    //                    }
+    //                });
+    //            }
+    //        }
+    //        // if this isn't here then it'll fail to place you at an entrance when you hit load
+    //        ERData.RandomizedPortals.Clear();
+    //        return true;
+    //    }
 
     }
 
