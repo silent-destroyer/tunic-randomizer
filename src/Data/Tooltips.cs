@@ -132,6 +132,9 @@ namespace TunicRandomizer {
             { "Community Discord", "Have a question or want to discuss the TUNIC Randomizer and/or Speedruns? Join our community Discord!" },
             { "Speedrun Leaderboards", "Check out the speedrun leaderboards for the TUNIC Randomizer!" },
             { "Report An Issue", "Experiencing an issue? Report it in the Discord server or on the project's Github." },
+
+            // ???
+            { "Mr Mayor", "mr mayor tells your fortune recounts a story and offers you snacks" },
         };
     }
 }

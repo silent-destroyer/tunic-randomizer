@@ -1042,11 +1042,17 @@ namespace TunicRandomizer {
             GUI.skin.toggle.fontSize = scFont(20);
             y += 40f;
             TunicRandomizer.Settings.HolyCrossVisualizer = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Holy Cross DDR"), TunicRandomizer.Settings.HolyCrossVisualizer, "Holy Cross DDR");
-            TunicRandomizer.Settings.ArachnophobiaMode = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Arachnophobia Mode"), TunicRandomizer.Settings.ArachnophobiaMode, "Arachnophobia Mode");
-            TunicRandomizer.Settings.ShowPlayerPosition = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Show Player Position"), TunicRandomizer.Settings.ShowPlayerPosition, "Show Player Position");
+            TunicRandomizer.Settings.ShowPlayerPosition = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Show Player Position"), TunicRandomizer.Settings.ShowPlayerPosition, "Show Player Position");
+            TunicRandomizer.Settings.ArachnophobiaMode = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Arachnophobia Mode"), TunicRandomizer.Settings.ArachnophobiaMode, "Arachnophobia Mode");
             y += 40f;
             TunicRandomizer.Settings.MoreSkulls = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "More Skulls"), TunicRandomizer.Settings.MoreSkulls, "More Skulls");
             TunicRandomizer.Settings.CameraFlip = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "???"), TunicRandomizer.Settings.CameraFlip, "???");
+            if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
+                bool mayorToggle = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Mr Mayor"), SecretMayor.shouldBeActive, "<color=#ffd700>Mr Mayor</color>");
+                if ((mayorToggle && !SecretMayor.shouldBeActive) || (!mayorToggle && SecretMayor.shouldBeActive)) {
+                    SecretMayor.ToggleMayorSecret(0);
+                }
+            }
             y += 40f;
 
             GUI.Label(scRect(10f, y, 200f, 30f), $"Music Shuffle");
