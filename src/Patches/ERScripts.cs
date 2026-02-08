@@ -253,7 +253,13 @@ namespace TunicRandomizer {
             ItemTracker.EntranceFileAllPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
             TunicLogger.LogInfo("Create randomized portals is randomizing portals");
-            List<PortalCombo> randomizedPortals = RandomizePortals(seed);
+
+            Dictionary<string, string> plando = null;
+            if (GetBool(ERFixedShop)) {
+                plando = new Dictionary<string, string> { {"Windmill Entrance", "Shop Portal 1" } };
+            }
+
+            List<PortalCombo> randomizedPortals = RandomizePortals(seed, plando);
 
             foreach (PortalCombo portalCombo in randomizedPortals) {
                 RandomizedPortals.Add(portalCombo);
@@ -377,6 +383,15 @@ namespace TunicRandomizer {
 
             // combining this one with the next just creates pain, I promise
             if (GetBool(FoxPrinceEnabled) && (!ItemRandomizer.InitialRandomizationDone || FoxPrince.FPRandomizedPortals.Count == 0)) {
+                
+                // if fewer shops are on, we need to add the pairing to the save file now
+                if (GetBool(ERFixedShop)) {
+                    SaveFile.SetString($"{FPChosenPortalPrefix} {"Windmill Entrance"}", "Shop Portal 1");
+                    if (!GetBool(Decoupled)) {
+                        SaveFile.SetString($"{FPChosenPortalPrefix} {"Shop Portal 1"}", "Windmill Entrance");
+                    }
+                }
+                
                 foreach (string key in SaveFile.stringStore.Keys) {
                     if (key.StartsWith(FPChosenPortalPrefix)) {
                         string origin = key.Substring($"{FPChosenPortalPrefix} ".Length);
