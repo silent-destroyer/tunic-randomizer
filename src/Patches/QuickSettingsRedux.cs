@@ -326,15 +326,19 @@ namespace TunicRandomizer {
         private void QuickSettingsWindow(int windowID) {
             GUI.skin.toggle.wordWrap = true;
             GUI.skin.label.fontSize = scFont(25f);
-            //GUI.skin.toggle.fontSize = 25 * multiplier;
-            //GUI.skin.toggle.alignment = TextAnchor.UpperLeft;
             GUI.skin.toggle.fontSize = scFont(20);
             GUI.skin.label.alignment = TextAnchor.UpperLeft;
             GUI.skin.label.clipping = TextClipping.Overflow;
             GUI.color = Color.white;
             GUI.DragWindow(scRect(500f, 50f, 500f, 30f));
             y = 20f;
-
+            if (TitleVersion.UpdateAvailable) {
+                bool DownloadUpdate = GUI.Button(scRect(10f, y, 638f, 30f), $"<color=#FFA500>Update Available! Download Randomizer Mod Ver. {TitleVersion.UpdateVersion}</color>");
+                if (DownloadUpdate) {
+                    System.Diagnostics.Process.Start(TitleVersion.UpdateUrl);
+                }
+                y += 35f;
+            }
             GUI.skin.toggle.fontSize = scFont(15);
             if (TunicRandomizer.Settings.RaceMode) {
                 TunicRandomizer.Settings.RaceMode = GUI.Toggle(scRect(510f, y, 150f, 30f), TunicRandomizer.Settings.RaceMode, "Race Mode Enabled");
@@ -360,7 +364,7 @@ namespace TunicRandomizer {
 
             GUI.skin.toggle.fontSize = scFont(20);
 
-            GUI.Label(scRect(10f, 20f, 300f, 30f), "Randomizer Mode");
+            GUI.Label(scRect(10f, y, 300f, 30f), "Randomizer Mode");
             y += 40f;
             bool ToggleSinglePlayer = GUI.Toggle(scRect(10f, y, 130f, 30f), TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.SINGLEPLAYER, "Single Player");
             if (ToggleSinglePlayer && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
@@ -1186,9 +1190,9 @@ namespace TunicRandomizer {
                 System.Diagnostics.Process.Start("https://www.speedrun.com/tunic_rando");
             }
             y += 40f;
-            bool reportAnIssue = GUI.Button(scRect(10f, y, 206f, 30f, tooltip: "Report An Issue"), "Report An Issue");
+            bool reportAnIssue = GUI.Button(scRect(10f, y, 206f, 30f, tooltip: "Report an Issue"), "Report an Issue");
             if (reportAnIssue) {
-                System.Diagnostics.Process.Start("https://github.com/silent-destroyer/tunic-randomizer/issues");
+                System.Diagnostics.Process.Start(TitleVersion.ReportIssueUrl);
             }
             bool openLogFile = GUI.Button(scRect(226f, y, 206f, 30f), "Open Log File");
             if (openLogFile) {
