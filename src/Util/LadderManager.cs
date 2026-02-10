@@ -40,8 +40,6 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
-            if (!GetBool(LadderRandoEnabled)) { return; }
-
             if (ladderHandler != null && ladderZones.Count > 0) { 
                 ladderHandler.MoveNext();
             }
@@ -71,6 +69,7 @@ namespace TunicRandomizer {
                             if (PlayerCharacter.instance.currentLadder == zone.Ladder.GetComponent<Ladder>() && zone.Ladder.GetComponent<Ladder>() != null) {
                                 continue;
                             }
+                            if (zone.Ladder.transform.GetChild(i).GetComponent<LadderEnd>() != null) { continue; }
                             zone.Ladder.transform.GetChild(i).gameObject.SetActive(hasLadder);
                         }
 
@@ -168,6 +167,7 @@ namespace TunicRandomizer {
                 if (PlayerCharacter.instance.currentLadder == zone.Ladder.GetComponent<Ladder>() && zone.Ladder.GetComponent<Ladder>() != null) {
                     continue;
                 }
+                if (zone.Ladder.transform.GetChild(i).GetComponent<LadderEnd>() != null) { continue; }
                 zone.Ladder.transform.GetChild(i).gameObject.SetActive(hasLadder);
             }
 
