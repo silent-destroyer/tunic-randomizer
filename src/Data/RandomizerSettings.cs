@@ -683,8 +683,8 @@ namespace TunicRandomizer {
             if (getFromSave) {
                 seed = SaveFile.GetInt("seed").ToString();
             } else {
-                seed = QuickSettings.CustomSeed == "" ? new System.Random().Next().ToString() : QuickSettings.CustomSeed;
-                QuickSettings.CustomSeed = seed;
+                seed = QuickSettingsRedux.CustomSeed == "" ? new System.Random().Next().ToString() : QuickSettingsRedux.CustomSeed;
+                QuickSettingsRedux.CustomSeed = seed;
             }
             string SettingsString = $"tunc:{PluginInfo.VERSION}:{seed}:{EncodedSettings}";
             return SettingsString;
@@ -699,7 +699,7 @@ namespace TunicRandomizer {
                     Notifications.Show($"\"Could not import settings string!\"", $"\"Settings are from a different version.\"");
                     return;
                 }
-                QuickSettings.CustomSeed = split[2];
+                QuickSettingsRedux.CustomSeed = split[2];
 
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(split[3]));
                 string[] decodedSplit = decoded.Split(':');

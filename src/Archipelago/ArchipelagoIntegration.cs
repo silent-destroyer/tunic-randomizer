@@ -79,7 +79,9 @@ namespace TunicRandomizer {
 
         public string TryConnect() {
             
-            if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)) {
+            if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)
+                && TunicRandomizer.Settings.ConnectionSettings.Hostname == session.Socket.Uri.Host
+                && TunicRandomizer.Settings.ConnectionSettings.Port == session.Socket.Uri.Port.ToString()) {
                 return "";
             }
 

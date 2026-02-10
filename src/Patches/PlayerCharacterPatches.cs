@@ -30,11 +30,13 @@ namespace TunicRandomizer {
         public static LadderEnd LastLadder = null;
 
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
-
-            __instance.gameObject.AddComponent<WaveSpell>();
-            __instance.gameObject.AddComponent<EntranceSeekerSpell>();
-            __instance.gameObject.AddComponent<DDRSpell>();
-            DDRSpell.SetupDPADTester(__instance);
+            try {
+                __instance.gameObject.AddComponent<WaveSpell>();
+                __instance.gameObject.AddComponent<EntranceSeekerSpell>();
+                __instance.gameObject.AddComponent<DDRSpell>();
+                DDRSpell.SetupDPADTester(__instance);
+            } catch (Exception e) { 
+            }
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
@@ -430,7 +432,7 @@ namespace TunicRandomizer {
             int seed = SaveFile.GetInt("seed");
 
             if (seed == 0) {
-                seed = QuickSettings.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettings.CustomSeed);
+                seed = QuickSettingsRedux.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettingsRedux.CustomSeed);
                 TunicLogger.LogInfo($"Starting new single player file with seed: " + seed);
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
