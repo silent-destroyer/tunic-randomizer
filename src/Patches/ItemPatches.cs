@@ -504,7 +504,11 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
 
-            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+            InventoryCounter.UpdateCounters();
+
+            if (TunicRandomizer.Settings.ShowRecentItems) {
+                RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+            }
 
             return ItemResult.Success;
         }
@@ -754,7 +758,11 @@ namespace TunicRandomizer {
             SaveFile.SetInt($"randomizer picked up {CheckId}", 1);
             FairyTargets.RemoveFairyTarget(CheckId);
 
-            RecentItemsDisplay.instance.EnqueueItem(Check);
+            InventoryCounter.UpdateCounters();
+
+            if (TunicRandomizer.Settings.ShowRecentItems) {
+                RecentItemsDisplay.instance.EnqueueItem(Check);
+            }
 
             if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
                 ModelSwaps.SwapItemsInScene();

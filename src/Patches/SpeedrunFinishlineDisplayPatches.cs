@@ -72,9 +72,9 @@ namespace TunicRandomizer {
         public static GameObject CompletionRate;
         public static GameObject CompletionCanvas;
 
-        public static bool ShowCompletionStatsAfterDelay = false;
         public static bool GameCompleted = false;
 
+        public static GameObject ActionGroup;
         public static GameObject Release;
         public static GameObject Collect;
 
@@ -228,10 +228,8 @@ namespace TunicRandomizer {
                 new List<string>(){"Dark Tomb", "Frog's Domain", "Shop/Coin Wells", "Bosses Defeated", "Time Found"},
                 new List<string>(){"Beneath the Well", "Far Shore/Hero's Grave", "Holy Cross Checks", "Player Deaths"},
             };
-            List<int> Spacings = new List<int>() { -300, -198, 370, 465 };
-            if ((Screen.width == 1920 && Screen.height == 1080) || (Screen.width == 2560 && Screen.height == 1440)) {
-                Spacings = new List<int>() { -345, -243, 410, 503 };
-            }
+            List<int> Spacings = new List<int>() { -345, -243, 410, 503 };
+
             for (int i = 0; i < 5; i++) {
                 SetupCompletionCount(Columns[0][i], i, Spacings[0]);
             }
@@ -320,6 +318,13 @@ namespace TunicRandomizer {
             SkipCredits.transform.position = new Vector3(-355, 75, 200);
             Release.transform.position = new Vector3(-460, 35, 0);
             Collect.transform.position = new Vector3(-355, 35, 200);
+
+            ActionGroup = new GameObject("Action Group");
+            ActionGroup.transform.parent = HideStats.transform.parent;
+            HideStats.transform.parent = ActionGroup.transform;
+            SkipCredits.transform.parent = ActionGroup.transform;
+            Collect.transform.parent = ActionGroup.transform;
+            Release.transform.parent = ActionGroup.transform;
 
             UpdateCounters();
         }
@@ -512,6 +517,11 @@ namespace TunicRandomizer {
                     AreaCount.transform.GetChild(2).GetComponent<TextMeshPro>().text = FormatTime(SpeedrunData.inGameTime, false, true);
                 }
             }
+
+            if (((float)Screen.width / Screen.height) < 1.7f) {
+                Vector3 pos = ActionGroup.transform.localPosition;
+                ActionGroup.transform.localPosition = new Vector3(50f, pos.y, pos.z);
+            }
         }
 
         public static string FormatTime(float Seconds, bool ItemTime, bool isIgt = false) {
@@ -540,7 +550,6 @@ namespace TunicRandomizer {
             if (CompletionCanvas != null) {
                 CompletionCanvas.SetActive(false);
             }
-
 
             if (IsArchipelago()) {
                 Archipelago.instance.integration.sentCompletion = false;
