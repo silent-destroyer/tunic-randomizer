@@ -50,7 +50,7 @@ namespace TunicRandomizer {
 
             if (SpeedrunData.gameComplete != 0 && !SpeedrunFinishlineDisplayPatches.GameCompleted) {
                 SpeedrunFinishlineDisplayPatches.GameCompleted = true;
-                SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = true;
+                Invoke("ShowCompletionStats", 6);
                 if (InventoryDisplayPatches.HexagonQuest != null) {
                     InventoryDisplayPatches.HexagonQuest.SetActive(false);
                 }
@@ -58,16 +58,12 @@ namespace TunicRandomizer {
                     InventoryDisplayPatches.GrassCounter.SetActive(false);
                 }
             }
-            if (SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay) {
-                CompletionTimer += Time.fixedUnscaledDeltaTime;
-                if (CompletionTimer > 6.0f) {
-                    CompletionTimer = 0.0f;
-                    SpeedrunFinishlineDisplayPatches.UpdateCounters();
-                    SpeedrunFinishlineDisplayPatches.StatSections["Timer"].SetActive(!Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode));
-                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
-                    SpeedrunFinishlineDisplayPatches.ShowCompletionStatsAfterDelay = false;
-                }
-            }
+        }
+
+        private void ShowCompletionStats() {
+            SpeedrunFinishlineDisplayPatches.UpdateCounters();
+            SpeedrunFinishlineDisplayPatches.StatSections["Timer"].SetActive(!Profile.GetAccessibilityPref(Profile.AccessibilityPrefs.SpeedrunMode));
+            SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(true);
         }
     }
 }
