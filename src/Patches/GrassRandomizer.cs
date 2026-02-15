@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -135,6 +136,7 @@ namespace TunicRandomizer {
                         SaveFile.SetInt("randomizer picked up " + grassId, 1);
                         Locations.CheckedLocations[grassId] = true;
                         IncrementGrassCounters();
+                        InventoryCounter.UpdateCounters();
                         TunicLogger.LogInfo("Cut Grass: " + grassId + " at location id " + ItemInfo.LocationId);
                         FairyTargets.RemoveFairyTarget(grassId);
                         string receiver = ItemInfo.Player.Name;
@@ -167,6 +169,7 @@ namespace TunicRandomizer {
                             ItemPatches.GiveItem(check, alwaysSkip: true);
                         }
                         IncrementGrassCounters();
+                        InventoryCounter.UpdateCounters();
                         FairyTargets.RemoveFairyTarget(check.CheckId);
                     }
                     if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
@@ -182,6 +185,8 @@ namespace TunicRandomizer {
         private static void IncrementGrassCounters() {
             GrassCut += 1;
             GrassCutScene += 1;
+
+            UpdateGrassText();
         }
 
         public static void UpdateGrassCounters() {
@@ -195,6 +200,15 @@ namespace TunicRandomizer {
                         GrassCutScene++;
                     }
                 }
+            }
+            UpdateGrassText();
+        }
+
+        private static void UpdateGrassText() {
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "Loading" && InventoryDisplayPatches.GrassText != null) {
+                InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(GrassRandomizer.GrassCutScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCutScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
+    $"<#ffffff> • {(GrassRandomizer.GrassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCut}/{GrassRandomizer.GrassChecks.Count}";
             }
         }
 

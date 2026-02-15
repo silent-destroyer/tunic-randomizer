@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TunicRandomizer {
@@ -360,7 +361,9 @@ namespace TunicRandomizer {
         }
 
         public static void ChangeHyperdashColors(Color HyperdashColor) {
-            GameObject Hyperdash = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/GameObject");
+            if (!PlayerCharacter.Instanced) { return; }
+            GameObject Hyperdash = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(7).gameObject;
+
             if (Hyperdash != null) {
                 HyperdashRenderers.Add(Hyperdash.GetComponent<MeshRenderer>());
             }
@@ -373,7 +376,8 @@ namespace TunicRandomizer {
 
         public static void ChangeSunglassesColor(Color GlassesColor) {
             try {
-                GameObject TheRealest = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/therealest");
+                if (!PlayerCharacter.Instanced) { return; }
+                GameObject TheRealest = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(8).gameObject;
                 if (TheRealest != null) {
                     TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
                     TheRealest.GetComponent<MeshRenderer>().material.color = GlassesColor;
