@@ -1157,14 +1157,24 @@ namespace TunicRandomizer {
         private float FoxCustomizationSection(float y) {
             GUI.Label(scRect(10f, y, 300f, 30f), "Fox Customization");
             y += 40f;
-            TunicRandomizer.Settings.RandomFoxColorsEnabled = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Random Fox Colors"), TunicRandomizer.Settings.RandomFoxColorsEnabled, "Random Fox Colors");
-            if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
+            bool toggleRandomFoxColors = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Random Fox Colors"), TunicRandomizer.Settings.RandomFoxColorsEnabled, "Random Fox Colors");
+            if (toggleRandomFoxColors && !TunicRandomizer.Settings.RandomFoxColorsEnabled) {
                 TunicRandomizer.Settings.UseCustomTexture = false;
+                PaletteEditor.RandomizeFoxColors();
+            } else if (!toggleRandomFoxColors && TunicRandomizer.Settings.RandomFoxColorsEnabled) {
+                PaletteEditor.RevertFoxColors();
             }
-            TunicRandomizer.Settings.UseCustomTexture = GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Use Custom Texture"), TunicRandomizer.Settings.UseCustomTexture, "Use Custom Texture");
-            if (TunicRandomizer.Settings.UseCustomTexture) {
+            TunicRandomizer.Settings.RandomFoxColorsEnabled = toggleRandomFoxColors;
+
+            bool toggleCustomTexture = GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Use Custom Texture"), TunicRandomizer.Settings.UseCustomTexture, "Use Custom Texture");
+            if (toggleCustomTexture && !TunicRandomizer.Settings.UseCustomTexture) {
                 TunicRandomizer.Settings.RandomFoxColorsEnabled = false;
+                PaletteEditor.LoadCustomTexture();
+            } else if (!toggleCustomTexture && TunicRandomizer.Settings.UseCustomTexture) {
+                PaletteEditor.RevertFoxColors();
             }
+            TunicRandomizer.Settings.UseCustomTexture = toggleCustomTexture;
+            
             TunicRandomizer.Settings.RealestAlwaysOn = GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Keepin' It Real"), TunicRandomizer.Settings.RealestAlwaysOn, "Keepin' It Real");
             y += 40f;
             TunicRandomizer.Settings.BiggerHeadMode = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Bigger Head Mode"), TunicRandomizer.Settings.BiggerHeadMode, "Bigger Head Mode");
