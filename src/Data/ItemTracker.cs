@@ -225,7 +225,10 @@ namespace TunicRandomizer {
 
             Dictionary<string, List<string>> regionsToPortals = new Dictionary<string, List<string>>();
 
+            List<string> addedPortals = new List<string>();
+
             void addPortal(string portalName, string portalRegion) {
+                addedPortals.Add(portalName);
                 PortalCombo portalCombo = portalNameToPair[portalName];
                 string portalLine = portalCombo.Portal1.Name + ",-->,";
                 if (SaveFile.GetInt("randomizer entered portal " + portalName) == 1) {
@@ -247,6 +250,26 @@ namespace TunicRandomizer {
                     }
                 }
             }
+
+            // the sorting stuff above skips shops, and they're at the end anyway so let's just add them here
+            List<int> leftoverShopNums = new List<int>();
+            foreach (string portalName in allInUsePortalNames) {
+                if (!addedPortals.Contains(portalName)) {
+                    if (portalName.StartsWith("Shop")) {
+                        int shopNum = Convert.ToInt32(string.Concat(portalName.ToArray().Reverse().TakeWhile(char.IsNumber).Reverse()));
+                        leftoverShopNums.Add(shopNum);
+                    } else {
+                        TunicLogger.LogInfo($"Was missing {portalName} in ItemTracker.WriteEntranceFile, we should investigate this");
+                    }
+                }
+            }
+
+            leftoverShopNums.Sort();
+
+            foreach (int num in leftoverShopNums) {
+                addPortal($"Shop Portal {num}", "Shop");
+            }
+
             fileContents = "From,,To\n";
             foreach (KeyValuePair<string, List<string>> pair in regionsToPortals) {
                 fileContents += pair.Key + ",,\n";
