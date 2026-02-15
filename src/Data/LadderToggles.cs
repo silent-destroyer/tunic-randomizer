@@ -101,6 +101,8 @@ namespace TunicRandomizer {
             List<Ladder> ladders = Resources.FindObjectsOfTypeAll<Ladder>().Where(ladder => ladder.gameObject.scene.name == scene).ToList();
 
             if (LaddersUnderConstruction.ContainsKey(scene)) {
+                GameObject LadderManagerObj = new GameObject("ladder manager");
+                LadderManager ladderManager = LadderManagerObj.AddComponent<LadderManager>();
                 foreach(string LadderItem in LaddersUnderConstruction[scene].Keys) {
                     foreach(LadderInfo ladderInfo in LaddersUnderConstruction[scene][LadderItem]) {
                         GameObject Ladder = ladders.Where(ladder => $"{ladder.name} {ladder.transform.position.ToString()}" == ladderInfo.LadderNameAndPosition).DefaultIfEmpty(null).First().gameObject;
@@ -108,14 +110,7 @@ namespace TunicRandomizer {
                             if (ladderInfo.IsSpecialLadder && Ladder.transform.parent != null) {
                                 Ladder = Ladder.transform.parent.gameObject;
                             }
-
-                            Ladder.gameObject.AddComponent<ToggleLadderByLadderItem>().ladderItem = Inventory.GetItemByName(LadderItem);
-                            Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().ladderInfo = ladderInfo;
-                            try {
-                                Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().SpawnBlockers();
-                            } catch (Exception e) {
-                                TunicLogger.LogError("Error spawning construction barriers for " + Ladder.name);
-                            }
+                            ladderManager.AddLadderZone(Ladder, Inventory.GetItemByName(LadderItem), ladderInfo);
                         }
                     }
                 }
