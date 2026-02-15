@@ -357,6 +357,28 @@ namespace TunicRandomizer {
             Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
             return vector;
         }
-    }
 
+        public static float calcGuiScale() {
+            float guiScale = 1f;
+            int width = Camera.main.pixelWidth;
+            int height = Camera.main.pixelHeight;
+            if (width <= 3840 && height <= 2160) {
+                guiScale = 1.25f;
+            } 
+            if (width <= 2560 && height <= 1440) {
+                guiScale = 1f;
+            }
+            if (width <= 1920 && height <= 1080) {
+                guiScale = 0.9f;
+            }
+            if (width <= 1400 && height <= 800) {
+                guiScale = 0.75f;
+            }
+            if (width <= 800 && height <= 600) {
+                guiScale = 0.6f;
+            }
+            return guiScale;
+        }
+
+    }
 }

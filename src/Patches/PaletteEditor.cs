@@ -92,20 +92,16 @@ namespace TunicRandomizer {
 
             if (QuickSettingsRedux.showFoxCustomization || (EditorOpen && SceneLoaderPatches.SceneName != "TitleScreen")) {
                 titleScreenMode = QuickSettingsRedux.showFoxCustomization && SceneLoaderPatches.SceneName == "TitleScreen";
-                if (Screen.width == 3840 && Screen.height == 2160) {
-                    guiScale = 1.25f;
-                } else if (Screen.width == 1280 && Screen.height <= 800) {
-                    guiScale = 0.75f;
-                } else {
-                    guiScale = 1f;
-                }
+
+                guiScale = TunicUtils.calcGuiScale();
+                
                 GUI.skin.font = OdinRounded;
                 GUI.backgroundColor = Color.white;
                 Cursor.visible = true;
-                if (titleScreenMode) { 
-                    GUI.Window(102, scRect(20f, ((float)Screen.height * 0.12f) + QuickSettingsRedux.y + (10f * guiScale), 800f, y), new Action<int>(PaletteEditorWindow), "Palette Editor");
+                if (titleScreenMode) {
+                    GUI.Window(102, scRect(QuickSettingsRedux.windowRect.x, QuickSettingsRedux.windowRect.bottom + (10f * guiScale), 800f, y, scaleY: false), new Action<int>(PaletteEditorWindow), "Palette Editor");
                 } else {
-                    GUI.Window(102,scRect(10f, 230f, 800f, 440f), new Action<int>(PaletteEditorWindow), "Palette Editor");
+                    GUI.Window(102,scRect(QuickSettingsRedux.windowRect.x, 230f, 800f, 440f), new Action<int>(PaletteEditorWindow), "Palette Editor");
                 }
                 GUI.backgroundColor = Color.white;
             }
@@ -215,11 +211,13 @@ namespace TunicRandomizer {
                 if (CloseAndSave) {
                     SaveTexture();
                     EditorOpen = false;
+                    Cursor.visible = false;
                     CameraController.DerekZoom = 1f;
                 }
                 Close = GUI.Button(scRect(30f, 390f, 260f, 30f), "Close Without Saving");
                 if (Close) {
                     EditorOpen = false;
+                    Cursor.visible = false;
                     CameraController.DerekZoom = 1f;
                 }
             } else {

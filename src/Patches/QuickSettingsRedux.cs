@@ -57,7 +57,7 @@ namespace TunicRandomizer {
 
         // For showing option tooltips
         private static string hoveredOption = "";
-        private static Rect windowRect = new Rect();
+        public static Rect windowRect = new Rect();
 
         //Get a conenction setting value by fieldname
         private string getConnectionSetting(string fieldName) {
@@ -174,23 +174,40 @@ namespace TunicRandomizer {
             return (int)(size * guiScale);
         }
 
+        private float calcWindowY() {
+            float windowY = (float)Screen.height * 0.11f;
+            if (Screen.height != Camera.main.pixelHeight) {
+                int diff = Screen.height - Camera.main.pixelHeight;
+                windowY = (float)((Screen.height - diff) * 0.11f) + (diff / 2);
+            }
+            return windowY;
+        }
+
+        private float calcWindowX() {
+            float windowX = 20f;
+            if (Screen.width != Camera.main.pixelWidth) {
+                int diff = Screen.width - Camera.main.pixelWidth;
+                windowX += (diff / 2);
+            }
+            return windowX;
+        }
+
         private void OnGUI() {
             if (SceneManager.GetActiveScene().name == "TitleScreen" && GameObject.FindObjectOfType<TitleScreen>() != null) {
-                if (Screen.width == 3840 && Screen.height == 2160) {
-                    guiScale = 1.25f;
-                } else if (Screen.width == 1280 && Screen.height <= 800) {
-                    guiScale = 0.75f;
-                } else {
-                    guiScale = 1f;
-                }
+
+                guiScale = TunicUtils.calcGuiScale();
+
                 GUI.skin.font = PaletteEditor.OdinRounded == null ? GUI.skin.font : PaletteEditor.OdinRounded;
                 Cursor.visible = true;
 
-                windowRect = scRect(20f, (float)Screen.height * 0.12f, 658, y);
+                float windowX = calcWindowX();
+                float windowY = calcWindowY();
+
+                windowRect = scRect(windowX, (float)windowY, 658f, y, scaleY: false);
                 GUI.Window(101, windowRect, new Action<int>(QuickSettingsWindow), "Quick Settings");
 
                 if (hoveredOption != "" && TunicRandomizer.Settings.OptionTooltips) {
-                    GUI.Window(107, scRect(20f, (float)Screen.height - (110f * guiScale), 1000f, 110f, scaleY: false), new Action<int>(TooltipWindow), hoveredOption);
+                    GUI.Window(107, scRect(windowX, (float)Screen.height - (110f * guiScale), 1000f, 110f, scaleY: false), new Action<int>(TooltipWindow), hoveredOption);
                 }
                 if (sword != null) {
                     sword.SetActive(!showFoxCustomization);
@@ -549,9 +566,9 @@ namespace TunicRandomizer {
         private float ArchipelagoMiscSettings(float y) {
             GUI.Label(scRect(10f, y, 400f, 30f), $"Archipelago Settings");
             y += 40f;
-            TunicRandomizer.Settings.DeathLinkEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 105f, 30f), "Death Link"), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
-            TunicRandomizer.Settings.TrapLinkEnabled = GUI.Toggle(ShowTooltip(scRect(122.5f, y, 97.5f, 30f), "Trap Link"), TunicRandomizer.Settings.TrapLinkEnabled, "Trap Link");
-            TunicRandomizer.Settings.SendHintsToServer = GUI.Toggle(ShowTooltip(scRect(226f, y, 190f, 30f), "Send Hints to Server"), TunicRandomizer.Settings.SendHintsToServer, "Send Hints to Server");
+            TunicRandomizer.Settings.DeathLinkEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 115f, 30f), "Death Link"), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
+            TunicRandomizer.Settings.TrapLinkEnabled = GUI.Toggle(ShowTooltip(scRect(127.5f, y, 105.5f, 30f), "Trap Link"), TunicRandomizer.Settings.TrapLinkEnabled, "Trap Link");
+            TunicRandomizer.Settings.SendHintsToServer = GUI.Toggle(ShowTooltip(scRect(236f, y, 200f, 30f), "Send Hints to Server"), TunicRandomizer.Settings.SendHintsToServer, "Send Hints to Server");
             TunicRandomizer.Settings.CollectReflectsInWorld = GUI.Toggle(ShowTooltip(scRect(442f, y, 198f, 30f), "Hide Collected Items"), TunicRandomizer.Settings.CollectReflectsInWorld, "Hide Collected Items");
             y += 40f;
             return y;
@@ -812,7 +829,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Grass Randomizer"), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
             y += 40f;
             GUI.skin.toggle.fontSize = scFont(22.5f);
-            TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
+            TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 400f, 30f), "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
             GUI.skin.toggle.fontSize = scFont(20f);
             y += 30f;
             GUI.skin.label.fontSize = scFont(20f);
@@ -1185,7 +1202,7 @@ namespace TunicRandomizer {
             if (discordLink) {
                 System.Diagnostics.Process.Start("https://discord.gg/HXkztJgQWj");
             }
-            bool leaderboards = GUI.Button(scRect(442f, y, 206f, 30f, tooltip: "Speedrun Leaderboards"), "Speedrun Leaderboards");
+            bool leaderboards = GUI.Button(scRect(442f, y, 206f, 30f, tooltip: "Speedrun Leaderboards"), "Speedrun Leaderboard");
             if (leaderboards) {
                 System.Diagnostics.Process.Start("https://www.speedrun.com/tunic_rando");
             }

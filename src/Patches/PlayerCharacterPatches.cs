@@ -223,6 +223,8 @@ namespace TunicRandomizer {
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
             SceneLoaderPatches.TimeOfLastSceneTransition = SaveFile.GetFloat("playtime");
 
+            Cursor.visible = false;
+
             // hide inventory prompt button so it doesn't overlap item messages
             GameObject InvButton = Resources.FindObjectsOfTypeAll<Animator>().Where(animator => animator.gameObject.name == "LB Prompt").ToList()[0].gameObject;
             if (InvButton != null) {
