@@ -399,12 +399,13 @@ namespace TunicRandomizer {
         }
 
         public static void ChangeHyperdashColors(Color HyperdashColor) {
-            if (!PlayerCharacter.Instanced) { return; }
-            GameObject Hyperdash = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(7).gameObject;
-
-            if (Hyperdash != null) {
-                HyperdashRenderers.Add(Hyperdash.GetComponent<MeshRenderer>());
+            if (PlayerCharacter.Instanced) {
+               GameObject Hyperdash = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(7).gameObject;
+                if (Hyperdash != null) {
+                    HyperdashRenderers.Add(Hyperdash.GetComponent<MeshRenderer>());
+                }
             }
+
             if (QuickSettingsRedux.laurels != null && QuickSettingsRedux.laurels.GetComponent<MeshRenderer>() != null) {
                 HyperdashRenderers.Add(QuickSettingsRedux.laurels.GetComponent<MeshRenderer>());
             }
