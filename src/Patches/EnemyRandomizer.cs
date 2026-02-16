@@ -8,23 +8,11 @@ using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
-
-    public class BossEnemy : MonoBehaviour { }
-    public class FleemerQuartet : MonoBehaviour {
-        public int GroupId;
-        public List<GameObject> Quartet;
-        public void Awake() {
-            GroupId = -1;
-            Quartet = new List<GameObject>();
-        }
-
-        public void Update() {
-            Quartet = Quartet.Where(monster => monster != null).ToList();
-        }
-    }
     public class EnemyRandomizer {
 
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
+
+        public static List<string> EnemyNames = new List<string>();
 
         public static Dictionary<string, List<string>> DefeatedEnemyTracker = new Dictionary<string, List<string>>();
 
@@ -732,6 +720,7 @@ namespace TunicRandomizer {
                 Enemies["Hedgehog Trap"].name = "Hedgehog Trap Prefab";
             }
 
+            EnemyNames = Enemies.Keys.ToList();
         }
 
         public static void DoEnemyRandomization() {
@@ -1049,7 +1038,6 @@ namespace TunicRandomizer {
                         int bombChance = Random.Next(100);
                         Rigidbody randomBomb;
                         if (bombChance < 4) {
-
                             randomBomb = bombFlasks.Where(bomb => bomb.name == "centipede_detritus_head").ToList()[0].gameObject.GetComponent<Rigidbody>();
                         } else {
                             List<BombFlask> possibleBombs = bombFlasks.Where(bomb => bomb.name != "Firecracker" && bomb.name != "centipede_detritus_head").ToList();
@@ -1074,6 +1062,9 @@ namespace TunicRandomizer {
 
                     if (NewEnemy.name.Contains("Spinnerbot Corrupted") && Random.Next(100) == 99) {
                         NewEnemy.transform.localScale = new Vector3(2f, 2f, 2f);
+                        if (NewEnemy.GetComponent<Monster>().defaultStartingMaxHP == null) {
+                            NewEnemy.GetComponent<Monster>().Awake();
+                        }
                         NewEnemy.GetComponent<Monster>().defaultStartingMaxHP._value = 30;
                     }
 
@@ -1284,6 +1275,8 @@ namespace TunicRandomizer {
                     SaveFile.SetInt("randomizer defeated boss scavenger", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Boss Scavenger", true);
                 }
+
+                InventoryCounter.UpdateCounters();
             }
 
             if (__instance.__4__this.GetComponent<TunicKnightVoid>() != null) {
@@ -1527,10 +1520,10 @@ namespace TunicRandomizer {
             }
             if (__instance.name == "_Fox(Clone)") {
                 if (CustomItemBehaviors.CanTakeGoldenHit) {
-                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
                     PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
                     PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxCape.GetComponent<MeshRenderer>().materials;
 
@@ -1629,6 +1622,42 @@ namespace TunicRandomizer {
                 hat.AddComponent<MeshFilter>().mesh = ModelSwaps.FindMesh("floppy hat");
                 hat.AddComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("fox redux");
                 hat.SetActive(true);
+            }
+        }
+    }
+    public class BossEnemy : MonoBehaviour { }
+    public class FleemerQuartet : MonoBehaviour {
+        public int GroupId;
+        public List<GameObject> Quartet;
+        public void Awake() {
+            GroupId = -1;
+            Quartet = new List<GameObject>();
+        }
+
+        public void Update() {
+            Quartet = Quartet.Where(monster => monster != null).ToList();
+        }
+    }
+    public class EnemyManager : MonoBehaviour {
+        public IEnumerator<bool> manager;
+        public void Awake() {
+            manager = ManageEnemies();
+        }
+
+        public void Update() {
+            if (manager != null) {
+                manager.MoveNext();
+            }
+        }
+        public IEnumerator<bool> ManageEnemies() {
+            while (true) {
+                for (int i = 0; i < EnemyRandomizer.EnemyNames.Count; i++) {
+                    EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].SetActive(false);
+                    yield return true;
+                    EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].transform.position = new Vector3(-30000f, -30000f, -30000f);
+                    yield return true;
+                }
+                yield return true;
             }
         }
     }

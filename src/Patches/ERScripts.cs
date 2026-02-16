@@ -117,7 +117,7 @@ namespace TunicRandomizer {
                     dir = (int)PDir.EAST;
                 }
                 if (portal2_sdt.StartsWith("Shop,")) {
-                    portal2 = new Portal(name: "Shop Portal", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                    portal2 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
                     shop_num++;
                 }
                 else if (portal2_sdt == "Purgatory, Purgatory_bottom") {

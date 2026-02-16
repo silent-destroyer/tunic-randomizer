@@ -13,178 +13,134 @@ namespace TunicRandomizer {
 
         private IEnumerator<bool> counterManager;
         private IEnumerator<bool> imageManager;
+        private static InventoryCounter instance;
 
         private IEnumerator<bool> UpdateInventoryCounts() {
-            while(true) {
-                if (!InventoryDisplayPatches.Loaded) {
-                    yield return true;
-                    continue;
-                }
-
-                if (!PlayerCharacter.Instanced) {
-                    yield return true;
-                    continue;
-                }
-
-                if (Locations.RandomizedLocations.Count == 0 && ItemLookup.ItemList.Count == 0) {
-                    yield return true;
-                    continue;
-                }
-
-                InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
-                InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  {TunicRandomizer.Tracker.ImportantItems["Fairies"]}/20";
-                InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t{TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]}/12";
-                InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().text = $"Coins Tossed: {TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]}/15";
-                InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
-                yield return true;
-
-                List<Check> allChecks = TunicUtils.GetAllInUseChecks(exceptGrass: true);
-                int ObtainedItemCount = 0;
-                int ObtainedItemCountInCurrentScene = 0;
-                int TotalItemCountInCurrentScene = 0;
-                int TotalItemCount = allChecks.Count;
-                string sceneName = SceneLoaderPatches.SceneName;
-                yield return true;
-
-                for (int i = 0; i < allChecks.Count; i++) {
-                    Check check = allChecks[i];
-
-                    if (check.IsCompletedOrCollected) { 
-                        ObtainedItemCount++;
-                        if (check.Location.SceneName == sceneName) {
-                            TotalItemCountInCurrentScene++;
-                            ObtainedItemCountInCurrentScene++;
-                        }
-                    } else {
-                        if (check.Location.SceneName == sceneName) {
-                            TotalItemCountInCurrentScene++;
-                        }
-                    }
-                    if (i % (allChecks.Count / 5) == 0) {
-                        yield return true;
-                    }
-                }
-                yield return true;
-                
-                if (GetBool(GrassRandoEnabled)) {
-                    TotalItemCount += GrassRandomizer.GrassChecks.Count;
-                    ObtainedItemCount += GrassRandomizer.GrassCut;
-                    if (GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "Loading" && InventoryDisplayPatches.GrassText != null) {
-                        TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[sceneName];
-                        ObtainedItemCountInCurrentScene += GrassRandomizer.GrassCutScene;
-                        InventoryDisplayPatches.GrassText.GetComponent<TextMeshProUGUI>().text = $"{(GrassRandomizer.GrassCutScene >= GrassRandomizer.GrassChecksPerScene[sceneName] ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCutScene}/{GrassRandomizer.GrassChecksPerScene[sceneName]}" +
-                            $"<#ffffff> • {(GrassRandomizer.GrassCut == GrassRandomizer.GrassChecks.Count ? "<#00ff00>" : "<#ffffff>")}{GrassRandomizer.GrassCut}/{GrassRandomizer.GrassChecks.Count}";
-                    }
-                }
-                yield return true;
-                InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:{(TotalItemCountInCurrentScene >= 1000 ? $"  {ObtainedItemCountInCurrentScene.ToString().PadLeft(4)}" : $"\t{ObtainedItemCountInCurrentScene}")}/{TotalItemCountInCurrentScene}";
-                InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
-                InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().text = $"Total:{(TotalItemCount >= 1000 ? $"\t   {ObtainedItemCount.ToString().PadLeft(4)}" : $"\t\t  {ObtainedItemCount}")}/{TotalItemCount}";
-                yield return true;
-                if (InventoryDisplayPatches.GoldHexagons != null) {
-                    InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
-                    InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
-                }
-                InventoryDisplayPatches.QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
-                InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
-            
-                yield return true;
+            if (!InventoryDisplayPatches.Loaded) {
+                yield break;
             }
+
+            if (!PlayerCharacter.Instanced) {
+                yield break;
+            }
+
+            if (Locations.RandomizedLocations.Count == 0 && ItemLookup.ItemList.Count == 0) {
+                yield break;
+            }
+
+            InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t{TunicRandomizer.Tracker.ImportantItems["Pages"]}/28";
+            InventoryDisplayPatches.Pages.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Pages"] == 28 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  {TunicRandomizer.Tracker.ImportantItems["Fairies"]}/20";
+            InventoryDisplayPatches.Fairies.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Fairies"] == 20 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t{TunicRandomizer.Tracker.ImportantItems["Golden Trophies"]}/12";
+            InventoryDisplayPatches.Treasures.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Golden Trophies"] == 12 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().text = $"Coins Tossed: {TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]}/15";
+            InventoryDisplayPatches.CoinsTossed.GetComponent<TextMeshProUGUI>().color = TunicRandomizer.Tracker.ImportantItems["Coins Tossed"] >= 15 ? PaletteEditor.Gold : Color.white;
+            yield return true;
+
+            List<Check> allChecks = TunicUtils.GetAllInUseChecks(exceptGrass: true);
+            int ObtainedItemCount = 0;
+            int ObtainedItemCountInCurrentScene = 0;
+            int TotalItemCountInCurrentScene = 0;
+            int TotalItemCount = allChecks.Count;
+            string sceneName = SceneLoaderPatches.SceneName;
+            yield return true;
+
+            for (int i = 0; i < allChecks.Count; i++) {
+                Check check = allChecks[i];
+
+                if (check.IsCompletedOrCollected) {
+                    ObtainedItemCount++;
+                    if (check.Location.SceneName == sceneName) {
+                        TotalItemCountInCurrentScene++;
+                        ObtainedItemCountInCurrentScene++;
+                    }
+                } else {
+                    if (check.Location.SceneName == sceneName) {
+                        TotalItemCountInCurrentScene++;
+                    }
+                }
+                if (i % (allChecks.Count / 10) == 0) {
+                    yield return true;
+                }
+            }
+           
+            yield return true;
+
+            if (GetBool(GrassRandoEnabled)) {
+                TotalItemCount += GrassRandomizer.GrassChecks.Count;
+                ObtainedItemCount += GrassRandomizer.GrassCut;
+                if (GrassRandomizer.GrassChecksPerScene.ContainsKey(sceneName) && sceneName != "Loading" && InventoryDisplayPatches.GrassText != null) {
+                    TotalItemCountInCurrentScene += GrassRandomizer.GrassChecksPerScene[sceneName];
+                    ObtainedItemCountInCurrentScene += GrassRandomizer.GrassCutScene;
+                }
+            }
+            yield return true;
+            InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().text = $"This Area:{(TotalItemCountInCurrentScene >= 1000 ? $"  {ObtainedItemCountInCurrentScene.ToString().PadLeft(4)}" : $"\t{ObtainedItemCountInCurrentScene}")}/{TotalItemCountInCurrentScene}";
+            InventoryDisplayPatches.ThisArea.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCountInCurrentScene == TotalItemCountInCurrentScene) ? PaletteEditor.Gold : Color.white;
+            InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().text = $"Total:{(TotalItemCount >= 1000 ? $"\t   {ObtainedItemCount.ToString().PadLeft(4)}" : $"\t\t  {ObtainedItemCount}")}/{TotalItemCount}";
+            yield return true;
+            if (InventoryDisplayPatches.GoldHexagons != null) {
+                InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().text = $"{Inventory.GetItemByName("Hexagon Gold").Quantity}/{SaveFile.GetInt(HexagonQuestGoal)}";
+                InventoryDisplayPatches.GoldHexagons.GetComponent<TextMeshProUGUI>().color = Inventory.GetItemByName("Hexagon Gold").Quantity >= SaveFile.GetInt(HexagonQuestGoal) ? PaletteEditor.Gold : Color.white;
+            }
+            InventoryDisplayPatches.QuestionMark.SetActive(Inventory.GetItemByName("Spear").Quantity == 0);
+            InventoryDisplayPatches.Total.GetComponent<TextMeshProUGUI>().color = (ObtainedItemCount >= TotalItemCount) ? PaletteEditor.Gold : Color.white;
+            
+            yield return true;
         }
 
         private IEnumerator<bool> UpdateInventoryImages() {
-
-            while(true) {
-                if (!InventoryDisplayPatches.Loaded) {
-                    yield return true;
-                    continue;
-                }
-                if (!InventoryDisplay.InventoryOpen) {
-                    yield return true;
-                    continue;
-                }
-
-                if (Inventory.GetItemByName("Hexagon Red").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 1 Red") == 1) {
-                    InventoryDisplay.instance.hexagonImages[0].enabled = true;
-                    InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.RedMarkerColor;
-                } else {
-                    InventoryDisplay.instance.hexagonImages[0].enabled = false;
-                    InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = Color.white;
-                }
-
-                yield return true;
-                if (Inventory.GetItemByName("Hexagon Green").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 2 Green") == 1) {
-                    InventoryDisplay.instance.hexagonImages[1].enabled = true;
-                    InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.GreenMarkerColor;
-                } else {
-                    InventoryDisplay.instance.hexagonImages[1].enabled = false;
-                    InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = Color.white;
-                }
-
-                yield return true;
-                if (Inventory.GetItemByName("Hexagon Blue").Quantity == 1 || SaveFile.GetInt("Placed Hexagon 3 Blue") == 1) {
-                    InventoryDisplay.instance.hexagonImages[2].enabled = true;
-                    InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : Color.blue;
-                } else {
-                    InventoryDisplay.instance.hexagonImages[2].enabled = false;
-                    InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = Color.white;
-                }
-
-                yield return true;
-                InventoryDisplayPatches.GuardCaptain.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1 ? InventoryDisplayPatches.GuardCaptainColor : Color.white;
-                InventoryDisplayPatches.GardenKnight.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1 ? Color.cyan : Color.white;
-                if (GetBool(BellShuffleEnabled)) {
-                    InventoryDisplayPatches.Ding.GetComponent<Image>().color = Inventory.GetItemByName("East Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                    InventoryDisplayPatches.Dong.GetComponent<Image>().color = Inventory.GetItemByName("West Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                } else {
-                    InventoryDisplayPatches.Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                    InventoryDisplayPatches.Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
-                }
-                InventoryDisplayPatches.SiegeEngine.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1 ? InventoryDisplayPatches.RedMarkerColor : Color.white;
-                InventoryDisplayPatches.Librarian.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1 ? InventoryDisplayPatches.GreenMarkerColor : Color.white;
-                InventoryDisplayPatches.BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;
-
-                yield return true;
-                if (InventoryDisplayPatches.AbilityShuffle.active) {
-                    InventoryDisplayPatches.AbilityShuffle.transform.localPosition = new Vector3(465f, 0f, 0f);
-                    InventoryDisplayPatches.AbilityShuffle.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
-                    yield return true;
-                    bool hexQuest = IsHexQuestWithHexAbilities();
-                    for (int i = 16; i < 19; i++) {
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(!hexQuest);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(!hexQuest);
-                    }
-                    yield return true;
-                    for (int i = 19; i < InventoryDisplayPatches.AbilityShuffle.transform.childCount; i++) {
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).localPosition = new Vector3(77, -197 - ((i - 19) * 96), 0f);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i).gameObject.SetActive(hexQuest);
-                        InventoryDisplayPatches.AbilityShuffle.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
-                    }
-                }
-                yield return true;
-                InventoryDisplayPatches.ItemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
-                yield return true;
-                if (InventoryDisplayPatches.ItemIcons.Count == 2) {
-                    InventoryDisplayPatches.ItemIcons[1].transform.position = InventoryDisplayPatches.ItemIcons[0].transform.position;
-                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
-                    InventoryDisplayPatches.ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
-                }
+            if (!InventoryDisplayPatches.Loaded) {
+                yield break;
             }
+
+            if (Inventory.GetItemByName("Hexagon Red").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 1 Red") == 1) {
+                InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.RedMarkerColor;
+            } else {
+                InventoryDisplayPatches.RedHexagon.GetComponent<Image>().color = Color.white;
+            }
+
+            yield return true;
+            if (Inventory.GetItemByName("Hexagon Green").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 2 Green") == 1) {
+                InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : InventoryDisplayPatches.GreenMarkerColor;
+            } else {
+                InventoryDisplayPatches.GreenHexagon.GetComponent<Image>().color = Color.white;
+            }
+
+            yield return true;
+            if (Inventory.GetItemByName("Hexagon Blue").Quantity > 0 || SaveFile.GetInt("Placed Hexagon 3 Blue") == 1) {
+                InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = SaveFile.GetInt(HexagonQuestEnabled) == 1 ? PaletteEditor.Gold : Color.blue;
+            } else {
+                InventoryDisplayPatches.BlueHexagon.GetComponent<Image>().color = Color.white;
+            }
+
+            yield return true;
+            InventoryDisplayPatches.GuardCaptain.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[0]) == 1 ? InventoryDisplayPatches.GuardCaptainColor : Color.white;
+            InventoryDisplayPatches.GardenKnight.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[1]) == 1 ? Color.cyan : Color.white;
+            if (GetBool(BellShuffleEnabled)) {
+                InventoryDisplayPatches.Ding.GetComponent<Image>().color = Inventory.GetItemByName("East Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                InventoryDisplayPatches.Dong.GetComponent<Image>().color = Inventory.GetItemByName("West Bell").Quantity > 0 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+            } else {
+                InventoryDisplayPatches.Ding.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 1 (East)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+                InventoryDisplayPatches.Dong.GetComponent<Image>().color = SaveFile.GetInt("Rung Bell 2 (West)") == 1 ? InventoryDisplayPatches.BellMarkerColor : Color.white;
+            }
+            yield return true;
+            InventoryDisplayPatches.SiegeEngine.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[2]) == 1 ? InventoryDisplayPatches.RedMarkerColor : Color.white;
+            InventoryDisplayPatches.Librarian.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[3]) == 1 ? InventoryDisplayPatches.GreenMarkerColor : Color.white;
+            InventoryDisplayPatches.BossScavenger.GetComponent<Image>().color = SaveFile.GetInt(EnemyRandomizer.CustomBossFlags[4]) == 1 ? Color.blue : Color.white;
+
+            yield return true;
         }
 
         public void Start() {
-            counterManager = UpdateInventoryCounts();
-            imageManager = UpdateInventoryImages();
+            instance = this;
         }
 
         public void Update() {
@@ -195,12 +151,20 @@ namespace TunicRandomizer {
                 imageManager.MoveNext();
             }
         }
+
+        public static void UpdateCounters() {
+            if (instance != null) {
+                instance.counterManager = instance.UpdateInventoryCounts();
+                instance.imageManager = instance.UpdateInventoryImages();
+            }
+        }
     }
 
     public class InventoryDisplayPatches {
 
         public static bool Loaded = false;
         public static bool GridSetup = false;
+        public static GameObject RandomizerStats;
         public static GameObject Title;
         public static GameObject Pages;
         public static GameObject Fairies;
@@ -210,7 +174,7 @@ namespace TunicRandomizer {
         public static GameObject Total;
         public static GameObject GoldHexagons;
         public static GameObject GrassText;
-        public static GameObject AbilityShuffle;
+        public static GameObject AbilityShuffleSection;
 
         public static GameObject GuardCaptain;
         public static GameObject Ding;
@@ -239,8 +203,8 @@ namespace TunicRandomizer {
             if (!Loaded) {
                 TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
                 Material FontMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(Material => Material.name == "Latin Rounded - Quantity Outline").ToList()[0];
-                GameObject Stats = new GameObject("randomizer stats");
-                Stats.transform.parent = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/").transform;
+                RandomizerStats = new GameObject("randomizer stats");
+                RandomizerStats.transform.parent = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/").transform;
 
                 GameObject Backing = new GameObject("backing");
                 Backing.AddComponent<Image>().sprite = Resources.FindObjectsOfTypeAll<Sprite>().Where(Sprite => Sprite.name == "UI_offeringBacking").ToList()[0];
@@ -248,31 +212,31 @@ namespace TunicRandomizer {
                 Backing.transform.localScale = new Vector3(5f, 3.75f, 0f);
                 Backing.transform.position = new Vector3(220f, -35f, 0);
                 Backing.layer = 5;
-                Backing.transform.parent = Stats.transform;
+                Backing.transform.parent = RandomizerStats.transform;
                 GameObject.DontDestroyOnLoad(Backing);
 
-                Title = SetupText("title", new Vector3(275f, 35f, 0f), Stats.transform, 24f, FontAsset, FontMaterial);
+                Title = SetupText("title", new Vector3(275f, 35f, 0f), RandomizerStats.transform, 24f, FontAsset, FontMaterial);
                 Title.GetComponent<TextMeshProUGUI>().text = $"Randomizer Stats";
                 //Title = SetupTitle(Stats.transform);
                 // sep line 3.4464 -0.0155 0.05, 217.3751 27.471 0
                 Sprite SepLine = Resources.FindObjectsOfTypeAll<Sprite>().Where(Sprite => Sprite.name == "UI_separator_line_single").ToList()[0];
                 GameObject SepLine1 = new GameObject("sep line");
                 SepLine1.AddComponent<Image>().sprite = SepLine;
-                SepLine1.transform.parent = Stats.transform;
+                SepLine1.transform.parent = RandomizerStats.transform;
                 SepLine1.transform.localScale = new Vector3(1.0337f, -0.0155f, 0.05f);
                 SepLine1.transform.position = new Vector3(97.41f, 29.9839f, 0f);
                 GameObject SepLine2 = new GameObject("sep line");
                 SepLine2.AddComponent<Image>().sprite = SepLine;
-                SepLine2.transform.parent = Stats.transform;
+                SepLine2.transform.parent = RandomizerStats.transform;
                 SepLine2.transform.localScale = new Vector3(3.4464f, -0.0155f, 0.05f);
                 SepLine2.transform.position = new Vector3(217.3751f, 27.471f, 0f);
                 // sep line 1.0337 -0.0155 0.05, 97.41 29.9839 0
-                Pages = SetupText("pages", new Vector3(195f, 0f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                Fairies = SetupText("fairies", new Vector3(370f, 0f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                Treasures = SetupText("treasures", new Vector3(195f, -30f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                CoinsTossed = SetupText("coins tossed", new Vector3(370f, -30f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                ThisArea = SetupText("this area", new Vector3(195f, -60f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
-                Total = SetupText("total", new Vector3(370f, -60f, 0f), Stats.transform, 20f, FontAsset, FontMaterial);
+                Pages = SetupText("pages", new Vector3(195f, 0f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                Fairies = SetupText("fairies", new Vector3(370f, 0f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                Treasures = SetupText("treasures", new Vector3(195f, -30f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                CoinsTossed = SetupText("coins tossed", new Vector3(370f, -30f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                ThisArea = SetupText("this area", new Vector3(195f, -60f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
+                Total = SetupText("total", new Vector3(370f, -60f, 0f), RandomizerStats.transform, 20f, FontAsset, FontMaterial);
                 Pages.GetComponent<TextMeshProUGUI>().text = $"Pages:\t\t0/28";
                 Fairies.GetComponent<TextMeshProUGUI>().text = $"Fairies:\t  0/20";
                 Treasures.GetComponent<TextMeshProUGUI>().text = $"Treasures:\t0/12";
@@ -337,16 +301,16 @@ namespace TunicRandomizer {
 
                 Material ImageMaterial = Resources.FindObjectsOfTypeAll<Material>().Where(mat => mat.name == "UI Add").ToList()[0];
 
-                GuardCaptain = SetupImage("guard captain", "Alphabet New_91", Stats.transform, new Vector3(57.5f, -85f, 0f), ImageMaterial);
-                Ding = SetupImage("ding", "Alphabet New_93", Stats.transform, new Vector3(92.5f, -85f, 0f), ImageMaterial);
-                GardenKnight = SetupImage("garden knight", "Alphabet New_91", Stats.transform, new Vector3(127.5f, -85f, 0f), ImageMaterial);
+                GuardCaptain = SetupImage("guard captain", "Alphabet New_91", RandomizerStats.transform, new Vector3(57.5f, -85f, 0f), ImageMaterial);
+                Ding = SetupImage("ding", "Alphabet New_93", RandomizerStats.transform, new Vector3(92.5f, -85f, 0f), ImageMaterial);
+                GardenKnight = SetupImage("garden knight", "Alphabet New_91", RandomizerStats.transform, new Vector3(127.5f, -85f, 0f), ImageMaterial);
                 //Dong = SetupImage("dong", "Alphabet New_93", Stats.transform, new Vector3(162.5f, -85f, 0f), ImageMaterial);
-                SiegeEngine = SetupImage("siege engine", "Alphabet New_91", Stats.transform, new Vector3(197.5f, -85f, 0f), ImageMaterial);
-                RedHexagon = SetupImage("red hexagon", "Alphabet New_98", Stats.transform, new Vector3(232.5f, -84f, 0f), ImageMaterial);
-                Librarian = SetupImage("librarian", "Alphabet New_91", Stats.transform, new Vector3(267.5f, -85f, 0f), ImageMaterial);
-                GreenHexagon = SetupImage("green hexagon", "Alphabet New_98", Stats.transform, new Vector3(302.5f, -84f, 0f), ImageMaterial);
-                BossScavenger = SetupImage("boss scavenger", "Alphabet New_91", Stats.transform, new Vector3(337.5f, -85f, 0f), ImageMaterial);
-                BlueHexagon = SetupImage("blue hexagon", "Alphabet New_98", Stats.transform, new Vector3(372.5f, -84f, 0f), ImageMaterial);
+                SiegeEngine = SetupImage("siege engine", "Alphabet New_91", RandomizerStats.transform, new Vector3(197.5f, -85f, 0f), ImageMaterial);
+                RedHexagon = SetupImage("red hexagon", "Alphabet New_98", RandomizerStats.transform, new Vector3(232.5f, -84f, 0f), ImageMaterial);
+                Librarian = SetupImage("librarian", "Alphabet New_91", RandomizerStats.transform, new Vector3(267.5f, -85f, 0f), ImageMaterial);
+                GreenHexagon = SetupImage("green hexagon", "Alphabet New_98", RandomizerStats.transform, new Vector3(302.5f, -84f, 0f), ImageMaterial);
+                BossScavenger = SetupImage("boss scavenger", "Alphabet New_91", RandomizerStats.transform, new Vector3(337.5f, -85f, 0f), ImageMaterial);
+                BlueHexagon = SetupImage("blue hexagon", "Alphabet New_98", RandomizerStats.transform, new Vector3(372.5f, -84f, 0f), ImageMaterial);
 
                 RedHexagon.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 GreenHexagon.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
@@ -357,13 +321,13 @@ namespace TunicRandomizer {
                 I.transform.localScale = Vector3.one;
                 GameObject NG = SetupImage("ng", "Alphabet New_20", Ding.transform, new Vector3(98f, -110f, 0f), ImageMaterial);
                 NG.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-                Dong = GameObject.Instantiate(Ding, Stats.transform);
+                Dong = GameObject.Instantiate(Ding, RandomizerStats.transform);
                 Dong.transform.position = new Vector3(162.5f, -85f, 0f);
                 Dong.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.FindObjectsOfTypeAll<Sprite>().Where(sprite => sprite.name == "Alphabet New_1").ToList()[0];
                 Dong.transform.GetChild(1).transform.position = new Vector3(167f, -110f, 0f);
 
                 QuestionMark = new GameObject("question mark");
-                QuestionMark.transform.parent = Stats.transform;
+                QuestionMark.transform.parent = RandomizerStats.transform;
                 QuestionMark.transform.position = new Vector3(25f, -17f, 0f);
                 QuestionMark.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 QuestionMark.transform.localRotation = new Quaternion(0f, 0f, 0.1305f, -0.9914f);
@@ -371,10 +335,13 @@ namespace TunicRandomizer {
                 GameObject.DontDestroyOnLoad(QuestionMark);
                 CreateAbilitySection();
 
-                Stats.transform.SetAsFirstSibling();
+                RandomizerStats.transform.SetAsFirstSibling();
                 if ((float)Screen.width/Screen.height < 1.7f) {
-                    Stats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
+                    RandomizerStats.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
                 }
+
+                InventoryCounter.UpdateCounters();
+                GrassRandomizer.UpdateGrassCounters();
             }
             Loaded = true;
         }
@@ -426,21 +393,21 @@ namespace TunicRandomizer {
 
         public static void CreateAbilitySection() {
             GameObject sectionPrefab = GameObject.Find("_GameGUI(Clone)/HUD Canvas/Scaler/Inventory/Inventory Subscreen/Body/Section 1 Bits/");
-            if (sectionPrefab != null && AbilityShuffle == null) {
+            if (sectionPrefab != null && AbilityShuffleSection == null) {
 
-                AbilityShuffle = GameObject.Instantiate(sectionPrefab, new Vector3(-239.5023f, 216.6f, -98f), sectionPrefab.transform.rotation, sectionPrefab.transform.parent);
-                AbilityShuffle.transform.GetChild(0).localScale = new Vector3(0.7f, 1f, 1f);
-                AbilityShuffle.transform.GetChild(1).GetComponent<Image>().sprite = ModelSwaps.CustomItemImages["AbilityShuffle"].GetComponent<Image>().sprite;
-                AbilityShuffle.transform.GetChild(1).localScale = new Vector3(1.3f, 1f, 1f);
-                AbilityShuffle.transform.GetChild(1).transform.localPosition = new Vector3(-12f, -4f, 0f);
+                AbilityShuffleSection = GameObject.Instantiate(sectionPrefab, new Vector3(-239.5023f, 216.6f, -98f), sectionPrefab.transform.rotation, sectionPrefab.transform.parent);
+                AbilityShuffleSection.transform.GetChild(0).localScale = new Vector3(0.7f, 1f, 1f);
+                AbilityShuffleSection.transform.GetChild(1).GetComponent<Image>().sprite = ModelSwaps.CustomItemImages["AbilityShuffle"].GetComponent<Image>().sprite;
+                AbilityShuffleSection.transform.GetChild(1).localScale = new Vector3(1.3f, 1f, 1f);
+                AbilityShuffleSection.transform.GetChild(1).transform.localPosition = new Vector3(-12f, -4f, 0f);
 
-                for (int i = 2; i < AbilityShuffle.transform.childCount; i++) {
-                    AbilityShuffle.transform.GetChild(i).gameObject.SetActive(false);
+                for (int i = 2; i < AbilityShuffleSection.transform.childCount; i++) {
+                    AbilityShuffleSection.transform.GetChild(i).gameObject.SetActive(false);
                 }
 
                 for (int i = 0; i < 3; i++) {
                     GameObject icon = new GameObject($"icon {i}");
-                    icon.transform.parent = AbilityShuffle.transform;
+                    icon.transform.parent = AbilityShuffleSection.transform;
                     icon.transform.localScale = Vector3.one;
                     icon.transform.localPosition = new Vector3(-560f, 42 - (i * 96), 0f);
                     icon.AddComponent<Image>().sprite = Inventory.GetItemByName("Book").icon;
@@ -449,7 +416,7 @@ namespace TunicRandomizer {
 
                 for (int i = 0; i < 3; i++) {
                     GameObject icon = new GameObject($"hex icon {i}");
-                    icon.transform.parent = AbilityShuffle.transform;
+                    icon.transform.parent = AbilityShuffleSection.transform;
                     icon.transform.localScale = Vector3.one;
                     icon.transform.localPosition = new Vector3(-560f, 42 - (i * 96), 0f);
                     icon.AddComponent<Image>().sprite = Inventory.GetItemByName("Hexagon Gold").icon;
@@ -462,7 +429,7 @@ namespace TunicRandomizer {
                 Material fontMaterial = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
                 for (int i = 0; i < 3; i++) {
                     GameObject ability = new GameObject($"ability {i}");
-                    ability.transform.parent = AbilityShuffle.transform;
+                    ability.transform.parent = AbilityShuffleSection.transform;
                     ability.transform.localScale = Vector3.one;
                     ability.transform.localPosition = new Vector3(-385f, 42 - (i * 96), 0f);
                     ability.AddComponent<TextMeshProUGUI>().font = odin;
@@ -476,7 +443,7 @@ namespace TunicRandomizer {
 
                 for (int i = 0; i < 3; i++) {
                     GameObject subscript = new GameObject($"subscript {i}");
-                    subscript.transform.parent = AbilityShuffle.transform;
+                    subscript.transform.parent = AbilityShuffleSection.transform;
                     subscript.transform.localScale = Vector3.one;
                     subscript.AddComponent<TextMeshProUGUI>().font = odin;
                     subscript.GetComponent<TextMeshProUGUI>().fontMaterial = fontMaterial;
@@ -488,7 +455,7 @@ namespace TunicRandomizer {
 
                 for (int i = 0; i < 3; i++) {
                     GameObject subscript = new GameObject($"hex subscript {i}");
-                    subscript.transform.parent = AbilityShuffle.transform;
+                    subscript.transform.parent = AbilityShuffleSection.transform;
                     subscript.transform.localScale = Vector3.one;
                     subscript.AddComponent<TextMeshProUGUI>().font = odin;
                     subscript.GetComponent<TextMeshProUGUI>().fontMaterial = fontMaterial;
@@ -497,21 +464,21 @@ namespace TunicRandomizer {
                     subscript.GetComponent<TextMeshProUGUI>().autoSizeTextContainer = true;
                     subscript.GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Right;
                 }
-                GameObject.DontDestroyOnLoad(AbilityShuffle);
+                GameObject.DontDestroyOnLoad(AbilityShuffleSection);
 
                 UpdateAbilitySection();
             }
         }
 
         public static void UpdateAbilitySection() {
-            if (AbilityShuffle == null) {
+            if (AbilityShuffleSection == null) {
                 return;
             }
             if (SaveFile.GetInt(SaveFlags.AbilityShuffle) == 0) {
-                AbilityShuffle.SetActive(false);
+                AbilityShuffleSection.SetActive(false);
                 return;
             } else {
-                AbilityShuffle.SetActive(true);
+                AbilityShuffleSection.SetActive(true);
             }
 
             bool HasPrayer = SaveFile.GetInt(PrayerUnlocked) == 1;
@@ -539,56 +506,56 @@ namespace TunicRandomizer {
                 bool readHint1 = SaveFile.GetInt($"randomizer hex quest read {abilities[0]} hint") == 1;
                 bool readHint2 = SaveFile.GetInt($"randomizer hex quest read {abilities[1]} hint") == 1;
                 bool readHint3 = SaveFile.GetInt($"randomizer hex quest read {abilities[2]} hint") == 1;
-                AbilityShuffle.transform.GetChild(13).GetComponent<TextMeshProUGUI>().text = hasAbility1 || readHint1 || (readHint2 && readHint3) ? abilities[0] : "?????";
-                AbilityShuffle.transform.GetChild(14).GetComponent<TextMeshProUGUI>().text = hasAbility2 || readHint2 || ((readHint1 || hasAbility1) && readHint3) ? abilities[1] : "?????";
-                AbilityShuffle.transform.GetChild(15).GetComponent<TextMeshProUGUI>().text = hasAbility3 || readHint3 || ((readHint1 || hasAbility1) && (readHint2 || hasAbility2)) ? abilities[2] : "?????";
+                AbilityShuffleSection.transform.GetChild(13).GetComponent<TextMeshProUGUI>().text = hasAbility1 || readHint1 || (readHint2 && readHint3) ? abilities[0] : "?????";
+                AbilityShuffleSection.transform.GetChild(14).GetComponent<TextMeshProUGUI>().text = hasAbility2 || readHint2 || ((readHint1 || hasAbility1) && readHint3) ? abilities[1] : "?????";
+                AbilityShuffleSection.transform.GetChild(15).GetComponent<TextMeshProUGUI>().text = hasAbility3 || readHint3 || ((readHint1 || hasAbility1) && (readHint2 || hasAbility2)) ? abilities[2] : "?????";
 
-                AbilityShuffle.transform.GetChild(13).GetComponent<TextMeshProUGUI>().color = hasAbility1 ? Full : Faded;
-                AbilityShuffle.transform.GetChild(14).GetComponent<TextMeshProUGUI>().color = hasAbility2 ? Full : Faded;
-                AbilityShuffle.transform.GetChild(15).GetComponent<TextMeshProUGUI>().color = hasAbility3 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(13).GetComponent<TextMeshProUGUI>().color = hasAbility1 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(14).GetComponent<TextMeshProUGUI>().color = hasAbility2 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(15).GetComponent<TextMeshProUGUI>().color = hasAbility3 ? Full : Faded;
 
-                AbilityShuffle.transform.GetChild(19).GetComponent<TextMeshProUGUI>().text = $"{unlocks[0]}";
-                AbilityShuffle.transform.GetChild(20).GetComponent<TextMeshProUGUI>().text = $"{unlocks[1]}";
-                AbilityShuffle.transform.GetChild(21).GetComponent<TextMeshProUGUI>().text = $"{unlocks[2]}";
+                AbilityShuffleSection.transform.GetChild(19).GetComponent<TextMeshProUGUI>().text = $"{unlocks[0]}";
+                AbilityShuffleSection.transform.GetChild(20).GetComponent<TextMeshProUGUI>().text = $"{unlocks[1]}";
+                AbilityShuffleSection.transform.GetChild(21).GetComponent<TextMeshProUGUI>().text = $"{unlocks[2]}";
                 for (int i = 19; i < 22; i++) {
-                    AbilityShuffle.transform.GetChild(i).GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Right;
-                    AbilityShuffle.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = false;
-                    AbilityShuffle.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = true;
+                    AbilityShuffleSection.transform.GetChild(i).GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Right;
+                    AbilityShuffleSection.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = false;
+                    AbilityShuffleSection.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = true;
                 }
 
-                AbilityShuffle.transform.GetChild(19).GetComponent<TextMeshProUGUI>().color = hasAbility1 ? Full : Faded;
-                AbilityShuffle.transform.GetChild(20).GetComponent<TextMeshProUGUI>().color = hasAbility2 ? Full : Faded;
-                AbilityShuffle.transform.GetChild(21).GetComponent<TextMeshProUGUI>().color = hasAbility3 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(19).GetComponent<TextMeshProUGUI>().color = hasAbility1 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(20).GetComponent<TextMeshProUGUI>().color = hasAbility2 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(21).GetComponent<TextMeshProUGUI>().color = hasAbility3 ? Full : Faded;
 
-                AbilityShuffle.transform.GetChild(10).GetComponent<Image>().color = hasAbility1 ? Full : Faded;
-                AbilityShuffle.transform.GetChild(11).GetComponent<Image>().color = hasAbility2 ? Full : Faded;
-                AbilityShuffle.transform.GetChild(12).GetComponent<Image>().color = hasAbility3 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(10).GetComponent<Image>().color = hasAbility1 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(11).GetComponent<Image>().color = hasAbility2 ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(12).GetComponent<Image>().color = hasAbility3 ? Full : Faded;
 
             } else {
-                AbilityShuffle.transform.GetChild(13).GetComponent<TextMeshProUGUI>().text = "Prayer";
-                AbilityShuffle.transform.GetChild(14).GetComponent<TextMeshProUGUI>().text = "Holy Cross";
-                AbilityShuffle.transform.GetChild(15).GetComponent<TextMeshProUGUI>().text = "Icebolt";
+                AbilityShuffleSection.transform.GetChild(13).GetComponent<TextMeshProUGUI>().text = "Prayer";
+                AbilityShuffleSection.transform.GetChild(14).GetComponent<TextMeshProUGUI>().text = "Holy Cross";
+                AbilityShuffleSection.transform.GetChild(15).GetComponent<TextMeshProUGUI>().text = "Icebolt";
 
-                AbilityShuffle.transform.GetChild(13).GetComponent<TextMeshProUGUI>().color = HasPrayer ? Full : Faded;
-                AbilityShuffle.transform.GetChild(14).GetComponent<TextMeshProUGUI>().color = HasHolyCross ? Full : Faded;
-                AbilityShuffle.transform.GetChild(15).GetComponent<TextMeshProUGUI>().color = HasIcebolt ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(13).GetComponent<TextMeshProUGUI>().color = HasPrayer ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(14).GetComponent<TextMeshProUGUI>().color = HasHolyCross ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(15).GetComponent<TextMeshProUGUI>().color = HasIcebolt ? Full : Faded;
 
-                AbilityShuffle.transform.GetChild(16).GetComponent<TextMeshProUGUI>().text = "24-25";
-                AbilityShuffle.transform.GetChild(17).GetComponent<TextMeshProUGUI>().text = "42-43";
-                AbilityShuffle.transform.GetChild(18).GetComponent<TextMeshProUGUI>().text = "52-53";
+                AbilityShuffleSection.transform.GetChild(16).GetComponent<TextMeshProUGUI>().text = "24-25";
+                AbilityShuffleSection.transform.GetChild(17).GetComponent<TextMeshProUGUI>().text = "42-43";
+                AbilityShuffleSection.transform.GetChild(18).GetComponent<TextMeshProUGUI>().text = "52-53";
                 for (int i = 16; i < 19; i++) {
-                    AbilityShuffle.transform.GetChild(i).GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Center;
-                    AbilityShuffle.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = false;
-                    AbilityShuffle.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = true;
+                    AbilityShuffleSection.transform.GetChild(i).GetComponent<TextMeshProUGUI>().horizontalAlignment = HorizontalAlignmentOptions.Center;
+                    AbilityShuffleSection.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = false;
+                    AbilityShuffleSection.transform.GetChild(i).GetComponent<TextMeshProUGUI>().autoSizeTextContainer = true;
                 }
 
-                AbilityShuffle.transform.GetChild(16).GetComponent<TextMeshProUGUI>().color = HasPrayer ? Full : Faded;
-                AbilityShuffle.transform.GetChild(17).GetComponent<TextMeshProUGUI>().color = HasHolyCross ? Full : Faded;
-                AbilityShuffle.transform.GetChild(18).GetComponent<TextMeshProUGUI>().color = HasIcebolt ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(16).GetComponent<TextMeshProUGUI>().color = HasPrayer ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(17).GetComponent<TextMeshProUGUI>().color = HasHolyCross ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(18).GetComponent<TextMeshProUGUI>().color = HasIcebolt ? Full : Faded;
 
-                AbilityShuffle.transform.GetChild(7).GetComponent<Image>().color = HasPrayer ? Full : Faded;
-                AbilityShuffle.transform.GetChild(8).GetComponent<Image>().color = HasHolyCross ? Full : Faded;
-                AbilityShuffle.transform.GetChild(9).GetComponent<Image>().color = HasIcebolt ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(7).GetComponent<Image>().color = HasPrayer ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(8).GetComponent<Image>().color = HasHolyCross ? Full : Faded;
+                AbilityShuffleSection.transform.GetChild(9).GetComponent<Image>().color = HasIcebolt ? Full : Faded;
             }
 
         }
@@ -619,9 +586,41 @@ namespace TunicRandomizer {
 
             if (InventoryDisplay.InventoryOpen) {
                 if (Inventory.GetItemByName("Spear").Quantity == 1) {
-                    InventoryDisplayPatches.EquipmentRoot.transform.GetChild(InventoryDisplayPatches.EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
-                    InventoryDisplayPatches.EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
+                    EquipmentRoot.transform.GetChild(EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
+                    EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
                 }
+                // TODO fix this
+                ItemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
+                if (ItemIcons.Count == 2) {
+                    ItemIcons[1].transform.position = InventoryDisplayPatches.ItemIcons[0].transform.position;
+                    ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
+                    ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
+                }
+                __instance.hexagonImages[0].enabled = Inventory.GetItemByName("Hexagon Red").Quantity > 0 || GetBool("Placed Hexagon 1 Red");
+                __instance.hexagonImages[1].enabled = Inventory.GetItemByName("Hexagon Green").Quantity > 0 || GetBool("Placed Hexagon 2 Green");
+                __instance.hexagonImages[2].enabled = Inventory.GetItemByName("Hexagon Blue").Quantity > 0 || GetBool("Placed Hexagon 3 Blue");
+                RecentItemsDisplay.instance.gameObject.SetActive(false);
+                RandomizerStats.SetActive(true);
+
+                if (AbilityShuffleSection.active) {
+                    AbilityShuffleSection.transform.localPosition = new Vector3(465f, 0f, 0f);
+                    AbilityShuffleSection.transform.GetChild(0).localPosition = new Vector3(146.9f, -72.5f, 0f);
+                    bool hexQuest = IsHexQuestWithHexAbilities();
+                    for (int i = 16; i < 19; i++) {
+                        AbilityShuffleSection.transform.GetChild(i).localPosition = new Vector3(52, -197 - ((i - 16) * 96), 0f);
+                        AbilityShuffleSection.transform.GetChild(i).gameObject.SetActive(!hexQuest);
+                        AbilityShuffleSection.transform.GetChild(i - 9).gameObject.SetActive(!hexQuest);
+                    }
+                    for (int i = 19; i < AbilityShuffleSection.transform.childCount; i++) {
+                        AbilityShuffleSection.transform.GetChild(i).localPosition = new Vector3(77, -197 - ((i - 19) * 96), 0f);
+                        AbilityShuffleSection.transform.GetChild(i).gameObject.SetActive(hexQuest);
+                        AbilityShuffleSection.transform.GetChild(i - 9).gameObject.SetActive(hexQuest);
+                    }
+                }
+
+            } else {
+                RecentItemsDisplay.instance.gameObject.SetActive(TunicRandomizer.Settings.ShowRecentItems);
+                RandomizerStats.SetActive(false);
             }
 
             HexagonQuest.SetActive(SaveFile.GetInt(HexagonQuestEnabled) == 1 && SpeedrunData.gameComplete == 0 && !InventoryDisplay.InventoryOpen);

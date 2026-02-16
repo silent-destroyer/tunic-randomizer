@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> BreakableChecks = new Dictionary<string, Check>();
         public static Dictionary<string, int> BreakableChecksPerScene = new Dictionary<string, int>();
         public static Dictionary<string, string> BreakableCheckDescriptions = new Dictionary<string, string>();
+        public static int BreakableChecksBaseCount = 0;
+        public static int BreakableChecksEntranceRandoCount = 0;
         //public static List<string> APConvertedLines = new List<string>();
 
         // keys are the auto-genned name, values are the nicer name (or the key if the key is already a nice name)
@@ -97,12 +100,9 @@ namespace TunicRandomizer {
                 }
                 extraReader.Close();
             }
-            //string convertedBlock = "";
-            //foreach (string APLine in APConvertedLines) {
-            //    convertedBlock += APLine;
-            //    convertedBlock += "\n";
-            //}
-            //TunicLogger.LogInfo(convertedBlock);
+
+            BreakableChecksBaseCount = BreakableChecks.Where(check => check.Value.Location.SceneName != "Purgatory").Count();
+            BreakableChecksEntranceRandoCount = BreakableChecks.Where(check => check.Value.Location.SceneName == "Purgatory").Count();
         }
 
         public static string ConvertToAPLine(string description, string region, string breakableName) {

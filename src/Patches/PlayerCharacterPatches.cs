@@ -20,21 +20,19 @@ namespace TunicRandomizer {
         public static string DeathLinkMessage = "";
         public static int index = 0;
 
-        public static bool LoadSwords = false;
-        public static float LoadSwordTimer = 0.0f;
-        public static bool LoadCustomTexture = false;
-        public static bool WearHat = false;
         public static float TimeWhenLastChangedDayNight = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
-        public static bool LeftCommandPressed = false;
         public static LadderEnd LastLadder = null;
+        public static Renderer foxHair = null;
 
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
-
-            __instance.gameObject.AddComponent<WaveSpell>();
-            __instance.gameObject.AddComponent<EntranceSeekerSpell>();
-            __instance.gameObject.AddComponent<DDRSpell>();
-            DDRSpell.SetupDPADTester(__instance);
+            try {
+                __instance.gameObject.AddComponent<WaveSpell>();
+                __instance.gameObject.AddComponent<EntranceSeekerSpell>();
+                __instance.gameObject.AddComponent<DDRSpell>();
+                DDRSpell.SetupDPADTester(__instance);
+            } catch (Exception e) { 
+            }
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
@@ -52,12 +50,7 @@ namespace TunicRandomizer {
                     DiedToDeathLink = false;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.H) || (InputManager.ActiveDevice.LeftCommand.WasPressed && !LeftCommandPressed)) {
-                if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
-                    SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
-                }
-            }
-            LeftCommandPressed = InputManager.ActiveDevice.LeftCommand.WasPressed;
+
             if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
                 if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
@@ -75,14 +68,6 @@ namespace TunicRandomizer {
                     $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
                     (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 }
-            }
-
-            if ((Input.GetKeyDown(KeyCode.R) || InputManager.ActiveDevice.LeftStickButton.WasPressed) && IsArchipelago()) {
-                Archipelago.instance.Release();
-            }
-
-            if ((Input.GetKeyDown(KeyCode.C) || InputManager.ActiveDevice.RightStickButton.WasPressed) && IsArchipelago()) {
-                Archipelago.instance.Collect();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
@@ -113,22 +98,6 @@ namespace TunicRandomizer {
                 //EnemyDropShuffle.LoadEnemyData();
             }
 
-            if (LoadSwords && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/sword_proxy/") != null)) {
-                try {
-                    SwordProgression.CreateSwordItemBehaviours(__instance);
-                    LoadSwords = false;
-                } catch (Exception ex) {
-                    TunicLogger.LogError("Error applying upgraded sword!");
-                }
-            }
-            if (WearHat && (GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat") != null)) {
-                GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/floppy hat").SetActive(true);
-                WearHat = false;
-            }
-            if (LoadCustomTexture && GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/GameObject") != null) {
-                PaletteEditor.LoadCustomTexture();
-                LoadCustomTexture = false;
-            }
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
                 CycleController.IsNight = false;
@@ -139,8 +108,7 @@ namespace TunicRandomizer {
                 }
             }
             if (SpeedrunData.timerRunning && SceneLoaderPatches.SceneName != null && Locations.AllScenes.Count > 0) {
-                float AreaPlaytime = SaveFile.GetFloat($"randomizer play time {SceneLoaderPatches.SceneName}");
-                SaveFile.SetFloat($"randomizer play time {SceneLoaderPatches.SceneName}", AreaPlaytime + Time.unscaledDeltaTime);
+                SaveFile.SetFloat($"randomizer play time {SceneLoaderPatches.SceneName}", SaveFile.GetFloat($"randomizer play time {SceneLoaderPatches.SceneName}") + Time.unscaledDeltaTime);
             }
             if (IsTeleporting) {
                 PlayerCharacter.instance.cheapIceParticleSystemEmission.enabled = true;
@@ -168,7 +136,9 @@ namespace TunicRandomizer {
                 __instance.gameObject.transform.localScale = new Vector3(2f, scale.y, scale.z);
             }
 
-            __instance.gameObject.transform.Find("fox hair").GetComponent<Renderer>().enabled = !FoolTrap.BaldFox;
+            if (foxHair != null) {
+                foxHair.enabled = !FoolTrap.BaldFox;
+            }
 
             if (SaveFile.GetInt(AbilityShuffle) == 1) { 
                 if(SaveFile.GetInt(PrayerUnlocked) == 0) {
@@ -215,19 +185,12 @@ namespace TunicRandomizer {
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().UseSpecialGhostMat = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().UseSpecialGhostMat;
             }
 
-            if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<FoxgodCutscenePatch>() == null) {
-                new GameObject("foxgod cutscene patcher").gameObject.AddComponent<FoxgodCutscenePatch>();
-            }
-
-            foreach (string Key in EnemyRandomizer.Enemies.Keys.ToList()) {
-                EnemyRandomizer.Enemies[Key].SetActive(false);
-                EnemyRandomizer.Enemies[Key].transform.position = new Vector3(-30000f, -30000f, -30000f);
-            }
-
         }
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
             SceneLoaderPatches.TimeOfLastSceneTransition = SaveFile.GetFloat("playtime");
+
+            Cursor.visible = false;
 
             // hide inventory prompt button so it doesn't overlap item messages
             GameObject InvButton = Resources.FindObjectsOfTypeAll<Animator>().Where(animator => animator.gameObject.name == "LB Prompt").ToList()[0].gameObject;
@@ -262,7 +225,7 @@ namespace TunicRandomizer {
 
             CalculateHeirAssistDamage();
 
-            LoadSwords = true;
+            SwordProgression.CreateSwordItemBehaviours(__instance);
 
             ItemPresentationPatches.SwitchDathStonePresentation();
 
@@ -339,6 +302,8 @@ namespace TunicRandomizer {
                 GhostHints.SpawnHintGhosts(SceneLoaderPatches.SceneName);
             }
 
+            InventoryCounter.UpdateCounters();
+
             InventoryDisplayPatches.UpdateAbilitySection();
 
             RandomizerSettings.SaveSettings();
@@ -405,7 +370,7 @@ namespace TunicRandomizer {
             }
 
             if (TunicRandomizer.Settings.UseCustomTexture) {
-                LoadCustomTexture = true;
+                PaletteEditor.LoadCustomTexture();
             }
 
             if (TunicRandomizer.Settings.RealestAlwaysOn) {
@@ -417,8 +382,10 @@ namespace TunicRandomizer {
             }
 
             if (PaletteEditor.PartyHatEnabled) {
-                WearHat = true;
+                __instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(9).gameObject.SetActive(true);
             }
+
+            foxHair = __instance.gameObject.transform.GetChild(3).GetComponent<Renderer>();
 
             List<MagicSpell> spells = __instance.spells.ToList();
             spells.Reverse();
@@ -438,7 +405,7 @@ namespace TunicRandomizer {
             int seed = SaveFile.GetInt("seed");
 
             if (seed == 0) {
-                seed = QuickSettings.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettings.CustomSeed);
+                seed = QuickSettingsRedux.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettingsRedux.CustomSeed);
                 TunicLogger.LogInfo($"Starting new single player file with seed: " + seed);
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
