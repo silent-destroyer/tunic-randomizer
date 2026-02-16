@@ -46,6 +46,10 @@ namespace TunicRandomizer {
 
         // for portals that lead directly to a different region, ie: appearing at a yellow portal square
         public string OutletRegion() {
+            // for shop portals past number 8, we need an override here
+            if (Region.StartsWith("Shop") && !ERData.RegionDict.ContainsKey(Region)) {
+                return Region;
+            }
             return ERData.RegionDict[Region].OutletRegion ?? Region;
         }
     }
