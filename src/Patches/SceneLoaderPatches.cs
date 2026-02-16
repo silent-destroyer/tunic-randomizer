@@ -586,6 +586,8 @@ namespace TunicRandomizer {
 
             EnemyRandomizer.CheckBossState();
 
+            InventoryCounter.UpdateCounters();
+
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 if (ERData.RandomizedPortals.Count == 0) {
                     if (IsArchipelago()) {

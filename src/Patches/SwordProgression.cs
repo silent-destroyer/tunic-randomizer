@@ -140,7 +140,7 @@ namespace TunicRandomizer {
         }
 
         public static void CreateSwordItemBehaviours(PlayerCharacter instance) {
-            GameObject swordProxy = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R/").transform.GetChild(1).gameObject;
+            GameObject swordProxy = instance.GetComponent<SwordItemBehaviour>().itemRoot;
             // fix: reset localposition to 0 on instantiate sword root object
             instance.gameObject.AddComponent<SwordItemBehaviour>().item = Inventory.GetItemByName("Librarian Sword").TryCast<ButtonAssignableItem>();
             instance.gameObject.AddComponent<SwordItemBehaviour>().item = Inventory.GetItemByName("Heir Sword").TryCast<ButtonAssignableItem>();

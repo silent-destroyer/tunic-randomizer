@@ -225,6 +225,10 @@ namespace TunicRandomizer {
 
             // todo: make sure these changes work with ap with > 8 shops
 
+            List<string> allInUsePortalNames = new List<string>();
+
+            allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Value.Portal1.Name).ToList();
+
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
             
             foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
@@ -233,10 +237,13 @@ namespace TunicRandomizer {
 
             Dictionary<string, List<string>> regionsToPortals = new Dictionary<string, List<string>>();
 
+            List<string> addedPortals = new List<string>();
+
             void addPortal(string portalName, string portalRegion) {
-                string portalLine = portalName + ",-->,";
+                addedPortals.Add(portalName);
+                PortalCombo portalCombo = portalNameToPair[portalName];
+                string portalLine = portalCombo.Portal1.Name + ",-->,";
                 if (SaveFile.GetInt("randomizer entered portal " + portalName) == 1) {
-                    PortalCombo portalCombo = portalNameToPair[portalName];
                     portalLine += portalCombo.Portal2.Name;
                 }
                 regionsToPortals[Locations.SimplifiedSceneNames[portalRegion]].Add(portalLine);
@@ -252,14 +259,16 @@ namespace TunicRandomizer {
                         if (allInUsePortalNames.Contains(portal.Name)) {
                             addPortal(portal.Name, portalGroup.Key);
                         }
-                        if (portal.Name == "Shop Portal") {
-                            for (int i = 0; i < numberOfShops; i++) {
-                                addPortal($"{portal.Name} {i + 1}", portalGroup.Key);
-                            }
-                        }
                     }
                 }
             }
+
+            // the sorting stuff above skips shops, and they're at the end anyway so let's just add them here
+            List<string> leftoverPortals = allInUsePortalNames.Where(x => !addedPortals.Contains(x) && x.StartsWith("Shop")).OrderBy(x => int.Parse(x.Split(' ').Last())).ToList();
+            foreach (string shopPortal in leftoverPortals) {
+                addPortal(shopPortal, "Shop");
+            }
+
             fileContents = "From,,To\n";
             foreach (KeyValuePair<string, List<string>> pair in regionsToPortals) {
                 fileContents += pair.Key + ",,\n";

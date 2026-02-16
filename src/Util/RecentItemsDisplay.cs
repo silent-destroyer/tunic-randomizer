@@ -36,28 +36,11 @@ namespace TunicRandomizer {
         public float itemQueueDelay = 1f;
 
         public void Update() {
-            title.SetActive(TunicRandomizer.Settings.ShowRecentItems && !InventoryDisplay.InventoryOpen);
-            if (!TunicRandomizer.Settings.ShowRecentItems) {
-                foreach (GameObject obj in recentItems) {
-                    for(int i = 0; i < obj.transform.childCount; i++) {
-                        obj.transform.GetChild(i).gameObject.SetActive(false);
-                    }
-                }
-                return;
-            } else {
-                for(int i = 0; i < recentItems.Count; i++) {
-                    for (int j = 0; j < recentItems[i].transform.childCount; j++) {
-                        recentItems[i].transform.GetChild(j).gameObject.SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen && (j == 2 ? recentItemsQueue.Count >= recentItems.Count ? recentItemsQueue[recentItems.Count - 1 - i].isTrinket : recentItemsQueue[recentItemsQueue.Count - 1 - i].isTrinket : true));
-                    }
-                }
-            }
-            if (PlayerCharacter.Instanced) {
+            if (PlayerCharacter.Instanced && recentItemsQueue.Count > 5) {
                 itemQueueTimer += Time.fixedUnscaledDeltaTime;
                 if (itemQueueTimer > (itemQueueDelay)) {
-                    if (recentItemsQueue.Count > 5) {
-                        recentItemsQueue.RemoveAt(0);
-                        UpdateItemDisplay();
-                    }
+                    recentItemsQueue.RemoveAt(0);
+                    UpdateItemDisplay();
                     itemQueueTimer = 0;
                 }
             }
@@ -162,6 +145,11 @@ namespace TunicRandomizer {
                     }
                 }
             }
+            for (int i = 0; i < recentItems.Count; i++) {
+                for (int j = 0; j < recentItems[i].transform.childCount; j++) {
+                    recentItems[i].transform.GetChild(j).gameObject.SetActive(recentItemsQueue.Count > i && !InventoryDisplay.InventoryOpen && (j == 2 ? recentItemsQueue.Count >= recentItems.Count ? recentItemsQueue[recentItems.Count - 1 - i].isTrinket : recentItemsQueue[recentItemsQueue.Count - 1 - i].isTrinket : true));
+                }
+            }
         }
 
         public void ResetQueue() {
@@ -222,6 +210,7 @@ namespace TunicRandomizer {
             recentItemsDisplay.GetComponent<VerticalLayoutGroup>().spacing = 50f;
             recentItemsDisplay.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
             recentItemsDisplay.transform.localScale = Vector3.one * 2;
+            recentItemsDisplay.SetActive(TunicRandomizer.Settings.ShowRecentItems);
         }
 
         public static GameObject SetupItemTextAndSprite(Transform parent, int i) {

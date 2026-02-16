@@ -114,22 +114,22 @@ namespace TunicRandomizer {
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.blockSFX);
                 if (!CanTakeGoldenHit) {
                     FoxBody = new GameObject();
-                    FoxBody.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials;
+                    FoxBody.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials;
                     FoxHair = new GameObject();
-                    FoxHair.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials;
+                    FoxHair.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials;
                     GhostFoxBody = new GameObject();
-                    GhostFoxBody.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().ghostMaterialArray;
+                    GhostFoxBody.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().ghostMaterialArray;
                     GhostFoxHair = new GameObject();
-                    GhostFoxHair.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().ghostMaterialArray;
+                    GhostFoxHair.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().ghostMaterialArray;
                     FoxCape = new GameObject();
                     FoxCape.AddComponent<MeshRenderer>().materials = PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials;
                 }
 
-                
-                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+
+                __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 GameObject Hand = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R");

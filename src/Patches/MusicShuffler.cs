@@ -20,6 +20,8 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
+            if (!TunicRandomizer.Settings.MusicShuffle) { return; }
+
             if (Time.time > TimeSinceMusicStart + 1.5f) {
                 if (paramsToSet.Count > 0) {
                     (string, int) param = paramsToSet.Dequeue();

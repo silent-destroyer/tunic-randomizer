@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace TunicRandomizer {
     public class Archipelago : MonoBehaviour {
@@ -96,21 +97,7 @@ namespace TunicRandomizer {
             if (args.Length > 0) {
                 foreach (string arg in args) {
                     try {
-                        Uri uri = new Uri(arg);
-
-                        if (uri.Scheme == "archipelago") {
-                            string[] UserInfo = uri.UserInfo.Split(':');
-                            
-                            TunicRandomizer.Settings.ConnectionSettings.Player = UserInfo[0];
-                            TunicRandomizer.Settings.ConnectionSettings.Hostname = uri.Host;
-                            TunicRandomizer.Settings.ConnectionSettings.Port = uri.Port.ToString();
-                            
-                            if (UserInfo.Length > 1 && UserInfo[1] != "None") {
-                                TunicRandomizer.Settings.ConnectionSettings.Password = UserInfo[1];
-                            }
-
-                            TunicRandomizer.Settings.Mode = RandomizerSettings.RandomizerType.ARCHIPELAGO;
-                            RandomizerSettings.SaveSettings();
+                        if (ParseUri(arg)) {
                             break;
                         }
                     } catch {
@@ -118,6 +105,38 @@ namespace TunicRandomizer {
                     }
                 }
             }
+        }
+
+        public bool ParseUri(string arg) {
+            Uri uri = new Uri(arg);
+
+            Dictionary<string, string> queryParams = uri.Query.Substring(uri.Query.IndexOf("?") + 1)
+                .Split('&')
+                .Select(s => s.Split('='))
+                .ToDictionary(kvp => kvp[0], kvp => kvp[1]);
+
+            if (queryParams.ContainsKey("game") && queryParams["game"] == "TUNIC") {
+
+                string[] UserInfo = uri.UserInfo.Replace("%20", " ").Split(':');
+                if (UserInfo[0] != "") {
+                    TunicRandomizer.Settings.ConnectionSettings.Player = UserInfo[0];
+                }
+                if (uri.Host != "") {
+                    TunicRandomizer.Settings.ConnectionSettings.Hostname = uri.Host;
+                }
+                if (uri.Port > -1) {
+                    TunicRandomizer.Settings.ConnectionSettings.Port = uri.Port.ToString();
+                }
+
+                if (UserInfo.Length > 1 && UserInfo[1] != "None") {
+                    TunicRandomizer.Settings.ConnectionSettings.Password = UserInfo[1];
+                }
+
+                TunicRandomizer.Settings.Mode = RandomizerSettings.RandomizerType.ARCHIPELAGO;
+                RandomizerSettings.SaveSettings();
+                return true;
+            }
+            return false;
         }
 
     }

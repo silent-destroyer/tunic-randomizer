@@ -33,7 +33,6 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<VisibleByNotHavingItem>();
             ClassInjector.RegisterTypeInIl2Cpp<HeroGraveToggle>();
             ClassInjector.RegisterTypeInIl2Cpp<MailboxFlag>();
-            ClassInjector.RegisterTypeInIl2Cpp<ToggleLadderByLadderItem>();
             ClassInjector.RegisterTypeInIl2Cpp<UnderConstruction>();
             ClassInjector.RegisterTypeInIl2Cpp<FoxgodCutscenePatch>();
             ClassInjector.RegisterTypeInIl2Cpp<ToggleObjectByFuse>();
@@ -48,14 +47,16 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<RandoActionSet>();
             ClassInjector.RegisterTypeInIl2Cpp<EntranceSelector>();
             ClassInjector.RegisterTypeInIl2Cpp<SceneSelectionButton>();
+            ClassInjector.RegisterTypeInIl2Cpp<LadderManager>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
-            RegisterTypeAndCreateObject(typeof(QuickSettings), "quick settings gui");
+            RegisterTypeAndCreateObject(typeof(QuickSettingsRedux), "quick settings gui");
             RegisterTypeAndCreateObject(typeof(CreditsSkipper), "credits skipper");
             RegisterTypeAndCreateObject(typeof(InventoryCounter), "inventory counter");
             RegisterTypeAndCreateObject(typeof(PlayerPositionDisplay), "player position display");
             RegisterTypeAndCreateObject(typeof(ArachnophobiaMode), "arachnophobia mode helper");
+            RegisterTypeAndCreateObject(typeof(EnemyManager), "enemy rando manager");
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");
@@ -251,9 +252,9 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(ItemPresentation), "presentItem"), new HarmonyMethod(AccessTools.Method(typeof(ItemPresentationPatches), "ItemPresentation_presentItem_PrefixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(TitleScreen), "__NewGame"), new HarmonyMethod(AccessTools.Method(typeof(QuickSettings), "TitleScreen___NewGame_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(TitleScreen), "__NewGame"), new HarmonyMethod(AccessTools.Method(typeof(QuickSettingsRedux), "TitleScreen___NewGame_PrefixPatch")));
 
-            Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "LoadFileAndStart"), new HarmonyMethod(AccessTools.Method(typeof(QuickSettings), "FileManagement_LoadFileAndStart_PrefixPatch")));
+            Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "LoadFileAndStart"), new HarmonyMethod(AccessTools.Method(typeof(QuickSettingsRedux), "FileManagement_LoadFileAndStart_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(SpecialSwampTrigger), "OnTriggerEnter"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "SpecialSwampTrigger_OnTriggerEnter_PrefixPatch")));
 
