@@ -252,22 +252,9 @@ namespace TunicRandomizer {
             }
 
             // the sorting stuff above skips shops, and they're at the end anyway so let's just add them here
-            List<int> leftoverShopNums = new List<int>();
-            foreach (string portalName in allInUsePortalNames) {
-                if (!addedPortals.Contains(portalName)) {
-                    if (portalName.StartsWith("Shop")) {
-                        int shopNum = Convert.ToInt32(string.Concat(portalName.ToArray().Reverse().TakeWhile(char.IsNumber).Reverse()));
-                        leftoverShopNums.Add(shopNum);
-                    } else {
-                        TunicLogger.LogInfo($"Was missing {portalName} in ItemTracker.WriteEntranceFile, we should investigate this");
-                    }
-                }
-            }
-
-            leftoverShopNums.Sort();
-
-            foreach (int num in leftoverShopNums) {
-                addPortal($"Shop Portal {num}", "Shop");
+            List<string> leftoverPortals = allInUsePortalNames.Where(x => !addedPortals.Contains(x) && x.StartsWith("Shop")).OrderBy(x => int.Parse(x.Split(' ').Last())).ToList();
+            foreach (string shopPortal in leftoverPortals) {
+                addPortal(shopPortal, "Shop");
             }
 
             fileContents = "From,,To\n";
