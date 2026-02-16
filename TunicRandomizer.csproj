@@ -218,6 +218,7 @@
     <Compile Include="src\Patches\PageDisplayPatches.cs" />
     <Compile Include="src\Patches\PlayerCharacterPatches.cs" />
     <Compile Include="src\Patches\OptionsGUIPatches.cs" />
+    <Compile Include="src\Patches\QuickSettingsRedux.cs" />
     <Compile Include="src\Patches\SceneLoaderPatches.cs" />
     <Compile Include="src\Patches\SecretMayor.cs" />
     <Compile Include="src\Patches\TextBuilderPatches.cs" />

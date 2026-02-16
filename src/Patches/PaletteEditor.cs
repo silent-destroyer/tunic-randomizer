@@ -81,63 +81,77 @@ namespace TunicRandomizer {
         public static Font OdinRounded;
         private static string errorMessage = "";
 
+        private static float y;
+        private static float guiScale = 1f;
+        private static bool titleScreenMode = false;
+
+        private static Rect scRect(float x, float y, float width, float height, bool scaleX = true, bool scaleY = true, bool scaleW = true, bool scaleH = true, string tooltip = "") {
+            return new Rect(x * (scaleX ? guiScale : 1.0f), y * (scaleY ? guiScale : 1.0f), width * (scaleW ? guiScale : 1.0f), height * (scaleH ? guiScale : 1.0f));
+        }
+
         private void OnGUI() {
 
-            if (EditorOpen && SceneLoaderPatches.SceneName != "TitleScreen") {
+            if (QuickSettingsRedux.showFoxCustomization || (EditorOpen && SceneLoaderPatches.SceneName != "TitleScreen")) {
+                titleScreenMode = QuickSettingsRedux.showFoxCustomization && SceneLoaderPatches.SceneName == "TitleScreen";
+
+                guiScale = TunicUtils.calcGuiScale();
+                
                 GUI.skin.font = OdinRounded;
-                GUI.backgroundColor = Color.black;
-                Cursor.visible = true;
-                GUI.Window(102, new Rect(10f, 230f, 800f, 440f), new Action<int>(PaletteEditorWindow), "Palette Editor");
                 GUI.backgroundColor = Color.white;
-            } else if (SceneLoaderPatches.SceneName != "TitleScreen") {
-                Cursor.visible = false;
+                Cursor.visible = true;
+                if (titleScreenMode) {
+                    GUI.Window(102, scRect(QuickSettingsRedux.windowRect.x, QuickSettingsRedux.windowRect.bottom + (10f * guiScale), 800f, y, scaleY: false), new Action<int>(PaletteEditorWindow), "Palette Editor");
+                } else {
+                    GUI.Window(102,scRect(QuickSettingsRedux.windowRect.x, 230f, 800f, 440f), new Action<int>(PaletteEditorWindow), "Palette Editor");
+                }
+                GUI.backgroundColor = Color.white;
             }
 
         }
 
         private static void PaletteEditorWindow(int windowID) {
-            GUI.skin.label.fontSize = 20;
+            GUI.skin.label.fontSize = (int)(20 * guiScale);
             GUI.skin.label.alignment = TextAnchor.UpperLeft;
             GUI.skin.label.clipping = TextClipping.Overflow;
             GUI.color = Color.white;
-            GUI.DragWindow(new Rect(200f, 50f, 10000f, 30f));
-            GUI.skin.button.fontSize = 15;
+            GUI.DragWindow(scRect(200f, 50f, 10000f, 30f));
+            GUI.skin.button.fontSize = (int)(15 * guiScale);
             for (int i = 0; i < 16; i++) {
                 GUI.backgroundColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[i][0], ColorIndices[i][1]);
-                bool PaletteButton = GUI.Button(new Rect((float)(10 + 75 * (i % 4)), (float)(35 + 75 * Mathf.FloorToInt((float)i / 4f)), 75f, 75f), ColorNames[i]);
+                bool PaletteButton = GUI.Button(scRect((float)(10 + 75 * (i % 4)), (float)(35 + 75 * Mathf.FloorToInt((float)i / 4f)), 75f, 75f), ColorNames[i]);
 
                 GUI.backgroundColor = Color.white;
                 if (PaletteButton) {
                     SelectedIndex = i;
                 }
             }
-            GUI.skin.button.fontSize = 20;
+            GUI.skin.button.fontSize = (int)(20 * guiScale);
             bool PaletteSelected = SelectedIndex >= 0 && SelectedIndex < 16;
-            float y = 35f;
+            y = 35f;
             if (PaletteSelected) {
 
                 SelectedColor = PlayerPalette.runtimePalette.GetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1]);
 
-                GUI.skin.label.fontSize = 25;
-                GUI.Label(new Rect(350f, y, 400f, 30f), "Selected: " + ColorNames[SelectedIndex].Replace("\n", " "));
+                GUI.skin.label.fontSize = (int)(25 * guiScale);
+                GUI.Label(scRect(350f, y, 400f, 30f), "Selected: " + ColorNames[SelectedIndex].Replace("\n", " "));
                 string hex = string.Format("#{0:X2}{1:X2}{2:X2}", ToByte(SelectedColor.r), ToByte(SelectedColor.g), ToByte(SelectedColor.b));
-                GUI.Label(new Rect(650f, y, 125f, 30f), hex);
+                GUI.Label(scRect(650f, y, 125f, 30f), hex);
 
                 y += 40f;
-                bool CopyHexCode = GUI.Button(new Rect(350f, y, 200f, 30f), "Copy Hex Code");
+                bool CopyHexCode = GUI.Button(scRect(350f, y, 200f, 30f), "Copy Hex Code");
                 if (CopyHexCode) {
                     CopyHexValue();
                 }
-                bool PasteHexCode = GUI.Button(new Rect(555f, y, 200f, 30f), "Paste Hex Code");
+                bool PasteHexCode = GUI.Button(scRect(555f, y, 200f, 30f), "Paste Hex Code");
                 if (PasteHexCode) {
                     errorMessage = PasteHexValue(GUIUtility.systemCopyBuffer);
                 }
-                GUI.skin.label.fontSize = 15;
-                GUI.Label(new Rect(555f, y+30f, 200f, 30f), $"{errorMessage}");
+                GUI.skin.label.fontSize = (int)(15 * guiScale);
+                GUI.Label(scRect(555f, y+30f, 200f, 30f), $"{errorMessage}");
                 y += 40f;
-                SelectedColor = RGBSlider(new Rect(350f, y, 400f, 10f), SelectedColor);
+                SelectedColor = RGBSlider(scRect(350f, y, 400f, 10f), SelectedColor);
                 y += 150f;
-                bool RandomizeSelected = GUI.Button(new Rect(350f, y, 200f, 30f), "Randomize Selected");
+                bool RandomizeSelected = GUI.Button(scRect(350f, y, 200f, 30f), "Randomize Selected");
                 if (RandomizeSelected) {
                     errorMessage = "";
                     SelectedColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1f);
@@ -156,51 +170,74 @@ namespace TunicRandomizer {
                     ChangeCapeColor(SelectedColor);
                 }
             }
-            bool RandomizeAll = GUI.Button(new Rect(555f, y, 200f, 30f), "Randomize All");
+            bool RandomizeAll = GUI.Button(scRect(555f, y, 200f, 30f), "Randomize All");
             if (RandomizeAll) {
                 RandomizeFoxColors();
             }
-            y += 50f;
-            bool ResetSelected = GUI.Button(new Rect(350f, y, 200f, 30f), "Reset Selected");
+            y += 40f;
+            bool ResetSelected = GUI.Button(scRect(350f, y, 200f, 30f), "Reset Selected");
             if (ResetSelected) {
                 if (PaletteSelected) {
                     PlayerPalette.runtimePalette.SetPixel(ColorIndices[SelectedIndex][0], ColorIndices[SelectedIndex][1], DefaultColors[SelectedIndex]);
                 }
             }
-            bool ResetAll = GUI.Button(new Rect(555f, y, 200f, 30f), "Reset All");
+            bool ResetAll = GUI.Button(scRect(555f, y, 200f, 30f), "Reset All");
             if (ResetAll) {
                 RevertFoxColors();
             }
-            y += 50f;
-            bool Save = GUI.Button(new Rect(350f, y, 200f, 30f), "Save Texture");
-            if (Save) {
-                SaveTexture();
+            y += 40f;
+            bool Save = false;
+            bool Load = false;
+            if (!titleScreenMode) {
+                Save = GUI.Button(scRect(350f, y, 200f, 30f), "Save Texture");
+                if (Save) {
+                    SaveTexture();
+                }
+                Load = GUI.Button(scRect(555f, y, 200f, 30f), "Load Texture");
+            } else {
+                Load = GUI.Button(scRect(350f, y, 200f, 30f), "Load Texture");
+                GUI.Label(scRect(555f, y - 5f, 275f, 30f), "Rotate Fox");
+                Vector3 rot = QuickSettingsRedux.fox.transform.localEulerAngles;
+                rot.y = GUI.HorizontalSlider(scRect(555f, y + 20f, 110f, 30f), rot.y, 0f, 359.9f);
+                QuickSettingsRedux.fox.transform.localEulerAngles = rot;
+                QuickSettingsRedux.hideLaurels = GUI.Toggle(scRect(675f, y, 200f, 30f), QuickSettingsRedux.hideLaurels, "Hide Laurels");
             }
-            bool Load = GUI.Button(new Rect(555f, y, 200f, 30f), "Load Texture");
             if (Load) {
                 LoadCustomTexture();
             }
-            bool CloseAndSave = GUI.Button(new Rect(30f, 350f, 260f, 30f), "Save Texture & Close");
-            if (CloseAndSave) {
-                SaveTexture();
-                EditorOpen = false;
-                CameraController.DerekZoom = 1f;
-            }
-            bool Close = GUI.Button(new Rect(30f, 390f, 260f, 30f), "Close Without Saving");
-            if (Close) {
-                EditorOpen = false;
-                CameraController.DerekZoom = 1f;
+            bool CloseAndSave = false;
+            bool Close = false;
+            if (!titleScreenMode) {
+                CloseAndSave = GUI.Button(scRect(30f, 350f, 260f, 30f), "Save Texture & Close");
+                if (CloseAndSave) {
+                    SaveTexture();
+                    EditorOpen = false;
+                    Cursor.visible = false;
+                    CameraController.DerekZoom = 1f;
+                }
+                Close = GUI.Button(scRect(30f, 390f, 260f, 30f), "Close Without Saving");
+                if (Close) {
+                    EditorOpen = false;
+                    Cursor.visible = false;
+                    CameraController.DerekZoom = 1f;
+                }
+            } else {
+                bool saveTexture = GUI.Button(scRect(10f, y, 300f, 30f), "Save Texture");
+                if (saveTexture) {
+                    SaveTexture();
+                }
             }
             if (Save || Load || RandomizeAll || ResetSelected || ResetAll || Close || CloseAndSave) {
                 errorMessage = "";
             }
-            y += 35f;
-            bool ToggleCustomTextureUse = GUI.Toggle(new Rect(350f, y, 200f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Use Saved Texture");
-            TunicRandomizer.Settings.UseCustomTexture = ToggleCustomTextureUse;
+            y += 40f;
 
-            GUI.skin.label.fontSize = 16;
-            GUI.Label(new Rect(555f, y-5f, 275f, 30f), "Camera Zoom");
-            CameraController.DerekZoom = 1 - GUI.HorizontalSlider(new Rect(555f, y+20f, 200f, 30f), 1-CameraController.DerekZoom, 0f, 0.99f);
+            GUI.skin.label.fontSize = (int)(16 * guiScale);
+            if (!titleScreenMode) {
+                TunicRandomizer.Settings.UseCustomTexture = GUI.Toggle(scRect(350f, y, 200f, 30f), TunicRandomizer.Settings.UseCustomTexture, "Use Saved Texture");
+                GUI.Label(scRect(555f, y - 5, 275f, 30f), "Camera Zoom");
+                CameraController.DerekZoom = 1 - GUI.HorizontalSlider(scRect(555f, y+20f, 200f, 30f), 1-CameraController.DerekZoom, 0f, 0.99f);
+            } 
         }
         private static void CopyHexValue() {
             GUIUtility.systemCopyBuffer = string.Format("#{0:X2}{1:X2}{2:X2}", ToByte(SelectedColor.r), ToByte(SelectedColor.g), ToByte(SelectedColor.b));
@@ -230,19 +267,19 @@ namespace TunicRandomizer {
         }
 
         private static Color RGBSlider(Rect screenRect, Color rgb) {
-            GUI.skin.label.fontSize = 16;
+            GUI.skin.label.fontSize = (int)(20 * guiScale);
             GUI.Label(screenRect, $"Red:\t{255 * rgb.r} ({(rgb.r.ToString().Length < 5 ? rgb.r.ToString() : rgb.r.ToString().Substring(0, 5))})");
-            screenRect.y += 25f;
+            screenRect.y += 30f * guiScale;
             rgb.r = GUI.HorizontalSlider(screenRect, rgb.r, 0f, 1f);
-            screenRect.y += 20f;
+            screenRect.y += 20f * guiScale;
             GUI.Label(screenRect, $"Green:\t{255 * rgb.g} ({(rgb.g.ToString().Length < 5 ? rgb.g.ToString() : rgb.g.ToString().Substring(0, 5))})");
-            screenRect.y += 25f;
+            screenRect.y += 30f * guiScale;
             rgb.g = GUI.HorizontalSlider(screenRect, rgb.g, 0f, 1f);
-            screenRect.y += 20f;
+            screenRect.y += 20f * guiScale;
             GUI.Label(screenRect, $"Blue:\t{255 * rgb.b} ({(rgb.b.ToString().Length < 5 ? rgb.b.ToString() : rgb.b.ToString().Substring(0, 5))})");
-            screenRect.y += 25f;
+            screenRect.y += 30f * guiScale;
             rgb.b = GUI.HorizontalSlider(screenRect, rgb.b, 0f, 1f);
-            GUI.skin.label.fontSize = 20;
+            GUI.skin.label.fontSize = (int)(20 * guiScale);
             Color oldcolor = GUI.backgroundColor;
             GUI.backgroundColor = rgb;
             GUI.backgroundColor = oldcolor;
@@ -259,6 +296,7 @@ namespace TunicRandomizer {
                     PlayerPalette.runtimePalette.SetPixel(2, 0, PlayerPalette.runtimePalette.GetPixel(3, 0));
                 }
                 TunicRandomizer.Settings.UseCustomTexture = true;
+                TunicRandomizer.Settings.RandomFoxColorsEnabled = false;
                 errorMessage = "";
 
                 File.WriteAllBytes(TexturePath, ImageConversion.EncodeToPNG(PlayerPalette.runtimePalette));
@@ -304,12 +342,8 @@ namespace TunicRandomizer {
                     ScavengerMask.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0f);
                 }
                 // Sunglasses color
-                GameObject TheRealest = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/head/therealest");
-                if (TheRealest != null) {
-                    TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
-                    TheRealest.GetComponent<MeshRenderer>().material.color = PlayerPalette.runtimePalette.GetPixel(2, 0);
-                }
-
+                ChangeSunglassesColor(PlayerPalette.runtimePalette.GetPixel(2, 0));
+                // Cape color
                 ChangeCapeColor(PlayerPalette.runtimePalette.GetPixel(2, 2));
             }
         }
@@ -326,6 +360,10 @@ namespace TunicRandomizer {
             if (TheRealest != null) {
                 TheRealest.GetComponent<MeshRenderer>().material.mainTexture = PlayerPalette.runtimePalette;
                 TheRealest.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
+            }
+            if (QuickSettingsRedux.sunglasses != null) {
+                QuickSettingsRedux.sunglasses.GetComponent<MeshRenderer>().material.mainTexture = PlayerPalette.runtimePalette;
+                QuickSettingsRedux.sunglasses.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
             }
             ChangeCapeColor(DefaultColors[15]);
         }
@@ -361,11 +399,15 @@ namespace TunicRandomizer {
         }
 
         public static void ChangeHyperdashColors(Color HyperdashColor) {
-            if (!PlayerCharacter.Instanced) { return; }
-            GameObject Hyperdash = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(7).gameObject;
+            if (PlayerCharacter.Instanced) {
+               GameObject Hyperdash = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(7).gameObject;
+                if (Hyperdash != null) {
+                    HyperdashRenderers.Add(Hyperdash.GetComponent<MeshRenderer>());
+                }
+            }
 
-            if (Hyperdash != null) {
-                HyperdashRenderers.Add(Hyperdash.GetComponent<MeshRenderer>());
+            if (QuickSettingsRedux.laurels != null && QuickSettingsRedux.laurels.GetComponent<MeshRenderer>() != null) {
+                HyperdashRenderers.Add(QuickSettingsRedux.laurels.GetComponent<MeshRenderer>());
             }
             foreach (Renderer renderer in HyperdashRenderers) {
                 if (renderer != null && renderer.material != null) {
@@ -376,11 +418,16 @@ namespace TunicRandomizer {
 
         public static void ChangeSunglassesColor(Color GlassesColor) {
             try {
-                if (!PlayerCharacter.Instanced) { return; }
-                GameObject TheRealest = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(8).gameObject;
-                if (TheRealest != null) {
-                    TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
-                    TheRealest.GetComponent<MeshRenderer>().material.color = GlassesColor;
+                if (QuickSettingsRedux.sunglasses != null) {
+                    QuickSettingsRedux.sunglasses.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
+                    QuickSettingsRedux.sunglasses.GetComponent<MeshRenderer>().material.color = GlassesColor;
+                }
+                if (PlayerCharacter.Instanced) { 
+                    GameObject TheRealest = PlayerCharacter.instance.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetChild(8).gameObject;
+                    if (TheRealest != null) {
+                        TheRealest.GetComponent<MeshRenderer>().material.mainTexture = Texture2D.whiteTexture;
+                        TheRealest.GetComponent<MeshRenderer>().material.color = GlassesColor;
+                    }
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error changing Sunglasses Color!" + e.Message);

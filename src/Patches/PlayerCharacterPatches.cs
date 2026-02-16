@@ -26,10 +26,13 @@ namespace TunicRandomizer {
         public static Renderer foxHair = null;
 
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
-            __instance.gameObject.AddComponent<WaveSpell>();
-            __instance.gameObject.AddComponent<EntranceSeekerSpell>();
-            __instance.gameObject.AddComponent<DDRSpell>();
-            DDRSpell.SetupDPADTester(__instance);
+            try {
+                __instance.gameObject.AddComponent<WaveSpell>();
+                __instance.gameObject.AddComponent<EntranceSeekerSpell>();
+                __instance.gameObject.AddComponent<DDRSpell>();
+                DDRSpell.SetupDPADTester(__instance);
+            } catch (Exception e) { 
+            }
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
@@ -178,6 +181,8 @@ namespace TunicRandomizer {
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
             SceneLoaderPatches.TimeOfLastSceneTransition = SaveFile.GetFloat("playtime");
+
+            Cursor.visible = false;
 
             // hide inventory prompt button so it doesn't overlap item messages
             GameObject InvButton = Resources.FindObjectsOfTypeAll<Animator>().Where(animator => animator.gameObject.name == "LB Prompt").ToList()[0].gameObject;
@@ -392,7 +397,7 @@ namespace TunicRandomizer {
             int seed = SaveFile.GetInt("seed");
 
             if (seed == 0) {
-                seed = QuickSettings.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettings.CustomSeed);
+                seed = QuickSettingsRedux.CustomSeed == "" ? new System.Random().Next() : int.Parse(QuickSettingsRedux.CustomSeed);
                 TunicLogger.LogInfo($"Starting new single player file with seed: " + seed);
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
