@@ -673,47 +673,47 @@ namespace TunicRandomizer {
 
                     y += 40f;
                     
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), slotData["hexagon_quest"].ToString() == "1", slotData["hexagon_quest"].ToString() == "1" ?
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Hexagon Quest"), slotData["hexagon_quest"].ToString() == "1", slotData["hexagon_quest"].ToString() == "1" ?
                         $"Hexagon Quest (<color=#E3D457>{slotData["Hexagon Quest Goal"].ToString()}</color>)" : $"Hexagon Quest");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), slotData["sword_progression"].ToString() == "1", "Sword Progression");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), slotData["start_with_sword"].ToString() == "1", "Start With Sword");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Sword Progression"), slotData["sword_progression"].ToString() == "1", "Sword Progression");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Start With Sword"), slotData["start_with_sword"].ToString() == "1", "Start With Sword");
                     
                     y += 40f;
                     
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), slotData["keys_behind_bosses"].ToString() == "1", "Keys Behind Bosses");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), slotData["ability_shuffling"].ToString() == "1", "Shuffled Abilities");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Keys Behind Bosses"), slotData["keys_behind_bosses"].ToString() == "1", "Keys Behind Bosses");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Abilities"), slotData["ability_shuffling"].ToString() == "1", "Shuffled Abilities");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Ladders"), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
 
                     y += 40f;
 
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), slotData["entrance_rando"].ToString() == "1", $"Entrance Randomizer");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), slotData.ContainsKey("grass_randomizer") && slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), slotData.ContainsKey("breakable_shuffle") && slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Entrance Randomizer"), slotData["entrance_rando"].ToString() == "1", $"Entrance Randomizer");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Grass Randomizer"), slotData.ContainsKey("grass_randomizer") && slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), slotData.ContainsKey("breakable_shuffle") && slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
 
                     y += 40f;
 
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), slotData.ContainsKey("shuffle_fuses") && slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), slotData.ContainsKey("shuffle_bells") && slotData["shuffle_bells"].ToString() == "1", $"Shuffled Bells");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Fuses"), slotData.ContainsKey("shuffle_fuses") && slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Bells"), slotData.ContainsKey("shuffle_bells") && slotData["shuffle_bells"].ToString() == "1", $"Shuffled Bells");
                     int FoolIndex = int.Parse(slotData["fool_traps"].ToString());
-                    GUI.Toggle(scRect(442f, y, 206f, 60f), FoolIndex != 0, $"Fool Traps: {(FoolIndex == 0 ? "Off" : $"<color={FoolColors[FoolIndex]}>{FoolChoices[FoolIndex]}</color>")}");
+                    GUI.Toggle(scRect(442f, y, 206f, 60f, tooltip: "Fool Traps"), FoolIndex != 0, $"Fool Traps: {(FoolIndex == 0 ? "Off" : $"<color={FoolColors[FoolIndex]}>{FoolChoices[FoolIndex]}</color>")}");
 
                 } else {
                     y += 40f;
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), false, "Hexagon Quest");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), false, "Sword Progression");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), false, "Start With Sword");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Hexagon Quest"), false, "Hexagon Quest");
+                    GUI.Toggle(scRect(226f, y, 206f, 30, tooltip: "Sword Progression"), false, "Sword Progression");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Start With Sword"), false, "Start With Sword");
                     y += 40f;
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), false, "Keys Behind Bosses");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), false, "Shuffled Abilities");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), false, $"Shuffled Ladders");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Keys Behind Bosses"), false, "Keys Behind Bosses");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Abilities"), false, "Shuffled Abilities");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Ladders"), false, $"Shuffled Ladders");
                     y += 40f;
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), false, $"Entrance Randomizer");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), false, $"Grass Randomizer");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), false, $"Shuffled Breakables");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Entrance Randomizer"), false, $"Entrance Randomizer");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Grass Randomizer"), false, $"Grass Randomizer");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), false, $"Shuffled Breakables");
                     y += 40f;
-                    GUI.Toggle(scRect(10f, y, 206f, 30f), false, $"Shuffled Fuses");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f), false, $"Shuffled Bells");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f), false, "Fool Traps: Off");
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Fuses"), false, $"Shuffled Fuses");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Bells"), false, $"Shuffled Bells");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Fool Traps"), false, "Fool Traps: Off");
                 }
             }
             GUI.skin.button.fontSize = scFont(20);
