@@ -497,8 +497,6 @@ namespace TunicRandomizer {
             return "FindPairedPortalRegionFromSDT failed to find a match";
         }
 
-    }
-
         public static float calcGuiScale() {
             float guiScale = 1f;
             int width = Camera.main.pixelWidth;
