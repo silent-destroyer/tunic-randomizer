@@ -69,7 +69,7 @@ namespace TunicRandomizer {
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
-            TunicLogger.LogInfo("randomize and place items starting");
+            TunicLogger.LogInfo("Randomizing and placing items");
 
             if (testLocations) {
                 testBool2 = true;

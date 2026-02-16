@@ -212,7 +212,7 @@ namespace TunicRandomizer {
                     dir = (int)PDir.EAST;
                 }
                 if (portal2_sdt.StartsWith("Shop,")) {
-                    portal2 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir);
+                    portal2 = new Portal(name: $"Shop Portal {shop_num}", destination: $"Previous Region {shop_num}", tag: "", scene: "Shop", region: $"Shop Entrance {shop_num}", direction: dir, isDeadEnd: true);
                     shop_num++;
                 }
                 else if (portal2_sdt == "Purgatory, Purgatory_bottom") {
@@ -246,13 +246,10 @@ namespace TunicRandomizer {
         }
 
         public static void CreateRandomizedPortals(int seed) {
-            TunicLogger.LogInfo("CreateRandomizedPortals started");
-            TunicLogger.LogTesting("Randomizing portals");
             RandomizedPortals.Clear();
             FoxPrince.FPRandomizedPortals.Clear();
             ItemTracker.EntranceFileAllPortals.Clear();
             ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
-            TunicLogger.LogInfo("Create randomized portals is randomizing portals");
 
             Dictionary<string, string> plando = null;
             if (GetBool(ERFixedShop)) {
@@ -266,7 +263,6 @@ namespace TunicRandomizer {
                 ItemTracker.EntranceFileAllPortals.Add(portalCombo);
             }
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
-            TunicLogger.LogInfo("CreateRandomizedPortals done");
         }
 
 
@@ -274,7 +270,6 @@ namespace TunicRandomizer {
         // deplando is for Fox Pricne, basically it says "this portal cannot connect to this other portal"
         // canFail is to say whether it should try to reroll or just return null if it reaches a failure condition, it is also for Fox Prince
         public static List<PortalCombo> RandomizePortals(int seed, Dictionary<string, string> plando = null, List<Tuple<string, string>> deplando = null, bool canFail = false) {
-            TunicLogger.LogInfo("Randomize Portals started");
             List<PortalCombo> randomizedPortals = new List<PortalCombo>();
             // making a separate lists for portals connected to one, two, or three+ regions, to be populated by the foreach coming up next
             List<Portal> portalsList = new List<Portal>();
@@ -762,7 +757,6 @@ namespace TunicRandomizer {
                 }
                 randomizedPortals = allRandomizedPortals;
             }
-            TunicLogger.LogInfo("Randomize Portals done");
             return randomizedPortals;
         }
 

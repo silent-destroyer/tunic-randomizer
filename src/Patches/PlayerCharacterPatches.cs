@@ -22,6 +22,7 @@ namespace TunicRandomizer {
 
         public static float TimeWhenLastChangedDayNight = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
+        public static bool LeftCommandPressed = false;
         public static LadderEnd LastLadder = null;
         public static Renderer foxHair = null;
         public static bool DisableShortcuts = true;

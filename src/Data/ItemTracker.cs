@@ -223,12 +223,6 @@ namespace TunicRandomizer {
             }
             int numberOfShops = allInUsePortalNames.Where(p => p.StartsWith("Shop Portal")).Count();
 
-            // todo: make sure these changes work with ap with > 8 shops
-
-            List<string> allInUsePortalNames = new List<string>();
-
-            allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Value.Portal1.Name).ToList();
-
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
             
             foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
