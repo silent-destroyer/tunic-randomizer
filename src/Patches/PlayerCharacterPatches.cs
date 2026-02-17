@@ -22,7 +22,6 @@ namespace TunicRandomizer {
 
         public static float TimeWhenLastChangedDayNight = 0.0f;
         public static float ResetDayNightTimer = -1.0f;
-        public static bool LeftCommandPressed = false;
         public static LadderEnd LastLadder = null;
         public static Renderer foxHair = null;
         public static bool DisableShortcuts = true;
@@ -57,12 +56,6 @@ namespace TunicRandomizer {
                 DisableShortcuts = !DisableShortcuts;
             }
             if (!DisableShortcuts) {
-                if (Input.GetKeyDown(KeyCode.H) || (InputManager.ActiveDevice.LeftCommand.WasPressed && !LeftCommandPressed)) {
-                    if (SpeedrunFinishlineDisplayPatches.CompletionCanvas != null && SpeedrunFinishlineDisplayPatches.GameCompleted) {
-                        SpeedrunFinishlineDisplayPatches.CompletionCanvas.SetActive(!SpeedrunFinishlineDisplayPatches.CompletionCanvas.active);
-                    }
-                }
-                LeftCommandPressed = InputManager.ActiveDevice.LeftCommand.WasPressed;
                 if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
                     if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                         GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
@@ -80,14 +73,6 @@ namespace TunicRandomizer {
                         $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
                         (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                     }
-                }
-
-                if ((Input.GetKeyDown(KeyCode.R) || InputManager.ActiveDevice.LeftStickButton.WasPressed) && IsArchipelago()) {
-                    Archipelago.instance.Release();
-                }
-
-                if ((Input.GetKeyDown(KeyCode.C) || InputManager.ActiveDevice.RightStickButton.WasPressed) && IsArchipelago()) {
-                    Archipelago.instance.Collect();
                 }
 
                 if (Input.GetKeyDown(KeyCode.Alpha3)) {
