@@ -212,6 +212,7 @@ namespace TunicRandomizer {
         public static void TrinketWell_TossedInCoin_PostfixPatch(TrinketWell __instance) {
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]++;
             ItemTracker.SaveTrackerFile();
+            InventoryCounter.UpdateCounters();
         }
 
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
