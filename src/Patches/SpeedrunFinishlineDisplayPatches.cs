@@ -577,7 +577,8 @@ namespace TunicRandomizer {
             GameCompleted = false;
             SpeedrunData.gameComplete = 0;
             PauseMenu.ReturnToTitleScreen();
-            return false;
+            SceneLoaderPatches.SceneName = "TitleScreen";
+            return false; 
         }
 
         public static void GameOverDecision_Start_PostfixPatch(GameOverDecision __instance) {

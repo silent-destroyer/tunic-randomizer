@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TunicRandomizer {
     public class PaletteEditor : MonoBehaviour {
@@ -91,8 +92,8 @@ namespace TunicRandomizer {
 
         private void OnGUI() {
 
-            if (QuickSettingsRedux.showFoxCustomization || (EditorOpen && SceneLoaderPatches.SceneName != "TitleScreen")) {
-                titleScreenMode = QuickSettingsRedux.showFoxCustomization && SceneLoaderPatches.SceneName == "TitleScreen";
+            if (QuickSettingsRedux.showFoxCustomization || (EditorOpen && SceneManager.GetActiveScene().name != "TitleScreen")) {
+                titleScreenMode = QuickSettingsRedux.showFoxCustomization && SceneManager.GetActiveScene().name == "TitleScreen";
 
                 guiScale = TunicUtils.calcGuiScale();
                 
