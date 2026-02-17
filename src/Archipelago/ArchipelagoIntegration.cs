@@ -332,7 +332,7 @@ namespace TunicRandomizer {
                     Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                     RecentItemsDisplay.instance.EnqueueItem(itemInfo, false);
                 }
-
+                InventoryCounter.UpdateCounters();
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
