@@ -119,7 +119,7 @@ namespace TunicRandomizer {
                 deathLinkService = session.CreateDeathLinkService();
 
                 deathLinkService.OnDeathLinkReceived += (deathLinkObject) => {
-                    if (SceneManager.GetActiveScene().name != "TitleScreen") {
+                    if (PlayerCharacter.Instanced && SpeedrunData.gameComplete == 0) {
                         TunicLogger.LogInfo("Death link received");
                         PlayerCharacterPatches.DeathLinkMessage = deathLinkObject.Cause == null ? $"\"{deathLinkObject.Source} died and took you with them.\"": $"\"{deathLinkObject.Cause}\"";
                         PlayerCharacterPatches.DiedToDeathLink = true;
