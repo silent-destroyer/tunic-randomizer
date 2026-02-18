@@ -240,7 +240,8 @@ namespace TunicRandomizer {
         public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
             if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled ||
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
-                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
+                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead
+                || (PlayerCharacter.Instanced && PlayerCharacter.instance.magicInputBufferIndex > 0) || PlayerCharacterPatches.IsTeleporting) {
                 return ItemResult.TemporaryFailure;
             }
 

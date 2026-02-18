@@ -1288,7 +1288,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop = (int)GUI.HorizontalSlider(scRect(226f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop, 0, 100);
             TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs = (int)GUI.HorizontalSlider(scRect(442f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs, 0, 100);
             y += 20f;
-            GUI.Label(scRect(10f, y, 206f, 60f, tooltip: "Decoupled Entrances"), "ER: Decoupled Entrances");
+            GUI.Label(scRect(10f, y, 206f, 60f, tooltip: "Decoupled Entrances"), "ER: Decoupled");
             GUI.Label(scRect(226f, y, 206f, 60f, tooltip: "Fox Prince"), "ER: Fox Prince");
             y += 25f;
             GUI.Label(scRect(170f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled}%");

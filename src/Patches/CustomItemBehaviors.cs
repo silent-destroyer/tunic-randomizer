@@ -203,7 +203,8 @@ namespace TunicRandomizer {
                     SaveFile.SetString("last campfire scene name", SaveFile.GetString("randomizer last campfire scene name for dath stone"));
                     SaveFile.SetString("last campfire id", SaveFile.GetString("randomizer last campfire id for dath stone"));
                 }
-            }            
+            }
+            PlayerCharacter.instance.cachedFireController._fireAmount = 0;
             PlayerCharacter.instance.gameObject.AddComponent<Rotate>();
             PlayerCharacterPatches.IsTeleporting = true;
             return true;
