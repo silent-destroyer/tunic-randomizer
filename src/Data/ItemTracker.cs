@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using static TunicRandomizer.GhostHints;
 using static TunicRandomizer.SaveFlags;
 
@@ -226,7 +227,6 @@ namespace TunicRandomizer {
             } else {
                 allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Portal1.Name).ToList();
             }
-            int numberOfShops = allInUsePortalNames.Where(p => p.StartsWith("Shop Portal")).Count();
 
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
             
@@ -239,10 +239,10 @@ namespace TunicRandomizer {
             List<string> addedPortals = new List<string>();
 
             void addPortal(string portalName, string portalRegion) {
+                string portalLine = portalName + ",-->,";
                 addedPortals.Add(portalName);
-                PortalCombo portalCombo = portalNameToPair[portalName];
-                string portalLine = portalCombo.Portal1.Name + ",-->,";
                 if (SaveFile.GetInt("randomizer entered portal " + portalName) == 1) {
+                    PortalCombo portalCombo = portalNameToPair[portalName];
                     portalLine += portalCombo.Portal2.Name;
                 }
                 regionsToPortals[Locations.SimplifiedSceneNames[portalRegion]].Add(portalLine);
@@ -264,8 +264,13 @@ namespace TunicRandomizer {
 
             // the sorting stuff above skips shops, and they're at the end anyway so let's just add them here
             List<string> leftoverPortals = allInUsePortalNames.Where(x => !addedPortals.Contains(x) && x.StartsWith("Shop")).OrderBy(x => int.Parse(x.Split(' ').Last())).ToList();
+            // in fox prince, for some reason it likes adding duplicates of all the shops, and I'm too tired today to deal with it properly
+            List<string> leftoverPortalsAdded = new List<string>();
             foreach (string shopPortal in leftoverPortals) {
-                addPortal(shopPortal, "Shop");
+                if (!leftoverPortalsAdded.Contains(shopPortal)) {
+                    addPortal(shopPortal, "Shop");
+                    leftoverPortalsAdded.Add(shopPortal);
+                }
             }
 
             fileContents = "From,,To\n";
