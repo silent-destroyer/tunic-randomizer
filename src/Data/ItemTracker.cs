@@ -206,7 +206,7 @@ namespace TunicRandomizer {
                 try {
                     WriteEntranceFile();
                 } catch (Exception e) {
-                    TunicLogger.LogError("Error generated entrance tracker file: " + e.Message);
+                    TunicLogger.LogError("Error generating entrance tracker file: " + e.Message);
                 }
             }
             SaveTrackerFile();
