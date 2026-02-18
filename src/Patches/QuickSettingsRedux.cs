@@ -845,6 +845,7 @@ namespace TunicRandomizer {
             }
             y += 30f;
             TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(scRect(25f, y, 206f, 30f), "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
+            TunicRandomizer.Settings.FoxPrinceEnabled = GUI.Toggle(ShowTooltip(scRect(241f, y, 206f, 30f), "Fox Prince"), TunicRandomizer.Settings.FoxPrinceEnabled, "Fox Prince");
             y += 40f;
             y = HexagonQuestSection(y);
             return y;
