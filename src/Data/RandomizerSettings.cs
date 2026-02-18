@@ -47,6 +47,7 @@ namespace TunicRandomizer {
         private const int BELL_SHUFFLE = 262144;
         private const int LAURELS_ZIPS = 524288;
         private const int LS_WITHOUT_ITEMS = 1048576;
+        private const int FOX_PRINCE = 2097152;
 
         public GameModes GameMode {
             get;
@@ -740,6 +741,7 @@ namespace TunicRandomizer {
                 BellShuffle = eval(logic, BELL_SHUFFLE);
                 LaurelsZips = eval(logic, LAURELS_ZIPS);
                 LadderStorageWithoutItems = eval(logic, LS_WITHOUT_ITEMS);
+                FoxPrinceEnabled = eval(logic, FOX_PRINCE);
 
                 int general = int.Parse(decodedSplit[9]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);

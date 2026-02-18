@@ -896,6 +896,9 @@ namespace TunicRandomizer {
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems) { 
                 SaveFile.SetInt(LadderStorageWithoutItems, 1);
             }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ERFoxPrince) {
+                SaveFile.SetInt(FoxPrinceEnabled, 1);
+            }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);
                 if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.HexQuestAbilityShufflePages) {
