@@ -141,6 +141,8 @@ namespace TunicRandomizer {
             int GoldHexagonsAdded = 0;
             int HexagonsToAdd = TunicUtils.GetMaxGoldHexagons();
 
+            //int KobansAdded = 0;
+
             if (IsHexQuestWithHexAbilities()) {
                 int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
                 List<string> abilities = new List<string>() { "prayer", "holy cross", "icebolt" }.OrderBy(r => random.Next()).ToList();
@@ -246,6 +248,14 @@ namespace TunicRandomizer {
                     Item.Reward.Type = "INVENTORY";
                     Ladders.Remove(Item.Reward.Name);
                 }
+
+                // in case we use this for something
+                //if (GetBool(FoxPrinceEnabled) && ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && KobansAdded < 15) {
+                //    Item.Reward.Name = "Koban";
+                //    Item.Reward.Amount = 1;
+                //    Item.Reward.Type = "INVENTORY";
+                //    KobansAdded++;
+                //}
 
                 if ((ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) && !lockedItem) {
                     ProgressionRewards.Add(Item.Reward);

@@ -219,8 +219,14 @@ namespace TunicRandomizer {
             Item Dart = Inventory.GetItemByName("Dart");
             Dart.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
             Dart.collectionMessage.text = "boulzI!";
+
+            Item Koban = ScriptableObject.CreateInstance<Item>();
+            Koban.name = "Koban";
+            Koban.collectionMessage = null;
+            Koban.controlAction = "";
         
             Inventory.itemList.Add(SoulDice);
+            Inventory.itemList.Add(Koban);
         }
     }
 }

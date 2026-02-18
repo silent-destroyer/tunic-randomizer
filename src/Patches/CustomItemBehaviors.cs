@@ -260,6 +260,7 @@ namespace TunicRandomizer {
                 case "Cape":
                 case "Soul Dice":
                 case "Dart":
+                case "Koban":
                     __result = false;
                     return false;
                 default:

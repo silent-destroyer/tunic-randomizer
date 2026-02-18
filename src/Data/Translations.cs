@@ -177,6 +177,7 @@ namespace TunicRandomizer {
             {"Grass", "grahs"},
             {"Soul Dice", "sOl dIs"},
             {"Dart", "dRt"},
+            {"Koban", "kObahn"},
             {"Overworld", "Ovurwurld"},
             {"West Furnace", "wehst furnis"},
             {"Cube Cave", "kyoob kAv"},

@@ -464,6 +464,32 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupFoxPrinceKobanItemPresentation() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "shield").First().gameObject;
+                GameObject KobanPresentation = GameObject.Instantiate(PresentationBase);
+                GameObject Koban = Resources.FindObjectsOfTypeAll<UpgradeStatue>().First().transform.GetChild(6).GetChild(4).gameObject;
+                KobanPresentation.transform.parent = PresentationBase.transform.parent;
+                KobanPresentation.transform.localPosition = new Vector3(0f, 0.019f, 0.091f);
+                KobanPresentation.transform.localEulerAngles = new Vector3(338.9561f, 150.0619f, 0f);
+                KobanPresentation.transform.localScale = Vector3.one * 0.4358f;
+                KobanPresentation.GetComponent<MeshFilter>().mesh = Koban.GetComponent<MeshFilter>().mesh;
+                KobanPresentation.GetComponent<MeshRenderer>().materials = Koban.GetComponent<MeshRenderer>().materials;
+                KobanPresentation.name = "koban";
+                KobanPresentation.layer = 5;
+
+                KobanPresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Koban") };
+
+                KobanPresentation.SetActive(false);
+
+                RegisterNewItemPresentation(KobanPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Koban"] = KobanPresentation;
+            } catch (Exception e) {
+                TunicLogger.LogError("Fox prince presentation error: " + e.Message);
+            }
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);

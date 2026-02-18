@@ -4608,7 +4608,6 @@ namespace TunicRandomizer {
                     },
                 }
             },
-
             {
                 "Library Rotunda to Hall",
                 new Dictionary<string, List<List<string>>> {

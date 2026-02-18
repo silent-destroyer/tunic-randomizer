@@ -112,8 +112,8 @@ namespace TunicRandomizer {
                 }
                 if (Input.GetKeyDown(KeyCode.O)) {
                     try {
-                        Inventory.GetItemByName("Dart").Quantity = 3;
-                        ItemPresentation.PresentItem(Inventory.GetItemByName("Dart"), 3);
+                        Inventory.GetItemByName("Koban").Quantity = 3;
+                        ItemPresentation.PresentItem(Inventory.GetItemByName("Koban"));
                     } catch (Exception e) {
                         TunicLogger.LogInfo("Error showing dice item");
                     }
