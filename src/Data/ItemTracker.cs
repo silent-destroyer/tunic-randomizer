@@ -1,5 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static TunicRandomizer.GhostHints;
@@ -202,7 +203,11 @@ namespace TunicRandomizer {
                 }
             }
             if (SaveFile.GetInt(EntranceRando) == 1) { 
-                WriteEntranceFile();
+                try {
+                    WriteEntranceFile();
+                } catch (Exception e) {
+                    TunicLogger.LogError("Error generated entrance tracker file: " + e.Message);
+                }
             }
             SaveTrackerFile();
         }
