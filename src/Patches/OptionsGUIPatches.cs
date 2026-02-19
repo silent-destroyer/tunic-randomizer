@@ -240,7 +240,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
             OptionsGUI.addToggle("???", "Off", "On", TunicRandomizer.Settings.CameraFlip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
 
-            if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
+            if (SecretMayor.shouldBeActive || SecretMayor.checkIfActive()) {
                 OptionsGUI.addToggle("<#ffd700>Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }
             addPageButton("Debug / Misc Options", DebugFunctionsPage);

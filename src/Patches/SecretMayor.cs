@@ -8,7 +8,7 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
     public class SecretMayor {
 
-        public static bool shouldBeActive = isCorrectDate();
+        public static bool shouldBeActive = checkIfActive();
         public static bool SetupAlready = false;
         public static GameObject MrMayor;
         public static void Setup(Scene loadingScene) {
@@ -322,8 +322,9 @@ namespace TunicRandomizer {
             }
         }
 
-        public static bool isCorrectDate() {
-            return DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
+        public static bool checkIfActive() {
+            string[] args = Il2CppSystem.Environment.GetCommandLineArgs();
+            return (DateTime.Now.Day == 1 && DateTime.Now.Month == 4) || args.Contains("-mayor");
         }
     }
 }
