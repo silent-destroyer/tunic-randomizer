@@ -756,7 +756,10 @@ namespace TunicRandomizer {
                     portal.optionalIDToSpawnAt = "zig_skip_recovery";
                     continue;
                 }
-
+                // failsafe to save the fox after a wrong warp
+                if (PlayerCharacterSpawn.portalIDToSpawnAt == portal.FullID) {
+                    PlayerCharacterPatches.failsafeSpawnPoint = portal.playerSpawnTransform;
+                }
                 // go through the list of randomized portals and see if the first portal matches the one we're looking at
                 foreach (KeyValuePair<string, PortalCombo> portalCombo in RandomizedPortals) {
                     string comboTag = portalCombo.Key;
