@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -43,11 +45,16 @@ namespace TunicRandomizer {
             return dictionary;
         }
 
+        public static Dictionary<string, int> AddStringAndQuantityToDict(Dictionary<string, int> dictionary, string item, int quantity) {
+            dictionary.TryGetValue(item, out var count);
+            dictionary[item] = count + quantity;
+            return dictionary;
+        }
+
         // for combining dictionaries of item quantities
         public static Dictionary<string, int> AddDictToDict(Dictionary<string, int> primaryDictionary, Dictionary<string, int> secondaryDictionary) {
             foreach (KeyValuePair<string, int> pair in secondaryDictionary) {
-                primaryDictionary.TryGetValue(pair.Key, out var count);
-                primaryDictionary[pair.Key] = count + pair.Value;
+                AddStringAndQuantityToDict(primaryDictionary, pair.Key, pair.Value);
             }
             return primaryDictionary;
         }
@@ -207,6 +214,27 @@ namespace TunicRandomizer {
             return false;
         }
 
+        public static void CheckAllLocsReachable(List<PortalCombo> randomizedPortals = null) {
+            TunicLogger.LogInfo("Starting CheckAllLocsReachable");
+            Dictionary<string, int> inventory = new Dictionary<string, int>(ItemRandomizer.PopulatePrecollected());
+            List<Check> allInUseChecks = GetAllInUseChecks();
+            
+            AddStringToDict(inventory, "Overworld");
+
+            if (randomizedPortals == null) {
+                randomizedPortals = ERData.RandomizedPortals;
+            }
+            // if it worked right, then inventory should be full and alreadyGottenLocs should be all locations with progression items
+            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory, randomizedPortals: randomizedPortals);
+
+            foreach (Check check in allInUseChecks) {
+                if (!check.Location.reachable(inventory)) {
+                    TunicLogger.LogError($"{check.CheckId} is not reachable!");
+                }
+            }
+            TunicLogger.LogInfo("CheckAllLocsReachable done, if there are issues then they will be shown above");
+        }
+
         public static Dictionary<string, Dictionary<string, List<List<string>>>> DeepCopyTraversalReqs() {
             Dictionary<string, Dictionary<string, List<List<string>>>> deepCopied = new Dictionary<string, Dictionary<string, List<List<string>>>>();
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> kvp in ERData.TraversalReqs) {
@@ -215,7 +243,7 @@ namespace TunicRandomizer {
                     List<List<string>> newListList = new List<List<string>>();
                     foreach (List<string> list in kvp2.Value) {
                         List<string> newList = new List<string>(list);
-                        newListList.Add(list);
+                        newListList.Add(newList);
                     }
                     newDict.Add(kvp2.Key, newListList);
                 }
@@ -356,6 +384,117 @@ namespace TunicRandomizer {
             string[] coords = Position.Split(',');
             Vector3 vector = new Vector3(float.Parse(coords[0], CultureInfo.InvariantCulture), float.Parse(coords[1], CultureInfo.InvariantCulture), float.Parse(coords[2], CultureInfo.InvariantCulture));
             return vector;
+        }
+
+        public static int GetIntFromString(string str) {
+            string result = Regex.Match(str, @"\d+").Value;
+            return int.Parse(result);
+        }
+
+
+        // ER-related stuff
+
+        // quick reference for which directions you can pair to which
+        public static Dictionary<int, int> DirectionPairs = new Dictionary<int, int> { { (int)PDir.NORTH, (int)PDir.SOUTH }, { (int)PDir.SOUTH, (int)PDir.NORTH }, { (int)PDir.EAST, (int)PDir.WEST }, { (int)PDir.WEST, (int)PDir.EAST }, { (int)PDir.LADDER_UP, (int)PDir.LADDER_DOWN }, { (int)PDir.LADDER_DOWN, (int)PDir.LADDER_UP }, { (int)PDir.FLOOR, (int)PDir.FLOOR }, };
+
+        public static int FindPortalDirectionFromName(string portalName) {
+            if (portalName.StartsWith("Shop Portal")) {
+                if (portalName.EndsWith("7") || portalName.EndsWith("8")) {
+                    return (int)PDir.WEST;
+                } else {
+                    return (int)PDir.SOUTH;
+                }
+            }
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return portal.Direction;
+                        }
+                    }
+                }
+            }
+            return (int)PDir.NONE;
+        }
+
+        private static bool CheckDirections(int dir1, int dir2) {
+            return dir1 == DirectionPairs[dir2];
+        }
+
+        public static bool VerifyDirectionPair(Portal portal1, Portal portal2) {
+            return CheckDirections(portal1.Direction, portal2.Direction);
+        }
+        public static bool VerifyDirectionPair(string portal1, string portal2) {
+            return CheckDirections(FindPortalDirectionFromName(portal1), FindPortalDirectionFromName(portal2));
+        }
+
+        public static PortalCombo GetPortalComboFromRandomizedPortals(string portalName, List<PortalCombo> randomizedPortals) {
+            Portal originPortal = null;
+            Portal destinationPortal = null;
+            foreach (PortalCombo portalCombo in randomizedPortals) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    originPortal = portalCombo.Portal1;
+                    destinationPortal = portalCombo.Portal2;
+                    break;
+                }
+            }
+            if (destinationPortal == null) {
+                TunicLogger.LogError("Error in getting portal name in FPGetThreePortals");
+            }
+            PortalCombo newPortalCombo = new PortalCombo(originPortal, destinationPortal);
+            return newPortalCombo;
+        }        
+
+        public static string FindPairedPortalSceneFromName(string portalName) {
+            List<PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList) {
+                if (portalCombo.Portal1.Name == portalName) {
+                    return portalCombo.Portal2.Scene;
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalSceneFromName failed to find a match";
+        }
+
+        public static string FindPortalRegionFromName(string portalName) {
+            foreach (Dictionary<string, List<TunicPortal>> regionGroups in RegionPortalsList.Values) {
+                foreach (KeyValuePair<string, List<TunicPortal>> regionGroup in regionGroups) {
+                    string regionName = regionGroup.Key;
+                    foreach (TunicPortal portal in regionGroup.Value) {
+                        if (portal.Name == portalName) {
+                            return regionName;
+                        }
+                    }
+                }
+            }
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPortalRegionFromName failed to find a match";
+        }
+
+        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
+            List<PortalCombo> portalList;
+            if (GetBool(EntranceRando)) {
+                portalList = ERData.RandomizedPortals;
+            } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
+                portalList = ERData.VanillaPortals;
+            }
+            foreach (PortalCombo portalCombo in portalList) {
+                if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
+                    return portalCombo.Portal2.OutletRegion();
+                }
+            }
+
+            // returning this if it fails, since that makes some FairyTarget stuff easier
+            return "FindPairedPortalRegionFromSDT failed to find a match";
         }
 
         public static float calcGuiScale() {

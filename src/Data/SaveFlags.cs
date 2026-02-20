@@ -39,6 +39,11 @@
         public const string PortalDirectionPairs = "randomizer paired portal directions enabled";
         public const string Decoupled = "randomizer decoupled ER enabled";
 
+        // Fox Prince Flags
+        public const string FoxPrinceEnabled = "randomizer fox prince enabled";
+        public const string FPChosenPortalPrefix = "randomizer bp chosen";
+        public const string FPPinnedPortalFlag = "randomizer fp pinned";
+
         // Logic Trick Flags
         public const string LaurelsZips = "randomizer laurels zips enabled";
         public const string IceGrapplingDifficulty = "randomizer ice grappling difficulty";

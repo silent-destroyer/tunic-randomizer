@@ -2,8 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using static TunicRandomizer.GhostHints;
 using static TunicRandomizer.SaveFlags;
 
@@ -193,7 +193,7 @@ namespace TunicRandomizer {
         }
 
         public void PopulateDiscoveredEntrances() {
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal1.Name) == 1) {
                     DiscoveredEntrances[portalCombo.Portal1.SceneDestinationTag] = portalCombo.Portal2.SceneDestinationTag;
                 }
@@ -204,7 +204,11 @@ namespace TunicRandomizer {
                 }
             }
             if (SaveFile.GetInt(EntranceRando) == 1) { 
-                WriteEntranceFile();
+                try {
+                    WriteEntranceFile();
+                } catch (Exception e) {
+                    TunicLogger.LogError("Error generating entrance tracker file: " + e.Message);
+                }
             }
             SaveTrackerFile();
         }
@@ -212,14 +216,21 @@ namespace TunicRandomizer {
         public static List<PortalCombo> EntranceFileAllPortals = new List<PortalCombo>();
         public void WriteEntranceFile() {
             string fileContents = "";
-
             List<string> allInUsePortalNames = new List<string>();
-
-            allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Value.Portal1.Name).ToList();
+            if (GetBool(FoxPrinceEnabled)) {
+                foreach (PortalCombo portalCombo in EntranceFileAllPortals) {
+                    allInUsePortalNames.Add(portalCombo.Portal1.Name);
+                    if (!GetBool(Decoupled)) {
+                        allInUsePortalNames.Add(portalCombo.Portal2.Name);
+                    }
+                }
+            } else {
+                allInUsePortalNames = ERData.RandomizedPortals.Select(p => p.Portal1.Name).ToList();
+            }
 
             Dictionary<string, PortalCombo> portalNameToPair = new Dictionary<string, PortalCombo>();
-
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 portalNameToPair.Add(portalCombo.Portal1.Name, portalCombo);
             }
 
@@ -228,10 +239,10 @@ namespace TunicRandomizer {
             List<string> addedPortals = new List<string>();
 
             void addPortal(string portalName, string portalRegion) {
+                string portalLine = portalName + ",-->,";
                 addedPortals.Add(portalName);
-                PortalCombo portalCombo = portalNameToPair[portalName];
-                string portalLine = portalCombo.Portal1.Name + ",-->,";
                 if (SaveFile.GetInt("randomizer entered portal " + portalName) == 1) {
+                    PortalCombo portalCombo = portalNameToPair[portalName];
                     portalLine += portalCombo.Portal2.Name;
                 }
                 regionsToPortals[Locations.SimplifiedSceneNames[portalRegion]].Add(portalLine);
@@ -253,8 +264,13 @@ namespace TunicRandomizer {
 
             // the sorting stuff above skips shops, and they're at the end anyway so let's just add them here
             List<string> leftoverPortals = allInUsePortalNames.Where(x => !addedPortals.Contains(x) && x.StartsWith("Shop")).OrderBy(x => int.Parse(x.Split(' ').Last())).ToList();
+            // in fox prince, for some reason it likes adding duplicates of all the shops, and I'm too tired today to deal with it properly
+            List<string> leftoverPortalsAdded = new List<string>();
             foreach (string shopPortal in leftoverPortals) {
-                addPortal(shopPortal, "Shop");
+                if (!leftoverPortalsAdded.Contains(shopPortal)) {
+                    addPortal(shopPortal, "Shop");
+                    leftoverPortalsAdded.Add(shopPortal);
+                }
             }
 
             fileContents = "From,,To\n";
@@ -372,7 +388,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 List<string> portalPairs = new List<string>();
                 SpoilerLogLines.Add("\nEntrance Connections");
-                foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                     portalPairs.Add(portalCombo.Portal1.Name + " --> " + portalCombo.Portal2.Name);
                 }
                 // list of all portals in order, for the purpose of sorting the portal spoiler

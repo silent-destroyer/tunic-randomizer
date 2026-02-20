@@ -400,6 +400,96 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupFoxPrinceItemPresentations() {
+            try {
+                // Soul Dice
+
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "shield").First().gameObject;
+                GameObject DicePresentation = GameObject.Instantiate(PresentationBase);
+                GameObject DiceObject = Resources.FindObjectsOfTypeAll<LoadingSpinner>().First().gameObject;
+
+                DicePresentation.transform.parent = PresentationBase.transform.parent;
+                DicePresentation.transform.localPosition = Vector3.zero;
+                DicePresentation.transform.localEulerAngles = new Vector3(345f, 45f, 345f);
+                DicePresentation.transform.localScale = Vector3.one * 0.5f;
+                DicePresentation.GetComponent<MeshFilter>().mesh = DiceObject.transform.GetChild(0).GetChild(0).GetComponent<MeshFilter>().mesh;
+                DicePresentation.GetComponent<MeshRenderer>().materials = DiceObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().materials;
+
+                DicePresentation.name = "soul dice";
+                DicePresentation.layer = 5;
+
+                DicePresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Soul Dice") };
+                DicePresentation.AddComponent<Rotate>().unscaled = true;
+                DicePresentation.GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(10f, 30f, 10f);
+
+                GameObject SubLayer = GameObject.Instantiate(DicePresentation);
+                SubLayer.transform.parent = DicePresentation.transform;
+                GameObject.Destroy(SubLayer.GetComponent<Rotate>());
+                GameObject.Destroy(SubLayer.GetComponent<ItemPresentationGraphic>());
+                SubLayer.layer = 5;
+                SubLayer.GetComponent<MeshRenderer>().material = ModelSwaps.FindMaterial("tunic knight obsidian");
+                SubLayer.transform.localRotation = new Quaternion(0, 0, 0, 0);
+                SubLayer.transform.localPosition = Vector3.zero;
+
+                DicePresentation.SetActive(false);
+
+                RegisterNewItemPresentation(DicePresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Soul Dice"] = DicePresentation;
+
+                // Dart
+                GameObject fox = Resources.Load("_PlayerCharacter").Cast<GameObject>();
+                GameObject.DontDestroyOnLoad(fox);
+                GameObject Dart = fox.transform.GetChild(3).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(6).gameObject;
+                // torch is 2
+                GameObject DartPresentation = GameObject.Instantiate(Dart);
+
+                DartPresentation.transform.parent = PresentationBase.transform.parent;
+                DartPresentation.transform.localPosition = Vector3.zero;
+                DartPresentation.transform.localEulerAngles = new Vector3(315f, 90f, 0f);
+                DartPresentation.transform.localScale = Vector3.one;
+
+                DartPresentation.name = "dart";
+                DartPresentation.layer = 5;
+
+                DartPresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Dart") };
+
+                DartPresentation.SetActive(false);
+                RegisterNewItemPresentation(DartPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Dart"] = DartPresentation;
+
+            } catch (Exception e) {
+                TunicLogger.LogError("Fox prince presentation error: " + e.Message);
+            }
+        }
+
+        public static void SetupFoxPrinceKobanItemPresentation() {
+            try {
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "shield").First().gameObject;
+                GameObject KobanPresentation = GameObject.Instantiate(PresentationBase);
+                GameObject Koban = Resources.FindObjectsOfTypeAll<UpgradeStatue>().First().transform.GetChild(6).GetChild(4).gameObject;
+                KobanPresentation.transform.parent = PresentationBase.transform.parent;
+                KobanPresentation.transform.localPosition = new Vector3(0f, 0.019f, 0.091f);
+                KobanPresentation.transform.localEulerAngles = new Vector3(338.9561f, 150.0619f, 0f);
+                KobanPresentation.transform.localScale = Vector3.one * 0.4358f;
+                KobanPresentation.GetComponent<MeshFilter>().mesh = Koban.GetComponent<MeshFilter>().mesh;
+                KobanPresentation.GetComponent<MeshRenderer>().materials = Koban.GetComponent<MeshRenderer>().materials;
+                KobanPresentation.name = "koban";
+                KobanPresentation.layer = 5;
+
+                KobanPresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Koban") };
+
+                KobanPresentation.SetActive(false);
+
+                RegisterNewItemPresentation(KobanPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Koban"] = KobanPresentation;
+            } catch (Exception e) {
+                TunicLogger.LogError("Fox prince presentation error: " + e.Message);
+            }
+        }
+
         private static void RegisterNewItemPresentation(ItemPresentationGraphic itemPresentationGraphic) {
             List<ItemPresentationGraphic> newipgs = ItemPresentation.instance.itemGraphics.ToList();
             newipgs.Add(itemPresentationGraphic);

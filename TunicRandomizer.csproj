@@ -35,8 +35,8 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Archipelago.MultiClient.Net, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Archipelago.MultiClient.Net.6.6.0\lib\net45\Archipelago.MultiClient.Net.dll</HintPath>
+    <Reference Include="Archipelago.MultiClient.Net, Version=6.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Archipelago.MultiClient.Net.6.6.1\lib\net45\Archipelago.MultiClient.Net.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
@@ -92,7 +92,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Archipelago.MultiClient.Net.6.6.0\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Archipelago.MultiClient.Net.6.6.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RTLTMPro">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\TUNIC\BepInEx\unhollowed\RTLTMPro.dll</HintPath>
@@ -193,6 +193,7 @@
     <Compile Include="src\Data\PortalCombo.cs" />
     <Compile Include="src\Data\RandomizerSettings.cs" />
     <Compile Include="src\Data\SaveFlags.cs" />
+    <Compile Include="src\Data\SceneImageData.cs" />
     <Compile Include="src\Data\Tooltips.cs" />
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Data\TrickLogic.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
+    <Compile Include="src\Patches\FoxPrince.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
     <Compile Include="src\Patches\GrassRandomizer.cs" />
@@ -232,8 +234,10 @@
     <Compile Include="src\TunicRandomizer.cs" />
     <Compile Include="src\Util\CreditsSkipper.cs" />
     <Compile Include="src\Util\DDRSpell.cs" />
+    <Compile Include="src\Util\EntranceSelector.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
+    <Compile Include="src\Util\SceneSelectionButton.cs" />
     <Compile Include="src\Util\LadderManager.cs" />
     <Compile Include="src\Util\LogicChecker.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
@@ -247,9 +251,10 @@
     <Compile Include="src\Util\UnderConstruction.cs" />
     <Compile Include="src\Util\VisibleByNotHavingItem.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="src\Data\Grass.json" />
     <EmbeddedResource Include="src\Data\GrassReqs.json" />
     <EmbeddedResource Include="src\Data\Fuses.json" />

@@ -24,6 +24,7 @@ namespace TunicRandomizer {
         public static float ResetDayNightTimer = -1.0f;
         public static LadderEnd LastLadder = null;
         public static Renderer foxHair = null;
+        public static bool DisableShortcuts = true;
 
         // for trying to detect a wrong warp and save the fox
         public static int timesDeathplaneTriggeredThisScene = 0;
@@ -55,42 +56,100 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
-                if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
-                    GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
-                    $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
-                    $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
-                } else {
-                    GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
-                    $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
-                    $"\"Hexagon Quest........{(SaveFile.GetInt(HexagonQuestEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Keys Behind Bosses...{(SaveFile.GetInt(KeysBehindBosses) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Sword Progression....{(SaveFile.GetInt(SwordProgressionEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Abilities...{(SaveFile.GetInt(AbilityShuffle) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Shuffled Ladders.....{(SaveFile.GetInt(LadderRandoEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
-                    $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
-                    (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
-                }
+            if (Input.GetKeyDown(KeyCode.RightAlt)) {
+                DisableShortcuts = !DisableShortcuts;
             }
+            if (!DisableShortcuts) {
+                if (Input.GetKeyDown(KeyCode.Alpha2) && IsSinglePlayer()) {
+                    if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
+                        GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
+                        $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
+                        $"\"Mystery Seed.........{"<#00ff00>On".PadLeft(21, '.')}\"",
+                        (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
+                    } else {
+                        GenericPrompt.ShowPrompt($"\"Copy Current Game Settings?\"\n\"-----------------\"\n" +
+                        $"\"Seed.................{SaveFile.GetInt("seed").ToString().PadLeft(12, '.')}\"\n" +
+                        $"\"Hexagon Quest........{(SaveFile.GetInt(HexagonQuestEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                        $"\"Keys Behind Bosses...{(SaveFile.GetInt(KeysBehindBosses) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                        $"\"Sword Progression....{(SaveFile.GetInt(SwordProgressionEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                        $"\"Shuffled Abilities...{(SaveFile.GetInt(AbilityShuffle) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                        $"\"Shuffled Ladders.....{(SaveFile.GetInt(LadderRandoEnabled) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"\n" +
+                        $"\"Entrance Randomizer..{(SaveFile.GetInt(EntranceRando) == 0 ? "<#ff0000>Off" : "<#00ff00>On").PadLeft(21, '.')}\"",
+                        (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
+                    }
+                }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                if (OptionsGUIPatches.BonusOptionsUnlocked) {
-                    PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
+                if (Input.GetKeyDown(KeyCode.Alpha3)) {
+                    if (OptionsGUIPatches.BonusOptionsUnlocked) {
+                        PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
+                    }
                 }
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha5)) {
-                PaletteEditor.RandomizeFoxColors();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha6)) {
-                PaletteEditor.LoadCustomTexture();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha8)) {
-                // can't think of why it would fail right now, but if it fails I don't really want it to break anything
-                try {
-                    LogicChecker.WriteLogicSummaryFile();
-                } catch (Exception e) {
-                    TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
+                if (Input.GetKeyDown(KeyCode.Alpha5)) {
+                    PaletteEditor.RandomizeFoxColors();
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha6)) {
+                    PaletteEditor.LoadCustomTexture();
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                    // can't think of why it would fail right now, but if it fails I don't really want it to break anything
+                    try {
+                        LogicChecker.WriteLogicSummaryFile();
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha9)) {
+                    try {
+                        EntranceSelector.instance.ShowSelection(new List<PortalCombo>());
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing entrance selector");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.I)) {
+                    try {
+                        Inventory.GetItemByName("Soul Dice").Quantity = 3;
+                        ItemPresentation.PresentItem(Inventory.GetItemByName("Soul Dice"), 3);
+                        Inventory.GetItemByName("Dart").Quantity = 3;
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing dice item");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.O)) {
+                    try {
+                        Inventory.GetItemByName("Koban").Quantity = 3;
+                        ItemPresentation.PresentItem(Inventory.GetItemByName("Koban"));
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing dice item");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.LeftBracket)) {
+                    try {
+                        if (SceneImageData.index > 0) {
+                            SceneImageData.index--;
+                            SceneImageData.ShowPortalImage(SceneImageData.SceneImages.Values.ToList()[SceneImageData.index]);
+                        }
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing scene image");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.RightBracket)) {
+                    try {
+                        if (SceneImageData.index < SceneImageData.SceneImages.Count) { 
+                            SceneImageData.ShowPortalImage(SceneImageData.SceneImages.Values.ToList()[SceneImageData.index]);
+                            SceneImageData.index++;
+                        }
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing scene image");
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.Pause)) {
+                    // resets the gui
+                    try {
+                        GUIMode.ClearStack();
+                        GUIMode.PushGameMode();
+                    } catch (Exception e) {
+                        TunicLogger.LogInfo("Error showing scene image");
+                    }
                 }
             }
 
@@ -247,6 +306,16 @@ namespace TunicRandomizer {
                 ItemTracker.PopulateSpoilerLog();
             }
 
+            // this is here for the first time you're loading in, assumes you're in Overworld
+            if (GetBool(EntranceRando)) {
+                ERScripts.ModifyPortals(SceneLoaderPatches.SceneName);
+                ERScripts.ModifyPortals(SceneLoaderPatches.SceneName, sending: true);
+                GhostHints.SpawnTorchHintGhost();
+            } else {
+                ERData.RandomizedPortals = ERData.GetVanillaPortals();
+                ERScripts.ModifyPortalNames(SceneLoaderPatches.SceneName);
+            }
+
             try {
                 Hints.PopulateHints();
             } catch (Exception e) {
@@ -270,16 +339,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
                 SaveFile.SetInt("last page viewed", 0);
-            }
-
-            // this is here for the first time you're loading in, assumes you're in Overworld
-            if (SaveFile.GetInt(EntranceRando) == 1) {
-                ERScripts.ModifyPortals("Overworld Redux");
-                ERScripts.ModifyPortals("Overworld Redux", sending: true);
-                GhostHints.SpawnTorchHintGhost();
-            } else {
-                ERData.RandomizedPortals = ERData.GetVanillaPortals();
-                ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
             TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
@@ -511,6 +570,9 @@ namespace TunicRandomizer {
                             }
                             if (TunicRandomizer.Settings.DecoupledER) {
                                 SaveFile.SetInt(Decoupled, 1);
+                            }
+                            if (TunicRandomizer.Settings.FoxPrinceEnabled) {
+                                SaveFile.SetInt(SaveFlags.FoxPrinceEnabled, 1);
                             }
                         }
                         if (TunicRandomizer.Settings.ShuffleLadders) {
@@ -837,6 +899,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems) { 
                 SaveFile.SetInt(LadderStorageWithoutItems, 1);
+            }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ERFoxPrince) {
+                SaveFile.SetInt(FoxPrinceEnabled, 1);
             }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);

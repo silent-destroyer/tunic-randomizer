@@ -6,8 +6,6 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> LogicTrickTraversalReqs = new Dictionary<string, Dictionary<string, List<List<string>>>>();
 
-
-
         public class LadderInfo {
             public string Origin;  // origin region
             public string Destination;  // destination portal
@@ -90,7 +88,7 @@ namespace TunicRandomizer {
             }
         }
 
-        public static List<LSElevConnect> LSElevConnections = new List<LSElevConnect> {
+        public static List<LSElevConnect> OWLSElevConnections = new List<LSElevConnect> {
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Furnace_gyro_west", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Swamp Redux 2_conduit", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 0", destination: "Overworld Redux, Overworld Cave_", difficulty: 1),
@@ -129,7 +127,8 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
             Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
-            Dictionary<string, PortalCombo> portalList;
+            List<PortalCombo> portalList;
+
             if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
@@ -140,8 +139,13 @@ namespace TunicRandomizer {
             }
 
             // add the OW LS connections
-            foreach (LSElevConnect connection in LSElevConnections) {
-                string destination = ERScripts.FindPairedPortalRegionFromSDT(connection.Destination);
+            foreach (LSElevConnect connection in OWLSElevConnections) {
+                string destination = TunicUtils.FindPairedPortalRegionFromSDT(connection.Destination);
+                if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
+                    // this should only happen as a result of fox prince making the randomized portals list not contain every portal
+                    continue;
+                }
+
                 List<List<string>> rules = new List<List<string>> { new List<string> { "LS" + connection.Difficulty.ToString() } };
                 if (!traversalReqsWithLS.ContainsKey(connection.Origin)) {
                     traversalReqsWithLS.Add(connection.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
@@ -163,7 +167,13 @@ namespace TunicRandomizer {
                     } else {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
-                    string destination = ERScripts.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
+
+                    string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
+                    if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
+                        // this should only happen as a result of fox prince making the randomized portals list not contain every portal
+                        continue;
+                    }
+
                     if (!traversalReqsWithLS.ContainsKey(ladderInfo.Origin)) {
                         traversalReqsWithLS.Add(ladderInfo.Origin, new Dictionary<string, List<List<string>>> { { destination, rules } });
                     } else {
@@ -181,7 +191,7 @@ namespace TunicRandomizer {
 
             // while we're here, let's just add the portal combo connections to the traversal reqs too for completion's sake
             // we could do this in another function, but ideally we always do this right after the trick logic (or right before I guess)
-            foreach (PortalCombo portalCombo in portalList.Values) {
+            foreach (PortalCombo portalCombo in portalList) {
                 string p1region = portalCombo.Portal1.Region;
                 string p2region = portalCombo.Portal2.OutletRegion();
 

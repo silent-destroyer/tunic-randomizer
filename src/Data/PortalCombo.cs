@@ -8,9 +8,18 @@ namespace TunicRandomizer {
 
         public PortalCombo() {}
 
+        public bool FlippedShop = false;
+
+        public string ComboTag;
+
         public PortalCombo(Portal portal1, Portal portal2) {
             Portal1 = portal1;
             Portal2 = portal2;
+            if ((Portal1.Name.StartsWith("Shop Portal") && (Portal2.Direction == (int)ERData.PDir.EAST || Portal2.Direction == (int)ERData.PDir.SOUTH || Portal1.Direction == (int)ERData.PDir.WEST))
+                || (Portal2.Name.StartsWith("Shop Portal") && (Portal1.Direction == (int)ERData.PDir.EAST || Portal1.Direction == (int)ERData.PDir.SOUTH || Portal2.Direction == (int)ERData.PDir.WEST))) {
+                FlippedShop = true;
+            }
+            ComboTag = $"{portal1.Name}--{portal2.Name}";
         }
 
         public Dictionary<string, int> AddComboRegion(Dictionary<string, int> inventory) {
@@ -24,17 +33,6 @@ namespace TunicRandomizer {
                 inventory[outletRegion] = 1;
             }
             return inventory;
-        }
-
-        // check if this portal is oriented such that we should use the left-to-right shop look
-        public bool FlippedShop() {
-            if (Portal1.Name.StartsWith("Shop Portal") && (Portal2.Direction == (int)ERData.PDir.EAST || Portal2.Direction == (int)ERData.PDir.SOUTH || Portal1.Direction == (int)ERData.PDir.WEST)) {
-                return true;
-            }
-            if (Portal2.Name.StartsWith("Shop Portal") && (Portal1.Direction == (int)ERData.PDir.EAST || Portal1.Direction == (int)ERData.PDir.SOUTH || Portal2.Direction == (int)ERData.PDir.WEST)) {
-                return true;
-            }
-            return false;
         }
 
     }

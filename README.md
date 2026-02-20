@@ -125,6 +125,10 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Pairs each entrance up with one that matches the expected direction on the other side (i.e. North/South, East/West, Teleporters, Ladders Up/Down)
 - Entrance Randomizer: Decoupled Entrances
   - Turns every entrance into a one-way. Leaving from where you came will take you somewhere else.
+- Entrance Randomizer: Fox Prince
+  - When using an entrance, you get 3 choices of entrances to choose from so you can decide where to go.
+    - Inspired by the [Hollow Knight Bug Prince mod](https://github.com/dplochcoder/HollowKnight.BugPrince/releases/latest), created by Purenail.
+    - Also inspired by [Blue Prince](https://store.steampowered.com/app/1569580/Blue_Prince/), by Dogubomb.
 - Fool Traps
   - Enables fool traps, which replace low-value money rewards when enabled and apply damage/other negative effects to the player. Turning the setting up increases the amount of traps in the item pool.
   - For Single Player seeds, this option can be changed mid-run by changing the value and reloading the save file. For Archipelago games, this is a yaml option and cannot be changed after the game starts.
@@ -263,3 +267,4 @@ With the exception of the Logic settings (which are determined in your Archipela
 - RadRingtail, Glace, RisingStar111, kingsamps0n, Landie, JimTheEternal, Jabberrocky, Ekkosangen, FletchIsAFurry, and many others for playtesting and helping to improve the mod.
 - SapphireSapphic, ScoutJD, and Br00ty for creating/maintaining the emo/poptracker maps.
 - Andrew Shouldice, Kevin Regamey, Finji, and everyone else involved in making this wonderful game.
+
