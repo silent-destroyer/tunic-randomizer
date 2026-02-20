@@ -105,7 +105,6 @@ namespace TunicRandomizer {
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
             ArachnophobiaMode.DidArachnophobiaModeAlready = false;
@@ -353,6 +352,8 @@ namespace TunicRandomizer {
                 PlayerCharacterPatches.IsTeleporting = false;
                 GameObject.Destroy(PlayerCharacter.instance.gameObject.GetComponent<Rotate>());
             }
+            PlayerCharacterPatches.timesDeathplaneTriggeredThisScene = 0;
+            PlayerCharacterPatches.failsafeSpawnPoint = null;
 
             // Failsafe for potion flasks not combining due to receiving 3rd shard during a load zone or at some other weird moment
             if (Inventory.GetItemByName("Flask Shard").Quantity >= 3) {

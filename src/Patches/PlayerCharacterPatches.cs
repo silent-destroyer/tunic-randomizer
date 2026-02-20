@@ -26,6 +26,10 @@ namespace TunicRandomizer {
         public static Renderer foxHair = null;
         public static bool DisableShortcuts = true;
 
+        // for trying to detect a wrong warp and save the fox
+        public static int timesDeathplaneTriggeredThisScene = 0;
+        public static Transform failsafeSpawnPoint = null;
+
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
             try {
                 __instance.gameObject.AddComponent<WaveSpell>();
@@ -1069,6 +1073,24 @@ namespace TunicRandomizer {
             if (__instance.GetComponent<PlayerCharacter>() != null && SceneManager.GetActiveScene().name != "Library Arena" && TunicRandomizer.Settings.DeathplanePatch) {
                 TunicLogger.LogInfo("rescuing the fox from a deathplane");
                 __instance.transform.position = __instance.lastValidNavmeshPosition;
+                
+                timesDeathplaneTriggeredThisScene++;
+
+                if (timesDeathplaneTriggeredThisScene >= 5) {
+                    TunicLogger.LogInfo("Attempting to save the fox from a wrong warp");
+                    timesDeathplaneTriggeredThisScene = 0;
+                    
+                    ScenePortal portal = Resources.FindObjectsOfTypeAll<ScenePortal>().Where(sp => sp.gameObject.scene.name == SceneManager.GetActiveScene().name && sp.FullID == PlayerCharacterSpawn.portalIDToSpawnAt).FirstOrDefault();
+                    if (portal != null) { 
+                        __instance.transform.position = portal.playerSpawnTransform.position;
+                        return false;
+                    } 
+                    if (failsafeSpawnPoint != null) {
+                        __instance.transform.position = failsafeSpawnPoint.position;
+                        return false;
+                    }  
+                    return true;
+                }
                 return false;
             }
             return true;
