@@ -212,6 +212,7 @@ namespace TunicRandomizer {
         public static void TrinketWell_TossedInCoin_PostfixPatch(TrinketWell __instance) {
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]++;
             ItemTracker.SaveTrackerFile();
+            InventoryCounter.UpdateCounters();
         }
 
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
@@ -237,9 +238,10 @@ namespace TunicRandomizer {
         }
 
         public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
-            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled ||
+            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || PotionCombine.instance.isActiveAndEnabled ||
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
-                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
+                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead
+                || (PlayerCharacter.Instanced && PlayerCharacter.instance.magicInputBufferIndex > 0) || PlayerCharacterPatches.IsTeleporting) {
                 return ItemResult.TemporaryFailure;
             }
 

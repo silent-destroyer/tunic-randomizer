@@ -1068,7 +1068,7 @@ namespace TunicRandomizer {
             y += 40f;
             TunicRandomizer.Settings.MoreSkulls = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "More Skulls"), TunicRandomizer.Settings.MoreSkulls, "More Skulls");
             TunicRandomizer.Settings.CameraFlip = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "???"), TunicRandomizer.Settings.CameraFlip, "???");
-            if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
+            if (SecretMayor.shouldBeActive || SecretMayor.checkIfActive()) {
                 bool mayorToggle = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Mr Mayor"), SecretMayor.shouldBeActive, "<color=#ffd700>Mr Mayor</color>");
                 if ((mayorToggle && !SecretMayor.shouldBeActive) || (!mayorToggle && SecretMayor.shouldBeActive)) {
                     SecretMayor.ToggleMayorSecret(0);
@@ -1287,7 +1287,7 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop = (int)GUI.HorizontalSlider(scRect(226f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERFixedShop, 0, 100);
             TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs = (int)GUI.HorizontalSlider(scRect(442f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs, 0, 100);
             y += 20f;
-            GUI.Label(scRect(10f, y, 206f, 60f, tooltip: "Decoupled Entrances"), "ER: Decoupled Entrances");
+            GUI.Label(scRect(10f, y, 206f, 60f, tooltip: "Decoupled Entrances"), "ER: Decoupled");
             y += 25f;
             GUI.Label(scRect(170f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled}%");
             y += 10f; 
