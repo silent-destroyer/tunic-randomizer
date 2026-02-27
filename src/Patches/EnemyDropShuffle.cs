@@ -13,12 +13,24 @@ namespace TunicRandomizer {
 
         public string CheckId;
 
-        public void ActivateCheck(Transform transform) {
-            if (CheckId != null && Locations.RandomizedLocations.ContainsKey(CheckId)) { 
-                Check check = Locations.RandomizedLocations[CheckId];
-                ItemPatches.GiveItem(check, true);
-                ModelSwaps.SetupItemMoveUp(transform, check);
+        public void ActivateEnemyCheck(Transform transform) {
+            if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                return;
             }
+            if (CheckId != null) {
+                if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId) && !Locations.CheckedLocations[CheckId] && SaveFile.GetInt($"randomizer picked up {CheckId}") == 0) {
+                    Check check = Locations.RandomizedLocations[CheckId];
+                    ItemPatches.GiveItem(check, alwaysSkip: true);
+                    ModelSwaps.SetupItemMoveUp(transform, check: check);
+                } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(CheckId) && !Locations.CheckedLocations[CheckId] && SaveFile.GetInt($"randomizer picked up {CheckId}") == 0) {
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
+                    ModelSwaps.SetupItemMoveUp(transform, itemInfo: ItemLookup.ItemList[CheckId]);
+                }
+            }
+        }
+
+        private void OnGUI() {
+            
         }
     }
 
@@ -135,23 +147,35 @@ namespace TunicRandomizer {
     }
 
     public class EnemySoulManager : MonoBehaviour {
-        public Dictionary<string, List<Monster>> monsterSouls = new Dictionary<string, List<Monster>>();
+        public Dictionary<string, List<GameObject>> monsterSouls = new Dictionary<string, List<GameObject>>();
         public void Update() {
             if (!SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) { return; }
-            foreach (KeyValuePair<string, List<Monster>> pair in monsterSouls) {
+            foreach (KeyValuePair<string, List<GameObject>> pair in monsterSouls) {
                 if (Inventory.GetItemByName(pair.Key).Quantity == 0) {
-                    foreach (Monster m in pair.Value) { 
-                        m.gameObject.SetActive(false);
+                    foreach (GameObject m in pair.Value) { 
+                        m.SetActive(false);
                     }
                 }
             }
         }
 
-        public void registerMonster(Monster monster, EnemyDropShuffle.EnemyInfo enemyInfo) {
+        public void registerMonster(GameObject monster, EnemyDropShuffle.EnemyInfo enemyInfo) {
             if (!monsterSouls.ContainsKey(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType])) { 
-                monsterSouls.Add(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType], new List<Monster>());
+                if (Inventory.GetItemByName(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]).Quantity > 0) {
+                    return;
+                }
+                monsterSouls.Add(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType], new List<GameObject>());
             }
             monsterSouls[EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]].Add(monster);
+        }
+
+        public void onItemGet(string ItemName) {
+            if (monsterSouls.ContainsKey(ItemName)) { 
+                foreach (GameObject obj in monsterSouls[ItemName]) {
+                    obj.SetActive(true);
+                }
+            }
+            monsterSouls.Remove(ItemName);
         }
     }
 
@@ -693,16 +717,32 @@ namespace TunicRandomizer {
         }
 
         public static void SetupEnemyChecks() {
+            if (GameObject.FindObjectOfType<EnemySoulManager>() != null) { return; }
+
             GameObject soulManager = new GameObject("enemy soul maanger");
             soulManager.AddComponent<EnemySoulManager>();
-            foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
+            foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name && m.GetComponent<EnemyCheck>() == null)) {
                 if (monster.GetComponent<RuntimeStableID>() != null) {
                     string id = $"{monster.GetComponent<RuntimeStableID>().ID} [{SceneManager.GetActiveScene().name}]";
                     if (EnemyDrops.ContainsKey(id) && !SaveFlags.GetBool($"randomizer picked up {id}")) {
+                        if (ExtraEnemyDropChecks.ContainsKey(id) && !SaveFlags.GetBool(SaveFlags.ExtraEnemyDropsEnabled)) { continue; }
                         monster.gameObject.AddComponent<EnemyCheck>();
                         monster.gameObject.GetComponent<EnemyCheck>().CheckId = id;
-                        soulManager.GetComponent<EnemySoulManager>().registerMonster(monster, EnemyDrops[id]);
+                        soulManager.GetComponent<EnemySoulManager>().registerMonster(monster.gameObject, EnemyDrops[id]);
                     }
+                }
+            }
+            foreach (TurretTrap turretTrap in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(t => t.gameObject.scene.name == SceneManager.GetActiveScene().name && t.GetComponent<EnemyCheck>() == null)) {
+                string position = turretTrap.GetComponent<SmashableObject>().initialPosition.ToString();
+                if (position == "(0.0, 0.0, 0.0)") {
+                    position = turretTrap.transform.position.ToString();
+                }
+                string id = $"{position} [{SceneManager.GetActiveScene().name}]";
+                if (EnemyDrops.ContainsKey(id) && !SaveFlags.GetBool($"randomizer picked up {id}")) {
+                    if (ExtraEnemyDropChecks.ContainsKey(id) && !SaveFlags.GetBool(SaveFlags.ExtraEnemyDropsEnabled)) { continue; }
+                    turretTrap.gameObject.AddComponent<EnemyCheck>();
+                    turretTrap.gameObject.GetComponent<EnemyCheck>().CheckId = id;
+                    soulManager.GetComponent<EnemySoulManager>().registerMonster(turretTrap.gameObject, EnemyDrops[id]);
                 }
             }
         }

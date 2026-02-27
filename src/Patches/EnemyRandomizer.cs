@@ -1303,7 +1303,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (__instance.__4__this.GetComponent<EnemyCheck>() != null) {
-                    __instance.__4__this.GetComponent<EnemyCheck>().ActivateCheck(__instance.__4__this.transform);
+                    __instance.__4__this.GetComponent<EnemyCheck>().ActivateEnemyCheck(__instance.__4__this.transform);
                 }
                 //EnemyDropShuffle.EnemyInfo enemyInfo = new EnemyDropShuffle.EnemyInfo();
                 //Monster m = __instance.__4__this;

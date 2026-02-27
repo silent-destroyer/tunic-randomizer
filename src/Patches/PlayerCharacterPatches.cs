@@ -361,6 +361,14 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
+            try {
+                if (SaveFile.GetInt(EnemyDropsEnabled) == 1) {
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {
                 PaletteEditor.ToonFox.AddComponent<MeshRenderer>().material = __instance.transform.GetChild(25).GetComponent<SkinnedMeshRenderer>().material;
             }

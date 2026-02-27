@@ -670,7 +670,9 @@ namespace TunicRandomizer {
             }
 
             try {
-                EnemyDropShuffle.SetupEnemyChecks();
+                if (SaveFile.GetInt(EnemyDropsEnabled) == 1) { 
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
             } catch (Exception e) {
                 TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }

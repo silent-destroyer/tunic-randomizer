@@ -259,7 +259,9 @@ namespace TunicRandomizer {
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
             if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationDisplayName != "Cheat Console" && Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) &&
-                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
+                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) 
+                || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName])
+                || EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 
@@ -342,6 +344,10 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.ENEMY) {
                     foreach (string key in EnemySoulModels.EnemyPresentationObjs.Keys) {
                         EnemySoulModels.EnemyPresentationObjs[key].SetActive(key == Item.Name);
+                    }
+                    EnemySoulManager enemySoulManager = GameObject.FindObjectOfType<EnemySoulManager>();
+                    if (enemySoulManager != null) {
+                        enemySoulManager.onItemGet(Item.Name);
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
@@ -613,6 +619,10 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.ENEMY) {
                     foreach (string key in EnemySoulModels.EnemyPresentationObjs.Keys) {
                         EnemySoulModels.EnemyPresentationObjs[key].SetActive(key == Item.Name);
+                    }
+                    EnemySoulManager enemySoulManager = GameObject.FindObjectOfType<EnemySoulManager>();
+                    if (enemySoulManager != null) {
+                        enemySoulManager.onItemGet(Item.Name);
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);

@@ -146,23 +146,33 @@ namespace TunicRandomizer {
                 return true;
             }
 
-            //if (__instance.GetComponent<TurretTrap>() != null) {
-            //    EnemyDropShuffle.EnemyInfo enemyInfo = new EnemyDropShuffle.EnemyInfo();
-            //    enemyInfo.EnemyName = __instance.name;
-            //    enemyInfo.EnemyRuntimeID = __instance.initialPosition.ToString();
-            //    enemyInfo.EnemyScene = __instance.gameObject.scene.name;
-            //    enemyInfo.EnemyType = "Hedgehog Trap";
-            //    enemyInfo.EnemyPosition = __instance.initialPosition.ToString();
-            //    enemyInfo.EnemyDropValue = 0;
-            //    enemyInfo.EnemyRegion = EnemyDropShuffle.Region;
-            //    enemyInfo.IsNGPlusEnemy = NGPActive.NGPStateVar.IntValue > 0;
-            //    enemyInfo.IsNightEnemy = StateVariable.GetStateVariableByName("Is Night").BoolValue;
-            //    string dictId = $"{enemyInfo.EnemyRuntimeID} [{enemyInfo.EnemyScene}]";
-            //    if (!EnemyDropShuffle.EnemyDrops.ContainsKey(dictId)) {
-            //        EnemyDropShuffle.EnemyDrops.Add(dictId, enemyInfo);
-            //    }
-            //    EnemyDropShuffle.SaveEnemyData();
-            //}
+            if (SaveFlags.GetBool(SaveFlags.EnemyDropsEnabled)) { 
+                if (__instance.GetComponent<TurretTrap>() != null) {
+                    if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                        return false;
+                    }
+
+                    if (__instance.GetComponent<EnemyCheck>() != null) {
+                        __instance.GetComponent<EnemyCheck>().ActivateEnemyCheck(__instance.transform);
+                    }
+                    return true;
+                    //EnemyDropShuffle.EnemyInfo enemyInfo = new EnemyDropShuffle.EnemyInfo();
+                    //enemyInfo.EnemyName = __instance.name;
+                    //enemyInfo.EnemyRuntimeID = __instance.initialPosition.ToString();
+                    //enemyInfo.EnemyScene = __instance.gameObject.scene.name;
+                    //enemyInfo.EnemyType = "Hedgehog Trap";
+                    //enemyInfo.EnemyPosition = __instance.initialPosition.ToString();
+                    //enemyInfo.EnemyDropValue = 0;
+                    //enemyInfo.EnemyRegion = EnemyDropShuffle.Region;
+                    //enemyInfo.IsNGPlusEnemy = NGPActive.NGPStateVar.IntValue > 0;
+                    //enemyInfo.IsNightEnemy = StateVariable.GetStateVariableByName("Is Night").BoolValue;
+                    //string dictId = $"{enemyInfo.EnemyRuntimeID} [{enemyInfo.EnemyScene}]";
+                    //if (!EnemyDropShuffle.EnemyDrops.ContainsKey(dictId)) {
+                    //    EnemyDropShuffle.EnemyDrops.Add(dictId, enemyInfo);
+                    //}
+                    //EnemyDropShuffle.SaveEnemyData();
+                }                
+            }
 
             if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {

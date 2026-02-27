@@ -1056,13 +1056,12 @@ namespace TunicRandomizer {
             moveUp.layer = 0;
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
-            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null || transform.GetComponent<Monster>() != null);
-            if (transform.GetComponent<Monster>() != null) {
+            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null || transform.GetComponent<Monster>() != null || transform.GetComponent<TurretTrap>() != null);
+            if (transform.GetComponent<Monster>() != null || transform.GetComponent<TurretTrap>() != null) {
                 moveUp.transform.parent = null;
             }
-            moveUp.SetActive(true);
            
-            if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null || transform.GetComponent<SecretPassagePanel>() != null) {
+            if ((transform.GetComponent<SmashableObject>() != null && transform.GetComponent<TurretTrap>() == null) || transform.GetComponent<DustyPile>() != null || transform.GetComponent<SecretPassagePanel>() != null) {
                 moveUp.transform.parent = transform;
                 // so we can rotate it properly
                 if (Item != null && Item.Type == ItemTypes.TRINKET) {

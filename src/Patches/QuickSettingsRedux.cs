@@ -1392,9 +1392,7 @@ namespace TunicRandomizer {
             GameObject.Destroy(fox.GetComponent<PlayerCharacter>());
             GameObject.Destroy(fox.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetComponent<TrackingBone>());
             GameObject.DontDestroyOnLoad(fox);
-            TunicLogger.LogInfo(fox.name);
             GameObject head = fox.transform.Find("Fox/root/pelvis/chest/head/").gameObject;
-            TunicLogger.LogInfo(head.name);
             foxHead = head.transform;
             laurels = head.transform.GetChild(7).gameObject;
             GameObject.Destroy(laurels.GetComponent<VisibleByHavingInventoryItem>());
