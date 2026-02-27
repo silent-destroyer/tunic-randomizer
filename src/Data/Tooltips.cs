@@ -33,7 +33,10 @@ namespace TunicRandomizer {
             { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, bombable walls, and more." },
             { "Shuffle Fuses", "Praying at a fuse now rewards an item instead of turning on the power.\nInstead, the power connections between fuses are shuffled into the item pool and unlocked separately." },
             { "Shuffle Bells", "The East and West bells are shuffled into the item pool and must be found in order to unlock the Sealed Temple.\nRinging the bells will instead now reward a random item." },
-            
+            { "Shuffle Enemy Drops", "Every individual enemy drops a check when defeated. Adds around ~600 checks to the Randomizer.\nAround ~100 extra checks can be added via the Extra Enemy Drops setting, which includes New Game+ and nighttime enemy spawns." },
+            { "Shuffle Enemy Souls", "Adds a number of Enemy \"Soul\" items to the item pool. Enemies will not appear in the world until their corresponding \"Soul\" item is found." },
+            { "Extra Enemy Drops", "Includes New Game+ and nighttime enemy spawns as shuffled enemy drops, adding about ~100 checks." },
+
             // Trick logic
             { "Laurels Zips", "Adds a number of gates, doors, and other tricky spots that can be bypassed using the Hero's Laurels into logic. Notable inclusions are the Monastery gate, Ruined Passage door, Old House gate, Forest Grave Path gate, and going between the back and middle of Swamp." },
             { "Ice Grapples", "Adds logic for grappling to frozen enemies to reach new areas.\nMay include pushing enemies through walls or luring them far distances." },

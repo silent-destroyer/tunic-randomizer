@@ -5948,7 +5948,7 @@
         "EnemyRegion": "Library Hall",
         "EnemyDropValue": 32,
         "IsNGPlusEnemy": false,
-        "IsNightEnemy": true,
+        "IsNightEnemy": false,
         "EnemyDescription": "Library Hall - Right Beefboy",
         "ExtraReqs": [
             []
@@ -5963,7 +5963,7 @@
         "EnemyRegion": "Library Hall",
         "EnemyDropValue": 32,
         "IsNGPlusEnemy": false,
-        "IsNightEnemy": true,
+        "IsNightEnemy": false,
         "EnemyDescription": "Library Hall - Left Beefboy",
         "ExtraReqs": [
             []

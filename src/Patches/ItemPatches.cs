@@ -295,7 +295,8 @@ namespace TunicRandomizer {
                 Item.Type == ItemTypes.TRINKET ||
                 Item.Type == ItemTypes.LADDER ||
                 Item.Type == ItemTypes.FUSE ||
-                Item.Type == ItemTypes.BELL) {
+                Item.Type == ItemTypes.BELL ||
+                Item.Type == ItemTypes.ENEMY) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Item.QuantityToGive;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -336,6 +337,11 @@ namespace TunicRandomizer {
                         }
                     } else {
                         NotificationBottom = $"\"...but nothing happened.\"";
+                    }
+                }
+                if (Item.Type == ItemTypes.ENEMY) {
+                    foreach (string key in EnemySoulModels.EnemyPresentationObjs.Keys) {
+                        EnemySoulModels.EnemyPresentationObjs[key].SetActive(key == Item.Name);
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
@@ -560,7 +566,8 @@ namespace TunicRandomizer {
                 Item.Type == ItemTypes.TRINKET ||
                 Item.Type == ItemTypes.LADDER || 
                 Item.Type == ItemTypes.FUSE ||
-                Item.Type == ItemTypes.BELL) {
+                Item.Type == ItemTypes.BELL ||
+                Item.Type == ItemTypes.ENEMY) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Check.Reward.Amount;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -601,6 +608,11 @@ namespace TunicRandomizer {
                         }
                     } else {
                         NotificationBottom = $"\"...but nothing happened.\"";
+                    }
+                }
+                if (Item.Type == ItemTypes.ENEMY) {
+                    foreach (string key in EnemySoulModels.EnemyPresentationObjs.Keys) {
+                        EnemySoulModels.EnemyPresentationObjs[key].SetActive(key == Item.Name);
                     }
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);

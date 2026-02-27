@@ -95,13 +95,17 @@ namespace TunicRandomizer {
                 }
             }
             if (Input.GetKeyDown(KeyCode.Alpha7)) {
-                foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name && m.gameObject.active)) {
-                    TunicLogger.LogInfo($"Monster: {monster.name} ({monster.GetComponent<RuntimeStableID>().ID})");
+                List<string> enemySouls = ItemRandomizer.EnemyItems;
+                foreach (GameObject obj in EnemySoulModels.EnemyPresentationObjs.Values) {
+                    obj.SetActive(false);
                 }
-                ItemPresentation.PresentItem(Inventory.GetItemByName("Enemy Soul (Blob)"));
-                //EnemyDropShuffle.LoadEnemyData();
+                EnemySoulModels.EnemyPresentationObjs[enemySouls[index]].SetActive(true);
+                ItemPresentation.PresentItem(Inventory.GetItemByName(enemySouls[index]));
+                index++;
+                if (index > enemySouls.Count) {
+                    index = 0;
+                }
             }
-
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
                 CycleController.IsNight = false;

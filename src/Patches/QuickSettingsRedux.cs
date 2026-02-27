@@ -767,6 +767,12 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.BellShuffle) {
                 count += BellShuffle.BellChecks.Count;
             }
+            if (TunicRandomizer.Settings.EnemyDropShuffle) {
+                count += EnemyDropShuffle.BaseEnemyDropChecks.Count;
+                if (TunicRandomizer.Settings.ExtraEnemyDrops) {
+                    count += EnemyDropShuffle.ExtraEnemyDropChecks.Count;
+                }
+            }
             return count;
         }
         private float LogicSettingsSection(float y) {
@@ -827,6 +833,10 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.FuseShuffle = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Shuffle Fuses"), TunicRandomizer.Settings.FuseShuffle, "Shuffle Fuses");
             TunicRandomizer.Settings.BellShuffle = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Shuffle Bells"), TunicRandomizer.Settings.BellShuffle, "Shuffle Bells");
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Grass Randomizer"), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
+            y += 40f;
+            TunicRandomizer.Settings.EnemyDropShuffle = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Shuffle Enemy Drops"), TunicRandomizer.Settings.EnemyDropShuffle, "Shuffle Enemy Drops");
+            TunicRandomizer.Settings.ShuffleEnemySouls = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Shuffle Enemy Souls"), TunicRandomizer.Settings.ShuffleEnemySouls, "Shuffle Enemy Souls");
+            TunicRandomizer.Settings.ExtraEnemyDrops = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Extra Enemy Drops"), TunicRandomizer.Settings.ExtraEnemyDrops, "Extra Enemy Drops");
             y += 40f;
             GUI.skin.toggle.fontSize = scFont(22.5f);
             TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 400f, 30f), "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");

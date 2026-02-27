@@ -94,6 +94,7 @@ namespace TunicRandomizer {
             { "[grass]", "Randomizer items_grass" },
             { "[fuse]", "Randomizer items_fuse" },
             { "[bell]", "Randomizer items_bell" },
+            { "[enemysoul]", "Randomizer items_enemysoul" }
         };
 
         public static Dictionary<string, string> SpriteNameToAbbreviation = new Dictionary<string, string>();
@@ -271,6 +272,7 @@ namespace TunicRandomizer {
             { "Ladders in Lower Quarry", "[ladder]"},
             { "Ladders in Library", "[ladder]"},
             // Fuses added here in FuseRandomizer.CreateFuseItems()
+            // Enemy Souls added here in EnemyDropShuffle.CreateEnemyItems()
             // Bells
             { "East Bell", "[bell]" },
             { "West Bell", "[bell]" },

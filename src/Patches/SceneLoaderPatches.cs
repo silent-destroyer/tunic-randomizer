@@ -114,12 +114,17 @@ namespace TunicRandomizer {
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
 
+            if (loadingScene.name == "Playable Intro" && ModelSwaps.ShadowOubliette == null) {
+                EnemyDropShuffle.LoadEnemyData();
+                ItemPresentationPatches.SetupEnemyBasePresentation();
+                TunicLogger.LogInfo("Done loading resources!");
+                SceneLoader.LoadScene("TitleScreen");
+                return;
+            }
             if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                 EnemyRandomizer.InitializeEnemies("Posterity");
                 ModelSwaps.CreateOtherWorldItemBlocks();
-                EnemyDropShuffle.LoadEnemyData();
-                TunicLogger.LogInfo("Done loading resources!");
-                SceneLoader.LoadScene("TitleScreen");
+                SceneLoader.LoadScene("Playable Intro");
                 return;
             }
             if (loadingScene.name == "Overworld Interiors" && GlyphTowerTeleporterPrefab == null) {

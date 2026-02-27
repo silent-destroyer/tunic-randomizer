@@ -130,7 +130,7 @@ namespace TunicRandomizer {
 
                 for (int i = 0; i < InitialItems.Count; i++) { 
                     Check check = InitialItems[i];
-                    if (EnemyDropShuffle.EnemyDropChecks.ContainsKey(check.CheckId) && EnemySouls.Count > 0) {
+                    if (EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(check.CheckId) && EnemySouls.Count > 0) {
                         check.Reward.Name = EnemySouls[random.Next(EnemySouls.Count)];
                         check.Reward.Amount = 1;
                         check.Reward.Type = "INVENTORY";

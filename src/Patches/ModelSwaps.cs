@@ -42,6 +42,9 @@ namespace TunicRandomizer {
 
         public static GameObject FishingRod;
 
+        // Enemy Drop Shuffle
+        public static GameObject ShadowOubliette;
+
         public static List<string> ShopItemIDs = new List<string>() {
             "Potion (First) [Shop]",
             "Potion (West Garden) [Shop]",
@@ -1285,6 +1288,10 @@ namespace TunicRandomizer {
                         if (Item.Type == ItemTypes.FUSE) {
                             PagePickup.GetComponent<SphereCollider>().radius = 2f;
                         }
+                        if (Item.Type == ItemTypes.ENEMY) {
+                            PagePickup.transform.GetChild(2).GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(0f, 45f, 0f);
+                            NewItem.GetComponentInChildren<Rotate>().enabled = false;
+                        }
                     }
 
                     NewItem.transform.localPosition = TransformData.pos;
@@ -1361,6 +1368,17 @@ namespace TunicRandomizer {
                     GameObject.Destroy(NewItem.GetComponent<BoxCollider>());
                 } else if (Item.Type == ItemTypes.ENEMY) {
                     NewItem = GameObject.Instantiate(Items["Enemy"], Parent.transform.position, Parent.transform.rotation);
+                    GameObject enemyRoot = NewItem.transform.GetChild(0).GetChild(3).gameObject;
+                    for (int i = 0; i < enemyRoot.transform.childCount; i++) {
+                        if (enemyRoot.transform.GetChild(i).name == Item.Name) {
+                            enemyRoot.transform.GetChild(i).gameObject.SetActive(true);
+                            enemyRoot.transform.GetChild(i).SetAsFirstSibling();
+                            break;
+                        }
+                    }
+                    for (int i = 1; i < enemyRoot.transform.childCount; i++) {
+                        GameObject.Destroy(enemyRoot.transform.GetChild(i).gameObject);
+                    }
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
@@ -1684,6 +1702,9 @@ namespace TunicRandomizer {
                             GameObject.Destroy(NewItem.GetComponent<Rotate>());
                             GameObject.Destroy(NewItem.transform.GetChild(0).GetChild(0).gameObject);
                         }
+                        if (Item.Type == ItemTypes.ENEMY) {
+                            NewItem.GetComponentInChildren<Rotate>().enabled = false;
+                        }
                     }
 
                     NewItem.transform.parent = ItemHolder.transform.parent;
@@ -1930,6 +1951,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Grass", CreateSprite(ImageData.Grass, ImageMaterial, 160, 160, SpriteName: "Randomizer items_grass"));
             CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
             CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
+            CustomItemImages.Add("Enemy Soul", CreateSprite(ImageData.EnemySoul, ImageMaterial, 160, 160, SpriteName: "Randomizer items_enemysoul"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;
@@ -1975,9 +1997,18 @@ namespace TunicRandomizer {
         }
 
         public static Mesh FindMesh(string MeshName) {
-            List<Mesh> Meshes = Resources.FindObjectsOfTypeAll<Mesh>().Where(Sprite => Sprite.name == MeshName).ToList();
+            List<Mesh> Meshes = Resources.FindObjectsOfTypeAll<Mesh>().Where(Mesh => Mesh.name == MeshName).ToList();
             if (Meshes != null && Meshes.Count > 0) {
                 return Meshes[0];
+            } else {
+                return null;
+            }
+        }
+
+        public static Shader FindShader(string ShaderName) {
+            List<Shader> Shaders = Resources.FindObjectsOfTypeAll<Shader>().Where(Shader => Shader.name == ShaderName || Shader.name.Contains(ShaderName)).ToList();
+            if (Shaders != null && Shaders.Count > 0) {
+                return Shaders[0];
             } else {
                 return null;
             }

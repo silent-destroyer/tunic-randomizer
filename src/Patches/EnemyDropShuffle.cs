@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Reflection;
-using RTLTMPro;
-using static Il2CppSystem.Uri;
-using System.Xml.Linq;
 
 namespace TunicRandomizer {
 
     public class EnemyCheck : MonoBehaviour {
 
         public string CheckId;
-
 
         public void ActivateCheck(Transform transform) {
             if (CheckId != null && Locations.RandomizedLocations.ContainsKey(CheckId)) { 
@@ -35,71 +28,71 @@ namespace TunicRandomizer {
             //this.guiMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(((float)Screen.width) / 1920f, ((float)Screen.height) / 1080f, 1f));
         }
         private void OnGUI() {
-            if (!PlayerCharacter.Instanced) { return; }
-            string scene = SceneManager.GetActiveScene().name;
-            Monster[] monsters = GameObject.FindObjectsOfType<Monster>();
-            Matrix4x4 matrix = GUI.matrix;
-            GUI.matrix = matrix;
-            for (int i = 0; i < monsters.Length; i++) {
-                Vector2 vector2 = CameraController.instance.cachedCamera.WorldToScreenPoint(monsters[i].gameObject.transform.position);
-                string text = $"{monsters[i].name} {monsters[i].GetComponent<RuntimeStableID>().ID}";
-                if (EnemyDropShuffle.EnemyDrops.ContainsKey($"{monsters[i].GetComponent<RuntimeStableID>().ID} [{scene}]")) {
-                    text = EnemyDropShuffle.EnemyDrops[$"{monsters[i].GetComponent<RuntimeStableID>().ID} [{scene}]"].EnemyDescription;
-                }
-                monsters[i].monsterAggroDistance = 0;
-                monsters[i].GetComponent<Rigidbody>().isKinematic = true;
-                if (vector2.x > 0f && vector2.x < (float)Screen.width && vector2.y > 0f && vector2.y < (float)Screen.height) {
-                    GUI.skin.label.fontSize = 28;
-                    GUI.skin.label.fontStyle = FontStyle.Bold;
-                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-                    float num = (float)Screen.height - vector2.y;
-                    GUI.color = Color.black;
-                    GUI.Label(new Rect(vector2.x - 252.5f, num + 2.5f, 700f, 22f), text);
-                    GUI.color = Color.white;
-                    GUI.Label(new Rect(vector2.x - 250, num, 700f, 22f), text);
-                }
-            }
+            //if (!PlayerCharacter.Instanced) { return; }
+            //string scene = SceneManager.GetActiveScene().name;
+            //Monster[] monsters = GameObject.FindObjectsOfType<Monster>();
+            //Matrix4x4 matrix = GUI.matrix;
+            //GUI.matrix = matrix;
+            //for (int i = 0; i < monsters.Length; i++) {
+            //    Vector2 vector2 = CameraController.instance.cachedCamera.WorldToScreenPoint(monsters[i].gameObject.transform.position);
+            //    string text = $"{monsters[i].name} {monsters[i].GetComponent<RuntimeStableID>().ID}";
+            //    if (EnemyDropShuffle.EnemyDrops.ContainsKey($"{monsters[i].GetComponent<RuntimeStableID>().ID} [{scene}]")) {
+            //        text = EnemyDropShuffle.EnemyDrops[$"{monsters[i].GetComponent<RuntimeStableID>().ID} [{scene}]"].EnemyDescription;
+            //    }
+            //    monsters[i].monsterAggroDistance = 0;
+            //    monsters[i].GetComponent<Rigidbody>().isKinematic = true;
+            //    if (vector2.x > 0f && vector2.x < (float)Screen.width && vector2.y > 0f && vector2.y < (float)Screen.height) {
+            //        GUI.skin.label.fontSize = 28;
+            //        GUI.skin.label.fontStyle = FontStyle.Bold;
+            //        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            //        float num = (float)Screen.height - vector2.y;
+            //        GUI.color = Color.black;
+            //        GUI.Label(new Rect(vector2.x - 252.5f, num + 2.5f, 700f, 22f), text);
+            //        GUI.color = Color.white;
+            //        GUI.Label(new Rect(vector2.x - 250, num, 700f, 22f), text);
+            //    }
+            //}
 
-            TurretTrap[] traps = GameObject.FindObjectsOfType<TurretTrap>();
-            for (int i = 0; i < traps.Length; i++) {
-                Vector2 vector2 = CameraController.instance.cachedCamera.WorldToScreenPoint(traps[i].gameObject.transform.position); 
-                string text = $"{traps[i].name} {traps[i].GetComponent<RuntimeStableID>().ID}";
-                if (EnemyDropShuffle.EnemyDrops.ContainsKey($"{traps[i].GetComponent<PermanentStateByPosition>().initialPosition.ToString()} [{scene}]")) {
-                    text = EnemyDropShuffle.EnemyDrops[$"{traps[i].GetComponent<PermanentStateByPosition>().initialPosition.ToString()} [{scene}]"].EnemyDescription;
-                }
-                if (traps[i].GetComponent<Rigidbody>() != null) {
-                    traps[i].GetComponent<Rigidbody>().isKinematic = true;
-                }
-                if (vector2.x > 0f && vector2.x < (float)Screen.width && vector2.y > 0f && vector2.y < (float)Screen.height) {
-                    GUI.skin.label.fontSize = 28;
-                    GUI.skin.label.fontStyle = FontStyle.Bold;
-                    GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-                    float num = (float)Screen.height - vector2.y;
-                    GUI.color = Color.black;
-                    GUI.Label(new Rect(vector2.x - 252.5f, num + 2.5f, 700f, 22f), text);
-                    GUI.color = Color.white;
-                    GUI.Label(new Rect(vector2.x - 250, num, 700f, 22f), text);
-                }
-            }
-            if (UnityEngine.Input.GetKeyUp(KeyCode.Mouse0)) {
-                Ray ray = CameraController.instance.cachedCamera.ScreenPointToRay(UnityEngine.Input.mousePosition);
-                LayerMask mask = LayerMask.GetMask(new string[]
-                {
-                    LayerMask.LayerToName(8)
-                });
-                RaycastHit raycastHit;
-                if (Physics.Raycast(ray, out raycastHit, 1000f, mask)) {
-                    if (raycastHit.collider != null) {
-                        if (raycastHit.collider.GetComponent<RuntimeStableID>() != null) {
-                            GUIUtility.systemCopyBuffer = $"{raycastHit.collider.GetComponent<RuntimeStableID>().ID} [{scene}]";
-                        }
-                        if (raycastHit.collider.GetComponent<TurretTrap>() != null) {
-                            GUIUtility.systemCopyBuffer = $"{raycastHit.collider.GetComponent<PermanentStateByPosition>().initialPosition.ToString()} {scene}";
-                        }
-                        TunicLogger.LogInfo("raycast hit");
-                    }
-                }
-            }
+            //TurretTrap[] traps = GameObject.FindObjectsOfType<TurretTrap>();
+            //for (int i = 0; i < traps.Length; i++) {
+            //    Vector2 vector2 = CameraController.instance.cachedCamera.WorldToScreenPoint(traps[i].gameObject.transform.position); 
+            //    string text = $"{traps[i].name} {traps[i].GetComponent<RuntimeStableID>().ID}";
+            //    if (EnemyDropShuffle.EnemyDrops.ContainsKey($"{traps[i].GetComponent<PermanentStateByPosition>().initialPosition.ToString()} [{scene}]")) {
+            //        text = EnemyDropShuffle.EnemyDrops[$"{traps[i].GetComponent<PermanentStateByPosition>().initialPosition.ToString()} [{scene}]"].EnemyDescription;
+            //    }
+            //    if (traps[i].GetComponent<Rigidbody>() != null) {
+            //        traps[i].GetComponent<Rigidbody>().isKinematic = true;
+            //    }
+            //    if (vector2.x > 0f && vector2.x < (float)Screen.width && vector2.y > 0f && vector2.y < (float)Screen.height) {
+            //        GUI.skin.label.fontSize = 28;
+            //        GUI.skin.label.fontStyle = FontStyle.Bold;
+            //        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            //        float num = (float)Screen.height - vector2.y;
+            //        GUI.color = Color.black;
+            //        GUI.Label(new Rect(vector2.x - 252.5f, num + 2.5f, 700f, 22f), text);
+            //        GUI.color = Color.white;
+            //        GUI.Label(new Rect(vector2.x - 250, num, 700f, 22f), text);
+            //    }
+            //}
+            //if (UnityEngine.Input.GetKeyUp(KeyCode.Mouse0)) {
+            //    Ray ray = CameraController.instance.cachedCamera.ScreenPointToRay(UnityEngine.Input.mousePosition);
+            //    LayerMask mask = LayerMask.GetMask(new string[]
+            //    {
+            //        LayerMask.LayerToName(8)
+            //    });
+            //    RaycastHit raycastHit;
+            //    if (Physics.Raycast(ray, out raycastHit, 1000f, mask)) {
+            //        if (raycastHit.collider != null) {
+            //            if (raycastHit.collider.GetComponent<RuntimeStableID>() != null) {
+            //                GUIUtility.systemCopyBuffer = $"{raycastHit.collider.GetComponent<RuntimeStableID>().ID} [{scene}]";
+            //            }
+            //            if (raycastHit.collider.GetComponent<TurretTrap>() != null) {
+            //                GUIUtility.systemCopyBuffer = $"{raycastHit.collider.GetComponent<PermanentStateByPosition>().initialPosition.ToString()} {scene}";
+            //            }
+            //            TunicLogger.LogInfo("raycast hit");
+            //        }
+            //    }
+            //}
             //List<string> regions = new List<string>();
             //foreach (KeyValuePair<string, ERData.RegionInfo> pair in ERData.RegionDict) {
             //    if (pair.Value.Scene == scene) {
@@ -141,11 +134,35 @@ namespace TunicRandomizer {
         }
     }
 
+    public class EnemySoulManager : MonoBehaviour {
+        public Dictionary<string, List<Monster>> monsterSouls = new Dictionary<string, List<Monster>>();
+        public void Update() {
+            if (!SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) { return; }
+            foreach (KeyValuePair<string, List<Monster>> pair in monsterSouls) {
+                if (Inventory.GetItemByName(pair.Key).Quantity == 0) {
+                    foreach (Monster m in pair.Value) { 
+                        m.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+
+        public void registerMonster(Monster monster, EnemyDropShuffle.EnemyInfo enemyInfo) {
+            if (!monsterSouls.ContainsKey(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType])) { 
+                monsterSouls.Add(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType], new List<Monster>());
+            }
+            monsterSouls[EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]].Add(monster);
+        }
+    }
+
     public class EnemyDropShuffle {
 
         public static Dictionary<string, EnemyInfo> EnemyDrops = new Dictionary<string, EnemyInfo>();
+        public static Dictionary<string, string> EnemyTypeToSoul = new Dictionary<string, string>();
         public static string EnemyInfoPath = Application.persistentDataPath + "/Randomizer/EnemyData.json";
-        public static Dictionary<string, Check> EnemyDropChecks = new Dictionary<string, Check>();
+        public static Dictionary<string, Check> AllEnemyDropChecks = new Dictionary<string, Check>();
+        public static Dictionary<string, Check> BaseEnemyDropChecks = new Dictionary<string, Check>();
+        public static Dictionary<string, Check> ExtraEnemyDropChecks = new Dictionary<string, Check>();
 
         public static bool IsNighttime = false;
         public static bool IsNGPlus = false;
@@ -202,11 +219,11 @@ namespace TunicRandomizer {
                 "Blob", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Stick", 1},
-                        {"Enemy Soul (Blob)", 1}
+                        {"Enemy Soul (Blobs)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Blob)", 1}
+                        {"Enemy Soul (Blobs)", 1}
                     },
                 }
             },
@@ -214,7 +231,7 @@ namespace TunicRandomizer {
                 "Bumblebones", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Fleemer)", 1}
+                        {"Enemy Soul (Fleemers)", 1}
                     },
                 }
             },
@@ -222,7 +239,7 @@ namespace TunicRandomizer {
                 "Bumblebones Big", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Fleemer)", 1}
+                        {"Enemy Soul (Fleemers)", 1}
                     },
                 }
             },
@@ -230,7 +247,7 @@ namespace TunicRandomizer {
                 "Crabbit", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Crabbit)", 1}
+                        {"Enemy Soul (Crabs)", 1}
                     },
                 }
             },
@@ -239,7 +256,7 @@ namespace TunicRandomizer {
                     new Dictionary<string, int>() {
                         {"Wand", 1},
                         {"Sword", 1},
-                        {"Enemy Soul (Crabbit)", 1}
+                        {"Enemy Soul (Crabs)", 1}
                     },
                 }
             },
@@ -247,7 +264,7 @@ namespace TunicRandomizer {
                 "Crabbo", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Crabbo)", 1}
+                        {"Enemy Soul (Crabs)", 1}
                     },
                 }
             },
@@ -279,7 +296,7 @@ namespace TunicRandomizer {
                 "Fencer", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Fleemer)", 1}
+                        {"Enemy Soul (Fleemers)", 1}
                     },
                 }
             },
@@ -287,7 +304,7 @@ namespace TunicRandomizer {
                 "FoxEnemy", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Zombie Fox)", 1}
+                        {"Enemy Soul (Zombie Foxes)", 1}
                     },
                 }
             },
@@ -295,7 +312,7 @@ namespace TunicRandomizer {
                 "FoxEnemyZombie", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Zombie Fox)", 1}
+                        {"Enemy Soul (Zombie Foxes)", 1}
                     },
                 }
             },
@@ -303,7 +320,7 @@ namespace TunicRandomizer {
                 "Frog", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Frog)", 1}
+                        {"Enemy Soul (Frogs)", 1}
                     },
                 }
             },
@@ -311,7 +328,7 @@ namespace TunicRandomizer {
                 "Frog Small", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Frog)", 1}
+                        {"Enemy Soul (Frogs)", 1}
                     },
                 }
             },
@@ -319,7 +336,7 @@ namespace TunicRandomizer {
                 "Frog Spear", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Frog)", 1}
+                        {"Enemy Soul (Frogs)", 1}
                     },
                 }
             },
@@ -404,15 +421,15 @@ namespace TunicRandomizer {
                     new Dictionary<string, int>() {
                         {"Wand", 1},
                         {"Stick", 1},
-                        {"Enemy Soul (Fairy)", 1}
+                        {"Enemy Soul (Fairies)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Fairy)", 1}
+                        {"Enemy Soul (Fairies)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Techbow", 1},
-                        {"Enemy Soul (Fairy)", 1}
+                        {"Enemy Soul (Fairies)", 1}
                     },
                 }
             },
@@ -420,11 +437,11 @@ namespace TunicRandomizer {
                 "Scavenger", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Scavenger)", 1}
+                        {"Enemy Soul (Scavengers)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Techbow", 1},
-                        {"Enemy Soul (Scavenger)", 1}
+                        {"Enemy Soul (Scavengers)", 1}
                     },
                 }
             },
@@ -432,11 +449,11 @@ namespace TunicRandomizer {
                 "Scavenger Miner", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Scavenger)", 1}
+                        {"Enemy Soul (Scavengers)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Techbow", 1},
-                        {"Enemy Soul (Scavenger)", 1}
+                        {"Enemy Soul (Scavengers)", 1}
                     },
                 }
             },
@@ -444,11 +461,11 @@ namespace TunicRandomizer {
                 "Scavenger Support", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Scavenger)", 1}
+                        {"Enemy Soul (Scavengers)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Techbow", 1},
-                        {"Enemy Soul (Scavenger)", 1}
+                        {"Enemy Soul (Scavengers)", 1}
                     },
                 }
             },
@@ -472,7 +489,7 @@ namespace TunicRandomizer {
                 "Skuladin", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Rudeling)", 1}
+                        {"Enemy Soul (Rudelings)", 1}
                     },
                 }
             },
@@ -480,7 +497,7 @@ namespace TunicRandomizer {
                 "Skuladin Big", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Rudeling)", 1}
+                        {"Enemy Soul (Rudelings)", 1}
                     },
                 }
             },
@@ -488,7 +505,7 @@ namespace TunicRandomizer {
                 "Skuladin Shield", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Rudeling)", 1}
+                        {"Enemy Soul (Rudelings)", 1}
                     },
                 }
             },
@@ -496,7 +513,7 @@ namespace TunicRandomizer {
                 "Spider", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Spider)", 1}
+                        {"Enemy Soul (Spiders)", 1}
                     },
                 }
             },
@@ -548,7 +565,7 @@ namespace TunicRandomizer {
                 "Voidtouched", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Voidtouched)", 1}
+                        {"Enemy Soul (Voidling)", 1}
                     },
                 }
             },
@@ -556,7 +573,7 @@ namespace TunicRandomizer {
                 "Wizard", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Custodian)", 1}
+                        {"Enemy Soul (Custodians)", 1}
                     },
                 }
             },
@@ -564,7 +581,7 @@ namespace TunicRandomizer {
                 "Wizard Candleabra", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Custodian)", 1}
+                        {"Enemy Soul (Custodians)", 1}
                     },
                 }
             },
@@ -572,7 +589,7 @@ namespace TunicRandomizer {
                 "Wizard Sword", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Custodian)", 1}
+                        {"Enemy Soul (Custodians)", 1}
                     },
                 }
             },
@@ -586,7 +603,7 @@ namespace TunicRandomizer {
             EnemyDrops.Clear();
             var assembly = Assembly.GetExecutingAssembly();
             var enemyDropJson = "TunicRandomizer.src.Data.EnemyData.json";
-            EnemyDropChecks.Clear();
+            AllEnemyDropChecks.Clear();
             System.Random random = new System.Random();
             List<ItemData> itemNames = ItemLookup.Items.Values.Where(item => ItemLookup.FillerItems.ContainsKey(item.ItemNameForInventory)).ToList();
             using (Stream stream = assembly.GetManifestResourceStream(enemyDropJson))
@@ -615,23 +632,30 @@ namespace TunicRandomizer {
                                     if (!ItemLookup.Items.ContainsKey(x.Key)) {
                                         TunicLogger.LogInfo("ERROR " + x.Key);
                                     } else {
-                                        TunicLogger.LogInfo(x.Key);
+                                        if (!EnemyTypeToSoul.ContainsKey(enemy.Value.EnemyType)) {
+                                            EnemyTypeToSoul[enemy.Value.EnemyType] = x.Key;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    EnemyDropChecks.Add(enemy.Key, check);
+                    AllEnemyDropChecks.Add(enemy.Key, check);
+                    if (enemy.Value.IsNGPlusEnemy || enemy.Value.IsNightEnemy) { 
+                        ExtraEnemyDropChecks.Add(enemy.Key, check);
+                    } else {
+                        BaseEnemyDropChecks.Add(enemy.Key, check);
+                    }
                     Locations.LocationIdToDescription.Add(check.CheckId, enemy.Value.EnemyDescription);
                     Locations.LocationDescriptionToId.Add(enemy.Value.EnemyDescription, check.CheckId);
                 }
             }
 
             foreach (string type in enemyRequirements.Keys) {
-                TunicLogger.LogInfo($"{{ \"Enemy Soul ({type})\", new ItemData(\"Enemy Soul ({type})\", \"progression\", \"Enemy Soul ({type})\", ItemTypes.ENEMY, 1) }},");
+                TunicLogger.LogInfo(type);
+                //TunicLogger.LogInfo($"{{ \"Enemy Soul ({type})\", new ItemData(\"Enemy Soul ({type})\", \"progression\", \"Enemy Soul ({type})\", ItemTypes.ENEMY, 1) }},");
             }
             CreateEnemyItems();
-            ItemPresentationPatches.SetupEnemyPresentation();
         }
 
         public static void CreateEnemyItems() {
@@ -641,8 +665,13 @@ namespace TunicRandomizer {
                 EnemySoul.name = item.Name;
                 EnemySoul.collectionMessage = TunicUtils.CreateLanguageLine($"ehnuhmE sOl \"- {item.Name.Split('(')[1].Replace(")", "").ToUpper()}\"");
                 EnemySoul.controlAction = "";
-                EnemySoul.icon = ModelSwaps.FindSprite("Randomizer items_fuse");
+                Sprite sprite = ModelSwaps.FindSprite("Randomizer items_enemysoul");
+                EnemySoul.icon = sprite;
+                ItemLookup.SimplifiedItemNames.Add(item.Name, item.Name);
+                Translations.EnglishToTrunic.Add($"\"{item.Name}\"", $"\"{item.Name}\"");
+                TextBuilderPatches.ItemNameToAbbreviation.Add(item.Name, "[enemysoul]");
                 Inventory.itemList.Add(EnemySoul);
+                TunicUtils.AllProgressionNames.Add(item.Name);
             }
         }
 
@@ -664,12 +693,15 @@ namespace TunicRandomizer {
         }
 
         public static void SetupEnemyChecks() {
+            GameObject soulManager = new GameObject("enemy soul maanger");
+            soulManager.AddComponent<EnemySoulManager>();
             foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
                 if (monster.GetComponent<RuntimeStableID>() != null) {
                     string id = $"{monster.GetComponent<RuntimeStableID>().ID} [{SceneManager.GetActiveScene().name}]";
-                    if (EnemyDrops.ContainsKey(id)) {
+                    if (EnemyDrops.ContainsKey(id) && !SaveFlags.GetBool($"randomizer picked up {id}")) {
                         monster.gameObject.AddComponent<EnemyCheck>();
                         monster.gameObject.GetComponent<EnemyCheck>().CheckId = id;
+                        soulManager.GetComponent<EnemySoulManager>().registerMonster(monster, EnemyDrops[id]);
                     }
                 }
             }
