@@ -93,7 +93,7 @@ namespace TunicRandomizer {
         };
 
         public static void ToggleLadders() {
-            if (PlayerCharacter.instance == null) {
+            if (!PlayerCharacter.Instanced) {
                 return;
             }
 
