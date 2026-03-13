@@ -57,7 +57,7 @@ namespace TunicRandomizer {
             RegisterTypeAndCreateObject(typeof(PlayerPositionDisplay), "player position display");
             RegisterTypeAndCreateObject(typeof(ArachnophobiaMode), "arachnophobia mode helper");
             RegisterTypeAndCreateObject(typeof(RegionSelector), "region selector");
-            RegisterTypeAndCreateObject(typeof(EnemyManager), "enemy rando manager");
+            //RegisterTypeAndCreateObject(typeof(EnemyManager), "enemy rando manager");
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Randomizer/");

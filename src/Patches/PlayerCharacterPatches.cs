@@ -1,5 +1,4 @@
 ﻿using Archipelago.MultiClient.Net.Models;
-using InControl;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

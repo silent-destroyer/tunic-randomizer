@@ -69,7 +69,6 @@ namespace TunicRandomizer {
                             if (PlayerCharacter.instance.currentLadder == zone.Ladder.GetComponent<Ladder>() && zone.Ladder.GetComponent<Ladder>() != null) {
                                 continue;
                             }
-                            if (zone.Ladder.transform.GetChild(i).GetComponent<LadderEnd>() != null) { continue; }
                             zone.Ladder.transform.GetChild(i).gameObject.SetActive(hasLadder);
                         }
 
@@ -164,10 +163,9 @@ namespace TunicRandomizer {
             }
 
             for (int i = 0; i < zone.Ladder.transform.childCount; i++) {
-                if (PlayerCharacter.instance.currentLadder == zone.Ladder.GetComponent<Ladder>() && zone.Ladder.GetComponent<Ladder>() != null) {
+                if ((zone.LadderInfo.IsExit || zone.LadderInfo.IsEntrance) && zone.Ladder.GetComponent<Ladder>() != null) {
                     continue;
-                }
-                if (zone.Ladder.transform.GetChild(i).GetComponent<LadderEnd>() != null) { continue; }
+                } 
                 zone.Ladder.transform.GetChild(i).gameObject.SetActive(hasLadder);
             }
 
