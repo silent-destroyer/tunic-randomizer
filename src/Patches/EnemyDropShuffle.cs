@@ -225,10 +225,6 @@ namespace TunicRandomizer {
                         {"Sword", 1},
                         {"Enemy Soul (Phrend)", 1}
                     },
-                    new Dictionary<string, int>() {
-                        {"Techbow", 1},
-                        {"Enemy Soul (Phrend)", 1}
-                    },
                 }
             },
             {
@@ -254,6 +250,10 @@ namespace TunicRandomizer {
             {
                 "Bumblebones", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
+                        {"Stick", 1},
+                        {"Enemy Soul (Fleemers)", 1}
+                    },
+                    new Dictionary<string, int>() {
                         {"Sword", 1},
                         {"Enemy Soul (Fleemers)", 1}
                     },
@@ -270,6 +270,10 @@ namespace TunicRandomizer {
             {
                 "Crabbit", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
+                        {"Stick", 1},
+                        {"Enemy Soul (Crabs)", 1}
+                    },
+                    new Dictionary<string, int>() {
                         {"Sword", 1},
                         {"Enemy Soul (Crabs)", 1}
                     },
@@ -279,6 +283,11 @@ namespace TunicRandomizer {
                 "Crabbit Shell", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Wand", 1},
+                        {"Stick", 1},
+                        {"Enemy Soul (Crabs)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Wand", 1},
                         {"Sword", 1},
                         {"Enemy Soul (Crabs)", 1}
                     },
@@ -286,6 +295,10 @@ namespace TunicRandomizer {
             },
             {
                 "Crabbo", new List<Dictionary<string, int>>() {
+                    new Dictionary<string, int>() {
+                        {"Stick", 1},
+                        {"Enemy Soul (Crabs)", 1}
+                    },
                     new Dictionary<string, int>() {
                         {"Sword", 1},
                         {"Enemy Soul (Crabs)", 1}
@@ -304,6 +317,7 @@ namespace TunicRandomizer {
                 "Crow", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Wand", 1},
                         {"Enemy Soul (Husher)", 1}
                     },
                 }
@@ -312,6 +326,10 @@ namespace TunicRandomizer {
                 "DefenseTurret", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Enemy Soul (Autobolt)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1},
                         {"Enemy Soul (Autobolt)", 1}
                     },
                 }
@@ -408,6 +426,16 @@ namespace TunicRandomizer {
                 "HonourGuard", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Shop", 1},
+                        {"Enemy Soul (Envoy)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Sword", 1},
+                        {"Wand", 1},
+                        {"Enemy Soul (Envoy)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1},
                         {"Enemy Soul (Envoy)", 1}
                     },
                 }
@@ -424,6 +452,14 @@ namespace TunicRandomizer {
                 "Librarian", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Wand", 1},
+                        {"Techbow", 1},
+                        {"Enemy Soul (Librarian)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Sword", 1},
+                        {"Wand", 1},
+                        {"Shotgun", 1},
                         {"Enemy Soul (Librarian)", 1}
                     }
                 }
@@ -545,6 +581,7 @@ namespace TunicRandomizer {
                 "Spidertank", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Techbow", 1},
                         {"Enemy Soul (Siege Engine)", 1}
                     }
                 }
@@ -575,6 +612,10 @@ namespace TunicRandomizer {
                         {"Sword", 1},
                         {"Enemy Soul (Baby Slorm)", 1}
                     },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1 },
+                        {"Enemy Soul (Baby Slorm)", 1}
+                    }
                 }
             },
             {
@@ -583,12 +624,17 @@ namespace TunicRandomizer {
                         {"Sword", 1},
                         {"Enemy Soul (Voidling)", 1}
                     },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1},
+                        {"Enemy Soul (Voidling)", 1}
+                    },
                 }
             },
             {
                 "Voidtouched", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Hyperdash", 1},
                         {"Enemy Soul (Voidling)", 1}
                     },
                 }
@@ -599,12 +645,21 @@ namespace TunicRandomizer {
                         {"Sword", 1},
                         {"Enemy Soul (Custodians)", 1}
                     },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1},
+                        {"Enemy Soul (Custodians)", 1}
+                    },
                 }
             },
             {
                 "Wizard Candleabra", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Stundagger", 1},
+                        {"Enemy Soul (Custodians)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1},
                         {"Enemy Soul (Custodians)", 1}
                     },
                 }
@@ -613,6 +668,11 @@ namespace TunicRandomizer {
                 "Wizard Sword", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Stundagger", 1},
+                        {"Enemy Soul (Custodians)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Shotgun", 1},
                         {"Enemy Soul (Custodians)", 1}
                     },
                 }
@@ -675,10 +735,6 @@ namespace TunicRandomizer {
                 }
             }
 
-            foreach (string type in enemyRequirements.Keys) {
-                TunicLogger.LogInfo(type);
-                //TunicLogger.LogInfo($"{{ \"Enemy Soul ({type})\", new ItemData(\"Enemy Soul ({type})\", \"progression\", \"Enemy Soul ({type})\", ItemTypes.ENEMY, 1) }},");
-            }
             CreateEnemyItems();
         }
 
