@@ -235,6 +235,7 @@
     <Compile Include="src\Util\CreditsSkipper.cs" />
     <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
+    <Compile Include="src\Util\EnemySoulManager.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\LadderManager.cs" />
     <Compile Include="src\Util\LogicChecker.cs" />

@@ -919,6 +919,7 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Vault Key (Red)").Quantity = 1;
             Inventory.GetItemByName("Level Up - Attack").Quantity = 10;
             Inventory.GetItemByName("Relic - Hero Sword").Quantity = 1;
+            StateVariable.GetStateVariableByName("Placed Hexagons ALL").BoolValue = true;
         }
     }
 }

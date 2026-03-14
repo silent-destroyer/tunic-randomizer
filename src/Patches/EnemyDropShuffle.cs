@@ -146,39 +146,6 @@ namespace TunicRandomizer {
         }
     }
 
-    public class EnemySoulManager : MonoBehaviour {
-        public Dictionary<string, List<GameObject>> monsterSouls = new Dictionary<string, List<GameObject>>();
-        public void Update() {
-            if (!SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) { return; }
-            foreach (KeyValuePair<string, List<GameObject>> pair in monsterSouls) {
-                if (Inventory.GetItemByName(pair.Key).Quantity == 0) {
-                    foreach (GameObject m in pair.Value) { 
-                        m.SetActive(false);
-                    }
-                }
-            }
-        }
-
-        public void registerMonster(GameObject monster, EnemyDropShuffle.EnemyInfo enemyInfo) {
-            if (!monsterSouls.ContainsKey(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType])) { 
-                if (Inventory.GetItemByName(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]).Quantity > 0) {
-                    return;
-                }
-                monsterSouls.Add(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType], new List<GameObject>());
-            }
-            monsterSouls[EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]].Add(monster);
-        }
-
-        public void onItemGet(string ItemName) {
-            if (monsterSouls.ContainsKey(ItemName)) { 
-                foreach (GameObject obj in monsterSouls[ItemName]) {
-                    obj.SetActive(true);
-                }
-            }
-            monsterSouls.Remove(ItemName);
-        }
-    }
-
     public class EnemyDropShuffle {
 
         public static Dictionary<string, EnemyInfo> EnemyDrops = new Dictionary<string, EnemyInfo>();
