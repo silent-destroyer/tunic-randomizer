@@ -16,7 +16,13 @@
                         {
                             ""Cathedral Gauntlet"": 1,
                             ""Sword"": 1,
-                            ""Techbow"": 1
+                            ""Techbow"": 1,
+                            ""Enemy Soul (Fairies)"": 1,
+                            ""Enemy Soul (Fleemers)"": 1,
+                            ""Enemy Soul (Custodians)"": 1,
+                            ""Enemy Soul (Garden Knight)"": 1,
+                            ""Enemy Soul (Frogs)"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
                         }
                     ]
                 }
@@ -2521,7 +2527,8 @@
                         {
                             ""Library Arena"": 1,
                             ""Ladders in Library"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""Enemy Soul (Librarian)"": 1
                         }
                     ]
                 }
@@ -4009,7 +4016,8 @@
                     ""Requirements"": [
                         {
                             ""Sword"": 1,
-                            ""Fortress Arena"": 1
+                            ""Fortress Arena"": 1,
+                            ""Enemy Soul (Siege Engine)"": 1
                         }
                     ]
                 }
@@ -4845,11 +4853,13 @@
                     ""Requirements"": [
                         {
                             ""Rooted Ziggurat Lower Back"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""Enemy Soul (Boss Scavenger)"": 1
                         },
                         {
                             ""Rooted Ziggurat Lower Back"": 1,
-                            ""IG2S"": 1
+                            ""IG2S"": 1,
+                            ""Enemy Soul (Boss Scavenger)"": 1
                         }
                     ]
                 }

@@ -4111,13 +4111,15 @@ namespace TunicRandomizer {
                         "West Garden after Boss",
                         new List<List<string>> {
                             new List<string> {
-                                "Sword"
+                                "Sword",
+                                "Enemy Soul (Garden Knight)"
                             },
                             new List<string> {
                                 "Hyperdash"
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Garden Knight)"
                             },
                         }
                     },
@@ -5483,7 +5485,6 @@ namespace TunicRandomizer {
                     },
                 }
             },
-
             {
                 "Rooted Ziggurat Upper Entry",
                 new Dictionary<string, List<List<string>>> {
@@ -5502,6 +5503,7 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Sword",
+                                "Enemy Soul (Administrator)"
                             },
                             new List<string> {
                                 "Hyperdash",

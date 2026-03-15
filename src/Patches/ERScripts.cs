@@ -262,6 +262,7 @@ namespace TunicRandomizer {
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
             FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
+            FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.EnemyItems);
 
             FullInventory = UpdateReachableRegions(FullInventory);
 

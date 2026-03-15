@@ -343,7 +343,7 @@ namespace TunicRandomizer {
                     MajorItems.AddRange(ItemRandomizer.BellItems);
                 }
                 if (GetBool(EnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
-                    MajorItems.AddRange(ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.ENEMY).Select(item => item.Name));
+                    MajorItems.AddRange(ItemRandomizer.EnemyItems);
                 }
                 foreach (string MajorItem in MajorItems) {
                     foreach (Check Check in ItemRandomizer.FindAllRandomizedItemsByName(MajorItem)) {

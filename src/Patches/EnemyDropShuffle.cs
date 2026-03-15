@@ -172,7 +172,7 @@ namespace TunicRandomizer {
             public bool IsNGPlusEnemy;
             public bool IsNightEnemy;
             public string EnemyDescription;
-            public List<List<string>> ExtraReqs;
+            public List<Dictionary<string, int>> ExtraReqs;
         }
 
         public static Dictionary<string, List<Dictionary<string, int>>> enemyRequirements = new Dictionary<string, List<Dictionary<string, int>>>() {
@@ -675,8 +675,14 @@ namespace TunicRandomizer {
                     check.Location.Position = enemy.Value.EnemyPosition;
                     check.Location.SceneId = 0;
                     check.Location.Requirements = new List<Dictionary<string, int>>();
-                    if (enemyRequirements.ContainsKey(enemy.Value.EnemyType)) {
-                        foreach (Dictionary<string, int> requirements in enemyRequirements[enemy.Value.EnemyType]) {
+                    List<Dictionary<string, int>> reqsToUse = null;
+                    if (enemy.Value.ExtraReqs.Count > 0) {
+                        reqsToUse = enemy.Value.ExtraReqs;
+                    } else if (enemyRequirements.ContainsKey(enemy.Value.EnemyType)) {
+                        reqsToUse = enemyRequirements[enemy.Value.EnemyType];
+                    }
+                    if (reqsToUse != null) {
+                        foreach (Dictionary<string, int> requirements in reqsToUse) {
                             Dictionary<string, int> newReqs = requirements.ToDictionary(entry => entry.Key, entry => entry.Value);
                             newReqs.Add(enemy.Value.EnemyRegion, 1);
                             check.Location.Requirements.Add(newReqs);
@@ -692,6 +698,11 @@ namespace TunicRandomizer {
                                 }
                             }
                         }
+                        TunicLogger.LogInfo(check.CheckId);
+                        foreach (Dictionary<string, int> reqs in check.Location.Requirements) {
+                            TunicLogger.LogInfo(string.Join(", ", reqs.Keys.ToList()));
+                        }
+                        TunicLogger.LogInfo("================================================");
                     }
                     AllEnemyDropChecks.Add(enemy.Key, check);
                     if (enemy.Value.IsNGPlusEnemy || enemy.Value.IsNightEnemy) { 
