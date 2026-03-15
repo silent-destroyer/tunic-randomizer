@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Reflection;
+using UnityEngine.AI;
+using FMODUnity;
 
 namespace TunicRandomizer {
 
@@ -742,7 +744,7 @@ namespace TunicRandomizer {
         public static void SetupEnemyChecks() {
             if (GameObject.FindObjectOfType<EnemySoulManager>() != null) { return; }
 
-            GameObject soulManager = new GameObject("enemy soul maanger");
+            GameObject soulManager = new GameObject("enemy soul manager");
             soulManager.AddComponent<EnemySoulManager>();
             foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name && m.GetComponent<EnemyCheck>() == null)) {
                 if (monster.GetComponent<RuntimeStableID>() != null) {
@@ -767,6 +769,63 @@ namespace TunicRandomizer {
                     turretTrap.gameObject.GetComponent<EnemyCheck>().CheckId = id;
                     soulManager.GetComponent<EnemySoulManager>().registerMonster(turretTrap.gameObject, EnemyDrops[id]);
                 }
+            }
+
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) {
+                string scene = SceneManager.GetActiveScene().name;
+                if (scene == "Overworld Redux") {
+                    SetupOverworldEnvoyStatue();
+                }
+                if (scene == "Spirit Arena") {
+                    GameObject cutsceneRoot = GameObject.Find("_BOSSFIGHT ROOT/_CUTSCENE/");
+                    if (cutsceneRoot != null) {
+                        cutsceneRoot.AddComponent<LockEnemyInteraction>();
+                    }
+                }
+                if (scene == "Cathedral Arena") {
+                    foreach (CathedralGauntletSummoner summoner in GameObject.FindObjectsOfType<CathedralGauntletSummoner>()) {
+                        summoner.gameObject.AddComponent<LockEnemyInteraction>();
+                    }
+                    if (GameObject.Find("_Fog/quarry_fogplane_round") != null) {
+                        GameObject.Find("_Fog/quarry_fogplane_round").transform.localPosition = new Vector3(-2f, -2f, 31f);
+                    }
+                }
+            }
+        }
+
+        public static void SetupOverworldEnvoyStatue() {
+            HonourGuard envoy = Resources.FindObjectsOfTypeAll<HonourGuard>().Where(hg => TunicUtils.IsInActiveScene(hg.gameObject) 
+            && hg.name == "Honourguard" && hg.GetComponent<RuntimeStableID>().ID == 25000036).FirstOrDefault();
+            if (envoy != null) {
+                GameObject envoyStatue = GameObject.Instantiate(envoy.gameObject);
+                envoyStatue.name = "enemy soul envoy statue";
+                envoyStatue.transform.position = envoy.transform.position;
+                envoyStatue.transform.localScale = Vector3.one;
+                GameObject.Destroy(envoyStatue.GetComponent<Animator>());
+                GameObject.Destroy(envoyStatue.GetComponent<NavMeshAgent>());
+                GameObject.Destroy(envoyStatue.GetComponent<RuntimeStableID>());
+                GameObject.Destroy(envoyStatue.GetComponent<HitReceiver>());
+                GameObject.Destroy(envoyStatue.GetComponent<Rigidbody>());
+                GameObject.DestroyImmediate(envoyStatue.GetComponent<HonourGuard>());
+                GameObject.Destroy(envoyStatue.GetComponent<ZTarget>());
+                GameObject.Destroy(envoyStatue.GetComponent<FireController>());
+                GameObject.Destroy(envoyStatue.GetComponent<StudioEventEmitter>());
+                GameObject.DestroyImmediate(envoyStatue.GetComponent<EnemyCheck>());
+                Material mat = ModelSwaps.FindMaterial("granite");
+                foreach (CreatureMaterialManager manager in envoyStatue.GetComponentsInChildren<CreatureMaterialManager>()) {
+                    GameObject.Destroy(manager);
+                }
+                foreach (SkinnedMeshRenderer renderer in envoyStatue.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                    renderer.material = mat;
+                }
+                foreach (MeshRenderer renderer in envoyStatue.GetComponentsInChildren<MeshRenderer>()) { 
+                    renderer.material = mat;
+                }
+                envoyStatue.SetActive(true);
+                envoyStatue.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Enemy Soul (Envoy)");
+                TunicLogger.LogInfo("created overworld envoy statue near quarry");
+            } else {
+                TunicLogger.LogError("overworld envoy not found near quarry for statue");
             }
         }
     }

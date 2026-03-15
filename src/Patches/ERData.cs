@@ -2515,9 +2515,11 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "Heir Sword",
+                                "Enemy Soul (Envoy)"
                             },
                             new List<string> {
                                 "Shotgun",
+                                "Enemy Soul (Envoy)"
                             },
                         }
                     },

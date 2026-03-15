@@ -406,12 +406,6 @@ namespace TunicRandomizer {
                         teleporter.GetComponentInChildren<ScenePortal>().spawnTransform.position = new Vector3(0, 0, -17);
                     }
                 }
-                if (GetBool(EnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
-                    GameObject cutsceneRoot = GameObject.Find("_BOSSFIGHT ROOT/_CUTSCENE/");
-                    if (cutsceneRoot != null) {
-                        cutsceneRoot.AddComponent<LockEnemyInteraction>();
-                    }
-                }
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
             } else if (SceneName == "Overworld Interiors") {
                 GameObject.FindObjectOfType<BedToggle>().canBeUsed = StateVariable.GetStateVariableByName("false");
@@ -448,7 +442,7 @@ namespace TunicRandomizer {
                     GameObject HintStatueGlow = GameObject.Instantiate(ModelSwaps.GlowEffect);
                     HintStatueGlow.SetActive(true);
                     HintStatueGlow.transform.position = new Vector3(13f, 0f, 49f);
-                    HintStatueGlow.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Hyperdash");
+                    HintStatueGlow.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Hyperdash Toggle");
                 }
 
                 GameObject.Instantiate(ModelSwaps.Chalkboard, new Vector3(23.0934f, 7.2261f, 65.0646f), new Quaternion(0, 0.701f, 0, 0.701f)).SetActive(true);
@@ -541,14 +535,6 @@ namespace TunicRandomizer {
             } else if (SceneName == "Cathedral Arena") {
                 if (GetBool(EntranceRando) || (GetBool(FuseShuffleEnabled) && Inventory.GetItemByName("Cathedral Elevator Fuse").Quantity > 0)) {
                     StateVariable.GetStateVariableByName("SV_cathedral elevator").BoolValue = false;
-                }
-                if (GetBool(EnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
-                    foreach (CathedralGauntletSummoner summoner in GameObject.FindObjectsOfType<CathedralGauntletSummoner>()) { 
-                        summoner.gameObject.AddComponent<LockEnemyInteraction>();
-                    }
-                    if (GameObject.Find("_Fog/quarry_fogplane_round") != null) {
-                        GameObject.Find("_Fog/quarry_fogplane_round").transform.localPosition = new Vector3(-2f, -2f, 31f);
-                    }
                 }
             } else if (SceneName == "Cathedral Redux") {
                 if (GetBool(EntranceRando) || (GetBool(FuseShuffleEnabled) && Inventory.GetItemByName("Cathedral Elevator Fuse").Quantity > 0)) {

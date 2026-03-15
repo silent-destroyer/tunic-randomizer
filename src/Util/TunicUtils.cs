@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -386,6 +387,10 @@ namespace TunicRandomizer {
                 guiScale = 0.6f;
             }
             return guiScale;
+        }
+
+        public static bool IsInActiveScene(GameObject obj) {
+            return obj.scene.name == SceneManager.GetActiveScene().name;
         }
 
     }
