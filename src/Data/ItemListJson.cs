@@ -808,7 +808,8 @@
                             ""Stundagger"": 1,
                             ""Techbow"": 1,
                             ""26"": 1,
-                            ""Lower Forest"": 1
+                            ""Lower Forest"": 1,
+                            ""Enemy Soul (Blobs)"": 1
                         }
                     ]
                 }
@@ -1639,7 +1640,8 @@
                         },
                         {
                             ""Wand"": 1,
-                            ""Overworld Beach"": 1
+                            ""Overworld Beach"": 1,
+                            ""Enemy Soul (Autobolt)"": 1
                         }
                     ]
                 }
@@ -2304,7 +2306,8 @@
                     ""Requirements"": [
                         {
                             ""Wand"": 1,
-                            ""Frog's Domain Back"": 1
+                            ""Frog's Domain Back"": 1,
+                            ""Enemy Soul (Autobolt)"": 1
                         },
                         {
                             ""Hyperdash"": 1,
