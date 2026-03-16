@@ -2393,7 +2393,8 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Rudelings)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -2426,7 +2427,8 @@ namespace TunicRandomizer {
                                 "Ladder to Swamp",
                             },
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Blobs)"
                             },
                         }
                     },
@@ -2456,7 +2458,8 @@ namespace TunicRandomizer {
                                 "Ladders near Weathervane",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
                             }
                         }
                     },
@@ -2468,9 +2471,6 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "Hyperdash",
-                            },
-                            new List<string> {
-                                "IG1L"
                             }
                         }
                     },
@@ -2481,7 +2481,12 @@ namespace TunicRandomizer {
                                 "Ladders near Overworld Checkpoint",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Hedgehog)"
                             },
                         }
                     },
@@ -2538,7 +2543,16 @@ namespace TunicRandomizer {
                         "Overworld to West Garden from Furnace",
                         new List<List<string>> {
                             new List<string> {
-                                "IG3L"
+                                "IG3L",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG3L",
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "IG3L",
+                                "Enemy Soul (Hedgehog)"
                             },
                         }
                     },
@@ -2549,7 +2563,8 @@ namespace TunicRandomizer {
                                 "21",
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Blobs)"
                             },
                         }
                     },
@@ -2566,7 +2581,12 @@ namespace TunicRandomizer {
                                 "West Bell", "East Bell", BELL_SHUFFLE,
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG2S",
+                                "Enemy Soul (Hedgehog)"
                             },
                             new List<string> {
                                 "LS3", PAIRING_ONLY
@@ -2577,7 +2597,8 @@ namespace TunicRandomizer {
                         "Overworld Quarry Entry",
                         new List<List<string>> {
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Rudelings)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -2591,7 +2612,16 @@ namespace TunicRandomizer {
                                 "21",
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG2S",
+                                "Enemy Soul (Hedgehog)"
+                            },
+                            new List<string> {
+                                "IG2S",
+                                "Enemy Soul (Rudelings)"
                             },
                         }
                     },
@@ -2618,7 +2648,8 @@ namespace TunicRandomizer {
                                 "Key (House)",
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Blobs)"
                             },
                         }
                     },
@@ -2886,7 +2917,6 @@ namespace TunicRandomizer {
                     }
                 }
             },
-
             {
                 "East Overworld",
                 new Dictionary<string, List<List<string>>> {
@@ -2902,7 +2932,8 @@ namespace TunicRandomizer {
                         "After Ruined Passage",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -2929,7 +2960,8 @@ namespace TunicRandomizer {
                                 "Ladders near Overworld Checkpoint"
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Hedgehog)"
                             },
                         }
                     },
@@ -3091,7 +3123,8 @@ namespace TunicRandomizer {
                                 "Ladders in Overworld Town",
                             },
                             new List<string> {
-                                "IG1S"
+                                "IG1S",
+                                "Enemy Soul (Autobolt)"
                             },
                         }
                     },
@@ -3192,7 +3225,8 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)",
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -3206,7 +3240,8 @@ namespace TunicRandomizer {
                                 "Ladders near Patrol Cave",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Hedgehog)"
                             }
                         }
                     },
@@ -3254,7 +3289,8 @@ namespace TunicRandomizer {
                                 "Ladders near Patrol Cave",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Rudelings)"
                             }
                         }
                     },
@@ -3300,7 +3336,8 @@ namespace TunicRandomizer {
                                 "Ladder near Temple Rafters",
                             },
                             new List<string> {
-                                "IG2L"
+                                "IG2L",
+                                "Enemy Soul (Rudelings)"
                             },
                         }
                     },
@@ -3316,7 +3353,8 @@ namespace TunicRandomizer {
                                 "Ladder near Temple Rafters",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Rudelings)"
                             },
                         }
                     },
@@ -3444,7 +3482,8 @@ namespace TunicRandomizer {
                         "East Overworld",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
                             }
                         }
                     }
@@ -3470,6 +3509,10 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Ladders near Weathervane",
                             },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
+                            }
                         }
                     },
                     {
@@ -3479,7 +3522,8 @@ namespace TunicRandomizer {
                                 "Ladders near Weathervane",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
                             }
                         }
                     },
@@ -3661,7 +3705,8 @@ namespace TunicRandomizer {
                                 "Stick", "Trinket - Glass Cannon",
                             },
                             new List<string> {
-                                "IG1S"
+                                "IG1S",
+                                "Enemy Soul (Blobs)"
                             },
                         }
                     },
@@ -3678,13 +3723,14 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Hedgehog)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
                             },
                             new List<string> {
-                                "LS2"
+                                "LS2",
                             },
                         }
                     },
@@ -3703,7 +3749,8 @@ namespace TunicRandomizer {
                                 "Ladders to Lower Forest",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
                             },
                         }
                     },
@@ -3719,7 +3766,16 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Hedgehog)"
+                            },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Rudelings)"
                             },
                         }
                     },
@@ -3858,7 +3914,16 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG3S",
+                                "Enemy Soul (Hedgehog)"
+                            },
+                            new List<string> {
+                                "IG3S",
+                                "Enemy Soul (Rudelings)"
                             },
                             new List<string> {
                                 "LS2", PAIRING_ONLY
@@ -3882,7 +3947,16 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Hedgehog)"
+                            },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Rudelings)"
                             },
                         }
                     },
@@ -3903,7 +3977,8 @@ namespace TunicRandomizer {
                         "Forest Grave Path Main",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1S"
+                                "IG1S",
+                                "Enemy Soul (Rudelings)"
                             },
                             new List<string> {
                                 "Zip"
@@ -4055,7 +4130,8 @@ namespace TunicRandomizer {
                                 "Ladder in Dark Tomb"
                             },
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Fleemers)"
                             },
                         }
                     },
@@ -4132,10 +4208,24 @@ namespace TunicRandomizer {
                         }
                     },
                     {
+                        "West Garden by Portal",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG2S",
+                                "Enemy Soul (Chompignom)"
+                            }
+                        }
+                    },
+                    {
                         "West Garden Portal Item",
                         new List<List<string>> {
                             new List<string> {
-                                "IG2L"
+                                "IG2L",
+                                "Enemy Soul (Chompignom)"
+                            },
+                            new List<string> {
+                                "IG2L",
+                                "Enemy Soul (Rudelings)"
                             },
                         }
                     },
@@ -4165,11 +4255,13 @@ namespace TunicRandomizer {
                             },
                             // ice grapple to the boss, then ice grapple them off
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Garden Knight)"
                             },
                             // ice grapple to the boss, then fight
                             new List<string> {
-                                "IG1S", "Sword"
+                                "IG1S", "Sword",
+                                "Enemy Soul (Garden Knight)"
                             }
                         }
                     },
@@ -4190,7 +4282,8 @@ namespace TunicRandomizer {
                         "West Garden",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Chompignom)"
                             },
                         }
                     }
@@ -4251,7 +4344,8 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Plover)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -4405,7 +4499,8 @@ namespace TunicRandomizer {
                                 "Ladders to Frog's Domain",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Frogs)"
                             },
                         }
                     },
@@ -4818,7 +4913,8 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Custodians)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -4867,7 +4963,8 @@ namespace TunicRandomizer {
                         "Fortress Courtyard",
                         new List<List<string>> {
                             new List<string> {
-                                "IG3L"
+                                "IG3L",
+                                "Enemy Soul (Custodians)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -4916,7 +5013,8 @@ namespace TunicRandomizer {
                         "Fortress Courtyard Upper",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -5036,7 +5134,8 @@ namespace TunicRandomizer {
                         "Fortress East Shortcut Upper",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Custodians)"
                             }
                         }
                     },
@@ -5068,7 +5167,8 @@ namespace TunicRandomizer {
                                 FUSE_SHUFFLE,
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -5081,7 +5181,8 @@ namespace TunicRandomizer {
                         "Eastern Vault Fortress",
                         new List<List<string>> {
                             new List<string> {
-                                "IG1S"
+                                "IG1S",
+                                "Enemy Soul (Custodians)"
                             },
                             new List<string> {
                                 FUSE_SHUFFLE,
@@ -5128,6 +5229,7 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "IG1L",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -5403,7 +5505,8 @@ namespace TunicRandomizer {
                         "Even Lower Quarry Isolated Chest",
                         new List<List<string>> {
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Scavengers)"
                             }
                         }
                     },
@@ -5419,7 +5522,8 @@ namespace TunicRandomizer {
                                 "Ladders in Lower Quarry",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Scavengers)"
                             },
                         }
                     },
@@ -5448,7 +5552,8 @@ namespace TunicRandomizer {
                                 "Quarry Fuse 1", "Quarry Fuse 2", FUSE_SHUFFLE,
                             },
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Scavengers)"
                             },
                         }
                     },
@@ -5574,7 +5679,7 @@ namespace TunicRandomizer {
                                 "Ziggurat Miniboss Fuse", FUSE_SHUFFLE
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L", "Sword", "12", NO_FUSE_SHUFFLE
                             },
                             // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
                             new List<string> {
@@ -5674,7 +5779,12 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Gunslinger)"
+                            },
+                            new List<string> {
+                                "IG3S",
+                                "Enemy Soul (Fleemers)"
                             }
                         }
                     },
@@ -5701,8 +5811,17 @@ namespace TunicRandomizer {
                                 "Hyperdash",
                             },
                             new List<string> {
-                                "IG3S"
+                                "IG3S",
+                                "Enemy Soul (Gunslinger)"
                             },
+                            new List<string> {
+                                "IG3S",
+                                "Enemy Soul (Fleemers)"
+                            },
+                            new List<string> {
+                                "IG3S",
+                                "Enemy Soul (Lost Echo)"
+                            }
                         }
                     },
                     {
@@ -5716,7 +5835,8 @@ namespace TunicRandomizer {
                                 "Swamp Fuse 3", FUSE_SHUFFLE,
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Gunslinger)"
                             },
                             new List<string> {
                                 "LS3", PAIRING_ONLY
@@ -5730,7 +5850,8 @@ namespace TunicRandomizer {
                                 "Ladders in Swamp",
                             },
                             new List<string> {
-                                "IG3L"
+                                "IG3L",
+                                "Enemy Soul (Gunslinger)"
                             }
                         }
                     },
@@ -5755,7 +5876,8 @@ namespace TunicRandomizer {
                                 "Swamp Fuse 3", FUSE_SHUFFLE,
                             },
                             new List<string> {
-                                "IG1S"
+                                "IG1S",
+                                "Enemy Soul (Gunslinger)"
                             },
                         }
                     }
@@ -5771,7 +5893,8 @@ namespace TunicRandomizer {
                                 "Ladders in Swamp",
                             },
                             new List<string> {
-                                "IG1L"
+                                "IG1L",
+                                "Enemy Soul (Gunslinger)"
                             },
                         }
                     },
@@ -5868,7 +5991,10 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Zip"
-                            }
+                            },
+                            new List<string> {
+                                "Hyperdash", "IG1L"
+                            },
                         }
                     },
                     {
@@ -5876,9 +6002,6 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "Zip"
-                            },
-                            new List<string> {
-                                "Hyperdash", "IG1L"
                             },
                         }
                     }
@@ -5908,7 +6031,8 @@ namespace TunicRandomizer {
                                 "12", NO_FUSE_SHUFFLE
                             },
                             new List<string> {
-                                "IG2S"
+                                "IG2S",
+                                "Enemy Soul (Zombie Foxes)"
                             },
                             new List<string> {
                                 "ER on"

@@ -234,6 +234,12 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Blobs)"": 1
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehog)"": 1
                         }
                     ]
                 }
@@ -499,6 +505,12 @@
                         {
                             ""East Forest"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Blobs)"": 1
+                        },
+                        {
+                            ""East Forest"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehog)"": 1
                         }
                     ]
                 }
@@ -1731,6 +1743,12 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Rudelings)"": 1
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehog)"": 1
                         }
                     ]
                 }
@@ -1959,6 +1977,7 @@
                         {
                             ""Ruined Atoll"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Frogs)"": 1
                         }
                     ]
                 }
@@ -2073,10 +2092,6 @@
                         {
                             ""Key"": 2,
                             ""Ruined Atoll"": 1
-                        },
-                        {
-                            ""IG2S"": 1,
-                            ""Ruined Atoll"": 1
                         }
                     ]
                 }
@@ -2099,10 +2114,6 @@
                         },
                         {
                             ""Key"": 2,
-                            ""Ruined Atoll"": 1
-                        },
-                        {
-                            ""IG2S"": 1,
                             ""Ruined Atoll"": 1
                         }
                     ]
@@ -3903,6 +3914,7 @@
                         {
                             ""Eastern Vault Fortress"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Custodians)"": 1
                         }
                     ]
                 }
@@ -4228,6 +4240,7 @@
                         {
                             ""Quarry Back"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Scavengers)"": 1
                         }
                     ]
                 }
