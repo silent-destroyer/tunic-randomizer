@@ -10,6 +10,8 @@ using static TunicRandomizer.SaveFlags;
 namespace TunicRandomizer {
     public class EnemyRandomizer {
 
+        public static GameObject PrefabRoot;
+
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
 
         public static List<string> EnemyNames = new List<string>();
@@ -539,6 +541,14 @@ namespace TunicRandomizer {
         }
 
         public static void InitializeEnemies(string SceneName) {
+            if (PrefabRoot == null) {
+                PrefabRoot = new GameObject("enemy prefabs");
+                PrefabRoot.transform.position = Vector3.one * -30000f;
+                PrefabRoot.transform.localEulerAngles = Vector3.zero;
+                PrefabRoot.transform.localScale = Vector3.one;
+                PrefabRoot.SetActive(false);
+                GameObject.DontDestroyOnLoad(PrefabRoot);
+            }
             List<Monster> Monsters = Resources.FindObjectsOfTypeAll<Monster>().ToList();
             Dictionary<string, string> RenamedEnemies = new Dictionary<string, string>() {
                 { "_Turret", "Turret" },
@@ -673,7 +683,11 @@ namespace TunicRandomizer {
                 Enemies["Hedgehog Trap"].transform.position = new Vector3(-30000f, -30000f, -30000f);
                 Enemies["Hedgehog Trap"].name = "Hedgehog Trap Prefab";
             }
-
+            foreach (string key in Enemies.Keys) {
+                Enemies[key].transform.parent = PrefabRoot.transform;
+                Enemies[key].transform.position = Vector3.one * -30000f;
+                Enemies[key].SetActive(false);
+            }
             EnemyNames = Enemies.Keys.ToList();
         }
 
@@ -1452,27 +1466,27 @@ namespace TunicRandomizer {
             Quartet = Quartet.Where(monster => monster != null).ToList();
         }
     }
-    public class EnemyManager : MonoBehaviour {
-        public IEnumerator<bool> manager;
-        public void Awake() {
-            manager = ManageEnemies();
-        }
+    //public class EnemyManager : MonoBehaviour {
+    //    public IEnumerator<bool> manager;
+    //    public void Awake() {
+    //        manager = ManageEnemies();
+    //    }
 
-        public void Update() {
-            if (manager != null) {
-                manager.MoveNext();
-            }
-        }
-        public IEnumerator<bool> ManageEnemies() {
-            while (true) {
-                for (int i = 0; i < EnemyRandomizer.EnemyNames.Count; i++) {
-                    EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].SetActive(false);
-                    yield return true;
-                    EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].transform.position = new Vector3(-30000f, -30000f, -30000f);
-                    yield return true;
-                }
-                yield return true;
-            }
-        }
-    }
+    //    public void Update() {
+    //        if (manager != null) {
+    //            manager.MoveNext();
+    //        }
+    //    }
+    //    public IEnumerator<bool> ManageEnemies() {
+    //        while (true) {
+    //            for (int i = 0; i < EnemyRandomizer.EnemyNames.Count; i++) {
+    //                EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].SetActive(false);
+    //                yield return true;
+    //                EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].transform.position = new Vector3(-30000f, -30000f, -30000f);
+    //                yield return true;
+    //            }
+    //            yield return true;
+    //        }
+    //    }
+    //}
 }
