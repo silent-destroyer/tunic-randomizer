@@ -4211,7 +4211,7 @@ namespace TunicRandomizer {
                         "West Garden by Portal",
                         new List<List<string>> {
                             new List<string> {
-                                "IG2S",
+                                "IG3S",
                                 "Enemy Soul (Chompignom)"
                             }
                         }
