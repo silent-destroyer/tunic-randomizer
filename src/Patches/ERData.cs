@@ -2765,7 +2765,8 @@ namespace TunicRandomizer {
                         "Overworld Beach",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Autobolt)"
                             }
                         }
                     }
@@ -2787,7 +2788,8 @@ namespace TunicRandomizer {
                         "Overworld Tunnel Turret",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Autobolt)"
                             }
                         }
                     }
@@ -2809,7 +2811,8 @@ namespace TunicRandomizer {
                         "After Ruined Passage",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Blobs)"
                             }
                         }
                     }
@@ -2831,15 +2834,18 @@ namespace TunicRandomizer {
                         "Overworld after Envoy",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Envoy)"
                             }
                         }
                     },
                     {
                         "East Overworld",
                         new List<List<string>> {
+                            // hedgehog isn't here because it's at elevation 5
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Blobs)"
                             }
                         }
                     }
@@ -2875,7 +2881,12 @@ namespace TunicRandomizer {
                         "East Overworld",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Hedgehog)"
                             }
                         }
                     }
@@ -2897,7 +2908,8 @@ namespace TunicRandomizer {
                         "Overworld above Patrol Cave",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Hedgehog)"
                             }
                         }
                     }
@@ -2911,7 +2923,12 @@ namespace TunicRandomizer {
                         "Upper Overworld",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Phrend)"
                             }
                         }
                     }
@@ -3731,6 +3748,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "LS2",
+                                "Enemy Soul (Hedgehog)"
                             },
                         }
                     },
@@ -3925,6 +3943,7 @@ namespace TunicRandomizer {
                                 "IG3S",
                                 "Enemy Soul (Rudelings)"
                             },
+                            // for leaving through the upper exit
                             new List<string> {
                                 "LS2", PAIRING_ONLY
                             },
@@ -4872,7 +4891,8 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Custodians)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
@@ -4920,7 +4940,8 @@ namespace TunicRandomizer {
                                 "LS1", PAIRING_ONLY
                             },
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -4928,7 +4949,8 @@ namespace TunicRandomizer {
                         "Fortress Courtyard Upper",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -4970,7 +4992,9 @@ namespace TunicRandomizer {
                                 "LS1", PAIRING_ONLY
                             },
                             new List<string> {
-                                "LS2", "Ladder to Beneath the Vault"
+                                "LS2",
+                                "Ladder to Beneath the Vault",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -4979,7 +5003,8 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
@@ -5402,6 +5427,7 @@ namespace TunicRandomizer {
                     {
                         "Monastery Rope",
                         new List<List<string>> {
+                            // for entering through the back entrance to Monastery
                             new List<string> {
                                 "LS2", PAIRING_ONLY,
                             }
@@ -5681,17 +5707,28 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "IG1L", "Sword", "12", NO_FUSE_SHUFFLE
                             },
-                            // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                            // LS2 includes getting knocked down by melee enemies (or enemies that are close range), so this does not need the pairing only tag
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Voidling)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Autobolt)"
                             },
                         }
                     },
-                    {  // can't get to checkpoint if enemies aggro, gap too big
+                    {  
+                        // can't get to checkpoint if enemies aggro, gap too big, so no laurels connection
                         "Rooted Ziggurat Lower Mid Checkpoint",
                         new List<List<string>> {
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Voidling)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Administrator)"
                             },
                         }
                     },
@@ -5941,8 +5978,17 @@ namespace TunicRandomizer {
                         "Swamp Mid",
                         new List<List<string>> {
                             new List<string> {
-                                // LS2 includes getting knocked down by melee enemies, so this does not need the pairing only tag
+                                // LS2 includes getting knocked down by melee and close range enemies, so this does not need the pairing only tag
                                 "LS2",
+                                "Enemy Soul (Gunslinger)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Fleemers)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Lost Echo)"
                             },
                         }
                     },
@@ -5953,7 +5999,12 @@ namespace TunicRandomizer {
                                 "LS1", PAIRING_ONLY
                             },
                             new List<string> {
-                                "LS2"
+                                "LS2",
+                                "Enemy Soul (Gunslinger)"
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Fleemers)"
                             },
                         }
                     },
