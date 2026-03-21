@@ -4422,7 +4422,7 @@ namespace TunicRandomizer {
                                 "12", "Ladders in South Atoll", "Wand", "Sword", NO_FUSE_SHUFFLE,
                             },
                             new List<string> {
-                                "12", "Ladders in South Atoll", "Wand", "Bow", NO_FUSE_SHUFFLE,
+                                "12", "Ladders in South Atoll", "Wand", "Shotgun", NO_FUSE_SHUFFLE,
                             },
                             new List<string> {
                                 "12", "Ladders in South Atoll", "Wand", "Techbow", NO_FUSE_SHUFFLE,
