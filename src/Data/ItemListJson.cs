@@ -239,7 +239,7 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
-                            ""Enemy Soul (Hedgehog)"": 1
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -510,7 +510,7 @@
                         {
                             ""East Forest"": 1,
                             ""IG3S"": 1,
-                            ""Enemy Soul (Hedgehog)"": 1
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -1748,7 +1748,7 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
-                            ""Enemy Soul (Hedgehog)"": 1
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }

@@ -32,7 +32,7 @@ namespace TunicRandomizer {
             { "Enemy Soul (Frogs)", ("Frog", new Vector3(0, -5, -2), Vector3.one * 2) },
             { "Enemy Soul (Lost Echo)", ("Ghostfox_monster", new Vector3(0, -8, -1), Vector3.one * 3f) },
             { "Enemy Soul (Gunslinger)", ("Gunslinger", new Vector3(0, -7, 0), Vector3.one * 2.5f) },
-            { "Enemy Soul (Hedgehog)", ("HedgehogBig", new Vector3(0, -7, -1), Vector3.one * 4) },
+            { "Enemy Soul (Hedgehogs)", ("HedgehogBig", new Vector3(0, -7, -1), Vector3.one * 4) },
             { "Enemy Soul (Laser Trap)", ("Hedgehog Trap", new Vector3(0, -6, 0), Vector3.one * 3.5f) },
             { "Enemy Soul (Envoy)", ("Honourguard", new Vector3(0, -6, 0), Vector3.one * 2.5f) },
             { "Enemy Soul (Garden Knight)", ("tech knight boss", new Vector3(0, -6, 0), Vector3.one * 2) },
@@ -194,8 +194,8 @@ namespace TunicRandomizer {
         }
 
         private static void setupHedgehogs(Transform parent) {
-            GameObject hedgehog = cloneEnemy("Enemy Soul (Hedgehog)", parent);
-            EnemyPresentationObjs.Add("Enemy Soul (Hedgehog)", hedgehog);
+            GameObject hedgehog = cloneEnemy("Enemy Soul (Hedgehogs)", parent);
+            EnemyPresentationObjs.Add("Enemy Soul (Hedgehogs)", hedgehog);
         }
 
         private static void setupLaserTrap(Transform parent) {

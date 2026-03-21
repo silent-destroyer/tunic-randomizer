@@ -2486,7 +2486,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                         }
                     },
@@ -2552,7 +2552,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG3L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                         }
                     },
@@ -2586,7 +2586,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG2S",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
                                 "LS3", PAIRING_ONLY
@@ -2617,7 +2617,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG2S",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
                                 "IG2S",
@@ -2886,7 +2886,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "LS2",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             }
                         }
                     }
@@ -2909,7 +2909,7 @@ namespace TunicRandomizer {
                         new List<List<string>> {
                             new List<string> {
                                 "LS2",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             }
                         }
                     }
@@ -2978,7 +2978,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                         }
                     },
@@ -3258,7 +3258,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             }
                         }
                     },
@@ -3741,14 +3741,14 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
                             },
                             new List<string> {
                                 "LS2",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                         }
                     },
@@ -3789,7 +3789,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
                                 "IG1L",
@@ -3937,7 +3937,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG3S",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
                                 "IG3S",
@@ -3971,7 +3971,7 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "IG1L",
-                                "Enemy Soul (Hedgehog)"
+                                "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
                                 "IG1L",

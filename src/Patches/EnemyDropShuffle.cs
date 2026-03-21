@@ -30,10 +30,6 @@ namespace TunicRandomizer {
                 }
             }
         }
-
-        private void OnGUI() {
-            
-        }
     }
 
     public class RegionSelector : MonoBehaviour {
@@ -371,11 +367,11 @@ namespace TunicRandomizer {
                 "Hedgehog", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Stick", 1},
-                        {"Enemy Soul (Hedgehog)", 1}
+                        {"Enemy Soul (Hedgehogs)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Enemy Soul (Hedgehog)", 1}
+                        {"Enemy Soul (Hedgehogs)", 1}
                     },
                 }
             },

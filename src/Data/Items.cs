@@ -334,7 +334,7 @@ namespace TunicRandomizer {
             { "Enemy Soul (Frogs)", new ItemData("Enemy Soul (Frogs)", "progression", "Enemy Soul (Frogs)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Lost Echo)", new ItemData("Enemy Soul (Lost Echo)", "progression", "Enemy Soul (Lost Echo)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Gunslinger)", new ItemData("Enemy Soul (Gunslinger)", "progression", "Enemy Soul (Gunslinger)", ItemTypes.ENEMY, 1) },
-            { "Enemy Soul (Hedgehog)", new ItemData("Enemy Soul (Hedgehog)", "progression", "Enemy Soul (Hedgehog)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Hedgehogs)", new ItemData("Enemy Soul (Hedgehogs)", "progression", "Enemy Soul (Hedgehogs)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Laser Trap)", new ItemData("Enemy Soul (Laser Trap)", "progression", "Enemy Soul (Laser Trap)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Envoy)", new ItemData("Enemy Soul (Envoy)", "progression", "Enemy Soul (Envoy)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Garden Knight)", new ItemData("Enemy Soul (Garden Knight)", "progression", "Enemy Soul (Garden Knight)", ItemTypes.ENEMY, 1) },
