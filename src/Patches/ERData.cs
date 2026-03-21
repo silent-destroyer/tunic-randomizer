@@ -4871,7 +4871,6 @@ namespace TunicRandomizer {
                     },
                 }
             },
-
             {
                 "Fortress Exterior from East Forest",
                 new Dictionary<string, List<List<string>>> {
@@ -4896,6 +4895,18 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
+                            },
+                        }
+                    },
+                    {
+                        "Fortress Courtyard",
+                        new List<List<string>> {
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2",
+                                "Enemy Soul (Custodians)"
                             },
                         }
                     },
