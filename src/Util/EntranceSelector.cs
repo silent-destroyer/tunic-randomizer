@@ -313,7 +313,7 @@ namespace TunicRandomizer {
                 return; 
             }
             WaitingForDartSelection = true;
-            Title.text = $"select a scene to pin";
+            SetHeading("select a scene to pin");
             EventSystem.current.SetSelectedGameObject(EntranceSelector.ButtonObj1);
         }
 
@@ -323,6 +323,7 @@ namespace TunicRandomizer {
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.blockSFX);
             Pin.Quantity -= 1;
             PinButton.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Pin.Quantity.ToString();
+            SetHeading("choose wisely, tiny fox...");
             WaitingForDartSelection = false;
         }
 
@@ -360,6 +361,10 @@ namespace TunicRandomizer {
             //ItemButton4.gameObject.AddComponent<SceneSelectionButton>();
         }
 
+        public void SetHeading(string text) {
+            Title.text = text;
+        }
+
         public void ShowSelection(List<PortalCombo> portalChoices) {
             TunicLogger.LogInfo("Showing Selections:");
             foreach (PortalCombo combo in portalChoices) {
@@ -385,7 +390,7 @@ namespace TunicRandomizer {
             RerollButton.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Soul Dice").Quantity.ToString();
             PinButton.transform.GetChild(0).GetComponent<Image>().sprite = Inventory.GetItemByName("Dart").icon;
             PinButton.transform.GetChild(1).GetComponent<RTLTextMeshPro>().text = Inventory.GetItemByName("Dart").Quantity.ToString();
-            Title.text = $"choose wisely, tiny fox...";
+            SetHeading("choose wisely, tiny fox...");
             AreaLabel.CancelShowLabel();
             ToggleItemRow(false);
             readyForInputs = false;
