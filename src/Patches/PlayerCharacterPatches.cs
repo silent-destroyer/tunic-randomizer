@@ -296,6 +296,14 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
 
             try {
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) {
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
                 TunicUtils.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();
                 //FairyTargets.CreateEntranceTargets();
@@ -358,14 +366,6 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
-            }
-
-            try {
-                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) {
-                    EnemyDropShuffle.SetupEnemyChecks();
-                }
-            } catch (Exception e) {
-                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             if (PaletteEditor.ToonFox.GetComponent<MeshRenderer>() == null) {

@@ -45,8 +45,14 @@ namespace TunicRandomizer {
                     }
                 }
 
+                List<EnemyCheck> enemyChecks = new List<EnemyCheck>();
+                if (SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) {
+                    enemyChecks = Resources.FindObjectsOfTypeAll<EnemyCheck>().Where(ec => TunicUtils.IsInActiveScene(ec.gameObject)).ToList();
+                }
+
                 foreach (string ItemId in ItemIdsInScene) {
                     bool isBreakable = BreakableShuffle.BreakableChecks.ContainsKey(ItemId);
+                    bool isEnemy = EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(ItemId);
                     Location Location = Checks[ItemId].Location;
 
                     if (GameObject.Find($"fairy target {ItemId}") == null) {
@@ -59,6 +65,14 @@ namespace TunicRandomizer {
                             foreach (GameObject breakable in breakableObjects) {
                                 if (BreakableShuffle.getBreakableGameObjectId(breakable.gameObject) == ItemId) {
                                     fairyTarget.transform.parent = breakable.transform;
+                                }
+                            }
+                        }
+                        if (isEnemy) {
+                            foreach (EnemyCheck enemyCheck in enemyChecks) {
+                                if (enemyCheck.CheckId == ItemId) { 
+                                    fairyTarget.transform.parent = enemyCheck.transform;
+                                    fairyTarget.transform.localPosition = Vector3.zero;
                                 }
                             }
                         }

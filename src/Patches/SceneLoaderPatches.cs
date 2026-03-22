@@ -633,6 +633,15 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HolyCrossUnlocked) == 0) {
                 ItemPatches.ToggleHolyCrossObjects(false);
             }
+
+            try {
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) {
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
             try {
                 if (PlayerCharacter.instance != null) {
                     TunicUtils.FindChecksInLogic();
@@ -666,14 +675,6 @@ namespace TunicRandomizer {
                 }
             } catch (Exception e) {
                 TunicLogger.LogInfo("Error modifying tuning fork bells! " + e.Source + " " + e.Message + " " + e.StackTrace);
-            }
-
-            try {
-                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) { 
-                    EnemyDropShuffle.SetupEnemyChecks();
-                }
-            } catch (Exception e) {
-                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {

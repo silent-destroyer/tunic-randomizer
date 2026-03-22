@@ -766,6 +766,7 @@ namespace TunicRandomizer {
                 if (monster.GetComponent<RuntimeStableID>() != null) {
                     string id = GetEnemyCheckId(monster.gameObject);
                     if (EnemyDrops.ContainsKey(id) && !SaveFlags.GetBool($"randomizer picked up {id}")) {
+                        if (ExtraEnemyDropChecks.ContainsKey(id) && !SaveFlags.GetBool(SaveFlags.ExtraEnemyDropsEnabled)) { continue; }
                         monster.gameObject.AddComponent<EnemyCheck>();
                         monster.gameObject.GetComponent<EnemyCheck>().CheckId = id;
                         soulManager.GetComponent<EnemySoulManager>().registerMonster(monster.gameObject, EnemyDrops[id]);
@@ -775,6 +776,7 @@ namespace TunicRandomizer {
             foreach (TurretTrap turretTrap in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(t => t.gameObject.scene.name == SceneManager.GetActiveScene().name && t.GetComponent<EnemyCheck>() == null)) {
                 string id = GetEnemyCheckId(turretTrap.gameObject);
                 if (EnemyDrops.ContainsKey(id) && !SaveFlags.GetBool($"randomizer picked up {id}")) {
+                    if (ExtraEnemyDropChecks.ContainsKey(id) && !SaveFlags.GetBool(SaveFlags.ExtraEnemyDropsEnabled)) { continue; }
                     turretTrap.gameObject.AddComponent<EnemyCheck>();
                     turretTrap.gameObject.GetComponent<EnemyCheck>().CheckId = id;
                     soulManager.GetComponent<EnemySoulManager>().registerMonster(turretTrap.gameObject, EnemyDrops[id]);
