@@ -126,7 +126,7 @@ namespace TunicRandomizer {
             DartModel.transform.parent = ButtonObj1.transform;
             DartModel.layer = 5;
             DartModel.transform.localScale = Vector3.one * 100;
-            DartModel.transform.localPosition = new Vector3(119.4731f, 83.4838f, -126.0739f);
+            DartModel.transform.localPosition = new Vector3(120f, 83f, -126f);
             DartModel.transform.localEulerAngles = new Vector3(8.9441f, 320.5457f, 0f);
             DartModel.AddComponent<MeshFilter>().mesh = ModelSwaps.Items["Dart"].GetComponent<MeshFilter>().mesh;
             DartModel.AddComponent<MeshRenderer>().materials = ModelSwaps.Items["Dart"].GetComponent<MeshRenderer>().materials;
@@ -155,15 +155,15 @@ namespace TunicRandomizer {
             ItemButtons.layer = 5;
             ItemButtons.transform.parent = mainBox.transform;
             ItemButtons.transform.localScale = Vector3.one * 2f;
-            ItemButtons.transform.localPosition = new Vector3(-500f, -420f, 200f);
-            ItemButtons.AddComponent<HorizontalLayoutGroup>();
+            ItemButtons.transform.localPosition = new Vector3(-420f, -420f, 200f);
+            ItemButtons.AddComponent<HorizontalLayoutGroup>().spacing = 115;
 
             GameObject RerollButtonObj = new GameObject("Reroll button");
             RerollButtonObj.layer = 5;
             RerollButtonObj.transform.localScale = Vector3.one;
             RerollButtonObj.transform.parent = ItemButtons.transform;
             RerollButtonObj.transform.localPosition = new Vector3(RerollButtonObj.transform.localPosition.x, RerollButtonObj.transform.localPosition.y, 200);
-            RerollButtonObj.AddComponent<LayoutElement>().minWidth = 150;
+            RerollButtonObj.AddComponent<LayoutElement>().minWidth = 200;
             RerollButtonObj.AddComponent<Image>().sprite = box;
             RerollButton = RerollButtonObj.AddComponent<Button>();
 
@@ -179,7 +179,7 @@ namespace TunicRandomizer {
             GameObject RerollText = new GameObject("item quantity");
             RerollText.transform.localScale = Vector3.one;
             RerollText.transform.parent = RerollButtonObj.transform;
-            RerollText.transform.localPosition = new Vector3(110.6092f, 0f, -76.9091f);
+            RerollText.transform.localPosition = new Vector3(120.6092f, 0f, -76.9091f);
             RerollText.transform.localScale = Vector3.one;
             RerollText.layer = 5;
             RTLTextMeshPro rerollText = RerollText.AddComponent<RTLTextMeshPro>();
@@ -438,9 +438,20 @@ namespace TunicRandomizer {
             Layout1.transform.localPosition = new Vector3(Layout1.transform.localPosition.x, 0, 200);
             Layout2.transform.localPosition = new Vector3(Layout2.transform.localPosition.x, 0, 200);
             Layout3.transform.localPosition = new Vector3(Layout3.transform.localPosition.x, 0, 200);
-            SceneSprite1.transform.localPosition = new Vector3(SceneSprite1.transform.localPosition.x, SceneSprite1.transform.localPosition.y, 200);
-            SceneSprite2.transform.localPosition = new Vector3(SceneSprite2.transform.localPosition.x, SceneSprite2.transform.localPosition.y, 200);
-            SceneSprite3.transform.localPosition = new Vector3(SceneSprite3.transform.localPosition.x, SceneSprite3.transform.localPosition.y, 200);
+            int z = SpeedrunTimerDisplay.Visible ? 200 : -50;
+            SceneSprite1.transform.localPosition = new Vector3(SceneSprite1.transform.localPosition.x, SceneSprite1.transform.localPosition.y, z);
+            SceneSprite2.transform.localPosition = new Vector3(SceneSprite2.transform.localPosition.x, SceneSprite2.transform.localPosition.y, z);
+            SceneSprite3.transform.localPosition = new Vector3(SceneSprite3.transform.localPosition.x, SceneSprite3.transform.localPosition.y, z);
+            yield return true;
+            int buttonZ = SpeedrunTimerDisplay.Visible ? 0 : -80;
+            SceneButton1.transform.localPosition = new Vector3(SceneButton1.transform.localPosition.x, SceneButton1.transform.localPosition.y, buttonZ);
+            SceneButton2.transform.localPosition = new Vector3(SceneButton2.transform.localPosition.x, SceneButton2.transform.localPosition.y, buttonZ);
+            SceneButton3.transform.localPosition = new Vector3(SceneButton3.transform.localPosition.x, SceneButton3.transform.localPosition.y, buttonZ);
+            yield return true;
+            int dartZ = SpeedrunTimerDisplay.Visible ? -126 : -96;
+            SceneButton1.transform.GetChild(1).localPosition = new Vector3(SceneButton1.transform.GetChild(1).localPosition.x, SceneButton1.transform.GetChild(1).localPosition.y, dartZ);
+            SceneButton2.transform.GetChild(1).localPosition = new Vector3(SceneButton2.transform.GetChild(1).localPosition.x, SceneButton2.transform.GetChild(1).localPosition.y, dartZ);
+            SceneButton3.transform.GetChild(1).localPosition = new Vector3(SceneButton3.transform.GetChild(1).localPosition.x, SceneButton3.transform.GetChild(1).localPosition.y, dartZ);
             yield return true;
             while (Layout3.transform.localPosition.y < 435) {
                 if (Layout1.transform.localPosition.y < 435) {
