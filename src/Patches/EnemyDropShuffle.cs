@@ -708,11 +708,6 @@ namespace TunicRandomizer {
                                 }
                             }
                         }
-                        TunicLogger.LogInfo(check.CheckId);
-                        foreach (Dictionary<string, int> reqs in check.Location.Requirements) {
-                            TunicLogger.LogInfo(string.Join(", ", reqs.Keys.ToList()));
-                        }
-                        TunicLogger.LogInfo("================================================");
                     }
                     AllEnemyDropChecks.Add(enemy.Key, check);
                     if (enemy.Value.IsNGPlusEnemy || enemy.Value.IsNightEnemy) { 
