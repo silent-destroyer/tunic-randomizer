@@ -342,7 +342,7 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
                     MajorItems.AddRange(ItemRandomizer.BellItems);
                 }
-                if (GetBool(EnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
+                if (GetBool(ShuffleEnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
                     MajorItems.AddRange(ItemRandomizer.EnemyItems);
                 }
                 foreach (string MajorItem in MajorItems) {

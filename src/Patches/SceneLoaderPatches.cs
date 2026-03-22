@@ -669,7 +669,7 @@ namespace TunicRandomizer {
             }
 
             try {
-                if (SaveFile.GetInt(EnemyDropsEnabled) == 1) { 
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) { 
                     EnemyDropShuffle.SetupEnemyChecks();
                 }
             } catch (Exception e) {

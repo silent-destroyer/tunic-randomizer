@@ -265,7 +265,7 @@ namespace TunicRandomizer {
             if (GetBool(BellShuffleEnabled) || getAll) {
                 checks.AddRange(BellShuffle.BellChecks.Values.ToList());
             }
-            if (GetBool(EnemyDropsEnabled) || getAll) { 
+            if (GetBool(ShuffleEnemyDropsEnabled) || getAll) { 
                 checks.AddRange(EnemyDropShuffle.BaseEnemyDropChecks.Values.ToList());
                 if (GetBool(ExtraEnemyDropsEnabled) || getAll) {
                     checks.AddRange(EnemyDropShuffle.ExtraEnemyDropChecks.Values.ToList());

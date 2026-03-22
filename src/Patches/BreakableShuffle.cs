@@ -146,7 +146,7 @@ namespace TunicRandomizer {
                 return true;
             }
 
-            if (SaveFlags.GetBool(SaveFlags.EnemyDropsEnabled)) { 
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) { 
                 if (__instance.GetComponent<TurretTrap>() != null) {
                     if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                         return false;

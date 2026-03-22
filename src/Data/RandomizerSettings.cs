@@ -848,7 +848,7 @@ namespace TunicRandomizer {
                     GetBool(SaveFlags.Decoupled), GetBool(SaveFlags.HexagonQuestPageAbilities),
                     GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
                     GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
-                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.EnemyDropsEnabled),
+                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.ShuffleEnemyDropsEnabled),
                     GetBool(SaveFlags.ExtraEnemyDropsEnabled), GetBool(SaveFlags.ShuffleEnemySoulsEnabled),
                 };
             }

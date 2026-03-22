@@ -125,7 +125,7 @@ namespace TunicRandomizer {
                     check.Reward.Amount = random.Next(1, 6);
                 }
             }
-            if (GetBool(EnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
+            if (GetBool(ShuffleEnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
                 ProgressionNames.AddRange(EnemySouls);
 
                 for (int i = 0; i < InitialItems.Count; i++) { 

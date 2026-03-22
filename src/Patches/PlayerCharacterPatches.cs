@@ -361,7 +361,7 @@ namespace TunicRandomizer {
             }
 
             try {
-                if (SaveFile.GetInt(EnemyDropsEnabled) == 1) {
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) {
                     EnemyDropShuffle.SetupEnemyChecks();
                 }
             } catch (Exception e) {
@@ -548,7 +548,7 @@ namespace TunicRandomizer {
                             SaveFile.SetInt(BellShuffleEnabled, 1);
                         }
                         if (TunicRandomizer.Settings.EnemyDropShuffle) { 
-                            SaveFile.SetInt(EnemyDropsEnabled, 1);
+                            SaveFile.SetInt(ShuffleEnemyDropsEnabled, 1);
                             if (TunicRandomizer.Settings.ExtraEnemyDrops) {
                                 SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
                             }

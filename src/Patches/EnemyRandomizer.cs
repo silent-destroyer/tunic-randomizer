@@ -744,7 +744,7 @@ namespace TunicRandomizer {
                         EnemyRandomizer.SpawnNewEnemies();
                     }
                 } else {
-                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                    if (GetBool(ExtraEnemyDropsEnabled) || TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                         EnemyRandomizer.EnableExtraEnemies();
                     }
                 }
@@ -795,7 +795,7 @@ namespace TunicRandomizer {
             if (CurrentScene == "Forest Belltower") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Library Hall" && !CycleController.IsNight) {
+            if ((GetBool(ExtraEnemyDropsEnabled) || TunicRandomizer.Settings.ExtraEnemiesEnabled) && CurrentScene == "Library Hall" && !CycleController.IsNight) {
                 GameObject.Find("beefboy statues").SetActive(false);
                 GameObject.Find("beefboy statues (2)").SetActive(false);
                 foreach (GameObject Monster in Monsters) {
@@ -820,18 +820,21 @@ namespace TunicRandomizer {
             if (CurrentScene == "Cathedral Arena") {
                 Monster.ClearRuntimeDeadMonsters();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                if (CurrentScene == "Monastery") {
-                    Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
-                } else if(CurrentScene == "ziggurat2020_3") {
-                    foreach(ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == CurrentScene)) {
-                        bossScav.eggTossChance = 0.2f;
-                    }
+            if (CurrentScene == "Monastery" && (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ExtraEnemyDropsEnabled))) {
+                Voidtouched voidtouched = Resources.FindObjectsOfTypeAll<Voidtouched>().Where(Voidtouched => TunicUtils.IsInActiveScene(Voidtouched.gameObject)).First();
+                if (voidtouched != null) { 
+                    voidtouched.transform.parent = null;
+                    voidtouched.onlyAggroViaTrigger = false;
+                }
+            }
+            if(CurrentScene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                foreach(ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == CurrentScene)) {
+                    bossScav.eggTossChance = 0.2f;
                 }
             }
 
-            Monsters = Monsters.Where(Monster => Monster.gameObject.scene.name == CurrentScene).ToList();
-            
+            Monsters = Monsters.Where(Monster => TunicUtils.IsInActiveScene(Monster) && EnemyDropShuffle.IsValidEnemy(Monster)).ToList();
+
             int i = 0;
             foreach (GameObject Enemy in Monsters) {
                 GameObject NewEnemy = null;
@@ -869,7 +872,7 @@ namespace TunicRandomizer {
                     if (CurrentScene == "Crypt Redux" && Enemy.name.Contains("bomezome") && !Enemy.name.Contains("big") && !Enemy.name.Contains("easy")) {
                         Enemy.name = Enemy.name.Replace("bomezome", "bomezome_easy");
                     }
-                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ExtraEnemyDropsEnabled)) {
                         if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && CurrentScene != "Cathedral Arena"))) {
                             Enemy.transform.parent.gameObject.SetActive(true);
                         }
@@ -929,6 +932,22 @@ namespace TunicRandomizer {
                         continue;
                     }
 
+                    if (GetBool(ShuffleEnemyDropsEnabled)) {
+                        string checkId = EnemyDropShuffle.GetEnemyCheckId(Enemy);
+                        if (checkId != null && (Locations.RandomizedLocations.ContainsKey(checkId) || ItemLookup.ItemList.ContainsKey(checkId))) {
+                            if (!EnemyDropShuffle.AllEnemyDropChecks[checkId].IsCompletedOrCollected) {
+                                continue;
+                            }
+                        }
+                        if (GetBool(ShuffleEnemySoulsEnabled)) { 
+                            if (EnemyDropShuffle.EnemyDrops.ContainsKey(checkId) && EnemyDropShuffle.EnemyTypeToSoul.ContainsKey(EnemyDropShuffle.EnemyDrops[checkId].EnemyType)) {
+                                string enemySoul = EnemyDropShuffle.EnemyTypeToSoul[EnemyDropShuffle.EnemyDrops[checkId].EnemyType];
+                                if (Inventory.GetItemByName(enemySoul).Quantity == 0) {
+                                    continue;    
+                                }
+                            }
+                        }
+                    }
                     if (!TunicRandomizer.Settings.BalancedEnemies || TunicRandomizer.Settings.OopsAllEnemy) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else {
@@ -1234,7 +1253,11 @@ namespace TunicRandomizer {
         public static void EnableExtraEnemies() {
             string scene = SceneManager.GetActiveScene().name;
 
-            List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab") && Monster.gameObject.scene.name == scene).ToList();
+            List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) &&
+            Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab") && TunicUtils.IsInActiveScene(Monster) && 
+            EnemyDropShuffle.GetEnemyCheckId(Monster) != null &&
+            (EnemyDropShuffle.ExtraEnemyDropChecks.ContainsKey(EnemyDropShuffle.GetEnemyCheckId(Monster)) || scene == "Library Hall" || (scene == "Monastery" && Monster.GetComponent<Voidtouched>() != null))).ToList();
+
             foreach (GameObject Enemy in Monsters) {
                 if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && scene != "Cathedral Arena"))) {
                     Enemy.transform.parent.gameObject.SetActive(true);
@@ -1247,8 +1270,8 @@ namespace TunicRandomizer {
                     if (GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/") != null) {
                         GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/").transform.position = new Vector3(30000, 30000, 30000);
                     }
-                    foreach (Voidtouched voidtouched in Resources.FindObjectsOfTypeAll<Voidtouched>().Where(voidtouched => voidtouched.gameObject.scene.name == scene)) {
-                        voidtouched.onlyAggroViaTrigger = false;
+                    if (Enemy.GetComponent<Voidtouched>() != null) { 
+                        Enemy.GetComponent<Voidtouched>().onlyAggroViaTrigger = false;
                     }
                 }
             }
@@ -1259,7 +1282,7 @@ namespace TunicRandomizer {
                     Monster.transform.parent = null;
                 }
             }
-            if (scene == "ziggurat2020_3") {
+            if (scene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                 foreach (ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == scene)) {
                     bossScav.eggTossChance = 0.2f;
                 }
