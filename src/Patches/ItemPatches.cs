@@ -342,13 +342,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (Item.Type == ItemTypes.ENEMY) {
-                    foreach (string key in EnemySoulModels.EnemyPresentationObjs.Keys) {
-                        EnemySoulModels.EnemyPresentationObjs[key].SetActive(key == Item.Name);
-                    }
-                    EnemySoulManager enemySoulManager = GameObject.FindObjectOfType<EnemySoulManager>();
-                    if (enemySoulManager != null) {
-                        enemySoulManager.onItemGet(Item.Name);
-                    }
+                    EnemySoulModels.OnEnemySoulItemGet(Item.Name);
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -617,13 +611,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (Item.Type == ItemTypes.ENEMY) {
-                    foreach (string key in EnemySoulModels.EnemyPresentationObjs.Keys) {
-                        EnemySoulModels.EnemyPresentationObjs[key].SetActive(key == Item.Name);
-                    }
-                    EnemySoulManager enemySoulManager = GameObject.FindObjectOfType<EnemySoulManager>();
-                    if (enemySoulManager != null) {
-                        enemySoulManager.onItemGet(Item.Name);
-                    }
+                    EnemySoulModels.OnEnemySoulItemGet(Item.Name);
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {

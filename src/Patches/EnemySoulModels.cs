@@ -9,15 +9,6 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, GameObject> EnemyPresentationObjs = new Dictionary<string, GameObject>();
 
-        public static void SetupSkuladotTexture(Skuladin skuladin) {
-            Texture2D newTexture = new Texture2D(4, 4, TextureFormat.DXT1, false);
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) { 
-                    newTexture.SetPixel(i, j, skuladin.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material.mainTexture.TryCast<Texture2D>().GetPixel(i, j));
-                }
-            }
-        }
-
         public static Dictionary<string, (string, Vector3, Vector3)> enemySoulToPrefab = new Dictionary<string, (string, Vector3, Vector3)>() {
             { "Enemy Soul (Administrator)", ("administrator", Vector3.one, Vector3.one) },
             { "Enemy Soul (Phrend)", ("Bat", new Vector3(0, -8, 0), Vector3.one * 4) },
@@ -51,6 +42,29 @@ namespace TunicRandomizer {
             { "Enemy Soul (Custodians)", ("Wizard_Candleabra", new Vector3(0, 0, 0), new Vector3(1, 1, 1)) },
             { "Enemy Soul (The Heir)", ("Foxgod", new Vector3(0f, -9f, 1f), Vector3.one * 1.8f) },
         };
+
+        public static void OnEnemySoulItemGet(string ItemName) {
+            foreach (string key in EnemyPresentationObjs.Keys) {
+                EnemyPresentationObjs[key].SetActive(key == ItemName);
+            }
+            if (ItemName == "Enemy Soul (The Heir)") {
+                SetHeirMaterials(EnemyPresentationObjs[ItemName]);
+            }
+            EnemySoulManager enemySoulManager = GameObject.FindObjectOfType<EnemySoulManager>();
+            if (enemySoulManager != null) {
+                enemySoulManager.onItemGet(ItemName);
+            }
+        }
+
+        public static void SetHeirMaterials(GameObject heir) {
+            foreach (SkinnedMeshRenderer renderer in heir.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                if (SaveFlags.GetBool(SaveFlags.HexagonQuestEnabled)) {
+                    renderer.materials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                } else {
+                    renderer.materials = new Material[] { ModelSwaps.FindMaterial("foxgod_glowyfox") };
+                }
+            }
+        }
 
         public static void SetupEnemyPresentations(Transform root) {
             foreach (ItemData item in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.ENEMY)) {
@@ -391,6 +405,9 @@ namespace TunicRandomizer {
             }
             GameObject.Destroy(heir.transform.GetChild(2).gameObject);
             GameObject.Destroy(heir.transform.Find("rig/root/torso/MCH-spine.002/MCH-spine.003/tweak_spine.003/ORG-spine.003/ORG-shoulder.R/ORG-upper_arm.R/ORG-forearm.R/ORG-hand.R/held.R 1/elderfox_sword/").gameObject);
+            foreach (CreatureMaterialManager manager in heir.GetComponentsInChildren<CreatureMaterialManager>()) {
+                GameObject.Destroy(manager);
+            }
             EnemyPresentationObjs.Add("Enemy Soul (The Heir)", heir);
         }
         private static GameObject cloneEnemy(string enemySoul, Transform parent) {
