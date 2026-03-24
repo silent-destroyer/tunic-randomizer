@@ -5497,6 +5497,16 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Frog's Domain - Side Room Secret Frog",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Frogs)": 1
+            },
+            {
+                "Sword": 1,
+                "Hyperdash": 1,
+                "Enemy Soul (Frogs)": 1
+            }
         ]
     },
     "52000002 [frog cave main]": {
