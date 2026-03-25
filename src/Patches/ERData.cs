@@ -2585,7 +2585,7 @@ namespace TunicRandomizer {
                                 "Enemy Soul (Blobs)"
                             },
                             new List<string> {
-                                "IG2S",
+                                "IG3S",
                                 "Enemy Soul (Hedgehogs)"
                             },
                             new List<string> {
@@ -2648,8 +2648,16 @@ namespace TunicRandomizer {
                                 "Key (House)",
                             },
                             new List<string> {
-                                "IG2S",
+                                "IG3S",
                                 "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "IG2S",
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "IG2S",
+                                "Enemy Soul (Hedgehogs)"
                             },
                         }
                     },
