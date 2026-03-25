@@ -2612,7 +2612,7 @@ namespace TunicRandomizer {
                                 "21",
                             },
                             new List<string> {
-                                "IG2S",
+                                "IG3S",
                                 "Enemy Soul (Blobs)"
                             },
                             new List<string> {
