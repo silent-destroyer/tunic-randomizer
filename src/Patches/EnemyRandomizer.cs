@@ -1327,6 +1327,9 @@ namespace TunicRandomizer {
         }
 
         public static void Monster_Die_MoveNext_PostfixPatch(Monster._Die_d__77 __instance, ref bool __result) {
+            if (__instance.__4__this.GetComponent<EnemyCheck>() != null) {
+                __instance.__4__this.GetComponent<EnemyCheck>().ActivateEnemyCheck(__instance.__4__this.transform);
+            }
             if (!__result) {
                 int EnemiesDefeated = SaveFile.GetInt(EnemiesDefeatedCount);
                 SaveFile.SetInt(EnemiesDefeatedCount, EnemiesDefeated + 1);
@@ -1338,9 +1341,6 @@ namespace TunicRandomizer {
                     } else {
                         RecordDefeatedEnemy(__instance.__4__this);
                     }
-                }
-                if (__instance.__4__this.GetComponent<EnemyCheck>() != null) {
-                    __instance.__4__this.GetComponent<EnemyCheck>().ActivateEnemyCheck(__instance.__4__this.transform);
                 }
                 //EnemyDropShuffle.EnemyInfo enemyInfo = new EnemyDropShuffle.EnemyInfo();
                 //Monster m = __instance.__4__this;
