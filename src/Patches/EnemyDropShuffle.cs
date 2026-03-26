@@ -696,6 +696,20 @@ namespace TunicRandomizer {
                     } else if (enemyRequirements.ContainsKey(enemy.Value.EnemyType)) {
                         reqsToUse = enemyRequirements[enemy.Value.EnemyType];
                     }
+                    if (enemy.Value.EnemyType == "Probe" && enemy.Value.EnemyScene == "Cathedral Arena") {
+                        TunicLogger.LogInfo(enemy.Value.EnemyDescription);
+                        reqsToUse = new List<Dictionary<string, int>>() {
+                            new Dictionary<string, int>() {
+                                {"Wand", 1},
+                                {"Sword", 1},
+                                {"Enemy Soul (Fairies)", 1},
+                            },
+                            new Dictionary<string, int>() {
+                                {"Techbow", 1},
+                                {"Enemy Soul (Fairies)", 1},
+                            },
+                        };
+                    }
                     if (reqsToUse != null) {
                         foreach (Dictionary<string, int> requirements in reqsToUse) {
                             Dictionary<string, int> newReqs = requirements.ToDictionary(entry => entry.Key, entry => entry.Value);
