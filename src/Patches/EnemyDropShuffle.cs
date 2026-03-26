@@ -28,6 +28,7 @@ namespace TunicRandomizer {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
                     ModelSwaps.SetupItemMoveUp(transform, itemInfo: ItemLookup.ItemList[CheckId]);
                 }
+                Destroy(this);
             }
         }
     }
@@ -575,6 +576,10 @@ namespace TunicRandomizer {
                     },
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Enemy Soul (Baby Slorm)", 1}
+                    },
+                    new Dictionary<string, int>() {
+                        {"Techbow", 1},
                         {"Enemy Soul (Baby Slorm)", 1}
                     },
                     new Dictionary<string, int>() {
