@@ -2539,6 +2539,16 @@
                             ""Library Arena"": 1,
                             ""Ladders in Library"": 1,
                             ""Sword"": 1,
+                            ""Wand"": 1,
+                            ""Techbow"": 1,
+                            ""Enemy Soul (Librarian)"": 1
+                        },
+                        {
+                            ""Library Arena"": 1,
+                            ""Ladders in Library"": 1,
+                            ""Sword"": 1,
+                            ""Wand"": 1,
+                            ""Shotgun"": 1,
                             ""Enemy Soul (Librarian)"": 1
                         }
                     ]
@@ -4028,6 +4038,7 @@
                     ""Requirements"": [
                         {
                             ""Sword"": 1,
+                            ""Techbow"": 1,
                             ""Fortress Arena"": 1,
                             ""Enemy Soul (Siege Engine)"": 1
                         }
