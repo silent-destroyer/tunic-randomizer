@@ -685,15 +685,20 @@ namespace TunicRandomizer {
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Ladders"), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
 
                     y += 40f;
-
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Entrance Randomizer"), slotData["entrance_rando"].ToString() == "1", $"Entrance Randomizer");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Grass Randomizer"), slotData.ContainsKey("grass_randomizer") && slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), slotData.ContainsKey("breakable_shuffle") && slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Decoupled Entrances"), slotData["decoupled"].ToString() == "1", $"Decoupled Entrances");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
 
                     y += 40f;
 
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Fuses"), slotData.ContainsKey("shuffle_fuses") && slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
                     GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Bells"), slotData.ContainsKey("shuffle_bells") && slotData["shuffle_bells"].ToString() == "1", $"Shuffled Bells");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Grass Randomizer"), slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
+
+                    y += 40f;
+                    
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Enemy Drops"), slotData.ContainsKey("shuffle_enemy_drops") && int.Parse(slotData["shuffle_enemy_drops"].ToString()) >= 1, $"Shuffled Enemy Drops");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Enemy Souls"), slotData.ContainsKey("shuffle_enemy_souls") && slotData["shuffle_enemy_souls"].ToString() == "1", $"Shuffled Enemy Souls");
                     int FoolIndex = int.Parse(slotData["fool_traps"].ToString());
                     GUI.Toggle(scRect(442f, y, 206f, 60f, tooltip: "Fool Traps"), FoolIndex != 0, $"Fool Traps: {(FoolIndex == 0 ? "Off" : $"<color={FoolColors[FoolIndex]}>{FoolChoices[FoolIndex]}</color>")}");
 
@@ -708,11 +713,15 @@ namespace TunicRandomizer {
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Ladders"), false, $"Shuffled Ladders");
                     y += 40f;
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Entrance Randomizer"), false, $"Entrance Randomizer");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Grass Randomizer"), false, $"Grass Randomizer");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Decoupled Entrances"), false, $"Decoupled Entrances");
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), false, $"Shuffled Breakables");
                     y += 40f;
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Fuses"), false, $"Shuffled Fuses");
                     GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Bells"), false, $"Shuffled Bells");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Grass Randomizer"), false, $"Grass Randomizer");
+                    y += 40f;
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Enemy Drops"), false, $"Shuffled Enemy Drops");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Enemy Souls"), false, $"Shuffled Enemy Souls");
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Fool Traps"), false, "Fool Traps: Off");
                 }
             }

@@ -721,6 +721,21 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(BellShuffleEnabled, 1);
                     }
                 }
+                if (slotData.TryGetValue("shuffle_enemy_drops", out var enemyDropShuffle)) {
+                    if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 0 && int.TryParse(enemyDropShuffle.ToString(), out var enemyDropInt)) {
+                        if (enemyDropInt >= 1) {
+                            SaveFile.SetInt(ShuffleEnemyDropsEnabled, 1);
+                            if (enemyDropInt == 2) {
+                                SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
+                            }
+                            if (slotData.TryGetValue("shuffle_enemy_souls", out var enemySoulShuffle)) {
+                                if (SaveFile.GetInt(ShuffleEnemySoulsEnabled) == 0 && enemySoulShuffle.ToString() == "1") {
+                                    SaveFile.SetInt(ShuffleEnemySoulsEnabled, 1);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (slotData.TryGetValue("seed", out var Seed)) {
                     if (SaveFile.GetInt("seed") == 0) {
                         SaveFile.SetInt("seed", int.Parse(Seed.ToString(), CultureInfo.InvariantCulture));
