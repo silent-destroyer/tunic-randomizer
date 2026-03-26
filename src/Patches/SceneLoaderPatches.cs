@@ -589,7 +589,7 @@ namespace TunicRandomizer {
             }
 
             EnemyRandomizer.CheckBossState();
-            //EnemyDropShuffle.RemoveRecordedEnemies();
+
             InventoryCounter.UpdateCounters();
 
             if (SaveFile.GetInt(EntranceRando) == 1) {

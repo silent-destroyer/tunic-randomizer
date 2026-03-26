@@ -745,23 +745,6 @@ namespace TunicRandomizer {
             }
         }
 
-        public static void RemoveRecordedEnemies() {
-            foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(m => m.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
-                if (monster.GetComponent<RuntimeStableID>() != null) {
-                    string id = $"{monster.GetComponent<RuntimeStableID>().ID} [{SceneManager.GetActiveScene().name}]";
-                    if (EnemyDrops.ContainsKey(id)) {
-                        //EnemyDrops[id].EnemyPosition = monster.transform.position.ToString();
-                        //if (monster.dropValue != null) {
-                        //    EnemyDrops[id].EnemyDropValue = monster.dropValue.IntValue;
-                        //}
-                        //GameObject.Destroy(monster.gameObject);
-                        monster.gameObject.AddComponent<EnemyCheck>();
-                        monster.gameObject.GetComponent<EnemyCheck>().CheckId = id;
-                    }
-                }
-            }
-        }
-
         public static void SetupEnemyChecks() {
             if (GameObject.FindObjectOfType<EnemySoulManager>() != null) { return; }
 
