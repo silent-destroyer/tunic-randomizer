@@ -113,13 +113,16 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, ItemData> Items = new Dictionary<string, ItemData>() {
             // Consumables
+            { "Firecracker", new ItemData("Firecracker", "useful", "Firecracker", ItemTypes.INVENTORY, 1) },
             { "Firecracker x2", new ItemData("Firecracker x2", "useful", "Firecracker", ItemTypes.INVENTORY, 2) },
             { "Firecracker x3", new ItemData("Firecracker x3", "useful", "Firecracker", ItemTypes.INVENTORY, 3) },
             { "Firecracker x4", new ItemData("Firecracker x4", "useful", "Firecracker", ItemTypes.INVENTORY, 4) },
             { "Firecracker x5", new ItemData("Firecracker x5", "useful", "Firecracker", ItemTypes.INVENTORY, 5) },
             { "Firecracker x6", new ItemData("Firecracker x6", "useful", "Firecracker", ItemTypes.INVENTORY, 6) },
+            { "Fire Bomb", new ItemData("Fire Bomb", "useful", "Firebomb", ItemTypes.INVENTORY, 1) },
             { "Fire Bomb x2", new ItemData("Fire Bomb x2", "useful", "Firebomb", ItemTypes.INVENTORY, 2) },
             { "Fire Bomb x3", new ItemData("Fire Bomb x3", "useful", "Firebomb", ItemTypes.INVENTORY, 3) },
+            { "Ice Bomb", new ItemData("Ice Bomb", "useful", "Ice Bomb", ItemTypes.INVENTORY, 1) },
             { "Ice Bomb x2", new ItemData("Ice Bomb x2", "useful", "Ice Bomb", ItemTypes.INVENTORY, 2) },
             { "Ice Bomb x3", new ItemData("Ice Bomb x3", "useful", "Ice Bomb", ItemTypes.INVENTORY, 3) },
             { "Ice Bomb x5", new ItemData("Ice Bomb x5", "useful", "Ice Bomb", ItemTypes.INVENTORY, 5) },
