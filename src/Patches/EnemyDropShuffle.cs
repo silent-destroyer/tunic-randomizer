@@ -605,7 +605,7 @@ namespace TunicRandomizer {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
                         {"Hyperdash", 1},
-                        {"Enemy Soul (Voidling)", 1}
+                        {"Enemy Soul (Voidtouched)", 1}
                     },
                 }
             },
@@ -697,7 +697,6 @@ namespace TunicRandomizer {
                         reqsToUse = enemyRequirements[enemy.Value.EnemyType];
                     }
                     if (enemy.Value.EnemyType == "Probe" && enemy.Value.EnemyScene == "Cathedral Arena") {
-                        TunicLogger.LogInfo(enemy.Value.EnemyDescription);
                         reqsToUse = new List<Dictionary<string, int>>() {
                             new Dictionary<string, int>() {
                                 {"Wand", 1},

@@ -40,6 +40,7 @@ namespace TunicRandomizer {
             { "Enemy Soul (Baby Slorm)", ("Spinnerbot Baby", new Vector3(0, -5, 0), Vector3.one * 2.5f) },
             { "Enemy Soul (Voidling)", ("voidling redux", new Vector3(0, -5, 0), Vector3.one * 1.5f) },
             { "Enemy Soul (Custodians)", ("Wizard_Candleabra", new Vector3(0, 0, 0), new Vector3(1, 1, 1)) },
+            { "Enemy Soul (Voidtouched)", ("Voidtouched", new Vector3(0, -8, -1), Vector3.one * 2.5f) },
             { "Enemy Soul (The Heir)", ("Foxgod", new Vector3(0f, -9f, 1f), Vector3.one * 1.8f) },
         };
 
@@ -102,6 +103,7 @@ namespace TunicRandomizer {
             setupBabySlorm(root);
             setupVoidlings(root);
             setupCustodians(root);
+            setupVoidtouched(root);
             setupHeir(root);
         }
 
@@ -398,6 +400,17 @@ namespace TunicRandomizer {
             EnemyPresentationObjs.Add("Enemy Soul (Custodians)", custodians);
         }
 
+        private static void setupVoidtouched(Transform parent) {
+            GameObject voidtouched = cloneEnemy("Enemy Soul (Voidtouched)", parent);
+            for (int i = voidtouched.transform.childCount - 1; i >= 2; i--) {
+                GameObject.Destroy(voidtouched.transform.GetChild(i).gameObject);
+            }
+            foreach (ParticleSystem ps in voidtouched.GetComponentsInChildren<ParticleSystem>(true)) { 
+                GameObject.Destroy(ps.gameObject);
+            }
+            EnemyPresentationObjs.Add("Enemy Soul (Voidtouched)", voidtouched);
+        }
+
         private static void setupHeir(Transform parent) {
             GameObject heir = cloneEnemy("Enemy Soul (The Heir)", parent);
             for (int i = heir.transform.childCount - 1; i >= 4; i--) { 
@@ -477,7 +490,6 @@ namespace TunicRandomizer {
             if (enemy.GetComponent<HitReceiver>() != null) GameObject.Destroy(enemy.GetComponent<HitReceiver>());
             if (enemy.GetComponent<CapsuleCollider>() != null) GameObject.Destroy(enemy.GetComponent<CapsuleCollider>());
             if (enemy.GetComponent<TetherTarget>() != null) GameObject.Destroy(enemy.GetComponent<TetherTarget>());
-            if (enemy.GetComponent<StudioEventEmitter>() != null) GameObject.Destroy(enemy.GetComponent<StudioEventEmitter>());
             if (enemy.GetComponent<CoinSpawner>() != null) GameObject.Destroy(enemy.GetComponent<CoinSpawner>());
             if (enemy.GetComponent<AnimationEvents>() != null) GameObject.Destroy(enemy.GetComponent<AnimationEvents>());
             if (enemy.GetComponent<NavMeshAgent>() != null) GameObject.Destroy(enemy.GetComponent<NavMeshAgent>());
@@ -485,6 +497,7 @@ namespace TunicRandomizer {
             if (enemy.GetComponent<TurretTrap>() != null) GameObject.Destroy(enemy.GetComponent<TurretTrap>());
             if (enemy.GetComponent<SmashableObject>() != null) GameObject.Destroy(enemy.GetComponent<SmashableObject>());
             if (enemy.GetComponent<BossEnemy>() != null) GameObject.Destroy(enemy.GetComponent<BossEnemy>());
+            if (enemy.GetComponent<ColliderByParameter>() != null) GameObject.Destroy(enemy.GetComponent<ColliderByParameter>());
             foreach (TrackingBone trackingBone in enemy.GetComponentsInChildren<TrackingBone>()) {
                 GameObject.Destroy(trackingBone);
             }
@@ -496,6 +509,9 @@ namespace TunicRandomizer {
             }
             foreach (HitTrigger ht in enemy.GetComponentsInChildren<HitTrigger>()) {
                 GameObject.Destroy(ht);
+            }
+            foreach (StudioEventEmitter see in enemy.GetComponentsInChildren<StudioEventEmitter>()) {
+                GameObject.Destroy(see);
             }
         }
     }

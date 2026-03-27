@@ -7324,7 +7324,7 @@
         "EnemyRegion": "Monastery Back",
         "EnemyDropValue": 0,
         "IsNGPlusEnemy": false,
-        "IsNightEnemy": true,
+        "IsNightEnemy": false,
         "EnemyDescription": "Monastery - [Back] Voidtouched",
         "ExtraReqs": [
         ]

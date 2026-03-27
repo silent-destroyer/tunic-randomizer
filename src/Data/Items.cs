@@ -351,6 +351,7 @@ namespace TunicRandomizer {
             { "Enemy Soul (Baby Slorm)", new ItemData("Enemy Soul (Baby Slorm)", "progression", "Enemy Soul (Baby Slorm)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Voidling)", new ItemData("Enemy Soul (Voidling)", "progression", "Enemy Soul (Voidling)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (Custodians)", new ItemData("Enemy Soul (Custodians)", "progression", "Enemy Soul (Custodians)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Voidtouched)", new ItemData("Enemy Soul (Voidtouched)", "progression", "Enemy Soul (Voidtouched)", ItemTypes.ENEMY, 1) },
             { "Enemy Soul (The Heir)", new ItemData("Enemy Soul (The Heir)", "progression", "Enemy Soul (The Heir)", ItemTypes.ENEMY, 1) },
         };
 
