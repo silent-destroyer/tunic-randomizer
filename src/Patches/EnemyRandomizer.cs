@@ -331,6 +331,242 @@ namespace TunicRandomizer {
             }
         };
 
+        public static Dictionary<string, List<string>> EnemySoulEnemies = new Dictionary<string, List<string>>() {
+            {
+                "Enemy Soul (Administrator)",
+                new List<string>() {
+                    "administrator_servant",
+                    "administrator",
+                }
+            },
+            {
+                "Enemy Soul (Phrend)",
+                new List<string>() {
+                    "Bat",
+                    "Bat void",
+                }
+            },
+            {
+                "Enemy Soul (Beefboy)",
+                new List<string>() {
+                    "beefboy",
+                }
+            },
+            {
+                "Enemy Soul (Blobs)",
+                new List<string>() {
+                    "Blob",
+                    "BlobBig",
+                    "BlobBigger",
+                }
+            },
+            {
+                "Enemy Soul (Fleemers)",
+                new List<string>() {
+                    "bomezome_easy",
+                    "bomezome_easy_ghost",
+                    "bomezome_fencer",
+                    "bomezome_easy_ghost (tweaked)",
+                    "bomezome_quartet",
+                    "bomezome big",
+                }
+            },
+            {
+                "Enemy Soul (Crabs)",
+                new List<string>() {
+                    "Crabbit",
+                    "Crabbo",
+                    "Crabbit with Shell",
+                }
+            },
+            {
+                "Enemy Soul (Chompignom)",
+                new List<string>() {
+                    "crocodoo",
+                    "crocodoo Voidtouched",
+                }
+            },
+            {
+                "Enemy Soul (Husher)",
+                new List<string>() {
+                    "Crow",
+                    "Crow Voidtouched",
+                }
+            },
+            {
+                "Enemy Soul (Autobolt)",
+                new List<string>() {
+                    "Turret",
+                }
+            },
+            {
+                "Enemy Soul (Zombie Foxes)",
+                new List<string>() {
+                    "Fox enemy zombie",
+                    "Fox enemy",
+                }
+            },
+            {
+                "Enemy Soul (Frogs)",
+                new List<string>() {                    
+                    "Frog",
+                    "Frog Small",
+                    "Frog Small_Ghost",
+                    "Frog Spear",
+                    "Frog Spear_Ghost",
+                }
+            },
+            {
+                "Enemy Soul (Lost Echo)",
+                new List<string>() {
+                    "Ghostfox_monster",
+                }
+            },
+            {
+                "Enemy Soul (Gunslinger)",
+                new List<string>() {
+                    "Gunslinger",
+                }
+            },
+            {
+                "Enemy Soul (Hedgehogs)",
+                new List<string>() {
+                    "Hedgehog",
+                    "HedgehogBig",
+                }
+            },
+            {
+                "Enemy Soul (Laser Trap)",
+                new List<string>() {
+                    "Hedgehog Trap",
+                }
+            },
+            {
+                "Enemy Soul (Envoy)",
+                new List<string>() {
+                    "Honourguard",
+                }
+            },
+            {
+                "Enemy Soul (Garden Knight)",
+                new List<string>() {
+                    "tech knight boss",
+                    "tech knight ghost",
+                    "tunic knight void",
+                }
+            },
+            {
+                "Enemy Soul (Librarian)",
+                new List<string>() {
+                    "Librarian",
+                    "Ghost Knight",
+                }
+            },
+            {
+                "Enemy Soul (Plover)",
+                new List<string>() {
+                    "plover",
+                }
+            },
+            {
+                "Enemy Soul (Fairies)",
+                new List<string>() {
+                    "Fairyprobe Archipelagos",
+                    "Fairyprobe Archipelagos (Ghost)",
+                    "Fairyprobe Archipelagos (Dmg)",
+                }
+            },
+            {
+                "Enemy Soul (Scavengers)",
+                new List<string>() {
+                    "Scavenger",
+                    "Scavenger_miner",
+                    "Scavenger_support",
+                    "Scavenger_stunner",
+                }
+            },
+            {
+                "Enemy Soul (Boss Scavenger)",
+                new List<string>() {
+                    "Scavenger Boss",
+                    "Centipede",
+                }
+            },
+            {
+                "Enemy Soul (Tentacle)",
+                new List<string>() {
+                    "sewertentacle",
+                }
+            },
+            {
+                "Enemy Soul (Rudelings)",
+                new List<string>() {
+                    "Skuladot redux",
+                    "Skuladot redux void",
+                    "Skuladot redux_ghost",
+                    "Skuladot redux_shield",
+                    "Skuladot redux_shield_ghost",
+                    "Skuladot redux Big",
+                    "Skuladot redux Big_ghost",
+                }
+            },
+            {
+                "Enemy Soul (Spiders)",
+                new List<string>() {
+                    "Spider Small",
+                    "Spider Big",
+                }
+            },
+            {
+                "Enemy Soul (Siege Engine)",
+                new List<string>() {
+                    "Spidertank",
+                    "woodcutter",
+                }
+            },
+            {
+                "Enemy Soul (Slorm)",
+                new List<string>() {
+                    "Spinnerbot Corrupted",
+                    "Phage",
+                }
+            },
+            {
+                "Enemy Soul (Baby Slorm)",
+                new List<string>() {
+                    "Spinnerbot Baby",
+                }
+            },
+            {
+                "Enemy Soul (Voidling)",
+                new List<string>() {
+                    "voidling redux",
+                }
+            },
+            {
+                "Enemy Soul (Custodians)",
+                new List<string>() {
+                    "Wizard_Sword",
+                    "Wizard_Support",
+                    "Wizard_Support_Ghost",
+                    "Wizard_Candleabra",
+                }
+            },
+            {
+                "Enemy Soul (Voidtouched)",
+                new List<string>() {
+                    "Voidtouched",
+                    "Shadowreaper",
+                }
+            },
+            {
+                "Enemy Soul (The Heir)",
+                new List<string>() {
+                    "Foxgod"
+                }
+            },
+        };
+
         public static Dictionary<string, List<string>> EnemyRankings = new Dictionary<string, List<string>>() {
             {
                 "Average",
@@ -927,10 +1163,6 @@ namespace TunicRandomizer {
                         });
                     }
 
-                    if (EnemyKeys.Count == 0) {
-                        GameObject.Destroy(Enemy.gameObject);
-                        continue;
-                    }
 
                     if (GetBool(ShuffleEnemyDropsEnabled)) {
                         string checkId = EnemyDropShuffle.GetEnemyCheckId(Enemy);
@@ -946,8 +1178,19 @@ namespace TunicRandomizer {
                                     continue;    
                                 }
                             }
+                            foreach (string key in EnemySoulEnemies.Keys) {
+                                if (Inventory.GetItemByName(key).Quantity == 0) {
+                                    EnemyKeys.RemoveAll(x => EnemySoulEnemies[key].Contains(x));
+                                }
+                            }
                         }
                     }
+
+                    if (EnemyKeys.Count == 0) {
+                        GameObject.Destroy(Enemy.gameObject);
+                        continue;
+                    }
+                    
                     if (!TunicRandomizer.Settings.BalancedEnemies || TunicRandomizer.Settings.OopsAllEnemy) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else {
