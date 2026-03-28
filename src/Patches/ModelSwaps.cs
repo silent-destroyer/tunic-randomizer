@@ -1059,6 +1059,7 @@ namespace TunicRandomizer {
             moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null || transform.GetComponent<Monster>() != null || transform.GetComponent<TurretTrap>() != null);
             if (transform.GetComponent<Monster>() != null || transform.GetComponent<TurretTrap>() != null) {
                 moveUp.transform.parent = null;
+                moveUp.transform.localScale = TransformData.scale;
             }
            
             if ((transform.GetComponent<SmashableObject>() != null && transform.GetComponent<TurretTrap>() == null) || transform.GetComponent<DustyPile>() != null || transform.GetComponent<SecretPassagePanel>() != null) {
