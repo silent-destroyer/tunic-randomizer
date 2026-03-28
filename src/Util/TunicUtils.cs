@@ -269,7 +269,6 @@ namespace TunicRandomizer {
                 checks.AddRange(EnemyDropShuffle.BaseEnemyDropChecks.Values.ToList());
                 if (GetBool(ExtraEnemyDropsEnabled) || getAll) {
                     checks.AddRange(EnemyDropShuffle.ExtraEnemyDropChecks.Values.ToList());
-
                 }
             }
             return CopyListOfChecks(checks);

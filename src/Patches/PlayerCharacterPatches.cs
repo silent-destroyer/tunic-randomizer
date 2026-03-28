@@ -306,8 +306,6 @@ namespace TunicRandomizer {
             try {
                 TunicUtils.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();
-                //FairyTargets.CreateEntranceTargets();
-                //FairyTargets.FindFairyTargets();
             } catch (Exception ex) {
                 TunicLogger.LogError("An error occurred creating new fairy seeker spell targets:");
                 TunicLogger.LogError(ex.Message + " " + ex.StackTrace);

@@ -70,8 +70,8 @@ namespace TunicRandomizer {
                         }
                         if (isEnemy) {
                             foreach (EnemyCheck enemyCheck in enemyChecks) {
-                                if (enemyCheck.CheckId == ItemId) { 
-                                    fairyTarget.transform.parent = enemyCheck.transform;
+                                if (enemyCheck.CheckId == ItemId) {
+                                    fairyTarget.gameObject.AddComponent<FollowEnemy>().Target = enemyCheck.transform;
                                     fairyTarget.transform.localPosition = Vector3.zero;
                                 }
                             }
@@ -274,6 +274,14 @@ namespace TunicRandomizer {
             }
             PlayerCharacter.instance.GetComponent<FairySpell>().SpellEffect();
             FairyTarget.registered = storedList;
+        }
+    }
+
+    public class FollowEnemy : MonoBehaviour {
+        public Transform Target;
+        public void Update() {
+            if (Target == null) { return; }
+            transform.position = Target.position;
         }
     }
 }
