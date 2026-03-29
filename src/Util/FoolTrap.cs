@@ -21,7 +21,17 @@ namespace TunicRandomizer {
             Home,  // for trap link
             Whoops,// for trap link
             Wide,  // for trap link
+            ZoomOut, // for trap link
         }
+
+        // potential todos:
+        // Chaos Trap from Anodyne, randomizes the game's textures for a short while, could mess with the fox colors or something I guess
+        // Depletion Trap from The Grinch, resets ammo to zero, could reduce your mana to zero, same with Dry Trap from DK64, same for Mana Drain Trap
+        // Disarm Trap from Anodyne, unequips current broom (weapon), could make it just unequip your items
+        // Explosion Trap, could swap it from fire trap to actually explode you, also for bomb, tnt, etc.
+        // Frog Trap from Glover, could spawn a frog
+        // Invert Colors Trap from Paint, idk we could probably do something with this
+        // Paper Trap from DK64, turns player and most enemies 2d, could maybe do something with the character scale
 
         public class Trap {
             public string Name;
@@ -46,6 +56,7 @@ namespace TunicRandomizer {
             {TrapType.Home, new Trap("Home Trap", 0) },
             {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
             {TrapType.Wide, new Trap("W I D E Trap", 0) },
+            {TrapType.ZoomOut, new Trap("Zoom Out Trap", 0) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -55,13 +66,22 @@ namespace TunicRandomizer {
             {"Frozen Trap", TrapType.Ice },
             {"Stun Trap", TrapType.Ice },
             {"Paralyze Trap", TrapType.Ice },
+            {"Paralysis Trap", TrapType.Ice },
             {"Chaos Control Trap", TrapType.Ice },
+            {"Bubble Trap", TrapType.Ice },  // DK64, freezes the player in a bubble for a short time
+            {"Frost Trap", TrapType.Ice },
+            {"Sleep Trap", TrapType.Ice },  // freezing is sleep right
 
             {"Fire Trap", TrapType.Fire },
             {"Damage Trap", TrapType.Fire },
+            {"Explosion Trap", TrapType.Fire },
             {"Bomb", TrapType.Fire },  // Luigi's Mansion, yes it's just Bomb
+            {"Bomb Trap", TrapType.Fire },
+            {"Burn Trap", TrapType.Fire },
             {"Posession Trap", TrapType.Fire },  // Luigi's Mansion, damage-based trap
             {"Nut Trap", TrapType.Fire },  // DKC, damage-based trap
+            {"TNT Trap", TrapType.Fire },
+            {"TNT Barrel Trap", TrapType.Fire },
 
             {"Bee Trap", TrapType.Bee },
 
@@ -72,23 +92,42 @@ namespace TunicRandomizer {
             {"Mirror Trap", TrapType.Mirror },
             {"Reverse Trap", TrapType.Mirror },
             {"Reversal Trap", TrapType.Mirror },
+            {"Reverse Controls Trap", TrapType.Mirror },
+            {"Flip Horizontal Trap", TrapType.Mirror },
+            {"Flip Vertical Trap", TrapType.Mirror },
+            {"Flip Trap", TrapType.Mirror },
+            {"Gas Trap", TrapType.Mirror },  // Anodyne, reverses controls, this seemed close enough
 
             {"Deisometric Trap", TrapType.Deisometric },
             {"Confuse Trap", TrapType.Deisometric },
             {"Confusion Trap", TrapType.Deisometric },
             {"Fuzzy Trap", TrapType.Deisometric },
             {"Confound Trap", TrapType.Deisometric },
+            {"Camera Rotate Trap", TrapType.Deisometric },
 
             {"Bonk Trap", TrapType.Trip },
             {"Banana Trap", TrapType.Trip },
+            {"Banana Peel Trap", TrapType.Trip },
             {"Spring Trap", TrapType.Trip },
+            {"Ice Floor Trap", TrapType.Trip },  // DK64, makes the floor slippery for 15 seconds, we could make this ice trap instead
+            {"Shake Trap", TrapType.Trip },  // Saving Princess, shakes the screen a lot, making it harder to control the player, so this seemed close
+            {"Slip Trap", TrapType.Trip },
 
             {"Zoom Trap", TrapType.Zoom },  // Celeste, zooms camera in
+            {"Fish Eye Trap", TrapType.Zoom },
+            {"Zoom In Trap", TrapType.Zoom },
+
+            {"Zoom Out Trap", TrapType.ZoomOut },
 
             {"Bald Trap", TrapType.Bald },  // Celeste, bald
+            
             {"Whoops! Trap", TrapType.Whoops }, // Here Comes Niko, drops the player from way high up
+            
             {"W I D E Trap", TrapType.Wide }, // Here Comes Niko, makes the fox W I D E
+            {"Squash Trap", TrapType.Wide },  // yeahhh squish that fox
+
             {"Home Trap", TrapType.Home }, // Here Comes Niko, teleports the player "home", overworld in this case
+            {"Teleport Trap", TrapType.Home },
         };
 
         public static bool StungByBee = false;
@@ -138,6 +177,9 @@ namespace TunicRandomizer {
                     break;
                 case TrapType.Home:
                     (FoolMessageTop, FoolMessageBottom) = FoolHomeTrap();
+                    break;
+                case TrapType.ZoomOut:
+                    (FoolMessageTop, FoolMessageBottom) = FoolZoomOutTrap();
                     break;
                 default:
                     TunicLogger.LogError("No match found for trap type " + trapType.ToString());
@@ -264,6 +306,16 @@ namespace TunicRandomizer {
             string FoolMessageTop = $"yoo R A <#FFA500>zoomd in \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"wehl I kahn sE juhst fIn...";
             CameraController.DerekZoom = 0.5f;
+            ZoomedCamera = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolZoomOutTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>zoomd owt \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"wehl I kahn sE juhst fIn...";
+            CameraController.DerekZoom = 2f;
             ZoomedCamera = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
