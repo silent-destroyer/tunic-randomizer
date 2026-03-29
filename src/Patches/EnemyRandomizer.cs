@@ -974,7 +974,7 @@ namespace TunicRandomizer {
         }
 
         public static void DoEnemyRandomization() {
-            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0) {
+            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && PlayerCharacter.Instanced) {
                 if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0) {
                     if (!EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
                         EnemyRandomizer.SpawnNewEnemies();

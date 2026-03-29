@@ -622,6 +622,14 @@ namespace TunicRandomizer {
             }
 
             try {
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1 && PlayerCharacter.Instanced) {
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
                 if (!ModelSwaps.SwappedThisSceneAlready && (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) && SaveFile.GetInt("seed") != 0) {
                     ModelSwaps.SwapItemsInScene();
                 }
@@ -632,14 +640,6 @@ namespace TunicRandomizer {
 
             if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HolyCrossUnlocked) == 0) {
                 ItemPatches.ToggleHolyCrossObjects(false);
-            }
-
-            try {
-                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) {
-                    EnemyDropShuffle.SetupEnemyChecks();
-                }
-            } catch (Exception e) {
-                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
             }
 
             try {

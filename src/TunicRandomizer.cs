@@ -200,6 +200,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(Crocodoo), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_monster_Start_PostfixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(HonourGuard), "dropShield"), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "HonourGuard_dropShield_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "HonourGuard_dropShield_PostfixPatch")));
+
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));
 

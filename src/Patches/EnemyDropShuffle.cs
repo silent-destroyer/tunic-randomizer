@@ -15,6 +15,12 @@ namespace TunicRandomizer {
 
         public string CheckId;
 
+        public void Awake() {
+            if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
+                EnemyModelSwaps.SetupEnemyTexture(this);
+            }
+        }
+
         public void ActivateEnemyCheck(Transform transform) {
             if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                 return;

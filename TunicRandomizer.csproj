@@ -200,6 +200,7 @@
     <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
     <Compile Include="src\Patches\EnemyDropShuffle.cs" />
+    <Compile Include="src\Patches\EnemyModelSwaps.cs" />
     <Compile Include="src\Patches\EnemySoulModels.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />
