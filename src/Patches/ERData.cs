@@ -4064,7 +4064,7 @@ namespace TunicRandomizer {
                         "Beneath the Well Back",
                         new List<List<string>> {
                             new List<string> {
-                                "LS3", "Ladders in Well"
+                                "LS3", "Ladders in Well", "Enemy Soul (Phrend)"
                             },
                         }
                     },
@@ -4612,7 +4612,7 @@ namespace TunicRandomizer {
                                 "Wand",
                             },
                             new List<string> {
-                                "LS3", "Ladders to Frog's Domain"
+                                "LS3", "Ladders to Frog's Domain", "Enemy Soul (Frogs)"
                             },
                         }
                     },
