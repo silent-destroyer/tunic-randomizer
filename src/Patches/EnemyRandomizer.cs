@@ -1170,6 +1170,9 @@ namespace TunicRandomizer {
                             if (!EnemyDropShuffle.AllEnemyDropChecks[checkId].IsCompletedOrCollected) {
                                 continue;
                             }
+                            if (EnemyDropShuffle.Administrator2ndPhases.ContainsKey(checkId) && !EnemyDropShuffle.AllEnemyDropChecks[EnemyDropShuffle.Administrator2ndPhases[checkId].Item2].IsCompletedOrCollected) {
+                                continue;
+                            }
                         }
                         if (GetBool(ShuffleEnemySoulsEnabled)) { 
                             if (EnemyDropShuffle.EnemyDrops.ContainsKey(checkId) && EnemyDropShuffle.EnemyTypeToSoul.ContainsKey(EnemyDropShuffle.EnemyDrops[checkId].EnemyType)) {
@@ -1585,143 +1588,6 @@ namespace TunicRandomizer {
                         RecordDefeatedEnemy(__instance.__4__this);
                     }
                 }
-                //EnemyDropShuffle.EnemyInfo enemyInfo = new EnemyDropShuffle.EnemyInfo();
-                //Monster m = __instance.__4__this;
-                //enemyInfo.EnemyName = m.name;
-                //enemyInfo.EnemyScene = m.gameObject.scene.name;
-                //enemyInfo.EnemyRegion = EnemyDropShuffle.Region;
-                //enemyInfo.IsNGPlusEnemy = NGPActive.NGPStateVar.IntValue > 0;
-                //enemyInfo.IsNightEnemy = StateVariable.GetStateVariableByName("Is Night").BoolValue;
-                //if (m.GetComponent<RuntimeStableID>() != null) {
-                //    enemyInfo.EnemyRuntimeID = m.GetComponent<RuntimeStableID>().ID.ToString();
-                //}
-
-                //string name = m.name.ToLower();
-                //string e = "";
-                //if (m.TryCast<Blob>() != null) {
-                //    e = "Blob";
-                //} else if (m.TryCast<Hedgehog>() != null) {
-                //    e = "Hedgehog";
-                //} else if (m.TryCast<Bat>() != null) {
-                //    e = "Bat";
-                //} else if (m.TryCast<Skuladin>() != null) {
-                //    e = "Skuladin";
-                //    if (name.Contains("shield")) {
-                //        e = "Skuladin Shield";
-                //    }
-                //    if (name.Contains("big")) {
-                //        e = "Skuladin Big";
-                //    }
-                //} else if (m.TryCast<HonourGuard>() != null) {
-                //    e = "HonourGuard";
-                //} else if (m.TryCast<Beefboy>() != null) {
-                //    e = "Beefboy";
-                //} else if (m.TryCast<Bumblebones>() != null) {
-                //    e = "Bumblebones";
-                //    if (name.Contains("big")) {
-                //        e = "Bumblebones Big";
-                //    }
-                //} else if (m.TryCast<FoxEnemyZombie>() != null) {
-                //    e = "FoxEnemyZombie";
-                //} else if (m.TryCast<DefenseTurret>() != null) {
-                //    e = "DefenseTurret";
-                //} else if (m.TryCast<Knightbot>() != null) {
-                //    e = "Knightbot";
-                //} else if (m.TryCast<Frog>() != null) {
-                //    e = "Frog";
-                //    if (name.Contains("small")) {
-                //        e = "Frog Small";
-                //    }
-                //    if (name.Contains("spear")) {
-                //        e = "Frog Spear";
-                //    }
-                //} else if (m.TryCast<Probe>() != null) {
-                //    e = "Probe";
-                //} else if (m.TryCast<Wizard>() != null) {
-                //    e = "Wizard";
-                //} else if (m.TryCast<Crocodoo>() != null) {
-                //    e = "Crocodoo";
-                //} else if (m.TryCast<Plover>() != null) {
-                //    e = "Plover";
-                //} else if (m.TryCast<Crow>() != null) {
-                //    e = "Crow";
-                //} else if (m.TryCast<Crabbo>() != null) {
-                //    e = "Crabbo";
-                //    if (name.Contains("crabbit")) {
-                //        e = "Crabbit";
-                //    }
-                //    if (name.Contains("shell")) {
-                //        e = "Crabbit Shell";
-                //    }
-                //} else if (m.TryCast<Spinnerbot>() != null) {
-                //    e = "Spinnerbot";
-                //    if (name.Contains("baby")) {
-                //        e = "Spinnerbot Baby";
-                //    }
-                //} else if (m.TryCast<Spider>() != null) {
-                //    e = "Spider";
-                //} else if (m.TryCast<Wizard_Sword>() != null) {
-                //    e = "Wizard Sword";
-                //} else if (m.TryCast<Wizard_Candleabra>() != null) {
-                //    e = "Wizard Candleabra";
-                //} else if (m.TryCast<Shadowreaper>() != null) {
-                //    e = "Shadowreaper";
-                //} else if (m.TryCast<Scavenger>() != null) {
-                //    e = "Scavenger";
-                //} else if (m.TryCast<Scavenger_Miner>() != null) {
-                //    e = "Scavenger Miner";
-                //} else if (m.TryCast<Scavenger_Support>() != null) {
-                //    e = "Scavenger Support";
-                //} else if (m.TryCast<Fencer>() != null) {
-                //    e = "Fencer";
-                //} else if (m.TryCast<Gost>() != null) {
-                //    e = "Gost";
-                //} else if (m.TryCast<Gunman>() != null) {
-                //    e = "Gunman";
-                //} else if (m.TryCast<SewerTentacle>() != null) {
-                //    e = "SewerTentacle";
-                //} else if (m.TryCast<Administrator>() != null) {
-                //    e = "Administrator";
-                //} else if (m.TryCast<Administrator_angry>() != null) {
-                //    e = "Administrator Angry";
-                //} else if (m.TryCast<FoxEnemy>() != null) {
-                //    e = "FoxEnemy";
-                //} else if (m.TryCast<Centipede>() != null) {
-                //    e = "Centipede";
-                //} else if (m.TryCast<ScavengerBoss>() != null) {
-                //    e = "ScavengerBoss";
-                //} else if (m.TryCast<Voidling>() != null) {
-                //    e = "Voidling";
-                //} else if (m.TryCast<Voidtouched>() != null) {
-                //    e = "Voidtouched";
-                //} else if (m.TryCast<Woodcutter>() != null) {
-                //    e = "Woodcutter";
-                //} else if (m.TryCast<Phage>() != null) {
-                //    e = "Phage";
-                //} else if (m.TryCast<GhostKnight>() != null) {
-                //    e = "GhostKnight";
-                //} else if (m.TryCast<Spidertank>() != null) {
-                //    e = "Spidertank";
-                //} else if (m.TryCast<TunicKnightVoid>() != null) {
-                //    e = "TunicKnightVoid";
-                //} else if (m.TryCast<Librarian>() != null) {
-                //    e = "Librarian";
-                //} else if (m.TryCast<Foxgod>() != null) {
-                //    e = "Foxgod";
-                //} else {
-                //    e = "Monster";
-                //    TunicLogger.LogInfo("Unknown monster found");
-                //}
-
-                //enemyInfo.EnemyType = e;
-                //if (m.dropValue != null) {
-                //    enemyInfo.EnemyDropValue = m.dropValue.IntValue;
-                //}
-                //string dictId = $"{enemyInfo.EnemyRuntimeID} [{enemyInfo.EnemyScene}]";
-                //if (!EnemyDropShuffle.EnemyDrops.ContainsKey(dictId)) {
-                //    EnemyDropShuffle.EnemyDrops.Add(dictId, enemyInfo);
-                //}
-                //EnemyDropShuffle.SaveEnemyData();
             }
         }
 

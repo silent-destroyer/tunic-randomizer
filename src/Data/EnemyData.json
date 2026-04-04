@@ -7609,6 +7609,20 @@
         "ExtraReqs": [
         ]
     },
+    "43009999 [ziggurat2020_1]": {
+        "EnemyName": "administrator_angry",
+        "EnemyRuntimeID": "43009999",
+        "EnemyType": "Administrator",
+        "EnemyScene": "ziggurat2020_1",
+        "EnemyPosition": "(174.0, 130.0, -126.0)",
+        "EnemyRegion": "Rooted Ziggurat Upper Front",
+        "EnemyDropValue": 0,
+        "IsNGPlusEnemy": false,
+        "IsNightEnemy": false,
+        "EnemyDescription": "Rooted Ziggurat Upper - Administrator 2nd Phase",
+        "ExtraReqs": [
+        ]
+    },
     "44000005 [ziggurat2020_3]": {
         "EnemyName": "voidling redux (9)",
         "EnemyRuntimeID": "44000005",
@@ -7722,7 +7736,7 @@
             {
                 "Sword": 1,
                 "Wand": 1,
-                "Enemy Soul (Autobolt)":  1
+                "Enemy Soul (Autobolt)": 1
             },
             {
                 "Sword": 1,
@@ -7847,6 +7861,20 @@
         "ExtraReqs": [
         ]
     },
+    "44009999 [ziggurat2020_3]": {
+        "EnemyName": "administrator (1) angry",
+        "EnemyRuntimeID": "44009999",
+        "EnemyType": "Administrator",
+        "EnemyScene": "ziggurat2020_3",
+        "EnemyPosition": "(114.0, 0.0, -108.0)",
+        "EnemyRegion": "Rooted Ziggurat Lower Front",
+        "EnemyDropValue": 0,
+        "IsNGPlusEnemy": false,
+        "IsNightEnemy": false,
+        "EnemyDescription": "Rooted Ziggurat Lower - Administrator 2 2nd Phase",
+        "ExtraReqs": [
+        ]
+    },
     "44000023 [ziggurat2020_3]": {
         "EnemyName": "voidling redux (miniboss arena)",
         "EnemyRuntimeID": "44000023",
@@ -7886,6 +7914,20 @@
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
         "EnemyDescription": "Rooted Ziggurat Lower - Administrator 1",
+        "ExtraReqs": [
+        ]
+    },
+    "44009998 [ziggurat2020_3]": {
+        "EnemyName": "administrator angry",
+        "EnemyRuntimeID": "44009998",
+        "EnemyType": "Administrator",
+        "EnemyScene": "ziggurat2020_3",
+        "EnemyPosition": "(90.0, 0.0, -108.0)",
+        "EnemyRegion": "Rooted Ziggurat Lower Front",
+        "EnemyDropValue": 0,
+        "IsNGPlusEnemy": false,
+        "IsNightEnemy": false,
+        "EnemyDescription": "Rooted Ziggurat Lower - Administrator 1 2nd Phase",
         "ExtraReqs": [
         ]
     },

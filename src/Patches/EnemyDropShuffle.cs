@@ -656,6 +656,12 @@ namespace TunicRandomizer {
             },
         };
 
+        public static Dictionary<string, (int, string)> Administrator2ndPhases = new Dictionary<string, (int, string)>() {
+            { "43000000 [ziggurat2020_1]", (9999, "43009999 [ziggurat2020_1]") },
+            { "44000016 [ziggurat2020_3]", (9998, "44009998 [ziggurat2020_3]") },
+            { "44000001 [ziggurat2020_3]", (9999, "44009999 [ziggurat2020_3]") },
+        };
+
         public static string GetEnemyCheckId(GameObject Enemy) {
             if (Enemy.GetComponent<RuntimeStableID>() != null) {
                 return $"{Enemy.GetComponent<RuntimeStableID>().ID} [{Enemy.gameObject.scene.name}]";
@@ -855,7 +861,19 @@ namespace TunicRandomizer {
         }
 
         public static bool Administrator_monster_preDestroy_PrefixPatch(Administrator __instance) {
-
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled) && IsValidEnemy(__instance.gameObject)) { 
+                string checkId = GetEnemyCheckId(__instance.gameObject);
+                if (Administrator2ndPhases.ContainsKey(checkId) && !AllEnemyDropChecks[Administrator2ndPhases[checkId].Item2].IsCompletedOrCollected) {
+                    GameObject angryAdministrator = GameObject.Instantiate(__instance.replacementMonster.gameObject);
+                    angryAdministrator.GetComponent<RuntimeStableID>().intraSceneID = Administrator2ndPhases[checkId].Item1;
+                    angryAdministrator.AddComponent<EnemyCheck>();
+                    angryAdministrator.GetComponent<EnemyCheck>().CheckId = Administrator2ndPhases[checkId].Item2;
+                    angryAdministrator.transform.position = __instance.transform.position;
+                    angryAdministrator.transform.rotation = __instance.transform.rotation;
+                    angryAdministrator.SetActive(true);
+                    return false;
+                }
+            }
             return true;
         }
     }
