@@ -179,6 +179,7 @@
     <Compile Include="src\Archipelago\DeathLinkMessages.cs" />
     <Compile Include="src\Data\Check.cs" />
     <Compile Include="src\Data\ConnectionSettings.cs" />
+    <Compile Include="src\Data\EnemyImageData.cs" />
     <Compile Include="src\Data\Hints.cs" />
     <Compile Include="src\Data\ImageData.cs" />
     <Compile Include="src\Data\ItemListJson.cs" />

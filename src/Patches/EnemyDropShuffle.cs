@@ -14,6 +14,7 @@ namespace TunicRandomizer {
     public class EnemyCheck : MonoBehaviour {
 
         public string CheckId;
+        public Material ScavengerBombMaterial;
 
         public void Awake() {
             if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
@@ -851,6 +852,11 @@ namespace TunicRandomizer {
         public static bool IsValidEnemy(GameObject monster) {
             string checkId = GetEnemyCheckId(monster);
             return checkId != null && AllEnemyDropChecks.ContainsKey(checkId);
+        }
+
+        public static bool Administrator_monster_preDestroy_PrefixPatch(Administrator __instance) {
+
+            return true;
         }
     }
 }

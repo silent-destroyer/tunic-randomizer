@@ -202,6 +202,10 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(HonourGuard), "dropShield"), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "HonourGuard_dropShield_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "HonourGuard_dropShield_PostfixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(Scavenger_Support), "__toss"), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "Scavenger_Support__toss__PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "Scavenger_Support__toss__PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Administrator), "monster_preDestroy"), new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Administrator_monster_preDestroy_PrefixPatch")));
+
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));
 

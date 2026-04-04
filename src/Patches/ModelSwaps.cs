@@ -1961,14 +1961,19 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hexagon Gold").icon = CustomItemImages["Gold Questagon"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Torch").icon = CustomItemImages["Torch Redux"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
+
+            EnemyModelSwaps.CreateTextures(ImageMaterial);
         }
 
-        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
-
-            Texture2D Texture = new Texture2D(Width, Height, TextureFormat.DXT1, false);
+        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
+            Texture2D Texture = new Texture2D(Width, Height, tf, false);
             ImageConversion.LoadImage(Texture, Convert.FromBase64String(ImageData));
+            return CreateSprite(Texture, imgMaterial, Width, Height, SpriteName);
+        }
 
+        public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
             GameObject obj = new GameObject(SpriteName + " image");
+            Texture.name = SpriteName;
             //Sprite.Create(Texture2D, Rect, Vector2, float, uint, SpriteMeshType, Vector4, bool)
             Sprite sprite = Sprite.CreateSprite(Texture, new Rect(0, 0, Width, Height), new Vector2(0.5f, 0.5f), 100, 0, SpriteMeshType.FullRect, Vector4.zero, false);
             sprite.name = SpriteName;
@@ -2011,6 +2016,15 @@ namespace TunicRandomizer {
             List<Shader> Shaders = Resources.FindObjectsOfTypeAll<Shader>().Where(Shader => Shader.name == ShaderName || Shader.name.Contains(ShaderName)).ToList();
             if (Shaders != null && Shaders.Count > 0) {
                 return Shaders[0];
+            } else {
+                return null;
+            }
+        }
+
+        public static Texture2D FindTexture(string TextureName, bool ExactMatch = false) {
+            List<Texture2D> Textures = Resources.FindObjectsOfTypeAll<Texture2D>().Where(Texture => Texture.name == TextureName || (!ExactMatch && Texture.name.Contains(TextureName))).ToList();
+            if (Textures != null && Textures.Count > 0) {
+                return Textures[0];
             } else {
                 return null;
             }
