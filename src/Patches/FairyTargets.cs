@@ -152,6 +152,9 @@ namespace TunicRandomizer {
                 filteredIds.RemoveAll(id => FuseRandomizer.FuseChecks.ContainsKey(id));
                 filteredIds.RemoveAll(id => BellShuffle.BellChecks.ContainsKey(id));
             }
+            if (!TunicRandomizer.Settings.SeekingSpellEnemyChecks) { 
+                filteredIds.RemoveAll(id => EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(id));
+            }
             return filteredIds;
         }
 

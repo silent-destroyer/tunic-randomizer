@@ -240,6 +240,10 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.SeekingSpellFusesBells = !TunicRandomizer.Settings.SeekingSpellFusesBells;
                 SaveSettings();
             }));
+            OptionsGUI.addToggle("Enemy Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellEnemyChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellEnemyChecks = !TunicRandomizer.Settings.SeekingSpellEnemyChecks;
+                SaveSettings();
+            }));
             OptionsGUI.setHeading("Fairy Targets");
         }
 

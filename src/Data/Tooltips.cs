@@ -97,6 +97,7 @@ namespace TunicRandomizer {
             { "Breakable Checks", "Allows the Seeking Spell to target breakables (pots, boxes, bareels, etc.) if breakables shuffle is enabled." },
             { "Grass Checks", "Allows the Seeking Spell to target grass if grass randomizer is enabled." },
             { "Fuse/Bell Checks", "Allows the Seeking Spell to target fuses or bells if either are enabled." },
+            { "Enemy Checks", "Allows the Seeking Spell to target enemies if enemy drops are shuffled." },
 
             // Music
             { "Music Shuffle", "Shuffles the music that plays throughout the game." },

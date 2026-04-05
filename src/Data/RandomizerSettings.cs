@@ -312,6 +312,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool SeekingSpellEnemyChecks {
+            get;
+            set;
+        }
+
         // Gameplay Settings
         private const int EASY_HEIR = 1;
         private const int CLEAR_BUSHES = 2;
@@ -645,6 +650,7 @@ namespace TunicRandomizer {
             SeekingSpellBreakableChecks = true;
             SeekingSpellGrassChecks = true;
             SeekingSpellFusesBells = true;
+            SeekingSpellEnemyChecks = true;
 
             // General
             HeirAssistModeEnabled = false;

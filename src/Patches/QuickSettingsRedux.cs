@@ -1144,6 +1144,7 @@ namespace TunicRandomizer {
             y += 40f;
             TunicRandomizer.Settings.SeekingSpellGrassChecks = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Grass Checks"), TunicRandomizer.Settings.SeekingSpellGrassChecks, "Grass Checks");
             TunicRandomizer.Settings.SeekingSpellFusesBells = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Fuse/Bell Checks"), TunicRandomizer.Settings.SeekingSpellFusesBells, "Fuse/Bell Checks");
+            TunicRandomizer.Settings.SeekingSpellEnemyChecks = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Enemy Checks"), TunicRandomizer.Settings.SeekingSpellEnemyChecks, "Enemy Checks");
             y += 40f;
 
             GUI.skin.button.fontSize = scFont(20);
