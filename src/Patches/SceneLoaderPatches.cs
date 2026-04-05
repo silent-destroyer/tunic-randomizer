@@ -464,7 +464,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (TunicRandomizer.Settings.ClearEarlyBushes || GetBool(ShuffleEnemySoulsEnabled)) {
+                if (TunicRandomizer.Settings.ClearEarlyBushes) {
                     int[] bushesToClear = new int[] { 7, 2, 16, 9, 23, 26, 47, 42, 58, 62, 64 };
                     foreach (int bush in bushesToClear) {
                         GameObject bushObj = GameObject.Find($"_Bush and Grass/bush ({bush})/");
