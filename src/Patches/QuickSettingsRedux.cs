@@ -1114,10 +1114,8 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.GhostFoxHintsEnabled = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Ghost Foxes"), TunicRandomizer.Settings.GhostFoxHintsEnabled, "Ghost Foxes");
             TunicRandomizer.Settings.SeekingSpellLogic = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Seeking Spell Logic"), TunicRandomizer.Settings.SeekingSpellLogic, "Seeking Spell Logic");
             y += 40f;
-            GUI.skin.toggle.fontSize = scFont(19);
-            TunicRandomizer.Settings.ChestsMatchContentsEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Chests Match Contents"), TunicRandomizer.Settings.ChestsMatchContentsEnabled, "Chests Match Contents");
-            GUI.skin.toggle.fontSize = scFont(20);
-            TunicRandomizer.Settings.ShowItemsEnabled = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 60f), "Freestanding Items Match Contents"), TunicRandomizer.Settings.ShowItemsEnabled, "Freestanding Items Match Contents");
+            TunicRandomizer.Settings.ShowItemsEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 60f), "Freestanding Items Match Contents"), TunicRandomizer.Settings.ShowItemsEnabled, "Freestanding Items Match Contents");
+            TunicRandomizer.Settings.ChestsMatchContentsEnabled = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 60f), "Textures Match Contents"), TunicRandomizer.Settings.ChestsMatchContentsEnabled, "Textures Match Contents");
             TunicRandomizer.Settings.UseTrunicTranslations = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Write Hints In Trunic"), TunicRandomizer.Settings.UseTrunicTranslations, "Write Hints In Trunic");
             y += 60f;
             GUI.skin.button.fontSize = scFont(20);

@@ -197,7 +197,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Path of the Hero Hints", "Off", "On", TunicRandomizer.Settings.HeroPathHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePathOfHeroHints);
             OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
             OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
-            OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
+            OptionsGUI.addToggle("Textures Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
             OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints);
             OptionsGUI.addToggle("Seeking Spell Uses Logic", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
             if (!Archipelago.instance.integration.disableSpoilerLog) {
