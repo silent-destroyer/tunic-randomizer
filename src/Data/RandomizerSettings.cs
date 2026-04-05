@@ -292,6 +292,25 @@ namespace TunicRandomizer {
             get;
             set;
         }
+        public bool SeekingSpellDefaultChecks {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellBreakableChecks {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellGrassChecks {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellFusesBells {
+            get;
+            set;
+        }
 
         // Gameplay Settings
         private const int EASY_HEIR = 1;
@@ -622,6 +641,10 @@ namespace TunicRandomizer {
             UseTrunicTranslations = false;
             CreateSpoilerLog = true;
             SeekingSpellLogic = false;
+            SeekingSpellDefaultChecks = true;
+            SeekingSpellBreakableChecks = true;
+            SeekingSpellGrassChecks = true;
+            SeekingSpellFusesBells = true;
 
             // General
             HeirAssistModeEnabled = false;

@@ -1954,6 +1954,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
             CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
             CustomItemImages.Add("Enemy Soul", CreateSprite(ImageData.EnemySoul, ImageMaterial, 160, 160, SpriteName: "Randomizer items_enemysoul"));
+            CustomItemImages.Add("Hyperdash Toggle", CreateSprite(ImageData.HyperdashToggle, ImageMaterial, 160, 160, SpriteName: "Randomizer items_hyperdash toggle"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;
@@ -1961,6 +1962,7 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hexagon Gold").icon = CustomItemImages["Gold Questagon"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Torch").icon = CustomItemImages["Torch Redux"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
 
             EnemyModelSwaps.CreateTextures(ImageMaterial);
         }
