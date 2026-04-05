@@ -40,6 +40,7 @@ namespace TunicRandomizer {
                     }
                 }
                 if (CheckId == "19000002 [Library Hall]") {
+                    EnemyModelSwaps.cleanupAdministratorTableCheck(gameObject);
                 }
                 Destroy(this);
             }
@@ -660,6 +661,31 @@ namespace TunicRandomizer {
                     },
                 }
             },
+        };
+
+        public static Dictionary<string, int> EnemyDropFillerItemCounts = new Dictionary<string, int>() {
+            {"Firecracker", 20},
+            {"Fire Bomb", 20},
+            {"Ice Bomb", 20},
+            {"Pepper", 10},
+            {"Ivy", 10},
+            {"Lure", 5},
+            {"HP Berry", 15},
+            {"MP Berry", 15},
+            {"Money x1", 70},
+            {"Money x2", 120},
+            {"Money x3", 100},
+            {"Money x4", 50},
+            {"Money x5", 25},
+            {"Money x6", 25},
+            {"Money x7", 20},
+            {"Money x8", 10},
+            {"Money x10", 10},
+            {"Money x20", 7},
+            {"Money x30", 5},
+            {"Money x100", 3},
+            {"Money x200", 1},
+            {"Money x255", 1},
         };
 
         public static Dictionary<string, (int, string)> Administrator2ndPhases = new Dictionary<string, (int, string)>() {

@@ -125,16 +125,38 @@ namespace TunicRandomizer {
                     check.Reward.Amount = random.Next(1, 6);
                 }
             }
-            if (GetBool(ShuffleEnemyDropsEnabled) && GetBool(ShuffleEnemySoulsEnabled)) {
-                ProgressionNames.AddRange(EnemySouls);
-
+            if (GetBool(ShuffleEnemyDropsEnabled)) {
+                if (GetBool(ShuffleEnemySoulsEnabled)) {
+                    ProgressionNames.AddRange(EnemySouls);
+                }
+                Dictionary<string, int> EnemyFillerItems = new Dictionary<string, int>(EnemyDropShuffle.EnemyDropFillerItemCounts);
                 for (int i = 0; i < InitialItems.Count; i++) { 
                     Check check = InitialItems[i];
-                    if (EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(check.CheckId) && EnemySouls.Count > 0) {
-                        check.Reward.Name = EnemySouls[random.Next(EnemySouls.Count)];
-                        check.Reward.Amount = 1;
-                        check.Reward.Type = "INVENTORY";
-                        EnemySouls.Remove(check.Reward.Name);
+                    if (EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(check.CheckId)) {
+                        if (GetBool(ShuffleEnemySoulsEnabled) && EnemySouls.Count > 0) {
+                            check.Reward.Name = EnemySouls[random.Next(EnemySouls.Count)];
+                            check.Reward.Amount = 1;
+                            check.Reward.Type = "INVENTORY";
+                            EnemySouls.Remove(check.Reward.Name);
+                        } else if (EnemyFillerItems.Count > 0) {
+                            // fill specific amounts of other filler items
+                            string itemToFill = EnemyFillerItems.Keys.First();
+                            if (EnemyFillerItems[itemToFill] > 0) {
+                                ItemData itemData = ItemLookup.Items[itemToFill];
+                                check.Reward.Name = itemData.ItemNameForInventory;
+                                check.Reward.Type = itemData.Type == ItemTypes.MONEY ? "MONEY" : "INVENTORY";
+                                check.Reward.Amount = itemData.QuantityToGive;
+                                EnemyFillerItems[itemToFill]--;
+                                if (EnemyFillerItems[itemToFill] == 0) {
+                                    EnemyFillerItems.Remove(itemToFill);
+                                }
+                            }
+                        } else {
+                            // fill any leftover checks with random money
+                            check.Reward.Name = "money";
+                            check.Reward.Type = "MONEY";
+                            check.Reward.Amount = random.Next(1, 6);
+                        }
                     }
                 }
             }
