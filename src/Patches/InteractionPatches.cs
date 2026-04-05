@@ -118,7 +118,7 @@ namespace TunicRandomizer {
             }
             if (SceneLoaderPatches.SceneName == "Overworld Interiors" && __instance.transform.position.ToString() == "(-26.4, 28.9, -46.2)") {
                 if ((StateVariable.GetStateVariableByName("Has Been Betrayed").BoolValue || StateVariable.GetStateVariableByName("Has Died To God").BoolValue) && (PlayerCharacterPatches.TimeWhenLastChangedDayNight + 3.0f < Time.fixedTime)) {
-                    GenericPrompt.ShowPrompt(CycleController.IsNight ? $"wAk fruhm #is drEm?" : $"rEtirn too yor drEm?", (Il2CppSystem.Action)ChangeDayNightHourglass, null);
+                    GenericPrompt.ShowPrompt(CycleController.IsNight ? $"wAk fruhm #is drEm?" : $"riturn too yor drEm?", (Il2CppSystem.Action)ChangeDayNightHourglass, null);
                 }
                 return false;
             }
@@ -175,6 +175,12 @@ namespace TunicRandomizer {
                     Archipelago.instance.integration.ShowNotConnectedError();
                     return false;
                 }
+            }
+            if (__instance.name == "coffee table check hack" && __instance.GetComponentInParent<EnemyCheck>() != null) {
+                GenericPrompt.ShowPrompt("tAk Ituhm?", (Action)(() => {
+                    __instance.GetComponentInParent<EnemyCheck>().ActivateEnemyCheck(__instance.transform, false);
+                }), null);
+                return false;
             }
 
             return true;

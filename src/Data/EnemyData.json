@@ -5621,6 +5621,23 @@
         "ExtraReqs": [
         ]
     },
+    "19000002 [Library Hall]": {
+        "EnemyName": "administrator_servant",
+        "EnemyRuntimeID": "19000002",
+        "EnemyType": "Administrator",
+        "EnemyScene": "Library Hall",
+        "EnemyPosition": "(116.0, 10.0, -76.0)",
+        "EnemyRegion": "Library Hall",
+        "EnemyDropValue": 0,
+        "IsNGPlusEnemy": false,
+        "IsNightEnemy": false,
+        "EnemyDescription": "Library Hall - Administrator Coffee Table",
+        "ExtraReqs": [
+            {
+                "Enemy Soul (Administrator)": 1
+            }
+        ]
+    },
     "14000027 [Fortress Basement]": {
         "EnemyName": "Spider Small (7)",
         "EnemyRuntimeID": "14000027",

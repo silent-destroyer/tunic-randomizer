@@ -22,18 +22,24 @@ namespace TunicRandomizer {
             }
         }
 
-        public void ActivateEnemyCheck(Transform transform) {
+        public void ActivateEnemyCheck(Transform transform, bool skipPresentation = true) {
             if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                 return;
             }
             if (CheckId != null) {
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId) && !Locations.CheckedLocations[CheckId] && SaveFile.GetInt($"randomizer picked up {CheckId}") == 0) {
                     Check check = Locations.RandomizedLocations[CheckId];
-                    ItemPatches.GiveItem(check, alwaysSkip: true);
-                    ModelSwaps.SetupItemMoveUp(transform, check: check);
+                    ItemPatches.GiveItem(check, alwaysSkip: skipPresentation);
+                    if (skipPresentation) {
+                        ModelSwaps.SetupItemMoveUp(transform, check: check);
+                    }
                 } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(CheckId) && !Locations.CheckedLocations[CheckId] && SaveFile.GetInt($"randomizer picked up {CheckId}") == 0) {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
-                    ModelSwaps.SetupItemMoveUp(transform, itemInfo: ItemLookup.ItemList[CheckId]);
+                    if (skipPresentation) {
+                        ModelSwaps.SetupItemMoveUp(transform, itemInfo: ItemLookup.ItemList[CheckId]);
+                    }
+                }
+                if (CheckId == "19000002 [Library Hall]") {
                 }
                 Destroy(this);
             }
@@ -685,18 +691,15 @@ namespace TunicRandomizer {
             var assembly = Assembly.GetExecutingAssembly();
             var enemyDropJson = "TunicRandomizer.src.Data.EnemyData.json";
             AllEnemyDropChecks.Clear();
-            System.Random random = new System.Random();
-            List<ItemData> itemNames = ItemLookup.Items.Values.Where(item => ItemLookup.FillerItems.ContainsKey(item.ItemNameForInventory)).ToList();
             using (Stream stream = assembly.GetManifestResourceStream(enemyDropJson))
             using (StreamReader reader = new StreamReader(stream)) {
                 EnemyDrops = JsonConvert.DeserializeObject<Dictionary<string, EnemyInfo>>(reader.ReadToEnd());
                 foreach (KeyValuePair<string, EnemyInfo> enemy in EnemyDrops) { 
                     Check check = new Check();
                     check.Reward = new Reward();
-                    int i = random.Next(itemNames.Count);
-                    check.Reward.Name = itemNames[i].ItemNameForInventory;
-                    check.Reward.Type = "INVENTORY";
-                    check.Reward.Amount = itemNames[i].QuantityToGive;
+                    check.Reward.Name = "money";
+                    check.Reward.Type = "MONEY";
+                    check.Reward.Amount = 1;
                     check.Location = new Location();
                     check.Location.LocationId = enemy.Value.EnemyRuntimeID;
                     check.Location.SceneName = enemy.Value.EnemyScene;
@@ -784,6 +787,9 @@ namespace TunicRandomizer {
                         monster.gameObject.AddComponent<EnemyCheck>();
                         monster.gameObject.GetComponent<EnemyCheck>().CheckId = id;
                         soulManager.GetComponent<EnemySoulManager>().registerMonster(monster.gameObject, EnemyDrops[id]);
+                        if (id == "19000002 [Library Hall]") {
+                            EnemyModelSwaps.SetupAdministratorTableCheck(monster.gameObject);
+                        }
                     }
                 }
             }

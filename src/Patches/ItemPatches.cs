@@ -261,7 +261,7 @@ namespace TunicRandomizer {
             if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationDisplayName != "Cheat Console" && Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) &&
                 (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) 
                 || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName])
-                || EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
+                || (EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.LocationDisplayName != "Library Hall - Administrator Coffee Table"))) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 

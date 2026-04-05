@@ -535,6 +535,7 @@ namespace TunicRandomizer {
         }
 
         private static void ApplyAdministratorTexture(GameObject admin, Material material, UnityEngine.Color color) {
+            if (admin.name.Contains("servant")) return;
             if (material != null) {
                 admin.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0] = material;
             } else if (!color.Equals(UnityEngine.Color.clear)) {
@@ -597,6 +598,93 @@ namespace TunicRandomizer {
                 } else if (!color.Equals(UnityEngine.Color.clear)) {
                     glow.GetComponent <SkinnedMeshRenderer>().material.color = color;
                 }
+            }
+        }
+
+        public static void SetupAdministratorTableCheck(GameObject table) {
+            string checkId = "19000002 [Library Hall]";
+            if (TunicUtils.IsCheckCompletedOrCollected(checkId)) { return; }
+
+            if (GameObject.Find("_Special/RelicPlinth/SIgnpost/") != null) {
+                GameObject interaction = GameObject.Instantiate(GameObject.Find("_Special/RelicPlinth/SIgnpost/"));
+                interaction.name = "coffee table check hack";
+                interaction.transform.parent = table.transform;
+                interaction.transform.localPosition = Vector3.zero;
+                interaction.GetComponent<SphereCollider>().radius = 5;
+            }
+            ItemInfo ApItem = null;
+            Check Check = null;
+            ItemData Item = null;
+            if (IsArchipelago()) {
+                ApItem = ItemLookup.ItemList[checkId];
+                if (Archipelago.instance.IsTunicPlayer(ApItem.Player)) {
+                    Item = ItemLookup.Items[ApItem.ItemDisplayName];
+                }
+            }
+            if (IsSinglePlayer()) {
+                Check = Locations.RandomizedLocations[checkId];
+                Item = ItemLookup.GetItemDataFromCheck(Check);
+            }
+            Transform tabletop = table.transform.Find("Armature/root/body/unrotate/");
+
+            GameObject starburst = GameObject.Instantiate(ModelSwaps.StarburstEffect);
+            starburst.transform.parent = tabletop.transform;
+            starburst.transform.localPosition = Vector3.zero;
+            starburst.SetActive(true);
+
+            if (TunicRandomizer.Settings.ShowItemsEnabled) { 
+                for (int i = 0; i < tabletop.childCount; i++) { 
+                    tabletop.GetChild(i).gameObject.SetActive(false);
+                }
+                starburst.SetActive(true);
+
+                GameObject NewItem = ModelSwaps.SetupItemBase(tabletop, ApItem, Check);
+
+                if (Item != null && Item.Name.Contains("Questagon") && NewItem.GetComponent<Rotate>() != null) {
+                    GameObject.Destroy(NewItem.GetComponent<Rotate>());
+                }
+                if (Item != null && Item.Type == ItemTypes.LADDER) {
+                    for (int i = 0; i < NewItem.transform.childCount; i++) {
+                        NewItem.transform.GetChild(i).gameObject.SetActive(false);
+                    }
+                }
+            
+                TransformData TransformData;
+                if (IsArchipelago() && Item == null && (ApItem != null && !Archipelago.instance.IsTunicPlayer(ApItem.Player) || !ItemLookup.Items.ContainsKey(ApItem.ItemDisplayName))) {
+                    TransformData = ItemPositions.Table["Other World"];
+                } else {
+                    if (Item.Type == ItemTypes.TRINKET) {
+                        TransformData = ItemPositions.Table["Trinket Card"];
+                    } else if (Item.Type == ItemTypes.MONEY || Item.Type == ItemTypes.FOOLTRAP) {
+                        if (Item.QuantityToGive < 30) {
+                            TransformData = ItemPositions.Table["money small"];
+                        } else if (Item.QuantityToGive >= 30 && Item.QuantityToGive < 100) {
+                            TransformData = ItemPositions.Table["money medium"];
+                        } else {
+                            TransformData = ItemPositions.Table["money large"];
+                        }
+                    } else if (Item.Type == ItemTypes.SWORDUPGRADE && (SaveFile.GetInt(SwordProgressionEnabled) == 1) && (IsSinglePlayer() || ApItem.Player == Archipelago.instance.GetPlayerSlot())) {
+                        int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
+                        TransformData = ItemPositions.Table.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Table[$"Sword Progression {SwordLevel}"] : ItemPositions.VaultKeyRed[Item.ItemNameForInventory];
+                    } else {
+                        TransformData = ItemPositions.Table.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Table[Item.ItemNameForInventory] : ItemPositions.Table[Enum.GetName(typeof(ItemTypes), Item.Type)];
+                    }
+                }
+
+                NewItem.transform.localPosition = TransformData.pos;
+                NewItem.transform.localRotation = TransformData.rot;
+                NewItem.transform.localScale = TransformData.scale;
+                NewItem.SetActive(true);
+            }
+        }
+
+        public static void cleanupAdministratorTableCheck(GameObject table) {
+            Transform tabletop = table.transform.Find("Armature/root/body/unrotate/");
+            for (int i = 0; i < tabletop.childCount; i++) {
+                tabletop.GetChild(i).gameObject.SetActive(i < 2);
+            }
+            if (table.GetComponentInChildren<Signpost>() != null) { 
+                GameObject.Destroy(table.GetComponentInChildren<Signpost>().gameObject);
             }
         }
     }
