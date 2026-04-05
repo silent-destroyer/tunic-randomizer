@@ -70,7 +70,7 @@ namespace TunicRandomizer {
         public static HashSet<string> AllProgressionNames = new HashSet<string>() {
             "Stick", "Sword", "Sword Upgrade", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shotgun",
             "Key (House)", "Key", "Vault Key (Red)", "Trinket Coin", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "Hexagon Gold", "Mask",
-            "Fairy", "12", "21", "26", "Trinket - Glass Cannon",
+            "Fairy", "12", "21", "26", "Trinket - Glass Cannon", "Upgrade Offering - Attack - Tooth",
             "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to East Forest",
             "Ladders to Lower Forest", "Ladders near Patrol Cave", "Ladders in Well", "Ladders to West Bell", "Ladder to Quarry",
             "Ladder in Dark Tomb", "Ladders near Dark Tomb", "Ladder near Temple Rafters", "Ladder to Swamp", "Ladders in Swamp",

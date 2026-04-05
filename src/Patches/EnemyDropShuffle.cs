@@ -191,6 +191,7 @@ namespace TunicRandomizer {
                 "Administrator", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Upgrade Offering - Attack - Tooth", 2},
                         {"Enemy Soul (Administrator)", 1}
                     }
                 }
@@ -211,6 +212,7 @@ namespace TunicRandomizer {
                 "Beefboy", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
+                        {"Upgrade Offering - Attack - Tooth", 2},
                         {"Enemy Soul (Beefboy)", 1}
                     }
                 }
@@ -619,6 +621,7 @@ namespace TunicRandomizer {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
                         {"Hyperdash", 1},
+                        {"Upgrade Offering - Attack - Tooth", 3},
                         {"Enemy Soul (Voidtouched)", 1}
                     },
                 }

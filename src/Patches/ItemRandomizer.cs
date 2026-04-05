@@ -129,6 +129,7 @@ namespace TunicRandomizer {
                 if (GetBool(ShuffleEnemySoulsEnabled)) {
                     ProgressionNames.AddRange(EnemySouls);
                 }
+                ProgressionNames.Add("Upgrade Offering - Attack - Tooth");
                 Dictionary<string, int> EnemyFillerItems = new Dictionary<string, int>(EnemyDropShuffle.EnemyDropFillerItemCounts);
                 for (int i = 0; i < InitialItems.Count; i++) { 
                     Check check = InitialItems[i];
