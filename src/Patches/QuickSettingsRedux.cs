@@ -1112,14 +1112,23 @@ namespace TunicRandomizer {
             y += 40f;
             TunicRandomizer.Settings.HeroPathHintsEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Path of the Hero"), TunicRandomizer.Settings.HeroPathHintsEnabled, "Path of the Hero");
             TunicRandomizer.Settings.GhostFoxHintsEnabled = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Ghost Foxes"), TunicRandomizer.Settings.GhostFoxHintsEnabled, "Ghost Foxes");
-            TunicRandomizer.Settings.SeekingSpellLogic = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Seeking Spell Logic"), TunicRandomizer.Settings.SeekingSpellLogic, "Seeking Spell Logic");
+            TunicRandomizer.Settings.UseTrunicTranslations = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Write Hints In Trunic"), TunicRandomizer.Settings.UseTrunicTranslations, "Write Hints In Trunic");
             y += 40f;
             TunicRandomizer.Settings.ShowItemsEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 60f), "Freestanding Items Match Contents"), TunicRandomizer.Settings.ShowItemsEnabled, "Freestanding Items Match Contents");
             TunicRandomizer.Settings.ChestsMatchContentsEnabled = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 60f), "Textures Match Contents"), TunicRandomizer.Settings.ChestsMatchContentsEnabled, "Textures Match Contents");
-            TunicRandomizer.Settings.UseTrunicTranslations = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Write Hints In Trunic"), TunicRandomizer.Settings.UseTrunicTranslations, "Write Hints In Trunic");
             y += 60f;
+            GUI.Label(scRect(10f, y, 400f, 30f, tooltip: "Seeking Spell Settings"), $"Seeking Spell Settings");
+            y += 40f;
+            TunicRandomizer.Settings.SeekingSpellLogic = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Seeking Spell Logic"), TunicRandomizer.Settings.SeekingSpellLogic, "In-Logic Checks");
+            TunicRandomizer.Settings.SeekingSpellDefaultChecks = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Default Checks"), TunicRandomizer.Settings.SeekingSpellDefaultChecks, "Default Checks");
+            TunicRandomizer.Settings.SeekingSpellBreakableChecks = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Breakable Checks"), TunicRandomizer.Settings.SeekingSpellBreakableChecks, "Breakable Checks");
+            y += 40f;
+            TunicRandomizer.Settings.SeekingSpellGrassChecks = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Grass Checks"), TunicRandomizer.Settings.SeekingSpellGrassChecks, "Grass Checks");
+            TunicRandomizer.Settings.SeekingSpellFusesBells = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Fuse/Bell Checks"), TunicRandomizer.Settings.SeekingSpellFusesBells, "Fuse/Bell Checks");
+            y += 40f;
+
             GUI.skin.button.fontSize = scFont(20);
-            bool OpenEntranceTracker = GUI.Button(ShowTooltip(scRect(10f, y, 206f, 30f), "Entrance Tracker"), "Entrance Tracker");
+            bool OpenEntranceTracker = GUI.Button(ShowTooltip(scRect(442f, y, 206f, 30f), "Entrance Tracker"), "Entrance Tracker");
             if (OpenEntranceTracker) {
                 System.Diagnostics.Process.Start("https://scipiowright.gitlab.io/tunic-tracker/");
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class FairyTargets {
@@ -33,7 +34,7 @@ namespace TunicRandomizer {
                 && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
                 List<GameObject> breakableObjects = new List<GameObject>();
-                if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                if (GetBool(BreakableShuffleEnabled)) {
                     foreach (SmashableObject obj in GameObject.FindObjectsOfType<SmashableObject>().ToList()) {
                         breakableObjects.Add(obj.gameObject);
                     }
@@ -45,7 +46,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                foreach (string ItemId in ItemIdsInScene) {
+                foreach (string ItemId in filterAllowedFairyTargets(ItemIdsInScene)) {
                     bool isBreakable = BreakableShuffle.BreakableChecks.ContainsKey(ItemId);
                     Location Location = Checks[ItemId].Location;
 
@@ -94,7 +95,7 @@ namespace TunicRandomizer {
             List<string> ItemIds = Checks.Values.Where(check => check.Location.SceneName != SceneManager.GetActiveScene().name
             && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
-            foreach (string ItemId in ItemIds) {
+            foreach (string ItemId in filterAllowedFairyTargets(ItemIds)) {
                 ScenesWithItems.Add(Checks[ItemId].Location.SceneName);
             }
 
@@ -115,10 +116,28 @@ namespace TunicRandomizer {
                 string destScene = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
                 // check if the entrance is logically accessible and if the adjacent scene has checks in logic
                 if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion) && TunicUtils.ChecksInLogicPerScene.ContainsKey(destScene) 
-                    && TunicUtils.ChecksInLogicPerScene[destScene].Count > 0 && SceneManager.GetActiveScene().name != destScene) {
+                    && filterAllowedFairyTargets(TunicUtils.ChecksInLogicPerScene[destScene]).Count > 0 && SceneManager.GetActiveScene().name != destScene) {
                     AdjItemTargetsInLogic.Add(CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position));
                 }
             }
+        }
+
+        private static List<string> filterAllowedFairyTargets(List<string> itemIds) {
+            List<string> filteredIds = new List<string>(itemIds);
+            if (!TunicRandomizer.Settings.SeekingSpellDefaultChecks) {
+                filteredIds.RemoveAll(id => Locations.VanillaLocations.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellBreakableChecks) {
+                filteredIds.RemoveAll(id => BreakableShuffle.BreakableChecks.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellGrassChecks) {
+                filteredIds.RemoveAll(id => GrassRandomizer.GrassChecks.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellFusesBells) {
+                filteredIds.RemoveAll(id => FuseRandomizer.FuseChecks.ContainsKey(id));
+                filteredIds.RemoveAll(id => BellShuffle.BellChecks.ContainsKey(id));
+            }
+            return filteredIds;
         }
 
         public static void CreateEntranceTargets() {

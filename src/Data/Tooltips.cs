@@ -81,7 +81,6 @@ namespace TunicRandomizer {
             // Hints
             { "Path of the Hero", "Places a major hint at specific locations throughout the game, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple." },
             { "Ghost Foxes", "Spawns 15 Ghost Fox NPCs around the world that give minor hints about the location of useful items and items in hard-to-reach locations.\nThere are over 70 unique Ghost Fox spawns, each with their own unique dialogue, so be on the lookout!" },
-            { "Seeking Spell Logic", "Makes it so the seeking spell only targets checks that can be reached in logic. By default, the seeking spell will target the closest item regardless of if it can be reached or not." },
             { "Freestanding Items Match Contents", "All freestanding items will have their model swapped to the item they are randomized as.\n\n" +
                 "For Archipelago items: Green = filler, Blue = useful, Gold = progression, and Gold + Cyan = progression + useful." },
             { "Textures Match Contents", "Swaps the textures of chests and other objects (breakables, grass, enemies, etc.) to indicate what item they contain. This applies to Fairies, Golden Trophies, Red/Green/Blue Questagons, and the Hero's Laurels.\n" +
@@ -89,6 +88,12 @@ namespace TunicRandomizer {
             { "Write Hints In Trunic", "Replaces most English words in the custom randomizer dialogue and hints with Trunic, " +
                 "leaving it up to your own knowledge to figure out what is where.\nSome text, like Archipelago player/item names, will not be translated to Trunic." },
             { "Entrance Tracker", "Opens the Entrance Tracker website. The Randomizer produces a .csv file that can be uploaded to sync the tracker. Auto-tracking is also supported for Archipelago games." },
+            { "Seeking Spell Settings", "Choose what types of checks the Seeking Spell fairies can search for, including checks on the other sides of entrances.\nCan be changed at any time and will take effect after reloading an area." },
+            { "Seeking Spell Logic", "The Seeking Spell will only target checks that can be reached in logic. By default, the seeking spell will target the closest item regardless of if it can be reached or not." },
+            { "Default Checks", "Allows the Seeking Spell to target any of the default 302 checks." },
+            { "Breakable Checks", "Allows the Seeking Spell to target breakables (pots, boxes, bareels, etc.) if breakables shuffle is enabled." },
+            { "Grass Checks", "Allows the Seeking Spell to target grass if grass randomizer is enabled." },
+            { "Fuse/Bell Checks", "Allows the Seeking Spell to target fuses or bells if either are enabled." },
 
             // Music
             { "Music Shuffle", "Shuffles the music that plays throughout the game." },
