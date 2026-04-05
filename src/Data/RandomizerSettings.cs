@@ -724,7 +724,7 @@ namespace TunicRandomizer {
 
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(split[3]));
                 string[] decodedSplit = decoded.Split(':');
-                HexagonQuestGoal = int.Parse(decodedSplit[0]);
+                HexagonQuestGoal = int.Parse(decodedSplit[0]) == 0 ? HexagonQuestGoal : int.Parse(decodedSplit[0]);
                 HexagonQuestExtraPercentage = int.Parse(decodedSplit[1]);
                 FoolTrapIntensity = (FoolTrapOption)int.Parse(decodedSplit[2]);
                 FixedLaurelsOption = (FixedLaurelsType)int.Parse(decodedSplit[3]);

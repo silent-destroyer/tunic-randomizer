@@ -873,6 +873,15 @@ namespace TunicRandomizer {
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleBells) { 
                 SaveFile.SetInt(BellShuffleEnabled, 1);
             }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemyDrops) { 
+                SaveFile.SetInt(ShuffleEnemyDropsEnabled, 1);
+                if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemySouls) { 
+                    SaveFile.SetInt(ShuffleEnemySoulsEnabled, 1);
+                }
+                if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops) {
+                    SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
+                }
+            }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips) {
                 SaveFile.SetInt(LaurelsZips, 1);
             }
