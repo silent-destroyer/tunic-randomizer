@@ -780,12 +780,14 @@ namespace TunicRandomizer {
             if (logicPage == 1) {
                 if (TunicRandomizer.Settings.MysterySeed) {
                     y = MysterySeedMainLogicSection(y);
+                    y = MysterySeedButtonSection(y);
                 } else {
                     y = MainLogicSection(y);
                 }
             } else if (logicPage == 2) {
                 if (TunicRandomizer.Settings.MysterySeed) {
                     y = MysterySeedAdvancedLogicSection(y);
+                    y = MysterySeedButtonSection(y);
                 } else {
                     y = AdvancedLogicSection(y);
                 }
@@ -1366,6 +1368,22 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips = (int)GUI.HorizontalSlider(scRect(20f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips, 0, 100);
             TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems = (int)GUI.HorizontalSlider(scRect(236f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems, 0, 100);
             GUI.skin.label.fontSize = scFont(25);
+            return y;
+        }
+
+        private float MysterySeedButtonSection(float y) {
+            y += 30f;
+            GUI.skin.button.fontSize = scFont(20f);
+            bool RandomizeAll = GUI.Button(scRect(10f, y, 314f, 30f), "Randomize All Weights");
+            if (RandomizeAll) {
+                TunicRandomizer.Settings.MysterySeedWeights.Randomize();
+                RandomizerSettings.SaveSettings();
+            }
+            bool ResetAll = GUI.Button(scRect(334f, y, 314f, 30f), "Reset to Defaults");
+            if (ResetAll) {
+                TunicRandomizer.Settings.MysterySeedWeights = new MysterySeedWeights();
+                RandomizerSettings.SaveSettings();
+            }
             return y;
         }
 
