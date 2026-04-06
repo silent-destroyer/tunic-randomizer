@@ -8,6 +8,7 @@ namespace TunicRandomizer {
         public Button button;
         public Color colorWhenSelected = new Color(0.92f, 0.65f, 0.08f);
         public bool isSceneButton = false;
+        public bool disabled = false;
         public GameObject dart;
         public string EntranceName;
 
@@ -32,7 +33,7 @@ namespace TunicRandomizer {
                     dart.SetActive(FoxPrince.PinnedPortal != "" && FoxPrince.PinnedPortal == EntranceName);
                 }
             }
-            GetComponent<Button>().enabled = isSceneButton || !EntranceSelector.WaitingForDartSelection;
+            GetComponent<Button>().enabled = (isSceneButton || !EntranceSelector.WaitingForDartSelection) && !disabled;
         }
     }
 }

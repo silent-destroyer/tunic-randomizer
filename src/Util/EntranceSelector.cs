@@ -374,15 +374,31 @@ namespace TunicRandomizer {
                 if (ButtonObj1.GetComponent<SceneSelectionButton>() == null) {
                     SetupSceneSelectionButtons();
                 }
-                SceneText1.GetComponent<RTLTextMeshPro>().text = portalChoices[0].Portal2.Name;
-                ButtonObj1.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[0].Portal2.Name;
-                SceneText2.GetComponent<RTLTextMeshPro>().text = portalChoices[1].Portal2.Name;
-                ButtonObj2.GetComponent<SceneSelectionButton>().EntranceName= portalChoices[1].Portal2.Name;
-                SceneText3.GetComponent<RTLTextMeshPro>().text = portalChoices[2].Portal2.Name;
-                ButtonObj3.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[2].Portal2.Name;
-                UpdateSceneSprite(SceneSprite1, portalChoices[0].Portal2.Name);
-                UpdateSceneSprite(SceneSprite2, portalChoices[1].Portal2.Name);
-                UpdateSceneSprite(SceneSprite3, portalChoices[2].Portal2.Name);
+                if (portalChoices.Count >= 1) {
+                    SceneText1.GetComponent<RTLTextMeshPro>().text = portalChoices[0].Portal2.Name;
+                    ButtonObj1.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[0].Portal2.Name;
+                    UpdateSceneSprite(SceneSprite1, portalChoices[0].Portal2.Name);
+                }
+                if (portalChoices.Count >= 2) {
+                    SceneText2.GetComponent<RTLTextMeshPro>().text = portalChoices[1].Portal2.Name;
+                    ButtonObj2.GetComponent<SceneSelectionButton>().EntranceName= portalChoices[1].Portal2.Name;
+                    ButtonObj2.GetComponent<SceneSelectionButton>().disabled = false;
+                    UpdateSceneSprite(SceneSprite2, portalChoices[1].Portal2.Name);
+                } else {
+                    SceneText2.GetComponent<RTLTextMeshPro>().text = "";
+                    SceneSprite2.sprite = null;
+                    ButtonObj2.GetComponent<SceneSelectionButton>().disabled = true;
+                }
+                if (portalChoices.Count >= 3) {
+                    SceneText3.GetComponent<RTLTextMeshPro>().text = portalChoices[2].Portal2.Name;
+                    ButtonObj3.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[2].Portal2.Name;
+                    ButtonObj3.GetComponent<SceneSelectionButton>().disabled = false;
+                    UpdateSceneSprite(SceneSprite3, portalChoices[2].Portal2.Name);
+                } else {
+                    SceneText3.GetComponent<RTLTextMeshPro>().text = "";
+                    SceneSprite3.sprite = null;
+                    ButtonObj3.GetComponent<SceneSelectionButton>().disabled = true;
+                }
             }
             EntranceOptions = portalChoices;
 
