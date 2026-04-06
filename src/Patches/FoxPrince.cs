@@ -120,9 +120,11 @@ namespace TunicRandomizer {
 
             if (CachedSuccessfulPairing != null) {
                 PortalCombo cachedPortalCombo = TunicUtils.GetPortalComboFromRandomizedPortals(currentPortalName, CachedSuccessfulPairing);
-                portalChoices.Add(cachedPortalCombo);
-                updateDeplando(currentPortalName, cachedPortalCombo.Portal2.Name);
-                CachePairingDict.Add(cachedPortalCombo, new List<PortalCombo>(CachedSuccessfulPairing));
+                if (!portalChoices.Exists(pc => pc.ToString() == cachedPortalCombo.ToString())) { 
+                    portalChoices.Add(cachedPortalCombo);
+                    updateDeplando(currentPortalName, cachedPortalCombo.Portal2.Name);
+                    CachePairingDict.Add(cachedPortalCombo, new List<PortalCombo>(CachedSuccessfulPairing));
+                }
                 CachedSuccessfulPairing = null;
             }
 

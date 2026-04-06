@@ -12,6 +12,10 @@ namespace TunicRandomizer {
 
         public string ComboTag;
 
+        public override string ToString() {
+            return $"{Portal1.Name}, {Portal2.Name}";
+        }
+
         public PortalCombo(Portal portal1, Portal portal2) {
             Portal1 = portal1;
             Portal2 = portal2;
