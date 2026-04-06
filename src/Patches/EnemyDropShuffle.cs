@@ -20,6 +20,11 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.ChestsMatchContentsEnabled) {
                 EnemyModelSwaps.SetupEnemyTexture(this);
             }
+            if (GetComponent<Monster>() != null) {
+                if (GetComponent<Monster>().dropValue != null) {
+                    GetComponent<Monster>().dropValue.Value = 0;
+                }
+            }
         }
 
         public void ActivateEnemyCheck(Transform transform, bool skipPresentation = true) {

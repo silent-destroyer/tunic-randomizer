@@ -64,7 +64,7 @@ namespace TunicRandomizer {
                 if (enemy.GetComponent<Blob>() != null) {
                     ApplyBlobTexture(enemy.gameObject, material, colorString);
                 } else if (enemy.GetComponent<Skuladin>() != null) {
-                    ApplyRudelingTexture(enemy.gameObject, material, colorString);
+                    ApplyRudelingTexture(enemy.gameObject, material, colorString, color);
                 } else if (enemy.GetComponent<Hedgehog>() != null) {
                     ApplyHedgehogTexture(enemy.gameObject, material, color, isProgUseful);
                 } else if (enemy.GetComponent<HonourGuard>() != null) {
@@ -78,7 +78,7 @@ namespace TunicRandomizer {
                 } else if (enemy.GetComponent<Crow>() != null) {
                     ApplyHusherTexture(enemy.gameObject, material, color);
                 } else if (enemy.GetComponent<Frog>() != null) {
-                    ApplyFrogTexture(enemy.gameObject, material, colorString);
+                    ApplyFrogTexture(enemy.gameObject, material, colorString, color);
                 } else if (enemy.GetComponent<Bat>() != null) {
                     ApplyBatTexture(enemy.gameObject, material, color);
                 } else if (enemy.GetComponent<Bumblebones>() != null || enemy.GetComponent<Fencer>() != null) {
@@ -98,7 +98,7 @@ namespace TunicRandomizer {
                 } else if (enemy.GetComponent<Spinnerbot>() != null) {
                     ApplySlormTexture(enemy.gameObject, material, colorString);
                 } else if (enemy.GetComponent<Wizard>() != null || enemy.GetComponent<Wizard_Candleabra>() != null || enemy.GetComponent<Wizard_Sword>() != null) {
-                    ApplyCustodianTexture(enemy.gameObject, material, colorString);
+                    ApplyCustodianTexture(enemy.gameObject, material, colorString, color);
                 } else if (enemy.GetComponent<Spider>() != null) {
                     ApplySpiderTexture(enemy.gameObject, material, colorString);
                 } else if (enemy.GetComponent<Scavenger>() != null || enemy.GetComponent<Scavenger_Miner>() != null || enemy.GetComponent<Scavenger_Support>() != null) {
@@ -169,14 +169,20 @@ namespace TunicRandomizer {
             }
         }
 
-        private static void ApplyRudelingTexture(GameObject rudeling, Material material, string color) {
+        private static void ApplyRudelingTexture(GameObject rudeling, Material material, string colorString, UnityEngine.Color color) {
             if (material != null) {
                 rudeling.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>().material = material;
-                if (rudeling.transform.GetChild(2).GetComponent<CreatureMaterialManager>() != null) {
-                    rudeling.transform.GetChild(2).GetComponent<CreatureMaterialManager>().originalMaterials = new Material[] { material };
+                foreach (CreatureMaterialManager manager in rudeling.GetComponentsInChildren<CreatureMaterialManager>()) {
+                    if(manager.name == "sword" || manager.name == "shield_proxy") {
+                        manager.originalMaterials[0] = material;
+                    }
                 }
-            } else if (color != null) {
-                rudeling.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials[0].mainTexture = EnemyTextures[$"Rudeling{color}"];
+            } else if (colorString != null) {
+                if (rudeling.scene.name == "Cathedral Arena") {
+                    rudeling.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0].color = color;
+                } else {
+                    rudeling.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials[0].mainTexture = EnemyTextures[$"Rudeling{colorString}"];
+                }
             }
         }
 
@@ -270,18 +276,22 @@ namespace TunicRandomizer {
             }
         }
 
-        private static void ApplyFrogTexture(GameObject frog, Material material, string color) {
+        private static void ApplyFrogTexture(GameObject frog, Material material, string colorString, UnityEngine.Color color) {
             if (material != null) {
                 frog.GetComponentInChildren<CreatureMaterialManager>().originalMaterials = new Material[] { material };
                 foreach (MeshRenderer mr in frog.GetComponentsInChildren<MeshRenderer>()) {
                     mr.material = material;
                 }
-            } else if (color != null) {
-                Material crabMaterial = frog.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0];
-                if (frog.name.ToLower().Contains("small")) {
-                    crabMaterial.mainTexture = EnemyTextures[$"FrogSmall{color}"];
+            } else if (colorString != null) {
+                if (frog.scene.name == "Cathedral Arena") {
+                    frog.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0].color = color;
                 } else {
-                    crabMaterial.mainTexture = EnemyTextures[$"Frog{color}"];
+                    Material frogMaterial = frog.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0];
+                    if (frog.name.ToLower().Contains("small")) {
+                        frogMaterial.mainTexture = EnemyTextures[$"FrogSmall{colorString}"];
+                    } else {
+                        frogMaterial.mainTexture = EnemyTextures[$"Frog{colorString}"];
+                    }
                 }
             }
         }
@@ -443,15 +453,19 @@ namespace TunicRandomizer {
             }
         }
 
-        private static void ApplyCustodianTexture(GameObject custodian, Material material, string color) {
+        private static void ApplyCustodianTexture(GameObject custodian, Material material, string colorString, UnityEngine.Color color) {
             if (material != null) {
                 foreach (MeshRenderer renderer in custodian.GetComponentsInChildren<MeshRenderer>()) {
                     if (renderer.name == "sword" || renderer.name == "staff" || renderer.name == "candelabra") {
                         renderer.material = material;
                     }
                 }
-            } else if (color != null) {
-                custodian.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0].mainTexture = EnemyTextures[$"Custodian{color}"];
+            } else if (colorString != null) {
+                if (custodian.scene.name == "Cathedral Arena") {
+                    custodian.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0].color = color;
+                } else {
+                    custodian.GetComponentInChildren<CreatureMaterialManager>().originalMaterials[0].mainTexture = EnemyTextures[$"Custodian{colorString}"];
+                }
             }
         }
 
