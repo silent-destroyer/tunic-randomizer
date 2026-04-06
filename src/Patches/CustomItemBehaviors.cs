@@ -14,6 +14,9 @@ namespace TunicRandomizer {
         public static GameObject FoxCape;
         public static GameObject GhostFoxBody;
         public static GameObject GhostFoxHair;
+        
+        public const string DathStoneMessagePrefix = "wAk fruhm #is drEm\nahnd rEturn too";
+
         public static void CreateCustomItems() {
             ButtonAssignableItem LibrarianSword = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             ButtonAssignableItem HeirSword = ScriptableObject.CreateInstance<ButtonAssignableItem>();
@@ -160,20 +163,22 @@ namespace TunicRandomizer {
             }
             if (__instance.item.name == "Torch") {
                 if (StateVariable.GetStateVariableByName("Is Night").BoolValue) {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Old House\"?";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} #E \"Old House\"?";
                 } else {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Overworld\"?";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} #E \"Overworld\"?";
                 }
             } else {
                 if (SceneLoaderPatches.SceneName == "g_elements") {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"???\"";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} \"???\"";
                 } else if (SceneLoaderPatches.SceneName == "Posterity") {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Overworld\"?";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} #E \"Overworld\"?";
                 } else {
                     if (SaveFile.GetString("randomizer last campfire scene name for dath stone") != "" && SaveFile.GetString("randomizer last campfire id for dath stone") != "") {
-                        __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"{Locations.SimplifiedSceneNames[SaveFile.GetString("randomizer last campfire scene name for dath stone")]}?\"";
+                        string prefix = GhostHints.Vowels.Contains(Locations.SimplifiedSceneNames[SaveFile.GetString("randomizer last campfire scene name for dath stone")][0]) ? "#E" : "#uh";
+                        __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} yor \"Last Checkpoint\"\nin {prefix} \"{Locations.SimplifiedSceneNames[SaveFile.GetString("randomizer last campfire scene name for dath stone")]}?\"";
                     } else {
-                        __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"{Locations.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}?\"";
+                        string prefix = GhostHints.Vowels.Contains(Locations.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")][0]) ? "#E" : "#uh";
+                        __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} yor \"Last Checkpoint\"\nin {prefix} \"{Locations.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}?\"";
                     }
                 }
             }

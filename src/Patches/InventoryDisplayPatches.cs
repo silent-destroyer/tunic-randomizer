@@ -197,8 +197,6 @@ namespace TunicRandomizer {
         public static Color RedMarkerColor = new Color(1f, 0f, 0f, 0.75f);
         public static Color GreenMarkerColor = new Color(0f, 1f, 0f, 0.75f);
 
-        public static List<ItemIcon> ItemIcons = new List<ItemIcon>();
-
         public static void Initialize() {
             if (!Loaded) {
                 TMP_FontAsset FontAsset = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(Font => Font.name == "Latin Rounded").ToList()[0];
@@ -589,13 +587,7 @@ namespace TunicRandomizer {
                     EquipmentRoot.transform.GetChild(EquipmentRoot.transform.childCount - 1).transform.position = new Vector3(20f, -20f, 0);
                     EquipmentRoot.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Color.black;
                 }
-                // TODO fix this
-                ItemIcons = Resources.FindObjectsOfTypeAll<ItemIcon>().Where(icon => icon.Item != null && icon.Item.name.Contains("Hyperdash")).ToList();
-                if (ItemIcons.Count == 2) {
-                    ItemIcons[1].transform.position = InventoryDisplayPatches.ItemIcons[0].transform.position;
-                    ItemIcons[1].transform.GetChild(0).gameObject.SetActive(false);
-                    ItemIcons[1].transform.GetChild(1).gameObject.SetActive(false);
-                }
+
                 __instance.hexagonImages[0].enabled = Inventory.GetItemByName("Hexagon Red").Quantity > 0 || GetBool("Placed Hexagon 1 Red");
                 __instance.hexagonImages[1].enabled = Inventory.GetItemByName("Hexagon Green").Quantity > 0 || GetBool("Placed Hexagon 2 Green");
                 __instance.hexagonImages[2].enabled = Inventory.GetItemByName("Hexagon Blue").Quantity > 0 || GetBool("Placed Hexagon 3 Blue");

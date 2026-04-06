@@ -1967,6 +1967,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
             CustomItemImages.Add("Soul Dice", CreateSprite(ImageData.SoulDice, ImageMaterial, 160, 160, SpriteName: "Randomizer items_souldice"));
             CustomItemImages.Add("Koban", CreateSprite(ImageData.Koban, ImageMaterial, 160, 160, SpriteName: "Randomizer items_koban"));
+            CustomItemImages.Add("Hyperdash Toggle", CreateSprite(ImageData.HyperdashToggle, ImageMaterial, 160, 160, SpriteName: "Randomizer items_hyperdash toggle"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Heir Sword").icon = CustomItemImages["Heir Sword"].GetComponent<Image>().sprite;
@@ -1974,9 +1975,9 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hexagon Gold").icon = CustomItemImages["Gold Questagon"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Torch").icon = CustomItemImages["Torch Redux"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
-
             Inventory.GetItemByName("Soul Dice").icon = CustomItemImages["Soul Dice"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Koban").icon = CustomItemImages["Koban"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
         }
 
         public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {

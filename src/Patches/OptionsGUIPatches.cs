@@ -199,9 +199,9 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Path of the Hero Hints", "Off", "On", TunicRandomizer.Settings.HeroPathHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePathOfHeroHints);
             OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
             OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
-            OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
+            OptionsGUI.addToggle("Textures Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
             OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints);
-            OptionsGUI.addToggle("Seeking Spell Uses Logic", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
+            addPageButton("Seeking Spell Settings", (Action)SeekingSpellPage);
             if (!Archipelago.instance.integration.disableSpoilerLog) {
                 OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
                 OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
@@ -218,6 +218,28 @@ namespace TunicRandomizer {
                 }
             }));
             OptionsGUI.setHeading("Hints");
+        }
+
+        public static void SeekingSpellPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.addToggle("In Logic Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
+            OptionsGUI.addToggle("Default Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellDefaultChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellDefaultChecks = !TunicRandomizer.Settings.SeekingSpellDefaultChecks;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Breakable Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellBreakableChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellBreakableChecks = !TunicRandomizer.Settings.SeekingSpellBreakableChecks;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Grass Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellGrassChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellGrassChecks = !TunicRandomizer.Settings.SeekingSpellGrassChecks;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Fuse/Bell Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellFusesBells ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellFusesBells = !TunicRandomizer.Settings.SeekingSpellFusesBells;
+                SaveSettings();
+            }));
+            OptionsGUI.setHeading("Fairy Targets");
         }
 
         public static void GeneralSettingsPage() {
