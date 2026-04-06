@@ -845,9 +845,15 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.PortalDirectionPairs) {
                 TunicRandomizer.Settings.ERFixedShop = false;
             }
-            y += 30f;
-            TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(scRect(25f, y, 206f, 30f), "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
-            TunicRandomizer.Settings.FoxPrinceEnabled = GUI.Toggle(ShowTooltip(scRect(241f, y, 206f, 30f), "Fox Prince"), TunicRandomizer.Settings.FoxPrinceEnabled, "Fox Prince");
+            y += 30f; 
+            GUI.skin.toggle.fontSize = scFont(22.5f);
+            bool ToggleFoxPrince = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Fox Prince"), TunicRandomizer.Settings.FoxPrinceEnabled, "Fox Prince");
+            GUI.skin.toggle.fontSize = scFont(20f);
+            if (ToggleFoxPrince && !TunicRandomizer.Settings.FoxPrinceEnabled) {
+                TunicRandomizer.Settings.EntranceRandoEnabled = true;
+            }
+            TunicRandomizer.Settings.FoxPrinceEnabled = ToggleFoxPrince;
+            TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
             y += 40f;
             y = HexagonQuestSection(y);
             return y;
