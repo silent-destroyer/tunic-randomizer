@@ -300,7 +300,7 @@ namespace TunicRandomizer {
              },
              {
                  "Forest Belltower to Guard Captain Room",
-                 new SceneImage("Forest Belltower to Guard Captain Room", "leaf_14r", 1750, 675)
+                 new SceneImage("Forest Belltower to Guard Captain Room", "leaf_5r", 935, 825)
              },
              {
                  "Forest Belltower to Overworld",
@@ -308,11 +308,11 @@ namespace TunicRandomizer {
              },
              {
                  "Forest Belltower to Fortress",
-                 new SceneImage("Forest Belltower to Fortress", "leaf_14r", 1750, 675)
+                 new SceneImage("Forest Belltower to Fortress", "leaf_16r", 500, 0)
              },
              {
                  "Forest Belltower to Forest",
-                 new SceneImage("Forest Belltower to Forest", "leaf_14r", 1750, 675)
+                 new SceneImage("Forest Belltower to Forest", "leaf_28", 0, 540)
              },
              {
                  "Forest to Belltower",
@@ -364,27 +364,27 @@ namespace TunicRandomizer {
              },
              {
                  "Guard House 1 Dance Fox Exit",
-                 new SceneImage("Guard House 1 Dance Fox Exit", "leaf_14r", 1750, 675)
+                 new SceneImage("Guard House 1 Dance Fox Exit", "leaf_28", 0, 360)
              },
              {
                  "Guard House 1 Lower Exit",
-                 new SceneImage("Guard House 1 Lower Exit", "leaf_14r", 1750, 675)
+                 new SceneImage("Guard House 1 Lower Exit", "leaf_28", 600, 360)
              },
              {
                  "Guard House 1 Upper Forest Exit",
-                 new SceneImage("Guard House 1 Upper Forest Exit", "leaf_14r", 1750, 675)
+                 new SceneImage("Guard House 1 Upper Forest Exit", "leaf_28", 300, 360)
              },
              {
                  "Guard House 1 to Guard Captain Room",
-                 new SceneImage("Guard House 1 to Guard Captain Room", "leaf_14r", 1750, 675)
+                 new SceneImage("Guard House 1 to Guard Captain Room", "leaf_5r", 935, 825)
              },
              {
                  "Guard House 2 Upper Exit",
-                 new SceneImage("Guard House 2 Upper Exit", "leaf_14r", 1750, 675)
+                 new SceneImage("Guard House 2 Upper Exit", "leaf_28", 600, 540)
              },
              {
                  "Guard House 2 Lower Exit",
-                 new SceneImage("Guard House 2 Lower Exit", "leaf_14r", 1750, 675)
+                 new SceneImage("Guard House 2 Lower Exit", "leaf_28", 900, 180)
              },
              {
                  "Guard Captain Room Non-Gate Exit",
@@ -560,7 +560,7 @@ namespace TunicRandomizer {
              },
              {
                  "Fortress to Far Shore",
-                 new SceneImage("Fortress to Far Shore", "leaf_16r", 350, 1200, 600, 360)
+                 new SceneImage("Fortress to Far Shore", "leaf_20v", 1650, 800)
              },
              {
                  "Atoll Upper Exit",
@@ -600,7 +600,7 @@ namespace TunicRandomizer {
              },
              {
                  "Frog Stairs to Frog's Domain's Exit",
-                 new SceneImage("Frog Stairs to Frog's Domain's Exit", "leaf_17v", 400, 1250)
+                 new SceneImage("Frog Stairs to Frog's Domain's Exit", "leaf_17v", 1750, 1150)
              },
              {
                  "Frog's Domain Orb Exit",
@@ -608,7 +608,7 @@ namespace TunicRandomizer {
              },
              {
                  "Frog Stairs to Frog's Domain's Entrance",
-                 new SceneImage("Frog Stairs to Frog's Domain's Entrance", "leaf_17v", 400, 1250)
+                 new SceneImage("Frog Stairs to Frog's Domain's Entrance", "leaf_17v", 1280, 850)
              },
              {
                  "Frog's Domain Ladder Exit",
@@ -760,11 +760,11 @@ namespace TunicRandomizer {
              },
              {
                  "Ziggurat Portal Room Exit",
-                 new SceneImage("Ziggurat Portal Room Exit", "leaf_19r", 325, 650)
+                 new SceneImage("Ziggurat Portal Room Exit", "leaf_18v", 535, 950, 600, 360)
              },
              {
                  "Ziggurat to Far Shore",
-                 new SceneImage("Ziggurat to Far Shore", "leaf_19r", 325, 650)
+                 new SceneImage("Ziggurat to Far Shore", "leaf_20v", 900, 800)
              },
              {
                  "Swamp Lower Exit",
