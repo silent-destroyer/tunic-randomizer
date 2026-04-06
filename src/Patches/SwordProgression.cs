@@ -83,7 +83,6 @@ namespace TunicRandomizer {
         }
 
         public static void EnableSecondSwordFromExisting(GameObject SwordProxy) {
-
             if (SwordProxy != null) {
                 if (SwordProxy.GetComponent<MeshFilter>() != null && SwordProxy.GetComponent<MeshRenderer>() != null) {
                     GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());
@@ -91,8 +90,8 @@ namespace TunicRandomizer {
                 }
                 if (SwordProxy.transform.childCount >= 3) {
                     SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 1.7f, 0f);
-                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.66f, 4.16f, 2f);
-                    SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.4f, 4.4f, 0.4f);
+                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 3.25f, 1f);
+                    SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.3f, 3.35f, 0.3f);
                 }
 
                 if (SwordProxy.transform.childCount == 5) {
@@ -102,7 +101,7 @@ namespace TunicRandomizer {
                 Sword.AddComponent<MeshFilter>().mesh = ModelSwaps.SecondSword.GetComponent<MeshFilter>().mesh;
                 Sword.AddComponent<MeshRenderer>().materials = ModelSwaps.SecondSword.GetComponent<MeshRenderer>().materials;
                 Sword.transform.parent = SwordProxy.transform;
-                Sword.transform.localScale = new Vector3(0.5f, 0.3f, 0.5f);
+                Sword.transform.localScale = new Vector3(0.483f, 0.29f, 0.483f);
                 Sword.transform.localRotation = Quaternion.identity;
                 Sword.transform.localPosition = Vector3.zero;
             } else {
@@ -111,7 +110,6 @@ namespace TunicRandomizer {
         }
 
         public static void EnableThirdSwordFromExisting(GameObject SwordProxy) {
-
             if (SwordProxy != null) {
                 if (SwordProxy.GetComponent<MeshFilter>() != null && SwordProxy.GetComponent<MeshRenderer>() != null) {
                     GameObject.Destroy(SwordProxy.GetComponent<MeshFilter>());
@@ -119,8 +117,8 @@ namespace TunicRandomizer {
                 }
                 if (SwordProxy.transform.childCount >= 3) {
                     SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 1.85f, 0f);
-                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.66f, 4.36f, 2f);
-                    SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.4f, 4.6f, 0.4f);
+                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 3.5f, 1f);
+                    SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.3f, 3.5f, 0.3f);
                     SwordProxy.transform.GetChild(1).GetComponent<HitTrigger>().unblockable = true;
                     SwordProxy.transform.GetChild(2).GetComponent<HitTrigger>().unblockable = true;
                 }
@@ -131,7 +129,7 @@ namespace TunicRandomizer {
                 Sword.AddComponent<MeshFilter>().mesh = ModelSwaps.ThirdSword.GetComponent<MeshFilter>().mesh;
                 Sword.AddComponent<MeshRenderer>().materials = ModelSwaps.ThirdSword.GetComponent<MeshRenderer>().materials;
                 Sword.transform.parent = SwordProxy.transform;
-                Sword.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                Sword.transform.localScale = Vector3.one * 0.28f;
                 Sword.transform.localRotation = new Quaternion(0.7071f, 0f, 0f, -0.7071f);
                 Sword.transform.localPosition = Vector3.zero;
             } else {
@@ -153,6 +151,7 @@ namespace TunicRandomizer {
                     EnableSecondSwordFromExisting(sword.itemRoot);
                     sword.itemRoot.transform.localRotation = swordProxy.transform.localRotation;
                     sword.itemRoot.transform.localPosition = swordProxy.transform.localPosition;
+                    sword.itemRoot.transform.localScale = Vector3.one * 0.786f;
                     behaviours.Add(sword);
                 }
                 if (sword.item.name == "Heir Sword") {
@@ -162,6 +161,7 @@ namespace TunicRandomizer {
                     EnableThirdSwordFromExisting(sword.itemRoot);
                     sword.itemRoot.transform.localRotation = swordProxy.transform.localRotation;
                     sword.itemRoot.transform.localPosition = swordProxy.transform.localPosition;
+                    sword.itemRoot.transform.localScale = Vector3.one * 0.86f;
                     behaviours.Add(sword);
                 }
             }
