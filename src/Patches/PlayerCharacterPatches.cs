@@ -93,18 +93,6 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) {
-                List<string> enemySouls = ItemRandomizer.EnemyItems;
-                foreach (GameObject obj in EnemySoulModels.EnemyPresentationObjs.Values) {
-                    obj.SetActive(false);
-                }
-                EnemySoulModels.EnemyPresentationObjs[enemySouls[index]].SetActive(true);
-                ItemPresentation.PresentItem(Inventory.GetItemByName(enemySouls[index]));
-                index++;
-                if (index > enemySouls.Count) {
-                    index = 0;
-                }
-            }
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
                 CycleController.IsNight = false;
