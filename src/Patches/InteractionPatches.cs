@@ -83,6 +83,12 @@ namespace TunicRandomizer {
                         List<string> fuses = ItemLookup.Items.Values.Where(fuse => fuse.Type == ItemTypes.FUSE).Select(fuse => fuse.Name).ToList();
                         message += FuseRandomizer.GetFuseStatusForSign(fuses);
                     }
+                    if (GetBool(ShuffleEnemySoulsEnabled)) { 
+                        if (message != "") {
+                            message += "---";
+                        }
+                        message += EnemyDropShuffle.GetEnemySoulsForSign();
+                    }
                     __instance.GetComponent<Signpost>().message.text = message;
                     NPCDialogue.DisplayDialogue(__instance.GetComponent<Signpost>().message, true);
                     return false;

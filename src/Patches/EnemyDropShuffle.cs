@@ -840,7 +840,12 @@ namespace TunicRandomizer {
             if (SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) {
                 string scene = SceneManager.GetActiveScene().name;
                 if (scene == "Overworld Redux") {
+
                     SetupOverworldEnvoyStatue();
+                    
+                    if (GameObject.Find("ladder and fuse checklist") == null) {
+                        LadderToggles.SpawnOverworldChecklistSign();
+                    }
                 }
                 if (scene == "Spirit Arena") {
                     GameObject cutsceneRoot = GameObject.Find("_BOSSFIGHT ROOT/_CUTSCENE/");
@@ -893,6 +898,22 @@ namespace TunicRandomizer {
             } else {
                 TunicLogger.LogError("overworld envoy not found near quarry for statue");
             }
+        }
+
+        public static string GetEnemySoulsForSign() {
+            string header = "             <size=85%><#FF0000>[death] ehkOz uhv uhnrehst [death]<#FFFFFF>           [enemysoul]\n";
+            string enemies = $"{header}";
+            int i = 0;
+            foreach (ItemData itemData in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.ENEMY)) {
+                Item item = Inventory.GetItemByName(itemData.ItemNameForInventory);
+                string formatted = $"\"{item.name.Split('(')[1].Replace(")", "")}\"";
+                enemies += $"{formatted}\"{new String('.', 26 - formatted.Length)}{(item.Quantity == 0 ? "<#FF0000>Not Found" : "....<#00FF00>Found")}\"\n";
+                i++;
+                if (i % 8 == 0 && i < 30) {
+                    enemies += $"---{header}";
+                }
+            }
+            return enemies;
         }
 
         public static bool IsValidEnemy(GameObject monster) {
