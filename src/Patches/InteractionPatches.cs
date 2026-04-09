@@ -146,10 +146,18 @@ namespace TunicRandomizer {
                 }
             }
             FoxgodArenaCutscenes cutscene = __instance.GetComponent<FoxgodArenaCutscenes>();
-            if (cutscene != null) {
+            if (cutscene != null && cutscene.gameObject.scene.name == "Spirit Arena") {
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                    if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                    if (SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
                         GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
+                        return false;
+                    } else {
+                        GenericPrompt.ShowPrompt(cutscene.chooseFateLanguageLine, (Action)(() => {
+                            cutscene._IInteractionReceiver_Interact_b__32_0();
+                        }), (Action)(() => {
+                            SaveFile.SetInt(DiedToHeir, 1);
+                            cutscene.startTheFight();
+                        }));
                         return false;
                     }
                 } else {
