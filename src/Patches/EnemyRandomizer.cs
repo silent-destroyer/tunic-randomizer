@@ -1659,11 +1659,43 @@ namespace TunicRandomizer {
             return true;
         }
 
+        public static bool Creature_Flinch_PrefixPatch(Creature __instance) {
+            if (__instance.GetComponent<Foxgod>() != null) { 
+                if (__instance.gameObject.scene.name == "Spirit Arena") {
+                    if (GetBool(HexagonQuestEnabled) && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                        return false;
+                    }
+                    if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (The Heir)").Quantity == 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public static bool Creature_Megaflinch_PrefixPatch(Creature __instance, ref bool megaflinch) {
+            if (__instance.GetComponent<Foxgod>() != null) {
+                if (__instance.gameObject.scene.name == "Spirit Arena") {
+                    if (GetBool(HexagonQuestEnabled) && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                        return false;
+                    }
+                    if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (The Heir)").Quantity == 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
 
-            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" 
-                && SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
-                return false;
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena") {
+                if (GetBool(HexagonQuestEnabled) && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                    return false;
+                }
+                if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (The Heir)").Quantity == 0) {
+                    return false;
+                }
             }
             if (__instance.name == "_Fox(Clone)") {
                 if (CustomItemBehaviors.CanTakeGoldenHit) {
