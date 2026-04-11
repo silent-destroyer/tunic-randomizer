@@ -5,7 +5,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Il2CppSystem.Uri;
 
 namespace TunicRandomizer {
     public class RecentItemsDisplay : MonoBehaviour {
@@ -14,17 +13,40 @@ namespace TunicRandomizer {
             public ItemInfo itemInfo;
             public bool isForYou;
             public bool isTrinket;
+            public bool isHexagonUnlock;
+            public string hexagonAbility;
+            public bool isShopPurchase;
+            public ItemData shopItem;
+
             public RecentItemData(Check Check) {
                 check = Check;
                 itemInfo = null;
                 isForYou = true;
                 isTrinket = false;
+                isHexagonUnlock = false;
+                hexagonAbility = null;
+                isShopPurchase = false;
+                shopItem = null;
             }
             public RecentItemData(ItemInfo ItemInfo, bool ForYou) {
                 itemInfo = ItemInfo;
                 check = null;
                 isForYou = ForYou;
                 isTrinket = false;
+                isHexagonUnlock = false;
+                hexagonAbility = null;
+                isShopPurchase = false;
+                shopItem = null;
+            }
+            public RecentItemData(Check Check = null, ItemInfo ItemInfo = null, bool ForYou = false, bool IsTrinket = false, bool IsHexagonUnlock = false, string HexagonAbility = null, bool IsShopPurchase = false, ItemData ShopItem = null) {
+                check = Check;
+                itemInfo = ItemInfo;
+                isForYou = ForYou;
+                isTrinket = IsTrinket;
+                isHexagonUnlock = IsHexagonUnlock;
+                hexagonAbility = HexagonAbility;
+                isShopPurchase = IsShopPurchase;
+                shopItem = ShopItem;
             }
         }
 
@@ -90,6 +112,12 @@ namespace TunicRandomizer {
                                 }
                             }
                             recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = itemFormatted;
+                            if (item.isHexagonUnlock && item.hexagonAbility != null) {
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\n({item.hexagonAbility} Unlocked)";
+                            }
+                            if (item.check.Location.SceneName == "Shop" || item.check.Location.SceneName == "ShopSpecial") {
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += "\nfrom Shopkeeper";
+                            }
                         } else if (item.itemInfo != null) {
                             isTrap = item.itemInfo.Flags.HasFlag(ItemFlags.Trap);
                             if (item.itemInfo.Player.Game != "TUNIC" && !item.isForYou) {
@@ -113,12 +141,27 @@ namespace TunicRandomizer {
                                 }
                                 if (item.isForYou) {
                                     recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}";
+                                    if (item.isHexagonUnlock && item.hexagonAbility != null) {
+                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\n({item.hexagonAbility} Unlocked)";
+                                    }
                                     if (item.itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
                                         recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\nfrom {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
+                                    } else if (item.itemInfo.Player == Archipelago.instance.GetPlayerSlot()) {
+                                        if (Locations.LocationDescriptionToId.ContainsKey(item.itemInfo.LocationDisplayName) && Locations.VanillaLocations.ContainsKey(Locations.LocationDescriptionToId[item.itemInfo.LocationDisplayName])) {
+                                            Check c = Locations.VanillaLocations[Locations.LocationDescriptionToId[item.itemInfo.LocationDisplayName]];
+                                            if (c.Location.SceneName == "Shop" || c.Location.SceneName == "ShopSpecial") {
+                                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += "\nfrom Shopkeeper";
+                                            }
+                                        }
                                     }
                                 } else {
                                     recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
                                 }
+                            } 
+                        } else if (item.isShopPurchase) {
+                            if (item.shopItem != null) {
+                                recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite(TextBuilderPatches.CustomSpriteIcons[TextBuilderPatches.ItemNameToAbbreviation[item.shopItem.Name]]);
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{item.shopItem.Name}\nfrom Shopkeeper";
                             }
                         }
                         if (isMoney) {
@@ -157,18 +200,26 @@ namespace TunicRandomizer {
             UpdateItemDisplay();
         }
 
-        public void EnqueueItem(Check check) {
+        public void EnqueueShopPurchase(ShopItem shopItem) {
+            ItemData itemData = ItemLookup.Items.Values.Where(item => item.ItemNameForInventory == shopItem.itemToGive.name && item.QuantityToGive == shopItem.quantityToGive).First();
+            if (itemData != null) {
+                recentItemsQueue.Add(new RecentItemData(IsShopPurchase: true, ShopItem: itemData));
+                UpdateItemDisplay();
+            }
+        }
+
+        public void EnqueueItem(Check check, bool hexagonUnlock = false, string hexagonAbility = null) {
             if (GrassRandomizer.GrassChecks.ContainsKey(check.CheckId) && check.Reward.Name == "Grass") {
                 return;
             }
             if ((SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) || SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) && check.Reward.Name == "money" && check.Reward.Amount <= 5) {
                 return;
             }
-            recentItemsQueue.Add(new RecentItemData(check));
+            recentItemsQueue.Add(new RecentItemData(Check: check, IsHexagonUnlock: hexagonUnlock, HexagonAbility: hexagonAbility));
             UpdateItemDisplay();
         }
 
-        public void EnqueueItem(ItemInfo itemInfo, bool forYou) {
+        public void EnqueueItem(ItemInfo itemInfo, bool forYou, bool hexagonUnlock = false, string hexagonAbility = null) {
             if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.ItemDisplayName == "Grass") {
                 return;
             }
@@ -177,7 +228,7 @@ namespace TunicRandomizer {
 
                 return;
             }
-            recentItemsQueue.Add(new RecentItemData(itemInfo, forYou));
+            recentItemsQueue.Add(new RecentItemData(ItemInfo: itemInfo, ForYou: forYou, IsHexagonUnlock: hexagonUnlock, HexagonAbility: hexagonAbility));
             UpdateItemDisplay();
         }
 
