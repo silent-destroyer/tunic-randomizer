@@ -1343,7 +1343,8 @@ namespace TunicRandomizer {
 
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
 
-            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" 
+                && SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
                 return false;
             }
             if (__instance.name == "_Fox(Clone)") {

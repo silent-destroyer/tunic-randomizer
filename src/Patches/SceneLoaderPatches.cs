@@ -113,7 +113,7 @@ namespace TunicRandomizer {
             GhostHints.SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
-            
+                        
             if (!InitialLoadDone) {
                 if (loadingScene.name == "Ruins Passage" && !ModelSwaps.Items.ContainsKey("Koban")) {
                     ItemPresentationPatches.SetupFoxPrinceKobanItemPresentation();
@@ -170,6 +170,9 @@ namespace TunicRandomizer {
                 }
                 if (loadingScene.name == "Swamp Redux 2" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_easy")) {
                     EnemyRandomizer.InitializeEnemies("Swamp Redux 2");
+                    ModelSwaps.ConduitSegment = GameObject.Instantiate(GameObject.Find("_Conduit Meshes/conduit_broken_end/"));
+                    GameObject.DontDestroyOnLoad(ModelSwaps.ConduitSegment);
+                    ModelSwaps.ConduitSegment.SetActive(false);
                     SceneLoader.LoadScene("ziggurat2020_1");
                     return;
                 }

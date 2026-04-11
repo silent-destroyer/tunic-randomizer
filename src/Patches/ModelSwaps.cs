@@ -38,6 +38,7 @@ namespace TunicRandomizer {
         public static GameObject UnderConstruction;
         public static GameObject Signpost;
         public static GameObject Chalkboard;
+        public static GameObject ConduitSegment;
         public static GameObject Torch;
 
         public static GameObject FishingRod;
