@@ -32,6 +32,7 @@ namespace TunicRandomizer {
             try {
                 __instance.gameObject.AddComponent<WaveSpell>();
                 __instance.gameObject.AddComponent<EntranceSeekerSpell>();
+                __instance.gameObject.AddComponent<AbilitySpell>();
                 __instance.gameObject.AddComponent<DDRSpell>();
                 DDRSpell.SetupDPADTester(__instance);
             } catch (Exception e) { 

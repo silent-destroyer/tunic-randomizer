@@ -69,6 +69,9 @@ namespace TunicRandomizer {
         }
 
         public void DoWave() {
+            foreach (ParticleSystemRenderer psr in particles.GetComponentsInChildren<ParticleSystemRenderer>()) {
+                psr.material.color = PlayerPalette.runtimePalette.GetPixel(0, 3);
+            }
             base.SpellEffect();
             PlayerCharacter.instance.transform.localRotation = new Quaternion(0, 0.9239f, 0, -0.3827f);
             PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
@@ -96,6 +99,26 @@ namespace TunicRandomizer {
             if (EntranceSeekerSpell != null) {
                 EntranceSeekerSpell.CheckInput(inputs, length);
             }
+        }
+    }
+
+    public class AbilitySpell : HealSpell {
+        public AbilitySpell(IntPtr ptr) : base(ptr) { }
+        private void Awake() {
+            base.particles = PlayerCharacter.instance.transform.GetChild(8).gameObject.GetComponent<ParticleSystem>(); 
+            foreach (ParticleSystemRenderer psr in base.particles.GetComponentsInChildren<ParticleSystemRenderer>()) {
+                psr.material.color = PlayerPalette.runtimePalette.GetPixel(0, 3);
+            }
+            base.inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
+            base.manaCost = 0;
+            base.hpToGive = 0;
+        }
+
+        public void doSpell() {
+            foreach (ParticleSystemRenderer psr in particles.GetComponentsInChildren<ParticleSystemRenderer>()) {
+                psr.material.color = PlayerPalette.runtimePalette.GetPixel(0, 3);
+            }
+            base.SpellEffect();
         }
     }
 }

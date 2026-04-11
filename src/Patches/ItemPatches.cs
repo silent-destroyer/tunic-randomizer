@@ -383,6 +383,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -456,6 +457,7 @@ namespace TunicRandomizer {
                         }
 
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
 
@@ -648,6 +650,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -721,6 +724,7 @@ namespace TunicRandomizer {
                         }
 
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
 
@@ -783,6 +787,12 @@ namespace TunicRandomizer {
                 foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
                     Spell.enabled = isEnabled;
                 }
+            }
+        }
+
+        private static void ShowAbilityUnlockEffect() {
+            if (PlayerCharacter.instance.GetComponent<AbilitySpell>() != null) {
+                PlayerCharacter.instance.GetComponent<AbilitySpell>().doSpell();
             }
         }
 
