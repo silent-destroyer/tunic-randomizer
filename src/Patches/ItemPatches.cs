@@ -194,6 +194,9 @@ namespace TunicRandomizer {
                         string itemName = ItemLookup.SimplifiedItemNames[__instance.itemToGive.name] + (__instance.quantityToGive > 1 ? "s" : "");
                         Notifications.Show($"{TextBuilderPatches.ItemNameToAbbreviation[ItemLookup.SimplifiedItemNames[__instance.itemToGive.name]]} \"Bought {itemName}!\"", $"{ItemLookup.ShopkeeperLines[new System.Random().Next(ItemLookup.ShopkeeperLines.Count)]}");
                     }
+                    if (TunicRandomizer.Settings.ShowRecentItems) {
+                        RecentItemsDisplay.instance.EnqueueShopPurchase(__instance);
+                    }
                     return true;
                 }
                 Inventory.GetItemByName("MoneySmall").Quantity -= Price;
@@ -255,6 +258,7 @@ namespace TunicRandomizer {
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
+            bool skipRecentItems = false;
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
@@ -262,7 +266,6 @@ namespace TunicRandomizer {
                 (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
-
 
             if (Item.Type == ItemTypes.GRASS) {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
@@ -383,6 +386,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -441,11 +445,8 @@ namespace TunicRandomizer {
                 int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
 
                 if (IsHexQuestWithHexAbilities()) {
-                    Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
-                        { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
-                    };
+                    Dictionary<int, (string, string, string, string)> hexesForAbilities = getHexagonUnlockInfo();
+
                     if (hexesForAbilities.ContainsKey(GoldHexes)) {
                         SaveFile.SetInt(hexesForAbilities[GoldHexes].Item1, 1);
                         SaveFile.SetFloat(hexesForAbilities[GoldHexes].Item2, SpeedrunData.inGameTime);
@@ -456,6 +457,13 @@ namespace TunicRandomizer {
                         }
 
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        
+                        ShowAbilityUnlockEffect();
+
+                        if (TunicRandomizer.Settings.ShowRecentItems) {
+                            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true, true, hexesForAbilities[GoldHexes].Item4);
+                            skipRecentItems = true;
+                        }
                     }
                 }
 
@@ -508,7 +516,7 @@ namespace TunicRandomizer {
 
             InventoryCounter.UpdateCounters();
 
-            if (TunicRandomizer.Settings.ShowRecentItems) {
+            if (TunicRandomizer.Settings.ShowRecentItems && !skipRecentItems) {
                 RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
             }
 
@@ -520,6 +528,7 @@ namespace TunicRandomizer {
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
+            bool skipRecentItems = false;
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
@@ -648,6 +657,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -706,11 +716,8 @@ namespace TunicRandomizer {
                 int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
 
                 if (IsHexQuestWithHexAbilities()) {
-                    Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
-                        { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
-                    };
+                    Dictionary<int, (string, string, string, string)> hexesForAbilities = getHexagonUnlockInfo();
+
                     if (hexesForAbilities.ContainsKey(GoldHexes)) {
                         SaveFile.SetInt(hexesForAbilities[GoldHexes].Item1, 1);
                         SaveFile.SetFloat(hexesForAbilities[GoldHexes].Item2, SpeedrunData.inGameTime);
@@ -721,6 +728,13 @@ namespace TunicRandomizer {
                         }
 
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        
+                        ShowAbilityUnlockEffect();
+
+                        if (TunicRandomizer.Settings.ShowRecentItems) {
+                            RecentItemsDisplay.instance.EnqueueItem(Check, true, hexesForAbilities[GoldHexes].Item4);
+                            skipRecentItems = true;
+                        }
                     }
                 }
 
@@ -762,7 +776,7 @@ namespace TunicRandomizer {
 
             InventoryCounter.UpdateCounters();
 
-            if (TunicRandomizer.Settings.ShowRecentItems) {
+            if (TunicRandomizer.Settings.ShowRecentItems && !skipRecentItems) {
                 RecentItemsDisplay.instance.EnqueueItem(Check);
             }
 
@@ -778,11 +792,25 @@ namespace TunicRandomizer {
             }
         }
 
+        private static Dictionary<int, (string, string, string, string)> getHexagonUnlockInfo() {
+            return new Dictionary<int, (string, string, string, string)>() {
+                { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine, "Prayer") },
+                { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine, "Holy Cross") },
+                { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine, "Icebolt") },
+            };
+        }
+
         public static void ToggleHolyCrossObjects(bool isEnabled) {
             foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>().Where(toggle => toggle.GetComponent<AllowHolyCross>() == null)) {
                 foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
                     Spell.enabled = isEnabled;
                 }
+            }
+        }
+
+        private static void ShowAbilityUnlockEffect() {
+            if (PlayerCharacter.instance.GetComponent<AbilitySpell>() != null) {
+                PlayerCharacter.instance.GetComponent<AbilitySpell>().doSpell();
             }
         }
 

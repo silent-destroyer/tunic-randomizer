@@ -48,6 +48,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<EntranceSelector>();
             ClassInjector.RegisterTypeInIl2Cpp<SceneSelectionButton>();
             ClassInjector.RegisterTypeInIl2Cpp<LadderManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<AbilitySpell>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
