@@ -818,6 +818,19 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void CheckForHeroPathServerHint(string itemName) {
+            if (Locations.MajorItemLocations.ContainsKey(itemName) && Locations.MajorItemLocations[itemName].Count > 0) {
+                ArchipelagoHint apHint = Locations.MajorItemLocations[itemName][0];
+                if ((int)apHint.Player != Archipelago.instance.GetPlayerSlot()) {
+                    if (SaveFile.GetInt($"archipelago sent optional hint to server {itemName}") == 0) {
+                        long locationId = Archipelago.instance.GetLocationId(apHint.Location, Archipelago.instance.GetPlayerGame((int)apHint.Player));
+                        Archipelago.instance.integration.session.Hints.CreateHints((int)apHint.Player, locationIds: new long[] { locationId });
+                        SaveFile.SetInt($"archipelago sent optional hint to server {itemName}", 1);
+                    }
+                }
+            }
+        }
+
         public static void SpawnTorchHintGhost() {
             if (SceneManager.GetActiveScene().name == "Overworld Redux") {
                 GhostFox.GetComponent<NPC>().nPCAnimState = NPC.NPCAnimState.SIT;
