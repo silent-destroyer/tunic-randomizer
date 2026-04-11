@@ -974,18 +974,20 @@ namespace TunicRandomizer {
         }
 
         public static void DoEnemyRandomization() {
-            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && PlayerCharacter.Instanced) {
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0) {
-                    if (!EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
-                        EnemyRandomizer.SpawnNewEnemies();
+            if (!RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && PlayerCharacter.Instanced) {
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && Enemies.Count > 0) {
+                    if (!ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
+                        SpawnNewEnemies();
                     }
                 } else {
                     if (GetBool(ExtraEnemyDropsEnabled) || TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                        EnemyRandomizer.EnableExtraEnemies();
+                        EnableExtraEnemies();
+                    } else if (GetBool(ShuffleEnemyDropsEnabled)) {
+                        EnableMonasteryAndLibraryNightEnemies();
                     }
                 }
                 if (TunicRandomizer.Settings.RandomEnemySizes) {
-                    EnemyRandomizer.RandomizeEnemySizes();
+                    RandomizeEnemySizes();
                 }
             }
         }
@@ -1031,13 +1033,6 @@ namespace TunicRandomizer {
             if (CurrentScene == "Forest Belltower") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
-            if ((GetBool(ExtraEnemyDropsEnabled) || TunicRandomizer.Settings.ExtraEnemiesEnabled) && CurrentScene == "Library Hall" && !CycleController.IsNight) {
-                GameObject.Find("beefboy statues").SetActive(false);
-                GameObject.Find("beefboy statues (2)").SetActive(false);
-                foreach (GameObject Monster in Monsters) {
-                    Monster.transform.parent = null;
-                }
-            }
             if (CurrentScene == "Fortress East" || CurrentScene == "Frog Stairs") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
@@ -1056,12 +1051,8 @@ namespace TunicRandomizer {
             if (CurrentScene == "Cathedral Arena") {
                 Monster.ClearRuntimeDeadMonsters();
             }
-            if (CurrentScene == "Monastery" && (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ExtraEnemyDropsEnabled))) {
-                Voidtouched voidtouched = Resources.FindObjectsOfTypeAll<Voidtouched>().Where(Voidtouched => TunicUtils.IsInActiveScene(Voidtouched.gameObject)).First();
-                if (voidtouched != null) { 
-                    voidtouched.transform.parent = null;
-                    voidtouched.onlyAggroViaTrigger = false;
-                }
+            if ((CurrentScene == "Monastery" || CurrentScene == "Library Hall") && (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ShuffleEnemyDropsEnabled))) {
+                EnableMonasteryAndLibraryNightEnemies();
             }
             if(CurrentScene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
                 foreach(ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == CurrentScene)) {
@@ -1111,15 +1102,6 @@ namespace TunicRandomizer {
                     if (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ExtraEnemyDropsEnabled)) {
                         if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && CurrentScene != "Cathedral Arena"))) {
                             Enemy.transform.parent.gameObject.SetActive(true);
-                        }
-
-                        if (CurrentScene == "Monastery") {
-                            if (GameObject.Find("_NIGHT/Corruption Blocker/") != null) {
-                                GameObject.Find("_NIGHT/Corruption Blocker/").SetActive(false);
-                            }
-                            if (GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/") != null) {
-                                GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/").SetActive(false);
-                            }
                         }
                     }
                     if (DoNotPlaceCoffeeTableHere.Contains($"{CurrentScene} {Enemy.name}")) {
@@ -1508,29 +1490,41 @@ namespace TunicRandomizer {
                 if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && scene != "Cathedral Arena"))) {
                     Enemy.transform.parent.gameObject.SetActive(true);
                 }
+            }
+            if (scene == "Monastery" || scene == "Library Hall") {
+                EnableMonasteryAndLibraryNightEnemies();
+            }
+            if (scene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                foreach (ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == scene)) {
+                    bossScav.eggTossChance = 0.2f;
+                }
+            }
+            RandomizedThisSceneAlready = true;
+        }
 
-                if (scene == "Monastery") {
+        private static void EnableMonasteryAndLibraryNightEnemies() {
+            string scene = SceneManager.GetActiveScene().name;
+            if (scene == "Monastery") {
+                Voidtouched Voidtouched = Resources.FindObjectsOfTypeAll<Voidtouched>().Where(voidtouched => TunicUtils.IsInActiveScene(voidtouched.gameObject) && voidtouched.transform.parent.name == "_NIGHT").First();
+                if (Voidtouched != null) { 
+                    Voidtouched.onlyAggroViaTrigger = false;              
+                    Voidtouched.transform.parent.gameObject.SetActive(true);
                     if (GameObject.Find("_NIGHT/Corruption Blocker/") != null) {
                         GameObject.Find("_NIGHT/Corruption Blocker/").transform.position = new Vector3(30000, 30000, 30000);
                     }
                     if (GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/") != null) {
                         GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/").transform.position = new Vector3(30000, 30000, 30000);
                     }
-                    if (Enemy.GetComponent<Voidtouched>() != null) { 
-                        Enemy.GetComponent<Voidtouched>().onlyAggroViaTrigger = false;
-                    }
                 }
             }
+
             if (scene == "Library Hall" && !CycleController.IsNight) {
+                List<Beefboy> Beefboys = Resources.FindObjectsOfTypeAll<Beefboy>().Where(beefboy => TunicUtils.IsInActiveScene(beefboy.gameObject)).ToList();
                 GameObject.Find("beefboy statues").SetActive(false);
                 GameObject.Find("beefboy statues (2)").SetActive(false);
-                foreach (GameObject Monster in Monsters) {
-                    Monster.transform.parent = null;
-                }
-            }
-            if (scene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                foreach (ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == scene)) {
-                    bossScav.eggTossChance = 0.2f;
+                foreach (Beefboy Beefboy in Beefboys) {
+                    Beefboy.gameObject.SetActive(true);
+                    Beefboy.transform.parent = null;
                 }
             }
             RandomizedThisSceneAlready = true;
