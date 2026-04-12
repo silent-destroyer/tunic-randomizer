@@ -65,7 +65,9 @@ namespace TunicRandomizer {
             if (Hints.HintLocations.ContainsKey(InteractionLocation) && Hints.HintMessages.ContainsKey(Hints.HintLocations[InteractionLocation]) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 LanguageLine Hint = ScriptableObject.CreateInstance<LanguageLine>();
                 Hint.text = Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
-
+                if (Hints.HintLocations[InteractionLocation] == "Temple Statue" && IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
+                    GhostHints.CheckForHeroPathServerHint("Hero's Laurels");
+                }
                 GenericMessage.ShowMessage(Hint);
                 return false;
             }
@@ -110,7 +112,11 @@ namespace TunicRandomizer {
             if (__instance.GetComponentInParent<HeroGraveToggle>() != null && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 bool showRelicHint = StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue;
                 HeroGraveHint hint = __instance.GetComponentInParent<HeroGraveToggle>().heroGravehint;
-
+                if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
+                    if (showRelicHint || (hint.PathItemName.Contains("Questagon") && hint.PathItemName != "Gold Questagon")) {
+                        GhostHints.CheckForHeroPathServerHint(showRelicHint ? hint.RelicItemName : hint.PathItemName);
+                    }
+                }
                 GenericMessage.ShowMessage(showRelicHint ? hint.RelicHint : hint.PathHint);
                 return false;
             }
