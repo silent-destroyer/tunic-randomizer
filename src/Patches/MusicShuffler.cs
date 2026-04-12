@@ -20,19 +20,22 @@ namespace TunicRandomizer {
         }
 
         public void Update() {
-            if (!TunicRandomizer.Settings.MusicShuffle) { return; }
-
-            if (Time.time > TimeSinceMusicStart + 1.5f) {
-                if (paramsToSet.Count > 0) {
-                    (string, int) param = paramsToSet.Dequeue();
-                    MusicManager.SetParam(param.Item1, param.Item2);
+            if (trackToShuffle != "") {
+                if (Time.time > TimeSinceMusicStart + 1.5f) {
+                    if (paramsToSet.Count > 0) {
+                        (string, int) param = paramsToSet.Dequeue();
+                        MusicManager.SetParam(param.Item1, param.Item2);
+                    }
                 }
-            }
 
-            if (Time.realtimeSinceStartup > TimeSinceMusicStart + 2f) {
-                if (paramsToSetRealtime.Count > 0) {
-                    (string, int) param = paramsToSetRealtime.Dequeue();
-                    MusicManager.SetParam(param.Item1, param.Item2);
+                if (Time.realtimeSinceStartup > TimeSinceMusicStart + 2f) {
+                    if (paramsToSetRealtime.Count > 0) {
+                        (string, int) param = paramsToSetRealtime.Dequeue();
+                        MusicManager.SetParam(param.Item1, param.Item2);
+                    }
+                }
+                if (paramsToSet.Count == 0 && paramsToSetRealtime.Count == 0) {
+                    trackToShuffle = "";
                 }
             }
         }
@@ -89,6 +92,7 @@ namespace TunicRandomizer {
                 foreach ((string, int) param in MusicShuffler.TrackParams[trackName]) {
                     MusicShuffler.instance.paramsToSetRealtime.Enqueue(param);
                 }
+                MusicShuffler.instance.trackToShuffle = trackName;
             }
             if (trackName == "Cube Cave" && GameObject.FindObjectOfType<RotatingCubeClue>() == null && GameObject.FindObjectOfType<PlayMusicOnLoad>() != null) {
                 GameObject cube = new GameObject("cube for music track");
