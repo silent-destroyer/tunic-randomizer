@@ -110,6 +110,11 @@ namespace TunicRandomizer {
             }
 
             string LocationId = $"{__instance.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
+
+            if (SaveFile.GetInt("randomizer picked up " + LocationId) == 1) {
+                return false;
+            }
+
             if (IsArchipelago()) {
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
