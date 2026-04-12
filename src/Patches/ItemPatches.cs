@@ -330,11 +330,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.BELL) {
                     if (GetBool(BellShuffleEnabled)) {
                         if (Item.Name == "East Bell") {
-                            NotificationBottom = $"di^!";
                             BellShuffle.EastBellStateVar.BoolValue = true;
                         }
                         if (Item.Name == "West Bell") {
-                            NotificationBottom = $"daw^!";
                             BellShuffle.WestBellStateVar.BoolValue = true;
                         }
                     } else {
@@ -366,11 +364,12 @@ namespace TunicRandomizer {
                     }
                 }
                 GameObject.Instantiate(ModelSwaps.FairyAnimation, PlayerCharacter.instance.transform.position, Quaternion.identity).SetActive(true);
-                NotificationBottom = $"\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\" fArEz fownd.";
+                NotificationBottom = $"frEd uh frehndlE fArE. (\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\")";
             }
 
             if (Item.Type == ItemTypes.PAGE) {
                 SaveFile.SetInt($"randomizer obtained page {Item.ItemNameForInventory}", 1);
+                NotificationBottom = "doo nawt Et.";
                 if (SaveFile.GetInt(AbilityShuffle) == 1) {
                     Dictionary<string, (string, string, string)> pagesForAbilities = new Dictionary<string, (string, string, string)>() {
                         { "12", (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
@@ -426,6 +425,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
                     string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
                     SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
+                    NotificationBottom = $"{ItemLookup.ItemFlavorText[RelicItem.name]} {ItemLookup.HeroRelicLookup[RelicItem.name].PlusOneStatString}";
                 }
 
                 // Apply custom pickup text
@@ -481,16 +481,22 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (NotificationBottom == "") {
+                if (ItemLookup.ItemFlavorText.ContainsKey(Item.ItemNameForInventory)) {
+                    NotificationBottom = ItemLookup.ItemFlavorText[Item.ItemNameForInventory];
+                } else {
+                    NotificationBottom = $"$oud bE yoosfuhl!";
+                }
+            }
+            
             if (itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
                 var sender = itemInfo.Player.Name;
                 NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
-                NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
             if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
                 NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
-                NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
@@ -601,11 +607,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.BELL) {
                     if (GetBool(BellShuffleEnabled)) {
                         if (Item.Name == "East Bell") {
-                            NotificationBottom = $"di^!";
                             BellShuffle.EastBellStateVar.BoolValue = true;
                         }
                         if (Item.Name == "West Bell") {
-                            NotificationBottom = $"daw^!";
                             BellShuffle.WestBellStateVar.BoolValue = true;
                         }
                     } else {
@@ -637,11 +641,12 @@ namespace TunicRandomizer {
                     }
                 }
                 GameObject.Instantiate(ModelSwaps.FairyAnimation, PlayerCharacter.instance.transform.position, Quaternion.identity).SetActive(true);
-                NotificationBottom = $"\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\" fArEz fownd.";
+                NotificationBottom = $"frEd uh frehndlE fArE. (\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\")";
             }
 
             if (Item.Type == ItemTypes.PAGE) {
                 SaveFile.SetInt($"randomizer obtained page {Item.ItemNameForInventory}", 1);
+                NotificationBottom = "doo nawt Et.";
                 if (SaveFile.GetInt(AbilityShuffle) == 1) {
                     Dictionary<string, (string, string, string)> pagesForAbilities = new Dictionary<string, (string, string, string)>() {
                         { "12", (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
@@ -697,6 +702,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
                     string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
                     SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
+                    NotificationBottom = $"{ItemLookup.ItemFlavorText[RelicItem.name]} {ItemLookup.HeroRelicLookup[RelicItem.name].PlusOneStatString}";
                 }
 
                 // Apply custom pickup text
@@ -753,7 +759,13 @@ namespace TunicRandomizer {
 
             if (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway) {
                 NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{Item.Name}!\"" : NotificationTop;
-                NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
+                if (NotificationBottom == "") {
+                    if (ItemLookup.ItemFlavorText.ContainsKey(Item.ItemNameForInventory)) { 
+                        NotificationBottom = ItemLookup.ItemFlavorText[Item.ItemNameForInventory];
+                    } else {
+                        NotificationBottom = $"$oud bE yoosfuhl!";
+                    }
+                }
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
