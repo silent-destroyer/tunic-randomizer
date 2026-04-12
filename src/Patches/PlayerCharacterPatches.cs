@@ -112,6 +112,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance._CompletelyInvulnerableEvenToIFrameIgnoringAttacks_k__BackingField = true;
                 PlayerCharacter.instance.AddPoison(1f);
+                PlayerCharacter.CutsceneLocked = true;
                 if (PlayerCharacter.instance.gameObject.GetComponent<Rotate>() != null) {
                     PlayerCharacter.instance.gameObject.GetComponent<Rotate>().eulerAnglesPerSecond += new Vector3(0, 3.5f, 0);
                 }
