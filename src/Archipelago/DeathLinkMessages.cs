@@ -17,77 +17,36 @@ namespace TunicRandomizer {
                     "'s prayer went unheard.",
                     " didn't share their wisdom.",
                     "'s HP fell to 0.",
-                    " blew themselves up.",
-                    " sought their own ruin instead.",
-                    " was chomped by Terry."
-                }
-            },
-            {
-                "Overworld",
-                new List<string>() {
-                    "'s prayer went unheard.",
-                    " didn't share their wisdom.",
-                    "'s HP fell to 0.",
-                    " blew themselves up.",
-                    " was shot by a turret.",
-                    " sought their own ruin instead."
-                }
-            },
-            {
-                "East Forest",
-                new List<string>() {
-                    " was ambushed by spiders.",
-                    " was taken out by the slimes.",
-                }
-            },
-            {
-
-                "Forest Boss Room",
-                new List<string>() { 
-                    " was defeated by the forest captain."
-                }
-            },
-            {
-                "West Garden",
-                new List<string>() {
-                    " was chomped by Terry.",
-                    " was shot by a fairy.",
-                    " was no match for Garden Knight."
-                }
-            },
-            {
-                "Eastern Vault Fortress",
-                new List<string>() {
-                    " was cleaned up by a custodian.",
-                    " couldn't outsmart the wizards.",
+                    " sought their own ruin.",
+                    " didn't follow the Golden Path.",
                 }
             },
             {
                 "Fortress Arena",
                 new List<string>() {
-                    " died to Siege Engine."
+                    " was Sieged by the Engine."
                 }
             },
             {
                 "Fortress Basement",
                 new List<string>() {
-                    " was too afraid of spiders.",
                     " got lost in the dark.",
-                    " was cleaned up by a custodian.",
-                    " couldn't outsmart the wizards.",
                 }
             },
             {
-                "Ruined Atoll",
+                "Library Exterior",
                 new List<string>() {
-                    " was crabbed to death.",
-                    " was shot by a fairy.",
-                    " tripped on a slorm.",
-                    " was hushed by a crow."
+                    " didn't return their libray books."
                 }
             },
             {
-                "Library",
+                "Library Hall",
+                new List<string>() {
+                    " didn't return their libray books."
+                }
+            },
+            {
+                "Library Rotunda",
                 new List<string>() {
                     " didn't return their libray books."
                 }
@@ -96,15 +55,19 @@ namespace TunicRandomizer {
                 "Library Arena",
                 new List<string>() { 
                     " died to The Librarian",
-                    " didn't return their libray books."
                 }
             },
             {
-                "Quarry/Mountain",
+                "Quarry",
+                new List<string>() {
+                    " died in a secret place.",
+                    " withered away from the miasma."
+                }
+            },
+            {
+                "Quarry Redux",
                 new List<string>() {
                     " withered away from the miasma.",
-                    " was sniped by a scavenger.",
-                    " was blown up by a scavenger."
                 }
             },
             {
@@ -120,74 +83,155 @@ namespace TunicRandomizer {
                 }
             },
             {
-                "Rooted Ziggurat",
-                new List<string>() {
-                    " died to Boss Scavenger.",
-                    " fell in the miasma.",
-                    " died to an Administrator.",
-                    " fell for the Voidling trap."
-                }
-            },
-            {
-                "Swamp",
+                "Swamp Redux 2",
                 new List<string>() {
                     " joined the skeletons.",
                     " dug their own grave.",
                     " became a ghost.",
-                    " made some phrends."
                 }
             },
             {
-                "Cathedral Redux",
-                new List<string>() {
-                    " was no match for themselves.",
-                    " was hushed by a crow.",
-                    "'s prayer went unheard."
-                }
-            },
-            {
-                "Cathedral Arena",
-                new List<string>() {
-                    " couldn't beat the gauntlet.",
-                }
-            },
-            {
-                "Dark Tomb",
+                "Crypt Redux",
                 new List<string>() {
                     " got lost in the dark.",
-                    " stepped on a spike trap.",
-                    " joined the skeletons.",
-                    " made some phrends."
                 }
             },
             {
-                "Beneath the Well",
+                "Crypt",
                 new List<string>() {
-                    " couldn't escape the well.",
-                    " tripped on a slorm.",
-                    " made some phrends."
+                    " died in a secret place."
                 }
             },
             {
-                "Frog's Domain",
+                "Posterity",
                 new List<string>() {
-                    " died to the Frogs."
+                    " died in a secret place."
                 }
             },
             {
-                "Far Shore/Hero's Grave",
+                "Purgatory",
                 new List<string>() {
-                    " didn't share their wisdom.",
-                    "'s prayer went unheard.",
-                    " sought their own ruin instead."
+                    " was trapped in purgatory."
                 }
-            },
-            {
-                "Shop/Coin Wells",
-                new List<string>() {
-                    " blew themselves up."
-                }
-            },
+            }
+        };
+
+        public static Dictionary<string, string> HitTriggerCauses = new Dictionary<string, string>() {
+            { "voidtouched", " was touched by the void." },
+            { "woodcutter", " was turned to lumber." },
+            { "centipede", " was too afraid of centipedes." },
+            { "administrator", " tried praying to an sdministrator." },
+            { "crow_voidtouched", " was hushed." },
+            { "bomezome_easy", " could not flee the fleemers." },
+            { "scavenger", " was sniped by a Scavenger." },
+            { "scavenger_miner", " was mined by a Scavenger" },
+            { "scavenger_stunner", " was frozen by a Scavenger." },
+            { "spidertank", " was Sieged by the Engine." },
+            { "wizard_extinguished", " was cleaned up by a custodian." },
+            { "wizard", " was cleaned up by a custodian." },
+            { "spider_big", " fell for the spider's trick." },
+            { "spider_small", " was fooled by a spider." },
+            { "spinnerbot", " was swarmed by a slorm." },
+            { "crow", " was hushed." },
+            { "crocodoo", " was chomped by Terry." },
+            { "crocodoo_voidtouched", " was chomped by Terry's cousin." },
+            { "foxgod_explosion", " didn't share their wisdom." },
+            { "foxgod_voidhole", " didn't share their wisdom." },
+            { "foxgod_bullet", " didn't share their wisdom." },
+            { "foxgod", " didn't share their wisdom." },
+            { "foxgod_shockwave", " didn't follow the Golden Path." },
+            { "foxgod_phase2", " didn't follow the Golden Path." },
+            { "fox_techbolt_stun", " froze themselves." },
+            { "fox_techbolt", " hit themselves with their own wand." },
+            { "wizard_bolt", " was cleaned up by a custodian." },
+            { "techbolt_stun", " was frozen by a fairy." },
+            { "fire", " was on fire (literally)." },
+            { "explosion", " blew up." },
+            { "spiketrap", " stepped on a spike trap." },
+            { "spidertank_bolt", " was hit by a laser beam." }
+        };
+
+        public static Dictionary<string, string> HitTriggerDescriptions = new Dictionary<string, string>() {
+            { "shotgun", " a shotgun." },
+            { "ghostknight", " a ghost knight." },
+            { "phage_spin", " a slorm...?" },
+            { "phage", " a slorm...?" },
+            { "zombie", " a past ruin seeker." },
+            { "zombieFast", " a seeker of ruin." },
+            { "voidtouched", " the voidtouched." },
+            { "woodcutter", " a woodcutter." },
+            { "scavengerBoss_kick", " a kick from the Boss Scavenger." },
+            { "scavengerBoss", " the Boss Scavenger." },
+            { "centipede", " a centipede." },
+            { "administrator", " an administrator." },
+            { "crow_voidtouched", " a corrupted husher." },
+            { "tentacle", " a tentacle." },
+            { "gost", " a lost echo." },
+            { "bomezome_easy", " a fleemer." },
+            { "scavenger", " a sniper scavenger." },
+            { "scavenger_miner", " a mining scavenger." },
+            { "scavenger_stunner", " a sniper scavenger." },
+            { "bomezome", " a fleemer." },
+            { "shadowreaper", " the shadowreaper." },
+            { "spidertank", " the Siege Engine." },
+            { "wizard_extinguished", " a custodian." },
+            { "wizard", " a custodian." },
+            { "spider_big", " a sappharach." },
+            { "spider_small", " a spyrite." },
+            { "frog", " a frog." },
+            { "frog_small", " a frog." },
+            { "spinnerbot", " a slorm." },
+            { "crabbit", " a crabbit." },
+            { "crabbo", " a crabbo." },
+            { "crow", " a husher." },
+            { "knightbot", " the Garden Knight." },
+            { "tunicknight_void", " the Garden Knight...?" },
+            { "crocodoo", " Terry." },
+            { "crocodoo_voidtouched", " Terry's cousin." },
+            { "foxgod_explosion", " The Heir." },
+            { "foxgod_voidhole", " The Heir." },
+            { "foxgod_bullet", " The Heir." },
+            { "foxgod", " The Heir." },
+            { "foxgod_shockwave", " The Heir." },
+            { "foxgod_phase2", " The Heir." },
+            { "librarian", " The Librarian." },
+            { "librarian_pushback", " The Librarian." },
+            { "spider_librarianAdd", " a pawn of The Librarian." },
+            { "ghost_skuladotBig", " the ghost of a Guard Captain." },
+            { "ghost_skuladot", " the ghost of a rudeling." },
+            { "ghost_frog_spear", " the ghost of a frog." },
+            { "ghost_frog_small", " the ghost of a frog." },
+            { "ghost_knightbot", " the ghost of a Garden Knight." },
+            { "bomezome_big", " a giant fleemer." },
+            { "beefboy", " a beefy boy." },
+            { "honourguard", " an envoy." },
+            { "skuladotBig", " the Guard Captain." },
+            { "skuladot", " a rudeling." },
+            { "bat", " a phrend." },
+            { "hedgehogBig", " a hedgehog." },
+            { "hedgehog", " a hedgehog." },
+            { "blobBig", " a blob." },
+            { "blob", " a blob." },
+            { "techbolt", " an autobolt turret." },
+            { "hedgehog_spine", " a hedgehog spike." },
+            { "gunslinger_bullet", " a gunslinger." },
+            { "wizard_bolt", " a custodian." },
+            { "spidertank_bolt", " a laser beam." },
+            { "techbolt_stun", " a fairy." },
+            { "knightbot_bullet", " the Garden Knight." },
+            { "voidling", " a voidling." },
+            { "voidling 1", " a voidling." },
+            { "administrator_angry", " an angered administrator." },
+            { "fire", " fire." },
+            { "explosion", " an explosion." },
+            { "spiketrap", " a spike trap." },
+        };
+
+        public static List<string> GenericMessages = new List<string>() {
+            " was killed by",
+            " was defeated by",
+            " died to",
+            " was no match for",
         };
     }
 }
