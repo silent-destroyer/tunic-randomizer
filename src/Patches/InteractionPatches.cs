@@ -297,7 +297,6 @@ namespace TunicRandomizer {
         }
 
         public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
-
             // Disables hitting the west bell from long range for race purposes
             if (__instance.GetComponent<TuningForkBell>() != null && __instance.name == "tuning fork" && SceneManager.GetActiveScene().name == "Overworld Redux"
                 && hitType == HitType.TECHBOW && TunicRandomizer.Settings.RaceMode && TunicRandomizer.Settings.DisableDistantBellShots) {
@@ -320,7 +319,25 @@ namespace TunicRandomizer {
                 unblockable = false;
             }
 
+            if (__instance.GetComponent<PlayerCharacter>() != null) {
+                if (hitType == HitType.EXPLOSIVE) {
+                    PlayerCharacterPatches.lastHitTriggerHitBy = "explosion";
+                    TunicLogger.LogTesting("player hit by: " + hitType.ToString());
+                }
+                if (hitType == HitType.FIRE) {
+                    PlayerCharacterPatches.lastHitTriggerHitBy = "fire";
+                    TunicLogger.LogTesting("player hit by: " + hitType.ToString());
+                }
+            }
+
             return true;
+        }
+
+        public static void HitTrigger_doHit_PrefixPatch(HitTrigger __instance, ref Collider c) {
+            if (c.GetComponent<PlayerCharacter>() != null && PlayerCharacter.HP > 0) {
+                PlayerCharacterPatches.lastHitTriggerHitBy = __instance.id;
+                TunicLogger.LogTesting($"Player hit by HitTrigger {__instance.id} from gameobject {__instance.name}");
+            }
         }
     }
 }

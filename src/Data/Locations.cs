@@ -284,6 +284,7 @@ namespace TunicRandomizer {
             {
                 "Quarry/Mountain",
                 new List<string>() {
+                    "Quarry",
                     "Quarry Redux",
                     "Monastery",
                     "Darkwoods Tunnel",
@@ -317,6 +318,7 @@ namespace TunicRandomizer {
             {
                 "Dark Tomb",
                 new List<string>() {
+                    "Crypt",
                     "Crypt Redux"
                 }
             },

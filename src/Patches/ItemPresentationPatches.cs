@@ -249,7 +249,10 @@ namespace TunicRandomizer {
                 for (int i = 0; i < ModelSwaps.Items["Ladder"].transform.childCount; i++) {
                     GameObject.Destroy(ModelSwaps.Items["Ladder"].transform.GetChild(i).gameObject.GetComponent<SphereCollider>());
                     GameObject.Destroy(ModelSwaps.Items["Ladder"].transform.GetChild(i).gameObject.GetComponent<BoxCollider>());
+                    GameObject.Destroy(ModelSwaps.Items["Ladder"].transform.GetChild(i).gameObject.GetComponent<UnderConstruction>());
+                    GameObject.Destroy(ModelSwaps.Items["Ladder"].transform.GetChild(i).gameObject.GetComponent<InteractionTrigger>());
                 }
+                
                 GameObject.Destroy(ModelSwaps.Items["Ladder"].GetComponent<ItemPresentationGraphic>());
 
                 RegisterNewItemPresentation(LadderPresentation.GetComponent<ItemPresentationGraphic>());
