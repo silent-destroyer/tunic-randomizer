@@ -22,6 +22,12 @@ namespace TunicRandomizer {
         public static List<string> LadderItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.LADDER).Select(item => item.Value.Name).ToList();
         public static List<string> FuseItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.FUSE).Select(item => item.Value.Name).ToList();
         public static List<string> BellItems = ItemLookup.Items.Where(item => item.Value.Type == ItemTypes.BELL).Select(item => item.Value.Name).ToList();
+
+        public static Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check>();
+
+        // plando items, first string is the item name, second is the location id
+        public static List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
+        public static bool InitialRandomizationDone = false;
         
         // Items you start with or effectively start with
         public static Dictionary<string, int> PopulatePrecollected() {
@@ -63,7 +69,7 @@ namespace TunicRandomizer {
         }
 
         public static void RandomizeAndPlaceItems(Random random = null) {
-            TunicLogger.LogInfo("randomize and place items starting");
+            TunicLogger.LogInfo("Randomizing and placing items");
 
             if (testLocations) {
                 testBool2 = true;
@@ -75,6 +81,7 @@ namespace TunicRandomizer {
 
             Locations.RandomizedLocations.Clear();
             Locations.CheckedLocations.Clear();
+            InitialRandomizationDone = false;
 
             PopulatePrecollected();
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
@@ -101,7 +108,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(LadderRandoEnabled) == 1) {
                 ProgressionNames.AddRange(Ladders);
             }
-            if(SaveFile.GetInt(FuseShuffleEnabled) == 1) {
+            if (SaveFile.GetInt(FuseShuffleEnabled) == 1) {
                 ProgressionNames.AddRange(Fuses);
             }
             if (SaveFile.GetInt(BellShuffleEnabled) == 1) {
@@ -112,7 +119,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(GrassRandoEnabled) == 1) {
                 ProgressionNames.AddRange(GrassCutters);
             }
-            
+
             if (SaveFile.GetInt(BreakableShuffleEnabled) == 1) {
                 if (!ProgressionNames.Contains("Trinket - Glass Cannon")) {
                     ProgressionNames.Add("Trinket - Glass Cannon");
@@ -128,11 +135,13 @@ namespace TunicRandomizer {
             List<Reward> ProgressionRewards = new List<Reward>();
             // inventory of progression items that have not been placed yet
             Dictionary<string, int> UnplacedInventory = new Dictionary<string, int>();
-            // locations that progression is placed at
-            Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check> { };
+            // this is set at the top now, so it can be referenced by the Blue Prince stuff
+            ProgressionLocations.Clear();
 
             int GoldHexagonsAdded = 0;
             int HexagonsToAdd = TunicUtils.GetMaxGoldHexagons();
+
+            //int KobansAdded = 0;
 
             if (IsHexQuestWithHexAbilities()) {
                 int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
@@ -172,7 +181,7 @@ namespace TunicRandomizer {
                     } else if (Item.Reward.Name == "Hexagon Red") {
                         Item.Reward.Name = "Vault Key (Red)";
                     }
-                } 
+                }
                 if (SaveFile.GetInt(SwordProgressionEnabled) != 0 && (Item.Reward.Name == "Stick" || Item.Reward.Name == "Sword" || Item.Location.LocationId == "5")) {
                     Item.Reward.Name = "Sword Progression";
                     Item.Reward.Type = "SPECIAL";
@@ -240,6 +249,14 @@ namespace TunicRandomizer {
                     Ladders.Remove(Item.Reward.Name);
                 }
 
+                // in case we use this for something
+                //if (GetBool(FoxPrinceEnabled) && ItemLookup.FillerItems.ContainsKey(Item.Reward.Name) && KobansAdded < 15) {
+                //    Item.Reward.Name = "Koban";
+                //    Item.Reward.Amount = 1;
+                //    Item.Reward.Type = "INVENTORY";
+                //    KobansAdded++;
+                //}
+
                 if ((ProgressionNames.Contains(Item.Reward.Name) || ItemLookup.FairyLookup.Keys.Contains(Item.Reward.Name)) && !lockedItem) {
                     ProgressionRewards.Add(Item.Reward);
                 } else {
@@ -248,36 +265,43 @@ namespace TunicRandomizer {
                 InitialLocations.Add(Item.Location);
             }
 
-            // pre-place laurels in ProgressionLocations, so that fill can collect it as needed
-            foreach (Reward item in ProgressionRewards.ToList()) {
-                if (item.Name == "Hyperdash" && SaveFile.GetInt(LaurelsLocation) != 0) {
-                    foreach (Location location in InitialLocations.ToList()) {
-                        if ((location.LocationId == "Well Reward (6 Coins)" && SaveFile.GetInt(LaurelsLocation) == 1)
-                            || (location.LocationId == "Well Reward (10 Coins)" && SaveFile.GetInt(LaurelsLocation) == 2)
-                            || (location.LocationId == "waterfall" && SaveFile.GetInt(LaurelsLocation) == 3)) {
-                            Check Check = new Check(item, location);
-                            string DictionaryId = Check.CheckId;
-                            ProgressionLocations.Add(DictionaryId, Check);
-                            InitialLocations.Remove(location);
-                            ProgressionRewards.Remove(item);
-                            break;
-                        }
-                    }
-                }
+            void addToPlandoItems(string item, string location) {
+                PlandoItems.Add(new Tuple<string, string>(item, location));
             }
 
-            // pre-place hexagons if keys behind bosses is on
-            foreach (Reward item in InitialRewards.ToList()) {
-                if (item.Name.Contains("Hexagon") && SaveFile.GetInt(KeysBehindBosses) == 1) {
-                    foreach (Location location in InitialLocations.ToList()) {
-                        Check Check = new Check(item, location);
-                        if (Check.CheckId == "Vault Key (Red) [Fortress Arena]"
-                            || Check.CheckId == "Hexagon Green [Library Arena]"
-                            || Check.CheckId == "Hexagon Blue [ziggurat2020_3]") {
-                            ProgressionLocations.Add(Check.CheckId, Check);
-                            InitialLocations.Remove(location);
-                            InitialRewards.Remove(item);
-                            break;
+            if (SaveFile.GetInt(LaurelsLocation) == 1) {
+                addToPlandoItems("Hyperdash", "Well Reward (6 Coins)");
+            } else if (SaveFile.GetInt(LaurelsLocation) == 2) {
+                addToPlandoItems("Hyperdash", "Well Reward (10 Coins)");
+            } else if (SaveFile.GetInt(LaurelsLocation) == 3) {
+                addToPlandoItems("Hyperdash", "waterfall");
+            }
+
+            if (GetBool(KeysBehindBosses)) {
+                List<string> hexes;
+                if (GetBool(HexagonQuestEnabled)) {
+                    hexes = new List<string> { "Hexagon Gold", "Hexagon Gold", "Hexagon Gold" };
+                } else {
+                    hexes = new List<string> { "Hexagon Red", "Hexagon Blue", "Hexagon Green" };
+                    TunicUtils.ShuffleList(hexes, SaveFile.GetInt("seed"));
+                }
+                addToPlandoItems(hexes[0], "Vault Key (Red)");
+                addToPlandoItems(hexes[1], "Hexagon Green");
+                addToPlandoItems(hexes[2], "Hexagon Blue");
+            }
+
+            foreach (Tuple<string, string> plandoPair in PlandoItems) {
+                foreach (Reward item in ProgressionRewards.ToList()) {
+                    if (item.Name == plandoPair.Item1) {
+                        foreach (Location location in InitialLocations.ToList()) {
+                            if (location.LocationId == plandoPair.Item2) {
+                                Check check = new Check(item, location);
+                                string dictionaryId = check.CheckId;
+                                ProgressionLocations.Add(dictionaryId, check);
+                                InitialLocations.Remove(location);
+                                ProgressionRewards.Remove(item);
+                                break;
+                            }
                         }
                     }
                 }
@@ -294,13 +318,13 @@ namespace TunicRandomizer {
             }
 
             if (SaveFile.GetInt(EntranceRando) == 1) {
-                ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
+                if (GetBool(FoxPrinceEnabled)) {
+                    FoxPrince.ClearFoxPrinceCaches();
+                }
+                ERScripts.CreateRandomizedPortals(SaveFile.GetInt("seed"));
             } else {
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
             }
-
-            // used in fill to keep checks that you've re-collected items from from being collected again
-            List<Check> checksAlreadyAdded = new List<Check>();
 
             // full inventory is to separate out "fake" items from real ones
             Dictionary<string, int> FullInventory = new Dictionary<string, int>();
@@ -327,59 +351,8 @@ namespace TunicRandomizer {
                 }
                 TunicUtils.AddDictToDict(FullInventory, PrecollectedItems);
 
-                // cache for picking up items during fill
-                checksAlreadyAdded.Clear();
-
                 // fill method: reverse fill and anything you can get with your remaining inventory is assumed to be in your inventory for the purpose of placing the next item
-                while (true) {
-                    // start count is the quantity of items in full inventory. If this stays the same between loops, then you are done getting items
-                    int start_count = 0;
-                    foreach (int count in FullInventory.Values) {
-                        start_count += count;
-                    }
-
-                    // fill up our FullInventory with regions until we stop getting new regions -- these are the regions we can currently access
-                    while (true) {
-                        // since regions always have a count of 1, we can just use .count instead of counting up all the values
-                        int start_num = FullInventory.Count;
-                        FullInventory = ERScripts.UpdateReachableRegions(FullInventory);
-                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
-                            FullInventory = portalCombo.AddComboRegion(FullInventory);
-                        }
-                        if (start_num == FullInventory.Count) {
-                            break;
-                        }
-                    }
-
-                    // for debugging to check inventory item counts
-                    //TunicLogger.LogInfo("iteration number is " + iteration_number.ToString());
-                    //TunicLogger.LogInfo("item being placed is " + item.Name);
-                    //TunicLogger.LogInfo("Full Inventory is");
-                    //foreach (string iname in FullInventory.Keys) {
-                    //    TunicLogger.LogInfo(iname + ": " + FullInventory[iname].ToString());
-                    //}
-
-                    // pick up all items you can reach with your current inventory
-                    foreach (Check placedLocation in ProgressionLocations.Values) {
-                        if (placedLocation.Location.reachable(FullInventory) && !checksAlreadyAdded.Contains(placedLocation)) {
-                            //TunicLogger.LogInfo("Location " + Locations.LocationIdToDescription[placedLocation.CheckId] + " is reachable");
-                            //TunicLogger.LogInfo("Adding " + placedLocation.Reward.Name + " to inventory");
-                            string item_name = ItemLookup.FairyLookup.Keys.Contains(placedLocation.Reward.Name) ? "Fairy" : placedLocation.Reward.Name;
-                            TunicUtils.AddStringToDict(FullInventory, item_name);
-                            checksAlreadyAdded.Add(placedLocation);
-                        }
-                    }
-
-                    int end_count = 0;
-                    foreach (int count in FullInventory.Values) {
-                        end_count += count;
-                    }
-
-                    // if these two are equal, then we've gotten everything we have access to
-                    if (start_count == end_count) {
-                        break;
-                    }
-                }
+                (FullInventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(FullInventory);
 
 
                 // this is for testing fill, ignore if not testing
@@ -407,7 +380,7 @@ namespace TunicRandomizer {
                             start_num += count;
                         }
                         testFullInventory = ERScripts.UpdateReachableRegions(testFullInventory);
-                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+                        foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                             testFullInventory = portalCombo.AddComboRegion(testFullInventory);
                         }
 
@@ -532,6 +505,41 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (SaveFlags.GetBool(FoxPrinceEnabled)) {
+                int diceAdded = 0;
+                int dartsAdded = 0;
+                foreach (string key in Locations.RandomizedLocations.Keys.ToList()) {
+                    Check check = Locations.RandomizedLocations[key];
+                    bool swapCheck = false;
+                    // prioritize swapping grass/money first on other settings, then swap filler items
+                    if (GetBool(GrassRandoEnabled)) {
+                        if (check.Reward.Name == "Grass" && !GrassRandomizer.ExcludedGrassChecks.Contains(check.CheckId)) {
+                            swapCheck = true;
+                        }
+                    } else if (GetBool(BreakableShuffleEnabled)) {
+                        if (check.Reward.Name == "money" && check.Reward.Amount < 10) {
+                            swapCheck = true;
+                        }
+                    } else if (ItemLookup.FillerItems.ContainsKey(check.Reward.Name)) {
+                        swapCheck = true;
+                    }
+                    if (swapCheck) { 
+                        if (diceAdded < 6) {
+                            check.Reward.Name = "Soul Dice";
+                            check.Reward.Type = "INVENTORY";
+                            check.Reward.Amount = 1;
+                            diceAdded++;
+                        } else if (dartsAdded < 3) {
+                            TunicLogger.LogInfo("swapping item");
+                            check.Reward.Name = "Dart";
+                            check.Reward.Type = "INVENTORY";
+                            check.Reward.Amount = 1;
+                            dartsAdded++;
+                        }
+                    }
+                }
+            }
+
             foreach (string Key in Locations.RandomizedLocations.Keys) {
                 int ItemPickedUp = SaveFile.GetInt($"randomizer picked up {Key}");
                 Locations.CheckedLocations.Add(Key, ItemPickedUp == 1 ? true : false);
@@ -547,6 +555,9 @@ namespace TunicRandomizer {
                     TunicRandomizer.Tracker.ImportantItems["Sword"] += 1;
                 }
             }
+
+            InitialRandomizationDone = true;
+            TunicUtils.CheckAllLocsReachable();
             TunicLogger.LogInfo("Successfully randomized and placed items!");
         }
 
@@ -618,7 +629,7 @@ namespace TunicRandomizer {
         // in non-ER, we want the actual sphere 1
         public static Dictionary<string, int> GetSphereOne(Dictionary<string, int> startInventory = null) {
             Dictionary<string, int> Inventory = new Dictionary<string, int>() { { "Overworld", 1 } };
-            Dictionary<string, PortalCombo> vanillaPortals = ERData.GetVanillaPortals();
+            List<PortalCombo> vanillaPortals = ERData.GetVanillaPortals();
             if (startInventory == null) {
                 TunicUtils.AddDictToDict(Inventory, PrecollectedItems);
             } else {
@@ -628,7 +639,7 @@ namespace TunicRandomizer {
             while (true) {
                 int start_num = Inventory.Count;
                 Inventory = ERScripts.UpdateReachableRegions(Inventory);
-                foreach (PortalCombo portalCombo in vanillaPortals.Values) {
+                foreach (PortalCombo portalCombo in vanillaPortals) {
                     Inventory = portalCombo.AddComboRegion(Inventory);
                 }
                 int end_num = Inventory.Count;
@@ -641,7 +652,7 @@ namespace TunicRandomizer {
 
         // gets all regions that can be reached based on the current inventory
         public static Dictionary<string, int> GetReachableRegions(Dictionary<string, int> inventory = null) {
-            Dictionary<string, PortalCombo> portalList;
+            List<PortalCombo> portalList;
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 portalList = ERData.RandomizedPortals;
             } else {
@@ -651,7 +662,7 @@ namespace TunicRandomizer {
             while (true) {
                 int start_num = inventory.Count;
                 inventory = ERScripts.UpdateReachableRegions(inventory);
-                foreach (PortalCombo portalCombo in portalList.Values) {
+                foreach (PortalCombo portalCombo in portalList) {
                     inventory = portalCombo.AddComboRegion(inventory);
                 }
                 int end_num = inventory.Count;
@@ -676,7 +687,7 @@ namespace TunicRandomizer {
             Inventory = ERScripts.UpdateReachableRegions(Inventory);
             
             // find which portals you can reach from spawn without additional progression
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 if (Inventory.ContainsKey(portalCombo.Portal1.Region)) {
                     PortalInventory.Add(portalCombo.Portal2);
                 }
@@ -693,6 +704,15 @@ namespace TunicRandomizer {
             }
             Inventory = ERScripts.UpdateReachableRegions(Inventory);
             return Inventory;
+        }
+
+        // for testing item model appearances everywhere
+        public static void testChangeEveryItem(string itemName, int quantity, string type) {
+            foreach (Check check in Locations.RandomizedLocations.Values) { 
+                check.Reward.Name = itemName;
+                check.Reward.Amount = quantity;
+                check.Reward.Type = type;
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace TunicRandomizer {
         public int ERFixedShop;
         public int ERDecoupled;
         public int ERDirectionPairs;
+        public int ERFoxPrince;
         public int Maskless;
         public int Lanternless;
         public int GrassRando;
@@ -69,6 +70,7 @@ namespace TunicRandomizer {
             ShuffleBreakables = 50;
             ShuffleFuses = 50;
             ShuffleBells = 50;
+            ERFoxPrince = 25;
 
             LaurelsZips = 0;
             LadderStorageWithoutItems = 0;
@@ -115,6 +117,7 @@ namespace TunicRandomizer {
                 $"&{ERFixedShop}" +
                 $"&{ERDecoupled}" +
                 $"&{ERDirectionPairs}" +
+                $"&{ERFoxPrince}" +
                 $"&{Maskless}" +
                 $"&{Lanternless}" +
                 $"&{GrassRando}" +
@@ -142,6 +145,7 @@ namespace TunicRandomizer {
             ERFixedShop = int.Parse(split[i++]);
             ERDecoupled = int.Parse(split[i++]);
             ERDirectionPairs = int.Parse(split[i++]);
+            ERFoxPrince = int.Parse(split[i++]);
             Maskless = int.Parse(split[i++]);
             Lanternless = int.Parse(split[i++]);
             GrassRando = int.Parse(split[i++]);
@@ -199,6 +203,7 @@ namespace TunicRandomizer {
             ERFixedShop = random.Next(101);
             ERDecoupled = random.Next(101);
             ERDirectionPairs = random.Next(101);
+            ERFoxPrince = random.Next(101);
             Maskless = random.Next(101);
             Lanternless = random.Next(101);
             GrassRando = random.Next(101);
