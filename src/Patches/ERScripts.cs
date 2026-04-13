@@ -1042,21 +1042,19 @@ namespace TunicRandomizer {
                 if (portal.FullID == PlayerCharacterSpawn.portalIDToSpawnAt) {
                     foreach (PortalCombo portalCombo in RandomizedPortals) {
                         if (portal.name == portalCombo.Portal2.Name && (portal.name != "Shop Portal" || (portal.name == "Shop Portal" && portalCombo.Portal1.Scene == SceneManager.GetActiveScene().name))) {
-                            if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal1.Name) == 0) {
-                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal1.Name, 1);
-                                if (IsArchipelago()) {
-                                    string key = $"{portalCombo.Portal1.Scene}, {portalCombo.Portal1.Destination}_{portalCombo.Portal1.Tag}";
-                                    Archipelago.instance.integration.UpdateDataStorage(key, true);
-                                }
+                            SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal1.Name, 1);
+                            if (IsArchipelago()) {
+                                string key = $"{portalCombo.Portal1.Scene}, {portalCombo.Portal1.Destination}_{portalCombo.Portal1.Tag}";
+                                Archipelago.instance.integration.UpdateDataStorage(key, true);
                             }
+                            
+                            
                             // if decoupled is off, we can just mark the other side of the portal too
                             if (!GetBool(Decoupled)) {
-                                if (SaveFile.GetInt("randomizer entered portal " + portalCombo.Portal2.Name) == 0) {
-                                    SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal2.Name, 1);
-                                    if (IsArchipelago()) {
-                                        string key = $"{portalCombo.Portal2.Scene}, {portalCombo.Portal2.Destination}_{portalCombo.Portal2.Tag}";
-                                        Archipelago.instance.integration.UpdateDataStorage(key, true);
-                                    }
+                                SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal2.Name, 1);
+                                if (IsArchipelago()) {
+                                    string key = $"{portalCombo.Portal2.Scene}, {portalCombo.Portal2.Destination}_{portalCombo.Portal2.Tag}";
+                                    Archipelago.instance.integration.UpdateDataStorage(key, true);
                                 }
                             }
                         }
