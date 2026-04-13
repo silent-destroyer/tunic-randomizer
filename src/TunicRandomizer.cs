@@ -233,6 +233,8 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "HitReceiver_ReceiveHit_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(HitReceiver), "ReceiveHit"), new HarmonyMethod(AccessTools.Method(typeof(GrassRandomizer), "HitReceiver_ReceiveHit_PrefixPatch")));
+            
+            Harmony.Patch(AccessTools.Method(typeof(HitTrigger), "doHit"), new HarmonyMethod(AccessTools.Method(typeof(InteractionPatches), "HitTrigger_doHit_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(ToggleObjectAnimation), "SetToggle"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "ToggleObjectAnimation_SetToggle_PostfixPatch")));
 
