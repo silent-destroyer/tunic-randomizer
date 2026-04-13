@@ -396,22 +396,34 @@ namespace TunicRandomizer {
 
         public void SendDeathLink() {
             string Player = SaveFile.GetString(SaveFlags.ArchipelagoPlayerName);
-            string AreaDiedIn = "";
-            if (DeathLinkMessages.Causes.ContainsKey(SceneLoaderPatches.SceneName)) {
-                AreaDiedIn = SceneLoaderPatches.SceneName;
-            } else {
-                foreach (string key in Locations.MainAreasToSubAreas.Keys) {
-                    if (Locations.MainAreasToSubAreas[key].Contains(SceneLoaderPatches.SceneName)) {
-                        AreaDiedIn = key;
-                        break;
-                    }
-                }
-            }
-            if (AreaDiedIn == "") {
-                AreaDiedIn = "Generic";
+
+            HashSet<string> MessageOptions = new HashSet<string>();
+
+            string hitBy = PlayerCharacterPatches.lastHitTriggerHitBy;
+
+            if (hitBy != "" && DeathLinkMessages.HitTriggerCauses.ContainsKey(hitBy)) {
+                MessageOptions.Add(DeathLinkMessages.HitTriggerCauses[hitBy]);
             }
 
-            deathLinkService.SendDeathLink(new DeathLink(Player, $"{Player}{DeathLinkMessages.Causes[AreaDiedIn][new System.Random().Next(DeathLinkMessages.Causes[AreaDiedIn].Count)]}"));
+            if (hitBy != "" && DeathLinkMessages.HitTriggerDescriptions.ContainsKey(hitBy)) {
+                foreach (string cause in DeathLinkMessages.GenericMessages) {
+                    MessageOptions.Add($"{cause}{DeathLinkMessages.HitTriggerDescriptions[hitBy]}");
+                }
+            }
+
+            if (DeathLinkMessages.Causes.ContainsKey(SceneLoaderPatches.SceneName)) {
+                foreach (string cause in DeathLinkMessages.Causes[SceneLoaderPatches.SceneName]) {
+                    MessageOptions.Add(cause);
+                }
+            } 
+
+            if (MessageOptions.Count == 0) {
+                foreach (string cause in DeathLinkMessages.Causes["Generic"]) { 
+                    MessageOptions.Add(cause);
+                }
+            }
+
+            deathLinkService.SendDeathLink(new DeathLink(Player, $"{Player}{MessageOptions.ToList()[new System.Random().Next(MessageOptions.Count)]}"));
         }
 
 

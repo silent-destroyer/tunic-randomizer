@@ -29,6 +29,9 @@ namespace TunicRandomizer {
         public static int timesDeathplaneTriggeredThisScene = 0;
         public static Transform failsafeSpawnPoint = null;
 
+        // for trying to detect source of last hit for death link messages
+        public static string lastHitTriggerHitBy = "";
+
         public static void PlayerCharacter_creature_Awake_PostfixPatch(PlayerCharacter __instance) {
             try {
                 __instance.gameObject.AddComponent<WaveSpell>();
@@ -153,6 +156,10 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (__instance.lastDamageTime != float.NegativeInfinity && Time.time > __instance.lastDamageTime + 10 && lastHitTriggerHitBy != "") {
+                lastHitTriggerHitBy = "";
+            }
+
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
                 CycleController.IsNight = false;
@@ -171,6 +178,7 @@ namespace TunicRandomizer {
                 PlayerCharacter.instance.staminaBoostParticleSystemEmission.enabled = true;
                 PlayerCharacter.instance._CompletelyInvulnerableEvenToIFrameIgnoringAttacks_k__BackingField = true;
                 PlayerCharacter.instance.AddPoison(1f);
+                PlayerCharacter.CutsceneLocked = true;
                 if (PlayerCharacter.instance.gameObject.GetComponent<Rotate>() != null) {
                     PlayerCharacter.instance.gameObject.GetComponent<Rotate>().eulerAnglesPerSecond += new Vector3(0, 3.5f, 0);
                 }
@@ -244,7 +252,7 @@ namespace TunicRandomizer {
 
         public static void PlayerCharacter_Start_PostfixPatch(PlayerCharacter __instance) {
             SceneLoaderPatches.TimeOfLastSceneTransition = SaveFile.GetFloat("playtime");
-
+            lastHitTriggerHitBy = "";
             Cursor.visible = false;
 
             // hide inventory prompt button so it doesn't overlap item messages
@@ -1058,10 +1066,10 @@ namespace TunicRandomizer {
         }
 
         public static void PlayerCharacter_Die_MoveNext_PostfixPatch(PlayerCharacter._Die_d__481 __instance, ref bool __result) {
-
             if (!__result) {
                 int Deaths = SaveFile.GetInt(PlayerDeathCount);
                 SaveFile.SetInt(PlayerDeathCount, Deaths + 1);
+
                 if (IsArchipelago() && TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
                     Archipelago.instance.integration.SendDeathLink();
                 }
