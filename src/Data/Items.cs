@@ -21,6 +21,7 @@ namespace TunicRandomizer {
         GRASS,
         FUSE,
         BELL,
+        ENEMY,
     }
 
     public struct BonusUpgrade {
@@ -114,13 +115,16 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, ItemData> Items = new Dictionary<string, ItemData>() {
             // Consumables
+            { "Firecracker", new ItemData("Firecracker", "useful", "Firecracker", ItemTypes.INVENTORY, 1) },
             { "Firecracker x2", new ItemData("Firecracker x2", "useful", "Firecracker", ItemTypes.INVENTORY, 2) },
             { "Firecracker x3", new ItemData("Firecracker x3", "useful", "Firecracker", ItemTypes.INVENTORY, 3) },
             { "Firecracker x4", new ItemData("Firecracker x4", "useful", "Firecracker", ItemTypes.INVENTORY, 4) },
             { "Firecracker x5", new ItemData("Firecracker x5", "useful", "Firecracker", ItemTypes.INVENTORY, 5) },
             { "Firecracker x6", new ItemData("Firecracker x6", "useful", "Firecracker", ItemTypes.INVENTORY, 6) },
+            { "Fire Bomb", new ItemData("Fire Bomb", "useful", "Firebomb", ItemTypes.INVENTORY, 1) },
             { "Fire Bomb x2", new ItemData("Fire Bomb x2", "useful", "Firebomb", ItemTypes.INVENTORY, 2) },
             { "Fire Bomb x3", new ItemData("Fire Bomb x3", "useful", "Firebomb", ItemTypes.INVENTORY, 3) },
+            { "Ice Bomb", new ItemData("Ice Bomb", "useful", "Ice Bomb", ItemTypes.INVENTORY, 1) },
             { "Ice Bomb x2", new ItemData("Ice Bomb x2", "useful", "Ice Bomb", ItemTypes.INVENTORY, 2) },
             { "Ice Bomb x3", new ItemData("Ice Bomb x3", "useful", "Ice Bomb", ItemTypes.INVENTORY, 3) },
             { "Ice Bomb x5", new ItemData("Ice Bomb x5", "useful", "Ice Bomb", ItemTypes.INVENTORY, 5) },
@@ -222,6 +226,10 @@ namespace TunicRandomizer {
             { "Money x3", new ItemData("Money x3", "useful", "money", ItemTypes.MONEY, 3) },
             { "Money x4", new ItemData("Money x4", "useful", "money", ItemTypes.MONEY, 4) },
             { "Money x5", new ItemData("Money x5", "useful", "money", ItemTypes.MONEY, 5) },
+            { "Money x6", new ItemData("Money x6", "useful", "money", ItemTypes.MONEY, 6) },
+            { "Money x7", new ItemData("Money x7", "useful", "money", ItemTypes.MONEY, 7) },
+            { "Money x8", new ItemData("Money x8", "useful", "money", ItemTypes.MONEY, 8) },
+            { "Money x9", new ItemData("Money x9", "useful", "money", ItemTypes.MONEY, 9) },
             { "Money x10", new ItemData("Money x10", "useful", "money", ItemTypes.MONEY, 10) },
             { "Money x15", new ItemData("Money x15", "useful", "money", ItemTypes.MONEY, 15) },
             { "Money x16", new ItemData("Money x16", "useful", "money", ItemTypes.MONEY, 16) },
@@ -322,6 +330,40 @@ namespace TunicRandomizer {
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
+
+            // Enemy Souls
+            { "Enemy Soul (Blobs)", new ItemData("Enemy Soul (Blobs)", "progression", "Enemy Soul (Blobs)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Hedgehogs)", new ItemData("Enemy Soul (Hedgehogs)", "progression", "Enemy Soul (Hedgehogs)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Rudelings)", new ItemData("Enemy Soul (Rudelings)", "progression", "Enemy Soul (Rudelings)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Envoy)", new ItemData("Enemy Soul (Envoy)", "progression", "Enemy Soul (Envoy)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Phrend)", new ItemData("Enemy Soul (Phrend)", "progression", "Enemy Soul (Phrend)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Autobolt)", new ItemData("Enemy Soul (Autobolt)", "progression", "Enemy Soul (Autobolt)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Fairies)", new ItemData("Enemy Soul (Fairies)", "progression", "Enemy Soul (Fairies)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Chompignom)", new ItemData("Enemy Soul (Chompignom)", "progression", "Enemy Soul (Chompignom)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Spiders)", new ItemData("Enemy Soul (Spiders)", "progression", "Enemy Soul (Spiders)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Custodians)", new ItemData("Enemy Soul (Custodians)", "progression", "Enemy Soul (Custodians)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Crabs)", new ItemData("Enemy Soul (Crabs)", "progression", "Enemy Soul (Crabs)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Plover)", new ItemData("Enemy Soul (Plover)", "progression", "Enemy Soul (Plover)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Husher)", new ItemData("Enemy Soul (Husher)", "progression", "Enemy Soul (Husher)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Frogs)", new ItemData("Enemy Soul (Frogs)", "progression", "Enemy Soul (Frogs)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Baby Slorm)", new ItemData("Enemy Soul (Baby Slorm)", "progression", "Enemy Soul (Baby Slorm)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Slorm)", new ItemData("Enemy Soul (Slorm)", "progression", "Enemy Soul (Slorm)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Tentacle)", new ItemData("Enemy Soul (Tentacle)", "progression", "Enemy Soul (Tentacle)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Laser Trap)", new ItemData("Enemy Soul (Laser Trap)", "progression", "Enemy Soul (Laser Trap)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Scavengers)", new ItemData("Enemy Soul (Scavengers)", "progression", "Enemy Soul (Scavengers)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Voidling)", new ItemData("Enemy Soul (Voidling)", "progression", "Enemy Soul (Voidling)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Fleemers)", new ItemData("Enemy Soul (Fleemers)", "progression", "Enemy Soul (Fleemers)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Lost Echo)", new ItemData("Enemy Soul (Lost Echo)", "progression", "Enemy Soul (Lost Echo)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Gunslinger)", new ItemData("Enemy Soul (Gunslinger)", "progression", "Enemy Soul (Gunslinger)", ItemTypes.ENEMY, 1) }, 
+            { "Enemy Soul (Zombie Foxes)", new ItemData("Enemy Soul (Zombie Foxes)", "progression", "Enemy Soul (Zombie Foxes)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Garden Knight)", new ItemData("Enemy Soul (Garden Knight)", "progression", "Enemy Soul (Garden Knight)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Siege Engine)", new ItemData("Enemy Soul (Siege Engine)", "progression", "Enemy Soul (Siege Engine)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Librarian)", new ItemData("Enemy Soul (Librarian)", "progression", "Enemy Soul (Librarian)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Boss Scavenger)", new ItemData("Enemy Soul (Boss Scavenger)", "progression", "Enemy Soul (Boss Scavenger)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Administrator)", new ItemData("Enemy Soul (Administrator)", "progression", "Enemy Soul (Administrator)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Beefboy)", new ItemData("Enemy Soul (Beefboy)", "progression", "Enemy Soul (Beefboy)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (Voidtouched)", new ItemData("Enemy Soul (Voidtouched)", "progression", "Enemy Soul (Voidtouched)", ItemTypes.ENEMY, 1) },
+            { "Enemy Soul (The Heir)", new ItemData("Enemy Soul (The Heir)", "progression", "Enemy Soul (The Heir)", ItemTypes.ENEMY, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {

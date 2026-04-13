@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -66,10 +67,10 @@ namespace TunicRandomizer {
         }
 
         // for filtering items out in PlayerItemsAndRegions
-        public static List<string> AllProgressionNames = new List<string>() {
+        public static HashSet<string> AllProgressionNames = new HashSet<string>() {
             "Stick", "Sword", "Sword Upgrade", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shotgun",
             "Key (House)", "Key", "Vault Key (Red)", "Trinket Coin", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "Hexagon Gold", "Mask",
-            "Fairy", "12", "21", "26", "Trinket - Glass Cannon",
+            "Fairy", "12", "21", "26", "Trinket - Glass Cannon", "Upgrade Offering - Attack - Tooth",
             "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to East Forest",
             "Ladders to Lower Forest", "Ladders near Patrol Cave", "Ladders in Well", "Ladders to West Bell", "Ladder to Quarry",
             "Ladder in Dark Tomb", "Ladders near Dark Tomb", "Ladder near Temple Rafters", "Ladder to Swamp", "Ladders in Swamp",
@@ -81,7 +82,8 @@ namespace TunicRandomizer {
             "Fortress Courtyard Fuse", "Beneath the Vault Fuse", "Fortress Candles Fuse",
             "Fortress Door Left Fuse", "Fortress Door Right Fuse", "West Furnace Fuse",
             "West Garden Fuse", "Atoll Northeast Fuse", "Atoll Northwest Fuse", "Atoll Southeast Fuse",
-            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell"
+            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell",
+            // Enemy Souls added here in EnemyDropShuffle.CreateEnemyItems()
         };
 
 
@@ -250,18 +252,24 @@ namespace TunicRandomizer {
         public static List<Check> GetAllInUseChecks(bool getAll = false, bool exceptGrass = false) {
             // Get a list of all default checks based on settings
             List<Check> checks = Locations.VanillaLocations.Values.ToList();
-            if ((SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1 || getAll) && !exceptGrass) {
+            if ((GetBool(GrassRandoEnabled) || getAll) && !exceptGrass) {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
             }
-            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1 || getAll) {
+            if (GetBool(BreakableShuffleEnabled) || getAll) {
                 bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
-                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
+                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory" || getAll));
             }
-            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1 || getAll) { 
+            if (GetBool(FuseShuffleEnabled) || getAll) { 
                 checks.AddRange(FuseRandomizer.FuseChecks.Values.ToList());
             }
-            if (SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1 || getAll) {
+            if (GetBool(BellShuffleEnabled) || getAll) {
                 checks.AddRange(BellShuffle.BellChecks.Values.ToList());
+            }
+            if (GetBool(ShuffleEnemyDropsEnabled) || getAll) { 
+                checks.AddRange(EnemyDropShuffle.BaseEnemyDropChecks.Values.ToList());
+                if (GetBool(ExtraEnemyDropsEnabled) || getAll) {
+                    checks.AddRange(EnemyDropShuffle.ExtraEnemyDropChecks.Values.ToList());
+                }
             }
             return CopyListOfChecks(checks);
         }
@@ -269,7 +277,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> GetAllInUseChecksDictionary(bool getAll = false) {
             // Get a list of all default checks based on settings
             Dictionary<string, Check> Checks = new Dictionary<string, Check>();
-            foreach (Check check in GetAllInUseChecks(getAll)) {
+            foreach (Check check in GetAllInUseChecks(getAll: getAll)) {
                 Checks.Add(check.CheckId, check);
             }
             return Checks;
@@ -378,6 +386,10 @@ namespace TunicRandomizer {
                 guiScale = 0.6f;
             }
             return guiScale;
+        }
+
+        public static bool IsInActiveScene(GameObject obj) {
+            return obj.scene.name == SceneManager.GetActiveScene().name;
         }
 
     }

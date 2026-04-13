@@ -212,7 +212,7 @@ namespace TunicRandomizer {
             if (GrassRandomizer.GrassChecks.ContainsKey(check.CheckId) && check.Reward.Name == "Grass") {
                 return;
             }
-            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && check.Reward.Name == "money" && check.Reward.Amount <= 5) {
+            if ((SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) || SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) && check.Reward.Name == "money" && check.Reward.Amount <= 5) {
                 return;
             }
             recentItemsQueue.Add(new RecentItemData(Check: check, IsHexagonUnlock: hexagonUnlock, HexagonAbility: hexagonAbility));
@@ -223,7 +223,7 @@ namespace TunicRandomizer {
             if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.ItemDisplayName == "Grass") {
                 return;
             }
-            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemDisplayName.Contains("Money")
+            if ((SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) || SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemDisplayName.Contains("Money")
                 && ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName) && ItemLookup.Items[itemInfo.ItemDisplayName].QuantityToGive <= 5) {
 
                 return;

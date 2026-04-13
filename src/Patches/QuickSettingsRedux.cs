@@ -685,15 +685,20 @@ namespace TunicRandomizer {
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Ladders"), slotData["shuffle_ladders"].ToString() == "1", $"Shuffled Ladders");
 
                     y += 40f;
-
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Entrance Randomizer"), slotData["entrance_rando"].ToString() == "1", $"Entrance Randomizer");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Grass Randomizer"), slotData.ContainsKey("grass_randomizer") && slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
-                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), slotData.ContainsKey("breakable_shuffle") && slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Decoupled Entrances"), slotData["decoupled"].ToString() == "1", $"Decoupled Entrances");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), slotData["breakable_shuffle"].ToString() == "1", $"Shuffled Breakables");
 
                     y += 40f;
 
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Fuses"), slotData.ContainsKey("shuffle_fuses") && slotData["shuffle_fuses"].ToString() == "1", $"Shuffled Fuses");
                     GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Bells"), slotData.ContainsKey("shuffle_bells") && slotData["shuffle_bells"].ToString() == "1", $"Shuffled Bells");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Grass Randomizer"), slotData["grass_randomizer"].ToString() == "1", $"Grass Randomizer");
+
+                    y += 40f;
+                    
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Enemy Drops"), slotData.ContainsKey("shuffle_enemy_drops") && int.Parse(slotData["shuffle_enemy_drops"].ToString()) >= 1, $"Shuffled Enemy Drops");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Enemy Souls"), slotData.ContainsKey("shuffle_enemy_souls") && slotData["shuffle_enemy_souls"].ToString() == "1", $"Shuffled Enemy Souls");
                     int FoolIndex = int.Parse(slotData["fool_traps"].ToString());
                     GUI.Toggle(scRect(442f, y, 206f, 60f, tooltip: "Fool Traps"), FoolIndex != 0, $"Fool Traps: {(FoolIndex == 0 ? "Off" : $"<color={FoolColors[FoolIndex]}>{FoolChoices[FoolIndex]}</color>")}");
 
@@ -708,11 +713,15 @@ namespace TunicRandomizer {
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Ladders"), false, $"Shuffled Ladders");
                     y += 40f;
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Entrance Randomizer"), false, $"Entrance Randomizer");
-                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Grass Randomizer"), false, $"Grass Randomizer");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Decoupled Entrances"), false, $"Decoupled Entrances");
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Shuffle Breakable Objects"), false, $"Shuffled Breakables");
                     y += 40f;
                     GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Fuses"), false, $"Shuffled Fuses");
                     GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Bells"), false, $"Shuffled Bells");
+                    GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Grass Randomizer"), false, $"Grass Randomizer");
+                    y += 40f;
+                    GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Shuffle Enemy Drops"), false, $"Shuffled Enemy Drops");
+                    GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Shuffle Enemy Souls"), false, $"Shuffled Enemy Souls");
                     GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Fool Traps"), false, "Fool Traps: Off");
                 }
             }
@@ -766,6 +775,12 @@ namespace TunicRandomizer {
             }
             if (TunicRandomizer.Settings.BellShuffle) {
                 count += BellShuffle.BellChecks.Count;
+            }
+            if (TunicRandomizer.Settings.EnemyDropShuffle) {
+                count += EnemyDropShuffle.BaseEnemyDropChecks.Count;
+                if (TunicRandomizer.Settings.ExtraEnemyDrops) {
+                    count += EnemyDropShuffle.ExtraEnemyDropChecks.Count;
+                }
             }
             return count;
         }
@@ -829,6 +844,10 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.FuseShuffle = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Shuffle Fuses"), TunicRandomizer.Settings.FuseShuffle, "Shuffle Fuses");
             TunicRandomizer.Settings.BellShuffle = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Shuffle Bells"), TunicRandomizer.Settings.BellShuffle, "Shuffle Bells");
             TunicRandomizer.Settings.GrassRandomizer = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Grass Randomizer"), TunicRandomizer.Settings.GrassRandomizer, "Grass Randomizer");
+            y += 40f;
+            TunicRandomizer.Settings.EnemyDropShuffle = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Shuffle Enemy Drops"), TunicRandomizer.Settings.EnemyDropShuffle, "Shuffle Enemy Drops");
+            TunicRandomizer.Settings.ShuffleEnemySouls = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Shuffle Enemy Souls"), TunicRandomizer.Settings.ShuffleEnemySouls, "Shuffle Enemy Souls");
+            TunicRandomizer.Settings.ExtraEnemyDrops = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Extra Enemy Drops"), TunicRandomizer.Settings.ExtraEnemyDrops, "Extra Enemy Drops");
             y += 40f;
             GUI.skin.toggle.fontSize = scFont(22.5f);
             TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 400f, 30f), "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
@@ -1125,6 +1144,7 @@ namespace TunicRandomizer {
             y += 40f;
             TunicRandomizer.Settings.SeekingSpellGrassChecks = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Grass Checks"), TunicRandomizer.Settings.SeekingSpellGrassChecks, "Grass Checks");
             TunicRandomizer.Settings.SeekingSpellFusesBells = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Fuse/Bell Checks"), TunicRandomizer.Settings.SeekingSpellFusesBells, "Fuse/Bell Checks");
+            TunicRandomizer.Settings.SeekingSpellEnemyChecks = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Enemy Checks"), TunicRandomizer.Settings.SeekingSpellEnemyChecks, "Enemy Checks");
             y += 40f;
 
             GUI.skin.button.fontSize = scFont(20);
@@ -1297,10 +1317,22 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs = (int)GUI.HorizontalSlider(scRect(442f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERDirectionPairs, 0, 100);
             y += 20f;
             GUI.Label(scRect(10f, y, 206f, 60f, tooltip: "Decoupled Entrances"), "ER: Decoupled");
+            GUI.Label(scRect(226f, y, 206f, 60f, tooltip: "Shuffle Enemy Drops"), "Shuffle Enemy Drops");
+            GUI.Label(scRect(442f, y, 206f, 60f, tooltip: "Shuffle Enemy Souls"), "Shuffle Enemy Souls");
             y += 25f;
             GUI.Label(scRect(170f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled}%");
+            GUI.Label(scRect(386f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemyDrops}%");
+            GUI.Label(scRect(602f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemySouls}%");
             y += 10f; 
             TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled = (int)GUI.HorizontalSlider(scRect(10f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled, 0, 100);
+            TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemyDrops = (int)GUI.HorizontalSlider(scRect(226f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemyDrops, 0, 100);
+            TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemySouls = (int)GUI.HorizontalSlider(scRect(442f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemySouls, 0, 100);
+            y += 20f;
+            GUI.Label(scRect(10f, y, 206f, 60f, tooltip: "Extra Enemy Drops"), "Extra Enemy Drops");
+            y += 25f;
+            GUI.Label(scRect(170f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops}%");
+            y += 10f;
+            TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops = (int)GUI.HorizontalSlider(scRect(10f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops, 0, 100);
             TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(scRect(442f, y - 25, 206f, 30f, tooltip: "Start With Sword"), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
             return y;
         }
@@ -1407,9 +1439,7 @@ namespace TunicRandomizer {
             GameObject.Destroy(fox.GetComponent<PlayerCharacter>());
             GameObject.Destroy(fox.transform.GetChild(0).GetChild(0).GetChild(8).GetChild(0).GetChild(3).GetComponent<TrackingBone>());
             GameObject.DontDestroyOnLoad(fox);
-            TunicLogger.LogInfo(fox.name);
             GameObject head = fox.transform.Find("Fox/root/pelvis/chest/head/").gameObject;
-            TunicLogger.LogInfo(head.name);
             foxHead = head.transform;
             laurels = head.transform.GetChild(7).gameObject;
             GameObject.Destroy(laurels.GetComponent<VisibleByHavingInventoryItem>());

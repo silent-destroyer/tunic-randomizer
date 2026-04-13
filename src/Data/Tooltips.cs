@@ -33,7 +33,10 @@ namespace TunicRandomizer {
             { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, bombable walls, and more." },
             { "Shuffle Fuses", "Praying at a fuse now rewards an item instead of turning on the power.\nInstead, the power connections between fuses are shuffled into the item pool and unlocked separately." },
             { "Shuffle Bells", "The East and West bells are shuffled into the item pool and must be found in order to unlock the Sealed Temple.\nRinging the bells will instead now reward a random item." },
-            
+            { "Shuffle Enemy Drops", "Every individual enemy and boss drops an item when defeated (excluding The Heir). Adds around 600 checks." },
+            { "Shuffle Enemy Souls", "Adds a number of \"Enemy Soul\" items to the item pool. Enemies will not appear in the world until their corresponding \"Soul\" item is found.\n(Requires Shuffle Enemy Drops to be enabled.)" },
+            { "Extra Enemy Drops", "Includes New Game+ and nighttime enemy spawns as shuffled enemy drops, adding around 100 additional checks.\n\n(Requires Shuffle Enemy Drops to be enabled.)" },
+
             // Trick logic
             { "Laurels Zips", "Adds a number of gates, doors, and other tricky spots that can be bypassed using the Hero's Laurels into logic. Notable inclusions are the Monastery gate, Ruined Passage door, Old House gate, Forest Grave Path gate, and going between the back and middle of Swamp." },
             { "Ice Grapples", "Adds logic for grappling to frozen enemies to reach new areas.\nMay include pushing enemies through walls or luring them far distances." },
@@ -94,6 +97,7 @@ namespace TunicRandomizer {
             { "Breakable Checks", "Allows the Seeking Spell to target breakables (pots, boxes, bareels, etc.) if breakables shuffle is enabled." },
             { "Grass Checks", "Allows the Seeking Spell to target grass if grass randomizer is enabled." },
             { "Fuse/Bell Checks", "Allows the Seeking Spell to target fuses or bells if either are enabled." },
+            { "Enemy Checks", "Allows the Seeking Spell to target enemies if enemy drops are shuffled." },
 
             // Music
             { "Music Shuffle", "Shuffles the music that plays throughout the game." },

@@ -46,8 +46,15 @@ namespace TunicRandomizer {
                     }
                 }
 
+                List<EnemyCheck> enemyChecks = new List<EnemyCheck>();
+                if (SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) {
+                    enemyChecks = Resources.FindObjectsOfTypeAll<EnemyCheck>().Where(ec => TunicUtils.IsInActiveScene(ec.gameObject)).ToList();
+                }
+
+
                 foreach (string ItemId in filterAllowedFairyTargets(ItemIdsInScene)) {
                     bool isBreakable = BreakableShuffle.BreakableChecks.ContainsKey(ItemId);
+                    bool isEnemy = EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(ItemId);
                     Location Location = Checks[ItemId].Location;
 
                     if (GameObject.Find($"fairy target {ItemId}") == null) {
@@ -60,6 +67,14 @@ namespace TunicRandomizer {
                             foreach (GameObject breakable in breakableObjects) {
                                 if (BreakableShuffle.getBreakableGameObjectId(breakable.gameObject) == ItemId) {
                                     fairyTarget.transform.parent = breakable.transform;
+                                }
+                            }
+                        }
+                        if (isEnemy) {
+                            foreach (EnemyCheck enemyCheck in enemyChecks) {
+                                if (enemyCheck.CheckId == ItemId) {
+                                    fairyTarget.gameObject.AddComponent<FollowEnemy>().Target = enemyCheck.transform;
+                                    fairyTarget.transform.localPosition = Vector3.zero;
                                 }
                             }
                         }
@@ -136,6 +151,9 @@ namespace TunicRandomizer {
             if (!TunicRandomizer.Settings.SeekingSpellFusesBells) {
                 filteredIds.RemoveAll(id => FuseRandomizer.FuseChecks.ContainsKey(id));
                 filteredIds.RemoveAll(id => BellShuffle.BellChecks.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellEnemyChecks) { 
+                filteredIds.RemoveAll(id => EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(id));
             }
             return filteredIds;
         }
@@ -279,6 +297,14 @@ namespace TunicRandomizer {
             }
             PlayerCharacter.instance.GetComponent<FairySpell>().SpellEffect();
             FairyTarget.registered = storedList;
+        }
+    }
+
+    public class FollowEnemy : MonoBehaviour {
+        public Transform Target;
+        public void Update() {
+            if (Target == null) { return; }
+            transform.position = Target.position;
         }
     }
 }

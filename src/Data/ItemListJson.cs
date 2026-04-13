@@ -16,7 +16,13 @@
                         {
                             ""Cathedral Gauntlet"": 1,
                             ""Sword"": 1,
-                            ""Techbow"": 1
+                            ""Techbow"": 1,
+                            ""Enemy Soul (Fairies)"": 1,
+                            ""Enemy Soul (Fleemers)"": 1,
+                            ""Enemy Soul (Custodians)"": 1,
+                            ""Enemy Soul (Garden Knight)"": 1,
+                            ""Enemy Soul (Frogs)"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
                         }
                     ]
                 }
@@ -228,6 +234,12 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Blobs)"": 1
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -493,6 +505,12 @@
                         {
                             ""East Forest"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Blobs)"": 1
+                        },
+                        {
+                            ""East Forest"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -808,7 +826,8 @@
                             ""Stundagger"": 1,
                             ""Techbow"": 1,
                             ""26"": 1,
-                            ""Lower Forest"": 1
+                            ""Lower Forest"": 1,
+                            ""Enemy Soul (Blobs)"": 1
                         }
                     ]
                 }
@@ -1639,7 +1658,8 @@
                         },
                         {
                             ""Wand"": 1,
-                            ""Overworld Beach"": 1
+                            ""Overworld Beach"": 1,
+                            ""Enemy Soul (Autobolt)"": 1
                         }
                     ]
                 }
@@ -1723,6 +1743,12 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Rudelings)"": 1
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -1951,6 +1977,7 @@
                         {
                             ""Ruined Atoll"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Frogs)"": 1
                         }
                     ]
                 }
@@ -2065,10 +2092,6 @@
                         {
                             ""Key"": 2,
                             ""Ruined Atoll"": 1
-                        },
-                        {
-                            ""IG2S"": 1,
-                            ""Ruined Atoll"": 1
                         }
                     ]
                 }
@@ -2091,10 +2114,6 @@
                         },
                         {
                             ""Key"": 2,
-                            ""Ruined Atoll"": 1
-                        },
-                        {
-                            ""IG2S"": 1,
                             ""Ruined Atoll"": 1
                         }
                     ]
@@ -2304,7 +2323,8 @@
                     ""Requirements"": [
                         {
                             ""Wand"": 1,
-                            ""Frog's Domain Back"": 1
+                            ""Frog's Domain Back"": 1,
+                            ""Enemy Soul (Autobolt)"": 1
                         },
                         {
                             ""Hyperdash"": 1,
@@ -2518,7 +2538,18 @@
                         {
                             ""Library Arena"": 1,
                             ""Ladders in Library"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""Wand"": 1,
+                            ""Techbow"": 1,
+                            ""Enemy Soul (Librarian)"": 1
+                        },
+                        {
+                            ""Library Arena"": 1,
+                            ""Ladders in Library"": 1,
+                            ""Sword"": 1,
+                            ""Wand"": 1,
+                            ""Shotgun"": 1,
+                            ""Enemy Soul (Librarian)"": 1
                         }
                     ]
                 }
@@ -3893,6 +3924,7 @@
                         {
                             ""Eastern Vault Fortress"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Custodians)"": 1
                         }
                     ]
                 }
@@ -4006,7 +4038,9 @@
                     ""Requirements"": [
                         {
                             ""Sword"": 1,
-                            ""Fortress Arena"": 1
+                            ""Techbow"": 1,
+                            ""Fortress Arena"": 1,
+                            ""Enemy Soul (Siege Engine)"": 1
                         }
                     ]
                 }
@@ -4217,6 +4251,7 @@
                         {
                             ""Quarry Back"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Scavengers)"": 1
                         }
                     ]
                 }
@@ -4842,11 +4877,13 @@
                     ""Requirements"": [
                         {
                             ""Rooted Ziggurat Lower Back"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""Enemy Soul (Boss Scavenger)"": 1
                         },
                         {
                             ""Rooted Ziggurat Lower Back"": 1,
-                            ""IG2S"": 1
+                            ""IG2S"": 1,
+                            ""Enemy Soul (Boss Scavenger)"": 1
                         }
                     ]
                 }

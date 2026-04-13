@@ -96,6 +96,9 @@ namespace TunicRandomizer {
                     SaveSettings();
                 }));
                 OptionsGUI.addToggle("Shuffle Breakable Objects", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
+                OptionsGUI.addToggle("Shuffle Enemy Drops", "Off", "On", TunicRandomizer.Settings.EnemyDropShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyDropShuffle);
+                OptionsGUI.addToggle("Extra Enemy Drops", "Off", "On", TunicRandomizer.Settings.ExtraEnemyDrops ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemyDrops);
+
                 addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
                 OptionsGUI.addMultiSelect("Laurels Location", LaurelsLocations, GetLaurelsLocationIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLaurelsLocation).wrap = true;
@@ -235,6 +238,10 @@ namespace TunicRandomizer {
             }));
             OptionsGUI.addToggle("Fuse/Bell Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellFusesBells ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
                 TunicRandomizer.Settings.SeekingSpellFusesBells = !TunicRandomizer.Settings.SeekingSpellFusesBells;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Enemy Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellEnemyChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellEnemyChecks = !TunicRandomizer.Settings.SeekingSpellEnemyChecks;
                 SaveSettings();
             }));
             OptionsGUI.setHeading("Fairy Targets");
@@ -558,6 +565,16 @@ namespace TunicRandomizer {
 
         public static void ToggleBreakableShuffle(int index) {
             TunicRandomizer.Settings.BreakableShuffle = !TunicRandomizer.Settings.BreakableShuffle;
+            SaveSettings();
+        }
+
+        public static void ToggleEnemyDropShuffle(int index) {
+            TunicRandomizer.Settings.EnemyDropShuffle = !TunicRandomizer.Settings.EnemyDropShuffle;
+            SaveSettings();
+        }
+
+        public static void ToggleExtraEnemyDrops(int index) {
+            TunicRandomizer.Settings.ExtraEnemyDrops = !TunicRandomizer.Settings.ExtraEnemyDrops;
             SaveSettings();
         }
 
