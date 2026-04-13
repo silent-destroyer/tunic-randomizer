@@ -1048,7 +1048,6 @@ namespace TunicRandomizer {
                                 Archipelago.instance.integration.UpdateDataStorage(key, true);
                             }
                             
-                            
                             // if decoupled is off, we can just mark the other side of the portal too
                             if (!GetBool(Decoupled)) {
                                 SaveFile.SetInt("randomizer entered portal " + portalCombo.Portal2.Name, 1);
