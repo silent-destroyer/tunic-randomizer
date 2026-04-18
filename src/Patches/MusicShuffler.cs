@@ -60,10 +60,7 @@ namespace TunicRandomizer {
                 MusicShuffler.instance.trackToShuffle = trackName;
                 MusicShuffler.instance.paramsToSet.Clear();
                 __instance.track = Tracks[trackName];
-                if (MusicManager.playingEventRef.Guid.ToString() == Tracks[trackName].Guid.ToString()) {
-                    MusicManager.StopImmediate();
-                    MusicManager.PlayNewTrackIfDifferent(Tracks[trackName]);
-                }
+                MusicManager.PlayNewTrackIfDifferent(Tracks[trackName]);
                 if (TrackParams.ContainsKey(trackName)) {
                     foreach ((string, int) param in TrackParams[trackName]) {
                         MusicShuffler.instance.paramsToSet.Enqueue(param);
