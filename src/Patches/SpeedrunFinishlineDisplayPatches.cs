@@ -590,6 +590,8 @@ namespace TunicRandomizer {
             __instance.newgame_option.transform.GetChild(1).GetComponent<RTLTMPro.RTLTextMeshPro>().text = "Return to Title Screen";
             __instance.newgame_option.transform.GetChild(2).GetComponent<LocalizeTMP>().enabled = false;
             __instance.newgame_option.transform.GetChild(2).GetComponent<RTLTMPro.RTLTextMeshPro>().text = "Thank you for playing the TUNIC Randomizer!";
+
+            CRTMode.Toggle();
         }
     }
 }
