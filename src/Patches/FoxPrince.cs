@@ -96,11 +96,16 @@ namespace TunicRandomizer {
                 CachedPlandoPortals = plando;
             }
 
+            // if you entered the pinned portal directly, it needs to be unpinned
+            if (GetBool($"randomizer bp chosen {PinnedPortal}")) {
+                PinnedPortal = "";
+            }
+
             // check if there's a pinned portal, if there is check if it's a valid direction pair if direction pairs, and check if it's been rerolled from already
             // if the pinned portal is valid for the current choice, then it will be the first choice
             if (PinnedPortal != ""
                 && (!GetBool(PortalDirectionPairs) || TunicUtils.VerifyDirectionPair(currentPortalName, PinnedPortal))
-                && excludedPortals == null) {
+                && excludedPortals == null) {   
                 // todo: this is duplicate of below, could probably deduplicate it
                 int maxCount = 100;
                 int curCount = 0;
@@ -139,9 +144,6 @@ namespace TunicRandomizer {
             int maxTrialCount = 1000;
             int trialCount = 0;
             while (portalChoices.Count < 3) {
-                if (portalChoices.Count() == 3) {
-                    break;
-                }
                 if (trialCount >= maxTrialCount && portalChoices.Count > 0) {
                     // we've done enough trials to say that we probably won't find any more connections, so it's time to give the player less than 3 choices
                     // if we don't have any choices yet, keep trying -- if it's failing, we'd wanna know that, but maybe it's just something really restrictive and weird

@@ -84,10 +84,54 @@ namespace TunicRandomizer {
             return output;
         }
 
+        public static List<string> ExtraStuff() {
+            List<string> output = new List<string>();
+
+            output.Add("Here is the player's current inventory of items and regions:");
+            foreach (KeyValuePair<string, int> itemPair in TunicUtils.PlayerItemsAndRegions) {
+                output.Add($"{itemPair.Key} x{itemPair.Value}");
+            }
+            output.Add("---------------------------------------------------");
+            output.Add("Here are the currently accessible entrances:");
+            List<string> portalNames = new List<string>();
+            foreach (Dictionary<string, List<ERData.TunicPortal>> regionDict in ERData.RegionPortalsList.Values) {
+                foreach (List<ERData.TunicPortal> portalList in regionDict.Values) {
+                    foreach (ERData.TunicPortal portal in portalList) {
+                        // I'm only doing it like this instead of getting the region earlier because there's probably weird shenanigans going on
+                        string portalRegion = TunicUtils.FindPortalRegionFromName(portal.Name);
+                        // if it's not valid for this generation let's just skip it because who cares
+                        if (portalRegion == TunicUtils.FindPortalRegionFromName("fake name")) {
+                            continue;
+                        }
+                        // this isn't a real portal, it's sorta hacky
+                        if (portal.Name == "Shop Portal") {
+                            continue;
+                        }
+                        if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion)) {
+                            portalNames.Add(portal.Name);
+                        }
+                    }
+                }
+            }
+            output.AddRange(portalNames);
+            output.Add("---------------------------------------------------");
+            output.Add("Here are the currently accessible entrances that have not been entered yet:");
+            foreach (string portalName in portalNames) {
+                if (!SaveFlags.GetBool("randomizer entered portal " + portalName)) {
+                    output.Add(portalName);
+                }
+            }
+            output.Add("---------------------------------------------------");
+
+            return output;
+        }
+
 
         public static void WriteLogicSummaryFile() {
             SetupRegionLogicSummaryWithStatus();
-            TunicUtils.TryWriteFile(TunicRandomizer.RegionLogicPath, StringifyLogicSummary(RegionLogicSummaryWithStatus));
+            List<string> summaryWithExtras = StringifyLogicSummary(RegionLogicSummaryWithStatus);
+            summaryWithExtras.AddRange(ExtraStuff());
+            TunicUtils.TryWriteFile(TunicRandomizer.RegionLogicPath, summaryWithExtras);
         }
 
     }

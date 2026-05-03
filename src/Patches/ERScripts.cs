@@ -249,7 +249,6 @@ namespace TunicRandomizer {
             RandomizedPortals.Clear();
             FoxPrince.FPRandomizedPortals.Clear();
             ItemTracker.EntranceFileAllPortals.Clear();
-            ModifiedTraversalReqs = TunicUtils.DeepCopyTraversalReqs();
 
             Dictionary<string, string> plando = null;
             if (GetBool(ERFixedShop)) {
@@ -276,7 +275,9 @@ namespace TunicRandomizer {
             bool decoupledEnabled = GetBool(Decoupled);
             bool dirPairsEnabled = GetBool(PortalDirectionPairs);
             bool foxPrinceEnabled = GetBool(FoxPrinceEnabled);
-            
+            // refreshing ModifiedTraversalReqs has to happen here so that fox prince pinned portals don't "taint" it for future trials
+            ModifiedTraversalReqs = DeepCopyTraversalReqs();
+
             // keeping track of how many portals of each are left while pairing portals
             Dictionary<int, int> twoPlusPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
             Dictionary<int, int> deadEndPortalDirectionTracker = new Dictionary<int, int> { { (int)PDir.NORTH, 0 }, { (int)PDir.SOUTH, 0 }, { (int)PDir.EAST, 0 }, { (int)PDir.WEST, 0 }, { (int)PDir.FLOOR, 0 }, { (int)PDir.LADDER_DOWN, 0 }, { (int)PDir.LADDER_UP, 0 }, { (int)PDir.NONE, 0 } };
@@ -426,9 +427,9 @@ namespace TunicRandomizer {
                     portalsList2.Remove(portal2);
                 } else {
                     TunicLogger.LogError($"Error finding portal2 {portal2name} in plando stuff");
+                    TunicLogger.LogInfo($"portal 1 is {portal1name}");
                 }
 
-                // this probably can't get hit, remove later after confirming that
                 if (portal1 == null || portal2 == null) {
                     TunicLogger.LogError("Error in plando connection stuff while finding the portal names!");
                 }
@@ -680,7 +681,6 @@ namespace TunicRandomizer {
                     TunicUtils.ShuffleList(portalsList2, seed);
                 }
             }
-            TunicLogger.LogTesting("done pairing portalsList");
 
             // now we have every region accessible, and every dead end should be connected, so it's time to connect loose ends
             int finalPairLoopNumber = 0;
@@ -842,12 +842,6 @@ namespace TunicRandomizer {
         public static void ModifyPortals(string scene_name, bool sending = false) {
             if (GetBool(FoxPrinceEnabled)) {
                 RandomizedPortals = new List<PortalCombo>(FoxPrince.FPRandomizedPortals);
-                TunicLogger.LogInfo("modifying portal names");
-                foreach (PortalCombo pc in RandomizedPortals) {
-                    TunicLogger.LogInfo(pc.Portal1.Name);
-                    TunicLogger.LogInfo(pc.Portal2.Name);
-                    TunicLogger.LogInfo("--");
-                }
                 ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(TunicUtils.DeepCopyTraversalReqs());
                 if (FoxPrince.UpdateSignsFlag) {
                     Hints.CreateSignHints();
