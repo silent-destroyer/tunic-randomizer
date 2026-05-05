@@ -108,6 +108,9 @@ namespace TunicRandomizer {
             SceneText1.SetActive(true);
             RTLTextMeshPro st1 = SceneText1.AddComponent<RTLTextMeshPro>();
             st1.fontSize = 12;
+            if (Screen.width == 3840 && Screen.height == 2160) {
+                st1.fontSize = 8;
+            }
             st1.fontMaterial = ModelSwaps.FindMaterial("Latin Rounded - Quantity Outline");
             st1.font = odin;
             st1.alignment = TextAlignmentOptions.Center;
@@ -376,11 +379,13 @@ namespace TunicRandomizer {
                 }
                 if (portalChoices.Count >= 1) {
                     SceneText1.GetComponent<RTLTextMeshPro>().text = portalChoices[0].Portal2.Name;
+                    ResizeText(SceneText1.GetComponent<RTLTextMeshPro>());
                     ButtonObj1.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[0].Portal2.Name;
                     UpdateSceneSprite(SceneSprite1, portalChoices[0].Portal2.Name);
                 }
                 if (portalChoices.Count >= 2) {
                     SceneText2.GetComponent<RTLTextMeshPro>().text = portalChoices[1].Portal2.Name;
+                    ResizeText(SceneText2.GetComponent<RTLTextMeshPro>());
                     ButtonObj2.GetComponent<SceneSelectionButton>().EntranceName= portalChoices[1].Portal2.Name;
                     ButtonObj2.GetComponent<SceneSelectionButton>().disabled = false;
                     UpdateSceneSprite(SceneSprite2, portalChoices[1].Portal2.Name);
@@ -391,6 +396,7 @@ namespace TunicRandomizer {
                 }
                 if (portalChoices.Count >= 3) {
                     SceneText3.GetComponent<RTLTextMeshPro>().text = portalChoices[2].Portal2.Name;
+                    ResizeText(SceneText3.GetComponent<RTLTextMeshPro>());
                     ButtonObj3.GetComponent<SceneSelectionButton>().EntranceName = portalChoices[2].Portal2.Name;
                     ButtonObj3.GetComponent<SceneSelectionButton>().disabled = false;
                     UpdateSceneSprite(SceneSprite3, portalChoices[2].Portal2.Name);
@@ -432,6 +438,13 @@ namespace TunicRandomizer {
                 sr.transform.localScale = new Vector3(35, 40, 35);
             } else {
                 sr.transform.localScale = new Vector3(70, 80, 70);
+            }
+        }
+
+        private void ResizeText(RTLTextMeshPro rtlTmp) {
+            rtlTmp.fontSize = 12;
+            if (Screen.width == 3840 && Screen.height == 2160) {
+                rtlTmp.fontSize = 8;
             }
         }
 
