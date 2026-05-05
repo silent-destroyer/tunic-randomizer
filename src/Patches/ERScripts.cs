@@ -343,19 +343,13 @@ namespace TunicRandomizer {
             FullInventory.Add("Overworld", 1);
 
             TunicUtils.AddDictToDict(FullInventory, ItemRandomizer.PopulatePrecollected());
-            // it doesn't really matter if there's duplicates from the above for this
-            Dictionary<string, int> MaxItems = new Dictionary<string, int> {
-                { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Hyperdash", 1 }, { "Mask", 1 },
-                { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 100 }
-            };
-            TunicUtils.AddDictToDict(FullInventory, MaxItems);
 
             // if blue prince mode is off or this is the first time through, add all progression to the FullInventory
             if (!ItemRandomizer.InitialRandomizationDone || !canFail) {
                 // it doesn't really matter if there's duplicates from the above for this
                 Dictionary<string, int> MaxItems = new Dictionary<string, int> {
                     { "Stick", 1 }, { "Sword", 1 }, { "Wand", 1 }, { "Stundagger", 1 }, { "Techbow", 1 }, { "Shotgun", 1 }, { "Mask", 1 },
-                    { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 50 }
+                    { "Lantern", 1 }, { "12", 1 }, { "21", 1 }, { "26", 1 }, { "Key", 2 }, { "Key (House)", 1 }, { "Hexagon Gold", 100 }
                 };
                 TunicUtils.AddDictToDict(FullInventory, MaxItems);
 
