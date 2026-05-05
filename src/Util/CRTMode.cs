@@ -37,8 +37,8 @@ namespace TunicRandomizer {
             GameObject.Destroy(crtHolder.transform.GetChild(2).gameObject);
             GameObject.Destroy(crtHolder.transform.GetChild(0).gameObject);
             crtHolder.transform.parent = transform;
-            crtHolder.transform.GetChild(1).localScale = new Vector3(3.5f, 2.5f, 2.5f);
-            crtHolder.transform.GetChild(4).localPosition = new Vector3(0f, -1.753f, 1.58f);
+            crtHolder.transform.Find("CRT plane").localScale = new Vector3(3.5f, 2.5f, 2.5f);
+            crtHolder.transform.Find("CRT_body").localPosition = new Vector3(0f, -1.753f, 1.58f);
             crtHolder.SetActive(true);
             crtHolder.transform.Find("Offset").GetComponentInChildren<Kino.Bloom>().enabled = false;
             crtHolder.transform.Find("Offset").GetComponentInChildren<DepthOfField>().aperture = 0.75f;
@@ -103,8 +103,8 @@ namespace TunicRandomizer {
             } else {
                 TitleVersion.VersionString.transform.localPosition = new Vector3(-25f, 240f, 0f);
             }
-            crtHolder.transform.GetChild(1).gameObject.SetActive(false);
-            crtHolder.transform.GetChild(0).localScale = new Vector3(3.5f, 2.5f, 2.5f);
+            crtHolder.transform.Find("CRT_body").gameObject.SetActive(false);
+            crtHolder.transform.Find("CRT plane").localScale = new Vector3(3.5f, 2.5f, 2.5f);
         }
 
         public static void SetupCRTMode() {
