@@ -90,7 +90,7 @@ namespace TunicRandomizer {
                 }
                 if (SwordProxy.transform.childCount >= 3) {
                     SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 1.7f, 0f);
-                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 3.25f, 1f);
+                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 3.25f, 2f);
                     SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.3f, 3.35f, 0.3f);
                 }
 
@@ -117,7 +117,7 @@ namespace TunicRandomizer {
                 }
                 if (SwordProxy.transform.childCount >= 3) {
                     SwordProxy.transform.GetChild(0).localPosition = new Vector3(0f, 1.85f, 0f);
-                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 3.5f, 1f);
+                    SwordProxy.transform.GetChild(1).GetComponent<BoxCollider>().size = new Vector3(0.33f, 3.5f, 2f);
                     SwordProxy.transform.GetChild(2).GetComponent<BoxCollider>().size = new Vector3(0.3f, 3.5f, 0.3f);
                     SwordProxy.transform.GetChild(1).GetComponent<HitTrigger>().unblockable = true;
                     SwordProxy.transform.GetChild(2).GetComponent<HitTrigger>().unblockable = true;
