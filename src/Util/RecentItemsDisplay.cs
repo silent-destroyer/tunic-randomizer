@@ -215,7 +215,7 @@ namespace TunicRandomizer {
             if ((SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) || SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) && check.Reward.Name == "money" && check.Reward.Amount <= 5) {
                 return;
             }
-            recentItemsQueue.Add(new RecentItemData(Check: check, IsHexagonUnlock: hexagonUnlock, HexagonAbility: hexagonAbility));
+            recentItemsQueue.Add(new RecentItemData(Check: check, ForYou: true, IsHexagonUnlock: hexagonUnlock, HexagonAbility: hexagonAbility));
             UpdateItemDisplay();
         }
 
