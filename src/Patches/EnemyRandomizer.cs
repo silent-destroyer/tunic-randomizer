@@ -912,6 +912,9 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].AddComponent<FleemerQuartet>();
                     Enemies[EnemyName].GetComponent<FleemerQuartet>().GroupId = -1;
                 }
+                if (EnemyName == "bomezome big") {
+                    EnemyDropShuffle.FleemerTossOriginal = Enemies[EnemyName].GetComponent<Bumblebones>().tossRigidbody;
+                }
                 if(EnemyName == "Librarian") {
                     LibrarianPools = GameObject.Instantiate(GameObject.Find("_Pools/"));
                     LibrarianOrbs = new List<GameObject>();
