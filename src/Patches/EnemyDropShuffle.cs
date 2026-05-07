@@ -702,9 +702,13 @@ namespace TunicRandomizer {
             { "44000001 [ziggurat2020_3]", (9999, "44009999 [ziggurat2020_3]") },
         };
 
+        // For enemies that summon enemies
         public static Item PhrendSoul;
+        public static Item RudelingSoul;
         public static Rigidbody FleemerTossReplacement;
         public static Rigidbody FleemerTossOriginal;
+        public static Monster librarianRudeling;
+        public static Monster librarianPhrend;
 
         public static string GetEnemyCheckId(GameObject Enemy) {
             if (Enemy.GetComponent<RuntimeStableID>() != null) {
@@ -812,6 +816,7 @@ namespace TunicRandomizer {
             }
 
             PhrendSoul = Inventory.GetItemByName("Enemy Soul (Phrend)");
+            RudelingSoul = Inventory.GetItemByName("Enemy Soul (Rudelings)");
         }
 
         public static void SetupEnemyChecks() {
@@ -949,6 +954,23 @@ namespace TunicRandomizer {
                 __instance.tossRigidbody = FleemerTossReplacement;
             } else if (FleemerTossOriginal != null) { 
                 __instance.tossRigidbody = FleemerTossOriginal;
+            }
+            return true;
+        }
+
+        public static bool Librarian_addSummon_PrefixPatch(Librarian __instance) {
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) {
+                List<Monster> adds = new List<Monster>();
+                if (PhrendSoul.Quantity > 0) {
+                    adds.Add(librarianPhrend);
+                }
+                if (RudelingSoul.Quantity > 0) {
+                    adds.Add(librarianRudeling);
+                }
+                if (adds.Count == 0) {
+                    return false;
+                }
+                __instance.addMonsters = adds.ToArray();
             }
             return true;
         }

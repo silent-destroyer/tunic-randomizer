@@ -213,6 +213,8 @@ namespace TunicRandomizer {
 
             Harmony.Patch(AccessTools.Method(typeof(Bumblebones), "__toss"), new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Bumblebones___toss_PrefixPatch")));
 
+            Harmony.Patch(AccessTools.Method(typeof(Librarian), "addSummon"), new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Librarian_addSummon_PrefixPatch")));
+
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));
 

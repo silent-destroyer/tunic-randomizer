@@ -930,6 +930,9 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].GetComponent<Librarian>().horizontalSlashPrefab_pool = LibrarianPools.transform.GetChild(0).GetComponent<PooledFX>();
                     Enemies[EnemyName].GetComponent<Librarian>().verticalSlashPrefab_pool = LibrarianPools.transform.GetChild(1).GetComponent<PooledFX>();
                     Enemies[EnemyName].GetComponent<Librarian>().orbPrefab_pool = LibrarianPools.transform.GetChild(3).GetComponent<PooledFX>();
+
+                    EnemyDropShuffle.librarianPhrend = Enemies[EnemyName].GetComponent<Librarian>().addMonsters.Where(m => m.GetComponent<Bat>() != null).First();
+                    EnemyDropShuffle.librarianRudeling = Enemies[EnemyName].GetComponent<Librarian>().addMonsters.Where(m => m.GetComponent<Skuladin>() != null).First();
                 }
                 if (EnemyName == "Foxgod") {
                     FoxgodBossfightRoot = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "_BOSSFIGHT ROOT").First());
