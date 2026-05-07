@@ -13,8 +13,8 @@ namespace TunicRandomizer {
             if (!SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) { return; }
             foreach (KeyValuePair<string, List<GameObject>> pair in monsterSouls) {
                 if (Inventory.GetItemByName(pair.Key).Quantity == 0) {
-                    foreach (GameObject m in pair.Value) {
-                        m.SetActive(false);
+                    for (int i = 0; i < pair.Value.Count; i++) {
+                        pair.Value[i].SetActive(false);
                     }
                 }
             }

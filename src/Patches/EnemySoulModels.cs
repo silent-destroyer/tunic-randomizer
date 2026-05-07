@@ -128,9 +128,14 @@ namespace TunicRandomizer {
             GameObject.Destroy(phrend.GetComponentInChildren<MaterialByParameter>());
             GameObject.Destroy(phrend.GetComponentInChildren<CreatureMaterialManager>());
             phrend.GetComponentInChildren<SkinnedMeshRenderer>().materials = EnemyRandomizer.Enemies["Bat"].GetComponentInChildren<SkinnedMeshRenderer>().materials;
-            phrend.GetComponentsInChildren<Rigidbody>(true)[1].gameObject.SetActive(true);
-            EnemyDropShuffle.FleemerTossReplacement = phrend.GetComponentsInChildren<Rigidbody>(true)[1];
             EnemyPresentationObjs.Add("Enemy Soul (Phrend)", phrend);
+
+            GameObject skullHolder = new GameObject("fleemer toss skull obj holder");
+            skullHolder.SetActive(false);
+            GameObject.DontDestroyOnLoad(skullHolder);
+            EnemyDropShuffle.FleemerTossReplacement = GameObject.Instantiate(phrend.GetComponentsInChildren<Rigidbody>(true)[1].gameObject).GetComponent<Rigidbody>();
+            EnemyDropShuffle.FleemerTossReplacement.transform.parent = skullHolder.transform;
+            EnemyDropShuffle.FleemerTossReplacement.gameObject.SetActive(true);
         }
 
         private static void setupBeefboy(Transform parent) {
