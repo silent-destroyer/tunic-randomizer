@@ -181,7 +181,7 @@ namespace TunicRandomizer {
                 if (trapType == TrapType.Zoom && CameraController.DerekZoom == 0.5f) {
                     continue;
                 }
-                if (trapType == TrapType.CRT && (CRTTrap || TunicRandomizer.Settings.RetroFilterEnabled)) {
+                if (trapType == TrapType.CRT && (VintageTrap || CRTTrap || TunicRandomizer.Settings.RetroFilterEnabled)) {
                     continue;
                 }
                 if (trapType == TrapType.Vintage && VintageTrap) {
