@@ -580,8 +580,10 @@ namespace TunicRandomizer {
             UpdateDataStorage("Reached an Ending", SpeedrunData.gameComplete != 0, false);
 
             // Bells
-            UpdateDataStorage("Rang East Bell", StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue, false);
-            UpdateDataStorage("Rang West Bell", StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue, false);
+            if (!GetBool(BellShuffleEnabled)) {
+                UpdateDataStorage("Rang East Bell", StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue, false);
+                UpdateDataStorage("Rang West Bell", StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue, false);
+            }
 
             // Bomb Codes
             UpdateDataStorage("Granted Firecracker", StateVariable.GetStateVariableByName("Granted Firecracker").BoolValue, false);
