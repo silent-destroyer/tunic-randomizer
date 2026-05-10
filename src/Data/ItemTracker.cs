@@ -451,11 +451,12 @@ namespace TunicRandomizer {
                 TotalAreaChecks = 0;
                 AreaChecksFound = 0;
                 foreach (string SubArea in Locations.MainAreasToSubAreas[Area]) {
+                    if (Area == "Overworld" && SubArea != "Overworld Redux") { continue; }
                     TotalAreaChecks += TunicUtils.GetCheckCountInScene(SubArea);
                     AreaChecksFound += TunicUtils.GetCompletedChecksCountByScene(Checks, SubArea);
                 }
                 displayText += $"\"{(AreaChecksFound == TotalAreaChecks ? "<#eaa614>" : "<#ffffff>")}{Area.PadRight(24, '.')}{$"{AreaChecksFound}/{TotalAreaChecks}".PadLeft(9, '.')}\"\n";
-                if (Area == "Rooted Ziggurat") {
+                if (Area == "Quarry/Mountain") {
                     displayText += "---" + title;
                 }
             }
