@@ -108,23 +108,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("Error showing entrance selector");
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.I)) {
-                    try {
-                        Inventory.GetItemByName("Soul Dice").Quantity = 3;
-                        ItemPresentation.PresentItem(Inventory.GetItemByName("Soul Dice"), 3);
-                        Inventory.GetItemByName("Dart").Quantity = 3;
-                    } catch (Exception e) {
-                        TunicLogger.LogInfo("Error showing dice item");
-                    }
-                }
-                if (Input.GetKeyDown(KeyCode.O)) {
-                    try {
-                        Inventory.GetItemByName("Koban").Quantity = 3;
-                        ItemPresentation.PresentItem(Inventory.GetItemByName("Koban"));
-                    } catch (Exception e) {
-                        TunicLogger.LogInfo("Error showing dice item");
-                    }
-                }
+
                 if (Input.GetKeyDown(KeyCode.LeftBracket)) {
                     try {
                         if (SceneImageData.index > 0) {

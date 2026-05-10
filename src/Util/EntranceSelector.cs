@@ -519,5 +519,9 @@ namespace TunicRandomizer {
 
             return true;
         }
+
+        public void Animate() {
+            animationHandler = AnimationHandler();
+        }
     }
 }

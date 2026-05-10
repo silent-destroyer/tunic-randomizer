@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using RTLTMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -196,11 +198,11 @@ namespace TunicRandomizer {
              },
              {
                  "Windmill Exit",
-                 new SceneImage("Windmill Exit", "leaf_14r", 750, 900)
+                 new SceneImage("Windmill Exit", "leaf_29", 0, 3240, 600, 360)
              },
              {
                  "Windmill Shop",
-                 new SceneImage("Windmill Shop", "leaf_14r", 750, 900)
+                 new SceneImage("Windmill Shop", "leaf_29", 600, 3240, 600, 360)
              },
              {
                  "Old House Door Exit",
@@ -220,63 +222,63 @@ namespace TunicRandomizer {
              },
              {
                  "Changing Room Exit",
-                 new SceneImage("Changing Room Exit", "leaf_14r", 775, 500)
+                 new SceneImage("Changing Room Exit", "leaf_29", 1200, 3240, 600, 360)
              },
              {
                  "Fountain HC Room Exit",
-                 new SceneImage("Fountain HC Room Exit", "leaf_14r", 605, 575)
+                 new SceneImage("Fountain HC Room Exit", "leaf_29", 1800, 3240, 600, 360)
              },
              {
                  "Cube Cave Exit",
-                 new SceneImage("Cube Cave Exit", "leaf_14r", 1000, 525)
+                 new SceneImage("Cube Cave Exit", "leaf_29", 2400, 3240, 600, 360)
              },
              {
                  "Guard Patrol Cave Exit",
-                 new SceneImage("Guard Patrol Cave Exit", "leaf_14r", 1650, 1100)
+                 new SceneImage("Guard Patrol Cave Exit", "leaf_29", 0, 2880, 600, 360)
              },
              {
                  "Ruined Shop Exit",
-                 new SceneImage("Ruined Shop Exit", "leaf_14r", 450, 600)
+                 new SceneImage("Ruined Shop Exit", "leaf_29", 600, 2880, 600, 360)
              },
              {
                  "Furnace Exit towards Well",
-                 new SceneImage("Furnace Exit towards Well", "leaf_14r", 275, 1000)
+                 new SceneImage("Furnace Exit towards Well", "leaf_29", 1200, 2880, 600, 360)
              },
              {
                  "Furnace Exit to Dark Tomb",
-                 new SceneImage("Furnace Exit to Dark Tomb", "leaf_15r", 900, 50)
+                 new SceneImage("Furnace Exit to Dark Tomb", "leaf_29", 1800, 2880, 600, 360)
              },
              {
                  "Furnace Exit towards West Garden",
-                 new SceneImage("Furnace Exit towards West Garden", "leaf_14r", 150, 675)
+                 new SceneImage("Furnace Exit towards West Garden", "leaf_29", 2400, 2880, 600, 360)
              },
              {
                  "Furnace Exit to Beach",
-                 new SceneImage("Furnace Exit to Beach", "leaf_14r", 275, 500)
+                 new SceneImage("Furnace Exit to Beach", "leaf_29", 0, 2520, 600, 360)
              },
              {
                  "Furnace Exit under Windmill",
-                 new SceneImage("Furnace Exit under Windmill", "leaf_14r", 450, 825)
+                 new SceneImage("Furnace Exit under Windmill", "leaf_29", 600, 2520, 600, 360)
              },
              {
                  "Stick House Exit",
-                 new SceneImage("Stick House Exit", "leaf_14r", 1090, 400)
+                 new SceneImage("Stick House Exit", "leaf_29", 1200, 2520, 600, 360)
              },
              {
                  "Ruined Passage Not-Door Exit",
-                 new SceneImage("Ruined Passage Not-Door Exit", "leaf_14r", 1500, 450)
+                 new SceneImage("Ruined Passage Not-Door Exit", "leaf_29", 1800, 2520, 600, 360)
              },
              {
                  "Ruined Passage Door Exit",
-                 new SceneImage("Ruined Passage Door Exit", "leaf_14r", 1300, 450)
+                 new SceneImage("Ruined Passage Door Exit", "leaf_29", 2400, 2520, 600, 360)
              },
              {
                  "Southeast HC Room Exit",
-                 new SceneImage("Southeast HC Room Exit", "leaf_14r", 1735, 350)
+                 new SceneImage("Southeast HC Room Exit", "leaf_29", 0, 2160, 600, 360)
              },
              {
                  "Caustic Light Cave Exit",
-                 new SceneImage("Caustic Light Cave Exit", "leaf_14r", 1735, 250)
+                 new SceneImage("Caustic Light Cave Exit", "leaf_29", 600, 2160, 600, 360)
              },
              {
                  "Maze Cave Exit",
@@ -284,35 +286,35 @@ namespace TunicRandomizer {
              },
              {
                  "Hourglass Cave Exit",
-                 new SceneImage("Hourglass Cave Exit", "leaf_8v", 1175, 1050)
+                 new SceneImage("Hourglass Cave Exit", "leaf_29", 1200, 2160, 600, 360)
              },
              {
                  "Special Shop Exit",
-                 new SceneImage("Special Shop Exit", "leaf_14r", 1700, 780)
+                 new SceneImage("Special Shop Exit", "leaf_29", 1800, 2160, 600, 360)
              },
              {
                  "Temple Rafters Exit",
-                 new SceneImage("Temple Rafters Exit", "leaf_12v", 500, 450, 600, 360)
+                 new SceneImage("Temple Rafters Exit", "leaf_29", 2400, 2160, 600, 360)
              },
              {
                  "Temple Door Exit",
-                 new SceneImage("Temple Door Exit", "leaf_12v", 500, 450, 600, 360)
+                 new SceneImage("Temple Door Exit", "leaf_29", 0, 1800, 600, 360)
              },
              {
                  "Forest Belltower to Guard Captain Room",
-                 new SceneImage("Forest Belltower to Guard Captain Room", "leaf_5r", 935, 825)
+                 new SceneImage("Forest Belltower to Guard Captain Room", "leaf_29", 600, 1800, 600, 360)
              },
              {
                  "Forest Belltower to Overworld",
-                 new SceneImage("Forest Belltower to Overworld", "leaf_14r", 1750, 675)
+                 new SceneImage("Forest Belltower to Overworld", "leaf_29", 1200, 1800, 600, 360)
              },
              {
                  "Forest Belltower to Fortress",
-                 new SceneImage("Forest Belltower to Fortress", "leaf_16r", 500, 0)
+                 new SceneImage("Forest Belltower to Fortress", "leaf_29", 1800, 1800, 600, 360)
              },
              {
                  "Forest Belltower to Forest",
-                 new SceneImage("Forest Belltower to Forest", "leaf_28", 0, 540)
+                 new SceneImage("Forest Belltower to Forest", "leaf_29", 2400, 1800, 600, 360)
              },
              {
                  "Forest to Belltower",
@@ -364,27 +366,27 @@ namespace TunicRandomizer {
              },
              {
                  "Guard House 1 Dance Fox Exit",
-                 new SceneImage("Guard House 1 Dance Fox Exit", "leaf_28", 0, 360)
+                 new SceneImage("Guard House 1 Dance Fox Exit", "leaf_29", 0, 1440, 600, 360)
              },
              {
                  "Guard House 1 Lower Exit",
-                 new SceneImage("Guard House 1 Lower Exit", "leaf_28", 600, 360)
+                 new SceneImage("Guard House 1 Lower Exit", "leaf_29", 1800, 1440, 600, 360)
              },
              {
                  "Guard House 1 Upper Forest Exit",
-                 new SceneImage("Guard House 1 Upper Forest Exit", "leaf_28", 300, 360)
+                 new SceneImage("Guard House 1 Upper Forest Exit", "leaf_29", 1200, 1440, 600, 360)
              },
              {
                  "Guard House 1 to Guard Captain Room",
-                 new SceneImage("Guard House 1 to Guard Captain Room", "leaf_5r", 935, 825)
+                 new SceneImage("Guard House 1 to Guard Captain Room", "leaf_29", 600, 1440, 600, 360)
              },
              {
                  "Guard House 2 Upper Exit",
-                 new SceneImage("Guard House 2 Upper Exit", "leaf_28", 600, 540)
+                 new SceneImage("Guard House 2 Upper Exit", "leaf_29", 2400, 1440, 600, 360)
              },
              {
                  "Guard House 2 Lower Exit",
-                 new SceneImage("Guard House 2 Lower Exit", "leaf_28", 900, 180)
+                 new SceneImage("Guard House 2 Lower Exit", "leaf_29", 0, 1080, 600, 360)
              },
              {
                  "Guard Captain Room Non-Gate Exit",
@@ -412,7 +414,7 @@ namespace TunicRandomizer {
              },
              {
                  "Checkpoint to Dark Tomb",
-                 new SceneImage("Checkpoint to Dark Tomb", "leaf_15r", 1450, 150)
+                 new SceneImage("Checkpoint to Dark Tomb", "leaf_29", 2400, 0, 600, 360)
              },
              {
                  "Dark Tomb to Overworld",
@@ -456,7 +458,7 @@ namespace TunicRandomizer {
              },
              {
                  "Magic Dagger House Exit",
-                 new SceneImage("Magic Dagger House Exit", "leaf_13v", 1350, 200)
+                 new SceneImage("Magic Dagger House Exit", "leaf_29", 600, 1080, 600, 360)
              },
              {
                  "Fortress Courtyard to Fortress Grave Path Lower",
@@ -548,7 +550,7 @@ namespace TunicRandomizer {
              },
              {
                  "Dusty Exit",
-                 new SceneImage("Dusty Exit", "leaf_16r", 1500, 550)
+                 new SceneImage("Dusty Exit", "leaf_29", 1200, 1080, 600, 360)
              },
              {
                  "Fortress Hero's Grave",
@@ -624,27 +626,27 @@ namespace TunicRandomizer {
              },
              {
                  "Library Hall Bookshelf Exit",
-                 new SceneImage("Library Hall Bookshelf Exit", "leaf_16v", 500, 1050)
+                 new SceneImage("Library Hall Bookshelf Exit", "leaf_29", 0, 720, 600, 360)
              },
              {
                  "Library Hero's Grave",
-                 new SceneImage("Library Hero's Grave", "leaf_11v", 300, 200)
+                 new SceneImage("Library Hero's Grave", "leaf_29", 600, 720, 600, 360)
              },
              {
                  "Library Hall to Rotunda",
-                 new SceneImage("Library Hall to Rotunda", "leaf_16v", 425, 1150)
+                 new SceneImage("Library Hall to Rotunda", "leaf_29", 1200, 720, 600, 360)
              },
              {
                  "Library Rotunda Lower Exit",
-                 new SceneImage("Library Rotunda Lower Exit", "leaf_16v", 425, 1150)
+                 new SceneImage("Library Rotunda Lower Exit", "leaf_29", 1800, 720, 600, 360)
              },
              {
                  "Library Rotunda Upper Exit",
-                 new SceneImage("Library Rotunda Upper Exit", "leaf_16v", 425, 1150)
+                 new SceneImage("Library Rotunda Upper Exit", "leaf_29", 2400, 720, 600, 360)
              },
              {
                  "Library Lab to Rotunda",
-                 new SceneImage("Library Lab to Rotunda", "leaf_16v", 425, 1150)
+                 new SceneImage("Library Lab to Rotunda", "leaf_29", 0, 360, 600, 360)
              },
              {
                  "Library to Far Shore",
@@ -676,11 +678,11 @@ namespace TunicRandomizer {
              },
              {
                  "Quarry Connector to Overworld",
-                 new SceneImage("Quarry Connector to Overworld", "leaf_14r", 250, 1150)
+                 new SceneImage("Quarry Connector to Overworld", "leaf_29", 600, 0, 600, 360)
              },
              {
                  "Quarry Connector to Quarry",
-                 new SceneImage("Quarry Connector to Quarry", "leaf_19r", 1750, 150)
+                 new SceneImage("Quarry Connector to Quarry", "leaf_29", 0, 0, 600, 360)
              },
              {
                  "Quarry to Overworld Exit",
@@ -704,7 +706,7 @@ namespace TunicRandomizer {
              },
              {
                  "Quarry to Ziggurat",
-                 new SceneImage("Quarry to Ziggurat", "leaf_19r", 1750, 700)
+                 new SceneImage("Quarry to Ziggurat", "leaf_19r", 325, 650)
              },
              {
                  "Quarry to Far Shore",
@@ -712,23 +714,23 @@ namespace TunicRandomizer {
              },
              {
                  "Monastery Rear Exit",
-                 new SceneImage("Monastery Rear Exit", "leaf_19r", 700, 1250)
+                 new SceneImage("Monastery Rear Exit", "leaf_29", 600, 360, 600, 360)
              },
              {
                  "Monastery Front Exit",
-                 new SceneImage("Monastery Front Exit", "leaf_19r", 900, 1150)
+                 new SceneImage("Monastery Front Exit", "leaf_29", 1800, 360, 600, 360)
              },
              {
                  "Monastery Hero's Grave",
-                 new SceneImage("Monastery Hero's Grave", "leaf_11v", 250, 1175)
+                 new SceneImage("Monastery Hero's Grave", "leaf_29", 1200, 360, 600, 360)
              },
              {
                  "Ziggurat Entry Hallway to Ziggurat Upper",
-                 new SceneImage("Ziggurat Entry Hallway to Ziggurat Upper", "leaf_19r", 325, 650)
+                 new SceneImage("Ziggurat Entry Hallway to Ziggurat Upper", "leaf_29", 1800, 0, 600, 360)
              },
              {
                  "Ziggurat Entry Hallway to Quarry",
-                 new SceneImage("Ziggurat Entry Hallway to Quarry", "leaf_19r", 325, 650)
+                 new SceneImage("Ziggurat Entry Hallway to Quarry", "leaf_29", 1200, 0, 600, 360)
              },
              {
                  "Ziggurat Upper to Ziggurat Entry Hallway",
@@ -760,11 +762,11 @@ namespace TunicRandomizer {
              },
              {
                  "Ziggurat Portal Room Exit",
-                 new SceneImage("Ziggurat Portal Room Exit", "leaf_18v", 535, 950, 600, 360)
+                 new SceneImage("Ziggurat Portal Room Exit", "leaf_29", 2400, 360, 600, 360)
              },
              {
                  "Ziggurat to Far Shore",
-                 new SceneImage("Ziggurat to Far Shore", "leaf_20v", 900, 800)
+                 new SceneImage("Ziggurat to Far Shore", "leaf_29", 2400, 360, 600, 360)
              },
              {
                  "Swamp Lower Exit",
@@ -958,10 +960,12 @@ namespace TunicRandomizer {
             SceneImage sceneImage = SceneImages[PortalName];
             createSprite(sceneImage.TextureName, sceneImage.TextureX, sceneImage.TextureY, sceneImage.Width, sceneImage.Height);
             EntranceSelector.SceneText1.GetComponent<RTLTextMeshPro>().text = sceneImage.PortalName;
+            EntranceSelector.instance.Animate();
         }
         public static void ShowPortalImage(SceneImage sceneImage) {
             createSprite(sceneImage.TextureName, sceneImage.TextureX, sceneImage.TextureY, sceneImage.Width, sceneImage.Height);
             EntranceSelector.SceneText1.GetComponent<RTLTextMeshPro>().text = sceneImage.PortalName;
+            EntranceSelector.instance.Animate();
         }
         public static void LogDictionary() {
             foreach (KeyValuePair<string, SceneImage> pair in SceneImages) {
@@ -980,6 +984,22 @@ namespace TunicRandomizer {
             GameObject.Destroy(ForestZigMap.GetComponent<Image>());
             Pages.Add("leaf_28", ForestZigMap);
             PageTextures.Add("leaf_28", ForestZigMap.GetComponent<SpriteRenderer>().sprite.texture);
+
+            var imgSource = "TunicRandomizer.src.Data.FoxPrinceSceneImages.jpg";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imgSource)) {
+                if (stream == null) {
+                    TunicLogger.LogInfo("img null");
+                } else {
+                    byte[] ba = new byte[stream.Length];
+                    stream.Read(ba, 0, ba.Length);
+                    GameObject InteriorAreas = ModelSwaps.CreateSprite(ba, m, Width: 3000, Height: 3600, SpriteName: "leaf_29");
+                    InteriorAreas.name = "leaf_29";
+                    InteriorAreas.AddComponent<SpriteRenderer>().sprite = InteriorAreas.GetComponent<Image>().sprite;
+                    GameObject.Destroy(InteriorAreas.GetComponent<Image>());
+                    Pages.Add("leaf_29", InteriorAreas);
+                    PageTextures.Add("leaf_29", InteriorAreas.GetComponent<SpriteRenderer>().sprite.texture);
+                }
+            }
         }
     }
 }

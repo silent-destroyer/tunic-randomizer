@@ -264,5 +264,8 @@
     <EmbeddedResource Include="src\Data\BreakableDescriptions.json" />
     <EmbeddedResource Include="src\Data\FuseDescriptions.json" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\Data\FoxPrinceSceneImages.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

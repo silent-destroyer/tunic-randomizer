@@ -2,7 +2,9 @@
 using Archipelago.MultiClient.Net.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -1978,13 +1980,17 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Soul Dice").icon = CustomItemImages["Soul Dice"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Koban").icon = CustomItemImages["Koban"].GetComponent<Image>().sprite;
-            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
+            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent<Image>().sprite;
         }
 
         public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
+            return CreateSprite(Convert.FromBase64String(ImageData), imgMaterial, Width, Height, SpriteName);
+        }
+        
+        public static GameObject CreateSprite(byte[] ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
 
             Texture2D Texture = new Texture2D(Width, Height, TextureFormat.DXT1, false);
-            ImageConversion.LoadImage(Texture, Convert.FromBase64String(ImageData));
+            ImageConversion.LoadImage(Texture, ImageData);
 
             GameObject obj = new GameObject(SpriteName + " image");
             //Sprite.Create(Texture2D, Rect, Vector2, float, uint, SpriteMeshType, Vector4, bool)
