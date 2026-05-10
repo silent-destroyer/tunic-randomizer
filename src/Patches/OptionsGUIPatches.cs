@@ -115,6 +115,7 @@ namespace TunicRandomizer {
                 }));
 
             } else {
+                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
                 if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     OptionsGUI.addButton("Mystery Seed", "<#00ff00>On", null);
                     return;
@@ -138,7 +139,6 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Maskless Logic", SaveFile.GetInt(MasklessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
-                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
             }
         }
 
