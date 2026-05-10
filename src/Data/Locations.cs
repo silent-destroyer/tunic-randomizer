@@ -235,6 +235,30 @@ namespace TunicRandomizer {
                 }
             },
             {
+                "Overworld Interiors",
+                new List<string>() {
+                    "Waterfall",
+                    "Overworld Cave",
+                    "Furnace",
+                    "Windmill",
+                    "ShopSpecial",
+                    "CubeRoom",
+                    "PatrolCave",
+                    "Maze Room",
+                    "Sword Cave",
+                    "Ruined Shop",
+                    "Town Basement",
+                    "Ruins Passage",
+                    "EastFiligreeCache",
+                    "Temple",
+                    "Overworld Interiors",
+                    "Town_FiligreeRoom",
+                    "Changing Room",
+                    "Posterity",
+                    "Purgatory",
+                }
+            },
+            {
                 "East Forest",
                 new List<string>() {
                     "Forest Belltower",
