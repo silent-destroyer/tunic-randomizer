@@ -220,7 +220,6 @@ namespace TunicRandomizer {
                     Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[breakableId]);
                 }
 
-                // todo: make this show the item in a reasonable spot
                 if (__instance.GetComponentInChildren<MoveUp>(true) != null) {
                     GameObject moveUp = __instance.GetComponentInChildren<MoveUp>(true).gameObject;
                     moveUp.transform.parent = __instance.transform.parent;

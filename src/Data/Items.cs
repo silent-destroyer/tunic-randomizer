@@ -322,6 +322,11 @@ namespace TunicRandomizer {
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
+
+            // Fox Prince Items
+            { "Soul Dice", new ItemData("Soul Dice", "filler", "Soul Dice", ItemTypes.INVENTORY, 1) },
+            { "Dart", new ItemData("Dart", "filler", "Dart", ItemTypes.INVENTORY, 1) },
+            { "Koban", new ItemData("Koban", "progression", "Koban", ItemTypes.INVENTORY, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {
@@ -580,6 +585,9 @@ namespace TunicRandomizer {
             {"Fortress Door Right Fuse", "Fortress Door Right Fuse"},
             {"East Bell", "East Bell"},
             {"West Bell", "West Bell"},
+            {"Soul Dice", "Soul Dice"},
+            {"Dart", "Dart"},
+            {"Koban", "Koban"},
         };
 
         public static Dictionary<string, string> ItemFlavorText = new Dictionary<string, string>() {

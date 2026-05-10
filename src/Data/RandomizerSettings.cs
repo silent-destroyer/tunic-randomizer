@@ -47,6 +47,7 @@ namespace TunicRandomizer {
         private const int BELL_SHUFFLE = 262144;
         private const int LAURELS_ZIPS = 524288;
         private const int LS_WITHOUT_ITEMS = 1048576;
+        private const int FOX_PRINCE = 2097152;
 
         public GameModes GameMode {
             get;
@@ -89,6 +90,11 @@ namespace TunicRandomizer {
         }
 
         public bool DecoupledER {
+            get;
+            set;
+        }
+
+        public bool FoxPrinceEnabled {
             get;
             set;
         }
@@ -585,6 +591,7 @@ namespace TunicRandomizer {
             ERFixedShop = false;
             PortalDirectionPairs = false;
             DecoupledER = false;
+            FoxPrinceEnabled = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
             FixedLaurelsOption = FixedLaurelsType.RANDOM;
@@ -763,6 +770,7 @@ namespace TunicRandomizer {
                 BellShuffle = eval(logic, BELL_SHUFFLE);
                 LaurelsZips = eval(logic, LAURELS_ZIPS);
                 LadderStorageWithoutItems = eval(logic, LS_WITHOUT_ITEMS);
+                FoxPrinceEnabled = eval(logic, FOX_PRINCE);
 
                 int general = int.Parse(decodedSplit[9]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -839,6 +847,7 @@ namespace TunicRandomizer {
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                     BreakableShuffle, FuseShuffle, BellShuffle, LaurelsZips, LadderStorageWithoutItems,
+                    FoxPrinceEnabled,
                 };
             } else {
                 return new bool[] { 
@@ -852,7 +861,7 @@ namespace TunicRandomizer {
                     GetBool(SaveFlags.Decoupled), GetBool(SaveFlags.HexagonQuestPageAbilities),
                     GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
                     GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
-                    GetBool(SaveFlags.LadderStorageWithoutItems),
+                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.FoxPrinceEnabled),
                 };
             }
         }

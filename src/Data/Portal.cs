@@ -11,8 +11,9 @@ namespace TunicRandomizer {
         public string SceneDestinationTag { get; set; }
         public string DestinationSceneTag { get; set; }
         public int Direction { get; set; }
+        public bool IsDeadEnd { get; set; }
 
-        public Portal(string name, string destination, string tag, string scene, string region) {
+        public Portal(string name, string destination, string tag, string scene, string region, bool isDeadEnd) {
             Name = name;
             Destination = destination;
             Tag = tag;
@@ -22,9 +23,10 @@ namespace TunicRandomizer {
             SceneDestinationTag = (Scene + ", " + DestinationTag);
             DestinationSceneTag = (Destination + ", " + Scene + "_" + Tag);  // for finding the vanilla connection
             Direction = (int)ERData.PDir.NONE;
+            IsDeadEnd = isDeadEnd;
         }
 
-        public Portal(string name, string destination, string tag, string scene, string region, int direction) {
+        public Portal(string name, string destination, string tag, string scene, string region, int direction, bool isDeadEnd) {
             Name = name;
             Destination = destination;
             Tag = tag;
@@ -34,6 +36,7 @@ namespace TunicRandomizer {
             SceneDestinationTag = (Scene + ", " + DestinationTag);
             DestinationSceneTag = (Destination + ", " + Scene + "_" + Tag);
             Direction = direction;
+            IsDeadEnd = isDeadEnd;
         }
 
         public bool CanReach(Dictionary<string, int> inventory) {
