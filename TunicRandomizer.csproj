@@ -233,6 +233,7 @@
     <Compile Include="src\PluginInfo.cs" />
     <Compile Include="src\TunicRandomizer.cs" />
     <Compile Include="src\Util\CreditsSkipper.cs" />
+    <Compile Include="src\Util\CRTMode.cs" />
     <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\EntranceSelector.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />

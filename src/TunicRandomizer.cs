@@ -49,6 +49,7 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<SceneSelectionButton>();
             ClassInjector.RegisterTypeInIl2Cpp<LadderManager>();
             ClassInjector.RegisterTypeInIl2Cpp<AbilitySpell>();
+            ClassInjector.RegisterTypeInIl2Cpp<CRTMode>();
 
             RegisterTypeAndCreateObject(typeof(MusicShuffler), "music shuffler");
             RegisterTypeAndCreateObject(typeof(PaletteEditor), "palette editor gui");
@@ -212,6 +213,10 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(GameOverDecision), "__newgame"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "GameOverDecision___newgame_PrefixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(GameOverDecision), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "GameOverDecision_Start_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(CreditsCardController), "Awake"), null, new HarmonyMethod(AccessTools.Method(typeof(CRTMode), "CreditsCardController_Awake_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(CreditsScrollController), "Start"), new HarmonyMethod(AccessTools.Method(typeof(CRTMode), "CreditsScrollController_Start_PrefixPatch")));
 
             // Fuses
             Harmony.Patch(AccessTools.Method(typeof(FuseCloseAnimationHelper), "__animationEvent_fuseCloseAnimationDone"), null, new HarmonyMethod(AccessTools.Method(typeof(FuseRandomizer), "FuseCloseAnimationHelper___animationEvent_fuseCloseAnimationDone_PostfixPatch")));
