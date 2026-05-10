@@ -47,9 +47,10 @@ namespace TunicRandomizer {
         private const int BELL_SHUFFLE = 262144;
         private const int LAURELS_ZIPS = 524288;
         private const int LS_WITHOUT_ITEMS = 1048576;
-        private const int ENEMY_DROP_SHUFFLE = 2097152;
-        private const int EXTRA_ENEMY_DROPS = 4194304;
-        private const int ENEMY_DROP_SOULS = 8388608;
+        private const int FOX_PRINCE = 2097152;
+        private const int ENEMY_DROP_SHUFFLE = 4194304;
+        private const int EXTRA_ENEMY_DROPS = 8388608;
+        private const int ENEMY_DROP_SOULS = 16777216;
 
         public GameModes GameMode {
             get;
@@ -92,6 +93,11 @@ namespace TunicRandomizer {
         }
 
         public bool DecoupledER {
+            get;
+            set;
+        }
+
+        public bool FoxPrinceEnabled {
             get;
             set;
         }
@@ -608,6 +614,7 @@ namespace TunicRandomizer {
             ERFixedShop = false;
             PortalDirectionPairs = false;
             DecoupledER = false;
+            FoxPrinceEnabled = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
             FixedLaurelsOption = FixedLaurelsType.RANDOM;
@@ -790,6 +797,7 @@ namespace TunicRandomizer {
                 BellShuffle = eval(logic, BELL_SHUFFLE);
                 LaurelsZips = eval(logic, LAURELS_ZIPS);
                 LadderStorageWithoutItems = eval(logic, LS_WITHOUT_ITEMS);
+                FoxPrinceEnabled = eval(logic, FOX_PRINCE);
                 EnemyDropShuffle = eval(logic, ENEMY_DROP_SHUFFLE);
                 ExtraEnemyDrops = eval(logic, EXTRA_ENEMY_DROPS);
                 ShuffleEnemySouls = eval(logic, ENEMY_DROP_SOULS);
@@ -869,7 +877,7 @@ namespace TunicRandomizer {
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                     BreakableShuffle, FuseShuffle, BellShuffle, LaurelsZips, LadderStorageWithoutItems,
-                    EnemyDropShuffle, ExtraEnemyDrops, ShuffleEnemySouls,
+                    FoxPrinceEnabled, EnemyDropShuffle, ExtraEnemyDrops, ShuffleEnemySouls,
                 };
             } else {
                 return new bool[] { 
@@ -884,7 +892,8 @@ namespace TunicRandomizer {
                     GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
                     GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
                     GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.ShuffleEnemyDropsEnabled),
-                    GetBool(SaveFlags.ExtraEnemyDropsEnabled), GetBool(SaveFlags.ShuffleEnemySoulsEnabled),
+                    GetBool(SaveFlags.FoxPrinceEnabled), GetBool(SaveFlags.ExtraEnemyDropsEnabled), 
+                    GetBool(SaveFlags.ShuffleEnemySoulsEnabled), GetBool(SaveFlags.LadderStorageWithoutItems), 
                 };
             }
         }

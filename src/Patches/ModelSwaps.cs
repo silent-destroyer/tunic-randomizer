@@ -2,7 +2,9 @@
 using Archipelago.MultiClient.Net.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -1840,9 +1842,50 @@ namespace TunicRandomizer {
                 List<ShopItem> items = ShopManager.cachedShopItems != null ? ShopManager.cachedShopItems.ToList() : new List<ShopItem>();
                 items.Add(IceBombs.GetComponent<ShopItem>());
                 items.Add(Pepper.GetComponent<ShopItem>());
+
+                if (GetBool(FoxPrinceEnabled)) {
+                    GameObject SoulDice = GameObject.Instantiate(IceBombs);
+                    SoulDice.name = "Soul Dice";
+                    SoulDice.transform.parent = Pepper.transform.parent;
+                    SoulDice.GetComponent<ShopItem>().itemToGive = Inventory.GetItemByName("Soul Dice");
+                    SoulDice.GetComponent<ShopItem>().price = 120;
+                    SoulDice.GetComponent<ShopItem>().quantityToGive = 1;
+                    for (int i = SoulDice.transform.GetChild(0).childCount - 1; i >= 0; i--) {
+                        GameObject.Destroy(SoulDice.transform.GetChild(0).GetChild(i).gameObject);
+                    }
+                    GameObject model = GameObject.Instantiate(Items["Soul Dice"]);
+                    model.layer = 12;
+                    model.transform.GetChild(0).gameObject.layer = 12;
+                    model.transform.parent = SoulDice.transform.GetChild(0);
+                    GameObject.DestroyImmediate(model.GetComponent<Rotate>());
+                    model.transform.localScale = Vector3.one * 0.65f;
+                    model.transform.localPosition = Vector3.zero;
+                    model.SetActive(true);
+
+                    GameObject Dart = GameObject.Instantiate(SoulDice);
+                    Dart.name = "Dart";
+                    Dart.transform.parent = Pepper.transform.parent;
+                    Dart.GetComponent<ShopItem>().itemToGive = Inventory.GetItemByName("Dart");
+                    Dart.GetComponent<ShopItem>().price = 180;
+                    Dart.GetComponent<ShopItem>().quantityToGive = 1;
+                    for (int i = Dart.transform.GetChild(0).childCount - 1; i >= 0; i--) {
+                        GameObject.Destroy(Dart.transform.GetChild(0).GetChild(i).gameObject);
+                    } 
+                    GameObject dartModel = new GameObject("Dart");
+                    dartModel.layer = 12;
+                    dartModel.transform.parent = Dart.transform.GetChild(0);
+                    dartModel.transform.localPosition = Vector3.zero;
+                    dartModel.AddComponent<MeshFilter>().mesh = Items["Dart"].GetComponent<MeshFilter>().mesh;
+                    dartModel.AddComponent<MeshRenderer>().materials = Items["Dart"].GetComponent<MeshRenderer>().materials;
+                    dartModel.transform.localScale = Vector3.one * 1.25f;
+                    dartModel.transform.localEulerAngles = new Vector3(315f, 0f, 0f);
+                    items.Add(SoulDice.GetComponent<ShopItem>());
+                    items.Add(Dart.GetComponent<ShopItem>());
+                }
+
                 ShopManager.cachedShopItems = items.ToArray();
             } catch (Exception e) {
-                TunicLogger.LogError("Failed to create permanent ice bomb and/or pepper items in the shop.");
+                TunicLogger.LogError("Failed to add new items to the shop.");
             }
         }
 
@@ -1955,6 +1998,8 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
             CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
             CustomItemImages.Add("Enemy Soul", CreateSprite(ImageData.EnemySoul, ImageMaterial, 160, 160, SpriteName: "Randomizer items_enemysoul"));
+            CustomItemImages.Add("Soul Dice", CreateSprite(ImageData.SoulDice, ImageMaterial, 160, 160, SpriteName: "Randomizer items_souldice"));
+            CustomItemImages.Add("Koban", CreateSprite(ImageData.Koban, ImageMaterial, 160, 160, SpriteName: "Randomizer items_koban"));
             CustomItemImages.Add("Hyperdash Toggle", CreateSprite(ImageData.HyperdashToggle, ImageMaterial, 160, 160, SpriteName: "Randomizer items_hyperdash toggle"));
 
             Inventory.GetItemByName("Librarian Sword").icon = CustomItemImages["Librarian Sword"].GetComponent<Image>().sprite;
@@ -1963,16 +2008,22 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hexagon Gold").icon = CustomItemImages["Gold Questagon"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Torch").icon = CustomItemImages["Torch Redux"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Soul Dice").icon = CustomItemImages["Soul Dice"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Koban").icon = CustomItemImages["Koban"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent<Image>().sprite;\
             Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
 
             EnemyModelSwaps.CreateTextures(ImageMaterial);
         }
 
-        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
-            Texture2D Texture = new Texture2D(Width, Height, tf, false);
-            ImageConversion.LoadImage(Texture, Convert.FromBase64String(ImageData));
-            return CreateSprite(Texture, imgMaterial, Width, Height, SpriteName);
+        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
+            return CreateSprite(Convert.FromBase64String(ImageData), imgMaterial, Width, Height, SpriteName);
         }
+        
+        public static GameObject CreateSprite(byte[] ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
+
+            Texture2D Texture = new Texture2D(Width, Height, TextureFormat.DXT1, false);
+            ImageConversion.LoadImage(Texture, ImageData);
 
         public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
             GameObject obj = new GameObject(SpriteName + " image");

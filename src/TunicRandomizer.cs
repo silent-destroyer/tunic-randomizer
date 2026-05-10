@@ -46,6 +46,8 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<AllowHolyCross>();
             ClassInjector.RegisterTypeInIl2Cpp<RandoActionSet>();
             ClassInjector.RegisterTypeInIl2Cpp<EnemyCheck>();            
+            ClassInjector.RegisterTypeInIl2Cpp<EntranceSelector>();
+            ClassInjector.RegisterTypeInIl2Cpp<SceneSelectionButton>();
             ClassInjector.RegisterTypeInIl2Cpp<LadderManager>();
             ClassInjector.RegisterTypeInIl2Cpp<EnemySoulManager>();
             ClassInjector.RegisterTypeInIl2Cpp<LockEnemyInteraction>();
@@ -240,6 +242,11 @@ namespace TunicRandomizer {
 
             // Bells            
             Harmony.Patch(AccessTools.Method(typeof(TuningForkBell), "onStateChange"), null, new HarmonyMethod(AccessTools.Method(typeof(BellShuffle), "TuningForkBell_onStateChange_PostfixPatch")));
+
+            // Fox Prince
+            Harmony.Patch(AccessTools.Method(typeof(ScenePortal), "OnTriggerEnter"), new HarmonyMethod(AccessTools.Method(typeof(FoxPrince), "ScenePortal_OnTriggerEnter_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.PropertyGetter(typeof(GUIMode), "PauseTime"), new HarmonyMethod(AccessTools.Method(typeof(EntranceSelector), "GUIMode_PauseTime_GetterPatch")));
 
             // Misc
             Harmony.Patch(AccessTools.Method(typeof(FileManagementGUI), "rePopulateList"), null, new HarmonyMethod(AccessTools.Method(typeof(OptionsGUIPatches), "FileManagementGUI_rePopulateList_PostfixPatch")));

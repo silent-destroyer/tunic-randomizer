@@ -852,6 +852,14 @@ namespace TunicRandomizer {
             GUI.skin.toggle.fontSize = scFont(22.5f);
             TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 400f, 30f), "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
             GUI.skin.toggle.fontSize = scFont(20f);
+            TunicRandomizer.Settings.EntranceRandoEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Entrance Randomizer"), TunicRandomizer.Settings.EntranceRandoEnabled, "Entrance Randomizer");
+            bool ToggleFoxPrince = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Fox Prince"), TunicRandomizer.Settings.FoxPrinceEnabled, "Fox Prince");
+            if (ToggleFoxPrince && !TunicRandomizer.Settings.FoxPrinceEnabled) {
+                TunicRandomizer.Settings.EntranceRandoEnabled = true;
+            }
+            TunicRandomizer.Settings.FoxPrinceEnabled = ToggleFoxPrince;
+            TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
+
             y += 30f;
             GUI.skin.label.fontSize = scFont(20f);
             GUI.Label(scRect(25f, y, 206f, 30f), "Entrance Layout:");
@@ -864,8 +872,6 @@ namespace TunicRandomizer {
             if (TunicRandomizer.Settings.PortalDirectionPairs) {
                 TunicRandomizer.Settings.ERFixedShop = false;
             }
-            y += 30f;
-            TunicRandomizer.Settings.DecoupledER = GUI.Toggle(ShowTooltip(scRect(25f, y, 206f, 30f), "Decoupled Entrances"), TunicRandomizer.Settings.DecoupledER, "Decoupled Entrances");
             y += 40f;
             y = HexagonQuestSection(y);
             return y;
@@ -1339,6 +1345,13 @@ namespace TunicRandomizer {
             GUI.Label(scRect(170f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops}%");
             y += 10f;
             TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops = (int)GUI.HorizontalSlider(scRect(10f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops, 0, 100);
+            GUI.Label(scRect(226f, y, 206f, 60f, tooltip: "Fox Prince"), "ER: Fox Prince");
+            y += 25f;
+            GUI.Label(scRect(170f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled}%");
+            GUI.Label(scRect(386f, y, 56f, 30f), $"{TunicRandomizer.Settings.MysterySeedWeights.ERFoxPrince}%");
+            y += 10f; 
+            TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled = (int)GUI.HorizontalSlider(scRect(10f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERDecoupled, 0, 100);
+            TunicRandomizer.Settings.MysterySeedWeights.ERFoxPrince = (int)GUI.HorizontalSlider(scRect(226f, y, 150f, 30f), TunicRandomizer.Settings.MysterySeedWeights.ERFoxPrince, 0, 100);
             TunicRandomizer.Settings.StartWithSwordEnabled = GUI.Toggle(scRect(442f, y - 25, 206f, 30f, tooltip: "Start With Sword"), TunicRandomizer.Settings.StartWithSwordEnabled, "Start With Sword");
             return y;
         }

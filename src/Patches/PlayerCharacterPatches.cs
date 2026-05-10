@@ -76,9 +76,7 @@ namespace TunicRandomizer {
                     (Il2CppSystem.Action)RandomizerSettings.copySettings, null);
                 }
             }
-            if (__instance.lastDamageTime != float.NegativeInfinity && Time.time > __instance.lastDamageTime + 10 && lastHitTriggerHitBy != "") {
-                lastHitTriggerHitBy = "";
-            }
+
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
                 if (OptionsGUIPatches.BonusOptionsUnlocked) {
                     PlayerCharacter.instance.GetComponent<Animator>().SetBool("wave", true);
@@ -99,6 +97,11 @@ namespace TunicRandomizer {
                     TunicLogger.LogInfo("Error generating logic summary file!\n" + e.Source + "\n" + e.Message + "\n" + e.StackTrace);
                 }
             }
+
+            if (__instance.lastDamageTime != float.NegativeInfinity && Time.time > __instance.lastDamageTime + 10 && lastHitTriggerHitBy != "") {
+                lastHitTriggerHitBy = "";
+            }
+
             if (SpeedrunData.timerRunning && ResetDayNightTimer != -1.0f && SaveFile.GetInt(DiedToHeir) != 1) {
                 ResetDayNightTimer += Time.fixedUnscaledDeltaTime;
                 CycleController.IsNight = false;
@@ -253,6 +256,16 @@ namespace TunicRandomizer {
                 ItemTracker.PopulateSpoilerLog();
             }
 
+            // this is here for the first time you're loading in, assumes you're in Overworld
+            if (GetBool(EntranceRando)) {
+                ERScripts.ModifyPortals(SceneLoaderPatches.SceneName);
+                ERScripts.ModifyPortals(SceneLoaderPatches.SceneName, sending: true);
+                GhostHints.SpawnTorchHintGhost();
+            } else {
+                ERData.RandomizedPortals = ERData.GetVanillaPortals();
+                ERScripts.ModifyPortalNames(SceneLoaderPatches.SceneName);
+            }
+
             try {
                 Hints.PopulateHints();
             } catch (Exception e) {
@@ -276,16 +289,6 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                 TunicRandomizer.Tracker.ImportantItems["Pages"] = 28;
                 SaveFile.SetInt("last page viewed", 0);
-            }
-
-            // this is here for the first time you're loading in, assumes you're in Overworld
-            if (SaveFile.GetInt(EntranceRando) == 1) {
-                ERScripts.ModifyPortals("Overworld Redux");
-                ERScripts.ModifyPortals("Overworld Redux", sending: true);
-                GhostHints.SpawnTorchHintGhost();
-            } else {
-                ERData.RandomizedPortals = ERData.GetVanillaPortals();
-                ERScripts.ModifyPortalNames("Overworld Redux");
             }
 
             TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
@@ -523,6 +526,9 @@ namespace TunicRandomizer {
                             }
                             if (TunicRandomizer.Settings.DecoupledER) {
                                 SaveFile.SetInt(Decoupled, 1);
+                            }
+                            if (TunicRandomizer.Settings.FoxPrinceEnabled) {
+                                SaveFile.SetInt(SaveFlags.FoxPrinceEnabled, 1);
                             }
                         }
                         if (TunicRandomizer.Settings.ShuffleLadders) {
@@ -882,6 +888,9 @@ namespace TunicRandomizer {
             }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LadderStorageWithoutItems) { 
                 SaveFile.SetInt(LadderStorageWithoutItems, 1);
+            }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ERFoxPrince) {
+                SaveFile.SetInt(FoxPrinceEnabled, 1);
             }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.HexagonQuest) {
                 SaveFile.SetInt(HexagonQuestEnabled, 1);

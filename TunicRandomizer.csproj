@@ -194,6 +194,7 @@
     <Compile Include="src\Data\PortalCombo.cs" />
     <Compile Include="src\Data\RandomizerSettings.cs" />
     <Compile Include="src\Data\SaveFlags.cs" />
+    <Compile Include="src\Data\SceneImageData.cs" />
     <Compile Include="src\Data\Tooltips.cs" />
     <Compile Include="src\Data\Translations.cs" />
     <Compile Include="src\Data\TrickLogic.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="src\Patches\EnemyModelSwaps.cs" />
     <Compile Include="src\Patches\EnemySoulModels.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
+    <Compile Include="src\Patches\FoxPrince.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />
     <Compile Include="src\Patches\GhostHints.cs" />
     <Compile Include="src\Patches\GrassRandomizer.cs" />
@@ -237,9 +239,11 @@
     <Compile Include="src\Util\CreditsSkipper.cs" />
     <Compile Include="src\Util\CRTMode.cs" />
     <Compile Include="src\Util\DDRSpell.cs" />
+    <Compile Include="src\Util\EntranceSelector.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
     <Compile Include="src\Util\EnemySoulManager.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
+    <Compile Include="src\Util\SceneSelectionButton.cs" />
     <Compile Include="src\Util\LadderManager.cs" />
     <Compile Include="src\Util\LogicChecker.cs" />
     <Compile Include="src\Util\MailboxFlag.cs" />
@@ -253,9 +257,10 @@
     <Compile Include="src\Util\UnderConstruction.cs" />
     <Compile Include="src\Util\VisibleByNotHavingItem.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="src\Data\Grass.json" />
     <EmbeddedResource Include="src\Data\GrassReqs.json" />
     <EmbeddedResource Include="src\Data\Fuses.json" />
@@ -264,6 +269,9 @@
     <EmbeddedResource Include="src\Data\BreakableDescriptions.json" />
     <EmbeddedResource Include="src\Data\FuseDescriptions.json" />
     <EmbeddedResource Include="src\Data\EnemyData.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\Data\FoxPrinceSceneImages.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

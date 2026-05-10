@@ -118,6 +118,7 @@ namespace TunicRandomizer {
                 }));
 
             } else {
+                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
                 if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     OptionsGUI.addButton("Mystery Seed", "<#00ff00>On", null);
                     return;
@@ -141,7 +142,6 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Maskless Logic", SaveFile.GetInt(MasklessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
-                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
             }
         }
 
@@ -154,6 +154,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
                 OptionsGUI.addMultiSelect("Entrance Layout", EntranceLayoutOptions, GetEntranceLayoutIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEntranceLayout).wrap = true;
                 OptionsGUI.addToggle("Decoupled Entrances", "Off", "On", TunicRandomizer.Settings.DecoupledER ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDecoupledER);
+                OptionsGUI.addToggle("Fox Prince", "Off", "On", TunicRandomizer.Settings.FoxPrinceEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFoxPrince);
             } else {
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
@@ -164,6 +165,7 @@ namespace TunicRandomizer {
                     OptionsGUI.addButton("Entrance Layout", "Matching Directions", null);
                 }
                 OptionsGUI.addButton("Decoupled Entrances", SaveFile.GetInt(SaveFlags.Decoupled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                OptionsGUI.addButton("Fox Prince", GetBool(FoxPrinceEnabled) ? "<#00ff00>On" : "<#ff0000>Off", null);
             }
         }
 
@@ -533,6 +535,11 @@ namespace TunicRandomizer {
 
         public static void ToggleDecoupledER(int index) {
             TunicRandomizer.Settings.DecoupledER = !TunicRandomizer.Settings.DecoupledER;
+            SaveSettings();
+        }
+
+        public static void ToggleFoxPrince(int index) {
+            TunicRandomizer.Settings.FoxPrinceEnabled = !TunicRandomizer.Settings.FoxPrinceEnabled;
             SaveSettings();
         }
 

@@ -502,7 +502,6 @@ namespace TunicRandomizer {
 
         public static void GenerateHints() {
             HintGhosts.Clear();
-            HexQuestHintLookup.Clear();
             Dictionary<string, List<HintGhost>> Ghosts = new Dictionary<string, List<HintGhost>>(GhostLocations);
             if (GetBool(EntranceRando)) { 
                 foreach(KeyValuePair<string, List<HintGhost>> pair in EntranceRandoGhostLocations) {
@@ -542,7 +541,7 @@ namespace TunicRandomizer {
                 }
             }
             for (int i = 0; i < 3; i++) {
-                if (i == 0 && SaveFile.GetInt(EntranceRando) == 1) {
+                if (i == 0 && GetBool(EntranceRando) && !GetBool(FoxPrinceEnabled)) {
                     GenerateHeirHint();
                     Hints.Add((HeirHint, "", "", ""));
                 }
@@ -686,6 +685,7 @@ namespace TunicRandomizer {
                 ItemHints.Add((prayerHint, "", "", ""));
                 ItemHints.Add((holyCrossHint, "", "", ""));
                 ItemHints.Add((iceboltHint, "", "", ""));
+                HexQuestHintLookup.Clear();
                 HexQuestHintLookup.Add(prayerHint, "Prayer");
                 HexQuestHintLookup.Add(holyCrossHint, "Holy Cross");
                 HexQuestHintLookup.Add(iceboltHint, "Icebolt");
@@ -801,7 +801,7 @@ namespace TunicRandomizer {
 
         public static void GenerateHeirHint() {
             string heirPortal = "error finding heir";
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 if (portalCombo.Portal2.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal1.Name;
                     break;

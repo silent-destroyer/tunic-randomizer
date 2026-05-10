@@ -88,6 +88,8 @@ namespace TunicRandomizer {
             QuarrySecretStateVar.name = SaveFlags.QuarrySecret;
             StateVariable.stateVariableList.Add(QuarrySecretStateVar);
 
+            FoxPrince.CreateFoxPrinceItems();
+
             Inventory.itemList.Add(GoldQuestagon);
             Inventory.itemList.Add(DathStone);
             Inventory.itemList.Add(Cape);
@@ -262,6 +264,9 @@ namespace TunicRandomizer {
         public static bool Item_shouldShowInInventory_GetterPatch(Item __instance, ref bool __result) {
             switch (__instance.name) {
                 case "Cape":
+                case "Soul Dice":
+                case "Dart":
+                case "Koban":
                     __result = false;
                     return false;
                 default:

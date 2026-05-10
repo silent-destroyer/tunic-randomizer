@@ -36,7 +36,8 @@ namespace TunicRandomizer {
             { "Shuffle Enemy Drops", "Every individual enemy and boss drops an item when defeated (excluding The Heir). Adds around 600 checks." },
             { "Shuffle Enemy Souls", "Adds a number of \"Enemy Soul\" items to the item pool. Enemies will not appear in the world until their corresponding \"Soul\" item is found.\n(Requires Shuffle Enemy Drops to be enabled.)" },
             { "Extra Enemy Drops", "Includes New Game+ and nighttime enemy spawns as shuffled enemy drops, adding around 100 additional checks.\n\n(Requires Shuffle Enemy Drops to be enabled.)" },
-
+            { "Fox Prince", "Entrance Randomizer with a twist, inspired by Blue Prince. Every entrance you visit will prompt you with three choices for where to go next. Discover new items in the item pool to take control of the path forward." },
+            
             // Trick logic
             { "Laurels Zips", "Adds a number of gates, doors, and other tricky spots that can be bypassed using the Hero's Laurels into logic. Notable inclusions are the Monastery gate, Ruined Passage door, Old House gate, Forest Grave Path gate, and going between the back and middle of Swamp." },
             { "Ice Grapples", "Adds logic for grappling to frozen enemies to reach new areas.\nMay include pushing enemies through walls or luring them far distances." },
