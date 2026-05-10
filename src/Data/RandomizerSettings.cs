@@ -426,6 +426,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool RetroFilterEnabled {
+            get;
+            set;
+        }
+
         // Enemy Randomization Settings
         private const int ENEMY_RANDOMIZER = 1;
         private const int EXTRA_ENEMIES = 2;
@@ -675,6 +680,7 @@ namespace TunicRandomizer {
             foreach(string track in MusicShuffler.Tracks.Keys) {
                 MusicToggles.Add(track, true);
             }
+            RetroFilterEnabled = false;
 
             // Enemy Randomizer
             EnemyRandomizerEnabled = false;

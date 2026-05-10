@@ -1087,8 +1087,14 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.ShowPlayerPosition = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "Show Player Position"), TunicRandomizer.Settings.ShowPlayerPosition, "Show Player Position");
             TunicRandomizer.Settings.ArachnophobiaMode = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Arachnophobia Mode"), TunicRandomizer.Settings.ArachnophobiaMode, "Arachnophobia Mode");
             y += 40f;
-            TunicRandomizer.Settings.MoreSkulls = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "More Skulls"), TunicRandomizer.Settings.MoreSkulls, "More Skulls");
-            TunicRandomizer.Settings.CameraFlip = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "???"), TunicRandomizer.Settings.CameraFlip, "???");
+            bool toggleCRT = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "CRT Filter"), TunicRandomizer.Settings.RetroFilterEnabled, "CRT Filter");
+            if ((toggleCRT && !TunicRandomizer.Settings.RetroFilterEnabled) || (!toggleCRT && TunicRandomizer.Settings.RetroFilterEnabled)) {
+                TunicRandomizer.Settings.RetroFilterEnabled = !TunicRandomizer.Settings.RetroFilterEnabled;
+                CRTMode.Toggle();
+                RandomizerSettings.SaveSettings();
+            }
+            TunicRandomizer.Settings.MoreSkulls = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "More Skulls"), TunicRandomizer.Settings.MoreSkulls, "More Skulls");
+            TunicRandomizer.Settings.CameraFlip = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "???"), TunicRandomizer.Settings.CameraFlip, "???");
             if (SecretMayor.shouldBeActive || SecretMayor.checkIfActive()) {
                 bool mayorToggle = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Mr Mayor"), SecretMayor.shouldBeActive, "<color=#ffd700>Mr Mayor</color>");
                 if ((mayorToggle && !SecretMayor.shouldBeActive) || (!mayorToggle && SecretMayor.shouldBeActive)) {
@@ -1217,11 +1223,11 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.RaceMode = GUI.Toggle(scRect(10f, y, 400f, 30f, tooltip: "Race Mode"), TunicRandomizer.Settings.RaceMode, "Race Mode");
             GUI.skin.toggle.fontSize = scFont(20);
             y += 40f;
-            TunicRandomizer.Settings.DisableIceboltInHeirFight = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Disable Heir Icebolt"), TunicRandomizer.Settings.DisableIceboltInHeirFight, "Disable Icebolt vs. Heir");
+            TunicRandomizer.Settings.DisableIceboltInHeirFight = GUI.Toggle(scRect(10f, y, 216f, 30f, tooltip: "Disable Heir Icebolt"), TunicRandomizer.Settings.DisableIceboltInHeirFight, "Disable Icebolt vs. Heir");
             TunicRandomizer.Settings.DisableDistantBellShots = GUI.Toggle(scRect(226f, y, 206f, 30f, tooltip: "Disable Distant West Bell"), TunicRandomizer.Settings.DisableDistantBellShots, "Disable West Bell Shot");
             TunicRandomizer.Settings.DisableIceGrappling = GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Disable Ice Grappling"), TunicRandomizer.Settings.DisableIceGrappling, "Disable Ice Grappling");
             y += 40f;
-            TunicRandomizer.Settings.DisableLadderStorage = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Disable Ladder Storage"), TunicRandomizer.Settings.DisableLadderStorage, "Disable Ladder Storage");
+            TunicRandomizer.Settings.DisableLadderStorage = GUI.Toggle(scRect(10f, y, 216f, 30f, tooltip: "Disable Ladder Storage"), TunicRandomizer.Settings.DisableLadderStorage, "Disable Ladder Storage");
             TunicRandomizer.Settings.DisableUpgradeStealing = GUI.Toggle(scRect(226f, y, 300f, 30f, tooltip: "Disable Upgrade Stealing"), TunicRandomizer.Settings.DisableUpgradeStealing, "Disable Upgrade Stealing");
             y += 40f;
             GUI.Label(scRect(10f, y, 500f, 30f), "Misc. Settings");

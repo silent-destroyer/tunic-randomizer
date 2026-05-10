@@ -265,6 +265,7 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Skip Upgrade Animations", "Off", "On", TunicRandomizer.Settings.FasterUpgrades ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterUpgrades);
             OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
             OptionsGUI.addToggle("Show Player Position", "Off", "On", TunicRandomizer.Settings.ShowPlayerPosition ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowPlayerPosition = !TunicRandomizer.Settings.ShowPlayerPosition; SaveSettings(); }));
+            OptionsGUI.addToggle("CRT Filter", "Off", "On", TunicRandomizer.Settings.RetroFilterEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCRTFilter);
             OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
             OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
             OptionsGUI.addToggle("???", "Off", "On", TunicRandomizer.Settings.CameraFlip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
@@ -769,6 +770,12 @@ namespace TunicRandomizer {
 
         public static void ToggleHolyCrossViewer(int index) {
             TunicRandomizer.Settings.HolyCrossVisualizer = !TunicRandomizer.Settings.HolyCrossVisualizer;
+            SaveSettings();
+        }
+
+        public static void ToggleCRTFilter(int index) {
+            TunicRandomizer.Settings.RetroFilterEnabled = !TunicRandomizer.Settings.RetroFilterEnabled;
+            CRTMode.Toggle();
             SaveSettings();
         }
 

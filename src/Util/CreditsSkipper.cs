@@ -46,6 +46,7 @@ namespace TunicRandomizer {
 
             if (SceneManager.GetActiveScene().name == "FinalBossBefriend" && GameObject.FindObjectOfType<FoxgodCutscenePatch>() == null) {
                 new GameObject("foxgod cutscene patcher").gameObject.AddComponent<FoxgodCutscenePatch>();
+                CRTMode.Toggle();
             }
 
             if (SpeedrunData.gameComplete != 0 && !SpeedrunFinishlineDisplayPatches.GameCompleted) {

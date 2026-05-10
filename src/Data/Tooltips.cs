@@ -80,6 +80,7 @@ namespace TunicRandomizer {
             { "Show Player Position", "Shows the xyz coordinates of the player in the lower right corner of the screen." },
             { "???", "!esirprus a rof no nruT" },
             { "More Skulls", "Spawns four additional gold skulls in the Swamp :>" },
+            { "CRT Filter", "Renders the game with a CRT filter overlay." },
 
             // Hints
             { "Path of the Hero", "Places a major hint at specific locations throughout the game, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple." },

@@ -100,6 +100,22 @@ namespace TunicRandomizer {
 
             // undoing the rotation trap
             CameraController.DerekRotationEnabled = false;
+            FoolTrap.StungByBee = false;
+            FoolTrap.TinierFox = false;
+            FoolTrap.BaldFox = false;
+            FoolTrap.WideFox = false;
+            if (FoolTrap.ZoomedCamera) {
+                CameraController.DerekZoom = 1f;
+                FoolTrap.ZoomedCamera = false;
+            }
+            if (FoolTrap.CRTTrap) { 
+                FoolTrap.CRTTrap = false;
+            }
+            if (FoolTrap.VintageTrap) {
+                FoolTrap.VintageTrap = false;
+            }
+
+            CRTMode.Toggle();
 
             return true;
         }
@@ -327,14 +343,6 @@ namespace TunicRandomizer {
                 TunicLogger.LogInfo("Resetting time of day to daytime!");
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
             }
-            FoolTrap.StungByBee = false;
-            FoolTrap.TinierFox = false;
-            FoolTrap.BaldFox = false;
-            FoolTrap.WideFox = false;
-            if (FoolTrap.ZoomedCamera) {
-                CameraController.DerekZoom = 1f;
-                FoolTrap.ZoomedCamera = false;
-            }
 
             // Fur, Puff, Details, Tunic, Scarf
             if (TunicRandomizer.Settings.RandomFoxColorsEnabled) {
@@ -429,6 +437,7 @@ namespace TunicRandomizer {
                 InitialLoadDone = true;
                 TitleVersion.Initialize();
                 RecentItemsDisplay.SetupRecentItemsDisplay();
+                CRTMode.SetupCRTMode();
 
                 Archipelago.instance.CheckForArchipelagoLauncherArgs();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
