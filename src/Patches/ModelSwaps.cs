@@ -2010,22 +2010,24 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Grass").icon = CustomItemImages["Grass"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Soul Dice").icon = CustomItemImages["Soul Dice"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Koban").icon = CustomItemImages["Koban"].GetComponent<Image>().sprite;
-            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent<Image>().sprite;\
+            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
 
             EnemyModelSwaps.CreateTextures(ImageMaterial);
         }
 
-        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
-            return CreateSprite(Convert.FromBase64String(ImageData), imgMaterial, Width, Height, SpriteName);
+        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
+            return CreateSprite(Convert.FromBase64String(ImageData), imgMaterial, Width, Height, SpriteName, tf);
         }
-        
-        public static GameObject CreateSprite(byte[] ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
 
-            Texture2D Texture = new Texture2D(Width, Height, TextureFormat.DXT1, false);
+        public static GameObject CreateSprite(byte[] ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
+
+            Texture2D Texture = new Texture2D(Width, Height, tf, false);
             ImageConversion.LoadImage(Texture, ImageData);
+            return CreateSprite(Texture, imgMaterial, Width, Height, SpriteName);
+        }
 
-        public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
+        public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
             GameObject obj = new GameObject(SpriteName + " image");
             Texture.name = SpriteName;
             //Sprite.Create(Texture2D, Rect, Vector2, float, uint, SpriteMeshType, Vector4, bool)
