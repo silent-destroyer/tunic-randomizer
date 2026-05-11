@@ -257,8 +257,6 @@ namespace TunicRandomizer {
         public EntranceSeekerSpell(IntPtr ptr) : base(ptr) { }
 
         private void Awake() {
-            base.inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
-
             CustomInputs = new List<DPAD>() { DPAD.RIGHT, DPAD.DOWN, DPAD.RIGHT, DPAD.UP, DPAD.LEFT, DPAD.UP };
         }
 
