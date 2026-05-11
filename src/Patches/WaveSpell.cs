@@ -13,7 +13,6 @@ namespace TunicRandomizer {
         public WaveSpell(IntPtr ptr) : base(ptr) { }
 
         private void Awake() {
-            base.inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
             base.manaCost = 0;
             base.hpToGive = 0;
             base.particles = PlayerCharacter.instance.transform.GetChild(8).gameObject.GetComponent<ParticleSystem>();
@@ -109,7 +108,6 @@ namespace TunicRandomizer {
             foreach (ParticleSystemRenderer psr in base.particles.GetComponentsInChildren<ParticleSystemRenderer>()) {
                 psr.material.color = PlayerPalette.runtimePalette.GetPixel(0, 3);
             }
-            base.inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
             base.manaCost = 0;
             base.hpToGive = 0;
         }

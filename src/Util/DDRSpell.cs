@@ -79,7 +79,6 @@ namespace TunicRandomizer {
         }
 
         private void Awake() {
-            inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
             spellToggles = GameObject.FindObjectsOfType<ToggleObjectBySpell>().ToArray();
             dpadToChar.Add(DPAD.UP, "u");
             dpadToChar.Add(DPAD.DOWN, "d");
