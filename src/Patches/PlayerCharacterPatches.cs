@@ -43,7 +43,7 @@ namespace TunicRandomizer {
         }
 
         public static void PlayerCharacter_Update_PostfixPatch(PlayerCharacter __instance) {
-            Cheats.FastForward = Input.GetKey(KeyCode.Backslash) && !TunicRandomizer.Settings.RaceMode;
+            Cheats.FastForward = (Input.GetKey(KeyCode.Backslash) || FoolTrap.FastTrap) && !TunicRandomizer.Settings.RaceMode;
 
             if (DiedToDeathLink) {
                 if (DeathLinkMessage != "") {

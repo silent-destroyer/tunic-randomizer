@@ -2039,5 +2039,14 @@ namespace TunicRandomizer {
                 return null;
             }
         }
+
+        public static Texture2D FindTexture(string TextureName, bool ExactMatch = false) {
+            List<Texture2D> Textures = Resources.FindObjectsOfTypeAll<Texture2D>().Where(Texture => Texture.name == TextureName || (!ExactMatch && Texture.name.Contains(TextureName))).ToList();
+            if (Textures != null && Textures.Count > 0) {
+                return Textures[0];
+            } else {
+                return null;
+            }
+        }
     }
 }
