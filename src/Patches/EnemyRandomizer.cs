@@ -8,23 +8,13 @@ using UnityEngine.SceneManagement;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
-
-    public class BossEnemy : MonoBehaviour { }
-    public class FleemerQuartet : MonoBehaviour {
-        public int GroupId;
-        public List<GameObject> Quartet;
-        public void Awake() {
-            GroupId = -1;
-            Quartet = new List<GameObject>();
-        }
-
-        public void Update() {
-            Quartet = Quartet.Where(monster => monster != null).ToList();
-        }
-    }
     public class EnemyRandomizer {
 
+        public static GameObject PrefabRoot;
+
         public static Dictionary<string, GameObject> Enemies = new Dictionary<string, GameObject>() { };
+
+        public static List<string> EnemyNames = new List<string>();
 
         public static Dictionary<string, List<string>> DefeatedEnemyTracker = new Dictionary<string, List<string>>();
 
@@ -551,6 +541,14 @@ namespace TunicRandomizer {
         }
 
         public static void InitializeEnemies(string SceneName) {
+            if (PrefabRoot == null) {
+                PrefabRoot = new GameObject("enemy prefabs");
+                PrefabRoot.transform.position = Vector3.one * -30000f;
+                PrefabRoot.transform.localEulerAngles = Vector3.zero;
+                PrefabRoot.transform.localScale = Vector3.one;
+                PrefabRoot.SetActive(false);
+                GameObject.DontDestroyOnLoad(PrefabRoot);
+            }
             List<Monster> Monsters = Resources.FindObjectsOfTypeAll<Monster>().ToList();
             Dictionary<string, string> RenamedEnemies = new Dictionary<string, string>() {
                 { "_Turret", "Turret" },
@@ -685,7 +683,12 @@ namespace TunicRandomizer {
                 Enemies["Hedgehog Trap"].transform.position = new Vector3(-30000f, -30000f, -30000f);
                 Enemies["Hedgehog Trap"].name = "Hedgehog Trap Prefab";
             }
-
+            foreach (string key in Enemies.Keys) {
+                Enemies[key].transform.parent = PrefabRoot.transform;
+                Enemies[key].transform.position = Vector3.one * -30000f;
+                Enemies[key].SetActive(false);
+            }
+            EnemyNames = Enemies.Keys.ToList();
         }
 
         public static void DoEnemyRandomization() {
@@ -1003,7 +1006,6 @@ namespace TunicRandomizer {
                         int bombChance = Random.Next(100);
                         Rigidbody randomBomb;
                         if (bombChance < 4) {
-
                             randomBomb = bombFlasks.Where(bomb => bomb.name == "centipede_detritus_head").ToList()[0].gameObject.GetComponent<Rigidbody>();
                         } else {
                             List<BombFlask> possibleBombs = bombFlasks.Where(bomb => bomb.name != "Firecracker" && bomb.name != "centipede_detritus_head").ToList();
@@ -1028,6 +1030,9 @@ namespace TunicRandomizer {
 
                     if (NewEnemy.name.Contains("Spinnerbot Corrupted") && Random.Next(100) == 99) {
                         NewEnemy.transform.localScale = new Vector3(2f, 2f, 2f);
+                        if (NewEnemy.GetComponent<Monster>().defaultStartingMaxHP == null) {
+                            NewEnemy.GetComponent<Monster>().Awake();
+                        }
                         NewEnemy.GetComponent<Monster>().defaultStartingMaxHP._value = 30;
                     }
 
@@ -1238,6 +1243,8 @@ namespace TunicRandomizer {
                     SaveFile.SetInt("randomizer defeated boss scavenger", 1);
                     Archipelago.instance.UpdateDataStorage("Defeated Boss Scavenger", true);
                 }
+
+                InventoryCounter.UpdateCounters();
             }
 
             if (__instance.__4__this.GetComponent<TunicKnightVoid>() != null) {
@@ -1336,15 +1343,16 @@ namespace TunicRandomizer {
 
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
 
-            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" && SaveFile.GetInt(HexagonQuestEnabled) == 1) {
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" 
+                && SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
                 return false;
             }
             if (__instance.name == "_Fox(Clone)") {
                 if (CustomItemBehaviors.CanTakeGoldenHit) {
-                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
-                    GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxBody.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxHair.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
+                    __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxHair.GetComponent<MeshRenderer>().materials;
                     PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = CustomItemBehaviors.GhostFoxBody.GetComponent<MeshRenderer>().materials;
                     PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = CustomItemBehaviors.FoxCape.GetComponent<MeshRenderer>().materials;
 
@@ -1446,4 +1454,40 @@ namespace TunicRandomizer {
             }
         }
     }
+    public class BossEnemy : MonoBehaviour { }
+    public class FleemerQuartet : MonoBehaviour {
+        public int GroupId;
+        public List<GameObject> Quartet;
+        public void Awake() {
+            GroupId = -1;
+            Quartet = new List<GameObject>();
+        }
+
+        public void Update() {
+            Quartet = Quartet.Where(monster => monster != null).ToList();
+        }
+    }
+    //public class EnemyManager : MonoBehaviour {
+    //    public IEnumerator<bool> manager;
+    //    public void Awake() {
+    //        manager = ManageEnemies();
+    //    }
+
+    //    public void Update() {
+    //        if (manager != null) {
+    //            manager.MoveNext();
+    //        }
+    //    }
+    //    public IEnumerator<bool> ManageEnemies() {
+    //        while (true) {
+    //            for (int i = 0; i < EnemyRandomizer.EnemyNames.Count; i++) {
+    //                EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].SetActive(false);
+    //                yield return true;
+    //                EnemyRandomizer.Enemies[EnemyRandomizer.EnemyNames[i]].transform.position = new Vector3(-30000f, -30000f, -30000f);
+    //                yield return true;
+    //            }
+    //            yield return true;
+    //        }
+    //    }
+    //}
 }

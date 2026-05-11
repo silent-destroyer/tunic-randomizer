@@ -65,7 +65,9 @@ namespace TunicRandomizer {
             if (Hints.HintLocations.ContainsKey(InteractionLocation) && Hints.HintMessages.ContainsKey(Hints.HintLocations[InteractionLocation]) && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 LanguageLine Hint = ScriptableObject.CreateInstance<LanguageLine>();
                 Hint.text = Hints.HintMessages[Hints.HintLocations[InteractionLocation]];
-
+                if (Hints.HintLocations[InteractionLocation] == "Temple Statue" && IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
+                    GhostHints.CheckForHeroPathServerHint("Hero's Laurels");
+                }
                 GenericMessage.ShowMessage(Hint);
                 return false;
             }
@@ -104,7 +106,11 @@ namespace TunicRandomizer {
             if (__instance.GetComponentInParent<HeroGraveToggle>() != null && TunicRandomizer.Settings.HeroPathHintsEnabled) {
                 bool showRelicHint = StateVariable.GetStateVariableByName("randomizer got all 6 grave items").BoolValue;
                 HeroGraveHint hint = __instance.GetComponentInParent<HeroGraveToggle>().heroGravehint;
-
+                if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
+                    if (showRelicHint || (hint.PathItemName.Contains("Questagon") && hint.PathItemName != "Gold Questagon")) {
+                        GhostHints.CheckForHeroPathServerHint(showRelicHint ? hint.RelicItemName : hint.PathItemName);
+                    }
+                }
                 GenericMessage.ShowMessage(showRelicHint ? hint.RelicHint : hint.PathHint);
                 return false;
             }
@@ -146,10 +152,18 @@ namespace TunicRandomizer {
                 }
             }
             FoxgodArenaCutscenes cutscene = __instance.GetComponent<FoxgodArenaCutscenes>();
-            if (cutscene != null) {
+            if (cutscene != null && cutscene.gameObject.scene.name == "Spirit Arena") {
                 if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
-                    if (__instance.transform.position.ToString() == "(0.0, 0.0, 0.0)" && SceneLoaderPatches.SceneName == "Spirit Arena" && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                    if (SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
                         GenericMessage.ShowMessage($"\"<#EAA615>Sealed Forever.\"");
+                        return false;
+                    } else {
+                        GenericPrompt.ShowPrompt(cutscene.chooseFateLanguageLine, (Action)(() => {
+                            cutscene._IInteractionReceiver_Interact_b__32_0();
+                        }), (Action)(() => {
+                            SaveFile.SetInt(DiedToHeir, 1);
+                            cutscene.startTheFight();
+                        }));
                         return false;
                     }
                 } else {
@@ -271,7 +285,6 @@ namespace TunicRandomizer {
         }
 
         public static bool HitReceiver_ReceiveHit_PrefixPatch(HitReceiver __instance, ref HitType hitType, ref bool unblockable, ref bool isPlayerCharacterMelee) {
-
             // Disables hitting the west bell from long range for race purposes
             if (__instance.GetComponent<TuningForkBell>() != null && __instance.name == "tuning fork" && SceneManager.GetActiveScene().name == "Overworld Redux"
                 && hitType == HitType.TECHBOW && TunicRandomizer.Settings.RaceMode && TunicRandomizer.Settings.DisableDistantBellShots) {
@@ -283,7 +296,7 @@ namespace TunicRandomizer {
 
             // Allows lvl 4 sword to hit bells/switches, also tells AP data storage if bells were rung
             if ((__instance.GetComponent<TuningForkBell>() != null || __instance.GetComponent<PowerSwitch>() != null || __instance.GetComponent<PlayerPaletteResetter>() != null) && isPlayerCharacterMelee) {
-                if (__instance.name == "tuning fork" && SaveFlags.IsArchipelago()) {
+                if (__instance.name == "tuning fork" && SaveFlags.IsArchipelago() && !GetBool(BellShuffleEnabled)) {
                     if (SceneManager.GetActiveScene().name == "Forest Belltower") {
                         Archipelago.instance.UpdateDataStorage("Rang East Bell", true);
                     }
@@ -294,7 +307,25 @@ namespace TunicRandomizer {
                 unblockable = false;
             }
 
+            if (__instance.GetComponent<PlayerCharacter>() != null) {
+                if (hitType == HitType.EXPLOSIVE) {
+                    PlayerCharacterPatches.lastHitTriggerHitBy = "explosion";
+                    TunicLogger.LogTesting("player hit by: " + hitType.ToString());
+                }
+                if (hitType == HitType.FIRE) {
+                    PlayerCharacterPatches.lastHitTriggerHitBy = "fire";
+                    TunicLogger.LogTesting("player hit by: " + hitType.ToString());
+                }
+            }
+
             return true;
+        }
+
+        public static void HitTrigger_doHit_PrefixPatch(HitTrigger __instance, ref Collider c) {
+            if (c.GetComponent<PlayerCharacter>() != null && PlayerCharacter.HP > 0) {
+                PlayerCharacterPatches.lastHitTriggerHitBy = __instance.id;
+                TunicLogger.LogTesting($"Player hit by HitTrigger {__instance.id} from gameobject {__instance.name}");
+            }
         }
     }
 }

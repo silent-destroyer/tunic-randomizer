@@ -79,7 +79,9 @@ namespace TunicRandomizer {
 
         public string TryConnect() {
             
-            if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)) {
+            if (connected && TunicRandomizer.Settings.ConnectionSettings.Player == session.Players.GetPlayerName(session.ConnectionInfo.Slot)
+                && TunicRandomizer.Settings.ConnectionSettings.Hostname == session.Socket.Uri.Host
+                && TunicRandomizer.Settings.ConnectionSettings.Port == session.Socket.Uri.Port.ToString()) {
                 return "";
             }
 
@@ -117,7 +119,7 @@ namespace TunicRandomizer {
                 deathLinkService = session.CreateDeathLinkService();
 
                 deathLinkService.OnDeathLinkReceived += (deathLinkObject) => {
-                    if (SceneManager.GetActiveScene().name != "TitleScreen") {
+                    if (PlayerCharacter.Instanced && SpeedrunData.gameComplete == 0) {
                         TunicLogger.LogInfo("Death link received");
                         PlayerCharacterPatches.DeathLinkMessage = deathLinkObject.Cause == null ? $"\"{deathLinkObject.Source} died and took you with them.\"": $"\"{deathLinkObject.Cause}\"";
                         PlayerCharacterPatches.DiedToDeathLink = true;
@@ -330,7 +332,7 @@ namespace TunicRandomizer {
                     Notifications.Show($"yoo sehnt  {(TextBuilderPatches.ItemNameToAbbreviation.ContainsKey(itemName) && Archipelago.instance.IsTunicPlayer(itemInfo.Player) ? TextBuilderPatches.ItemNameToAbbreviation[itemName] : "[archipelago]")}  \"{itemName.Replace("_", " ")}\" too \"{receiver}!\"", $"hOp #A lIk it!");
                     RecentItemsDisplay.instance.EnqueueItem(itemInfo, false);
                 }
-
+                InventoryCounter.UpdateCounters();
             } else {
                 TunicLogger.LogWarning("Failed to get unique name for check " + LocationName);
                 Notifications.Show($"\"Unknown Check: {LocationName}\"", $"\"Please file a bug!\"");
@@ -394,22 +396,34 @@ namespace TunicRandomizer {
 
         public void SendDeathLink() {
             string Player = SaveFile.GetString(SaveFlags.ArchipelagoPlayerName);
-            string AreaDiedIn = "";
-            if (DeathLinkMessages.Causes.ContainsKey(SceneLoaderPatches.SceneName)) {
-                AreaDiedIn = SceneLoaderPatches.SceneName;
-            } else {
-                foreach (string key in Locations.MainAreasToSubAreas.Keys) {
-                    if (Locations.MainAreasToSubAreas[key].Contains(SceneLoaderPatches.SceneName)) {
-                        AreaDiedIn = key;
-                        break;
-                    }
-                }
-            }
-            if (AreaDiedIn == "") {
-                AreaDiedIn = "Generic";
+
+            HashSet<string> MessageOptions = new HashSet<string>();
+
+            string hitBy = PlayerCharacterPatches.lastHitTriggerHitBy;
+
+            if (hitBy != "" && DeathLinkMessages.HitTriggerCauses.ContainsKey(hitBy)) {
+                MessageOptions.Add(DeathLinkMessages.HitTriggerCauses[hitBy]);
             }
 
-            deathLinkService.SendDeathLink(new DeathLink(Player, $"{Player}{DeathLinkMessages.Causes[AreaDiedIn][new System.Random().Next(DeathLinkMessages.Causes[AreaDiedIn].Count)]}"));
+            if (hitBy != "" && DeathLinkMessages.HitTriggerDescriptions.ContainsKey(hitBy)) {
+                foreach (string cause in DeathLinkMessages.GenericMessages) {
+                    MessageOptions.Add($"{cause}{DeathLinkMessages.HitTriggerDescriptions[hitBy]}");
+                }
+            }
+
+            if (DeathLinkMessages.Causes.ContainsKey(SceneLoaderPatches.SceneName)) {
+                foreach (string cause in DeathLinkMessages.Causes[SceneLoaderPatches.SceneName]) {
+                    MessageOptions.Add(cause);
+                }
+            } 
+
+            if (MessageOptions.Count == 0) {
+                foreach (string cause in DeathLinkMessages.Causes["Generic"]) { 
+                    MessageOptions.Add(cause);
+                }
+            }
+
+            deathLinkService.SendDeathLink(new DeathLink(Player, $"{Player}{MessageOptions.ToList()[new System.Random().Next(MessageOptions.Count)]}"));
         }
 
 
@@ -566,8 +580,10 @@ namespace TunicRandomizer {
             UpdateDataStorage("Reached an Ending", SpeedrunData.gameComplete != 0, false);
 
             // Bells
-            UpdateDataStorage("Rang East Bell", StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue, false);
-            UpdateDataStorage("Rang West Bell", StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue, false);
+            if (!GetBool(BellShuffleEnabled)) {
+                UpdateDataStorage("Rang East Bell", StateVariable.GetStateVariableByName("Rung Bell 1 (East)").BoolValue, false);
+                UpdateDataStorage("Rang West Bell", StateVariable.GetStateVariableByName("Rung Bell 2 (West)").BoolValue, false);
+            }
 
             // Bomb Codes
             UpdateDataStorage("Granted Firecracker", StateVariable.GetStateVariableByName("Granted Firecracker").BoolValue, false);

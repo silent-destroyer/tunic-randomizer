@@ -14,6 +14,9 @@ namespace TunicRandomizer {
         public static GameObject FoxCape;
         public static GameObject GhostFoxBody;
         public static GameObject GhostFoxHair;
+        
+        public const string DathStoneMessagePrefix = "wAk fruhm #is drEm\nahnd rEturn too";
+
         public static void CreateCustomItems() {
             ButtonAssignableItem LibrarianSword = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             ButtonAssignableItem HeirSword = ScriptableObject.CreateInstance<ButtonAssignableItem>();
@@ -85,6 +88,8 @@ namespace TunicRandomizer {
             QuarrySecretStateVar.name = SaveFlags.QuarrySecret;
             StateVariable.stateVariableList.Add(QuarrySecretStateVar);
 
+            FoxPrince.CreateFoxPrinceItems();
+
             Inventory.itemList.Add(GoldQuestagon);
             Inventory.itemList.Add(DathStone);
             Inventory.itemList.Add(Cape);
@@ -112,22 +117,22 @@ namespace TunicRandomizer {
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.blockSFX);
                 if (!CanTakeGoldenHit) {
                     FoxBody = new GameObject();
-                    FoxBody.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials;
+                    FoxBody.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials;
                     FoxHair = new GameObject();
-                    FoxHair.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials;
+                    FoxHair.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials;
                     GhostFoxBody = new GameObject();
-                    GhostFoxBody.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().ghostMaterialArray;
+                    GhostFoxBody.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().ghostMaterialArray;
                     GhostFoxHair = new GameObject();
-                    GhostFoxHair.AddComponent<MeshRenderer>().materials = GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().ghostMaterialArray;
+                    GhostFoxHair.AddComponent<MeshRenderer>().materials = __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().ghostMaterialArray;
                     FoxCape = new GameObject();
                     FoxCape.AddComponent<MeshRenderer>().materials = PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials;
                 }
 
-                
-                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
-                GameObject.Find("_Fox(Clone)/fox hair").GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+
+                __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                __instance.transform.GetChild(1).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
+                __instance.transform.GetChild(3).GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>().originalMaterials = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 PaletteEditor.FoxCape.GetComponent<CreatureMaterialManager>()._ghostMaterialArray = ModelSwaps.Items["Hexagon Gold"].GetComponent<MeshRenderer>().materials;
                 GameObject Hand = GameObject.Find("_Fox(Clone)/Fox/root/pelvis/chest/arm_upper.R/arm_lower.R/hand.R");
@@ -158,20 +163,22 @@ namespace TunicRandomizer {
             }
             if (__instance.item.name == "Torch") {
                 if (StateVariable.GetStateVariableByName("Is Night").BoolValue) {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Old House\"?";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} #E \"Old House\"?";
                 } else {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Overworld\"?";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} #E \"Overworld\"?";
                 }
             } else {
                 if (SceneLoaderPatches.SceneName == "g_elements") {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"???\"";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} \"???\"";
                 } else if (SceneLoaderPatches.SceneName == "Posterity") {
-                    __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"Overworld\"?";
+                    __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} #E \"Overworld\"?";
                 } else {
                     if (SaveFile.GetString("randomizer last campfire scene name for dath stone") != "" && SaveFile.GetString("randomizer last campfire id for dath stone") != "") {
-                        __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"{Locations.SimplifiedSceneNames[SaveFile.GetString("randomizer last campfire scene name for dath stone")]}?\"";
+                        string prefix = GhostHints.Vowels.Contains(Locations.SimplifiedSceneNames[SaveFile.GetString("randomizer last campfire scene name for dath stone")][0]) ? "#E" : "#uh";
+                        __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} yor \"Last Checkpoint\"\nin {prefix} \"{Locations.SimplifiedSceneNames[SaveFile.GetString("randomizer last campfire scene name for dath stone")]}?\"";
                     } else {
-                        __instance.confirmationPromptLine.text = $"wAk fruhm #is drEm\nahnd rEturn too \"{Locations.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}?\"";
+                        string prefix = GhostHints.Vowels.Contains(Locations.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")][0]) ? "#E" : "#uh";
+                        __instance.confirmationPromptLine.text = $"{DathStoneMessagePrefix} yor \"Last Checkpoint\"\nin {prefix} \"{Locations.SimplifiedSceneNames[SaveFile.GetString("last campfire scene name")]}?\"";
                     }
                 }
             }
@@ -201,7 +208,8 @@ namespace TunicRandomizer {
                     SaveFile.SetString("last campfire scene name", SaveFile.GetString("randomizer last campfire scene name for dath stone"));
                     SaveFile.SetString("last campfire id", SaveFile.GetString("randomizer last campfire id for dath stone"));
                 }
-            }            
+            }
+            PlayerCharacter.instance.cachedFireController._fireAmount = 0;
             PlayerCharacter.instance.gameObject.AddComponent<Rotate>();
             PlayerCharacterPatches.IsTeleporting = true;
             return true;
@@ -256,6 +264,9 @@ namespace TunicRandomizer {
         public static bool Item_shouldShowInInventory_GetterPatch(Item __instance, ref bool __result) {
             switch (__instance.name) {
                 case "Cape":
+                case "Soul Dice":
+                case "Dart":
+                case "Koban":
                     __result = false;
                     return false;
                 default:

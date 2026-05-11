@@ -17,6 +17,8 @@ namespace TunicRandomizer {
         public static string BuildDescription = "";
         public static bool UpdateAvailable = false;
         public static string UpdateVersion = "";
+        public const string UpdateUrl = "https://github.com/silent-destroyer/tunic-randomizer/releases/latest";
+        public const string ReportIssueUrl = "https://github.com/silent-destroyer/tunic-randomizer/issues";
         public static GameObject Logo;
 
         public static void Initialize() {
@@ -43,9 +45,9 @@ namespace TunicRandomizer {
             if (BuildDescription != "") {
                 VersionString.GetComponent<TextMeshProUGUI>().text += $" ({BuildDescription})";
             }
-            if (UpdateAvailable) {
-                VersionString.GetComponent<TextMeshProUGUI>().text += $" (Update Available: v{UpdateVersion}!)";
-            }
+            //if (UpdateAvailable) {
+            //    VersionString.GetComponent<TextMeshProUGUI>().text += $" (Update Available: v{UpdateVersion}!)";
+            //}
             VersionString.GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 0.64f, 0.0f);
             VersionString.GetComponent<TextMeshProUGUI>().fontMaterial = FontMaterial;
             VersionString.GetComponent<TextMeshProUGUI>().font = FontAsset;

@@ -38,13 +38,15 @@ namespace TunicRandomizer {
         public string CollectionMessage;
         public string OriginalPickupLocation;
         public string CorrespondingStat;
+        public string PlusOneStatString;
 
-        public HeroRelic(string flag, string itemPresentedOnCollection, string collectionMessage, string originalPickupLocation, string correspondingStat) {
+        public HeroRelic(string flag, string itemPresentedOnCollection, string collectionMessage, string originalPickupLocation, string correspondingStat, string plusOneStatString) {
             Flag = flag;
             ItemPresentedOnCollection = itemPresentedOnCollection;
             CollectionMessage = collectionMessage;
             OriginalPickupLocation = originalPickupLocation;
             CorrespondingStat = correspondingStat;
+            PlusOneStatString = plusOneStatString;
         }
     }
 
@@ -124,7 +126,9 @@ namespace TunicRandomizer {
             { "Ice Bomb x5", new ItemData("Ice Bomb x5", "useful", "Ice Bomb", ItemTypes.INVENTORY, 5) },
             { "Lure", new ItemData("Lure", "useful", "Bait", ItemTypes.INVENTORY, 1) },
             { "Lure x2", new ItemData("Lure x2", "useful", "Bait", ItemTypes.INVENTORY, 2) },
+            { "Pepper", new ItemData("Pepper", "useful", "Pepper", ItemTypes.INVENTORY, 1) },
             { "Pepper x2", new ItemData("Pepper x2", "useful", "Pepper", ItemTypes.INVENTORY, 2) },
+            { "Ivy", new ItemData("Ivy", "useful", "Ivy", ItemTypes.INVENTORY, 1) },
             { "Ivy x3", new ItemData("Ivy x3", "useful", "Ivy", ItemTypes.INVENTORY, 3) },
             { "Effigy", new ItemData("Effigy", "useful", "Piggybank L1", ItemTypes.INVENTORY, 1) },
             { "HP Berry", new ItemData("HP Berry", "useful", "Berry_HP", ItemTypes.INVENTORY, 1) },
@@ -318,6 +322,11 @@ namespace TunicRandomizer {
 
             // Grass
             { "Grass", new ItemData("Grass", "useful", "Grass", ItemTypes.GRASS, 1) },
+
+            // Fox Prince Items
+            { "Soul Dice", new ItemData("Soul Dice", "filler", "Soul Dice", ItemTypes.INVENTORY, 1) },
+            { "Dart", new ItemData("Dart", "filler", "Dart", ItemTypes.INVENTORY, 1) },
+            { "Koban", new ItemData("Koban", "progression", "Koban", ItemTypes.INVENTORY, 1) },
         };
 
         public static ItemData GetItemDataFromCheck(Check Check) {
@@ -381,12 +390,12 @@ namespace TunicRandomizer {
         };
         
         public static Dictionary<string, HeroRelic> HeroRelicLookup = new Dictionary<string, HeroRelic>() {
-            {"Relic - Hero Pendant SP", new HeroRelic("SV_RelicVoid_Got_Pendant_SP", "Upgrade Offering - Stamina SP - Feather", "Hero Relic - <#8ddc6e>SP", "Relic PIckup (1) (SP) [RelicVoid]", "Level Up - Stamina")},
-            {"Relic - Hero Crown", new HeroRelic("SV_RelicVoid_Got_Crown_DEF", "Upgrade Offering - DamageResist - Effigy", "Hero Relic - <#5de7cf>DEF", "Relic PIckup (2) (Crown) [RelicVoid]", "Level Up - DamageResist")},
-            {"Relic - Hero Pendant HP", new HeroRelic("SV_RelicVoid_Got_Pendant_HP", "Upgrade Offering - Health HP - Flower", "Hero Relic - <#f03c67>HP", "Relic PIckup (3) (HP) [RelicVoid]", "Level Up - Health")},
-            {"Relic - Hero Water", new HeroRelic("SV_RelicVoid_Got_Water_POT", "Upgrade Offering - PotionEfficiency Swig - Ash", "Hero Relic - <#ca7be4>POTION", "Relic PIckup (4) (water) [RelicVoid]", "Level Up - PotionEfficiency")},
-            {"Relic - Hero Pendant MP", new HeroRelic("SV_RelicVoid_Got_Pendant_MP", "Upgrade Offering - Magic MP - Mushroom", "Hero Relic - <#2a8fed>MP", "Relic PIckup (5) (MP) [RelicVoid]", "Level Up - Magic")},
-            {"Relic - Hero Sword", new HeroRelic("SV_RelicVoid_Got_Sword_ATT", "Upgrade Offering - Attack - Tooth", "Hero Relic - <#e99d4c>ATT", "Relic PIckup (6) Sword) [RelicVoid]", "Level Up - Attack")},
+            {"Relic - Hero Pendant SP", new HeroRelic("SV_RelicVoid_Got_Pendant_SP", "Upgrade Offering - Stamina SP - Feather", "Hero Relic - <#8ddc6e>SP", "Relic PIckup (1) (SP) [RelicVoid]", "Level Up - Stamina", "\"(<#8ddc6e>+1 SP<#FFFFFF>)\"")},
+            {"Relic - Hero Crown", new HeroRelic("SV_RelicVoid_Got_Crown_DEF", "Upgrade Offering - DamageResist - Effigy", "Hero Relic - <#5de7cf>DEF", "Relic PIckup (2) (Crown) [RelicVoid]", "Level Up - DamageResist", "\"(<#5de7cf>+1 DEF<#FFFFFF>)\"")},
+            {"Relic - Hero Pendant HP", new HeroRelic("SV_RelicVoid_Got_Pendant_HP", "Upgrade Offering - Health HP - Flower", "Hero Relic - <#f03c67>HP", "Relic PIckup (3) (HP) [RelicVoid]", "Level Up - Health", "\"(<#f03c67>+1 HP<#FFFFFF>)\"")},
+            {"Relic - Hero Water", new HeroRelic("SV_RelicVoid_Got_Water_POT", "Upgrade Offering - PotionEfficiency Swig - Ash", "Hero Relic - <#ca7be4>POTION", "Relic PIckup (4) (water) [RelicVoid]", "Level Up - PotionEfficiency", "\"(<#ca7be4>+1 POTION<#FFFFFF>)\"")},
+            {"Relic - Hero Pendant MP", new HeroRelic("SV_RelicVoid_Got_Pendant_MP", "Upgrade Offering - Magic MP - Mushroom", "Hero Relic - <#2a8fed>MP", "Relic PIckup (5) (MP) [RelicVoid]", "Level Up - Magic", "\"(<#2a8fed>+1 MP<#FFFFFF>)\"")},
+            {"Relic - Hero Sword", new HeroRelic("SV_RelicVoid_Got_Sword_ATT", "Upgrade Offering - Attack - Tooth", "Hero Relic - <#e99d4c>ATT", "Relic PIckup (6) Sword) [RelicVoid]", "Level Up - Attack", "\"(<#e99d4c>+1 ATT<#FFFFFF>)\"")},
         };
 
         public static List<string> MajorItems = new List<string>() { "Stick", "Sword", "Sword Upgrade", "Magic Dagger", "Magic Wand", "Magic Orb", "Hero's Laurels", "Lantern", "Shield", "Gun", "Scavenger Mask",
@@ -576,6 +585,50 @@ namespace TunicRandomizer {
             {"Fortress Door Right Fuse", "Fortress Door Right Fuse"},
             {"East Bell", "East Bell"},
             {"West Bell", "West Bell"},
+            {"Soul Dice", "Soul Dice"},
+            {"Dart", "Dart"},
+            {"Koban", "Koban"},
+        };
+
+        public static Dictionary<string, string> ItemFlavorText = new Dictionary<string, string>() {
+            {"Firecracker", "mAd fruhm slorm, #uh poudi^ #aht gOz boom."},
+            {"Firebomb", "fIur fIur ehvurEwAr, ahnd ow ow ow ow ow."},
+            {"Ice Bomb", "uhnstAboul powdur mAd fruhm #uh fArE uhv #uh wehst gRdin."},
+            {"Bait", "dawl uhv #uh bEluhvid hErO. fOz wil bE trikt!"},
+            {"Pepper", "spIsE. givz uh boost too \"ATT\"."},
+            {"Ivy", "mintE. givz uh boost too \"SP\"."},
+            {"Piggybank L1", "bEtrA for koinz. EJ bEtrAoul iz swEtur #ahn #uh lahst."},
+            {"Berry_HP", "Et froots too rEstor \"HP\". #A R gawn forehvur, sO snahk spAri^lE."},
+            {"Berry_MP", "Et froots too rEstor \"MP\". #A R gawn forehvur, sO snahk spAri^lE."},
+            {"Stick", "juhst uh stik!"},
+            {"Sword", "iz #is #uh hErOz blAd? or uh forjurE?"},
+            {"Shield", "lehft bI uh \"RUDELING\". yooz too dEflehkt blOz."},
+            {"Stundagger", "uh mahjik Itehm mAd fruhm uh fArE."},
+            {"Wand", "rOtAt it uhrownd #uh forbidin ahksis ahnd pR$uhlE suhmuhn uh diskwIeht bEi^."},
+            {"Lantern", "yoo fownd uh lIt!"},
+            {"Hyperdash", "yoo fEl uh ti^guhli^..."},
+            {"Shotgun", "powurfoul, buht yooziz uh lawt uhv mahjik."},
+            {"Flask Container", "lIf bluhd uhv #uh hErO."},
+            {"Trinket Coin", "uh speh$uhl treh&ur #aht uhlowz uh wi$. yooz aht wehl too giv too wi$ Etur."},
+            {"Dath Stone", "wAk fruhm #is drEm aht yor \"LAST CHECKPOINT\"."},
+            {"Upgrade Offering - Attack - Tooth", "risk ahn awfuri^ too #E Ar."},
+            {"Upgrade Offering - DamageResist - Effigy", "risk ahn awfuri^ too #E Ar."},
+            {"Upgrade Offering - PotionEfficiency Swig - Ash", "risk ahn awfuri^ too #E Ar."},
+            {"Upgrade Offering - Health HP - Flower", "risk ahn awfuri^ too #E Ar."},
+            {"Upgrade Offering - Magic MP - Mushroom", "risk ahn awfuri^ too #E Ar."},
+            {"Upgrade Offering - Stamina SP - Feather", "risk ahn awfuri^ too #E Ar."},
+            {"Relic - Hero Sword", "klAm yor hErOik pahst."},
+            {"Relic - Hero Crown", "klAm yor hErOik pahst."},
+            {"Relic - Hero Water", "klAm yor hErOik pahst."},
+            {"Relic - Hero Pendant HP", "klAm yor hErOik pahst."},
+            {"Relic - Hero Pendant MP", "klAm yor hErOik pahst."},
+            {"Relic - Hero Pendant SP", "klAm yor hErOik pahst."},
+            {"Hexagon Gold", "#uh sEl wEkinz..."},
+            {"Hexagon Red", "uh kE iz nO mEr toi..."},
+            {"Hexagon Blue", "uh kE iz nO mEr toi..."},
+            {"Hexagon Green", "uh kE iz nO mEr toi..."},
+            {"East Bell", "di^!"},
+            {"West Bell", "daw^!"},
         };
 
         public static Dictionary<string, string> BombCodes = new Dictionary<string, string>() {

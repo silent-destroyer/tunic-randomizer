@@ -110,6 +110,11 @@ namespace TunicRandomizer {
             }
 
             string LocationId = $"{__instance.itemToGive.name} [{SceneLoaderPatches.SceneName}]";
+
+            if (SaveFile.GetInt("randomizer picked up " + LocationId) == 1) {
+                return false;
+            }
+
             if (IsArchipelago()) {
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
@@ -194,6 +199,9 @@ namespace TunicRandomizer {
                         string itemName = ItemLookup.SimplifiedItemNames[__instance.itemToGive.name] + (__instance.quantityToGive > 1 ? "s" : "");
                         Notifications.Show($"{TextBuilderPatches.ItemNameToAbbreviation[ItemLookup.SimplifiedItemNames[__instance.itemToGive.name]]} \"Bought {itemName}!\"", $"{ItemLookup.ShopkeeperLines[new System.Random().Next(ItemLookup.ShopkeeperLines.Count)]}");
                     }
+                    if (TunicRandomizer.Settings.ShowRecentItems) {
+                        RecentItemsDisplay.instance.EnqueueShopPurchase(__instance);
+                    }
                     return true;
                 }
                 Inventory.GetItemByName("MoneySmall").Quantity -= Price;
@@ -212,6 +220,7 @@ namespace TunicRandomizer {
         public static void TrinketWell_TossedInCoin_PostfixPatch(TrinketWell __instance) {
             TunicRandomizer.Tracker.ImportantItems["Coins Tossed"]++;
             ItemTracker.SaveTrackerFile();
+            InventoryCounter.UpdateCounters();
         }
 
         public static bool TrinketWell_giveTrinketUpgrade_PrefixPatch(TrinketWell._giveTrinketUpgrade_d__14 __instance) {
@@ -237,9 +246,10 @@ namespace TunicRandomizer {
         }
 
         public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
-            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled ||
+            if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || PotionCombine.instance.isActiveAndEnabled ||
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
-                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead) {
+                GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead
+                || (PlayerCharacter.Instanced && PlayerCharacter.instance.magicInputBufferIndex > 0) || PlayerCharacterPatches.IsTeleporting) {
                 return ItemResult.TemporaryFailure;
             }
 
@@ -253,6 +263,7 @@ namespace TunicRandomizer {
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
+            bool skipRecentItems = false;
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
@@ -260,7 +271,6 @@ namespace TunicRandomizer {
                 (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
-
 
             if (Item.Type == ItemTypes.GRASS) {
                 ItemPresentation.PresentItem(Inventory.GetItemByName("Grass"));
@@ -325,11 +335,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.BELL) {
                     if (GetBool(BellShuffleEnabled)) {
                         if (Item.Name == "East Bell") {
-                            NotificationBottom = $"di^!";
                             BellShuffle.EastBellStateVar.BoolValue = true;
                         }
                         if (Item.Name == "West Bell") {
-                            NotificationBottom = $"daw^!";
                             BellShuffle.WestBellStateVar.BoolValue = true;
                         }
                     } else {
@@ -361,11 +369,12 @@ namespace TunicRandomizer {
                     }
                 }
                 GameObject.Instantiate(ModelSwaps.FairyAnimation, PlayerCharacter.instance.transform.position, Quaternion.identity).SetActive(true);
-                NotificationBottom = $"\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\" fArEz fownd.";
+                NotificationBottom = $"frEd uh frehndlE fArE. (\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\")";
             }
 
             if (Item.Type == ItemTypes.PAGE) {
                 SaveFile.SetInt($"randomizer obtained page {Item.ItemNameForInventory}", 1);
+                NotificationBottom = "doo nawt Et.";
                 if (SaveFile.GetInt(AbilityShuffle) == 1) {
                     Dictionary<string, (string, string, string)> pagesForAbilities = new Dictionary<string, (string, string, string)>() {
                         { "12", (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
@@ -381,6 +390,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -420,6 +430,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
                     string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
                     SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
+                    NotificationBottom = $"{ItemLookup.ItemFlavorText[RelicItem.name]} {ItemLookup.HeroRelicLookup[RelicItem.name].PlusOneStatString}";
                 }
 
                 // Apply custom pickup text
@@ -439,11 +450,8 @@ namespace TunicRandomizer {
                 int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
 
                 if (IsHexQuestWithHexAbilities()) {
-                    Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
-                        { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
-                    };
+                    Dictionary<int, (string, string, string, string)> hexesForAbilities = getHexagonUnlockInfo();
+
                     if (hexesForAbilities.ContainsKey(GoldHexes)) {
                         SaveFile.SetInt(hexesForAbilities[GoldHexes].Item1, 1);
                         SaveFile.SetFloat(hexesForAbilities[GoldHexes].Item2, SpeedrunData.inGameTime);
@@ -454,6 +462,13 @@ namespace TunicRandomizer {
                         }
 
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        
+                        ShowAbilityUnlockEffect();
+
+                        if (TunicRandomizer.Settings.ShowRecentItems) {
+                            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true, true, hexesForAbilities[GoldHexes].Item4);
+                            skipRecentItems = true;
+                        }
                     }
                 }
 
@@ -471,16 +486,22 @@ namespace TunicRandomizer {
                 }
             }
 
+            if (NotificationBottom == "") {
+                if (ItemLookup.ItemFlavorText.ContainsKey(Item.ItemNameForInventory)) {
+                    NotificationBottom = ItemLookup.ItemFlavorText[Item.ItemNameForInventory];
+                } else {
+                    NotificationBottom = $"$oud bE yoosfuhl!";
+                }
+            }
+            
             if (itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
                 var sender = itemInfo.Player.Name;
                 NotificationTop = NotificationTop == "" ? $"\"{sender}\" sehnt yoo  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
-                NotificationBottom = NotificationBottom == "" ? $"Rnt #A nIs\"?\"" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
             if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway)) {
                 NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{ItemName}!\"" : NotificationTop;
-                NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
@@ -504,7 +525,11 @@ namespace TunicRandomizer {
 
             TunicRandomizer.Settings.SkipItemAnimations = SkipAnimationsValue;
 
-            RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+            InventoryCounter.UpdateCounters();
+
+            if (TunicRandomizer.Settings.ShowRecentItems && !skipRecentItems) {
+                RecentItemsDisplay.instance.EnqueueItem(itemInfo, true);
+            }
 
             return ItemResult.Success;
         }
@@ -514,6 +539,7 @@ namespace TunicRandomizer {
             string NotificationTop = "";
             string NotificationBottom = "";
             bool DisplayMessageAnyway = false;
+            bool skipRecentItems = false;
 
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
@@ -586,11 +612,9 @@ namespace TunicRandomizer {
                 if (Item.Type == ItemTypes.BELL) {
                     if (GetBool(BellShuffleEnabled)) {
                         if (Item.Name == "East Bell") {
-                            NotificationBottom = $"di^!";
                             BellShuffle.EastBellStateVar.BoolValue = true;
                         }
                         if (Item.Name == "West Bell") {
-                            NotificationBottom = $"daw^!";
                             BellShuffle.WestBellStateVar.BoolValue = true;
                         }
                     } else {
@@ -622,11 +646,12 @@ namespace TunicRandomizer {
                     }
                 }
                 GameObject.Instantiate(ModelSwaps.FairyAnimation, PlayerCharacter.instance.transform.position, Quaternion.identity).SetActive(true);
-                NotificationBottom = $"\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\" fArEz fownd.";
+                NotificationBottom = $"frEd uh frehndlE fArE. (\"{(TunicRandomizer.Tracker.ImportantItems["Fairies"] + 1)}/20\")";
             }
 
             if (Item.Type == ItemTypes.PAGE) {
                 SaveFile.SetInt($"randomizer obtained page {Item.ItemNameForInventory}", 1);
+                NotificationBottom = "doo nawt Et.";
                 if (SaveFile.GetInt(AbilityShuffle) == 1) {
                     Dictionary<string, (string, string, string)> pagesForAbilities = new Dictionary<string, (string, string, string)>() {
                         { "12", (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
@@ -642,6 +667,7 @@ namespace TunicRandomizer {
                             ToggleHolyCrossObjects(true);
                         }
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        ShowAbilityUnlockEffect();
                     }
                 }
                 if (!TunicRandomizer.Settings.SkipItemAnimations) {
@@ -681,6 +707,7 @@ namespace TunicRandomizer {
                     Inventory.GetItemByName(bonusUpgrade).Quantity += 1;
                     string saveFlag = $"randomizer bonus upgrade {bonusUpgrade}";
                     SaveFile.SetInt(saveFlag, SaveFile.GetInt(saveFlag) + 1);
+                    NotificationBottom = $"{ItemLookup.ItemFlavorText[RelicItem.name]} {ItemLookup.HeroRelicLookup[RelicItem.name].PlusOneStatString}";
                 }
 
                 // Apply custom pickup text
@@ -700,11 +727,8 @@ namespace TunicRandomizer {
                 int GoldHexes = Inventory.GetItemByName("Hexagon Gold").Quantity;
 
                 if (IsHexQuestWithHexAbilities()) {
-                    Dictionary<int, (string, string, string)> hexesForAbilities = new Dictionary<int, (string, string, string)>() {
-                        { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine) },
-                        { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine) },
-                    };
+                    Dictionary<int, (string, string, string, string)> hexesForAbilities = getHexagonUnlockInfo();
+
                     if (hexesForAbilities.ContainsKey(GoldHexes)) {
                         SaveFile.SetInt(hexesForAbilities[GoldHexes].Item1, 1);
                         SaveFile.SetFloat(hexesForAbilities[GoldHexes].Item2, SpeedrunData.inGameTime);
@@ -715,6 +739,13 @@ namespace TunicRandomizer {
                         }
 
                         InventoryDisplayPatches.UpdateAbilitySection();
+                        
+                        ShowAbilityUnlockEffect();
+
+                        if (TunicRandomizer.Settings.ShowRecentItems) {
+                            RecentItemsDisplay.instance.EnqueueItem(Check, true, hexesForAbilities[GoldHexes].Item4);
+                            skipRecentItems = true;
+                        }
                     }
                 }
 
@@ -733,7 +764,13 @@ namespace TunicRandomizer {
 
             if (TunicRandomizer.Settings.SkipItemAnimations || DisplayMessageAnyway) {
                 NotificationTop = NotificationTop == "" ? $"yoo fownd  {itemDisplay}  \"{Item.Name}!\"" : NotificationTop;
-                NotificationBottom = NotificationBottom == "" ? $"$oud bE yoosfuhl!" : NotificationBottom;
+                if (NotificationBottom == "") {
+                    if (ItemLookup.ItemFlavorText.ContainsKey(Item.ItemNameForInventory)) { 
+                        NotificationBottom = ItemLookup.ItemFlavorText[Item.ItemNameForInventory];
+                    } else {
+                        NotificationBottom = $"$oud bE yoosfuhl!";
+                    }
+                }
                 Notifications.Show(NotificationTop, NotificationBottom);
             }
 
@@ -754,7 +791,11 @@ namespace TunicRandomizer {
             SaveFile.SetInt($"randomizer picked up {CheckId}", 1);
             FairyTargets.RemoveFairyTarget(CheckId);
 
-            RecentItemsDisplay.instance.EnqueueItem(Check);
+            InventoryCounter.UpdateCounters();
+
+            if (TunicRandomizer.Settings.ShowRecentItems && !skipRecentItems) {
+                RecentItemsDisplay.instance.EnqueueItem(Check);
+            }
 
             if (TunicRandomizer.Settings.ShowItemsEnabled && Item.Type == ItemTypes.SWORDUPGRADE) {
                 ModelSwaps.SwapItemsInScene();
@@ -768,11 +809,25 @@ namespace TunicRandomizer {
             }
         }
 
+        private static Dictionary<int, (string, string, string, string)> getHexagonUnlockInfo() {
+            return new Dictionary<int, (string, string, string, string)>() {
+                { SaveFile.GetInt(HexagonQuestPrayer), (PrayerUnlocked, PrayerUnlockedTime, ItemLookup.PrayerUnlockedLine, "Prayer") },
+                { SaveFile.GetInt(HexagonQuestHolyCross), (HolyCrossUnlocked, HolyCrossUnlockedTime, ItemLookup.HolyCrossUnlockedLine, "Holy Cross") },
+                { SaveFile.GetInt(HexagonQuestIcebolt), (IceBoltUnlocked, IceboltUnlockedTime, ItemLookup.IceboltUnlockedLine, "Icebolt") },
+            };
+        }
+
         public static void ToggleHolyCrossObjects(bool isEnabled) {
             foreach (ToggleObjectBySpell SpellToggle in Resources.FindObjectsOfTypeAll<ToggleObjectBySpell>().Where(toggle => toggle.GetComponent<AllowHolyCross>() == null)) {
                 foreach (ToggleObjectBySpell Spell in SpellToggle.gameObject.GetComponents<ToggleObjectBySpell>()) {
                     Spell.enabled = isEnabled;
                 }
+            }
+        }
+
+        private static void ShowAbilityUnlockEffect() {
+            if (PlayerCharacter.instance.GetComponent<AbilitySpell>() != null) {
+                PlayerCharacter.instance.GetComponent<AbilitySpell>().doSpell();
             }
         }
 

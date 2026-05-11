@@ -93,7 +93,7 @@ namespace TunicRandomizer {
         };
 
         public static void ToggleLadders() {
-            if (PlayerCharacter.instance == null) {
+            if (!PlayerCharacter.Instanced) {
                 return;
             }
 
@@ -101,6 +101,8 @@ namespace TunicRandomizer {
             List<Ladder> ladders = Resources.FindObjectsOfTypeAll<Ladder>().Where(ladder => ladder.gameObject.scene.name == scene).ToList();
 
             if (LaddersUnderConstruction.ContainsKey(scene)) {
+                GameObject LadderManagerObj = new GameObject("ladder manager");
+                LadderManager ladderManager = LadderManagerObj.AddComponent<LadderManager>();
                 foreach(string LadderItem in LaddersUnderConstruction[scene].Keys) {
                     foreach(LadderInfo ladderInfo in LaddersUnderConstruction[scene][LadderItem]) {
                         GameObject Ladder = ladders.Where(ladder => $"{ladder.name} {ladder.transform.position.ToString()}" == ladderInfo.LadderNameAndPosition).DefaultIfEmpty(null).First().gameObject;
@@ -108,14 +110,7 @@ namespace TunicRandomizer {
                             if (ladderInfo.IsSpecialLadder && Ladder.transform.parent != null) {
                                 Ladder = Ladder.transform.parent.gameObject;
                             }
-
-                            Ladder.gameObject.AddComponent<ToggleLadderByLadderItem>().ladderItem = Inventory.GetItemByName(LadderItem);
-                            Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().ladderInfo = ladderInfo;
-                            try {
-                                Ladder.gameObject.GetComponent<ToggleLadderByLadderItem>().SpawnBlockers();
-                            } catch (Exception e) {
-                                TunicLogger.LogError("Error spawning construction barriers for " + Ladder.name);
-                            }
+                            ladderManager.AddLadderZone(Ladder, Inventory.GetItemByName(LadderItem), ladderInfo);
                         }
                     }
                 }
@@ -145,6 +140,26 @@ namespace TunicRandomizer {
             construction.GetComponent<UnderConstruction>().isChecklistSign = true;
             construction.GetComponent<Signpost>().message = ScriptableObject.CreateInstance<LanguageLine>();
             construction.SetActive(true);
+
+            if (SaveFlags.GetBool(SaveFlags.FuseShuffleEnabled)) {
+                GameObject conduit = GameObject.Instantiate(ModelSwaps.ConduitSegment);
+                conduit.transform.localEulerAngles = new Vector3(0, 180, 0);
+                conduit.transform.position = new Vector3(-6.15f, 42.99f, -23.26f);
+                conduit.GetComponent<MeshRenderer>().material = ConduitPath.cachedMaterials[1];
+                conduit.SetActive(true);
+            }
+
+            if (SaveFlags.GetBool(SaveFlags.LadderRandoEnabled)) {
+                GameObject ladder = GameObject.Instantiate(ModelSwaps.Items["Ladder"]);
+                ladder.layer = 0;
+                ladder.transform.localScale = Vector3.one * 0.5f;
+                ladder.transform.localEulerAngles = new Vector3(349f, 270f, 0f);
+                ladder.transform.position = new Vector3(-3.5533f, 44.0833f, -23.0063f);
+                ladder.SetActive(true);
+                for (int i = 0; i < ladder.transform.childCount; i++) {
+                    ladder.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
         }
 
         public static string GetLadderChecklist() {

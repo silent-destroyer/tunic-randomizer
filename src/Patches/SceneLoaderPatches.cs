@@ -100,12 +100,27 @@ namespace TunicRandomizer {
 
             // undoing the rotation trap
             CameraController.DerekRotationEnabled = false;
+            FoolTrap.StungByBee = false;
+            FoolTrap.TinierFox = false;
+            FoolTrap.BaldFox = false;
+            FoolTrap.WideFox = false;
+            if (FoolTrap.ZoomedCamera) {
+                CameraController.DerekZoom = 1f;
+                FoolTrap.ZoomedCamera = false;
+            }
+            if (FoolTrap.CRTTrap) { 
+                FoolTrap.CRTTrap = false;
+            }
+            if (FoolTrap.VintageTrap) {
+                FoolTrap.VintageTrap = false;
+            }
+
+            CRTMode.Toggle();
 
             return true;
         }
 
         public static void SceneLoader_OnSceneLoaded_PostfixPatch(Scene loadingScene, LoadSceneMode mode, SceneLoader __instance) {
-
             ModelSwaps.SwappedThisSceneAlready = false;
             EnemyRandomizer.RandomizedThisSceneAlready = false;
             ArachnophobiaMode.DidArachnophobiaModeAlready = false;
@@ -114,192 +129,203 @@ namespace TunicRandomizer {
             GhostHints.SpawnedGhosts = false;
 
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
-
-            if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
-                EnemyRandomizer.InitializeEnemies("Posterity");
-                ModelSwaps.CreateOtherWorldItemBlocks();
-                TunicLogger.LogInfo("Done loading resources!");
-                SceneLoader.LoadScene("TitleScreen");
-                return;
-            }
-            if (loadingScene.name == "Overworld Interiors" && GlyphTowerTeleporterPrefab == null) {
-                GlyphTowerTeleporterPrefab = GameObject.Instantiate(GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject);
-                GlyphTowerTeleporterPrefab.SetActive(false);
-                GameObject.DontDestroyOnLoad(GlyphTowerTeleporterPrefab);
-                SceneLoader.LoadScene("Posterity");
-                return;
-            }
-            if (loadingScene.name == "Library Lab" && ModelSwaps.Chalkboard == null) {
-                ModelSwaps.CreateChalkboard();
-                SceneLoader.LoadScene("Overworld Interiors");
-                return;
-            }
-            if (loadingScene.name == "Library Hall" && !EnemyRandomizer.Enemies.ContainsKey("administrator_servant")) {
-                EnemyRandomizer.InitializeEnemies("Library Hall");
-                SceneLoader.LoadScene("Library Lab");
-                return;
-            }
-            if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
-                EnemyRandomizer.InitializeEnemies("Cathedral Redux");
-                SceneLoader.LoadScene("Library Hall");
-                return;
-            }
-            if (loadingScene.name == "Fortress Main" && !EnemyRandomizer.Enemies.ContainsKey("woodcutter")) {
-                EnemyRandomizer.InitializeEnemies("Fortress Main");
-                SceneLoader.LoadScene("Cathedral Redux");
-                return;
-            }
-            if (loadingScene.name == "Fortress Reliquary" && !EnemyRandomizer.Enemies.ContainsKey("voidling redux")) {
-                EnemyRandomizer.InitializeEnemies("Fortress Reliquary");
-                SceneLoader.LoadScene("Fortress Main");
-                return;
-            }
-            if (loadingScene.name == "ziggurat2020_3" && !EnemyRandomizer.Enemies.ContainsKey("Centipede")) {
-                EnemyRandomizer.InitializeEnemies("ziggurat2020_3");
-                SceneLoader.LoadScene("Fortress Reliquary");
-                return;
-            }
-            if (loadingScene.name == "ziggurat2020_1" && !EnemyRandomizer.Enemies.ContainsKey("administrator")) {
-                EnemyRandomizer.InitializeEnemies("ziggurat2020_1");
-                SceneLoader.LoadScene("ziggurat2020_3");
-                return;
-            }
-            if (loadingScene.name == "Swamp Redux 2" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_easy")) {
-                EnemyRandomizer.InitializeEnemies("Swamp Redux 2");
-                SceneLoader.LoadScene("ziggurat2020_1");
-                return;
-            }
-            if (loadingScene.name == "Quarry" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger_stunner")) {
-                EnemyRandomizer.InitializeEnemies("Quarry");
-                SceneLoader.LoadScene("Swamp Redux 2");
-                return;
-            }
-            if (loadingScene.name == "Quarry Redux" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger")) {
-                EnemyRandomizer.InitializeEnemies("Quarry Redux");
-                SceneLoader.LoadScene("Quarry");
-                return;
-            }
-            if (loadingScene.name == "Crypt Redux" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_quartet")) {
-                EnemyRandomizer.InitializeEnemies("Crypt Redux");
-                SceneLoader.LoadScene("Quarry Redux");
-                return;
-            }
-            if (loadingScene.name == "Crypt" && !EnemyRandomizer.Enemies.ContainsKey("Shadowreaper")) {
-                EnemyRandomizer.InitializeEnemies("Crypt");
-                SceneLoader.LoadScene("Crypt Redux");
-                return;
-            }
-            if (loadingScene.name == "Fortress Arena" && !EnemyRandomizer.Enemies.ContainsKey("Spidertank")) {
-                EnemyRandomizer.InitializeEnemies("Fortress Arena");
-                SceneLoader.LoadScene("Crypt");
-                return;
-            }
-            if (loadingScene.name == "Fortress Basement" && !EnemyRandomizer.Enemies.ContainsKey("Spider Small")) {
-                EnemyRandomizer.InitializeEnemies("Fortress Basement");
-                ModelSwaps.BlueFire = GameObject.Instantiate(GameObject.Find("Room - Big Room/Fortress wall lamp small unlit (1)/Fire/lamp fire"));
-                ModelSwaps.BlueFire.SetActive(false);
-                GameObject.DontDestroyOnLoad(ModelSwaps.BlueFire);
-                SceneLoader.LoadScene("Fortress Arena");
-                return;
-            }
-            if (loadingScene.name == "frog cave main" && !EnemyRandomizer.Enemies.ContainsKey("Frog Small")) {
-                EnemyRandomizer.InitializeEnemies("frog cave main");
-                SceneLoader.LoadScene("Fortress Basement");
-                return;
-            }
-            if (loadingScene.name == "Sewer" && !EnemyRandomizer.Enemies.ContainsKey("Spinnerbot Corrupted")) {
-                EnemyRandomizer.InitializeEnemies("Sewer");
-                SceneLoader.LoadScene("frog cave main");
-                return;
-            }
-            if (loadingScene.name == "Atoll Redux" && !EnemyRandomizer.Enemies.ContainsKey("plover")) {
-                EnemyRandomizer.InitializeEnemies("Atoll Redux");
-
-                ModelSwaps.LadderGraphic = GameObject.Instantiate(GameObject.Find("_INTERACTABLES/ladder_raisable ladder shortcut/ladder graphic/"));
-                ModelSwaps.LadderGraphic.SetActive(false);
-                GameObject.DontDestroyOnLoad(ModelSwaps.LadderGraphic);
-                ItemPresentationPatches.SetupLadderPresentation();
-
-                SceneLoader.LoadScene("Sewer");
-                return;
-            }
-            if (loadingScene.name == "DPADTesting" && DDRSpell.DPADPool == null) {
-                DDRSpell.CopyDPADTester();
-                SceneLoader.LoadScene("Atoll Redux");
-                return;
-            }
-            if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
-                ModelSwaps.SetupGlowEffect();
-                EnemyRandomizer.InitializeEnemies("Archipelagos Redux");
-                ModelSwaps.InstantiateFishingRod();
-                SceneLoader.LoadScene("DPADTesting");
-                return;
-            }
-            if (loadingScene.name == "Transit" && !ModelSwaps.Items.ContainsKey("Relic - Hero Sword")) {
-                ModelSwaps.InitializeHeroRelics();
-                SceneLoader.LoadScene("Archipelagos Redux");
-                return;
-            }
-            if (loadingScene.name == "Spirit Arena" && ModelSwaps.ThirdSword == null) {
-                ModelSwaps.InitializeThirdSword();
-                ItemPresentationPatches.SetupCustomSwordItemPresentations();
-                SpiritArenaTeleporterPrefab = GameObject.Instantiate(GameObject.Find("Teleporter"));
-                GameObject.DontDestroyOnLoad(SpiritArenaTeleporterPrefab);
-                SpiritArenaTeleporterPrefab.transform.position = new Vector3(-30000f, -30000f, -30000f);
-                SpiritArenaTeleporterPrefab.SetActive(false);
-                ModelSwaps.SetupStarburstEffect();
-                EnemyRandomizer.InitializeEnemies("Spirit Arena");
-                SceneLoader.LoadScene("Transit");
-                return;
-            }
-            if (loadingScene.name == "Library Arena" && ModelSwaps.SecondSword == null) {
-                ModelSwaps.InitializeSecondSword();
-                EnemyRandomizer.InitializeEnemies("Library Arena");
-                SceneLoader.LoadScene("Spirit Arena");
-                return;
-            }
-            if (loadingScene.name == "Cathedral Arena" && !ModelSwaps.Chests.ContainsKey("Hyperdash")) {
-                ModelSwaps.InitializeChestType("Hyperdash");
-                SceneLoader.LoadScene("Library Arena");
-                EnemyRandomizer.InitializeEnemies("Cathedral Arena");
-                return;
-            }
-            if (loadingScene.name == "Overworld Redux" && ModelSwaps.Chests.Count == 0) {
-                if (GhostHints.GhostFox == null) {
-                    GhostHints.InitializeGhostFox();
+                        
+            if (!InitialLoadDone) {
+                if (loadingScene.name == "Ruins Passage" && !ModelSwaps.Items.ContainsKey("Koban")) {
+                    ItemPresentationPatches.SetupFoxPrinceKobanItemPresentation();
+                    TunicLogger.LogInfo("Done loading resources!");
+                    SceneLoader.LoadScene("TitleScreen");
                 }
-
-                ModelSwaps.InitializeItems();
-
-                TextBuilderPatches.SetupCustomGlyphSprites();
-                EnemyRandomizer.InitializeEnemies("Overworld Redux");
-
-                FuseRandomizer.Setup();
-                BellShuffle.Setup();
-
-                LadderToggles.CreateLadderItems();
-                ModelSwaps.CreateConstructionObject();
-
-                SceneLoader.LoadScene("Cathedral Arena");
-                return;
-            }
-            if (ModelSwaps.Chests.Count == 0 && loadingScene.name == "TitleScreen") {
-                CustomItemBehaviors.CreateCustomItems();
-                GameObject ArchipelagoObject = new GameObject("archipelago");
-                Archipelago.instance = ArchipelagoObject.AddComponent<Archipelago>();
-                GameObject.DontDestroyOnLoad(ArchipelagoObject);
-                if (Locations.VanillaLocations.Count == 0) {
-                    Locations.CreateLocationLookups();
+                if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
+                    EnemyRandomizer.InitializeEnemies("Posterity");
+                    ModelSwaps.CreateOtherWorldItemBlocks();
+                    SceneLoader.LoadScene("Ruins Passage");
+                    return;
                 }
-                if (ERData.VanillaPortals.Count == 0) {
-                    ERScripts.SetupVanillaPortalsAndTraversalReqs();
+                if (loadingScene.name == "Overworld Interiors" && GlyphTowerTeleporterPrefab == null) {
+                    GlyphTowerTeleporterPrefab = GameObject.Instantiate(GameObject.Find("Trophy Stuff").transform.GetChild(4).gameObject);
+                    GlyphTowerTeleporterPrefab.SetActive(false);
+                    GameObject.DontDestroyOnLoad(GlyphTowerTeleporterPrefab);
+                    SceneLoader.LoadScene("Posterity");
+                    return;
                 }
-                SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
-                GrassRandomizer.LoadGrassChecks();
-                BreakableShuffle.LoadBreakableChecks();
-                PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
-                SceneLoader.LoadScene("Overworld Redux");
-                return;
+                if (loadingScene.name == "Library Lab" && ModelSwaps.Chalkboard == null) {
+                    ModelSwaps.CreateChalkboard();
+                    SceneLoader.LoadScene("Overworld Interiors");
+                    return;
+                }
+                if (loadingScene.name == "Library Hall" && !EnemyRandomizer.Enemies.ContainsKey("administrator_servant")) {
+                    EnemyRandomizer.InitializeEnemies("Library Hall");
+                    SceneLoader.LoadScene("Library Lab");
+                    return;
+                }
+                if (loadingScene.name == "Cathedral Redux" && !EnemyRandomizer.Enemies.ContainsKey("Voidtouched")) {
+                    EnemyRandomizer.InitializeEnemies("Cathedral Redux");
+                    SceneLoader.LoadScene("Library Hall");
+                    return;
+                }
+                if (loadingScene.name == "Fortress Main" && !EnemyRandomizer.Enemies.ContainsKey("woodcutter")) {
+                    EnemyRandomizer.InitializeEnemies("Fortress Main");
+                    SceneLoader.LoadScene("Cathedral Redux");
+                    return;
+                }
+                if (loadingScene.name == "Fortress Reliquary" && !EnemyRandomizer.Enemies.ContainsKey("voidling redux")) {
+                    EnemyRandomizer.InitializeEnemies("Fortress Reliquary");
+                    SceneLoader.LoadScene("Fortress Main");
+                    return;
+                }
+                if (loadingScene.name == "ziggurat2020_3" && !EnemyRandomizer.Enemies.ContainsKey("Centipede")) {
+                    EnemyRandomizer.InitializeEnemies("ziggurat2020_3");
+                    SceneLoader.LoadScene("Fortress Reliquary");
+                    return;
+                }
+                if (loadingScene.name == "ziggurat2020_1" && !EnemyRandomizer.Enemies.ContainsKey("administrator")) {
+                    EnemyRandomizer.InitializeEnemies("ziggurat2020_1");
+                    SceneLoader.LoadScene("ziggurat2020_3");
+                    return;
+                }
+                if (loadingScene.name == "Swamp Redux 2" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_easy")) {
+                    EnemyRandomizer.InitializeEnemies("Swamp Redux 2");
+                    ModelSwaps.ConduitSegment = GameObject.Instantiate(GameObject.Find("_Conduit Meshes/conduit_broken_end/"));
+                    GameObject.DontDestroyOnLoad(ModelSwaps.ConduitSegment);
+                    ModelSwaps.ConduitSegment.SetActive(false);
+                    SceneLoader.LoadScene("ziggurat2020_1");
+                    return;
+                }
+                if (loadingScene.name == "Quarry" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger_stunner")) {
+                    EnemyRandomizer.InitializeEnemies("Quarry");
+                    SceneLoader.LoadScene("Swamp Redux 2");
+                    return;
+                }
+                if (loadingScene.name == "Quarry Redux" && !EnemyRandomizer.Enemies.ContainsKey("Scavenger")) {
+                    EnemyRandomizer.InitializeEnemies("Quarry Redux");
+                    SceneLoader.LoadScene("Quarry");
+                    return;
+                }
+                if (loadingScene.name == "Crypt Redux" && !EnemyRandomizer.Enemies.ContainsKey("bomezome_quartet")) {
+                    EnemyRandomizer.InitializeEnemies("Crypt Redux");
+                    SceneLoader.LoadScene("Quarry Redux");
+                    return;
+                }
+                if (loadingScene.name == "Crypt" && !EnemyRandomizer.Enemies.ContainsKey("Shadowreaper")) {
+                    EnemyRandomizer.InitializeEnemies("Crypt");
+                    SceneLoader.LoadScene("Crypt Redux");
+                    return;
+                }
+                if (loadingScene.name == "Fortress Arena" && !EnemyRandomizer.Enemies.ContainsKey("Spidertank")) {
+                    EnemyRandomizer.InitializeEnemies("Fortress Arena");
+                    SceneLoader.LoadScene("Crypt");
+                    return;
+                }
+                if (loadingScene.name == "Fortress Basement" && !EnemyRandomizer.Enemies.ContainsKey("Spider Small")) {
+                    EnemyRandomizer.InitializeEnemies("Fortress Basement");
+                    ModelSwaps.BlueFire = GameObject.Instantiate(GameObject.Find("Room - Big Room/Fortress wall lamp small unlit (1)/Fire/lamp fire"));
+                    ModelSwaps.BlueFire.SetActive(false);
+                    GameObject.DontDestroyOnLoad(ModelSwaps.BlueFire);
+                    SceneLoader.LoadScene("Fortress Arena");
+                    return;
+                }
+                if (loadingScene.name == "frog cave main" && !EnemyRandomizer.Enemies.ContainsKey("Frog Small")) {
+                    EnemyRandomizer.InitializeEnemies("frog cave main");
+                    SceneLoader.LoadScene("Fortress Basement");
+                    return;
+                }
+                if (loadingScene.name == "Sewer" && !EnemyRandomizer.Enemies.ContainsKey("Spinnerbot Corrupted")) {
+                    EnemyRandomizer.InitializeEnemies("Sewer");
+                    SceneLoader.LoadScene("frog cave main");
+                    return;
+                }
+                if (loadingScene.name == "Atoll Redux" && !EnemyRandomizer.Enemies.ContainsKey("plover")) {
+                    EnemyRandomizer.InitializeEnemies("Atoll Redux");
+
+                    ModelSwaps.LadderGraphic = GameObject.Instantiate(GameObject.Find("_INTERACTABLES/ladder_raisable ladder shortcut/ladder graphic/"));
+                    ModelSwaps.LadderGraphic.SetActive(false);
+                    GameObject.DontDestroyOnLoad(ModelSwaps.LadderGraphic);
+                    ItemPresentationPatches.SetupLadderPresentation();
+
+                    SceneLoader.LoadScene("Sewer");
+                    return;
+                }
+                if (loadingScene.name == "DPADTesting" && DDRSpell.DPADPool == null) {
+                    DDRSpell.CopyDPADTester();
+                    SceneLoader.LoadScene("Atoll Redux");
+                    return;
+                }
+                if (loadingScene.name == "Archipelagos Redux" && ModelSwaps.GlowEffect == null) {
+                    ModelSwaps.SetupGlowEffect();
+                    EnemyRandomizer.InitializeEnemies("Archipelagos Redux");
+                    ModelSwaps.InstantiateFishingRod();
+                    SceneLoader.LoadScene("DPADTesting");
+                    return;
+                }
+                if (loadingScene.name == "Transit" && !ModelSwaps.Items.ContainsKey("Relic - Hero Sword")) {
+                    ModelSwaps.InitializeHeroRelics();
+                    SceneLoader.LoadScene("Archipelagos Redux");
+                    return;
+                }
+                if (loadingScene.name == "Spirit Arena" && ModelSwaps.ThirdSword == null) {
+                    ModelSwaps.InitializeThirdSword();
+                    ItemPresentationPatches.SetupCustomSwordItemPresentations();
+                    SpiritArenaTeleporterPrefab = GameObject.Instantiate(GameObject.Find("Teleporter"));
+                    GameObject.DontDestroyOnLoad(SpiritArenaTeleporterPrefab);
+                    SpiritArenaTeleporterPrefab.transform.position = new Vector3(-30000f, -30000f, -30000f);
+                    SpiritArenaTeleporterPrefab.SetActive(false);
+                    ModelSwaps.SetupStarburstEffect();
+                    EnemyRandomizer.InitializeEnemies("Spirit Arena");
+                    SceneLoader.LoadScene("Transit");
+                    return;
+                }
+                if (loadingScene.name == "Library Arena" && ModelSwaps.SecondSword == null) {
+                    ModelSwaps.InitializeSecondSword();
+                    EnemyRandomizer.InitializeEnemies("Library Arena");
+                    SceneLoader.LoadScene("Spirit Arena");
+                    return;
+                }
+                if (loadingScene.name == "Cathedral Arena" && !ModelSwaps.Chests.ContainsKey("Hyperdash")) {
+                    ModelSwaps.InitializeChestType("Hyperdash");
+                    SceneLoader.LoadScene("Library Arena");
+                    EnemyRandomizer.InitializeEnemies("Cathedral Arena");
+                    return;
+                }
+                if (loadingScene.name == "Overworld Redux" && ModelSwaps.Chests.Count == 0) {
+                    if (GhostHints.GhostFox == null) {
+                        GhostHints.InitializeGhostFox();
+                    }
+
+                    ModelSwaps.InitializeItems();
+
+                    TextBuilderPatches.SetupCustomGlyphSprites();
+                    EnemyRandomizer.InitializeEnemies("Overworld Redux");
+
+                    FuseRandomizer.Setup();
+                    BellShuffle.Setup();
+
+                    LadderToggles.CreateLadderItems();
+                    ModelSwaps.CreateConstructionObject();
+
+                    SceneLoader.LoadScene("Cathedral Arena");
+                    return;
+                }
+                if (ModelSwaps.Chests.Count == 0 && loadingScene.name == "TitleScreen") {
+                    CustomItemBehaviors.CreateCustomItems();
+                    GameObject ArchipelagoObject = new GameObject("archipelago");
+                    Archipelago.instance = ArchipelagoObject.AddComponent<Archipelago>();
+                    GameObject.DontDestroyOnLoad(ArchipelagoObject);
+                    if (Locations.VanillaLocations.Count == 0) {
+                        Locations.CreateLocationLookups();
+                    }
+                    if (ERData.VanillaPortals.Count == 0) {
+                        ERScripts.SetupVanillaPortalsAndTraversalReqs();
+                    }
+                    SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
+                    GrassRandomizer.LoadGrassChecks();
+                    BreakableShuffle.LoadBreakableChecks();
+                    PaletteEditor.OdinRounded = Resources.FindObjectsOfTypeAll<Font>().Where(Font => Font.name == "Odin Rounded").ToList()[0];
+
+                    SceneImageData.LoadPageData();
+                    SceneLoader.LoadScene("Overworld Redux");
+                    return;
+                }
             }
 
             if (Camera.main != null && Camera.main.gameObject.GetComponentInParent<CycleController>() == null) {
@@ -317,14 +343,6 @@ namespace TunicRandomizer {
                 SaveFile.SetString("last campfire id", "checkpoint");
                 TunicLogger.LogInfo("Resetting time of day to daytime!");
                 SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
-            }
-            FoolTrap.StungByBee = false;
-            FoolTrap.TinierFox = false;
-            FoolTrap.BaldFox = false;
-            FoolTrap.WideFox = false;
-            if (FoolTrap.ZoomedCamera) {
-                CameraController.DerekZoom = 1f;
-                FoolTrap.ZoomedCamera = false;
             }
 
             // Fur, Puff, Details, Tunic, Scarf
@@ -345,6 +363,8 @@ namespace TunicRandomizer {
                 PlayerCharacterPatches.IsTeleporting = false;
                 GameObject.Destroy(PlayerCharacter.instance.gameObject.GetComponent<Rotate>());
             }
+            PlayerCharacterPatches.timesDeathplaneTriggeredThisScene = 0;
+            PlayerCharacterPatches.failsafeSpawnPoint = null;
 
             // Failsafe for potion flasks not combining due to receiving 3rd shard during a load zone or at some other weird moment
             if (Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -419,6 +439,8 @@ namespace TunicRandomizer {
                 InitialLoadDone = true;
                 TitleVersion.Initialize();
                 RecentItemsDisplay.SetupRecentItemsDisplay();
+                FoxPrince.Setup();
+                CRTMode.SetupCRTMode();
 
                 Archipelago.instance.CheckForArchipelagoLauncherArgs();
                 if (!Archipelago.instance.integration.connected && TunicRandomizer.Settings.Mode == RandomizerSettings.RandomizerType.ARCHIPELAGO) {
@@ -583,12 +605,15 @@ namespace TunicRandomizer {
 
             EnemyRandomizer.CheckBossState();
 
+            InventoryCounter.UpdateCounters();
+
             if (SaveFile.GetInt(EntranceRando) == 1) {
                 if (ERData.RandomizedPortals.Count == 0) {
                     if (IsArchipelago()) {
                         ERScripts.CreatePortalPairs(((JObject)Archipelago.instance.GetPlayerSlotData()["Entrance Rando"]).ToObject<Dictionary<string, string>>());
                     } else if (IsSinglePlayer()) {
-                        ERScripts.RandomizePortals(SaveFile.GetInt("seed"));
+                        TunicLogger.LogInfo("creating randomized portals in sceneloaderpatches");
+                        ERScripts.CreateRandomizedPortals(SaveFile.GetInt("seed"));
                     }
                 }
                 ERScripts.ModifyPortals(loadingScene.name);

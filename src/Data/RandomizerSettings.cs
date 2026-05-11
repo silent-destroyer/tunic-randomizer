@@ -47,6 +47,7 @@ namespace TunicRandomizer {
         private const int BELL_SHUFFLE = 262144;
         private const int LAURELS_ZIPS = 524288;
         private const int LS_WITHOUT_ITEMS = 1048576;
+        private const int FOX_PRINCE = 2097152;
 
         public GameModes GameMode {
             get;
@@ -89,6 +90,11 @@ namespace TunicRandomizer {
         }
 
         public bool DecoupledER {
+            get;
+            set;
+        }
+
+        public bool FoxPrinceEnabled {
             get;
             set;
         }
@@ -274,6 +280,25 @@ namespace TunicRandomizer {
             get;
             set;
         }
+        public bool SeekingSpellDefaultChecks {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellBreakableChecks {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellGrassChecks {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellFusesBells {
+            get;
+            set;
+        }
 
         // Gameplay Settings
         private const int EASY_HEIR = 1;
@@ -380,6 +405,11 @@ namespace TunicRandomizer {
         }
 
         public bool TinierFoxMode {
+            get;
+            set;
+        }
+
+        public bool RetroFilterEnabled {
             get;
             set;
         }
@@ -561,6 +591,7 @@ namespace TunicRandomizer {
             ERFixedShop = false;
             PortalDirectionPairs = false;
             DecoupledER = false;
+            FoxPrinceEnabled = false;
             HexagonQuestGoal = 20;
             HexagonQuestExtraPercentage = 50;
             FixedLaurelsOption = FixedLaurelsType.RANDOM;
@@ -601,6 +632,10 @@ namespace TunicRandomizer {
             UseTrunicTranslations = false;
             CreateSpoilerLog = true;
             SeekingSpellLogic = false;
+            SeekingSpellDefaultChecks = true;
+            SeekingSpellBreakableChecks = true;
+            SeekingSpellGrassChecks = true;
+            SeekingSpellFusesBells = true;
 
             // General
             HeirAssistModeEnabled = false;
@@ -625,6 +660,7 @@ namespace TunicRandomizer {
             foreach(string track in MusicShuffler.Tracks.Keys) {
                 MusicToggles.Add(track, true);
             }
+            RetroFilterEnabled = false;
 
             // Enemy Randomizer
             EnemyRandomizerEnabled = false;
@@ -683,8 +719,8 @@ namespace TunicRandomizer {
             if (getFromSave) {
                 seed = SaveFile.GetInt("seed").ToString();
             } else {
-                seed = QuickSettings.CustomSeed == "" ? new System.Random().Next().ToString() : QuickSettings.CustomSeed;
-                QuickSettings.CustomSeed = seed;
+                seed = QuickSettingsRedux.CustomSeed == "" ? new System.Random().Next().ToString() : QuickSettingsRedux.CustomSeed;
+                QuickSettingsRedux.CustomSeed = seed;
             }
             string SettingsString = $"tunc:{PluginInfo.VERSION}:{seed}:{EncodedSettings}";
             return SettingsString;
@@ -699,7 +735,7 @@ namespace TunicRandomizer {
                     Notifications.Show($"\"Could not import settings string!\"", $"\"Settings are from a different version.\"");
                     return;
                 }
-                QuickSettings.CustomSeed = split[2];
+                QuickSettingsRedux.CustomSeed = split[2];
 
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(split[3]));
                 string[] decodedSplit = decoded.Split(':');
@@ -734,6 +770,7 @@ namespace TunicRandomizer {
                 BellShuffle = eval(logic, BELL_SHUFFLE);
                 LaurelsZips = eval(logic, LAURELS_ZIPS);
                 LadderStorageWithoutItems = eval(logic, LS_WITHOUT_ITEMS);
+                FoxPrinceEnabled = eval(logic, FOX_PRINCE);
 
                 int general = int.Parse(decodedSplit[9]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -810,6 +847,7 @@ namespace TunicRandomizer {
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                     BreakableShuffle, FuseShuffle, BellShuffle, LaurelsZips, LadderStorageWithoutItems,
+                    FoxPrinceEnabled,
                 };
             } else {
                 return new bool[] { 
@@ -823,7 +861,7 @@ namespace TunicRandomizer {
                     GetBool(SaveFlags.Decoupled), GetBool(SaveFlags.HexagonQuestPageAbilities),
                     GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
                     GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
-                    GetBool(SaveFlags.LadderStorageWithoutItems),
+                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.FoxPrinceEnabled),
                 };
             }
         }

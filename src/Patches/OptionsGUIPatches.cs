@@ -16,6 +16,27 @@ namespace TunicRandomizer {
         public static bool BonusOptionsUnlocked = false;
 
         public static bool OptionsGUI_page_root_PrefixPatch(OptionsGUI __instance) {
+            if (QuickSettingsRedux.titleScreenShowMusicToggles) {
+                QuickSettingsRedux.titleScreenShowMusicToggles = false;
+                MusicTogglesPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
+            if (QuickSettingsRedux.titleScreenShowJukebox) {
+                QuickSettingsRedux.titleScreenShowJukebox = false;
+                JukeboxPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
+            if (QuickSettingsRedux.titleScreenShowEnemyToggles) {
+                QuickSettingsRedux.titleScreenShowEnemyToggles = false;
+                EnemyTogglesPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
             addPageButton("Randomizer Settings", RandomizerSettingsPage);
             return true;
         }
@@ -29,9 +50,8 @@ namespace TunicRandomizer {
             addPageButton("Hint Settings", HintsSettingsPage);
             addPageButton("Enemy Randomizer Settings", EnemyRandomizerSettings);
             addPageButton("Fox Customization Settings", CustomFoxSettingsPage);
-            addPageButton("Race Mode Settings", RaceSettingsPage);
             addPageButton("Music Shuffle Settings", MusicSettingsPage);
-            addPageButton("Other Settings", OtherSettingsPage);
+            addPageButton("Race Mode Settings", RaceSettingsPage);
         }
 
         public static void ArchipelagoSettingsPage() {
@@ -95,6 +115,7 @@ namespace TunicRandomizer {
                 }));
 
             } else {
+                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
                 if (SaveFile.GetInt(MysterySeedEnabled) == 1) {
                     OptionsGUI.addButton("Mystery Seed", "<#00ff00>On", null);
                     return;
@@ -118,7 +139,6 @@ namespace TunicRandomizer {
                 OptionsGUI.addButton("Lanternless Logic", SaveFile.GetInt(LanternlessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addButton("Maskless Logic", SaveFile.GetInt(MasklessLogic) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
-                OptionsGUI.addButton("Copy Settings String", (Action)RandomizerSettings.copySettings);
             }
         }
 
@@ -131,6 +151,7 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("Entrance Randomizer", "Off", "On", TunicRandomizer.Settings.EntranceRandoEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEntranceRando);
                 OptionsGUI.addMultiSelect("Entrance Layout", EntranceLayoutOptions, GetEntranceLayoutIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeEntranceLayout).wrap = true;
                 OptionsGUI.addToggle("Decoupled Entrances", "Off", "On", TunicRandomizer.Settings.DecoupledER ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDecoupledER);
+                OptionsGUI.addToggle("Fox Prince", "Off", "On", TunicRandomizer.Settings.FoxPrinceEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFoxPrince);
             } else {
                 OptionsGUI.addButton("Entrance Randomizer", SaveFile.GetInt(SaveFlags.EntranceRando) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
                 if (SaveFile.GetInt(SaveFlags.ERFixedShop) == 1) {
@@ -141,6 +162,7 @@ namespace TunicRandomizer {
                     OptionsGUI.addButton("Entrance Layout", "Matching Directions", null);
                 }
                 OptionsGUI.addButton("Decoupled Entrances", SaveFile.GetInt(SaveFlags.Decoupled) == 1 ? "<#00ff00>On" : "<#ff0000>Off", null);
+                OptionsGUI.addButton("Fox Prince", GetBool(FoxPrinceEnabled) ? "<#00ff00>On" : "<#ff0000>Off", null);
             }
         }
 
@@ -177,9 +199,9 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Path of the Hero Hints", "Off", "On", TunicRandomizer.Settings.HeroPathHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePathOfHeroHints);
             OptionsGUI.addToggle("Ghost Fox Hints", "Off", "On", TunicRandomizer.Settings.GhostFoxHintsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleGhostFoxHints);
             OptionsGUI.addToggle("Freestanding Items Match Contents", "Off", "On", TunicRandomizer.Settings.ShowItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleShowItems);
-            OptionsGUI.addToggle("Chests Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
+            OptionsGUI.addToggle("Textures Match Contents", "Off", "On", TunicRandomizer.Settings.ChestsMatchContentsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestsMatchContents);
             OptionsGUI.addToggle("Display Hints in Trunic", "Off", "On", TunicRandomizer.Settings.UseTrunicTranslations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrunicHints);
-            OptionsGUI.addToggle("Seeking Spell Uses Logic", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
+            addPageButton("Seeking Spell Settings", (Action)SeekingSpellPage);
             if (!Archipelago.instance.integration.disableSpoilerLog) {
                 OptionsGUI.addToggle("Spoiler Log", "Off", "On", TunicRandomizer.Settings.CreateSpoilerLog ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSpoilerLog);
                 OptionsGUI.addButton("Open Spoiler Log", (Action)OpenLocalSpoilerLog);
@@ -198,18 +220,55 @@ namespace TunicRandomizer {
             OptionsGUI.setHeading("Hints");
         }
 
+        public static void SeekingSpellPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.addToggle("In Logic Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellLogic ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFairyLogic);
+            OptionsGUI.addToggle("Default Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellDefaultChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellDefaultChecks = !TunicRandomizer.Settings.SeekingSpellDefaultChecks;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Breakable Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellBreakableChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellBreakableChecks = !TunicRandomizer.Settings.SeekingSpellBreakableChecks;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Grass Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellGrassChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellGrassChecks = !TunicRandomizer.Settings.SeekingSpellGrassChecks;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Fuse/Bell Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellFusesBells ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellFusesBells = !TunicRandomizer.Settings.SeekingSpellFusesBells;
+                SaveSettings();
+            }));
+            OptionsGUI.setHeading("Fairy Targets");
+        }
+
         public static void GeneralSettingsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
             OptionsGUI.setHeading("General");
-            OptionsGUI.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
             OptionsGUI.addToggle("Clear Early Bushes", "Off", "On", TunicRandomizer.Settings.ClearEarlyBushes ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleClearEarlyBushes);
+            OptionsGUI.addToggle("Easier Heir Fight", "Off", "On", TunicRandomizer.Settings.HeirAssistModeEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHeirAssistMode);
             OptionsGUI.addToggle("Enable All Checkpoints", "Off", "On", TunicRandomizer.Settings.EnableAllCheckpoints ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleAllCheckpoints);
             OptionsGUI.addToggle("Cheaper Shop Items", "Off", "On", TunicRandomizer.Settings.CheaperShopItemsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCheaperShopItems);
             OptionsGUI.addToggle("Bonus Upgrades", "Off", "On", TunicRandomizer.Settings.BonusStatUpgradesEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBonusStatUpgrades);
             OptionsGUI.addToggle("Disable Chest Interruption", "Off", "On", TunicRandomizer.Settings.DisableChestInterruption ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleChestInterruption);
-            OptionsGUI.addToggle("Recent Items Display", "Off", "On", TunicRandomizer.Settings.ShowRecentItems ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowRecentItems = !TunicRandomizer.Settings.ShowRecentItems; SaveSettings(); }));
+            OptionsGUI.addToggle("Show Recent Items", "Off", "On", TunicRandomizer.Settings.ShowRecentItems ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { 
+                TunicRandomizer.Settings.ShowRecentItems = !TunicRandomizer.Settings.ShowRecentItems;
+                RecentItemsDisplay.instance.gameObject.SetActive(TunicRandomizer.Settings.ShowRecentItems);
+                SaveSettings(); 
+            }));
             OptionsGUI.addToggle("Skip Item Popups", "Off", "On", TunicRandomizer.Settings.SkipItemAnimations ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSkipItemAnimations);
             OptionsGUI.addToggle("Skip Upgrade Animations", "Off", "On", TunicRandomizer.Settings.FasterUpgrades ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterUpgrades);
+            OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
+            OptionsGUI.addToggle("Show Player Position", "Off", "On", TunicRandomizer.Settings.ShowPlayerPosition ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowPlayerPosition = !TunicRandomizer.Settings.ShowPlayerPosition; SaveSettings(); }));
+            OptionsGUI.addToggle("CRT Filter", "Off", "On", TunicRandomizer.Settings.RetroFilterEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCRTFilter);
+            OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
+            OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
+            OptionsGUI.addToggle("???", "Off", "On", TunicRandomizer.Settings.CameraFlip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
+
+            if (SecretMayor.shouldBeActive || SecretMayor.checkIfActive()) {
+                OptionsGUI.addToggle("<#ffd700>Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
+            }
+            addPageButton("Debug / Misc Options", DebugFunctionsPage);
         }
 
         public static void EnemyRandomizerSettings() {
@@ -273,6 +332,8 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Random Fox Colors", "Off", "On", TunicRandomizer.Settings.RandomFoxColorsEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleRandomFoxPalette);
             OptionsGUI.addToggle("Use Custom Fox Texture", "Off", "On", TunicRandomizer.Settings.UseCustomTexture ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCustomTexture);
             OptionsGUI.addToggle("Keepin' It Real", "Off", "On", TunicRandomizer.Settings.RealestAlwaysOn ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSunglasses);
+            OptionsGUI.addToggle("Bigger Head Mode", "Off", "On", TunicRandomizer.Settings.BiggerHeadMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.BiggerHeadMode = !TunicRandomizer.Settings.BiggerHeadMode; SaveSettings(); }));
+            OptionsGUI.addToggle("Tinier Fox Mode", "Off", "On", TunicRandomizer.Settings.TinierFoxMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.TinierFoxMode = !TunicRandomizer.Settings.TinierFoxMode; SaveSettings(); }));
             OptionsGUI.addButton($"Open Fox Color Editor", (Action)(() => {
                 if (SceneManager.GetActiveScene().name == "TitleScreen") {
                     GenericMessage.ShowMessage($"\"Fox Color Editor can only\"\n\"be opened while in-game.\"");
@@ -291,7 +352,6 @@ namespace TunicRandomizer {
                 OptionsGUI.addToggle("<#FF69B4>BONUS: Cape", "Off", "On", Inventory.GetItemByName("Cape").Quantity == 1 ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCape);
 
             }
-            OptionsGUI.addButton("Reset to Defaults", (Action)ResetToDefaults);
         }
 
         public static void RaceSettingsPage() {
@@ -305,26 +365,9 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Disable Upgrade Stealing", "Off", "On", TunicRandomizer.Settings.DisableUpgradeStealing ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDisableUpgradeStealing);
         }
 
-        public static void OtherSettingsPage() {
-            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.setHeading("Other");
-            OptionsGUI.addToggle("???", "Off", "On", TunicRandomizer.Settings.CameraFlip ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleWeirdMode);
-            OptionsGUI.addToggle("More Skulls", "Off", "On", TunicRandomizer.Settings.MoreSkulls ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleMoreSkulls);
-            OptionsGUI.addToggle("Arachnophobia Mode", "Off", "On", TunicRandomizer.Settings.ArachnophobiaMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleArachnophobiaMode);
-            OptionsGUI.addToggle("Holy Cross DDR", "Off", "On", TunicRandomizer.Settings.HolyCrossVisualizer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleHolyCrossViewer);
-            OptionsGUI.addToggle("Bigger Head Mode", "Off", "On", TunicRandomizer.Settings.BiggerHeadMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.BiggerHeadMode = !TunicRandomizer.Settings.BiggerHeadMode; SaveSettings(); }));
-            OptionsGUI.addToggle("Tinier Fox Mode", "Off", "On", TunicRandomizer.Settings.TinierFoxMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.TinierFoxMode = !TunicRandomizer.Settings.TinierFoxMode; SaveSettings(); }));
-            OptionsGUI.addToggle("Show Player Position", "Off", "On", TunicRandomizer.Settings.ShowPlayerPosition ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.ShowPlayerPosition = !TunicRandomizer.Settings.ShowPlayerPosition; SaveSettings(); }));
-
-            if (SecretMayor.shouldBeActive || SecretMayor.isCorrectDate()) {
-                OptionsGUI.addToggle("Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
-            }
-            addPageButton("Debug/Misc Options", DebugFunctionsPage);
-        }
-
         public static void DebugFunctionsPage() {
             OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
-            OptionsGUI.setHeading("Debug/Misc");
+            OptionsGUI.setHeading("Debug / Misc");
             OptionsGUI.addButton("Open Saves Folder", (Action)(() => { System.Diagnostics.Process.Start(Application.persistentDataPath + "/SAVES"); }));
             OptionsGUI.addButton("Open Log File", (Action)(() => { System.Diagnostics.Process.Start(Application.dataPath + "/../BepInEx/LogOutput.log"); }));
             OptionsGUI.addToggle("Title Screen Option Tooltips", "Off", "On", TunicRandomizer.Settings.OptionTooltips ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.OptionTooltips = !TunicRandomizer.Settings.OptionTooltips; SaveSettings(); }));
@@ -411,6 +454,12 @@ namespace TunicRandomizer {
             OptionsGUI.addButton("Return", new Action(OptionsGUI.popPage));
         }
 
+        public static void addReturnButton(OptionsGUI optionsGUI) {
+            optionsGUI.addButton("Return", (Action)(() => {
+                optionsGUI.exitOptions();
+            }));
+        }
+
         // Logic Settings
 
         public static void ChangeGameMode(int index) {
@@ -479,6 +528,11 @@ namespace TunicRandomizer {
 
         public static void ToggleDecoupledER(int index) {
             TunicRandomizer.Settings.DecoupledER = !TunicRandomizer.Settings.DecoupledER;
+            SaveSettings();
+        }
+
+        public static void ToggleFoxPrince(int index) {
+            TunicRandomizer.Settings.FoxPrinceEnabled = !TunicRandomizer.Settings.FoxPrinceEnabled;
             SaveSettings();
         }
 
@@ -706,6 +760,12 @@ namespace TunicRandomizer {
 
         public static void ToggleHolyCrossViewer(int index) {
             TunicRandomizer.Settings.HolyCrossVisualizer = !TunicRandomizer.Settings.HolyCrossVisualizer;
+            SaveSettings();
+        }
+
+        public static void ToggleCRTFilter(int index) {
+            TunicRandomizer.Settings.RetroFilterEnabled = !TunicRandomizer.Settings.RetroFilterEnabled;
+            CRTMode.Toggle();
             SaveSettings();
         }
 

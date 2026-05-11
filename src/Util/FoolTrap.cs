@@ -15,6 +15,8 @@ namespace TunicRandomizer {
             Tiny,
             Mirror,
             Deisometric,
+            CRT,
+            Vintage,
             Trip,  // for trap link
             Zoom,  // for trap link
             Bald,  // for trap link
@@ -44,7 +46,7 @@ namespace TunicRandomizer {
         }
 
         public static Dictionary<TrapType, Trap> Traps = new Dictionary<TrapType, Trap> {
-            {TrapType.Ice, new Trap("Ice Trap", 30) },
+            {TrapType.Ice, new Trap("Ice Trap", 20) },
             {TrapType.Fire, new Trap("Fire Trap", 20) },
             {TrapType.Bee, new Trap("Bee Trap", 15) },
             {TrapType.Tiny, new Trap("Tiny Trap", 15) },
@@ -57,6 +59,8 @@ namespace TunicRandomizer {
             {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
             {TrapType.Wide, new Trap("W I D E Trap", 0) },
             {TrapType.ZoomOut, new Trap("Zoom Out Trap", 0) },
+            {TrapType.CRT, new Trap("CRT Trap", 5) },
+            {TrapType.Vintage, new Trap("Vintage Trap", 1) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -136,6 +140,8 @@ namespace TunicRandomizer {
         public static bool BaldFox = false;
         public static bool WideFox = false;
         public static bool ZoomedCamera = false;
+        public static bool CRTTrap = false;
+        public static bool VintageTrap = false;
 
         public static (string, string) ApplyFoolEffect(TrapType trapType) {
             string FoolMessageTop = $"";
@@ -165,6 +171,12 @@ namespace TunicRandomizer {
                     break;
                 case TrapType.Zoom:
                     (FoolMessageTop, FoolMessageBottom) = FoolZoomTrap();
+                    break;
+                case TrapType.CRT:
+                    (FoolMessageTop, FoolMessageBottom) = FoolCRTTrap();
+                    break;
+                case TrapType.Vintage:
+                    (FoolMessageTop, FoolMessageBottom) = FoolVintageTrap();
                     break;
                 case TrapType.Bald:
                     (FoolMessageTop, FoolMessageBottom) = FoolBaldTrap();
@@ -209,6 +221,12 @@ namespace TunicRandomizer {
                     continue;
                 }
                 if (trapType == TrapType.Zoom && CameraController.DerekZoom == 0.5f) {
+                    continue;
+                }
+                if (trapType == TrapType.CRT && (VintageTrap || CRTTrap || TunicRandomizer.Settings.RetroFilterEnabled)) {
+                    continue;
+                }
+                if (trapType == TrapType.Vintage && VintageTrap) {
                     continue;
                 }
                 weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
@@ -355,6 +373,34 @@ namespace TunicRandomizer {
             string FoolMessageTop = $"yoo R A <#FFA500>wId \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"tuhuhuhuhuhuhuhnk";
             WideFox = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolCRTTrap() {
+            if (PlayerCharacter.Instanced && PlayerCharacter.instance.GetComponent<TechbowItemBehaviour>() != null) {
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.GetComponent<TechbowItemBehaviour>().sfx_fire);
+            }
+            string FoolMessageTop = $"yoo R A <#FF0000>kah%O<#00FF00>d rA \"<#0000FF>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"vintij!";
+            CRTTrap = true;
+            if (CRTMode.instance != null) { 
+                CRTMode.instance.Enable();
+            }
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolVintageTrap() {
+            if (PlayerCharacter.Instanced && PlayerCharacter.instance.GetComponent<TechbowItemBehaviour>() != null) {
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.GetComponent<TechbowItemBehaviour>().sfx_fire);
+            }
+            string FoolMessageTop = $"yoo R A <#FF0000>kah%O<#00FF00>d rA \"<#0000FF>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"vintij!";
+            VintageTrap = true;
+            if (CRTMode.instance != null) {
+                CRTMode.instance.Enable(true);
+            }
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
     public class FairyTargets {
@@ -33,7 +34,7 @@ namespace TunicRandomizer {
                 && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
                 List<GameObject> breakableObjects = new List<GameObject>();
-                if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
+                if (GetBool(BreakableShuffleEnabled)) {
                     foreach (SmashableObject obj in GameObject.FindObjectsOfType<SmashableObject>().ToList()) {
                         breakableObjects.Add(obj.gameObject);
                     }
@@ -45,7 +46,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                foreach (string ItemId in ItemIdsInScene) {
+                foreach (string ItemId in filterAllowedFairyTargets(ItemIdsInScene)) {
                     bool isBreakable = BreakableShuffle.BreakableChecks.ContainsKey(ItemId);
                     Location Location = Checks[ItemId].Location;
 
@@ -94,13 +95,13 @@ namespace TunicRandomizer {
             List<string> ItemIds = Checks.Values.Where(check => check.Location.SceneName != SceneManager.GetActiveScene().name
             && !TunicUtils.IsCheckCompletedOrCollected(check.CheckId)).Select(check => check.CheckId).ToList();
 
-            foreach (string ItemId in ItemIds) {
+            foreach (string ItemId in filterAllowedFairyTargets(ItemIds)) {
                 ScenesWithItems.Add(Checks[ItemId].Location.SceneName);
             }
 
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>()) {
                 if (ScenePortal.id.Contains("customfasttravel")) { continue; }
-                string sceneName = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
+                string sceneName = TunicUtils.FindPairedPortalSceneFromName(ScenePortal.name);
                 if (ScenesWithItems.Contains(sceneName)) {
                     FairyTarget fairyTarget = CreateFairyTarget($"fairy target {ScenePortal.name}", ScenePortal.transform.position);
                     AdjItemTargets.Add(fairyTarget);
@@ -108,17 +109,39 @@ namespace TunicRandomizer {
             }
         }
 
-        // specifically for fairy seeking spell with logic
+        // specifically for fairy seeking spell with logic, for the normal seeking spell, not the entrance seeking spell
         public static void CreateLogicLoadZoneTargets() {
             foreach (ScenePortal ScenePortal in Resources.FindObjectsOfTypeAll<ScenePortal>().Where(portal => portal.gameObject.scene.name == SceneManager.GetActiveScene().name)) {
-                string portalRegion = ERScripts.FindPortalRegionFromName(ScenePortal.name);
-                string destScene = ERScripts.FindPairedPortalSceneFromName(ScenePortal.name);
+                // hopefully this will skip portals that haven't been connected in yet in Fox Prince
+                if (SaveFlags.GetBool(SaveFlags.FoxPrinceEnabled) && !FoxPrince.FPRandomizedPortals.Any(p => p.Portal1.Name == ScenePortal.name)) {
+                    continue;
+                }
+                string portalRegion = TunicUtils.FindPortalRegionFromName(ScenePortal.name);
+                string destScene = TunicUtils.FindPairedPortalSceneFromName(ScenePortal.name);
                 // check if the entrance is logically accessible and if the adjacent scene has checks in logic
                 if (TunicUtils.PlayerItemsAndRegions.ContainsKey(portalRegion) && TunicUtils.ChecksInLogicPerScene.ContainsKey(destScene) 
-                    && TunicUtils.ChecksInLogicPerScene[destScene].Count > 0 && SceneManager.GetActiveScene().name != destScene) {
+                    && filterAllowedFairyTargets(TunicUtils.ChecksInLogicPerScene[destScene]).Count > 0 && SceneManager.GetActiveScene().name != destScene) {
                     AdjItemTargetsInLogic.Add(CreateFairyTarget($"alt target {ScenePortal.name}", ScenePortal.transform.position));
                 }
             }
+        }
+
+        private static List<string> filterAllowedFairyTargets(List<string> itemIds) {
+            List<string> filteredIds = new List<string>(itemIds);
+            if (!TunicRandomizer.Settings.SeekingSpellDefaultChecks) {
+                filteredIds.RemoveAll(id => Locations.VanillaLocations.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellBreakableChecks) {
+                filteredIds.RemoveAll(id => BreakableShuffle.BreakableChecks.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellGrassChecks) {
+                filteredIds.RemoveAll(id => GrassRandomizer.GrassChecks.ContainsKey(id));
+            }
+            if (!TunicRandomizer.Settings.SeekingSpellFusesBells) {
+                filteredIds.RemoveAll(id => FuseRandomizer.FuseChecks.ContainsKey(id));
+                filteredIds.RemoveAll(id => BellShuffle.BellChecks.ContainsKey(id));
+            }
+            return filteredIds;
         }
 
         public static void CreateEntranceTargets() {
@@ -127,7 +150,7 @@ namespace TunicRandomizer {
                 if (ScenePortal.isActiveAndEnabled && SaveFile.GetInt("randomizer entered portal " + ScenePortal.name) != 1) {
                     FairyTarget fairyTarget = CreateFairyTarget($"entrance target {ScenePortal.name}", ScenePortal.transform.position);
                     EntranceTargets.Add(fairyTarget);
-                    if (TunicUtils.PlayerItemsAndRegions.ContainsKey(ERScripts.FindPortalRegionFromName(ScenePortal.name))) {
+                    if (TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicUtils.FindPortalRegionFromName(ScenePortal.name))) {
                         EntranceTargetsInLogic.Add(fairyTarget);
                     }
                 }
@@ -204,8 +227,8 @@ namespace TunicRandomizer {
                         if (!AdjItemTargetsInLogic.Contains(fairyTarget)) {
                             // these are portal names
                             string targetName = fairyTarget.name.Replace("fairy target ", "");
-                            string regionName = ERScripts.FindPortalRegionFromName(targetName);
-                            string destSceneName = ERScripts.FindPairedPortalSceneFromName(targetName);
+                            string regionName = TunicUtils.FindPortalRegionFromName(targetName);
+                            string destSceneName = TunicUtils.FindPairedPortalSceneFromName(targetName);
                             if (TunicUtils.PlayerItemsAndRegions.ContainsKey(regionName) && TunicUtils.ChecksInLogicPerScene.ContainsKey(destSceneName) 
                                 && TunicUtils.ChecksInLogicPerScene[destSceneName].Count > 0 && SceneManager.GetActiveScene().name != destSceneName) {
                                 AdjItemTargetsInLogic.Add(fairyTarget);
@@ -217,7 +240,7 @@ namespace TunicRandomizer {
                     foreach (FairyTarget fairyTarget in EntranceTargets) {
                         if (fairyTarget == null || !fairyTarget.isActiveAndEnabled) { continue; }
                         if (!EntranceTargetsInLogic.Contains(fairyTarget)
-                                && TunicUtils.PlayerItemsAndRegions.ContainsKey(ERScripts.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))) {
+                                && TunicUtils.PlayerItemsAndRegions.ContainsKey(TunicUtils.FindPortalRegionFromName(fairyTarget.name.Replace("entrance target ", "")))) {
                             EntranceTargetsInLogic.Add(fairyTarget);
                         }
                     }
@@ -234,8 +257,6 @@ namespace TunicRandomizer {
         public EntranceSeekerSpell(IntPtr ptr) : base(ptr) { }
 
         private void Awake() {
-            base.inputsToCast = new UnhollowerBaseLib.Il2CppStructArray<DPAD>(1L);
-
             CustomInputs = new List<DPAD>() { DPAD.RIGHT, DPAD.DOWN, DPAD.RIGHT, DPAD.UP, DPAD.LEFT, DPAD.UP };
         }
 

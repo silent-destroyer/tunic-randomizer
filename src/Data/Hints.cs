@@ -32,17 +32,21 @@ namespace TunicRandomizer {
         public struct HeroGraveHint {
             public string PathHintId;
             public string PathHint;
+            public string PathItemName;
             public string RelicHintId;
             public string RelicHint;
+            public string RelicItemName;
             public string SceneName;
             public string GraveObjectPath;
             public bool PointLight;
 
-            public HeroGraveHint(string pathHintId, string pathHint, string relicHintId, string relicHint, string sceneName, string graveObjectPath, bool pointLight) { 
+            public HeroGraveHint(string pathHintId, string pathHint, string pathItemName, string relicHintId, string relicHint, string relicItemName, string sceneName, string graveObjectPath, bool pointLight) { 
                 PathHintId = pathHintId;
                 PathHint = pathHint;
+                PathItemName = pathItemName;
                 RelicHintId = relicHintId;
-                RelicHint = relicHint; 
+                RelicHint = relicHint;
+                RelicItemName = relicItemName;
                 SceneName = sceneName;
                 GraveObjectPath = graveObjectPath;
                 PointLight = pointLight;
@@ -104,7 +108,7 @@ namespace TunicRandomizer {
                 Hint += TunicRandomizer.Settings.UseTrunicTranslations ? $"\n<#FFFFFF>uhwAts yoo aht {Prefix} {Translations.Translate(Scene, false)}\"...\"" : $"\nuhwAts yoo in {Prefix} \"{Scene.ToUpper()}...\"";
             }
             HintMessages.Add("Temple Statue", Hint);
-            List<(string, string)> relicHints = CreateHeroRelicHints();
+            List<(string, string, string)> relicHints = CreateHeroRelicHints();
             List<string> HintItems = new List<string>() { "Magic Orb", "Magic Dagger", "Magic Wand" };
 
             List<string> secondaryHintItems = new List<string>() { SaveFile.GetInt(SwordProgressionEnabled) == 1 ? "Sword Upgrade" : "Sword" };
@@ -123,7 +127,7 @@ namespace TunicRandomizer {
                 string HintItem = HintItems[random.Next(HintItems.Count)];
                 string HintGrave = HintGraves[random.Next(HintGraves.Count)];
                 string slotLocation = "";
-                (string, string) RelicHint = relicHints[random.Next(relicHints.Count)];
+                (string, string, string) RelicHint = relicHints[random.Next(relicHints.Count)];
                 Hint = $"lehjehnd sehz ";
                 if (IsArchipelago()) {
                     int Player = Archipelago.instance.GetPlayerSlot();
@@ -159,11 +163,11 @@ namespace TunicRandomizer {
                 Hint += $"\niz lOkAtid awn #uh {(TunicRandomizer.Settings.UseTrunicTranslations ? $"<#ffd700>pah% uhv #uh hErO<#ffffff>\"...\"" : $"\"<#ffd700>PATH OF THE HERO<#ffffff>...\"")}";
 
                 if (HintGrave == "East Forest Relic") {
-                    HeroGraveHints.Add(HintGrave, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Sword Access", "_Setpieces/RelicPlinth (1)/", true));
+                    HeroGraveHints.Add(HintGrave, new HeroGraveHint(slotLocation, Hint, HintItem, RelicHint.Item1, RelicHint.Item2, RelicHint.Item3, "Sword Access", "_Setpieces/RelicPlinth (1)/", true));
                 } else if (HintGrave == "Fortress Relic") {
-                    HeroGraveHints.Add(HintGrave, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Fortress Reliquary", "RelicPlinth", true));
+                    HeroGraveHints.Add(HintGrave, new HeroGraveHint(slotLocation, Hint, HintItem, RelicHint.Item1, RelicHint.Item2, RelicHint.Item3, "Fortress Reliquary", "RelicPlinth", true));
                 } else if (HintGrave == "West Garden Relic") {
-                    HeroGraveHints.Add(HintGrave, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Archipelagos Redux", "_Environment Prefabs/RelicPlinth/", false));
+                    HeroGraveHints.Add(HintGrave, new HeroGraveHint(slotLocation, Hint, HintItem, RelicHint.Item1, RelicHint.Item2, RelicHint.Item3, "Archipelagos Redux", "_Environment Prefabs/RelicPlinth/", false));
                 }
                 relicHints.Remove(RelicHint);
                 HintItems.Remove(HintItem);
@@ -183,7 +187,7 @@ namespace TunicRandomizer {
                 string Hexagon = Hexagons[random.Next(Hexagons.Count)];
                 string HexagonHintArea = HexagonHintGraves[random.Next(HexagonHintGraves.Count)];
                 string slotLocation = "";
-                (string, string) RelicHint = relicHints[random.Next(relicHints.Count)];
+                (string, string, string) RelicHint = relicHints[random.Next(relicHints.Count)];
 
                 if (IsArchipelago()) {
                     if (Locations.MajorItemLocations[Hexagon].Count == 0) {
@@ -219,11 +223,11 @@ namespace TunicRandomizer {
                 }
 
                 if (HexagonHintArea == "Swamp Relic") {
-                    HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Swamp Redux 2", "_Setpieces Etc/RelicPlinth/", false));
+                    HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, Hexagon, RelicHint.Item1, RelicHint.Item2, RelicHint.Item3, "Swamp Redux 2", "_Setpieces Etc/RelicPlinth/", false));
                 } else if (HexagonHintArea == "Monastery Relic") {
-                    HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Monastery", "Root/RelicPlinth (1)/", false));
+                    HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, Hexagon, RelicHint.Item1, RelicHint.Item2, RelicHint.Item3, "Monastery", "Root/RelicPlinth (1)/", false));
                 } else if (HexagonHintArea == "Library Relic") {
-                    HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, RelicHint.Item1, RelicHint.Item2, "Library Hall", "_Special/RelicPlinth/", false));
+                    HeroGraveHints.Add(HexagonHintArea, new HeroGraveHint(slotLocation, Hint, Hexagon, RelicHint.Item1, RelicHint.Item2, RelicHint.Item3, "Library Hall", "_Special/RelicPlinth/", false));
                 }
 
                 relicHints.Remove(RelicHint);
@@ -235,39 +239,59 @@ namespace TunicRandomizer {
             SaveFile.SetInt($"randomizer hint found 0, Server", 1);
 
             // make the in-game signs tell you what area they're pointing to
-            if (SaveFile.GetInt(EntranceRando) == 1) {
-                foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_") {
-                        HintMessages.Add("East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Archipelagos Redux_lower") {
-                        HintMessages.Add("West Garden Sign", $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Fortress Courtyard_") {
-                        HintMessages.Add("Fortress Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}  [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Darkwoods Tunnel_") {
-                        HintMessages.Add("Quarry Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_up]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Ruins Passage_west") {
-                        HintMessages.Add("Ruined Hall Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
-                        HintMessages.Add("Town Sign", $"[arrow_left]  {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, Sword Access_lower") {
-                        HintMessages.Add("East East Forest Sign", $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]");
-                    }
-                    if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, East Forest Redux Laddercave_lower") {
-                        HintMessages.Add("West East Forest Sign", $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}");
-                    }
+            if (GetBool(EntranceRando)) {
+                CreateSignHints();
+            }
+        }
+
+        public static Dictionary<string, string> PortalToSignName = new Dictionary<string, string> {
+            {"Overworld Redux, Forest Belltower_", "East Forest Sign"},
+            {"Overworld Redux, Archipelagos Redux_lower", "West Garden Sign"},
+            {"Overworld Redux, Fortress Courtyard_", "Fortress Sign"},
+            {"Overworld Redux, Darkwoods Tunnel_", "Quarry Sign"},
+            {"Overworld Redux, Ruins Passage_west", "Ruined Hall Sign"},
+            {"Overworld Redux, Overworld Interiors_house", "Town Sign"},
+            {"East Forest Redux, Sword Access_lower", "East East Forest Sign"},
+            {"East Forest Redux, East Forest Redux Laddercave_lower", "West East Forest Sign"}
+        };
+
+        public static void CreateSignHints() {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Forest Belltower_") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Archipelagos Redux_lower") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Fortress Courtyard_") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}  [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Darkwoods Tunnel_") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_up]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Ruins Passage_west") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"[arrow_left]  {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, Sword Access_lower") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"{Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])} [arrow_right]";
+                }
+                if (portalCombo.Portal1.SceneDestinationTag == "East Forest Redux, East Forest Redux Laddercave_lower") {
+                    HintMessages[PortalToSignName[portalCombo.Portal1.SceneDestinationTag]] = $"[arrow_left] {Translations.TranslateDefaultQuotes(Locations.SimplifiedSceneNames[portalCombo.Portal2.Scene])}";
+                }
+            }
+            foreach (string sign in PortalToSignName.Values) {
+                if (!HintMessages.ContainsKey(sign)) {
+                    HintMessages[sign] = "???";
                 }
             }
         }
 
-        private static List<(string, string)> CreateHeroRelicHints() {
+        private static List<(string, string, string)> CreateHeroRelicHints() {
             List<ItemData> Relics = ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.RELIC).ToList();
-            List<(string, string)> RelicHints = new List<(string, string)>();
+            List<(string, string, string)> RelicHints = new List<(string, string, string)>();
             string Scene = "";
             string Prefix = "";
             string RelicHint = "";
@@ -304,14 +328,14 @@ namespace TunicRandomizer {
                         }
                         slotLocation = RelicItemHint.Player == Player && RelicItemHint.Location == "Your Pocket" ? "0, Server" : $"{RelicItemHint.Player}, {RelicItemHint.Location}";
                     }
-                    RelicHints.Add((slotLocation, RelicHint));
+                    RelicHints.Add((slotLocation, RelicHint, Relic.Name));
                 } else if (IsSinglePlayer()) {
                     Check RelicCheck = ItemRandomizer.FindRandomizedItemByName(Relic.ItemNameForInventory);
                     Scene = Locations.SimplifiedSceneNames[RelicCheck.Location.SceneName];
                     Prefix = Vowels.Contains(Scene[0]) ? "#E" : "#uh";
 
                     RelicHint = $"lehjehnd sehz #uh  {itemDisplayText}\nkahn bE fownd aht {Prefix} {(TunicRandomizer.Settings.UseTrunicTranslations ? Translations.Translate(Scene, false) + "." : $"\"{Scene.ToUpper()}.\"")}";
-                    RelicHints.Add((RelicCheck.CheckId, RelicHint));
+                    RelicHints.Add((RelicCheck.CheckId, RelicHint, Relic.Name));
                 }
             }
 
@@ -354,7 +378,16 @@ namespace TunicRandomizer {
             if (HintItem == null) {
                 n = 0;
                 while (HintItem == null && n < mailboxHintables.Count) {
-                    if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
+                    if (GetBool(FoxPrinceEnabled)) {
+                        string mailbox = SaveFile.GetString("randomizer mailbox hint location");
+                        if (mailbox != "") {
+                            foreach (Check itemData in TunicUtils.GetAllInUseChecks()) {
+                                if (itemData.CheckId == mailbox) {
+                                    HintItem = itemData;
+                                }
+                            }
+                        }
+                    } else if (mailboxHintables[n].Location.SceneName == "Trinket Well") {
                         foreach (Check itemData in ItemRandomizer.FindAllRandomizedItemsByName("Trinket Coin")) {
                             if (itemData.Location.reachable(ItemRandomizer.SphereZero)) {
                                 HintItem = itemData;

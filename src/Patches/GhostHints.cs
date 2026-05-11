@@ -258,7 +258,7 @@ namespace TunicRandomizer {
             },
             { "Ruined Shop", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Ruined Shop 1", "Ruined Shop", new Vector3(16.5333f, 8.983299f, -45.60382f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"hehlO. wuht iz yor nAm?---...tuhnk? wuht A strAnj nAm."),
-                new HintGhost("Hint Ghost Ruined Shop 2", "Ruined Shop", new Vector3(9.8111f, 8.0833f, -37.52119f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.IDLE, $"wehl, if yur nawt bIi^ ehnE%i^...", interactRadiusOverride: 4 ) }
+                new HintGhost("Hint Ghost Ruined Shop 2", "Ruined Shop", new Vector3(9.8111f, 8.0833f, -37.52119f), new Quaternion(0f, 0.9659258f, 0f, 0.2588191f), NPC.NPCAnimState.IDLE, $"wehl, if yur nawt bIi^ ehnE%i^...", interactRadiusOverride: 4.5f ) }
             },
             { "West Filigree", new List<HintGhost>() {
                 new HintGhost("Hint Ghost West Filigree", "Town_FiligreeRoom", new Vector3(-79.4348f, 22.0379f, -59.8104f), new Quaternion(0f, 1f, 0f, -4.371139E-08f), NPC.NPCAnimState.PRAY, $"wow, yoo hahv #uh powur uhv #uh \"Holy Cross!\"", $"wow, yoo hahv #uh powur uhv #uh hOlE kraws!") }
@@ -287,7 +287,7 @@ namespace TunicRandomizer {
                 new HintGhost("Hint Ghost Patrol Cave 2", "PatrolCave", new Vector3(72.6667f, 46.0686f, 14.9446f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.GAZE, $"klA^ klA^ klA^... duhzint hE ehvur stawp?") }
             },
             { "Cube Room", new List<HintGhost>() {
-                new HintGhost("Hint Ghost Cube Room", "CubeRoom", new Vector3(326.784f, 3.0833f, 207.0065f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.DANCE, $"rIt ahnd uhp! rit ahnd uhp!") }
+                new HintGhost("Hint Ghost Cube Room", "CubeRoom", new Vector3(326.784f, 3.0833f, 207.0065f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.DANCE, $"rIt ahnd uhp! rIt ahnd uhp!") }
             },
             { "Furnace", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Furnace", "Furnace", new Vector3(-131.9886f, 12.0833f, -51.0197f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.GAZE_UP, $"#Ez powur sorsehz... I dOnt truhst #ehm.") }
@@ -321,7 +321,7 @@ namespace TunicRandomizer {
             },
             { "Swamp", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Swamp 1", "Swamp Redux 2", new Vector3(-47f, 16.0463f, -31.3333f), new Quaternion(0f, 0f, 0f, 1f), NPC.NPCAnimState.GAZE, $"I kahn sE mI hows fruhm hEr!" ),
-                new HintGhost("Hint Ghost Swamp 2", "Swamp Redux 2", new Vector3(-90.55162f, 3.0462f, 6.2667f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"suhm%i^ $oud bE hEr rIt? I dOnt rEmehmbur..." ),
+                new HintGhost("Hint Ghost Swamp 2", "Swamp Redux 2", new Vector3(-90.55162f, 3.0462f, 6.2667f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"suhm%i^ $oud bE hEr rIt? I dOnt rEmehmbur...", interactRadiusOverride: 4 ),
                 new HintGhost("Hint Ghost Swamp 3", "Swamp Redux 2", new Vector3(-100.5333f, 3.3462f, 25.0965f), new Quaternion(0f, 0.7071068f, 0f, -0.7071068f), NPC.NPCAnimState.SIT, $"I %ink #is wuhz pRt uhv suhm%i^ ehls wuhns." ) }
             },
             { "Dark Tomb", new List<HintGhost>() {
@@ -493,7 +493,6 @@ namespace TunicRandomizer {
 
         public static void GenerateHints() {
             HintGhosts.Clear();
-            HexQuestHintLookup.Clear();
             Dictionary<string, List<HintGhost>> Ghosts = new Dictionary<string, List<HintGhost>>(GhostLocations);
             if (GetBool(EntranceRando)) { 
                 foreach(KeyValuePair<string, List<HintGhost>> pair in EntranceRandoGhostLocations) {
@@ -533,7 +532,7 @@ namespace TunicRandomizer {
                 }
             }
             for (int i = 0; i < 3; i++) {
-                if (i == 0 && SaveFile.GetInt(EntranceRando) == 1) {
+                if (i == 0 && GetBool(EntranceRando) && !GetBool(FoxPrinceEnabled)) {
                     GenerateHeirHint();
                     Hints.Add((HeirHint, "", "", ""));
                 }
@@ -677,6 +676,7 @@ namespace TunicRandomizer {
                 ItemHints.Add((prayerHint, "", "", ""));
                 ItemHints.Add((holyCrossHint, "", "", ""));
                 ItemHints.Add((iceboltHint, "", "", ""));
+                HexQuestHintLookup.Clear();
                 HexQuestHintLookup.Add(prayerHint, "Prayer");
                 HexQuestHintLookup.Add(holyCrossHint, "Holy Cross");
                 HexQuestHintLookup.Add(iceboltHint, "Icebolt");
@@ -792,7 +792,7 @@ namespace TunicRandomizer {
 
         public static void GenerateHeirHint() {
             string heirPortal = "error finding heir";
-            foreach (PortalCombo portalCombo in ERData.RandomizedPortals.Values) {
+            foreach (PortalCombo portalCombo in ERData.RandomizedPortals) {
                 if (portalCombo.Portal2.Scene == "Spirit Arena") {
                     heirPortal = portalCombo.Portal1.Name;
                     break;
@@ -814,6 +814,19 @@ namespace TunicRandomizer {
                 if (HintGhost.Name == npcName && HintGhost.ServerHintId != "" && SaveFile.GetInt($"archipelago sent optional hint to server {HintGhost.ServerHintId}") == 0) {
                     Archipelago.instance.integration.session.Locations.ScoutLocationsAsync(true, Archipelago.instance.GetLocationId(HintGhost.ServerHintId, "TUNIC"));
                     SaveFile.SetInt($"archipelago sent optional hint to server {HintGhost.ServerHintId}", 1);
+                }
+            }
+        }
+
+        public static void CheckForHeroPathServerHint(string itemName) {
+            if (Locations.MajorItemLocations.ContainsKey(itemName) && Locations.MajorItemLocations[itemName].Count > 0) {
+                ArchipelagoHint apHint = Locations.MajorItemLocations[itemName][0];
+                if ((int)apHint.Player != Archipelago.instance.GetPlayerSlot()) {
+                    if (SaveFile.GetInt($"archipelago sent optional hint to server {itemName}") == 0) {
+                        long locationId = Archipelago.instance.GetLocationId(apHint.Location, Archipelago.instance.GetPlayerGame((int)apHint.Player));
+                        Archipelago.instance.integration.session.Hints.CreateHints((int)apHint.Player, locationIds: new long[] { locationId });
+                        SaveFile.SetInt($"archipelago sent optional hint to server {itemName}", 1);
+                    }
                 }
             }
         }
@@ -876,7 +889,7 @@ namespace TunicRandomizer {
             DoorHint.transform.position = new Vector3(82.5f, 14f, 143.7f);
             DoorHint.transform.transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
             LanguageLine DoorSecret = ScriptableObject.CreateInstance<LanguageLine>();
-            DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht #aht \"DOOR\" bahk #Ar\nkahn bE \"OPENED\" fruhm #E \"OUTSIDE...\"";
+            DoorSecret.text = $"$$$... dOnt tehl ehnEwuhn, buht I hEr yoo kahn \"OPEN\"\n#aht sEkrit \"DOOR\" bahk #Ar \"FROM OUTSIDE...\"";
             DoorHint.GetComponent<NPC>().script = DoorSecret;
             DoorHint.SetActive(true);
         }
