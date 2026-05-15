@@ -1292,9 +1292,11 @@ namespace TunicRandomizer {
         }
 
         public static bool Campfire_Interact_PrefixPatch(Campfire __instance) {
-            SaveFile.SetString("randomizer last campfire scene name for dath stone", __instance.gameObject.scene.name);
-            SaveFile.SetString("randomizer last campfire id for dath stone", __instance.id);
-            DefeatedEnemyTracker.Clear();
+            if (__instance.isUseableAccordingToConduitSystem) {
+                SaveFile.SetString("randomizer last campfire scene name for dath stone", __instance.gameObject.scene.name);
+                SaveFile.SetString("randomizer last campfire id for dath stone", __instance.id);
+                DefeatedEnemyTracker.Clear();            
+            }
             return true;
         }
 
