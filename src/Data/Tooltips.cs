@@ -78,7 +78,7 @@ namespace TunicRandomizer {
             { "???", "!esirprus a rof no nruT" },
             { "More Skulls", "Spawns four additional gold skulls in the Swamp :>" },
             { "CRT Filter", "Renders the game with a CRT filter overlay." },
-            { "Configure Fool Traps", "Toggle on/off what kinds of fool traps the player can be affected by. If all trap types are toggled off, it will default to giving you an ice trap.\nNote: These selections will not be used if Race Mode is enabled." },
+            { "Configure Fool Traps", "Toggle on/off what kinds of fool traps the player can be affected by. If all trap types are toggled off, it will default to giving you an ice trap.\nNote: If Race Mode is enabled, these toggles will be ignored and the default traps will be used instead." },
 
             // Hints
             { "Path of the Hero", "Places a major hint at specific locations throughout the game, including the Mailbox, the Hero Graves, and the statue in the Sealed Temple." },
