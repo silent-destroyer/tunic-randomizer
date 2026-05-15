@@ -31,12 +31,8 @@ namespace TunicRandomizer {
         }
 
         // potential todos:
-        // Chaos Trap from Anodyne, randomizes the game's textures for a short while, could mess with the fox colors or something I guess
-        // Depletion Trap from The Grinch, resets ammo to zero, could reduce your mana to zero, same with Dry Trap from DK64, same for Mana Drain Trap
-        // Disarm Trap from Anodyne, unequips current broom (weapon), could make it just unequip your items
         // Explosion Trap, could swap it from fire trap to actually explode you, also for bomb, tnt, etc.
         // Frog Trap from Glover, could spawn a frog
-        // Invert Colors Trap from Paint, idk we could probably do something with this
         // Paper Trap from DK64, turns player and most enemies 2d, could maybe do something with the character scale
 
         public class Trap {
