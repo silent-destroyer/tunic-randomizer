@@ -45,6 +45,9 @@ namespace TunicRandomizer {
 
         public static GameObject FishingRod;
 
+        // Enemy Drop Shuffle
+        public static GameObject ShadowOubliette;
+
         public static List<string> ShopItemIDs = new List<string>() {
             "Potion (First) [Shop]",
             "Potion (West Garden) [Shop]",
@@ -643,7 +646,6 @@ namespace TunicRandomizer {
             }
             ItemFlags flag = itemInfo.Flags;
             int randomFlag = new System.Random().Next(3);
-            UnityEngine.Color color;
             if (flag == ItemFlags.None || (flag == ItemFlags.Trap && randomFlag == 0)) {
                 foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
                     r.material.color = new UnityEngine.Color(0f, 0.75f, 0f, 1f);
@@ -652,7 +654,7 @@ namespace TunicRandomizer {
             }
             if (flag.HasFlag(ItemFlags.NeverExclude) || (flag == ItemFlags.Trap && randomFlag == 1)) {
                 foreach (MeshRenderer r in grass.GetComponentsInChildren<MeshRenderer>(includeInactive: true)) {
-                    r.material.color = color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
+                    r.material.color = new UnityEngine.Color(0f, 0.5f, 0.75f, 1f);
                     grass.materialForBase = r.material;
                 }
             }
@@ -976,7 +978,7 @@ namespace TunicRandomizer {
             questionMark.SetActive(!Checked);
         }
 
-        private static Material GetMaterialType(ItemData Item) {
+        public static Material GetMaterialType(ItemData Item) {
             Material material = null;
             if (Item.Type == ItemTypes.FAIRY) {
                 material = Chests["Fairy"].GetComponent<MeshRenderer>().material;
@@ -1056,9 +1058,13 @@ namespace TunicRandomizer {
             moveUp.layer = 0;
             moveUp.AddComponent<DestroyAfterTime>().lifetime = 2f;
             moveUp.AddComponent<MoveUp>().speed = 0.5f;
-            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null);
-
-            if (transform.GetComponent<SmashableObject>() != null || transform.GetComponent<DustyPile>() != null || transform.GetComponent<SecretPassagePanel>() != null) {
+            moveUp.SetActive(transform.GetComponent<Chest>() != null || transform.GetComponent<TrinketWell>() != null || transform.GetComponent<Monster>() != null || transform.GetComponent<TurretTrap>() != null);
+            if (transform.GetComponent<Monster>() != null || transform.GetComponent<TurretTrap>() != null) {
+                moveUp.transform.parent = null;
+                moveUp.transform.localScale = TransformData.scale;
+            }
+           
+            if ((transform.GetComponent<SmashableObject>() != null && transform.GetComponent<TurretTrap>() == null) || transform.GetComponent<DustyPile>() != null || transform.GetComponent<SecretPassagePanel>() != null) {
                 moveUp.transform.parent = transform;
                 // so we can rotate it properly
                 if (Item != null && Item.Type == ItemTypes.TRINKET) {
@@ -1193,7 +1199,7 @@ namespace TunicRandomizer {
                                 int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                                 TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][$"Sword Progression {SwordLevel}"] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory];
                             } else {
-                                TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(ItemData.ItemNameForInventory) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Enum.GetName(typeof(ItemTypes), ItemData.Type)];
+                                TransformData = ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(ItemData.ItemNameForInventory) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][ItemData.ItemNameForInventory] : ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name].ContainsKey(Enum.GetName(typeof(ItemTypes), ItemData.Type)) ? ItemPositions.SpecificItemPlacement[ItemPickup.itemToGive.name][Enum.GetName(typeof(ItemTypes), ItemData.Type)] : ItemPositions.SpecificItemPlacement["Techbow"]["Key"];
                             }
 
                         }
@@ -1279,10 +1285,14 @@ namespace TunicRandomizer {
                             int SwordLevel = SaveFile.GetInt(SwordProgressionLevel);
                             TransformData = ItemPositions.Techbow.ContainsKey($"Sword Progression {SwordLevel}") ? ItemPositions.Techbow[$"Sword Progression {SwordLevel}"] : ItemPositions.Techbow[Item.ItemNameForInventory];
                         } else {
-                            TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)];
+                            TransformData = ItemPositions.Techbow.ContainsKey(Item.ItemNameForInventory) ? ItemPositions.Techbow[Item.ItemNameForInventory] : ItemPositions.Techbow.ContainsKey(Enum.GetName(typeof(ItemTypes), Item.Type)) ? ItemPositions.Techbow[Enum.GetName(typeof(ItemTypes), Item.Type)] : ItemPositions.Techbow["Key"];
                         }
                         if (Item.Type == ItemTypes.FUSE) {
                             PagePickup.GetComponent<SphereCollider>().radius = 2f;
+                        }
+                        if (Item.Type == ItemTypes.ENEMY) {
+                            PagePickup.transform.GetChild(2).GetComponent<Rotate>().eulerAnglesPerSecond = new Vector3(0f, 45f, 0f);
+                            NewItem.GetComponentInChildren<Rotate>().enabled = false;
                         }
                     }
 
@@ -1358,6 +1368,22 @@ namespace TunicRandomizer {
                     GameObject.Destroy(NewItem.GetComponent<TuningForkBell>());
                     GameObject.Destroy(NewItem.GetComponent<SphereCollider>());
                     GameObject.Destroy(NewItem.GetComponent<BoxCollider>());
+                } else if (Item.Type == ItemTypes.ENEMY) {
+                    NewItem = GameObject.Instantiate(Items["Enemy"], Parent.transform.position, Parent.transform.rotation);
+                    GameObject enemyRoot = NewItem.transform.GetChild(0).GetChild(3).gameObject;
+                    for (int i = 0; i < enemyRoot.transform.childCount; i++) {
+                        if (enemyRoot.transform.GetChild(i).name == Item.Name) {
+                            enemyRoot.transform.GetChild(i).gameObject.SetActive(true);
+                            if (Item.Name == "Enemy Soul (The Heir)") {
+                                EnemySoulModels.SetHeirMaterials(enemyRoot.transform.GetChild(i).gameObject);
+                            }
+                            enemyRoot.transform.GetChild(i).SetAsFirstSibling();
+                            break;
+                        }
+                    }
+                    for (int i = 1; i < enemyRoot.transform.childCount; i++) {
+                        GameObject.Destroy(enemyRoot.transform.GetChild(i).gameObject);
+                    }
                 } else {
                     NewItem = GameObject.Instantiate(Items[Item.ItemNameForInventory], Parent.transform.position, Parent.transform.rotation);
                 }
@@ -1681,6 +1707,9 @@ namespace TunicRandomizer {
                             GameObject.Destroy(NewItem.GetComponent<Rotate>());
                             GameObject.Destroy(NewItem.transform.GetChild(0).GetChild(0).gameObject);
                         }
+                        if (Item.Type == ItemTypes.ENEMY) {
+                            NewItem.GetComponentInChildren<Rotate>().enabled = false;
+                        }
                     }
 
                     NewItem.transform.parent = ItemHolder.transform.parent;
@@ -1968,6 +1997,7 @@ namespace TunicRandomizer {
             CustomItemImages.Add("Grass", CreateSprite(ImageData.Grass, ImageMaterial, 160, 160, SpriteName: "Randomizer items_grass"));
             CustomItemImages.Add("Fuse", CreateSprite(ImageData.Fuse, ImageMaterial, 160, 160, SpriteName: "Randomizer items_fuse"));
             CustomItemImages.Add("Bell", CreateSprite(ImageData.Bell, ImageMaterial, 160, 160, SpriteName: "Randomizer items_bell"));
+            CustomItemImages.Add("Enemy Soul", CreateSprite(ImageData.EnemySoul, ImageMaterial, 160, 160, SpriteName: "Randomizer items_enemysoul"));
             CustomItemImages.Add("Soul Dice", CreateSprite(ImageData.SoulDice, ImageMaterial, 160, 160, SpriteName: "Randomizer items_souldice"));
             CustomItemImages.Add("Koban", CreateSprite(ImageData.Koban, ImageMaterial, 160, 160, SpriteName: "Randomizer items_koban"));
             CustomItemImages.Add("Hyperdash Toggle", CreateSprite(ImageData.HyperdashToggle, ImageMaterial, 160, 160, SpriteName: "Randomizer items_hyperdash toggle"));
@@ -1981,18 +2011,25 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Soul Dice").icon = CustomItemImages["Soul Dice"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Koban").icon = CustomItemImages["Koban"].GetComponent<Image>().sprite;
             Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent<Image>().sprite;
+            Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
+
+            EnemyModelSwaps.CreateTextures(ImageMaterial);
         }
 
-        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
-            return CreateSprite(Convert.FromBase64String(ImageData), imgMaterial, Width, Height, SpriteName);
+        public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
+            return CreateSprite(Convert.FromBase64String(ImageData), imgMaterial, Width, Height, SpriteName, tf);
         }
-        
-        public static GameObject CreateSprite(byte[] ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "") {
 
-            Texture2D Texture = new Texture2D(Width, Height, TextureFormat.DXT1, false);
+        public static GameObject CreateSprite(byte[] ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
+
+            Texture2D Texture = new Texture2D(Width, Height, tf, false);
             ImageConversion.LoadImage(Texture, ImageData);
+            return CreateSprite(Texture, imgMaterial, Width, Height, SpriteName);
+        }
 
+        public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
             GameObject obj = new GameObject(SpriteName + " image");
+            Texture.name = SpriteName;
             //Sprite.Create(Texture2D, Rect, Vector2, float, uint, SpriteMeshType, Vector4, bool)
             Sprite sprite = Sprite.CreateSprite(Texture, new Rect(0, 0, Width, Height), new Vector2(0.5f, 0.5f), 100, 0, SpriteMeshType.FullRect, Vector4.zero, false);
             sprite.name = SpriteName;
@@ -2023,7 +2060,7 @@ namespace TunicRandomizer {
         }
 
         public static Mesh FindMesh(string MeshName) {
-            List<Mesh> Meshes = Resources.FindObjectsOfTypeAll<Mesh>().Where(Sprite => Sprite.name == MeshName).ToList();
+            List<Mesh> Meshes = Resources.FindObjectsOfTypeAll<Mesh>().Where(Mesh => Mesh.name == MeshName).ToList();
             if (Meshes != null && Meshes.Count > 0) {
                 return Meshes[0];
             } else {
@@ -2032,7 +2069,7 @@ namespace TunicRandomizer {
         }
 
         public static Shader FindShader(string ShaderName) {
-            List<Shader> Shaders = Resources.FindObjectsOfTypeAll<Shader>().Where(Shader => Shader.name == ShaderName).ToList();
+            List<Shader> Shaders = Resources.FindObjectsOfTypeAll<Shader>().Where(Shader => Shader.name == ShaderName || Shader.name.Contains(ShaderName)).ToList();
             if (Shaders != null && Shaders.Count > 0) {
                 return Shaders[0];
             } else {

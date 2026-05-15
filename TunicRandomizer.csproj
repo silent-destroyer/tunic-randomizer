@@ -179,6 +179,7 @@
     <Compile Include="src\Archipelago\DeathLinkMessages.cs" />
     <Compile Include="src\Data\Check.cs" />
     <Compile Include="src\Data\ConnectionSettings.cs" />
+    <Compile Include="src\Data\EnemyImageData.cs" />
     <Compile Include="src\Data\Hints.cs" />
     <Compile Include="src\Data\ImageData.cs" />
     <Compile Include="src\Data\ItemListJson.cs" />
@@ -200,6 +201,9 @@
     <Compile Include="src\Patches\ArachnophobiaMode.cs" />
     <Compile Include="src\Patches\BellShuffle.cs" />
     <Compile Include="src\Patches\BreakableShuffle.cs" />
+    <Compile Include="src\Patches\EnemyDropShuffle.cs" />
+    <Compile Include="src\Patches\EnemyModelSwaps.cs" />
+    <Compile Include="src\Patches\EnemySoulModels.cs" />
     <Compile Include="src\Patches\EnemyRandomizer.cs" />
     <Compile Include="src\Patches\FoxPrince.cs" />
     <Compile Include="src\Patches\FuseRandomizer.cs" />
@@ -237,6 +241,7 @@
     <Compile Include="src\Util\DDRSpell.cs" />
     <Compile Include="src\Util\EntranceSelector.cs" />
     <Compile Include="src\Util\FoolTrap.cs" />
+    <Compile Include="src\Util\EnemySoulManager.cs" />
     <Compile Include="src\Util\HeroGraveToggle.cs" />
     <Compile Include="src\Util\SceneSelectionButton.cs" />
     <Compile Include="src\Util\LadderManager.cs" />
@@ -263,6 +268,7 @@
     <EmbeddedResource Include="src\Data\Breakables.json" />
     <EmbeddedResource Include="src\Data\BreakableDescriptions.json" />
     <EmbeddedResource Include="src\Data\FuseDescriptions.json" />
+    <EmbeddedResource Include="src\Data\EnemyData.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\Data\FoxPrinceSceneImages.jpg" />

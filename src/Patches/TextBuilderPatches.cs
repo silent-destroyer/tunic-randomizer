@@ -94,6 +94,7 @@ namespace TunicRandomizer {
             { "[grass]", "Randomizer items_grass" },
             { "[fuse]", "Randomizer items_fuse" },
             { "[bell]", "Randomizer items_bell" },
+            { "[enemysoul]", "Randomizer items_enemysoul" },
             { "[souldice]", "Randomizer items_souldice" },
             { "[dart]", "Inventory items_dart" },
             { "[koban]", "Randomizer items_koban" }
@@ -207,6 +208,10 @@ namespace TunicRandomizer {
             { "Money x3", "[realmoney]" },
             { "Money x4", "[realmoney]" },
             { "Money x5", "[realmoney]" },
+            { "Money x6", "[realmoney]" },
+            { "Money x7", "[realmoney]" },
+            { "Money x8", "[realmoney]" },
+            { "Money x9", "[realmoney]" },
             { "Money x10", "[realmoney]" },
             { "Money x15", "[realmoney]" },
             { "Money x16", "[realmoney]" },
@@ -274,6 +279,7 @@ namespace TunicRandomizer {
             { "Ladders in Lower Quarry", "[ladder]"},
             { "Ladders in Library", "[ladder]"},
             // Fuses added here in FuseRandomizer.CreateFuseItems()
+            // Enemy Souls added here in EnemyDropShuffle.CreateEnemyItems()
             // Bells
             { "East Bell", "[bell]" },
             { "West Bell", "[bell]" },

@@ -33,6 +33,52 @@ namespace TunicRandomizer {
 
         public static GameObject TuningFork;
 
+        public static List<Type> EnemyTypeRefs = new List<Type>() { 
+            typeof(Blob),
+            typeof(Hedgehog),
+            typeof(Bat),
+            typeof(Skuladin),
+            typeof(HonourGuard),
+            typeof(Beefboy),
+            typeof(Bumblebones),
+            typeof(FoxEnemyZombie),
+            typeof(DefenseTurret),
+            typeof(Knightbot),
+            typeof(Frog),
+            typeof(Probe),
+            typeof(Wizard),
+            typeof(Crocodoo),
+            typeof(Plover),
+            typeof(Crow),
+            typeof(Crabbo),
+            typeof(Spinnerbot),
+            typeof(Spider),
+            typeof(Wizard_Sword),
+            typeof(Wizard_Candleabra),
+            typeof(Shadowreaper),
+            typeof(Scavenger),
+            typeof(Scavenger_Miner),
+            typeof(Scavenger_Support),
+            typeof(Fencer),
+            typeof(Gost),
+            typeof(Gunman),
+            typeof(SewerTentacle),
+            typeof(Administrator),
+            typeof(Administrator_angry),
+            typeof(FoxEnemy),
+            typeof(Centipede),
+            typeof(ScavengerBoss),
+            typeof(Voidling),
+            typeof(Voidtouched),
+            typeof(Woodcutter),
+            typeof(Phage),
+            typeof(GhostKnight),
+            typeof(Spidertank),
+            typeof(TunicKnightVoid),
+            typeof(Librarian),
+            typeof(Foxgod)
+        };
+
         public static List<string> SpecificExcludedEnemies = new List<string>() {
             "frog cave main (118.5, 29.9, -52.6)",
             "East Forest Redux (104.3, -16.0, -28.0)"
@@ -283,6 +329,242 @@ namespace TunicRandomizer {
                     "Foxgod"
                 }
             }
+        };
+
+        public static Dictionary<string, List<string>> EnemySoulEnemies = new Dictionary<string, List<string>>() {
+            {
+                "Enemy Soul (Administrator)",
+                new List<string>() {
+                    "administrator_servant",
+                    "administrator",
+                }
+            },
+            {
+                "Enemy Soul (Phrend)",
+                new List<string>() {
+                    "Bat",
+                    "Bat void",
+                }
+            },
+            {
+                "Enemy Soul (Beefboy)",
+                new List<string>() {
+                    "beefboy",
+                }
+            },
+            {
+                "Enemy Soul (Blobs)",
+                new List<string>() {
+                    "Blob",
+                    "BlobBig",
+                    "BlobBigger",
+                }
+            },
+            {
+                "Enemy Soul (Fleemers)",
+                new List<string>() {
+                    "bomezome_easy",
+                    "bomezome_easy_ghost",
+                    "bomezome_fencer",
+                    "bomezome_easy_ghost (tweaked)",
+                    "bomezome_quartet",
+                    "bomezome big",
+                }
+            },
+            {
+                "Enemy Soul (Crabs)",
+                new List<string>() {
+                    "Crabbit",
+                    "Crabbo",
+                    "Crabbit with Shell",
+                }
+            },
+            {
+                "Enemy Soul (Chompignom)",
+                new List<string>() {
+                    "crocodoo",
+                    "crocodoo Voidtouched",
+                }
+            },
+            {
+                "Enemy Soul (Husher)",
+                new List<string>() {
+                    "Crow",
+                    "Crow Voidtouched",
+                }
+            },
+            {
+                "Enemy Soul (Autobolt)",
+                new List<string>() {
+                    "Turret",
+                }
+            },
+            {
+                "Enemy Soul (Zombie Foxes)",
+                new List<string>() {
+                    "Fox enemy zombie",
+                    "Fox enemy",
+                }
+            },
+            {
+                "Enemy Soul (Frogs)",
+                new List<string>() {                    
+                    "Frog",
+                    "Frog Small",
+                    "Frog Small_Ghost",
+                    "Frog Spear",
+                    "Frog Spear_Ghost",
+                }
+            },
+            {
+                "Enemy Soul (Lost Echo)",
+                new List<string>() {
+                    "Ghostfox_monster",
+                }
+            },
+            {
+                "Enemy Soul (Gunslinger)",
+                new List<string>() {
+                    "Gunslinger",
+                }
+            },
+            {
+                "Enemy Soul (Hedgehogs)",
+                new List<string>() {
+                    "Hedgehog",
+                    "HedgehogBig",
+                }
+            },
+            {
+                "Enemy Soul (Laser Trap)",
+                new List<string>() {
+                    "Hedgehog Trap",
+                }
+            },
+            {
+                "Enemy Soul (Envoy)",
+                new List<string>() {
+                    "Honourguard",
+                }
+            },
+            {
+                "Enemy Soul (Garden Knight)",
+                new List<string>() {
+                    "tech knight boss",
+                    "tech knight ghost",
+                    "tunic knight void",
+                }
+            },
+            {
+                "Enemy Soul (Librarian)",
+                new List<string>() {
+                    "Librarian",
+                    "Ghost Knight",
+                }
+            },
+            {
+                "Enemy Soul (Plover)",
+                new List<string>() {
+                    "plover",
+                }
+            },
+            {
+                "Enemy Soul (Fairies)",
+                new List<string>() {
+                    "Fairyprobe Archipelagos",
+                    "Fairyprobe Archipelagos (Ghost)",
+                    "Fairyprobe Archipelagos (Dmg)",
+                }
+            },
+            {
+                "Enemy Soul (Scavengers)",
+                new List<string>() {
+                    "Scavenger",
+                    "Scavenger_miner",
+                    "Scavenger_support",
+                    "Scavenger_stunner",
+                }
+            },
+            {
+                "Enemy Soul (Boss Scavenger)",
+                new List<string>() {
+                    "Scavenger Boss",
+                    "Centipede",
+                }
+            },
+            {
+                "Enemy Soul (Tentacle)",
+                new List<string>() {
+                    "sewertentacle",
+                }
+            },
+            {
+                "Enemy Soul (Rudelings)",
+                new List<string>() {
+                    "Skuladot redux",
+                    "Skuladot redux void",
+                    "Skuladot redux_ghost",
+                    "Skuladot redux_shield",
+                    "Skuladot redux_shield_ghost",
+                    "Skuladot redux Big",
+                    "Skuladot redux Big_ghost",
+                }
+            },
+            {
+                "Enemy Soul (Spiders)",
+                new List<string>() {
+                    "Spider Small",
+                    "Spider Big",
+                }
+            },
+            {
+                "Enemy Soul (Siege Engine)",
+                new List<string>() {
+                    "Spidertank",
+                    "woodcutter",
+                }
+            },
+            {
+                "Enemy Soul (Slorm)",
+                new List<string>() {
+                    "Spinnerbot Corrupted",
+                    "Phage",
+                }
+            },
+            {
+                "Enemy Soul (Baby Slorm)",
+                new List<string>() {
+                    "Spinnerbot Baby",
+                }
+            },
+            {
+                "Enemy Soul (Voidling)",
+                new List<string>() {
+                    "voidling redux",
+                }
+            },
+            {
+                "Enemy Soul (Custodians)",
+                new List<string>() {
+                    "Wizard_Sword",
+                    "Wizard_Support",
+                    "Wizard_Support_Ghost",
+                    "Wizard_Candleabra",
+                }
+            },
+            {
+                "Enemy Soul (Voidtouched)",
+                new List<string>() {
+                    "Voidtouched",
+                    "Shadowreaper",
+                }
+            },
+            {
+                "Enemy Soul (The Heir)",
+                new List<string>() {
+                    "Foxgod"
+                }
+            },
         };
 
         public static Dictionary<string, List<string>> EnemyRankings = new Dictionary<string, List<string>>() {
@@ -630,6 +912,9 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].AddComponent<FleemerQuartet>();
                     Enemies[EnemyName].GetComponent<FleemerQuartet>().GroupId = -1;
                 }
+                if (EnemyName == "bomezome big") {
+                    EnemyDropShuffle.FleemerTossOriginal = Enemies[EnemyName].GetComponent<Bumblebones>().tossRigidbody;
+                }
                 if(EnemyName == "Librarian") {
                     LibrarianPools = GameObject.Instantiate(GameObject.Find("_Pools/"));
                     LibrarianOrbs = new List<GameObject>();
@@ -645,6 +930,9 @@ namespace TunicRandomizer {
                     Enemies[EnemyName].GetComponent<Librarian>().horizontalSlashPrefab_pool = LibrarianPools.transform.GetChild(0).GetComponent<PooledFX>();
                     Enemies[EnemyName].GetComponent<Librarian>().verticalSlashPrefab_pool = LibrarianPools.transform.GetChild(1).GetComponent<PooledFX>();
                     Enemies[EnemyName].GetComponent<Librarian>().orbPrefab_pool = LibrarianPools.transform.GetChild(3).GetComponent<PooledFX>();
+
+                    EnemyDropShuffle.librarianPhrend = Enemies[EnemyName].GetComponent<Librarian>().addMonsters.Where(m => m.GetComponent<Bat>() != null).First();
+                    EnemyDropShuffle.librarianRudeling = Enemies[EnemyName].GetComponent<Librarian>().addMonsters.Where(m => m.GetComponent<Skuladin>() != null).First();
                 }
                 if (EnemyName == "Foxgod") {
                     FoxgodBossfightRoot = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "_BOSSFIGHT ROOT").First());
@@ -692,18 +980,20 @@ namespace TunicRandomizer {
         }
 
         public static void DoEnemyRandomization() {
-            if (!EnemyRandomizer.RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0) {
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && EnemyRandomizer.Enemies.Count > 0) {
-                    if (!EnemyRandomizer.ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
-                        EnemyRandomizer.SpawnNewEnemies();
+            if (!RandomizedThisSceneAlready && SaveFile.GetInt("seed") != 0 && PlayerCharacter.Instanced) {
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && Enemies.Count > 0) {
+                    if (!ExcludedScenes.Contains(SceneManager.GetActiveScene().name)) {
+                        SpawnNewEnemies();
                     }
                 } else {
-                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                        EnemyRandomizer.EnableExtraEnemies();
+                    if (GetBool(ExtraEnemyDropsEnabled) || TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                        EnableExtraEnemies();
+                    } else if (GetBool(ShuffleEnemyDropsEnabled)) {
+                        EnableMonasteryAndLibraryNightEnemies();
                     }
                 }
                 if (TunicRandomizer.Settings.RandomEnemySizes) {
-                    EnemyRandomizer.RandomizeEnemySizes();
+                    RandomizeEnemySizes();
                 }
             }
         }
@@ -749,13 +1039,6 @@ namespace TunicRandomizer {
             if (CurrentScene == "Forest Belltower") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled && CurrentScene == "Library Hall" && !CycleController.IsNight) {
-                GameObject.Find("beefboy statues").SetActive(false);
-                GameObject.Find("beefboy statues (2)").SetActive(false);
-                foreach (GameObject Monster in Monsters) {
-                    Monster.transform.parent = null;
-                }
-            }
             if (CurrentScene == "Fortress East" || CurrentScene == "Frog Stairs") {
                 Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && !Monster.name.Contains("Prefab")).ToList();
             }
@@ -774,18 +1057,17 @@ namespace TunicRandomizer {
             if (CurrentScene == "Cathedral Arena") {
                 Monster.ClearRuntimeDeadMonsters();
             }
-            if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
-                if (CurrentScene == "Monastery") {
-                    Resources.FindObjectsOfTypeAll<Voidtouched>().ToList()[0].gameObject.transform.parent = null;
-                } else if(CurrentScene == "ziggurat2020_3") {
-                    foreach(ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == CurrentScene)) {
-                        bossScav.eggTossChance = 0.2f;
-                    }
+            if ((CurrentScene == "Monastery" || CurrentScene == "Library Hall") && (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ShuffleEnemyDropsEnabled))) {
+                EnableMonasteryAndLibraryNightEnemies();
+            }
+            if(CurrentScene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                foreach(ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == CurrentScene)) {
+                    bossScav.eggTossChance = 0.2f;
                 }
             }
 
-            Monsters = Monsters.Where(Monster => Monster.gameObject.scene.name == CurrentScene).ToList();
-            
+            Monsters = Monsters.Where(Monster => TunicUtils.IsInActiveScene(Monster) && EnemyDropShuffle.IsValidEnemy(Monster)).ToList();
+
             int i = 0;
             foreach (GameObject Enemy in Monsters) {
                 GameObject NewEnemy = null;
@@ -823,18 +1105,9 @@ namespace TunicRandomizer {
                     if (CurrentScene == "Crypt Redux" && Enemy.name.Contains("bomezome") && !Enemy.name.Contains("big") && !Enemy.name.Contains("easy")) {
                         Enemy.name = Enemy.name.Replace("bomezome", "bomezome_easy");
                     }
-                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                    if (TunicRandomizer.Settings.ExtraEnemiesEnabled || GetBool(ExtraEnemyDropsEnabled)) {
                         if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && CurrentScene != "Cathedral Arena"))) {
                             Enemy.transform.parent.gameObject.SetActive(true);
-                        }
-
-                        if (CurrentScene == "Monastery") {
-                            if (GameObject.Find("_NIGHT/Corruption Blocker/") != null) {
-                                GameObject.Find("_NIGHT/Corruption Blocker/").SetActive(false);
-                            }
-                            if (GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/") != null) {
-                                GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/").SetActive(false);
-                            }
                         }
                     }
                     if (DoNotPlaceCoffeeTableHere.Contains($"{CurrentScene} {Enemy.name}")) {
@@ -878,11 +1151,37 @@ namespace TunicRandomizer {
                         });
                     }
 
+
+                    if (GetBool(ShuffleEnemyDropsEnabled)) {
+                        string checkId = EnemyDropShuffle.GetEnemyCheckId(Enemy);
+                        if (checkId != null && (Locations.RandomizedLocations.ContainsKey(checkId) || ItemLookup.ItemList.ContainsKey(checkId))) {
+                            if (!EnemyDropShuffle.AllEnemyDropChecks[checkId].IsCompletedOrCollected) {
+                                continue;
+                            }
+                            if (EnemyDropShuffle.Administrator2ndPhases.ContainsKey(checkId) && !EnemyDropShuffle.AllEnemyDropChecks[EnemyDropShuffle.Administrator2ndPhases[checkId].Item2].IsCompletedOrCollected) {
+                                continue;
+                            }
+                        }
+                        if (GetBool(ShuffleEnemySoulsEnabled)) { 
+                            if (EnemyDropShuffle.EnemyDrops.ContainsKey(checkId) && EnemyDropShuffle.EnemyTypeToSoul.ContainsKey(EnemyDropShuffle.EnemyDrops[checkId].EnemyType)) {
+                                string enemySoul = EnemyDropShuffle.EnemyTypeToSoul[EnemyDropShuffle.EnemyDrops[checkId].EnemyType];
+                                if (Inventory.GetItemByName(enemySoul).Quantity == 0) {
+                                    continue;    
+                                }
+                            }
+                            foreach (string key in EnemySoulEnemies.Keys) {
+                                if (Inventory.GetItemByName(key).Quantity == 0) {
+                                    EnemyKeys.RemoveAll(x => EnemySoulEnemies[key].Contains(x));
+                                }
+                            }
+                        }
+                    }
+
                     if (EnemyKeys.Count == 0) {
                         GameObject.Destroy(Enemy.gameObject);
                         continue;
                     }
-
+                    
                     if (!TunicRandomizer.Settings.BalancedEnemies || TunicRandomizer.Settings.OopsAllEnemy) {
                         NewEnemy = GameObject.Instantiate(Enemies[EnemyKeys[Random.Next(EnemyKeys.Count)]]);
                     } else {
@@ -1188,34 +1487,50 @@ namespace TunicRandomizer {
         public static void EnableExtraEnemies() {
             string scene = SceneManager.GetActiveScene().name;
 
-            List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) && Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab") && Monster.gameObject.scene.name == scene).ToList();
+            List<GameObject> Monsters = Resources.FindObjectsOfTypeAll<GameObject>().Where(Monster => (Monster.GetComponent<Monster>() != null || Monster.GetComponent<TurretTrap>() != null) &&
+            Monster.transform.parent != null && !Monster.transform.parent.name.Contains("split tier") && !ExcludedEnemies.Contains(Monster.name) && !Monster.name.Contains("Prefab") && TunicUtils.IsInActiveScene(Monster) && 
+            EnemyDropShuffle.GetEnemyCheckId(Monster) != null &&
+            (EnemyDropShuffle.ExtraEnemyDropChecks.ContainsKey(EnemyDropShuffle.GetEnemyCheckId(Monster)) || scene == "Library Hall" || (scene == "Monastery" && Monster.GetComponent<Voidtouched>() != null))).ToList();
+
             foreach (GameObject Enemy in Monsters) {
                 if (Enemy.transform.parent != null && (Enemy.transform.parent.name.Contains("NG+") || (Enemy.transform.parent.name.ToLower().Contains("night") && scene != "Cathedral Arena"))) {
                     Enemy.transform.parent.gameObject.SetActive(true);
                 }
+            }
+            if (scene == "Monastery" || scene == "Library Hall") {
+                EnableMonasteryAndLibraryNightEnemies();
+            }
+            if (scene == "ziggurat2020_3" && TunicRandomizer.Settings.ExtraEnemiesEnabled) {
+                foreach (ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == scene)) {
+                    bossScav.eggTossChance = 0.2f;
+                }
+            }
+            RandomizedThisSceneAlready = true;
+        }
 
-                if (scene == "Monastery") {
+        private static void EnableMonasteryAndLibraryNightEnemies() {
+            string scene = SceneManager.GetActiveScene().name;
+            if (scene == "Monastery") {
+                Voidtouched Voidtouched = Resources.FindObjectsOfTypeAll<Voidtouched>().Where(voidtouched => TunicUtils.IsInActiveScene(voidtouched.gameObject) && voidtouched.transform.parent.name == "_NIGHT").First();
+                if (Voidtouched != null) { 
+                    Voidtouched.onlyAggroViaTrigger = false;              
+                    Voidtouched.transform.parent.gameObject.SetActive(true);
                     if (GameObject.Find("_NIGHT/Corruption Blocker/") != null) {
                         GameObject.Find("_NIGHT/Corruption Blocker/").transform.position = new Vector3(30000, 30000, 30000);
                     }
                     if (GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/") != null) {
                         GameObject.Find("_NIGHT/Corruption Blocker (retreat door)/").transform.position = new Vector3(30000, 30000, 30000);
                     }
-                    foreach (Voidtouched voidtouched in Resources.FindObjectsOfTypeAll<Voidtouched>().Where(voidtouched => voidtouched.gameObject.scene.name == scene)) {
-                        voidtouched.onlyAggroViaTrigger = false;
-                    }
                 }
             }
+
             if (scene == "Library Hall" && !CycleController.IsNight) {
+                List<Beefboy> Beefboys = Resources.FindObjectsOfTypeAll<Beefboy>().Where(beefboy => TunicUtils.IsInActiveScene(beefboy.gameObject)).ToList();
                 GameObject.Find("beefboy statues").SetActive(false);
                 GameObject.Find("beefboy statues (2)").SetActive(false);
-                foreach (GameObject Monster in Monsters) {
-                    Monster.transform.parent = null;
-                }
-            }
-            if (scene == "ziggurat2020_3") {
-                foreach (ScavengerBoss bossScav in Resources.FindObjectsOfTypeAll<ScavengerBoss>().Where(boss => boss.gameObject.scene.name == scene)) {
-                    bossScav.eggTossChance = 0.2f;
+                foreach (Beefboy Beefboy in Beefboys) {
+                    Beefboy.gameObject.SetActive(true);
+                    Beefboy.transform.parent = null;
                 }
             }
             RandomizedThisSceneAlready = true;
@@ -1258,6 +1573,9 @@ namespace TunicRandomizer {
         }
 
         public static void Monster_Die_MoveNext_PostfixPatch(Monster._Die_d__77 __instance, ref bool __result) {
+            if (__instance.__4__this.GetComponent<EnemyCheck>() != null) {
+                __instance.__4__this.GetComponent<EnemyCheck>().ActivateEnemyCheck(__instance.__4__this.transform);
+            }
             if (!__result) {
                 int EnemiesDefeated = SaveFile.GetInt(EnemiesDefeatedCount);
                 SaveFile.SetInt(EnemiesDefeatedCount, EnemiesDefeated + 1);
@@ -1343,11 +1661,43 @@ namespace TunicRandomizer {
             return true;
         }
 
+        public static bool Creature_Flinch_PrefixPatch(Creature __instance) {
+            if (__instance.GetComponent<Foxgod>() != null) { 
+                if (__instance.gameObject.scene.name == "Spirit Arena") {
+                    if (GetBool(HexagonQuestEnabled) && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                        return false;
+                    }
+                    if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (The Heir)").Quantity == 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public static bool Creature_Megaflinch_PrefixPatch(Creature __instance, ref bool megaflinch) {
+            if (__instance.GetComponent<Foxgod>() != null) {
+                if (__instance.gameObject.scene.name == "Spirit Arena") {
+                    if (GetBool(HexagonQuestEnabled) && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                        return false;
+                    }
+                    if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (The Heir)").Quantity == 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public static bool Monster_IDamageable_ReceiveDamage_PrefixPatch(Monster __instance, ref int damagePoints) {
 
-            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena" 
-                && SaveFile.GetInt(HexagonQuestEnabled) == 1 && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
-                return false;
+            if (__instance.GetComponent<Foxgod>() != null && __instance.gameObject.scene.name == "Spirit Arena") {
+                if (GetBool(HexagonQuestEnabled) && SaveFile.GetInt(GoldHexagonQuantity) < SaveFile.GetInt(HexagonQuestGoal)) {
+                    return false;
+                }
+                if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (The Heir)").Quantity == 0) {
+                    return false;
+                }
             }
             if (__instance.name == "_Fox(Clone)") {
                 if (CustomItemBehaviors.CanTakeGoldenHit) {

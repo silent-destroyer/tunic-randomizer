@@ -146,6 +146,19 @@ namespace TunicRandomizer {
                 return true;
             }
 
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) { 
+                if (__instance.GetComponent<TurretTrap>() != null) {
+                    if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
+                        return false;
+                    }
+
+                    if (__instance.GetComponent<EnemyCheck>() != null) {
+                        __instance.GetComponent<EnemyCheck>().ActivateEnemyCheck(__instance.transform);
+                    }
+                    return true;
+                }                
+            }
+
             if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1) {
                 if (SaveFile.GetInt("archipelago") == 1 && !Archipelago.instance.IsConnected()) {
                     return false;

@@ -45,9 +45,13 @@ namespace TunicRandomizer {
             ClassInjector.RegisterTypeInIl2Cpp<FuseTrapAppearanceHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<AllowHolyCross>();
             ClassInjector.RegisterTypeInIl2Cpp<RandoActionSet>();
+            ClassInjector.RegisterTypeInIl2Cpp<EnemyCheck>();            
             ClassInjector.RegisterTypeInIl2Cpp<EntranceSelector>();
             ClassInjector.RegisterTypeInIl2Cpp<SceneSelectionButton>();
             ClassInjector.RegisterTypeInIl2Cpp<LadderManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<EnemySoulManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<LockEnemyInteraction>();
+            ClassInjector.RegisterTypeInIl2Cpp<FollowEnemy>();
             ClassInjector.RegisterTypeInIl2Cpp<AbilitySpell>();
             ClassInjector.RegisterTypeInIl2Cpp<CRTMode>();
 
@@ -58,6 +62,7 @@ namespace TunicRandomizer {
             RegisterTypeAndCreateObject(typeof(InventoryCounter), "inventory counter");
             RegisterTypeAndCreateObject(typeof(PlayerPositionDisplay), "player position display");
             RegisterTypeAndCreateObject(typeof(ArachnophobiaMode), "arachnophobia mode helper");
+            RegisterTypeAndCreateObject(typeof(RegionSelector), "region selector");
             //RegisterTypeAndCreateObject(typeof(EnemyManager), "enemy rando manager");
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
@@ -198,6 +203,20 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(CathedralGauntletManager), "Spawn"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "CathedralGauntletManager_Spawn_PostfixPatch")));
 
             Harmony.Patch(AccessTools.Method(typeof(Crocodoo), "Start"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_monster_Start_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(HonourGuard), "dropShield"), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "HonourGuard_dropShield_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "HonourGuard_dropShield_PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Scavenger_Support), "__toss"), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "Scavenger_Support__toss__PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(EnemyModelSwaps), "Scavenger_Support__toss__PostfixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Administrator), "monster_preDestroy"), new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Administrator_monster_preDestroy_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Creature), "Flinch", new Type[] { }), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Creature_Flinch_PrefixPatch")));
+            
+            Harmony.Patch(AccessTools.Method(typeof(Creature), "Flinch", new Type[] { typeof(bool) }), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Creature_Megaflinch_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Bumblebones), "__toss"), new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Bumblebones___toss_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Librarian), "addSummon"), new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Librarian_addSummon_PrefixPatch")));
 
             // Finish Line
             Harmony.Patch(AccessTools.Method(typeof(SpeedrunFinishlineDisplay), "showFinishline"), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SpeedrunFinishlineDisplayPatches), "SpeedrunFinishlineDisplay_showFinishline_PostfixPatch")));

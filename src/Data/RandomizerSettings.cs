@@ -48,6 +48,9 @@ namespace TunicRandomizer {
         private const int LAURELS_ZIPS = 524288;
         private const int LS_WITHOUT_ITEMS = 1048576;
         private const int FOX_PRINCE = 2097152;
+        private const int ENEMY_DROP_SHUFFLE = 4194304;
+        private const int EXTRA_ENEMY_DROPS = 8388608;
+        private const int ENEMY_DROP_SOULS = 16777216;
 
         public GameModes GameMode {
             get;
@@ -202,6 +205,21 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool EnemyDropShuffle {
+            get;
+            set;
+        }
+
+        public bool ExtraEnemyDrops {
+            get;
+            set;
+        }
+
+        public bool ShuffleEnemySouls {
+            get;
+            set;
+        }
+
         // Archipelago Settings
         public bool DeathLinkEnabled {
             get;
@@ -296,6 +314,11 @@ namespace TunicRandomizer {
         }
 
         public bool SeekingSpellFusesBells {
+            get;
+            set;
+        }
+
+        public bool SeekingSpellEnemyChecks {
             get;
             set;
         }
@@ -615,6 +638,9 @@ namespace TunicRandomizer {
             BreakableShuffle = false;
             FuseShuffle = false;
             BellShuffle = false;
+            EnemyDropShuffle = false;
+            ExtraEnemyDrops = false;
+            ShuffleEnemySouls = false;
             RandomizeHexQuest = false;
             HexQuestAbilitiesUnlockedByPages = false;
             HexagonQuestRandomGoal = HexQuestValue.RANDOM;
@@ -647,6 +673,7 @@ namespace TunicRandomizer {
             SeekingSpellBreakableChecks = true;
             SeekingSpellGrassChecks = true;
             SeekingSpellFusesBells = true;
+            SeekingSpellEnemyChecks = true;
 
             // General
             HeirAssistModeEnabled = false;
@@ -760,7 +787,7 @@ namespace TunicRandomizer {
 
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(split[3]));
                 string[] decodedSplit = decoded.Split(':');
-                HexagonQuestGoal = int.Parse(decodedSplit[0]);
+                HexagonQuestGoal = int.Parse(decodedSplit[0]) == 0 ? HexagonQuestGoal : int.Parse(decodedSplit[0]);
                 HexagonQuestExtraPercentage = int.Parse(decodedSplit[1]);
                 FoolTrapIntensity = (FoolTrapOption)int.Parse(decodedSplit[2]);
                 FixedLaurelsOption = (FixedLaurelsType)int.Parse(decodedSplit[3]);
@@ -792,6 +819,9 @@ namespace TunicRandomizer {
                 LaurelsZips = eval(logic, LAURELS_ZIPS);
                 LadderStorageWithoutItems = eval(logic, LS_WITHOUT_ITEMS);
                 FoxPrinceEnabled = eval(logic, FOX_PRINCE);
+                EnemyDropShuffle = eval(logic, ENEMY_DROP_SHUFFLE);
+                ExtraEnemyDrops = eval(logic, EXTRA_ENEMY_DROPS);
+                ShuffleEnemySouls = eval(logic, ENEMY_DROP_SOULS);
 
                 int general = int.Parse(decodedSplit[9]);
                 HeirAssistModeEnabled = eval(general, EASY_HEIR);
@@ -868,7 +898,7 @@ namespace TunicRandomizer {
                     GrassRandomizer, RandomizeHexQuest,
                     PortalDirectionPairs, DecoupledER, HexQuestAbilitiesUnlockedByPages,
                     BreakableShuffle, FuseShuffle, BellShuffle, LaurelsZips, LadderStorageWithoutItems,
-                    FoxPrinceEnabled,
+                    FoxPrinceEnabled, EnemyDropShuffle, ExtraEnemyDrops, ShuffleEnemySouls,
                 };
             } else {
                 return new bool[] { 
@@ -882,7 +912,9 @@ namespace TunicRandomizer {
                     GetBool(SaveFlags.Decoupled), GetBool(SaveFlags.HexagonQuestPageAbilities),
                     GetBool(SaveFlags.BreakableShuffleEnabled), GetBool(SaveFlags.FuseShuffleEnabled),
                     GetBool(SaveFlags.BellShuffleEnabled), GetBool(SaveFlags.LaurelsZips),
-                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.FoxPrinceEnabled),
+                    GetBool(SaveFlags.LadderStorageWithoutItems), GetBool(SaveFlags.ShuffleEnemyDropsEnabled),
+                    GetBool(SaveFlags.FoxPrinceEnabled), GetBool(SaveFlags.ExtraEnemyDropsEnabled), 
+                    GetBool(SaveFlags.ShuffleEnemySoulsEnabled), GetBool(SaveFlags.LadderStorageWithoutItems), 
                 };
             }
         }

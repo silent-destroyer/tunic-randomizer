@@ -175,6 +175,7 @@ namespace TunicRandomizer {
             {"Sword Access", "East Forest (Path to Hero's Grave)"},
             {"East Forest Redux Interior", "East Forest (Guardhouse 2)"},
             {"East Forest Redux Laddercave", "East Forest (Guardhouse 1)"},
+            {"Forest Boss Room", "East Forest (Boss Room)"},
             {"Sewer", "Beneath the Well"},
             {"Sewer_Boss", "Beneath the Well (Boss Room)"},
             {"Crypt Redux", "Dark Tomb"},
