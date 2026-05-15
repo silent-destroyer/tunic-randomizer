@@ -414,6 +414,17 @@ namespace TunicRandomizer {
             set;
         }
 
+        public enum FoolTrapToggle {
+            OFF,
+            ON,
+            TRAPLINK,
+        }
+
+        public Dictionary<FoolTrap.TrapType, FoolTrapToggle> FoolTrapToggles {
+            get;
+            set;
+        }
+
         // Enemy Randomization Settings
         private const int ENEMY_RANDOMIZER = 1;
         private const int EXTRA_ENEMIES = 2;
@@ -661,7 +672,17 @@ namespace TunicRandomizer {
                 MusicToggles.Add(track, true);
             }
             RetroFilterEnabled = false;
-
+            FoolTrapToggles = new Dictionary<FoolTrap.TrapType, FoolTrapToggle>();
+            foreach (FoolTrap.TrapType trapType in Enum.GetValues(typeof(FoolTrap.TrapType))) {
+                FoolTrap.Trap trap = FoolTrap.Traps[trapType];
+                if (trap.Weight > 0) {
+                    FoolTrapToggles.Add(trapType, FoolTrapToggle.ON);
+                } else if (trap.AltWeight > 0) {
+                    FoolTrapToggles.Add(trapType, FoolTrapToggle.TRAPLINK);
+                } else {
+                    FoolTrapToggles.Add(trapType, FoolTrapToggle.OFF);
+                }
+            }
             // Enemy Randomizer
             EnemyRandomizerEnabled = false;
             BalancedEnemies = true;

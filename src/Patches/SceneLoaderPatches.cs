@@ -105,6 +105,7 @@ namespace TunicRandomizer {
             FoolTrap.BaldFox = false;
             FoolTrap.WideFox = false;
             FoolTrap.FastTrap = false;
+            FoolTrap.SaturatedTrap = false;
             if (FoolTrap.ZoomedCamera) {
                 CameraController.DerekZoom = 1f;
                 FoolTrap.ZoomedCamera = false;

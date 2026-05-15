@@ -42,10 +42,17 @@ namespace TunicRandomizer {
         public class Trap {
             public string Name;
             public int Weight;  // for random fool traps
+            public int AltWeight; // for trap link trap types
 
             public Trap(string name, int weight) {
                 Name = name;
                 Weight = weight;
+                AltWeight = 0;
+            }
+            public Trap(string name, int weight, int altWeight) {
+                Name = name;
+                Weight = weight;
+                AltWeight = altWeight;
             }
         }
 
@@ -56,19 +63,19 @@ namespace TunicRandomizer {
             {TrapType.Tiny, new Trap("Tiny Trap", 15) },
             {TrapType.Mirror, new Trap("Screen Flip Trap", 10) },
             {TrapType.Deisometric, new Trap("Deisometric Trap", 10) },
-            {TrapType.Trip, new Trap("Trip Trap", 0) },
+            {TrapType.Trip, new Trap("Trip Trap", 0, 5) },
             {TrapType.Zoom, new Trap("Zoom Trap", 5) },
-            {TrapType.Bald, new Trap("Bald Trap", 0) },
-            {TrapType.Home, new Trap("Home Trap", 0) },
-            {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
-            {TrapType.Wide, new Trap("W I D E Trap", 0) },
-            {TrapType.ZoomOut, new Trap("Zoom Out Trap", 0) },
-            {TrapType.CRT, new Trap("CRT Trap", 5) },
-            {TrapType.Vintage, new Trap("Vintage Trap", 1) },
-            {TrapType.Saturation, new Trap("Saturation Trap", 0) },
-            {TrapType.Depletion, new Trap("Depletion Trap", 0) },
-            {TrapType.Disarm, new Trap("Disarm Trap", 0) },
-            {TrapType.Fast, new Trap("Fast Trap", 0) },
+            {TrapType.Bald, new Trap("Bald Trap", 0, 5) },
+            {TrapType.Home, new Trap("Home Trap", 0, 1) },
+            {TrapType.Whoops, new Trap("Whoops! Trap", 0, 5) },
+            {TrapType.Wide, new Trap("W I D E Trap", 0, 5) },
+            {TrapType.ZoomOut, new Trap("Zoom Out Trap", 0, 5) },
+            {TrapType.CRT, new Trap("CRT Trap", 10) },
+            {TrapType.Vintage, new Trap("Vintage Trap", 1, 1) },
+            {TrapType.Saturation, new Trap("Saturation Trap", 0, 5) },
+            {TrapType.Depletion, new Trap("Depletion Trap", 0, 5) },
+            {TrapType.Disarm, new Trap("Disarm Trap", 0, 5) },
+            {TrapType.Fast, new Trap("Fast Trap", 0, 5) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -141,6 +148,11 @@ namespace TunicRandomizer {
             {"Home Trap", TrapType.Home }, // Here Comes Niko, teleports the player "home", overworld in this case
             {"Teleport Trap", TrapType.Home },
 
+            {"Trip Trap", TrapType.Trip },
+            {"CRT Trap", TrapType.CRT },
+            {"Vintage Trap", TrapType.Vintage },
+            {"Saturation Trap", TrapType.Saturation },
+
             {"144p Trap", TrapType.Vintage},
             {"Chaos Trap", TrapType.Saturation},
             {"Crystal Trap", TrapType.CRT},
@@ -163,6 +175,7 @@ namespace TunicRandomizer {
             {"Radiation Trap", TrapType.Ice },
             {"Ranch Trap", TrapType.Home },
             {"Spotlight Trap", TrapType.Zoom },
+
         };
 
         public static bool StungByBee = false;
@@ -174,6 +187,7 @@ namespace TunicRandomizer {
         public static bool CRTTrap = false;
         public static bool VintageTrap = false;
         public static bool FastTrap = false;
+        public static bool SaturatedTrap = false;
 
         public static (string, string) ApplyFoolEffect(TrapType trapType) {
             string FoolMessageTop = $"";
@@ -252,6 +266,9 @@ namespace TunicRandomizer {
 
             List<TrapType> weightedTrapList = new List<TrapType>();
             foreach (TrapType trapType in Traps.Keys) {
+                if (TunicRandomizer.Settings.FoolTrapToggles[trapType] != RandomizerSettings.FoolTrapToggle.ON && !TunicRandomizer.Settings.RaceMode) {
+                    continue;
+                }
                 if (trapType == TrapType.Mirror && CameraController.Flip) {
                     continue;
                 }
@@ -273,9 +290,37 @@ namespace TunicRandomizer {
                 if (trapType == TrapType.Vintage && VintageTrap) {
                     continue;
                 }
-                weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
+                if (trapType == TrapType.Fast && FastTrap) {
+                    continue;
+                }
+                if (trapType == TrapType.Depletion && PlayerCharacter.GetMP() == 0) {
+                    continue;
+                }
+                if (trapType == TrapType.Saturation && SaturatedTrap) {
+                    continue;
+                }
+                if (trapType == TrapType.Bald && BaldFox) {
+                    continue;
+                }
+                if (trapType == TrapType.ZoomOut && ZoomedCamera) {
+                    continue;
+                }
+                if (trapType == TrapType.Wide && WideFox) {
+                    continue;
+                }
+                if (TunicRandomizer.Settings.RaceMode) {
+                    weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
+                } else {
+                    weightedTrapList.AddRange(Enumerable.Repeat(trapType, Math.Max(Traps[trapType].Weight, Traps[trapType].AltWeight)));
+                }
             }
-            TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
+            TrapType trapSelected;
+            if (weightedTrapList.Count == 0) {
+                trapSelected = TrapType.Ice;
+            } else {
+                trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
+            }
+
             (FoolMessageTop, FoolMessageBottom) = ApplyFoolEffect(trapSelected);
 
             if (IsArchipelago() && TunicRandomizer.Settings.TrapLinkEnabled && !fromDeathLink) {
@@ -471,6 +516,7 @@ namespace TunicRandomizer {
                 }
             }
             PlayerCharacter.instance.Flinch(true);
+            SaturatedTrap = true;
             return (FoolMessageTop, FoolMessageBottom);
         }
 
