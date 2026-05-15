@@ -104,6 +104,8 @@ namespace TunicRandomizer {
             FoolTrap.TinierFox = false;
             FoolTrap.BaldFox = false;
             FoolTrap.WideFox = false;
+            FoolTrap.FastTrap = false;
+            FoolTrap.SaturatedTrap = false;
             if (FoolTrap.ZoomedCamera) {
                 CameraController.DerekZoom = 1f;
                 FoolTrap.ZoomedCamera = false;
@@ -939,6 +941,7 @@ namespace TunicRandomizer {
             if (IsArchipelago()) {
                 Archipelago.instance.integration.SendQueuedLocations();
             }
+            FoolTrap.FastTrap = false;
             SceneName = "TitleScreen";
         }
 

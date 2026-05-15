@@ -489,10 +489,13 @@ namespace TunicRandomizer {
                 if (trapSource.Item3 + TimeSpan.FromSeconds(5f) > DateTime.Now) {
                     string FoolMessageTop = $"";
                     string FoolMessageBottom = $"";
-                    (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(FoolTrap.TrapNameToType[trapSource.Item1]);
-                    FoolMessageTop = $"\"{trapSource.Item2}\" %i^ks {FoolMessageTop}";
+                    FoolTrap.TrapType trapType = FoolTrap.TrapNameToType[trapSource.Item1];
+                    if (TunicRandomizer.Settings.FoolTrapToggles[trapType] >= RandomizerSettings.FoolTrapToggle.ON) {
+                        (FoolMessageTop, FoolMessageBottom) = FoolTrap.ApplyFoolEffect(trapType);
+                        FoolMessageTop = $"\"{trapSource.Item2}\" %i^ks {FoolMessageTop}";
 
-                    Notifications.Show(FoolMessageTop, FoolMessageBottom);
+                        Notifications.Show(FoolMessageTop, FoolMessageBottom);
+                    }
                 }
 
                 yield return true;

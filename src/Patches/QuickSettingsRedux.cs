@@ -45,6 +45,7 @@ namespace TunicRandomizer {
         public static bool titleScreenShowMusicToggles = false;
         public static bool titleScreenShowJukebox = false;
         public static bool titleScreenShowEnemyToggles = false;
+        public static bool titleScreenShowFoolTrapToggles = false;
 
         public static QuickSettingsRedux instance;
 
@@ -1098,6 +1099,16 @@ namespace TunicRandomizer {
             }
             TunicRandomizer.Settings.MoreSkulls = GUI.Toggle(ShowTooltip(scRect(226f, y, 206f, 30f), "More Skulls"), TunicRandomizer.Settings.MoreSkulls, "More Skulls");
             TunicRandomizer.Settings.CameraFlip = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "???"), TunicRandomizer.Settings.CameraFlip, "???");
+            y += 40f;
+            bool openEnemyToggles = GUI.Button(scRect(10f, y, 206f, 30f, tooltip: "Configure Fool Traps"), "Configure Fool Traps");
+            if (openEnemyToggles) {
+                OptionsGUI options = Resources.FindObjectsOfTypeAll<OptionsGUI>().FirstOrDefault();
+                TitleScreen titleScreen = Resources.FindObjectsOfTypeAll<TitleScreen>().FirstOrDefault();
+                if (options != null && titleScreen != null) {
+                    titleScreenShowFoolTrapToggles = true;
+                    GUIMode.PushMode(options);
+                }
+            }
             if (SecretMayor.shouldBeActive || SecretMayor.checkIfActive()) {
                 bool mayorToggle = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Mr Mayor"), SecretMayor.shouldBeActive, "<color=#ffd700>Mr Mayor</color>");
                 if ((mayorToggle && !SecretMayor.shouldBeActive) || (!mayorToggle && SecretMayor.shouldBeActive)) {

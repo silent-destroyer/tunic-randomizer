@@ -214,6 +214,7 @@ namespace TunicRandomizer {
 
         public static bool PauseMenu___button_ReturnToTitle_PrefixPatch(PauseMenu __instance) {
             Profile.SavePermanentStatesByPosition(SceneManager.GetActiveScene().buildIndex, PermanentStateByPositionManager.deadPositionsInCurrentScene);
+            FoolTrap.FastTrap = false;
             return true;
         }
 

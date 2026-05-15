@@ -23,15 +23,32 @@ namespace TunicRandomizer {
             Home,  // for trap link
             Whoops,// for trap link
             Wide,  // for trap link
+            ZoomOut, // for trap link
+            Saturation, // for trap link
+            Depletion, // for trap link
+            Disarm, // for trap link
+            Fast, // for trap link
         }
+
+        // potential todos:
+        // Explosion Trap, could swap it from fire trap to actually explode you, also for bomb, tnt, etc.
+        // Frog Trap from Glover, could spawn a frog
+        // Paper Trap from DK64, turns player and most enemies 2d, could maybe do something with the character scale
 
         public class Trap {
             public string Name;
             public int Weight;  // for random fool traps
+            public int AltWeight; // for trap link trap types
 
             public Trap(string name, int weight) {
                 Name = name;
                 Weight = weight;
+                AltWeight = 0;
+            }
+            public Trap(string name, int weight, int altWeight) {
+                Name = name;
+                Weight = weight;
+                AltWeight = altWeight;
             }
         }
 
@@ -42,14 +59,19 @@ namespace TunicRandomizer {
             {TrapType.Tiny, new Trap("Tiny Trap", 15) },
             {TrapType.Mirror, new Trap("Screen Flip Trap", 10) },
             {TrapType.Deisometric, new Trap("Deisometric Trap", 10) },
-            {TrapType.Trip, new Trap("Trip Trap", 0) },
+            {TrapType.Trip, new Trap("Trip Trap", 0, 5) },
             {TrapType.Zoom, new Trap("Zoom Trap", 5) },
-            {TrapType.Bald, new Trap("Bald Trap", 0) },
-            {TrapType.Home, new Trap("Home Trap", 0) },
-            {TrapType.Whoops, new Trap("Whoops! Trap", 0) },
-            {TrapType.Wide, new Trap("W I D E Trap", 0) },
-            {TrapType.CRT, new Trap("CRT Trap", 5) },
-            {TrapType.Vintage, new Trap("Vintage Trap", 1) },
+            {TrapType.Bald, new Trap("Bald Trap", 0, 5) },
+            {TrapType.Home, new Trap("Home Trap", 0, 1) },
+            {TrapType.Whoops, new Trap("Whoops! Trap", 0, 5) },
+            {TrapType.Wide, new Trap("W I D E Trap", 0, 5) },
+            {TrapType.ZoomOut, new Trap("Zoom Out Trap", 0, 5) },
+            {TrapType.CRT, new Trap("CRT Trap", 10) },
+            {TrapType.Vintage, new Trap("Vintage Trap", 1, 1) },
+            {TrapType.Saturation, new Trap("Saturation Trap", 0, 5) },
+            {TrapType.Depletion, new Trap("Depletion Trap", 0, 5) },
+            {TrapType.Disarm, new Trap("Disarm Trap", 0, 5) },
+            {TrapType.Fast, new Trap("Fast Trap", 0, 5) },
         };
 
         // for TrapLink, we convert names of similar traps to our trap types for receiving traps
@@ -59,13 +81,22 @@ namespace TunicRandomizer {
             {"Frozen Trap", TrapType.Ice },
             {"Stun Trap", TrapType.Ice },
             {"Paralyze Trap", TrapType.Ice },
+            {"Paralysis Trap", TrapType.Ice },
             {"Chaos Control Trap", TrapType.Ice },
+            {"Bubble Trap", TrapType.Ice },  // DK64, freezes the player in a bubble for a short time
+            {"Frost Trap", TrapType.Ice },
+            {"Sleep Trap", TrapType.Ice },  // freezing is sleep right
 
             {"Fire Trap", TrapType.Fire },
             {"Damage Trap", TrapType.Fire },
+            {"Explosion Trap", TrapType.Fire },
             {"Bomb", TrapType.Fire },  // Luigi's Mansion, yes it's just Bomb
+            {"Bomb Trap", TrapType.Fire },
+            {"Burn Trap", TrapType.Fire },
             {"Posession Trap", TrapType.Fire },  // Luigi's Mansion, damage-based trap
             {"Nut Trap", TrapType.Fire },  // DKC, damage-based trap
+            {"TNT Trap", TrapType.Fire },
+            {"TNT Barrel Trap", TrapType.Fire },
 
             {"Bee Trap", TrapType.Bee },
 
@@ -76,23 +107,71 @@ namespace TunicRandomizer {
             {"Mirror Trap", TrapType.Mirror },
             {"Reverse Trap", TrapType.Mirror },
             {"Reversal Trap", TrapType.Mirror },
+            {"Reverse Controls Trap", TrapType.Mirror },
+            {"Flip Horizontal Trap", TrapType.Mirror },
+            {"Flip Vertical Trap", TrapType.Mirror },
+            {"Flip Trap", TrapType.Mirror },
+            {"Gas Trap", TrapType.Mirror },  // Anodyne, reverses controls, this seemed close enough
 
             {"Deisometric Trap", TrapType.Deisometric },
             {"Confuse Trap", TrapType.Deisometric },
             {"Confusion Trap", TrapType.Deisometric },
-            {"Fuzzy Trap", TrapType.Deisometric },
+            {"Fuzzy Trap", TrapType.Vintage },
             {"Confound Trap", TrapType.Deisometric },
+            {"Camera Rotate Trap", TrapType.Deisometric },
 
             {"Bonk Trap", TrapType.Trip },
             {"Banana Trap", TrapType.Trip },
-            {"Spring Trap", TrapType.Trip },
+            {"Banana Peel Trap", TrapType.Trip },
+            {"Spring Trap", TrapType.Whoops },
+            {"Ice Floor Trap", TrapType.Trip },  // DK64, makes the floor slippery for 15 seconds, we could make this ice trap instead
+            {"Shake Trap", TrapType.Trip },  // Saving Princess, shakes the screen a lot, making it harder to control the player, so this seemed close
+            {"Slip Trap", TrapType.Trip },
 
             {"Zoom Trap", TrapType.Zoom },  // Celeste, zooms camera in
+            {"Fish Eye Trap", TrapType.Zoom },
+            {"Zoom In Trap", TrapType.Zoom },
+
+            {"Zoom Out Trap", TrapType.ZoomOut },
 
             {"Bald Trap", TrapType.Bald },  // Celeste, bald
+            
             {"Whoops! Trap", TrapType.Whoops }, // Here Comes Niko, drops the player from way high up
+            
             {"W I D E Trap", TrapType.Wide }, // Here Comes Niko, makes the fox W I D E
+            {"Squash Trap", TrapType.Wide },  // yeahhh squish that fox
+
             {"Home Trap", TrapType.Home }, // Here Comes Niko, teleports the player "home", overworld in this case
+            {"Teleport Trap", TrapType.Home },
+
+            {"Trip Trap", TrapType.Trip },
+            {"CRT Trap", TrapType.CRT },
+            {"Vintage Trap", TrapType.Vintage },
+            {"Saturation Trap", TrapType.Saturation },
+
+            {"144p Trap", TrapType.Vintage},
+            {"Chaos Trap", TrapType.Saturation},
+            {"Crystal Trap", TrapType.CRT},
+            {"Depletion Trap", TrapType.Depletion},
+            {"Disarm Trap", TrapType.Disarm},
+            {"Dry Trap", TrapType.Depletion},
+            {"Eject Ability", TrapType.Disarm },
+            {"Electrocution Trap", TrapType.Ice},
+            {"Empty Item Box Trap", TrapType.Disarm },
+            {"Energy Drain Trap", TrapType.Depletion },
+            {"Fast Trap", TrapType.Fast},
+            {"Fracture Trap", TrapType.CRT},
+            {"Invert Colors Trap", TrapType.Saturation },
+            {"Jump Trap", TrapType.Whoops },
+            {"Jumping Jacks Trap", TrapType.Fire },
+            {"Mana Drain Trap", TrapType.Depletion },
+            {"Pixelate Trap", TrapType.CRT },
+            {"Pixellation Trap", TrapType.CRT },
+            {"Push Trap", TrapType.Trip},
+            {"Radiation Trap", TrapType.Ice },
+            {"Ranch Trap", TrapType.Home },
+            {"Spotlight Trap", TrapType.Zoom },
+
         };
 
         public static bool StungByBee = false;
@@ -103,6 +182,8 @@ namespace TunicRandomizer {
         public static bool ZoomedCamera = false;
         public static bool CRTTrap = false;
         public static bool VintageTrap = false;
+        public static bool FastTrap = false;
+        public static bool SaturatedTrap = false;
 
         public static (string, string) ApplyFoolEffect(TrapType trapType) {
             string FoolMessageTop = $"";
@@ -151,6 +232,21 @@ namespace TunicRandomizer {
                 case TrapType.Home:
                     (FoolMessageTop, FoolMessageBottom) = FoolHomeTrap();
                     break;
+                case TrapType.ZoomOut:
+                    (FoolMessageTop, FoolMessageBottom) = FoolZoomOutTrap();
+                    break;
+                case TrapType.Saturation:
+                    (FoolMessageTop, FoolMessageBottom) = FoolSaturatedTrap();
+                    break;
+                case TrapType.Depletion:
+                    (FoolMessageTop, FoolMessageBottom) = FoolDepletionTrap();
+                    break;
+                case TrapType.Disarm:
+                    (FoolMessageTop, FoolMessageBottom) = FoolDisarmTrap();
+                    break;
+                case TrapType.Fast:
+                    (FoolMessageTop, FoolMessageBottom) = FoolFastTrap();
+                    break;
                 default:
                     TunicLogger.LogError("No match found for trap type " + trapType.ToString());
                     break;
@@ -166,6 +262,9 @@ namespace TunicRandomizer {
 
             List<TrapType> weightedTrapList = new List<TrapType>();
             foreach (TrapType trapType in Traps.Keys) {
+                if (TunicRandomizer.Settings.FoolTrapToggles[trapType] != RandomizerSettings.FoolTrapToggle.ON && !TunicRandomizer.Settings.RaceMode) {
+                    continue;
+                }
                 if (trapType == TrapType.Mirror && CameraController.Flip) {
                     continue;
                 }
@@ -187,9 +286,37 @@ namespace TunicRandomizer {
                 if (trapType == TrapType.Vintage && VintageTrap) {
                     continue;
                 }
-                weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
+                if (trapType == TrapType.Fast && FastTrap) {
+                    continue;
+                }
+                if (trapType == TrapType.Depletion && PlayerCharacter.GetMP() == 0) {
+                    continue;
+                }
+                if (trapType == TrapType.Saturation && SaturatedTrap) {
+                    continue;
+                }
+                if (trapType == TrapType.Bald && BaldFox) {
+                    continue;
+                }
+                if (trapType == TrapType.ZoomOut && ZoomedCamera) {
+                    continue;
+                }
+                if (trapType == TrapType.Wide && WideFox) {
+                    continue;
+                }
+                if (TunicRandomizer.Settings.RaceMode) {
+                    weightedTrapList.AddRange(Enumerable.Repeat(trapType, Traps[trapType].Weight));
+                } else {
+                    weightedTrapList.AddRange(Enumerable.Repeat(trapType, Math.Max(Traps[trapType].Weight, Traps[trapType].AltWeight)));
+                }
             }
-            TrapType trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
+            TrapType trapSelected;
+            if (weightedTrapList.Count == 0) {
+                trapSelected = TrapType.Ice;
+            } else {
+                trapSelected = weightedTrapList[Random.Next(weightedTrapList.Count)];
+            }
+
             (FoolMessageTop, FoolMessageBottom) = ApplyFoolEffect(trapSelected);
 
             if (IsArchipelago() && TunicRandomizer.Settings.TrapLinkEnabled && !fromDeathLink) {
@@ -287,12 +414,25 @@ namespace TunicRandomizer {
             return (FoolMessageTop, FoolMessageBottom);
         }
 
+        public static (string, string) FoolZoomOutTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>zoomd owt \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"wehl I kahn sE juhst fIn...";
+            CameraController.DerekZoom = 2f;
+            ZoomedCamera = true;
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
         public static (string, string) FoolBaldTrap() {
             SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
             string FoolMessageTop = $"yoo R A <#FFA500>bawld \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
             string FoolMessageBottom = $"giv it bahk!";
             BaldFox = true;
             PlayerCharacter.instance.Flinch(true);
+            if (Inventory.GetItemByName("Hyperdash Toggle").Quantity > 0) {
+                Inventory.GetItemByName("Hyperdash").Quantity = 0; // Unequip laurels
+            }
             return (FoolMessageTop, FoolMessageBottom);
         }
 
@@ -349,6 +489,62 @@ namespace TunicRandomizer {
             if (CRTMode.instance != null) {
                 CRTMode.instance.Enable(true);
             }
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolSaturatedTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>sahJurAtid \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"wErd!";
+            Texture2D texture = ModelSwaps.FindTexture("CRT", true);
+            if (CameraController.instance.effectsCamera != null && CameraController.instance.effectsCamera.GetComponent<AmplifyColorEffect>() != null) {
+                CameraController.instance.effectsCamera.GetComponent<AmplifyColorEffect>().LutTexture = texture;
+                CameraController.instance.effectsCamera.GetComponent<AmplifyColorEffect>().enabled = true;
+            } else {
+                foreach (Camera camera in GameObject.FindObjectsOfType<Camera>()) {
+                    if (camera.name.Contains("Camera 2") || camera.name.Contains("Post Processing")) {
+                        if (camera.GetComponent<AmplifyColorEffect>() != null) {
+                            camera.GetComponent<AmplifyColorEffect>().LutTexture = texture;
+                            camera.GetComponent<AmplifyColorEffect>().enabled = true;
+                        }
+                    }
+                }
+            }
+            PlayerCharacter.instance.Flinch(true);
+            SaturatedTrap = true;
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+
+        public static (string, string) FoolDepletionTrap() {
+            if (PlayerCharacter.Instanced && PlayerCharacter.instance.GetComponent<TechbowItemBehaviour>() != null) {
+                SFX.PlayAudioClipAtFox(PlayerCharacter.instance.GetComponent<TechbowItemBehaviour>().sfx_fire);
+            }
+            string FoolMessageTop = $"yoo R A <#0000FF>mahnuhlehs \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"howz #aht for uh mahjik trik?";
+            PlayerCharacter.SetMP(0);
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolDisarmTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R ahn <#FFA500>itehmlehs \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"I swAr I juhst hahd it uh sehkuhnd uhgO...";
+            SaveFile.SetString($"Item on Button 0", "");
+            SaveFile.SetString($"Item on Button 1", "");
+            SaveFile.SetString($"Item on Button 2", "");
+            Inventory.buttonAssignedItems = new ButtonAssignableItem[] { null, null, null };
+            PlayerCharacter.instance.Flinch(true);
+            return (FoolMessageTop, FoolMessageBottom);
+        }
+
+        public static (string, string) FoolFastTrap() {
+            SFX.PlayAudioClipAtFox(PlayerCharacter.instance.bigHurtSFX);
+            string FoolMessageTop = $"yoo R A <#FFA500>fahst \"<#FFA500>FOOL<#ffffff>!!\" [fooltrap]";
+            string FoolMessageBottom = $"nyoom!";
+            FastTrap = true;
             PlayerCharacter.instance.Flinch(true);
             return (FoolMessageTop, FoolMessageBottom);
         }
