@@ -8,6 +8,7 @@ using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static TunicRandomizer.RandomizerSettings;
 using static TunicRandomizer.SaveFlags;
 
 namespace TunicRandomizer {
@@ -33,6 +34,13 @@ namespace TunicRandomizer {
             if (QuickSettingsRedux.titleScreenShowEnemyToggles) {
                 QuickSettingsRedux.titleScreenShowEnemyToggles = false;
                 EnemyTogglesPage();
+                addReturnButton(__instance);
+                return false;
+            }
+
+            if (QuickSettingsRedux.titleScreenShowFoolTrapToggles) {
+                QuickSettingsRedux.titleScreenShowFoolTrapToggles = false;
+                FoolTrapTogglesPage();
                 addReturnButton(__instance);
                 return false;
             }
@@ -268,6 +276,7 @@ namespace TunicRandomizer {
             if (SecretMayor.shouldBeActive || SecretMayor.checkIfActive()) {
                 OptionsGUI.addToggle("<#ffd700>Mr Mayor", "Off", "On", SecretMayor.shouldBeActive ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)SecretMayor.ToggleMayorSecret);
             }
+            addPageButton("Configure Fool Traps", FoolTrapTogglesPage);
             addPageButton("Debug / Misc Options", DebugFunctionsPage);
         }
 
@@ -323,6 +332,41 @@ namespace TunicRandomizer {
             }
             foreach (string enemy in EnemyRandomizer.EnemyToggleOptionNames.Values) {
                 OptionsGUI.addToggle(enemy, "Off", "On", TunicRandomizer.Settings.EnemyToggles[enemy] ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)toggles[enemy]);
+            }
+        }
+
+        public static void FoolTrapTogglesPage() {
+            OptionsGUI OptionsGUI = GameObject.FindObjectOfType<OptionsGUI>();
+            OptionsGUI.setHeading("Fool Traps");
+
+            Il2CppStringArray FoolTrapOptions = (Il2CppStringArray)new string[] { "<#FF0000>Off", "<#00FF00>On", "<#00FFFF>Trap Link Only" };
+
+            OptionsGUI.addButton("Reset to Defaults", (Action)(() => {
+                GameObject.FindObjectsOfType<OptionsGUIMultiSelect>().ToList().ForEach((button) => {
+                    foreach (FoolTrap.TrapType trapType in FoolTrap.Traps.Keys) {
+                        if (button.leftAlignedText.text == FoolTrap.Traps[trapType].Name) {
+                            FoolTrap.Trap trap = FoolTrap.Traps[trapType];
+                            if (trap.Weight > 0) {
+                                TunicRandomizer.Settings.FoolTrapToggles[trapType] = FoolTrapToggle.ON;
+                                button.SelectIndex(1);
+                            } else if (trap.AltWeight > 0) {
+                                TunicRandomizer.Settings.FoolTrapToggles[trapType] = FoolTrapToggle.TRAPLINK;
+                                button.SelectIndex(2);
+                            } else {
+                                TunicRandomizer.Settings.FoolTrapToggles[trapType] = FoolTrapToggle.OFF;
+                                button.SelectIndex(0);
+                            }
+                        }
+                    }
+                });
+                SaveSettings();
+            }));
+
+            foreach (FoolTrap.TrapType trapType in Enum.GetValues(typeof(FoolTrap.TrapType))) {
+                OptionsGUI.addMultiSelect(FoolTrap.Traps[trapType].Name, FoolTrapOptions, GetFoolTrapToggleIndex(trapType), (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                    TunicRandomizer.Settings.FoolTrapToggles[trapType] = (RandomizerSettings.FoolTrapToggle)index;
+                    SaveSettings();
+                })).wrap = true;
             }
         }
 
@@ -586,6 +630,10 @@ namespace TunicRandomizer {
 
         public static int GetFoolTrapIndex() {
             return (int)TunicRandomizer.Settings.FoolTrapIntensity;
+        }
+
+        public static int GetFoolTrapToggleIndex(FoolTrap.TrapType trapType) {
+            return (int)TunicRandomizer.Settings.FoolTrapToggles[trapType];
         }
 
         public static void ChangeFoolTrapFrequency(int index) {
