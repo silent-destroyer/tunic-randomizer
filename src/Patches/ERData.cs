@@ -5772,7 +5772,7 @@ namespace TunicRandomizer {
                                 "Enemy Soul (Administrator)"
                             },
                             new List<string> {
-                                "IG1L",
+                                "IG1S",
                                 "Enemy Soul (Voidling)"
                             },
                             new List<string> {
