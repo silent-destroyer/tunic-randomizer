@@ -5689,11 +5689,33 @@ namespace TunicRandomizer {
                 "Rooted Ziggurat Lower Front",
                 new Dictionary<string, List<List<string>>> {
                     {
-                        "Rooted Ziggurat Lower Back",
+                        "Rooted Ziggurat Lower Mid Checkpoint",
                         new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash",
-                            },
+                        }
+                    }
+                }
+            },
+            {
+                "Rooted Ziggurat Lower Mid Checkpoint",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Lower Miniboss Platform",
+                        new List<List<string>> {
+                        }
+                    },
+                    {
+                        "Rooted Ziggurat Lower Front",
+                        new List<List<string>> {
+                        }
+                    }
+                }
+            },
+            {
+                "Rooted Ziggurat Lower Miniboss Platform",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "Rooted Ziggurat Lower Mid Checkpoint",
+                        new List<List<string>> {
                             new List<string> {
                                 "Sword", "12", NO_FUSE_SHUFFLE,
                             },
@@ -5703,8 +5725,17 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "Rooted Ziggurat Lower Mid Checkpoint",
+                        "Rooted Ziggurat Lower Back",
                         new List<List<string>> {
+                            new List<string> {
+                                "Sword", "12", NO_FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "Ziggurat Miniboss Fuse", FUSE_SHUFFLE,
+                            },
+                            new List<string> {
+                                "Hyperdash"
+                            }
                         }
                     }
                 }
@@ -5715,15 +5746,6 @@ namespace TunicRandomizer {
                     {
                         "Rooted Ziggurat Lower Front",
                         new List<List<string>> {
-                            new List<string> {
-                                "Hyperdash", "Sword", "12", NO_FUSE_SHUFFLE
-                            },
-                            new List<string> {
-                                "Ziggurat Miniboss Fuse", FUSE_SHUFFLE
-                            },
-                            new List<string> {
-                                "IG1L", "Sword", "12", NO_FUSE_SHUFFLE
-                            },
                             // LS2 includes getting knocked down by melee enemies (or enemies that are close range), so this does not need the pairing only tag
                             new List<string> {
                                 "LS2",
@@ -5735,10 +5757,12 @@ namespace TunicRandomizer {
                             },
                         }
                     },
-                    {  
-                        // can't get to checkpoint if enemies aggro, gap too big, so no laurels connection
-                        "Rooted Ziggurat Lower Mid Checkpoint",
+                    {
+                        "Rooted Ziggurat Lower Miniboss Platform",
                         new List<List<string>> {
+                            new List<string> {
+                                "Hyperdash"
+                            },
                             new List<string> {
                                 "LS2",
                                 "Enemy Soul (Voidling)"
@@ -5746,6 +5770,13 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "LS2",
                                 "Enemy Soul (Administrator)"
+                            },
+                            new List<string> {
+                                "IG1L",
+                                "Enemy Soul (Voidling)"
+                            },
+                            new List<string> {
+                                "Ziggurat Miniboss Fuse", FUSE_SHUFFLE,
                             },
                         }
                     },
