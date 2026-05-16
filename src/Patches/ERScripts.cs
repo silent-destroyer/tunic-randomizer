@@ -645,10 +645,25 @@ namespace TunicRandomizer {
                                 TunicLogger.LogInfo(region);
                             }
                         }
+                        TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("remaining portals in portalsList are:");
                         foreach (Portal debugportal in portalsList) {
                             TunicLogger.LogInfo(debugportal.Name);
                         }
+                        TunicLogger.LogInfo("---------------------------------------");
+                        TunicLogger.LogInfo("The contents of FullInventory are:");
+                        foreach (string thing in FullInventory.Keys) {
+                            TunicLogger.LogInfo(thing);
+                            if (thing == "Sword Progression") {
+                                TunicLogger.LogInfo($"Quantity: {FullInventory[thing]}");
+                            }
+                        }
+                        TunicLogger.LogInfo("---------------------------------------");
+                        TunicLogger.LogInfo("Remaining portals in portalsList are:");
+                        foreach (Portal debugportal in portalsList) {
+                            TunicLogger.LogInfo(debugportal.Name);
+                        }
+                        TunicLogger.LogInfo("---------------------------------------");
                         // reroll, hopefully this shouldn't be common at all
                         return RandomizePortals(seed + 1);
                     }
@@ -671,6 +686,13 @@ namespace TunicRandomizer {
                     deadEndPortalDirectionTracker[portal2.Direction]--;
                 } else {
                     twoPlusPortalDirectionTracker[portal2.Direction]--;
+                }
+
+                // if laurels is at 10 fairies, we need to add hyperdash to the inventory when fairy cave is connected
+                if ((portal1.Region == "Secret Gathering Place" || portal2.Region == "Secret Gathering Place")
+                    && SaveFile.GetInt(LaurelsLocation) == 3
+                    && FullInventory.ContainsKey(PAIRING_ONLY)) {
+                    FullInventory.Add("Hyperdash", 1);
                 }
 
                 // this is at the end so that if it needs to retry portal 1 after not finding an appropriate portal 2,
