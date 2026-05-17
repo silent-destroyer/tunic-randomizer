@@ -728,10 +728,31 @@ namespace TunicRandomizer {
                     if (iceGrappling.ToString() != "0") {
                         Inventory.GetItemByName("Torch").Quantity = 1;
                     }
+                    if(int.TryParse(iceGrappling.ToString(), out var iceResult)) {
+                        if (iceResult > 0) {
+                            SaveFile.SetInt(IceGrapplingDifficulty, iceResult);
+                        }
+                    }
                 }
                 if (slotData.TryGetValue("ladder_storage", out var ladderStorage)) {
                     if (ladderStorage.ToString() != "0") {
                         Inventory.GetItemByName("Torch").Quantity = 1;
+                    }
+                    if (int.TryParse(ladderStorage.ToString(), out var ladderResult)) {
+                        if (ladderResult > 0) {
+                            SaveFile.SetInt(LadderStorageDifficulty, ladderResult);
+                        }
+                    }
+                }
+                if (slotData.TryGetValue("laurels_zips", out var laurelsZips)) {
+                    if (laurelsZips.ToString() == "1") {
+                        SaveFile.SetInt(LaurelsZips, 1);
+                    }
+                }
+
+                if (slotData.TryGetValue("ladder_storage_without_items", out var ladderStorageWithoutItems)) {
+                    if (ladderStorageWithoutItems.ToString() == "1") {
+                        SaveFile.SetInt(LadderStorageWithoutItems, 1);
                     }
                 }
                 if (slotData.TryGetValue("grass_randomizer", out var grassRandomizer)) {
