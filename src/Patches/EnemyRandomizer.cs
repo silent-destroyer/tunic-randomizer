@@ -1468,18 +1468,22 @@ namespace TunicRandomizer {
             } else {
                 Random = new System.Random();
             }
-            foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
-                float scale = ((float)Random.NextDouble() * 1.5f) + 0.25f;
-                monster.gameObject.transform.localScale *= scale; 
-                if (monster.GetComponent<FleemerQuartet>() != null) {
-                    foreach (GameObject fleemer in monster.GetComponent<FleemerQuartet>().Quartet) {
-                        fleemer.transform.localScale = (Vector3.one * 0.44f) * scale;
+            try {
+                foreach (Monster monster in Resources.FindObjectsOfTypeAll<Monster>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
+                    float scale = ((float)Random.NextDouble() * 1.5f) + 0.25f;
+                    monster.gameObject.transform.localScale *= scale; 
+                    if (monster.GetComponent<FleemerQuartet>() != null && monster.GetComponent<FleemerQuartet>().Quartet != null) {
+                        foreach (GameObject fleemer in monster.GetComponent<FleemerQuartet>().Quartet) {
+                            fleemer.transform.localScale = (Vector3.one * 0.44f) * scale;
+                        }
                     }
                 }
-            }
-            foreach (TurretTrap monster in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
-                float scale = ((float)Random.NextDouble() * 1.5f) + 0.25f;
-                monster.gameObject.transform.localScale *= scale;
+                foreach (TurretTrap monster in Resources.FindObjectsOfTypeAll<TurretTrap>().Where(monster => monster != null && monster.gameObject.scene.name == scene)) {
+                    float scale = ((float)Random.NextDouble() * 1.5f) + 0.25f;
+                    monster.gameObject.transform.localScale *= scale;
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("An error occurred while randomizing enemy sizes " + e.Message);
             }
             RandomizedThisSceneAlready = true;
         }
