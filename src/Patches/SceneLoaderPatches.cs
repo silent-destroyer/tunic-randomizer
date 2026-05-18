@@ -330,8 +330,9 @@ namespace TunicRandomizer {
                 }
             }
 
-            if (Camera.main != null && Camera.main.gameObject.GetComponentInParent<CycleController>() == null) {
-                Camera.main.transform.parent.gameObject.AddComponent<CycleController>();
+            Camera mainCamera = Resources.FindObjectsOfTypeAll<Camera>().Where(c => c.name == "Camera 1 - Main").First();
+            if (mainCamera != null && mainCamera.gameObject.GetComponentInParent<CycleController>() == null) {
+                mainCamera.transform.parent.gameObject.AddComponent<CycleController>();
             }
 
             TunicLogger.LogInfo("Entering scene " + loadingScene.name + " (" + loadingScene.buildIndex + ")");
