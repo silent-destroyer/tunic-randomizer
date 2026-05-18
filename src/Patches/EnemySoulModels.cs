@@ -493,7 +493,6 @@ namespace TunicRandomizer {
             if (enemy.GetComponent<RuntimeStableID>() != null) GameObject.Destroy(enemy.GetComponent<RuntimeStableID>());
             if (enemy.GetComponent<Rigidbody>() != null) GameObject.Destroy(enemy.GetComponent<Rigidbody>());
             if (enemy.GetComponent<FireController>() != null) GameObject.Destroy(enemy.GetComponent<FireController>());
-            if (enemy.GetComponent<ZTarget>() != null) GameObject.Destroy(enemy.GetComponent<ZTarget>());
             if (enemy.GetComponent<HitReceiver>() != null) GameObject.Destroy(enemy.GetComponent<HitReceiver>());
             if (enemy.GetComponent<CapsuleCollider>() != null) GameObject.Destroy(enemy.GetComponent<CapsuleCollider>());
             if (enemy.GetComponent<TetherTarget>() != null) GameObject.Destroy(enemy.GetComponent<TetherTarget>());
@@ -505,6 +504,9 @@ namespace TunicRandomizer {
             if (enemy.GetComponent<SmashableObject>() != null) GameObject.Destroy(enemy.GetComponent<SmashableObject>());
             if (enemy.GetComponent<BossEnemy>() != null) GameObject.Destroy(enemy.GetComponent<BossEnemy>());
             if (enemy.GetComponent<ColliderByParameter>() != null) GameObject.Destroy(enemy.GetComponent<ColliderByParameter>());
+            foreach (ZTarget zTarget in enemy.GetComponentsInChildren<ZTarget>()) {
+                GameObject.Destroy(zTarget);
+            }
             foreach (TrackingBone trackingBone in enemy.GetComponentsInChildren<TrackingBone>()) {
                 GameObject.Destroy(trackingBone);
             }
