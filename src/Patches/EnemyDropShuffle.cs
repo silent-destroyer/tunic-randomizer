@@ -25,6 +25,9 @@ namespace TunicRandomizer {
                     GetComponent<Monster>().dropValue.Value = 0;
                 }
             }
+            if (GetComponent<Probe>() != null) {
+                GetComponent<Probe>().onlyAggroViaTrigger = false;
+            }
         }
 
         public void ActivateEnemyCheck(Transform transform, bool skipPresentation = true) {
