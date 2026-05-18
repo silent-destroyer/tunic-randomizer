@@ -112,6 +112,10 @@ namespace TunicRandomizer {
             base.hpToGive = 0;
         }
 
+        public override bool CheckInput(Il2CppStructArray<DPAD> inputs, int length) {
+            return false;
+        }
+        
         public void doSpell() {
             foreach (ParticleSystemRenderer psr in particles.GetComponentsInChildren<ParticleSystemRenderer>()) {
                 psr.material.color = PlayerPalette.runtimePalette.GetPixel(0, 3);
