@@ -1370,6 +1370,11 @@ namespace TunicRandomizer {
                     GameObject.Destroy(NewItem.GetComponent<BoxCollider>());
                 } else if (Item.Type == ItemTypes.ENEMY) {
                     NewItem = GameObject.Instantiate(Items["Enemy"], Parent.transform.position, Parent.transform.rotation);
+                    if (NewItem.scene.name == "Swamp Redux 2") {
+                        NewItem.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        NewItem.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+                        NewItem.transform.GetChild(0).GetChild(2).gameObject.SetActive(false);
+                    }
                     GameObject enemyRoot = NewItem.transform.GetChild(0).GetChild(3).gameObject;
                     for (int i = 0; i < enemyRoot.transform.childCount; i++) {
                         if (enemyRoot.transform.GetChild(i).name == Item.Name) {
