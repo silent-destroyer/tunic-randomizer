@@ -780,7 +780,16 @@ namespace TunicRandomizer {
                         SaveFile.SetInt(LaurelsZips, 1);
                     }
                 }
-
+                if (slotData.TryGetValue("maskless", out var maskless)) {
+                    if (maskless.ToString() == "1") {
+                        SaveFile.SetInt(MasklessLogic, 1);
+                    }
+                }
+                if (slotData.TryGetValue("lanternless", out var lanternless)) {
+                    if (lanternless.ToString() == "1") {
+                        SaveFile.SetInt(LanternlessLogic, 1);
+                    }
+                }
                 if (slotData.TryGetValue("ladder_storage_without_items", out var ladderStorageWithoutItems)) {
                     if (ladderStorageWithoutItems.ToString() == "1") {
                         SaveFile.SetInt(LadderStorageWithoutItems, 1);
