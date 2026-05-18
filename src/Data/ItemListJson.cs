@@ -619,8 +619,29 @@
                     ""Position"": ""(-48.0, 0.0, -172.5)"",
                     ""Requirements"": [
                         {
-                            ""Forest Grave Path Main"": 1
-                        }
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Sword"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Techbow"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Shotgun"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Hyperdash"": 1,
+                        },
                     ]
                 }
             },
@@ -637,8 +658,29 @@
                     ""Position"": ""(-25.0, 8.0, -172.0)"",
                     ""Requirements"": [
                         {
-                            ""Forest Grave Path Main"": 1
-                        }
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Sword"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Techbow"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Shotgun"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Hyperdash"": 1,
+                        },
                     ]
                 }
             },
@@ -3485,7 +3527,28 @@
                     ""Position"": ""(-193.2, 8.0, 83.9)"",
                     ""Requirements"": [
                         {
-                            ""West Garden"": 1
+                            ""West Garden"": 1,
+                            ""Enemy Soul (Chompignom)"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Enemy Soul (Rudelings)"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Sword"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Shotgun"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Hyperdash"": 1
                         }
                     ]
                 }
@@ -3822,8 +3885,29 @@
                     ""Position"": ""(17.2, 0.0, 72.5)"",
                     ""Requirements"": [
                         {
-                            ""Beneath the Vault Back"": 1
-                        }
+                            ""Beneath the Vault Back"": 1,
+                            ""Enemy Soul (Custodians)"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Stick"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Sword"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Wand"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Hyperdash"": 1
+                        },
                     ]
                 }
             },

@@ -4111,6 +4111,16 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Ruined Atoll - [Northwest] Frog Near Fuse 1",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Frogs)": 1
+            },
+            {
+                "Sword": 1,
+                "Hyperdash": 1,
+                "Enemy Soul (Frogs)": 1
+            }
         ]
     },
     "32000071 [Atoll Redux]": {
@@ -4125,6 +4135,16 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Ruined Atoll - [Northwest] Frog Near Fuse 2",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Frogs)": 1
+            },
+            {
+                "Sword": 1,
+                "Hyperdash": 1,
+                "Enemy Soul (Frogs)": 1
+            }
         ]
     },
     "32000011 [Atoll Redux]": {
@@ -4181,6 +4201,16 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Ruined Atoll - [Northwest] Small Frog Above Ruins",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Frogs)": 1
+            },
+            {
+                "Sword": 1,
+                "Hyperdash": 1,
+                "Enemy Soul (Frogs)": 1
+            }
         ]
     },
     "32000010 [Atoll Redux]": {
@@ -7148,6 +7178,15 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Quarry - [Lowlands] Scavenger Sniper On Pillar",
         "ExtraReqs": [
+            {
+                "Techbow": 1,
+                "Enemy Soul (Scavengers)": 1
+            },
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Scavengers)": 1
+            },
         ]
     },
     "60000036 [Quarry Redux]": {

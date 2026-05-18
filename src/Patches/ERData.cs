@@ -3703,6 +3703,24 @@ namespace TunicRandomizer {
                     {
                         "Forest Belltower Main behind bushes",
                         new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
+                            },
                         }
                     },
                 }
@@ -5128,6 +5146,27 @@ namespace TunicRandomizer {
                     {
                         "Beneath the Vault Entry Spot",
                         new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Spiders)"
+                            },
+                            new List<string> {
+                                "Stick",
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Wand",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
                         }
                     },
                     {
