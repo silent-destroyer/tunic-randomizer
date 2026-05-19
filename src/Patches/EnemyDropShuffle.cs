@@ -650,7 +650,6 @@ namespace TunicRandomizer {
                 "Wizard Candleabra", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Stundagger", 1},
                         {"Enemy Soul (Custodians)", 1}
                     },
                     new Dictionary<string, int>() {
@@ -663,7 +662,6 @@ namespace TunicRandomizer {
                 "Wizard Sword", new List<Dictionary<string, int>>() {
                     new Dictionary<string, int>() {
                         {"Sword", 1},
-                        {"Stundagger", 1},
                         {"Enemy Soul (Custodians)", 1}
                     },
                     new Dictionary<string, int>() {
@@ -767,6 +765,14 @@ namespace TunicRandomizer {
                             new Dictionary<string, int>() {
                                 {"Techbow", 1},
                                 {"Enemy Soul (Fairies)", 1},
+                            },
+                        };
+                    }
+                    if (enemy.Value.EnemyType == "Bumblebones" && enemy.Value.EnemyScene == "Cathedral Arena") {
+                        reqsToUse = new List<Dictionary<string, int>>() {
+                            new Dictionary<string, int>() {
+                                {"Sword", 1},
+                                {"Enemy Soul (Fleemers)", 1},
                             },
                         };
                     }
