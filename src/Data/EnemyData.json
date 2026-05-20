@@ -445,6 +445,15 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Overworld - [Northwest] Envoy On Bridge To Quarry",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Envoy)": 1
+            },
+            {
+                "Shotgun": 1,
+                "Enemy Soul (Envoy)": 1
+            }
         ]
     },
     "25000059 [Overworld Redux]": {
