@@ -711,6 +711,15 @@ namespace TunicRandomizer {
         public static Monster librarianRudeling;
         public static Monster librarianPhrend;
 
+        // For indicating unchecked enemies with the z-target
+        public static Color ZTargetPreview = new Color(1, 1, 1, 0.128f);
+        public static Color ZTargetRing = new Color(1, 1, 1, 0.222f);
+        public static Color ZTargetCube = new Color(0.251f, 0.251f, 0.251f, 1);
+        public static Color ZTargetPink = new Color(0.8577f, 0.5044f, 1.7513f, 0.8f);
+        public static Color ZTargetBlue = new Color(0, 0, 5, 1);
+        public static Color ZTargetRed = new Color(2, 0, 0, 1);
+        public static Color ZTargetGreen = new Color(0, 0.8f, 0, 1);
+
         public static string GetEnemyCheckId(GameObject Enemy) {
             if (Enemy.GetComponent<RuntimeStableID>() != null) {
                 return $"{Enemy.GetComponent<RuntimeStableID>().ID} [{Enemy.gameObject.scene.name}]";
@@ -982,6 +991,31 @@ namespace TunicRandomizer {
                 __instance.addMonsters = adds.ToArray();
             }
             return true;
+        }
+
+        public static void Reticule_LateUpdate_PostfixPatch(Reticule __instance) {
+            if (!SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) { return; }
+            if (!PlayerCharacter.Instanced || PlayerCharacter.instance == null) { return; }
+
+            if (__instance.preview && PlayerCharacter.instance.previewZTarget != null) {
+                if (PlayerCharacter.instance.previewZTarget.GetComponent<EnemyCheck>() != null) {
+                    __instance.renderers[0].material.color = Color.Lerp(ZTargetPreview, ZTargetPink, Mathf.PingPong(Time.time, 1.25f));
+                } else {
+                    __instance.renderers[0].material.color = ZTargetPreview;
+                }
+            } else if (PlayerCharacter.instance.zTarget != null) {
+                if (PlayerCharacter.instance.zTarget.GetComponent<EnemyCheck>() != null) {
+                    __instance.renderers[0].material.color = ZTargetRed;
+                    __instance.renderers[1].material.color = ZTargetBlue;
+                    __instance.renderers[2].material.color = ZTargetGreen;
+                    __instance.renderers[3].material.color = PaletteEditor.DefaultColors[2];
+                } else {
+                    __instance.renderers[0].material.color = ZTargetCube;
+                    __instance.renderers[1].material.color = ZTargetCube;
+                    __instance.renderers[2].material.color = ZTargetCube;
+                    __instance.renderers[3].material.color = ZTargetRing;
+                }
+            }
         }
     }
 }

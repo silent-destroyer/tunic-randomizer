@@ -62,7 +62,7 @@ namespace TunicRandomizer {
             RegisterTypeAndCreateObject(typeof(InventoryCounter), "inventory counter");
             RegisterTypeAndCreateObject(typeof(PlayerPositionDisplay), "player position display");
             RegisterTypeAndCreateObject(typeof(ArachnophobiaMode), "arachnophobia mode helper");
-            RegisterTypeAndCreateObject(typeof(RegionSelector), "region selector");
+            //RegisterTypeAndCreateObject(typeof(RegionSelector), "region selector");
             //RegisterTypeAndCreateObject(typeof(EnemyManager), "enemy rando manager");
 
             if (!Directory.Exists(Application.persistentDataPath + "/Randomizer/")) {
@@ -121,6 +121,8 @@ namespace TunicRandomizer {
             Harmony.Patch(AccessTools.Method(typeof(Monster), "IDamageable_ReceiveDamage"), new HarmonyMethod(AccessTools.Method(typeof(EnemyRandomizer), "Monster_IDamageable_ReceiveDamage_PrefixPatch")));
             
             Harmony.Patch(AccessTools.Method(typeof(PlayerCharacter), "OnTouchKillbox"), new HarmonyMethod(AccessTools.Method(typeof(PlayerCharacterPatches), "PlayerCharacter_OnTouchKillbox_PrefixPatch")));
+
+            Harmony.Patch(AccessTools.Method(typeof(Reticule), "LateUpdate"), null, new HarmonyMethod(AccessTools.Method(typeof(EnemyDropShuffle), "Reticule_LateUpdate_PostfixPatch")));
 
             // Scene Loader
             Harmony.Patch(AccessTools.Method(typeof(SceneLoader), "OnSceneLoaded"), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PrefixPatch")), new HarmonyMethod(AccessTools.Method(typeof(SceneLoaderPatches), "SceneLoader_OnSceneLoaded_PostfixPatch")));
