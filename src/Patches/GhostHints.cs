@@ -840,8 +840,8 @@ namespace TunicRandomizer {
 
                 LanguageLine TorchFoxScript = ScriptableObject.CreateInstance<LanguageLine>();
                 TorchFoxScript.text = $"bE kArfuhl, tInE fawks. %i^z Ruhnt #uh wA #A sEm." +
-                $"---if yoo nEd hehlp, trI si^i^ #uh \"SEEKING-SPELL\"\nin rivurs. #uh fArEz wil \"FIND ENTRANCES\" #aht yoo\nhahvuhnt bin too yeht: [arrow_right] [arrow_down] [arrow_right] [arrow_up] [arrow_left] [arrow_up]" +
-                $"---awlsO, I sE yoo hahv A \"TORCH\" [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"";
+                $"---I sE yoo hahv A \"TORCH\" [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"" +
+                $"---nEd hehlp? kawl #uh fArEz too \"SEEK ENTRANCES\"\r\nwi% #uh \"ENTRANCE-SPELL:\"[arrow_right] [arrow_down] [arrow_right] [arrow_up] [arrow_left] [arrow_up]";
                 TorchFox.GetComponent<NPC>().script = TorchFoxScript;
 
                 TorchFox.name = "torch hint ghost";

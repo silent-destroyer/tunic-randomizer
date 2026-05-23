@@ -54,10 +54,6 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (__instance.name == "torch hint ghost") {
-                    ItemPresentation.PresentItem(Inventory.GetItemByName("Torch"));
-                }
-
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
                     GhostHints.CheckForServerHint(__instance.name);
                 }
