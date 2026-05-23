@@ -7,9 +7,9 @@ namespace TunicRandomizer {
     public class ItemPresentationPatches {
 
         public static bool DathStonePresentationAlreadyCreated = false;
-
+        
         public static bool ItemPresentation_presentItem_PrefixPatch(ItemPresentation __instance, Item item) {
-            if (TunicRandomizer.Settings.SkipItemAnimations && item.name != "Cape") {
+            if (TunicRandomizer.Settings.SkipItemAnimations && item.name != "Cape" && item.name != "Supply Coin - Darts") {
                 return false;
             }
             return true;
@@ -528,6 +528,20 @@ namespace TunicRandomizer {
                 RegisterNewItemPresentation(DartPresentation.GetComponent<ItemPresentationGraphic>());
 
                 ModelSwaps.Items["Dart"] = DartPresentation;
+
+                GameObject CombinedPresentation = GameObject.Instantiate(DicePresentation);
+                CombinedPresentation.transform.parent = DicePresentation.transform.parent;
+                CombinedPresentation.transform.localPosition = Vector3.zero;
+                CombinedPresentation.transform.GetChild(0).gameObject.SetActive(false);
+                GameObject Dart2 = GameObject.Instantiate(Dart);
+                Dart2.transform.parent = CombinedPresentation.transform;
+                Dart2.transform.localPosition = Vector3.zero;
+                Dart2.transform.localScale = Vector3.one;
+                Dart2.layer = 5;
+                Dart2.SetActive(true);
+                CombinedPresentation.GetComponent<ItemPresentationGraphic>().items = new Item[] { Inventory.GetItemByName("Supply Coin - Darts") };
+                CombinedPresentation.SetActive(false);
+                RegisterNewItemPresentation(CombinedPresentation.GetComponent<ItemPresentationGraphic>());
 
             } catch (Exception e) {
                 TunicLogger.LogError("Fox prince presentation error: " + e.Message);
