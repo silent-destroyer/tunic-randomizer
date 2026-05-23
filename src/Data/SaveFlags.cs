@@ -69,6 +69,7 @@
         public const string RescuedLostFox = "randomizer sent lost fox home";
         public const string CryptSecret = "randomizer crypt secret filigree door opened";
         public const string QuarrySecret = "randomizer quarry secret portal spawned";
+        public const string FoxPrinceFreeItems = "randomizer granted free fox prince items";
 
         // Archipelago
         public const string ArchipelagoFlag = "archipelago";

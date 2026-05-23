@@ -54,6 +54,14 @@ namespace TunicRandomizer {
                     }
                 }
 
+                if (__instance.name == "torch hint ghost" && GetBool(FoxPrinceEnabled) && !GetBool(FoxPrinceFreeItems)) {
+                    ItemPresentation.PresentItem(Inventory.GetItemByName("Supply Coin - Darts"));
+                    Inventory.GetItemByName("Soul Dice").Quantity++;
+                    Inventory.GetItemByName("Dart").Quantity++;
+                    __instance.GetComponent<NPC>().script.text += "\nhErz wuhn uhv EJ too geht yoo stRtuhd.";
+                    SaveFile.SetInt(FoxPrinceFreeItems, 1);
+                }
+
                 if (IsArchipelago() && TunicRandomizer.Settings.SendHintsToServer) {
                     GhostHints.CheckForServerHint(__instance.name);
                 }
