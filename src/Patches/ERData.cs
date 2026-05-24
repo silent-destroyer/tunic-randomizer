@@ -3765,7 +3765,7 @@ namespace TunicRandomizer {
                                 "Stick", "Trinket - Glass Cannon",
                             },
                             new List<string> {
-                                "IG1S",
+                                "Wand",
                                 "Enemy Soul (Blobs)"
                             },
                         }
