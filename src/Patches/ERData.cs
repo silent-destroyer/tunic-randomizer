@@ -529,6 +529,11 @@ namespace TunicRandomizer {
                             new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "gate", PDir.NORTH),
                             new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "upper", PDir.EAST),
                             new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "lower", PDir.EAST),
+                        }
+                    },
+                    {
+                        "East Forest above Guard House 2",
+                        new List<TunicPortal> {
                             new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "upper", PDir.EAST),
                         }
                     },
@@ -1711,6 +1716,10 @@ namespace TunicRandomizer {
             },
             {
                 "East Forest",
+                new RegionInfo("East Forest Redux", false)
+            },
+            {
+                "East Forest above Guard House 2",
                 new RegionInfo("East Forest Redux", false)
             },
             {
@@ -3763,6 +3772,35 @@ namespace TunicRandomizer {
                 "East Forest",
                 new Dictionary<string, List<List<string>>> {
                     {
+                        "East Forest above Guard House 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Hedgehogs)"
+                            },
+                            new List<string> {
+                                "Enemy Soul (Blobs)"
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            }
+                        }
+                    },
+                    {
                         "East Forest Dance Fox Spot",
                         new List<List<string>> {
                             new List<string> {
@@ -3801,6 +3839,34 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                }
+            },
+            {
+                "East Forest above Guard House 2",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
+                            },
+                        }
+                    }
                 }
             },
             {
