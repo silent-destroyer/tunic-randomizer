@@ -505,6 +505,12 @@ namespace TunicRandomizer {
             return "FindPairedPortalRegionFromSDT failed to find a match";
         }
 
+        public static bool CanGetPastBushes() {
+            return Inventory.GetItemByName("Hyperdash Toggle").Quantity > 0 || Inventory.GetItemByName("Sword").Quantity > 0
+                || Inventory.GetItemByName("Techbow").Quantity > 0 || Inventory.GetItemByName("Shotgun").Quantity > 0
+                || (Inventory.GetItemByName("Stick").Quantity > 0 && Inventory.GetItemByName("Trinket - Glass Cannon").Quantity > 0);
+        }
+
         public static float calcGuiScale() {
             float guiScale = 1f;
             int width = Camera.main.pixelWidth;

@@ -609,6 +609,17 @@ namespace TunicRandomizer {
                 SetupQuarrySecret();
             } else if (SceneName == "Quarry") {
                 SetupOldQuarryStuff();
+            } else if (SceneName == "East Forest Redux") {
+                if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (Rudelings)").Quantity == 0 && !TunicUtils.CanGetPastBushes()) { 
+                    GameObject bush1 = GameObject.Find("_BUSH AND GRASS/bush (16)");
+                    if (bush1 != null) {
+                        bush1.SetActive(false);
+                    }
+                    GameObject bush2 = GameObject.Find("_BUSH AND GRASS/bush (17)");
+                    if (bush2 != null) {
+                        bush2.SetActive(false);
+                    }
+                }
             }
 
             EnemyRandomizer.CheckBossState();
