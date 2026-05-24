@@ -1004,6 +1004,13 @@ namespace TunicRandomizer {
             return true;
         }
 
+        public static bool Spidertank___deployAdds_PrefixPatch(Spidertank __instance) {
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (Fairies)").Quantity == 0) {
+                return false;
+            }
+            return true;
+        }
+
         public static void Reticule_LateUpdate_PostfixPatch(Reticule __instance) {
             if (!SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) { return; }
             if (!PlayerCharacter.Instanced || PlayerCharacter.instance == null) { return; }
