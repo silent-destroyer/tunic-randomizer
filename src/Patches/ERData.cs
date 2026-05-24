@@ -529,6 +529,11 @@ namespace TunicRandomizer {
                             new TunicPortal("Forest Guard House 1 Gate Entrance", "East Forest Redux Laddercave", "gate", PDir.NORTH),
                             new TunicPortal("Forest Guard House 2 Upper Entrance", "East Forest Redux Interior", "upper", PDir.EAST),
                             new TunicPortal("Forest Grave Path Lower Entrance", "Sword Access", "lower", PDir.EAST),
+                        }
+                    },
+                    {
+                        "East Forest above Guard House 2",
+                        new List<TunicPortal> {
                             new TunicPortal("Forest Grave Path Upper Entrance", "Sword Access", "upper", PDir.EAST),
                         }
                     },
@@ -686,7 +691,6 @@ namespace TunicRandomizer {
                         "West Garden",
                         new List<TunicPortal> {
                             new TunicPortal("West Garden Exit near Hero's Grave", "Overworld Redux", "lower", PDir.EAST),
-                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house", "", PDir.EAST),
                             new TunicPortal("West Garden Shop", "Shop", "", PDir.EAST),
                         }
                     },
@@ -712,6 +716,12 @@ namespace TunicRandomizer {
                         "West Garden Portal",
                         new List<TunicPortal> {
                             new TunicPortal("West Garden to Far Shore", "Transit", "teleporter_archipelagos_teleporter", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "West Garden at Dagger House",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house", "", PDir.EAST),
                         }
                     },
                 }
@@ -1714,6 +1724,10 @@ namespace TunicRandomizer {
                 new RegionInfo("East Forest Redux", false)
             },
             {
+                "East Forest above Guard House 2",
+                new RegionInfo("East Forest Redux", false)
+            },
+            {
                 "East Forest Dance Fox Spot",
                 new RegionInfo("East Forest Redux", false)
             },
@@ -1807,6 +1821,10 @@ namespace TunicRandomizer {
             },
             {
                 "West Garden",
+                new RegionInfo("Archipelagos Redux", false)
+            },
+            {
+                "West Garden at Dagger House",
                 new RegionInfo("Archipelagos Redux", false)
             },
             {
@@ -3747,7 +3765,7 @@ namespace TunicRandomizer {
                                 "Stick", "Trinket - Glass Cannon",
                             },
                             new List<string> {
-                                "IG1S",
+                                "Wand",
                                 "Enemy Soul (Blobs)"
                             },
                         }
@@ -3758,6 +3776,45 @@ namespace TunicRandomizer {
             {
                 "East Forest",
                 new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest above Guard House 2",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Hedgehogs)"
+                            },
+                            new List<string> {
+                                "Enemy Soul (Blobs)"
+                            },
+                            // you can grapple a rudeling down to help you
+                            new List<string> {
+                                "Wand", "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
+                            },
+                            new List<string> {
+                                "LS1", PAIRING_ONLY
+                            },
+                            new List<string> {
+                                "LS2", "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "LS2", "Enemy Soul (Envoy)"
+                            },
+                        }
+                    },
                     {
                         "East Forest Dance Fox Spot",
                         new List<List<string>> {
@@ -3797,6 +3854,34 @@ namespace TunicRandomizer {
                             },
                         }
                     },
+                }
+            },
+            {
+                "East Forest above Guard House 2",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "East Forest",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
+                            },
+                        }
+                    }
                 }
             },
             {
@@ -4254,25 +4339,39 @@ namespace TunicRandomizer {
                     {
                         "West Garden by Portal",
                         new List<List<string>> {
+                            // can't use rudelings for this because their tether range is too short
                             new List<string> {
                                 "IG3S",
                                 "Enemy Soul (Chompignom)"
-                            }
+                            },
                         }
                     },
                     {
-                        "West Garden Portal Item",
+                        "West Garden at Dagger House",
                         new List<List<string>> {
                             new List<string> {
-                                "IG2L",
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
                                 "Enemy Soul (Chompignom)"
                             },
                             new List<string> {
-                                "IG2L",
-                                "Enemy Soul (Rudelings)"
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
                             },
                         }
-                    },
+                    }
                 }
             },
             {
@@ -4323,8 +4422,9 @@ namespace TunicRandomizer {
                         }
                     },
                     {
-                        "West Garden",
+                        "West Garden at Dagger House",
                         new List<List<string>> {
+                            // the rudeling isn't close enough to ice grapple
                             new List<string> {
                                 "IG1L",
                                 "Enemy Soul (Chompignom)"
@@ -4373,6 +4473,50 @@ namespace TunicRandomizer {
                     {
                         "West Garden",
                         new List<List<string>> {
+                        }
+                    },
+                }
+            },
+            {
+                "West Garden at Dagger House",
+                new Dictionary<string, List<List<string>>> {
+                    {
+                        "West Garden",
+                        new List<List<string>> {
+                            new List<string> {
+                                "Enemy Soul (Chompignom)"
+                            },
+                            new List<string> {
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "Sword",
+                            },
+                            new List<string> {
+                                "Hyperdash",
+                            },
+                            new List<string> {
+                                "Techbow",
+                            },
+                            new List<string> {
+                                "Shotgun",
+                            },
+                            new List<string> {
+                                "Stick", "Trinket - Glass Cannon",
+                            },
+                        }
+                    },
+                    {
+                        "West Garden Portal Item",
+                        new List<List<string>> {
+                            new List<string> {
+                                "IG2L",
+                                "Enemy Soul (Chompignom)"
+                            },
+                            new List<string> {
+                                "IG2L",
+                                "Enemy Soul (Rudelings)"
+                            },
                         }
                     },
                 }
