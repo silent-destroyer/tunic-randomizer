@@ -896,9 +896,22 @@ namespace TunicRandomizer {
                         soulManager.GetComponent<EnemySoulManager>().registerMonster(voidlingTease, "Enemy Soul (Voidling)");
                     }
                 }
+                if (scene == "ziggurat2020_1") {
+                    GameObject probeSwarms = GameObject.Find("_Probe Swarms");
+                    if (probeSwarms != null) {
+                        soulManager.GetComponent<EnemySoulManager>().registerMonster(probeSwarms, "Enemy Soul (Fairies)");
+
+                    }
+                }
                 if (scene == "ziggurat2020_2") {
                     foreach (SkinnedMeshRenderer v in GameObject.FindObjectsOfType<SkinnedMeshRenderer>().Where(smr => TunicUtils.IsInActiveScene(smr.gameObject) && smr.name == "voidtouched" && smr.transform.parent != null && smr.transform.parent.name == "voidtouched in tube")) {
                         soulManager.GetComponent<EnemySoulManager>().registerMonster(v.transform.parent.gameObject, "Enemy Soul (Voidtouched)");
+                    }
+                }
+                if (scene == "Cathedral Redux") {
+                    GameObject voidtouched = GameObject.Find("_ROOM: Sacrifice Room/voidtouched group 1 (present)/Voidtouched");
+                    if (voidtouched != null) {
+                        soulManager.GetComponent<EnemySoulManager>().registerMonster(voidtouched, "Enemy Soul (Voidtouched)");
                     }
                 }
             }
