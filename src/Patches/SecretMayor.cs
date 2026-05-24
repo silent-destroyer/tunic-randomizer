@@ -233,7 +233,7 @@ namespace TunicRandomizer {
                     voidtouched3.GetComponent<SkinnedMeshRenderer>().materials = voidMats;
                     voidtouched3.transform.localScale = Vector3.one * 1.5f;
 
-                    foreach(SkinnedMeshRenderer v in GameObject.FindObjectsOfType<SkinnedMeshRenderer>().Where(smr => smr.name == "voidtouched" && smr.transform.parent != null && smr.transform.parent.name == "voidtouched in tube")) {
+                    foreach(SkinnedMeshRenderer v in GameObject.FindObjectsOfType<SkinnedMeshRenderer>().Where(smr => TunicUtils.IsInActiveScene(smr.gameObject) && smr.name == "voidtouched" && smr.transform.parent != null && smr.transform.parent.name == "voidtouched in tube")) {
                         v.GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
                         v.GetComponent<SkinnedMeshRenderer>().materials = voidMats;
                         v.transform.localScale = Vector3.one * 1.5f;

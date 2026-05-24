@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static TunicRandomizer.EnemyDropShuffle;
 
 namespace TunicRandomizer {
     public class EnemySoulManager : MonoBehaviour {
@@ -21,13 +22,19 @@ namespace TunicRandomizer {
         }
 
         public void registerMonster(GameObject monster, EnemyDropShuffle.EnemyInfo enemyInfo) {
-            if (!monsterSouls.ContainsKey(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType])) {
-                if (Inventory.GetItemByName(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]).Quantity > 0) {
+            if (EnemyDropShuffle.EnemyTypeToSoul.ContainsKey(enemyInfo.EnemyType)) {
+                registerMonster(monster, EnemyTypeToSoul[enemyInfo.EnemyType]);
+            }
+        }
+
+        public void registerMonster(GameObject monster, string soulItem) {
+            if (!monsterSouls.ContainsKey(soulItem)) {
+                if (Inventory.GetItemByName(soulItem).Quantity > 0) {
                     return;
                 }
-                monsterSouls.Add(EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType], new List<GameObject>());
+                monsterSouls.Add(soulItem, new List<GameObject>());
             }
-            monsterSouls[EnemyDropShuffle.EnemyTypeToSoul[enemyInfo.EnemyType]].Add(monster);
+            monsterSouls[soulItem].Add(monster);
         }
 
         public void onItemGet(string ItemName) {

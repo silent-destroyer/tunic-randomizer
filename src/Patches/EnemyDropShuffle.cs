@@ -890,6 +890,17 @@ namespace TunicRandomizer {
                         GameObject.Find("_Fog/quarry_fogplane_round").transform.localPosition = new Vector3(-2f, -2f, 31f);
                     }
                 }
+                if (scene == "Atoll Redux") {
+                    GameObject voidlingTease = GameObject.Find("voidling tease");
+                    if (voidlingTease != null) {
+                        soulManager.GetComponent<EnemySoulManager>().registerMonster(voidlingTease, "Enemy Soul (Voidling)");
+                    }
+                }
+                if (scene == "ziggurat2020_2") {
+                    foreach (SkinnedMeshRenderer v in GameObject.FindObjectsOfType<SkinnedMeshRenderer>().Where(smr => TunicUtils.IsInActiveScene(smr.gameObject) && smr.name == "voidtouched" && smr.transform.parent != null && smr.transform.parent.name == "voidtouched in tube")) {
+                        soulManager.GetComponent<EnemySoulManager>().registerMonster(v.transform.parent.gameObject, "Enemy Soul (Voidtouched)");
+                    }
+                }
             }
         }
 
