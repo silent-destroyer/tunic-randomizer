@@ -4258,14 +4258,11 @@ namespace TunicRandomizer {
                     {
                         "West Garden by Portal",
                         new List<List<string>> {
+                            // can't use rudelings for this because their tether range is too short
                             new List<string> {
                                 "IG3S",
                                 "Enemy Soul (Chompignom)"
                             },
-                            new List<string> {
-                                "IG3S",
-                                "Enemy Soul (Rudelings)"
-                            }
                         }
                     },
                     {
