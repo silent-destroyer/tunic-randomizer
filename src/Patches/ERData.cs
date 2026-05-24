@@ -691,7 +691,6 @@ namespace TunicRandomizer {
                         "West Garden",
                         new List<TunicPortal> {
                             new TunicPortal("West Garden Exit near Hero's Grave", "Overworld Redux", "lower", PDir.EAST),
-                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house", "", PDir.EAST),
                             new TunicPortal("West Garden Shop", "Shop", "", PDir.EAST),
                         }
                     },
@@ -717,6 +716,12 @@ namespace TunicRandomizer {
                         "West Garden Portal",
                         new List<TunicPortal> {
                             new TunicPortal("West Garden to Far Shore", "Transit", "teleporter_archipelagos_teleporter", PDir.FLOOR),
+                        }
+                    },
+                    {
+                        "West Garden at Dagger House",
+                        new List<TunicPortal> {
+                            new TunicPortal("West Garden to Magic Dagger House", "archipelagos_house", "", PDir.EAST),
                         }
                     },
                 }
