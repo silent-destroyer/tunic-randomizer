@@ -3802,7 +3802,13 @@ namespace TunicRandomizer {
                             },
                             new List<string> {
                                 "LS1", PAIRING_ONLY
-                            }
+                            },
+                            new List<string> {
+                                "LS2", "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
+                                "LS2", "Enemy Soul (Envoy)"
+                            },
                         }
                     },
                     {

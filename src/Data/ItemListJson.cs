@@ -3453,7 +3453,7 @@
                     ""Position"": ""(-197.8, 1.0, 20.0)"",
                     ""Requirements"": [
                         {
-                            ""West Garden"": 1
+                            ""West Garden at Dagger House"": 1
                         }
                     ]
                 }
