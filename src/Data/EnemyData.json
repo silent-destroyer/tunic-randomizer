@@ -4414,7 +4414,7 @@
         "EnemyDropValue": 0,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "Ruined Atoll - [Southwest] Baby Slorm Surrouned By Crabbits",
+        "EnemyDescription": "Ruined Atoll - [Southwest] Baby Slorm Surrounded By Crabbits",
         "ExtraReqs": [
         ]
     },
@@ -6163,7 +6163,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Upper Floor Custodian 2",
+        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Upper Floor Custodian 1",
         "ExtraReqs": [
         ]
     },
@@ -6177,7 +6177,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Upper Floor Custodian 3",
+        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Upper Floor Custodian 2",
         "ExtraReqs": [
         ]
     },
@@ -6303,7 +6303,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Custodian Hiding In Corner 2",
+        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Custodian Hiding In Corner 1",
         "ExtraReqs": [
         ]
     },
@@ -6331,7 +6331,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": true,
         "IsNightEnemy": false,
-        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Custodian Hiding In Corner 1",
+        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Custodian Hiding In Corner 2",
         "ExtraReqs": [
         ]
     },
@@ -6359,7 +6359,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": true,
         "IsNightEnemy": false,
-        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Upper Floor Custodian 1",
+        "EnemyDescription": "Eastern Vault Fortress - [West Wing] Upper Floor Custodian 3",
         "ExtraReqs": [
         ]
     },
