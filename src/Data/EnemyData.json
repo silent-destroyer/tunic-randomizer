@@ -6485,7 +6485,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "Fortress East Shortcut - [Upper] Candelabra Custodian 2",
+        "EnemyDescription": "Fortress East Shortcut - [Upper] Candelabra Custodian 1",
         "ExtraReqs": [
         ]
     },
@@ -6499,7 +6499,7 @@
         "EnemyDropValue": 8,
         "IsNGPlusEnemy": true,
         "IsNightEnemy": false,
-        "EnemyDescription": "Fortress East Shortcut - [Upper] Candelabra Custodian 1",
+        "EnemyDescription": "Fortress East Shortcut - [Upper] Candelabra Custodian 2",
         "ExtraReqs": [
         ]
     },
