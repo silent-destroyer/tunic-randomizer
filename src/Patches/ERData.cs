@@ -4487,6 +4487,9 @@ namespace TunicRandomizer {
                                 "Enemy Soul (Chompignom)"
                             },
                             new List<string> {
+                                "Enemy Soul (Rudelings)"
+                            },
+                            new List<string> {
                                 "Sword",
                             },
                             new List<string> {
