@@ -3785,6 +3785,10 @@ namespace TunicRandomizer {
                             new List<string> {
                                 "Enemy Soul (Blobs)"
                             },
+                            // you can grapple a rudeling down to help you
+                            new List<string> {
+                                "Wand", "Enemy Soul (Rudelings)"
+                            },
                             new List<string> {
                                 "Sword",
                             },
