@@ -7630,6 +7630,20 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Rooted Ziggurat Upper - Turret Path Autobolt 5",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Autobolt)": 1
+            },
+            {
+                "Sword": 1,
+                "Hyperdash": 1,
+                "Enemy Soul (Autobolt)": 1
+            },
+            {
+                "Shotgun": 1,
+                "Enemy Soul (Autobolt)": 1
+            }
         ]
     },
     "43000001 [ziggurat2020_1]": {
