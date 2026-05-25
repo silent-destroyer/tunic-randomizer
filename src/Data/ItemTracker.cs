@@ -135,9 +135,13 @@ namespace TunicRandomizer {
             }
             
             if (Item.Type == ItemTypes.PAGE) {
-                if (!IsHexQuestWithPageAbilities()) {
-                    ImportantItems["Pages"]++;
+                int pages = 0;
+                for (int i = 0; i < 28; i++) {
+                    if (GetBool($"randomizer obtained page {i}")) {
+                        pages++;
+                    }
                 }
+                ImportantItems["Pages"] = pages;
 
                 if (Item.Name == "Pages 24-25 (Prayer)") { ImportantItems["Prayer"]++; }
                 if (Item.Name == "Pages 42-43 (Holy Cross)") { ImportantItems["Holy Cross"]++; }
