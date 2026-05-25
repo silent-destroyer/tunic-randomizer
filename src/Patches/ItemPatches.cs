@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -257,7 +258,8 @@ namespace TunicRandomizer {
             return false;
         }
 
-        public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
+        public static ItemResult GiveItem(ItemInfo itemInfo, int queueSize) {
+            string ItemName = itemInfo.ItemDisplayName;
             if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || PotionCombine.instance.isActiveAndEnabled ||
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
                 GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead
@@ -283,6 +285,10 @@ namespace TunicRandomizer {
                 (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) 
                 || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName])
                 || (EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.LocationDisplayName != "Library Hall - Administrator Coffee Table"))) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
+
+            if (TunicRandomizer.Settings.FasterItemQueue && queueSize > 10 && Item.Classification == "filler") {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 

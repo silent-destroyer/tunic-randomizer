@@ -246,6 +246,11 @@ namespace TunicRandomizer {
             set;
         }
 
+        public bool FasterItemQueue {
+            get;
+            set;
+        }
+
         public DeathLinkType DeathLinkEffect {
             get;
             set;
@@ -656,10 +661,10 @@ namespace TunicRandomizer {
             DeathLinkEnabled = false;
             TrapLinkEnabled = false;
             CollectReflectsInWorld = false;
-            SkipItemAnimations = false;
             SendHintsToServer = false;
             ShowSlotSettings = false;
             DeathLinkEffect = DeathLinkType.DEATH;
+            FasterItemQueue = false;
 
             // Hints
             HeroPathHintsEnabled = true;
@@ -682,6 +687,7 @@ namespace TunicRandomizer {
             CheaperShopItemsEnabled = true;
             BonusStatUpgradesEnabled = true;
             DisableChestInterruption = false;
+            SkipItemAnimations = false;
             FasterUpgrades = false;
             ShowRecentItems = true;
 

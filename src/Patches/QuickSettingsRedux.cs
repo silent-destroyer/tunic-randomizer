@@ -570,7 +570,9 @@ namespace TunicRandomizer {
             TunicRandomizer.Settings.DeathLinkEnabled = GUI.Toggle(ShowTooltip(scRect(10f, y, 115f, 30f), "Death Link"), TunicRandomizer.Settings.DeathLinkEnabled, "Death Link");
             TunicRandomizer.Settings.TrapLinkEnabled = GUI.Toggle(ShowTooltip(scRect(127.5f, y, 105.5f, 30f), "Trap Link"), TunicRandomizer.Settings.TrapLinkEnabled, "Trap Link");
             TunicRandomizer.Settings.SendHintsToServer = GUI.Toggle(ShowTooltip(scRect(236f, y, 200f, 30f), "Send Hints to Server"), TunicRandomizer.Settings.SendHintsToServer, "Send Hints to Server");
-            TunicRandomizer.Settings.CollectReflectsInWorld = GUI.Toggle(ShowTooltip(scRect(442f, y, 198f, 30f), "Hide Collected Items"), TunicRandomizer.Settings.CollectReflectsInWorld, "Hide Collected Items");
+            TunicRandomizer.Settings.CollectReflectsInWorld = GUI.Toggle(ShowTooltip(scRect(442f, y, 198f, 30f), "Hide Collected Checks"), TunicRandomizer.Settings.CollectReflectsInWorld, "Hide Collected Items");
+            y += 40f;
+            TunicRandomizer.Settings.FasterItemQueue = GUI.Toggle(ShowTooltip(scRect(10f, y, 206f, 30f), "Faster Item Queue"), TunicRandomizer.Settings.FasterItemQueue, "Faster Item Queue");
             y += 40f;
             return y;
         }

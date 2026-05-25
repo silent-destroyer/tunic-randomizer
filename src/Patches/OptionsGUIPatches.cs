@@ -70,8 +70,10 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Death Link", "Off", "On", TunicRandomizer.Settings.DeathLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDeathLink);
             OptionsGUI.addMultiSelect("Death Link Effect", DeathLinkTypes, (int)TunicRandomizer.Settings.DeathLinkEffect, (OptionsGUIMultiSelect.MultiSelectAction)ChangeDeathLinkType).wrap = true;
             OptionsGUI.addToggle("Trap Link", "Off", "On", TunicRandomizer.Settings.TrapLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrapLink);
-            OptionsGUI.addToggle("Auto-open !collect-ed Checks", "Off", "On", TunicRandomizer.Settings.CollectReflectsInWorld ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUpdateOnCollect);
+            OptionsGUI.addToggle("Hide Collected Checks", "Off", "On", TunicRandomizer.Settings.CollectReflectsInWorld ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUpdateOnCollect);
             OptionsGUI.addToggle("Send Hints to Server", "Off", "On", TunicRandomizer.Settings.SendHintsToServer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSendHintsToServer);
+            OptionsGUI.addToggle("Faster Item Queue", "Off", "On", TunicRandomizer.Settings.FasterItemQueue ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterItemQueue);
+
         }
 
         private static void ChangeDeathLinkType(int index) {
@@ -692,6 +694,11 @@ namespace TunicRandomizer {
 
         public static void ToggleSendHintsToServer(int index) {
             TunicRandomizer.Settings.SendHintsToServer = !TunicRandomizer.Settings.SendHintsToServer;
+            SaveSettings();
+        }
+
+        public static void ToggleFasterItemQueue(int index) {
+            TunicRandomizer.Settings.FasterItemQueue = !TunicRandomizer.Settings.FasterItemQueue;
             SaveSettings();
         }
 

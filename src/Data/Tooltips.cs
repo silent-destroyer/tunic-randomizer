@@ -65,7 +65,8 @@ namespace TunicRandomizer {
             { "Hide Collected Items", "Makes checks that have been collected by another player (such as via !collect or slot co-op) appear as already opened/completed. Inventory and ending screen counts will also reflect this.\nCan be toggled on/off at any point and the game will update/revert accordingly." },
             { "Connect via Player Link", "On the Archipelago room page, right click your Player Name and click Copy Link. Then click this button to import the room info and automatically connect. (May not work if your player name has special characters.)" +
                 "\nIf the room requires a password, you will have to type it manually and then connect." },
-            
+            { "Faster Item Queue", "Speeds up processing of filler and small money items when receiving a large amount of items at once." },
+
             // General
             { "Easier Heir Fight", "Attacks deal additional damage to The Heir based on the percentage of checks found." },
             { "Clear Early Bushes", "Removes a couple of bushes that block access to the East and West sides of the Overworld.\nNote: The logic does not account for these bushes. If this setting is turned off you are otherwise expected to clear them using the free bomb codes or by luring enemies to break them." },
@@ -74,7 +75,7 @@ namespace TunicRandomizer {
             { "Bonus Upgrades", "Makes the Golden Trophy and Hero Relic items give free stat level ups, allowing you to get up to +8 in every stat in a single playthrough." },
             { "Disable Chest Interruption", "Prevents the chest opening animation from being interrupted if you take damage." },
             { "Show Recent Items", "Enables a UI element showing the five most recent items that were sent or received." },
-            { "Skip Item Popups", "Turns off item and page popups." },
+            { "Skip Item Popups", "Turns off all item and page popups." },
             { "Skip Upgrade Animations", "Skips the animation that plays when upgrading stats at a checkpoint." },
             { "Holy Cross DDR", "Spawns DDR-style arrows above your head to help visualize Holy Cross inputs. The arrows will change color to indicate an incorrect sequence." },
             { "Arachnophobia Mode", "Turns the Spider enemies into floating signs that say 'Spider' in Trunic." },
