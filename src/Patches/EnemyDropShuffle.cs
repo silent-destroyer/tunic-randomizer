@@ -444,12 +444,14 @@ namespace TunicRandomizer {
                         {"Sword", 1},
                         {"Wand", 1},
                         {"Techbow", 1},
+                        {"Ladders in Library", 1},
                         {"Enemy Soul (Librarian)", 1}
                     },
                     new Dictionary<string, int>() {
                         {"Sword", 1},
                         {"Wand", 1},
                         {"Shotgun", 1},
+                        {"Ladders in Library", 1},
                         {"Enemy Soul (Librarian)", 1}
                     }
                 }
