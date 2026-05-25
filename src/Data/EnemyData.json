@@ -3712,7 +3712,7 @@
         "EnemyDropValue": 7,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "West Garden - [Southeast] Rudeling Above Cave",
+        "EnemyDescription": "West Garden - [Southeast] Rudeling Above Dagger House",
         "ExtraReqs": [
         ]
     },
@@ -3726,7 +3726,7 @@
         "EnemyDropValue": 6,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "West Garden - [Southeast] Chompignom Above Cave 1",
+        "EnemyDescription": "West Garden - [Southeast] Chompignom Above Dagger House 1",
         "ExtraReqs": [
         ]
     },
@@ -3740,7 +3740,7 @@
         "EnemyDropValue": 6,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": false,
-        "EnemyDescription": "West Garden - [Southeast] Chompignom Above Cave 2",
+        "EnemyDescription": "West Garden - [Southeast] Chompignom Above Dagger House 2",
         "ExtraReqs": [
         ]
     },
@@ -3866,7 +3866,7 @@
         "EnemyDropValue": 6,
         "IsNGPlusEnemy": false,
         "IsNightEnemy": true,
-        "EnemyDescription": "West Garden - [Southeast] Void Chompignom Above Cave",
+        "EnemyDescription": "West Garden - [Southeast] Void Chompignom Above Dagger House",
         "ExtraReqs": [
         ]
     },
