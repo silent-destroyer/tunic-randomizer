@@ -8918,6 +8918,16 @@
         "IsNightEnemy": false,
         "EnemyDescription": "Cathedral - [2F] Back Hallway Hedgehog Trap 3",
         "ExtraReqs": [
+            {
+                "Sword": 1,
+                "Shop": 1,
+                "Enemy Soul (Laser Trap)": 1
+            },
+            {
+                "Sword": 1,
+                "Wand": 1,
+                "Enemy Soul (Laser Trap)": 1
+            }
         ]
     },
     "69000000 [Cathedral Redux]": {
