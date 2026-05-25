@@ -789,7 +789,11 @@ namespace TunicRandomizer {
                     Notifications.Show($"\"Could not import settings string!\"", $"\"Settings are from a different version.\"");
                     return;
                 }
-                QuickSettingsRedux.CustomSeed = split[2];
+                if (split[2] == "speedrun") {
+                    QuickSettingsRedux.CustomSeed = new System.Random().Next().ToString();
+                } else {
+                    QuickSettingsRedux.CustomSeed = split[2];
+                }
 
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(split[3]));
                 string[] decodedSplit = decoded.Split(':');
