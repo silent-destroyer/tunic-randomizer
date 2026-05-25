@@ -127,6 +127,13 @@ namespace TunicRandomizer {
 
         public static bool HeroRelicPickup_onGetIt_PrefixPatch(HeroRelicPickup __instance) {
             string LocationId = $"{__instance.name} [{SceneLoaderPatches.SceneName}]";
+
+            if (SaveFile.GetInt("randomizer picked up " + LocationId) == 1) {
+                __instance.pickupStateVar.BoolValue = true;
+                __instance.destroyOrDisable();
+                return false;
+            }
+
             if (IsArchipelago()) {
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
@@ -140,6 +147,11 @@ namespace TunicRandomizer {
 
         public static bool PagePickup_onGetIt_PrefixPatch(PagePickup __instance) {
             string LocationId = $"{__instance.pageName} [{SceneLoaderPatches.SceneName}]";
+
+            if (SaveFile.GetInt("randomizer picked up " + LocationId) == 1) {
+                return false;
+            }
+
             if (IsArchipelago()) {
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
