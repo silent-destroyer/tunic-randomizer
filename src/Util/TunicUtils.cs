@@ -226,15 +226,28 @@ namespace TunicRandomizer {
             if (randomizedPortals == null) {
                 randomizedPortals = ERData.RandomizedPortals;
             }
+            Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(DeepCopyTraversalReqs(), randomizedPortals);
             // if it worked right, then inventory should be full and alreadyGottenLocs should be all locations with progression items
-            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory, randomizedPortals: randomizedPortals);
-
+            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory, randomizedPortals: randomizedPortals, modifiedTraversalReqs: modifiedTraversalReqs);
+            bool loggedIssue = false;
             foreach (Check check in allInUseChecks) {
                 if (!check.Location.reachable(inventory)) {
                     TunicLogger.LogError($"{check.CheckId} is not reachable!");
+                    loggedIssue = true;
                 }
             }
-            TunicLogger.LogInfo("CheckAllLocsReachable done, if there are issues then they will be shown above");
+            if (loggedIssue) {
+                TunicLogger.LogInfo("CheckAllLocsReachable found issues, outputting the portal pairs");
+                foreach (PortalCombo portalCombo in randomizedPortals) {
+                    TunicLogger.LogInfo($"{portalCombo.Portal1.Name} -> {portalCombo.Portal2.Name}");
+                }
+                TunicLogger.LogInfo("Also outputting what it thinks the collectable inventory is");
+                foreach (string item in inventory.Keys) {
+                    TunicLogger.LogInfo(item);
+                }
+            } else {
+                TunicLogger.LogInfo("CheckAllLocsReachable done!");
+            }
         }
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> DeepCopyTraversalReqs() {
@@ -454,11 +467,16 @@ namespace TunicRandomizer {
             return newPortalCombo;
         }        
 
-        public static string FindPairedPortalSceneFromName(string portalName) {
+        public static string FindPairedPortalSceneFromName(string portalName, List<PortalCombo> randomizedPortals = null) {
             List<PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
+            if (randomizedPortals != null) {
+                portalList = randomizedPortals;
+            } else if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
                 portalList = ERData.VanillaPortals;
             }
             foreach (PortalCombo portalCombo in portalList) {
@@ -485,9 +503,11 @@ namespace TunicRandomizer {
             return "FindPortalRegionFromName failed to find a match";
         }
 
-        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
+        public static string FindPairedPortalRegionFromSDT(string portalSDT, List<PortalCombo> randomizedPortals = null) {
             List<PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
+            if (randomizedPortals != null) {
+                portalList = randomizedPortals;
+            } else if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
                 if (ERData.VanillaPortals.Count == 0) {
@@ -495,6 +515,7 @@ namespace TunicRandomizer {
                 }
                 portalList = ERData.VanillaPortals;
             }
+
             foreach (PortalCombo portalCombo in portalList) {
                 if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
                     return portalCombo.Portal2.OutletRegion();

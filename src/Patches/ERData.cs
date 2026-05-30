@@ -2160,6 +2160,10 @@ namespace TunicRandomizer {
                 new RegionInfo("ziggurat2020_3", false)
             },
             {
+                "Rooted Ziggurat Lower Miniboss Platform",
+                new RegionInfo("ziggurat2020_3", false)
+            },
+            {
                 "Rooted Ziggurat Lower Back",
                 new RegionInfo("ziggurat2020_3", false)
             },
