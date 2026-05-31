@@ -658,7 +658,7 @@ namespace TunicRandomizer {
                             if (!FullInventory.ContainsKey(region)) {
                                 TunicLogger.LogInfo(region);
                             }
-                        }                        
+                        }
                         TunicLogger.LogInfo("---------------------------------------");
                         TunicLogger.LogInfo("remaining portals in portalsList are:");
                         foreach (Portal debugportal in portalsList) {
