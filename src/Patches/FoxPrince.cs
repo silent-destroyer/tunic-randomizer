@@ -144,7 +144,7 @@ namespace TunicRandomizer {
             int maxTrialCount = 1000;
             int trialCount = 0;
             while (portalChoices.Count < 3) {
-                if (trialCount >= maxTrialCount && portalChoices.Count > 0 || excludedPortals != null) {
+                if (trialCount >= maxTrialCount && (portalChoices.Count > 0 || excludedPortals != null)) {
                     // we've done enough trials to say that we probably won't find any more connections, so it's time to give the player less than 3 choices
                     // if we don't have any choices yet, keep trying -- if it's failing, we'd wanna know that, but maybe it's just something really restrictive and weird
                     // if there's excluded portals, that's because they rerolled, so they'll just need to get a set of old portals now
