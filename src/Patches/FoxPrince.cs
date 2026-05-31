@@ -75,7 +75,6 @@ namespace TunicRandomizer {
                 }
             }
             
-            // todo: the cache seems probably unnecessary
             Dictionary<string, string> plando = new Dictionary<string, string>();
             if (CachedPlandoPortals.Count > 0) {
                 plando = CachedPlandoPortals;

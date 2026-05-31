@@ -14,7 +14,10 @@ namespace TunicRandomizer {
         public static bool OldHouseDoorUnstuck = false;
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
-        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
+        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
+            if (modifiedTraversalReqs == null) {
+                modifiedTraversalReqs = ModifiedTraversalReqs;
+            }
             if (TunicLogger.Testing) {
                 TunicLogger.LogTesting("Starting UpdateReachableRegions, current inventory is as follows:");
                 foreach (string itemName in inventory.Keys) {
@@ -23,7 +26,7 @@ namespace TunicRandomizer {
             }
             int inv_count = inventory.Count;
             // for each origin region
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in modifiedTraversalReqs) {
                 string origin = traversal_group.Key;
                 if (!inventory.ContainsKey(origin)) {
                     continue;
@@ -86,7 +89,7 @@ namespace TunicRandomizer {
             return inventory;
         }
 
-        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null, List<PortalCombo> randomizedPortals = null) {
+        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null, List<PortalCombo> randomizedPortals = null, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
             if (alreadyCheckedLocations == null) {
                 alreadyCheckedLocations = new List<Check>();
             }
@@ -103,7 +106,7 @@ namespace TunicRandomizer {
                 while (true) {
                     // since regions always have a count of 1, we can just use .count instead of counting up all the values
                     int start_num = inventory.Count;
-                    inventory = UpdateReachableRegions(inventory);
+                    inventory = UpdateReachableRegions(inventory, modifiedTraversalReqs);
                     foreach (PortalCombo portalCombo in randomizedPortals) {
                         inventory = portalCombo.AddComboRegion(inventory);
                     }

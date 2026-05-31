@@ -126,12 +126,14 @@ namespace TunicRandomizer {
             new LSElevConnect(origin: "LS Elev 7", destination: "Overworld Redux, Mountain_", difficulty: 1),
         };
 
-        public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs, List<PortalCombo> randomizedPortals = null) {
             Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
             List<PortalCombo> portalList;
 
-            if (GetBool(EntranceRando)) {
-                portalList = ERData.RandomizedPortals;
+            if (randomizedPortals != null) {
+                portalList = randomizedPortals;
+            } else if (GetBool(EntranceRando)) {
+                    portalList = ERData.RandomizedPortals;
             } else {
                 if (ERData.VanillaPortals.Count == 0) {
                     ERScripts.SetupVanillaPortals();
@@ -141,9 +143,9 @@ namespace TunicRandomizer {
 
             // add the OW LS connections
             foreach (LSElevConnect connection in OWLSElevConnections) {
-                string destination = TunicUtils.FindPairedPortalRegionFromSDT(connection.Destination);
+                string destination = TunicUtils.FindPairedPortalRegionFromSDT(connection.Destination, randomizedPortals);
                 if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
-                    // this should only happen as a result of fox prince making the randomized portals list not contain every portal
+                    // this should only happen as a result of fox prince making the randomized portals list not containing every portal
                     continue;
                 }
 
@@ -169,9 +171,9 @@ namespace TunicRandomizer {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
 
-                    string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
+                    string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination, randomizedPortals);
                     if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
-                        // this should only happen as a result of fox prince making the randomized portals list not contain every portal
+                        // this should only happen as a result of fox prince making the randomized portals list not containing every portal
                         continue;
                     }
 
