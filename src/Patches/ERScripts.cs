@@ -14,7 +14,7 @@ namespace TunicRandomizer {
         public static bool OldHouseDoorUnstuck = false;
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
-        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
+        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory, List<PortalCombo> randomizedPortals = null, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
             if (modifiedTraversalReqs == null) {
                 modifiedTraversalReqs = ModifiedTraversalReqs;
             }
@@ -25,6 +25,16 @@ namespace TunicRandomizer {
                 }
             }
             int inv_count = inventory.Count;
+
+            // this is basically if it uses trick logic to get somewhere and never goes and back-checks it later after getting laurels
+            if (randomizedPortals != null) {
+                foreach (PortalCombo portalCombo in randomizedPortals) {
+                    inventory = portalCombo.AddComboRegion(inventory);
+                    PortalCombo reverseCombo = new PortalCombo(portalCombo.Portal2, portalCombo.Portal1);
+                    inventory = reverseCombo.AddComboRegion(inventory);
+                }
+            }
+
             // for each origin region
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in modifiedTraversalReqs) {
                 string origin = traversal_group.Key;
@@ -84,7 +94,7 @@ namespace TunicRandomizer {
             }
             // if we gained any regions, rerun this to get any new regions
             if (inv_count != inventory.Count) {
-                UpdateReachableRegions(inventory);
+                UpdateReachableRegions(inventory, randomizedPortals);
             }
             return inventory;
         }
@@ -106,7 +116,7 @@ namespace TunicRandomizer {
                 while (true) {
                     // since regions always have a count of 1, we can just use .count instead of counting up all the values
                     int start_num = inventory.Count;
-                    inventory = UpdateReachableRegions(inventory, modifiedTraversalReqs);
+                    inventory = UpdateReachableRegions(inventory, randomizedPortals, modifiedTraversalReqs);
                     foreach (PortalCombo portalCombo in randomizedPortals) {
                         inventory = portalCombo.AddComboRegion(inventory);
                     }
@@ -663,20 +673,14 @@ namespace TunicRandomizer {
                             }
                         }
                         TunicLogger.LogInfo("---------------------------------------");
-                        TunicLogger.LogInfo("Remaining portals in portalsList are:");
-                        foreach (Portal debugportal in portalsList) {
-                            TunicLogger.LogInfo(debugportal.Name);
+                        TunicLogger.LogInfo("Here are the current portal pairs:");
+                        foreach (PortalCombo portalCombo in randomizedPortals) {
+                            TunicLogger.LogInfo($"{portalCombo.Portal1.Name} -> {portalCombo.Portal2.Name}");
                         }
                         TunicLogger.LogInfo("---------------------------------------");
                         // reroll, hopefully this shouldn't be common at all
                         return RandomizePortals(seed + 1);
                     }
-                }
-
-                if (canFail) {
-                    (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
-                } else {
-                    FullInventory = UpdateReachableRegions(FullInventory);
                 }
 
                 // add the portal combo to the randomized portals list
@@ -697,6 +701,12 @@ namespace TunicRandomizer {
                     && SaveFile.GetInt(LaurelsLocation) == 3
                     && FullInventory.ContainsKey(PAIRING_ONLY)) {
                     FullInventory.Add("Hyperdash", 1);
+                }
+
+                if (canFail) {
+                    (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations, randomizedPortals);
+                } else {
+                    FullInventory = UpdateReachableRegions(FullInventory, randomizedPortals);
                 }
 
                 // this is at the end so that if it needs to retry portal 1 after not finding an appropriate portal 2,
