@@ -1085,6 +1085,11 @@ namespace TunicRandomizer {
                 if (IsArchipelago() && TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
                     Archipelago.instance.integration.SendDeathLink();
                 }
+
+                if (SceneManager.GetActiveScene().name == "Spirit Arena" && GetBool("Placed Hexagons ALL") && !GetBool("Has Been Betrayed")) {
+                    SaveFile.SetInt("Has Been Betrayed", 1);
+                }
+
                 DiedToDeathLink = false;
             }
         }
