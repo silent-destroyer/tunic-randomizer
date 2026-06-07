@@ -408,6 +408,12 @@ namespace TunicRandomizer {
                         string destination = SaveFile.stringStore[key];
                         Portal portal1 = portalsList.First(portal => portal.Name == origin);
                         Portal portal2 = portalsList.First(portal => portal.Name == destination);
+                        // if we end up having to redo RandomizePortals during initial generation, we end up adding this portal twice, which breaks stuff
+                        foreach (PortalCombo portalCombo in FoxPrince.FPRandomizedPortals) {
+                            if (portalCombo.Portal1.Name == portal1.Name && portalCombo.Portal2.Name == portal2.Name) {
+                                continue;
+                            }
+                        }
                         FoxPrince.FPRandomizedPortals.Add(new PortalCombo(portal1, portal2));
                     }
                 }
@@ -554,7 +560,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("This will now reroll the entrances and try again.");
                         TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
                         // reroll, hopefully this shouldn't be common at all
-                        return RandomizePortals(seed + 1);
+                        return RandomizePortals(seed + 1, plando);
                     }
                 } else {
                     failCount = 0;
@@ -588,7 +594,7 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling in first phase in RandomizePortals");
-                    return RandomizePortals(seed + 1);
+                    return RandomizePortals(seed + 1, plando);
                 }
 
                 foreach (Portal portal in portalsList2) {
@@ -679,7 +685,7 @@ namespace TunicRandomizer {
                         }
                         TunicLogger.LogInfo("---------------------------------------");
                         // reroll, hopefully this shouldn't be common at all
-                        return RandomizePortals(seed + 1);
+                        return RandomizePortals(seed + 1, plando);
                     }
                 }
 
@@ -737,7 +743,7 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling during last phase in RandomizePortals");
-                    return RandomizePortals(seed + 1);
+                    return RandomizePortals(seed + 1, plando);
                 }
                 Portal portal1 = portalsList[0];
                 portalsList.RemoveAt(0);
@@ -773,7 +779,7 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
-                    return RandomizePortals(seed + 1);
+                    return RandomizePortals(seed + 1, plando);
                 }
                 if (deplando.Any(item => item.Item1 == portal1.Name && item.Item2 == portal2.Name)) {
                     portalsList.Add(portal1);
