@@ -421,7 +421,7 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
 
-                if (TunicRandomizer.Settings.MysterySeed) {
+                if (TunicRandomizer.Settings.MysterySeed && TunicRandomizer.Settings.GameMode != RandomizerSettings.GameModes.VANILLA) {
                     SaveFile.SetInt(MysterySeedEnabled, 1);
                     GenerateMysterySettings();
                 } else {

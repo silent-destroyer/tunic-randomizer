@@ -788,6 +788,21 @@ namespace TunicRandomizer {
             return count;
         }
         private float LogicSettingsSection(float y) {
+            if (TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.VANILLA) {
+                GUI.Label(scRect(10f, y, 250f, 30f), "Vanilla Mode Enabled!");
+                bool disableVanilla = GUI.Button(scRect(270f, y, 100f, 30f), "Disable");
+                if (disableVanilla) {
+                    TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.RANDOMIZER;
+                    RandomizerSettings.SaveSettings();
+                }
+                GUI.skin.label.fontSize = scFont(20f);
+                y += 40f;
+                GUI.Label(scRect(10f, y, 600f, 30f), "Items will appear in their default locations. Extra logic options are disabled, but all other randomizer features can still be used.");
+                GUI.skin.label.fontSize = scFont(25f);
+                y += 60f;
+                return y;
+            }
+
             GUI.Label(scRect(10f, y, 400f, 30f), logicPage == 2 ? "Advanced Options" : $"Seed & Logic Settings");
             GUI.backgroundColor = Color.white;
             TunicRandomizer.Settings.MysterySeed = GUI.Toggle(ShowTooltip(scRect(442f, y, 206f, 30f), "Mystery Seed"), TunicRandomizer.Settings.MysterySeed, "Mystery Seed");
@@ -1253,6 +1268,15 @@ namespace TunicRandomizer {
             Application.runInBackground = TunicRandomizer.Settings.RunInBackground;
             TunicRandomizer.Settings.DeathplanePatch = GUI.Toggle(scRect(442f, y, 206f, 30f, tooltip: "Deathplane/OoB Patch"), TunicRandomizer.Settings.DeathplanePatch, "Deathplane/OoB Patch");
             y += 40f;
+            bool vanillaToggle = GUI.Toggle(scRect(10f, y, 206f, 30f, tooltip: "Vanilla Mode"), TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.VANILLA, "Vanilla Mode");
+            if (vanillaToggle && TunicRandomizer.Settings.GameMode != RandomizerSettings.GameModes.VANILLA) {
+                TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.VANILLA;
+                RandomizerSettings.SaveSettings();
+            } else if (!vanillaToggle && TunicRandomizer.Settings.GameMode == RandomizerSettings.GameModes.VANILLA) {
+                TunicRandomizer.Settings.GameMode = RandomizerSettings.GameModes.RANDOMIZER;
+                RandomizerSettings.SaveSettings();
+            }
+            y += 40f;
             GUI.Label(scRect(10f, y, 500f, 30f), "Links & Resources");
             y += 40f;
             bool openRandomizerWebsite = GUI.Button(scRect(10f, y, 206f, 30f, tooltip: "Randomizer Website"), "Randomizer Website");
@@ -1506,9 +1530,13 @@ namespace TunicRandomizer {
         }
 
         public static bool TitleScreen___NewGame_PrefixPatch(TitleScreen __instance) {
-            instance.CloseAPSettingsWindow();
-            RecentItemsDisplay.instance.ResetQueue();
-            if (SaveFlags.IsArchipelago()) {
+            if (instance != null) {
+                instance.CloseAPSettingsWindow();
+            }
+            if (RecentItemsDisplay.instance != null) { 
+                RecentItemsDisplay.instance.ResetQueue();
+            }
+            if (SaveFlags.IsArchipelago() && Archipelago.instance != null) {
                 Archipelago.instance.integration.ItemIndex = 0;
                 Archipelago.instance.integration.ClearQueue();
             }
