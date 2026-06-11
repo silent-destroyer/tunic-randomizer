@@ -1848,7 +1848,10 @@ namespace TunicRandomizer {
                 items.Add(IceBombs.GetComponent<ShopItem>());
                 items.Add(Pepper.GetComponent<ShopItem>());
 
+                ShopManager.spacing = 3.75f;
+
                 if (GetBool(FoxPrinceEnabled)) {
+                    ShopManager.spacing = 3.5f;
                     GameObject SoulDice = GameObject.Instantiate(IceBombs);
                     SoulDice.name = "Soul Dice";
                     SoulDice.transform.parent = Pepper.transform.parent;
