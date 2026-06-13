@@ -452,6 +452,7 @@ namespace TunicRandomizer {
                                 SaveFile.SetInt(HexagonQuestPageAbilities, 1);
                             }
                             if (TunicRandomizer.Settings.RandomizeHexQuest) {
+                                SaveFile.SetInt(HexagonQuestRandomizedValues, 1);
                                 switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
                                     default:
                                     case RandomizerSettings.HexQuestValue.RANDOM:
