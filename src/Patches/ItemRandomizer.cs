@@ -26,8 +26,6 @@ namespace TunicRandomizer {
 
         public static Dictionary<string, Check> ProgressionLocations = new Dictionary<string, Check>();
 
-        // plando items, first string is the item name, second is the location id
-        public static List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
         public static bool InitialRandomizationDone = false;
         
         // Items you start with or effectively start with
@@ -86,6 +84,9 @@ namespace TunicRandomizer {
             Locations.RandomizedLocations.Clear();
             Locations.CheckedLocations.Clear();
             InitialRandomizationDone = false;
+
+            // plando items, first string is the item name, second is the location id
+            List<Tuple<string, string>> PlandoItems = new List<Tuple<string, string>>();
 
             PopulatePrecollected();
             List<string> ProgressionNames = new List<string> { "Hyperdash", "Wand", "Techbow", "Stundagger", "Trinket Coin", "Lantern", "Stick", "Sword", "Sword Progression", "Key", "Key (House)", "Mask", "Vault Key (Red)", "Shotgun" };
@@ -209,6 +210,11 @@ namespace TunicRandomizer {
                 }
                 InitialItems.AddRange(bossChecks);
                 InitialItems.Reverse();
+                if (!GetBool(HexagonQuestEnabled)) {
+                    ProgressionNames.Add("Hexagon Red");
+                    ProgressionNames.Add("Hexagon Green");
+                    ProgressionNames.Add("Hexagon Blue");
+                }
             }
 
             foreach (Check Item in InitialItems) {
@@ -313,8 +319,7 @@ namespace TunicRandomizer {
                 if (GetBool(HexagonQuestEnabled)) {
                     hexes = new List<string> { "Hexagon Gold", "Hexagon Gold", "Hexagon Gold" };
                 } else {
-                    hexes = new List<string> { "Hexagon Red", "Hexagon Blue", "Hexagon Green" };
-                    TunicUtils.ShuffleList(hexes, SaveFile.GetInt("seed"));
+                    hexes = new List<string> { "Hexagon Red", "Hexagon Green", "Hexagon Blue" };
                 }
                 addToPlandoItems(hexes[0], "Vault Key (Red)");
                 addToPlandoItems(hexes[1], "Hexagon Green");
