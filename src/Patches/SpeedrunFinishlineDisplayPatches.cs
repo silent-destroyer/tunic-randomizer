@@ -468,7 +468,7 @@ namespace TunicRandomizer {
                     List<string> Times = new List<string>();
                     if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                         int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
-                        int HalfGoal = HexGoal / 2;
+                        int HalfGoal = Math.Max(1, ((int)Math.Round(HexGoal / 2.0)));
                         Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Gold Questagon 1 time"), true)}\t" +
                                 $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {HalfGoal} time"), true)}\n" +
                                 $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {SaveFile.GetInt(HexagonQuestGoal)} time"), true)}\t";
