@@ -33,7 +33,13 @@ namespace TunicRandomizer {
             { "Shuffle Breakable Objects", "Turns over 250 ordinary breakable objects in the game into checks, including pots, boxes, barrels, signposts, bombable walls, and more." },
             { "Shuffle Fuses", "Praying at a fuse now rewards an item instead of turning on the power.\nInstead, the power connections between fuses are shuffled into the item pool and unlocked separately." },
             { "Shuffle Bells", "The East and West bells are shuffled into the item pool and must be found in order to unlock the Sealed Temple.\nRinging the bells will instead now reward a random item." },
+            { "Shuffle Enemy Drops", "Every individual enemy and boss drops an item when defeated (excluding The Heir). Adds around 600 checks." },
+            { "Shuffle Enemy Souls", "Adds a number of \"Enemy Soul\" items to the item pool. Enemies will not appear in the world until their corresponding \"Soul\" item is found.\n(Requires Shuffle Enemy Drops to be enabled.)" },
+            { "Extra Enemy Drops", "Includes New Game+ and nighttime enemy spawns as shuffled enemy drops, adding around 100 additional checks.\n\n(Requires Shuffle Enemy Drops to be enabled.)" },
             { "Fox Prince", "Entrance Randomizer mode with a Blue Prince-inspired twist. Every entrance you visit will prompt you with three choices for where to go next. Find new items in the item pool to take control of the path forward." },
+            { "Vanilla Mode", "Allows you to play the game in a semi-vanilla way with items in their vanilla locations and other randomizer features still enabled." +
+                "\nThis does not let you load save files from the vanilla game, you must uninstall the mod for that." },
+
             // Trick logic
             { "Laurels Zips", "Adds a number of gates, doors, and other tricky spots that can be bypassed using the Hero's Laurels into logic. Notable inclusions are the Monastery gate, Ruined Passage door, Old House gate, Forest Grave Path gate, and going between the back and middle of Swamp." },
             { "Ice Grapples", "Adds logic for grappling to frozen enemies to reach new areas.\nMay include pushing enemies through walls or luring them far distances." },
@@ -61,7 +67,8 @@ namespace TunicRandomizer {
             { "Hide Collected Items", "Makes checks that have been collected by another player (such as via !collect or slot co-op) appear as already opened/completed. Inventory and ending screen counts will also reflect this.\nCan be toggled on/off at any point and the game will update/revert accordingly." },
             { "Connect via Player Link", "On the Archipelago room page, right click your Player Name and click Copy Link. Then click this button to import the room info and automatically connect. (May not work if your player name has special characters.)" +
                 "\nIf the room requires a password, you will have to type it manually and then connect." },
-            
+            { "Faster Item Queue", "Speeds up processing of filler and small money items when receiving a large amount of items at once." },
+
             // General
             { "Easier Heir Fight", "Attacks deal additional damage to The Heir based on the percentage of checks found." },
             { "Clear Early Bushes", "Removes a couple of bushes that block access to the East and West sides of the Overworld.\nNote: The logic does not account for these bushes. If this setting is turned off you are otherwise expected to clear them using the free bomb codes or by luring enemies to break them." },
@@ -70,7 +77,7 @@ namespace TunicRandomizer {
             { "Bonus Upgrades", "Makes the Golden Trophy and Hero Relic items give free stat level ups, allowing you to get up to +8 in every stat in a single playthrough." },
             { "Disable Chest Interruption", "Prevents the chest opening animation from being interrupted if you take damage." },
             { "Show Recent Items", "Enables a UI element showing the five most recent items that were sent or received." },
-            { "Skip Item Popups", "Turns off item and page popups." },
+            { "Skip Item Popups", "Turns off all item and page popups." },
             { "Skip Upgrade Animations", "Skips the animation that plays when upgrading stats at a checkpoint." },
             { "Holy Cross DDR", "Spawns DDR-style arrows above your head to help visualize Holy Cross inputs. The arrows will change color to indicate an incorrect sequence." },
             { "Arachnophobia Mode", "Turns the Spider enemies into floating signs that say 'Spider' in Trunic." },
@@ -96,6 +103,7 @@ namespace TunicRandomizer {
             { "Breakable Checks", "Allows the Seeking Spell to target breakables (pots, boxes, bareels, etc.) if breakables shuffle is enabled." },
             { "Grass Checks", "Allows the Seeking Spell to target grass if grass randomizer is enabled." },
             { "Fuse/Bell Checks", "Allows the Seeking Spell to target fuses or bells if either are enabled." },
+            { "Enemy Checks", "Allows the Seeking Spell to target enemies if enemy drops are shuffled." },
 
             // Music
             { "Music Shuffle", "Shuffles the music that plays throughout the game." },

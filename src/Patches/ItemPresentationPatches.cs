@@ -403,6 +403,73 @@ namespace TunicRandomizer {
             }
         }
 
+        public static void SetupEnemyBasePresentation() {
+            try {
+                GameObject ShadowGyro = GameObject.Find("_GYRO");
+
+                GameObject PresentationBase = Resources.FindObjectsOfTypeAll<ItemPresentationGraphic>().Where(item => item.name == "berry_HP").First().gameObject;
+                GameObject EnemyPresentation = GameObject.Instantiate(PresentationBase);
+                EnemyPresentation.transform.parent = PresentationBase.transform.parent;
+                EnemyPresentation.layer = 5;
+                EnemyPresentation.transform.localPosition = Vector3.zero;
+                EnemyPresentation.transform.localEulerAngles = new Vector3(0, 180, 0);
+                EnemyPresentation.name = "enemy souls";
+
+                if (EnemyPresentation.GetComponent<MeshFilter>() != null && EnemyPresentation.GetComponent<MeshRenderer>() != null) {
+                    GameObject.Destroy(EnemyPresentation.GetComponent<MeshFilter>());
+                    GameObject.Destroy(EnemyPresentation.GetComponent<MeshRenderer>());
+                }
+
+                GameObject Gyro = new GameObject("gyro");
+                Gyro.transform.parent = EnemyPresentation.transform;
+                Gyro.transform.localPosition = Vector3.zero;
+                Gyro.layer = 5;
+                Gyro.transform.localScale = Vector3.one * 0.5f;
+                Gyro.AddComponent<Rotate>().eulerAnglesPerSecond = new Vector3(0, 45, 0);
+                Gyro.GetComponent<Rotate>().unscaled = true;
+
+                GameObject Red = GameObject.Instantiate(ShadowGyro.transform.GetChild(4).GetChild(0).gameObject, parent: Gyro.transform);
+                GameObject Blue = GameObject.Instantiate(ShadowGyro.transform.GetChild(5).GetChild(0).gameObject, parent: Gyro.transform);
+                GameObject Green = GameObject.Instantiate(ShadowGyro.transform.GetChild(6).GetChild(0).gameObject, parent: Gyro.transform);
+                Red.layer = 5;
+                Red.transform.GetChild(0).gameObject.layer = 5;
+                Red.transform.localPosition = Vector3.zero;
+
+                Blue.layer = 5;
+                Blue.transform.GetChild(0).gameObject.layer = 5;
+                Blue.transform.localPosition = Vector3.zero;
+                
+                Green.layer = 5;
+                Green.transform.GetChild(0).gameObject.layer = 5;
+                Green.transform.localPosition = Vector3.zero;
+
+                ModelSwaps.ShadowOubliette = GameObject.Instantiate(Gyro);
+                GameObject.DontDestroyOnLoad(ModelSwaps.ShadowOubliette);
+                ModelSwaps.ShadowOubliette.transform.position = new Vector3(-30000f, -30000f, -30000f);
+                ModelSwaps.ShadowOubliette.SetActive(false);
+
+                GameObject EnemyRoot = new GameObject("enemy model root");
+                EnemyRoot.transform.parent = Gyro.transform;
+                EnemyRoot.transform.localPosition = Vector3.zero;
+                EnemyRoot.layer = 5;
+
+                EnemySoulModels.SetupEnemyPresentations(EnemyRoot.transform);
+
+                EnemyPresentation.transform.localEulerAngles = new Vector3(0, 180, 0);
+                EnemyPresentation.transform.localScale = Vector3.one * 0.2f;
+
+                EnemyPresentation.GetComponent<ItemPresentationGraphic>().items = ItemLookup.Items.Values.Where(enemy => enemy.Type == ItemTypes.ENEMY).Select(item => Inventory.GetItemByName(item.Name)).ToArray();
+
+                EnemyPresentation.SetActive(false);
+
+                RegisterNewItemPresentation(EnemyPresentation.GetComponent<ItemPresentationGraphic>());
+
+                ModelSwaps.Items["Enemy"] = EnemyPresentation;
+            } catch (Exception e) {
+                TunicLogger.LogError("Enemy presentation error: " + e.Message);
+            }
+        }
+        
         public static void SetupFoxPrinceItemPresentations() {
             try {
                 // Soul Dice

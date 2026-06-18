@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -127,6 +128,13 @@ namespace TunicRandomizer {
 
         public static bool HeroRelicPickup_onGetIt_PrefixPatch(HeroRelicPickup __instance) {
             string LocationId = $"{__instance.name} [{SceneLoaderPatches.SceneName}]";
+
+            if (SaveFile.GetInt("randomizer picked up " + LocationId) == 1) {
+                __instance.pickupStateVar.BoolValue = true;
+                __instance.destroyOrDisable();
+                return false;
+            }
+
             if (IsArchipelago()) {
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
@@ -140,6 +148,11 @@ namespace TunicRandomizer {
 
         public static bool PagePickup_onGetIt_PrefixPatch(PagePickup __instance) {
             string LocationId = $"{__instance.pageName} [{SceneLoaderPatches.SceneName}]";
+
+            if (SaveFile.GetInt("randomizer picked up " + LocationId) == 1) {
+                return false;
+            }
+
             if (IsArchipelago()) {
                 Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[LocationId]);
             } else if (IsSinglePlayer()) {
@@ -245,7 +258,8 @@ namespace TunicRandomizer {
             return false;
         }
 
-        public static ItemResult GiveItem(string ItemName, ItemInfo itemInfo) {
+        public static ItemResult GiveItem(ItemInfo itemInfo, int queueSize) {
+            string ItemName = itemInfo.ItemDisplayName;
             if (ItemPresentation.instance.isActiveAndEnabled || GenericMessage.instance.isActiveAndEnabled || PotionCombine.instance.isActiveAndEnabled ||
                 NPCDialogue.instance.isActiveAndEnabled || PageDisplay.instance.isActiveAndEnabled || GenericPrompt.instance.isActiveAndEnabled ||
                 GameObject.Find("_GameGUI(Clone)/PauseMenu/") != null || GameObject.Find("_OptionsGUI(Clone)") != null || PlayerCharacter.InstanceIsDead
@@ -268,7 +282,13 @@ namespace TunicRandomizer {
             bool SkipAnimationsValue = TunicRandomizer.Settings.SkipItemAnimations;
 
             if (itemInfo.Player == Archipelago.instance.GetPlayerSlot() && itemInfo.LocationDisplayName != "Cheat Console" && Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) &&
-                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]))) {
+                (GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) 
+                || BreakableShuffle.BreakableChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName])
+                || (EnemyDropShuffle.AllEnemyDropChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.LocationDisplayName != "Library Hall - Administrator Coffee Table"))) {
+                TunicRandomizer.Settings.SkipItemAnimations = true;
+            }
+
+            if (TunicRandomizer.Settings.FasterItemQueue && queueSize > 10 && Item.Classification == "filler") {
                 TunicRandomizer.Settings.SkipItemAnimations = true;
             }
 
@@ -303,7 +323,8 @@ namespace TunicRandomizer {
                 Item.Type == ItemTypes.TRINKET ||
                 Item.Type == ItemTypes.LADDER ||
                 Item.Type == ItemTypes.FUSE ||
-                Item.Type == ItemTypes.BELL) {
+                Item.Type == ItemTypes.BELL ||
+                Item.Type == ItemTypes.ENEMY) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Item.QuantityToGive;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -343,6 +364,9 @@ namespace TunicRandomizer {
                     } else {
                         NotificationBottom = $"\"...but nothing happened.\"";
                     }
+                }
+                if (Item.Type == ItemTypes.ENEMY) {
+                    EnemySoulModels.OnEnemySoulItemGet(Item.Name);
                 }
                 ItemPresentation.PresentItem(InventoryItem, Item.QuantityToGive);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -580,7 +604,8 @@ namespace TunicRandomizer {
                 Item.Type == ItemTypes.TRINKET ||
                 Item.Type == ItemTypes.LADDER || 
                 Item.Type == ItemTypes.FUSE ||
-                Item.Type == ItemTypes.BELL) {
+                Item.Type == ItemTypes.BELL ||
+                Item.Type == ItemTypes.ENEMY) {
                 Item InventoryItem = Inventory.GetItemByName(Item.ItemNameForInventory);
                 InventoryItem.Quantity += Check.Reward.Amount;
                 if (Item.Name == "Stick" || Item.Name == "Sword") {
@@ -620,6 +645,9 @@ namespace TunicRandomizer {
                     } else {
                         NotificationBottom = $"\"...but nothing happened.\"";
                     }
+                }
+                if (Item.Type == ItemTypes.ENEMY) {
+                    EnemySoulModels.OnEnemySoulItemGet(Item.Name);
                 }
                 ItemPresentation.PresentItem(InventoryItem, Check.Reward.Amount);
                 if (TunicRandomizer.Settings.SkipItemAnimations && Item.Name == "Flask Shard" && Inventory.GetItemByName("Flask Shard").Quantity >= 3) {
@@ -940,6 +968,10 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hyperdash Toggle").Quantity = 1;
             Inventory.GetItemByName("Key (House)").Quantity = 1;
             Inventory.GetItemByName("Vault Key (Red)").Quantity = 1;
+            Inventory.GetItemByName("Level Up - Attack").Quantity = 10;
+            Inventory.GetItemByName("Relic - Hero Sword").Quantity = 1;
+            Inventory.GetItemByName("Mask").Quantity = 1;
+            StateVariable.GetStateVariableByName("Placed Hexagons ALL").BoolValue = true;
         }
     }
 }

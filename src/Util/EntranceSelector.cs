@@ -291,6 +291,7 @@ namespace TunicRandomizer {
                         while (usedIndexes.Contains(index)) {
                             index = random.Next(RerollAlreadySeen.Count);
                         }
+                        usedIndexes.Add(index);
                         newPortals.Add(RerollAlreadySeen[index]);
                     }
                 }

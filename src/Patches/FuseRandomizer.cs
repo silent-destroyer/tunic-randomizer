@@ -355,7 +355,7 @@ namespace TunicRandomizer {
         }
 
         public static string GetFuseStatusForSign(List<string> Fuses) {
-            string header = $"             <#FF0000>[death] kawndooit rehstorA$uhn <#FF0000>[death]<#FFFFFF>         [fuse]\n";
+            string header = $"             <size=85%><#FF0000>[death] kawndooit rehstorA$uhn <#FF0000>[death]<#FFFFFF>         [fuse]\n";
             string message = header;
             int i = 0;
             foreach (string fuse in Fuses) { 
@@ -364,7 +364,7 @@ namespace TunicRandomizer {
 
                 i++;
                 if (i % 8 == 0 && Fuses.Count != i) {
-                    message += $"---{header}\n";
+                    message += $"---{header}";
                 }
             }
             

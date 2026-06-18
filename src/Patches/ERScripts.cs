@@ -14,7 +14,10 @@ namespace TunicRandomizer {
         public static bool OldHouseDoorUnstuck = false;
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
-        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
+        public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory, List<PortalCombo> randomizedPortals = null, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
+            if (modifiedTraversalReqs == null) {
+                modifiedTraversalReqs = ModifiedTraversalReqs;
+            }
             if (TunicLogger.Testing) {
                 TunicLogger.LogTesting("Starting UpdateReachableRegions, current inventory is as follows:");
                 foreach (string itemName in inventory.Keys) {
@@ -22,8 +25,18 @@ namespace TunicRandomizer {
                 }
             }
             int inv_count = inventory.Count;
+
+            // this is basically if it uses trick logic to get somewhere and never goes and back-checks it later after getting laurels
+            if (randomizedPortals != null) {
+                foreach (PortalCombo portalCombo in randomizedPortals) {
+                    inventory = portalCombo.AddComboRegion(inventory);
+                    PortalCombo reverseCombo = new PortalCombo(portalCombo.Portal2, portalCombo.Portal1);
+                    inventory = reverseCombo.AddComboRegion(inventory);
+                }
+            }
+
             // for each origin region
-            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
+            foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in modifiedTraversalReqs) {
                 string origin = traversal_group.Key;
                 if (!inventory.ContainsKey(origin)) {
                     continue;
@@ -81,12 +94,12 @@ namespace TunicRandomizer {
             }
             // if we gained any regions, rerun this to get any new regions
             if (inv_count != inventory.Count) {
-                UpdateReachableRegions(inventory);
+                UpdateReachableRegions(inventory, randomizedPortals);
             }
             return inventory;
         }
 
-        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null, List<PortalCombo> randomizedPortals = null) {
+        public static (Dictionary<string, int>, List<Check>) UpdateReachableRegionsAndPickUpItems(Dictionary<string, int> inventory, List<Check> alreadyCheckedLocations = null, List<PortalCombo> randomizedPortals = null, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
             if (alreadyCheckedLocations == null) {
                 alreadyCheckedLocations = new List<Check>();
             }
@@ -103,7 +116,7 @@ namespace TunicRandomizer {
                 while (true) {
                     // since regions always have a count of 1, we can just use .count instead of counting up all the values
                     int start_num = inventory.Count;
-                    inventory = UpdateReachableRegions(inventory);
+                    inventory = UpdateReachableRegions(inventory, randomizedPortals, modifiedTraversalReqs);
                     foreach (PortalCombo portalCombo in randomizedPortals) {
                         inventory = portalCombo.AddComboRegion(inventory);
                     }
@@ -363,6 +376,7 @@ namespace TunicRandomizer {
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.LadderItems);
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.FuseItems);
                 FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.BellItems);
+                FullInventory = TunicUtils.AddListToDict(FullInventory, ItemRandomizer.EnemyItems);
             }
 
             // making a second list if we're doing decoupled, a reference to the first list if not
@@ -394,6 +408,12 @@ namespace TunicRandomizer {
                         string destination = SaveFile.stringStore[key];
                         Portal portal1 = portalsList.First(portal => portal.Name == origin);
                         Portal portal2 = portalsList.First(portal => portal.Name == destination);
+                        // if we end up having to redo RandomizePortals during initial generation, we end up adding this portal twice, which breaks stuff
+                        foreach (PortalCombo portalCombo in FoxPrince.FPRandomizedPortals) {
+                            if (portalCombo.Portal1.Name == portal1.Name && portalCombo.Portal2.Name == portal2.Name) {
+                                continue;
+                            }
+                        }
                         FoxPrince.FPRandomizedPortals.Add(new PortalCombo(portal1, portal2));
                     }
                 }
@@ -540,7 +560,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo("This will now reroll the entrances and try again.");
                         TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
                         // reroll, hopefully this shouldn't be common at all
-                        return RandomizePortals(seed + 1);
+                        return RandomizePortals(seed + 1, plando);
                     }
                 } else {
                     failCount = 0;
@@ -574,7 +594,7 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling in first phase in RandomizePortals");
-                    return RandomizePortals(seed + 1);
+                    return RandomizePortals(seed + 1, plando);
                 }
 
                 foreach (Portal portal in portalsList2) {
@@ -659,20 +679,14 @@ namespace TunicRandomizer {
                             }
                         }
                         TunicLogger.LogInfo("---------------------------------------");
-                        TunicLogger.LogInfo("Remaining portals in portalsList are:");
-                        foreach (Portal debugportal in portalsList) {
-                            TunicLogger.LogInfo(debugportal.Name);
+                        TunicLogger.LogInfo("Here are the current portal pairs:");
+                        foreach (PortalCombo portalCombo in randomizedPortals) {
+                            TunicLogger.LogInfo($"{portalCombo.Portal1.Name} -> {portalCombo.Portal2.Name}");
                         }
                         TunicLogger.LogInfo("---------------------------------------");
                         // reroll, hopefully this shouldn't be common at all
-                        return RandomizePortals(seed + 1);
+                        return RandomizePortals(seed + 1, plando);
                     }
-                }
-
-                if (canFail) {
-                    (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
-                } else {
-                    FullInventory = UpdateReachableRegions(FullInventory);
                 }
 
                 // add the portal combo to the randomized portals list
@@ -693,6 +707,12 @@ namespace TunicRandomizer {
                     && SaveFile.GetInt(LaurelsLocation) == 3
                     && FullInventory.ContainsKey(PAIRING_ONLY)) {
                     FullInventory.Add("Hyperdash", 1);
+                }
+
+                if (canFail) {
+                    (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations, randomizedPortals);
+                } else {
+                    FullInventory = UpdateReachableRegions(FullInventory, randomizedPortals);
                 }
 
                 // this is at the end so that if it needs to retry portal 1 after not finding an appropriate portal 2,
@@ -723,7 +743,7 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling during last phase in RandomizePortals");
-                    return RandomizePortals(seed + 1);
+                    return RandomizePortals(seed + 1, plando);
                 }
                 Portal portal1 = portalsList[0];
                 portalsList.RemoveAt(0);
@@ -759,7 +779,7 @@ namespace TunicRandomizer {
                     }
                     // reroll, hopefully this shouldn't be common at all
                     TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
-                    return RandomizePortals(seed + 1);
+                    return RandomizePortals(seed + 1, plando);
                 }
                 if (deplando.Any(item => item.Item1 == portal1.Name && item.Item2 == portal2.Name)) {
                     portalsList.Add(portal1);

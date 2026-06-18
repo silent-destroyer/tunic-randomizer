@@ -16,7 +16,13 @@
                         {
                             ""Cathedral Gauntlet"": 1,
                             ""Sword"": 1,
-                            ""Techbow"": 1
+                            ""Techbow"": 1,
+                            ""Enemy Soul (Fairies)"": 1,
+                            ""Enemy Soul (Fleemers)"": 1,
+                            ""Enemy Soul (Custodians)"": 1,
+                            ""Enemy Soul (Garden Knight)"": 1,
+                            ""Enemy Soul (Frogs)"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
                         }
                     ]
                 }
@@ -228,6 +234,12 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Blobs)"": 1
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -493,6 +505,12 @@
                         {
                             ""East Forest"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Blobs)"": 1
+                        },
+                        {
+                            ""East Forest"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -601,8 +619,29 @@
                     ""Position"": ""(-48.0, 0.0, -172.5)"",
                     ""Requirements"": [
                         {
-                            ""Forest Grave Path Main"": 1
-                        }
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Sword"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Techbow"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Shotgun"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Hyperdash"": 1,
+                        },
                     ]
                 }
             },
@@ -619,8 +658,29 @@
                     ""Position"": ""(-25.0, 8.0, -172.0)"",
                     ""Requirements"": [
                         {
-                            ""Forest Grave Path Main"": 1
-                        }
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Enemy Soul (Rudelings)"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Sword"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Techbow"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Shotgun"": 1,
+                        },
+                        {
+                            ""Forest Grave Path Main"": 1,
+                            ""Hyperdash"": 1,
+                        },
                     ]
                 }
             },
@@ -808,7 +868,8 @@
                             ""Stundagger"": 1,
                             ""Techbow"": 1,
                             ""26"": 1,
-                            ""Lower Forest"": 1
+                            ""Lower Forest"": 1,
+                            ""Enemy Soul (Blobs)"": 1
                         }
                     ]
                 }
@@ -1639,7 +1700,8 @@
                         },
                         {
                             ""Wand"": 1,
-                            ""Overworld Beach"": 1
+                            ""Overworld Beach"": 1,
+                            ""Enemy Soul (Autobolt)"": 1
                         }
                     ]
                 }
@@ -1723,6 +1785,12 @@
                         {
                             ""Overworld"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Rudelings)"": 1
+                        },
+                        {
+                            ""Overworld"": 1,
+                            ""IG3S"": 1,
+                            ""Enemy Soul (Hedgehogs)"": 1
                         }
                     ]
                 }
@@ -1951,6 +2019,7 @@
                         {
                             ""Ruined Atoll"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Frogs)"": 1
                         }
                     ]
                 }
@@ -2065,10 +2134,6 @@
                         {
                             ""Key"": 2,
                             ""Ruined Atoll"": 1
-                        },
-                        {
-                            ""IG2S"": 1,
-                            ""Ruined Atoll"": 1
                         }
                     ]
                 }
@@ -2091,10 +2156,6 @@
                         },
                         {
                             ""Key"": 2,
-                            ""Ruined Atoll"": 1
-                        },
-                        {
-                            ""IG2S"": 1,
                             ""Ruined Atoll"": 1
                         }
                     ]
@@ -2304,7 +2365,8 @@
                     ""Requirements"": [
                         {
                             ""Wand"": 1,
-                            ""Frog's Domain Back"": 1
+                            ""Frog's Domain Back"": 1,
+                            ""Enemy Soul (Autobolt)"": 1
                         },
                         {
                             ""Hyperdash"": 1,
@@ -2518,7 +2580,18 @@
                         {
                             ""Library Arena"": 1,
                             ""Ladders in Library"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""Wand"": 1,
+                            ""Techbow"": 1,
+                            ""Enemy Soul (Librarian)"": 1
+                        },
+                        {
+                            ""Library Arena"": 1,
+                            ""Ladders in Library"": 1,
+                            ""Sword"": 1,
+                            ""Wand"": 1,
+                            ""Shotgun"": 1,
+                            ""Enemy Soul (Librarian)"": 1
                         }
                     ]
                 }
@@ -3380,7 +3453,7 @@
                     ""Position"": ""(-197.8, 1.0, 20.0)"",
                     ""Requirements"": [
                         {
-                            ""West Garden"": 1
+                            ""West Garden at Dagger House"": 1
                         }
                     ]
                 }
@@ -3454,7 +3527,28 @@
                     ""Position"": ""(-193.2, 8.0, 83.9)"",
                     ""Requirements"": [
                         {
-                            ""West Garden"": 1
+                            ""West Garden"": 1,
+                            ""Enemy Soul (Chompignom)"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Enemy Soul (Rudelings)"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Sword"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Shotgun"": 1
+                        },
+                        {
+                            ""West Garden"": 1,
+                            ""Hyperdash"": 1
                         }
                     ]
                 }
@@ -3791,8 +3885,29 @@
                     ""Position"": ""(17.2, 0.0, 72.5)"",
                     ""Requirements"": [
                         {
-                            ""Beneath the Vault Back"": 1
-                        }
+                            ""Beneath the Vault Back"": 1,
+                            ""Enemy Soul (Custodians)"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Techbow"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Stick"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Sword"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Wand"": 1
+                        },
+                        {
+                            ""Beneath the Vault Back"": 1,
+                            ""Hyperdash"": 1
+                        },
                     ]
                 }
             },
@@ -3893,6 +4008,7 @@
                         {
                             ""Eastern Vault Fortress"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Custodians)"": 1
                         }
                     ]
                 }
@@ -4006,7 +4122,9 @@
                     ""Requirements"": [
                         {
                             ""Sword"": 1,
-                            ""Fortress Arena"": 1
+                            ""Techbow"": 1,
+                            ""Fortress Arena"": 1,
+                            ""Enemy Soul (Siege Engine)"": 1
                         }
                     ]
                 }
@@ -4217,6 +4335,7 @@
                         {
                             ""Quarry Back"": 1,
                             ""IG3S"": 1,
+                            ""Enemy Soul (Scavengers)"": 1
                         }
                     ]
                 }
@@ -4842,11 +4961,13 @@
                     ""Requirements"": [
                         {
                             ""Rooted Ziggurat Lower Back"": 1,
-                            ""Sword"": 1
+                            ""Sword"": 1,
+                            ""Enemy Soul (Boss Scavenger)"": 1
                         },
                         {
                             ""Rooted Ziggurat Lower Back"": 1,
-                            ""IG2S"": 1
+                            ""IG2S"": 1,
+                            ""Enemy Soul (Boss Scavenger)"": 1
                         }
                     ]
                 }

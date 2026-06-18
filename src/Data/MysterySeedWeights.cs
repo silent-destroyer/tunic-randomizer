@@ -19,6 +19,9 @@ namespace TunicRandomizer {
         public int ShuffleBreakables;
         public int ShuffleFuses;
         public int ShuffleBells;
+        public int ShuffleEnemyDrops;
+        public int ShuffleEnemySouls;
+        public int ShuffleExtraEnemyDrops;
 
         public int LaurelsZips;
         public int LadderStorageWithoutItems;
@@ -70,6 +73,9 @@ namespace TunicRandomizer {
             ShuffleBreakables = 50;
             ShuffleFuses = 50;
             ShuffleBells = 50;
+            ShuffleEnemyDrops = 50;
+            ShuffleEnemySouls = 50;
+            ShuffleExtraEnemyDrops = 25;
             ERFoxPrince = 25;
 
             LaurelsZips = 0;
@@ -124,6 +130,9 @@ namespace TunicRandomizer {
                 $"&{ShuffleBreakables}" +
                 $"&{ShuffleFuses}" +
                 $"&{ShuffleBells}" +
+                $"&{ShuffleEnemyDrops}" +
+                $"&{ShuffleEnemySouls}" +
+                $"&{ShuffleExtraEnemyDrops}" +
                 $"&{HexagonQuest}" +
                 $"&{HexQuestAbilityShufflePages}" +
                 $"&{LaurelsZips}" +
@@ -152,6 +161,9 @@ namespace TunicRandomizer {
             ShuffleBreakables = int.Parse(split[i++]);
             ShuffleFuses = int.Parse(split[i++]);
             ShuffleBells = int.Parse(split[i++]);
+            ShuffleEnemyDrops = int.Parse(split[i++]);
+            ShuffleEnemySouls = int.Parse(split[i++]);
+            ShuffleExtraEnemyDrops = int.Parse(split[i++]);
             HexagonQuest = int.Parse(split[i++]);
             HexQuestAbilityShufflePages = int.Parse(split[i++]);
             LaurelsZips = int.Parse(split[i++]);
@@ -210,6 +222,9 @@ namespace TunicRandomizer {
             ShuffleBreakables = random.Next(101);
             ShuffleFuses = random.Next(101);
             ShuffleBells = random.Next(101);
+            ShuffleEnemyDrops = random.Next(101);
+            ShuffleEnemySouls = random.Next(101);
+            ShuffleExtraEnemyDrops = random.Next(101);
             HexagonQuest = random.Next(101);
             HexQuestAbilityShufflePages = random.Next(101);
 

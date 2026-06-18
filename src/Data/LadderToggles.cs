@@ -160,6 +160,24 @@ namespace TunicRandomizer {
                     ladder.transform.GetChild(i).gameObject.SetActive(false);
                 }
             }
+            if (SaveFlags.GetBool(SaveFlags.ShuffleEnemySoulsEnabled)) {
+                GameObject skull = GameObject.Instantiate(EnemyRandomizer.Enemies["Bat"].GetComponent<Bat>().destructionRoot);
+                GameObject.Destroy(skull.transform.GetChild(0).gameObject);
+                GameObject.Destroy(skull.GetComponent<Rigidbody>());
+                GameObject.Destroy(skull.GetComponent<BoxCollider>());
+                skull.transform.localEulerAngles = new Vector3(0, 180, 0);
+                skull.transform.position = new Vector3(-5.6409f, 45.5833f, -23.2322f);
+                skull.SetActive(true);
+
+                GameObject gyro = GameObject.Instantiate(ModelSwaps.ShadowOubliette);
+                gyro.transform.position  = new Vector3(-5.6409f, 45.8833f, -23.2322f);
+                gyro.transform.localScale = Vector3.one * 0.1f;
+                gyro.layer = 0;
+                gyro.SetActive(true);
+                foreach (Transform transform in gyro.GetComponentsInChildren<Transform>(true)) {
+                    transform.gameObject.layer = 0;
+                }
+            }
         }
 
         public static string GetLadderChecklist() {

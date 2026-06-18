@@ -133,10 +133,16 @@ namespace TunicRandomizer {
             CameraController.Flip = TunicRandomizer.Settings.CameraFlip;
                         
             if (!InitialLoadDone) {
-                if (loadingScene.name == "Ruins Passage" && !ModelSwaps.Items.ContainsKey("Koban")) {
-                    ItemPresentationPatches.SetupFoxPrinceKobanItemPresentation();
+                if (loadingScene.name == "Playable Intro" && ModelSwaps.ShadowOubliette == null) {
+                    EnemyDropShuffle.LoadEnemyData();
+                    ItemPresentationPatches.SetupEnemyBasePresentation();
                     TunicLogger.LogInfo("Done loading resources!");
                     SceneLoader.LoadScene("TitleScreen");
+                    return;
+                }
+                if (loadingScene.name == "Ruins Passage" && !ModelSwaps.Items.ContainsKey("Koban")) {
+                    ItemPresentationPatches.SetupFoxPrinceKobanItemPresentation();
+                    SceneLoader.LoadScene("Playable Intro");
                 }
                 if (loadingScene.name == "Posterity" && !EnemyRandomizer.Enemies.ContainsKey("Phage")) {
                     EnemyRandomizer.InitializeEnemies("Posterity");
@@ -330,7 +336,7 @@ namespace TunicRandomizer {
                 }
             }
 
-            Camera mainCamera = Resources.FindObjectsOfTypeAll<Camera>().Where(c => c.name == "Camera 1 - Main").First();
+            Camera mainCamera = Resources.FindObjectsOfTypeAll<Camera>().Where(c => c.name == "Camera 1 - Main").FirstOrDefault();
             if (mainCamera != null && mainCamera.gameObject.GetComponentInParent<CycleController>() == null) {
                 mainCamera.transform.parent.gameObject.AddComponent<CycleController>();
             }
@@ -421,7 +427,6 @@ namespace TunicRandomizer {
                         teleporter.GetComponentInChildren<ScenePortal>().spawnTransform.position = new Vector3(0, 0, -17);
                     }
                 }
-
                 SpawnHeirFastTravel("Overworld Redux", new Vector3(-30000f, -30000f, -30000f));
             } else if (SceneName == "Overworld Interiors") {
                 GameObject.FindObjectOfType<BedToggle>().canBeUsed = StateVariable.GetStateVariableByName("false");
@@ -460,7 +465,7 @@ namespace TunicRandomizer {
                     GameObject HintStatueGlow = GameObject.Instantiate(ModelSwaps.GlowEffect);
                     HintStatueGlow.SetActive(true);
                     HintStatueGlow.transform.position = new Vector3(13f, 0f, 49f);
-                    HintStatueGlow.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Hyperdash");
+                    HintStatueGlow.AddComponent<VisibleByNotHavingItem>().Item = Inventory.GetItemByName("Hyperdash Toggle");
                 }
 
                 GameObject.Instantiate(ModelSwaps.Chalkboard, new Vector3(23.0934f, 7.2261f, 65.0646f), new Quaternion(0, 0.701f, 0, 0.701f)).SetActive(true);
@@ -495,7 +500,7 @@ namespace TunicRandomizer {
                 if (SaveFile.GetInt(DiedToHeir) == 1) {
                     SpawnHeirFastTravel("Spirit Arena", new Vector3(2.0801f, 43.5833f, -54.0065f));
                 }
-                if (TunicRandomizer.Settings.EnemyRandomizerEnabled) {
+                if (TunicRandomizer.Settings.EnemyRandomizerEnabled && (!GetBool(ShuffleEnemySoulsEnabled) || Inventory.GetItemByName("Enemy Soul (Autobolt)").Quantity > 0)) {
                     GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(-183.9852f, 1f, -79.4829f), new Quaternion(0, 0, 0, 0)).SetActive(true);
                     GameObject.Instantiate(EnemyRandomizer.TuningFork, new Vector3(-166.9155f, 1f, -72.0338f), new Quaternion(0, 0, 0, 0)).SetActive(true);
                 }
@@ -604,6 +609,17 @@ namespace TunicRandomizer {
                 SetupQuarrySecret();
             } else if (SceneName == "Quarry") {
                 SetupOldQuarryStuff();
+            } else if (SceneName == "East Forest Redux") {
+                if (GetBool(ShuffleEnemySoulsEnabled) && Inventory.GetItemByName("Enemy Soul (Rudelings)").Quantity == 0 && !TunicUtils.CanGetPastBushes()) { 
+                    GameObject bush1 = GameObject.Find("_BUSH AND GRASS/bush (16)");
+                    if (bush1 != null) {
+                        bush1.SetActive(false);
+                    }
+                    GameObject bush2 = GameObject.Find("_BUSH AND GRASS/bush (17)");
+                    if (bush2 != null) {
+                        bush2.SetActive(false);
+                    }
+                }
             }
 
             EnemyRandomizer.CheckBossState();
@@ -641,6 +657,14 @@ namespace TunicRandomizer {
             }
 
             try {
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1 && PlayerCharacter.Instanced) {
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
                 if (!ModelSwaps.SwappedThisSceneAlready && (ItemLookup.ItemList.Count > 0 || Locations.RandomizedLocations.Count > 0) && SaveFile.GetInt("seed") != 0) {
                     ModelSwaps.SwapItemsInScene();
                 }
@@ -652,6 +676,7 @@ namespace TunicRandomizer {
             if (SaveFile.GetInt(AbilityShuffle) == 1 && SaveFile.GetInt(HolyCrossUnlocked) == 0) {
                 ItemPatches.ToggleHolyCrossObjects(false);
             }
+
             try {
                 if (PlayerCharacter.instance != null) {
                     TunicUtils.FindChecksInLogic();

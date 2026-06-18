@@ -70,8 +70,10 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Death Link", "Off", "On", TunicRandomizer.Settings.DeathLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleDeathLink);
             OptionsGUI.addMultiSelect("Death Link Effect", DeathLinkTypes, (int)TunicRandomizer.Settings.DeathLinkEffect, (OptionsGUIMultiSelect.MultiSelectAction)ChangeDeathLinkType).wrap = true;
             OptionsGUI.addToggle("Trap Link", "Off", "On", TunicRandomizer.Settings.TrapLinkEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleTrapLink);
-            OptionsGUI.addToggle("Auto-open !collect-ed Checks", "Off", "On", TunicRandomizer.Settings.CollectReflectsInWorld ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUpdateOnCollect);
+            OptionsGUI.addToggle("Hide Collected Checks", "Off", "On", TunicRandomizer.Settings.CollectReflectsInWorld ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleUpdateOnCollect);
             OptionsGUI.addToggle("Send Hints to Server", "Off", "On", TunicRandomizer.Settings.SendHintsToServer ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSendHintsToServer);
+            OptionsGUI.addToggle("Faster Item Queue", "Off", "On", TunicRandomizer.Settings.FasterItemQueue ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleFasterItemQueue);
+
         }
 
         private static void ChangeDeathLinkType(int index) {
@@ -104,6 +106,9 @@ namespace TunicRandomizer {
                     SaveSettings();
                 }));
                 OptionsGUI.addToggle("Shuffle Breakable Objects", "Off", "On", TunicRandomizer.Settings.BreakableShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleBreakableShuffle);
+                OptionsGUI.addToggle("Shuffle Enemy Drops", "Off", "On", TunicRandomizer.Settings.EnemyDropShuffle ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleEnemyDropShuffle);
+                OptionsGUI.addToggle("Extra Enemy Drops", "Off", "On", TunicRandomizer.Settings.ExtraEnemyDrops ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleExtraEnemyDrops);
+
                 addPageButton("Entrance Randomizer", (Action)EntranceRandomizerPage);
                 OptionsGUI.addMultiSelect("Fool Traps", FoolTrapOptions, GetFoolTrapIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeFoolTrapFrequency).wrap = true;
                 OptionsGUI.addMultiSelect("Laurels Location", LaurelsLocations, GetLaurelsLocationIndex(), (OptionsGUIMultiSelect.MultiSelectAction)ChangeLaurelsLocation).wrap = true;
@@ -245,6 +250,10 @@ namespace TunicRandomizer {
             }));
             OptionsGUI.addToggle("Fuse/Bell Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellFusesBells ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
                 TunicRandomizer.Settings.SeekingSpellFusesBells = !TunicRandomizer.Settings.SeekingSpellFusesBells;
+                SaveSettings();
+            }));
+            OptionsGUI.addToggle("Enemy Checks", "Off", "On", TunicRandomizer.Settings.SeekingSpellEnemyChecks ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => {
+                TunicRandomizer.Settings.SeekingSpellEnemyChecks = !TunicRandomizer.Settings.SeekingSpellEnemyChecks;
                 SaveSettings();
             }));
             OptionsGUI.setHeading("Fairy Targets");
@@ -613,6 +622,16 @@ namespace TunicRandomizer {
             SaveSettings();
         }
 
+        public static void ToggleEnemyDropShuffle(int index) {
+            TunicRandomizer.Settings.EnemyDropShuffle = !TunicRandomizer.Settings.EnemyDropShuffle;
+            SaveSettings();
+        }
+
+        public static void ToggleExtraEnemyDrops(int index) {
+            TunicRandomizer.Settings.ExtraEnemyDrops = !TunicRandomizer.Settings.ExtraEnemyDrops;
+            SaveSettings();
+        }
+
         public static void ToggleFuseShuffle(int index) {
             TunicRandomizer.Settings.FuseShuffle = !TunicRandomizer.Settings.FuseShuffle;
             SaveSettings();
@@ -675,6 +694,11 @@ namespace TunicRandomizer {
 
         public static void ToggleSendHintsToServer(int index) {
             TunicRandomizer.Settings.SendHintsToServer = !TunicRandomizer.Settings.SendHintsToServer;
+            SaveSettings();
+        }
+
+        public static void ToggleFasterItemQueue(int index) {
+            TunicRandomizer.Settings.FasterItemQueue = !TunicRandomizer.Settings.FasterItemQueue;
             SaveSettings();
         }
 
