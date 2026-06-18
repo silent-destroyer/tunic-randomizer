@@ -15,12 +15,6 @@ namespace TunicRandomizer {
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory) {
-            if (TunicLogger.Testing) {
-                TunicLogger.LogTesting("Starting UpdateReachableRegions, current inventory is as follows:");
-                foreach (string itemName in inventory.Keys) {
-                    TunicLogger.LogTesting(itemName);
-                }
-            }
             int inv_count = inventory.Count;
             // for each origin region
             foreach (KeyValuePair<string, Dictionary<string, List<List<string>>>> traversal_group in ModifiedTraversalReqs) {
@@ -28,20 +22,16 @@ namespace TunicRandomizer {
                 if (!inventory.ContainsKey(origin)) {
                     continue;
                 }
-                TunicLogger.LogTesting("checking traversal for " + origin);
                 // for each destination in an origin's group
                 foreach (KeyValuePair<string, List<List<string>>> destination_group in traversal_group.Value) {
                     string destination = destination_group.Key;
-                    TunicLogger.LogTesting("checking traversal to " + destination);
                     // if we can already reach this region, skip it
                     if (inventory.ContainsKey(destination)) {
-                        TunicLogger.LogTesting("we already have it");
                         continue;
                     }
                     // met is whether you meet any of the requirement lists for a destination
                     bool met = false;
                     if (destination_group.Value.Count == 0) {
-                        TunicLogger.LogTesting("no requirement groups, met is true");
                         met = true;
                     }
                     // check through each list of requirements
@@ -50,19 +40,16 @@ namespace TunicRandomizer {
                         if (reqs.Count == 0) {
                             // if a group is empty, you can just walk there
                             met = true;
-                            TunicLogger.LogTesting("group is empty, so met is true");
                         } else {
                             // check if we have the items in our inventory to traverse this path
                             met_count = 0;
                             foreach (string req in reqs) {
-                                TunicLogger.LogTesting("req is " + req);
                                 if (TunicUtils.HasReq(req, inventory)) {
                                     met_count++;
                                 }
                             }
                             // if you have all the requirements, you can traverse this path
                             if (met_count == reqs.Count) {
-                                TunicLogger.LogTesting("met is true");
                                 met = true;
                             }
                         }
@@ -72,10 +59,7 @@ namespace TunicRandomizer {
                         }
                     }
                     if (met == true) {
-                        TunicLogger.LogTesting("adding " + destination + " to inventory");
                         inventory.Add(destination, 1);
-                    } else {
-                        TunicLogger.LogTesting("did not add " + destination + ", we did not meet the requirements");
                     }
                 }
             }
@@ -597,7 +581,6 @@ namespace TunicRandomizer {
                                 if (portal.Direction == (int)PDir.SOUTH && !southProblems.Contains(portal.Name) && southProblems.Count > 0 && TooFewPortalsForDirectionPairs(portal.Direction, offset: southProblems.Count)) {
                                     foreach (Portal testPortal in portalsList) {
                                         if (southProblems.Contains(testPortal.Name)) {
-                                            TunicLogger.LogTesting("Will continue to avoid south problems");
                                             shouldContinue = true;
                                         }
                                     }
@@ -606,7 +589,6 @@ namespace TunicRandomizer {
                                     || portal.Direction == (int)PDir.LADDER_UP && portal.Name != "Frog's Domain Ladder Exit" && TooFewPortalsForDirectionPairs(portal.Direction, offset: 1)) {
                                     foreach (Portal testPortal in portalsList) {
                                         if (testPortal.Name == "Frog's Domain Ladder Exit") {
-                                            TunicLogger.LogTesting("Will continue to avoid Frog's Domain Ladder Exit issue");
                                             shouldContinue = true;
                                         }
                                     }
@@ -617,7 +599,6 @@ namespace TunicRandomizer {
 
                         // if secret gathering place gets paired really late and you have the laurels plando on, you can run out pretty easily
                         if (((portalsList2.Count < 80 && !foxPrinceEnabled) || portalsList2.Count < 40) && portal.Region != "Secret Gathering Place" && !FullInventory.ContainsKey("Hyperdash") && SaveFile.GetInt(LaurelsLocation) == 3) {
-                            TunicLogger.LogTesting("Continuing to wait for Secret Gathering Place");
                             continue;
                         }
 
