@@ -351,6 +351,7 @@ namespace TunicRandomizer {
             GUI.DragWindow(scRect(500f, 50f, 500f, 30f));
             y = 20f;
             if (TitleVersion.UpdateAvailable) {
+                y += 5f;
                 bool DownloadUpdate = GUI.Button(scRect(10f, y, 638f, 30f), $"<color=#FFA500>Update Available! Download Randomizer Mod Ver. {TitleVersion.UpdateVersion}</color>");
                 if (DownloadUpdate) {
                     System.Diagnostics.Process.Start(TitleVersion.UpdateUrl);
