@@ -1382,6 +1382,9 @@ namespace TunicRandomizer {
                             if (Item.Name == "Enemy Soul (The Heir)") {
                                 EnemySoulModels.SetHeirMaterials(enemyRoot.transform.GetChild(i).gameObject);
                             }
+                            if (Item.Name == "Enemy Soul (Crabs)") {
+                                enemyRoot.transform.GetChild(i).GetChild(0).GetChild(2).gameObject.SetActive(GetBool(ExtraEnemyDropsEnabled));
+                            }
                             enemyRoot.transform.GetChild(i).SetAsFirstSibling();
                             break;
                         }

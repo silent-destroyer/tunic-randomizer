@@ -51,6 +51,9 @@ namespace TunicRandomizer {
             if (ItemName == "Enemy Soul (The Heir)") {
                 SetHeirMaterials(EnemyPresentationObjs[ItemName]);
             }
+            if (ItemName == "Enemy Soul (Crabs)") {
+                EnemyPresentationObjs[ItemName].transform.GetChild(0).GetChild(2).gameObject.SetActive(SaveFlags.GetBool(SaveFlags.ExtraEnemyDropsEnabled));
+            }
             EnemySoulManager enemySoulManager = GameObject.FindObjectOfType<EnemySoulManager>();
             if (enemySoulManager != null) {
                 enemySoulManager.onItemGet(ItemName);
@@ -164,8 +167,13 @@ namespace TunicRandomizer {
         private static void setupCrabs(Transform parent) {
             GameObject crab1 = setupEnemyObject("Enemy Soul (Crabs)", parent, null, new Material[] { });
             updateEnemyObject(crab1, EnemyRandomizer.Enemies["Crabbo"].transform.GetChild(1).gameObject, new Vector3(0, -4, -2), Vector3.one * 2f);
-            GameObject crabbit = setupEnemyObject("crabbit", crab1.transform, null, new Material[] { });
-            updateEnemyObject(crabbit, EnemyRandomizer.Enemies["Crabbit"].transform.GetChild(1).gameObject, new Vector3(0, 1.5f, 0), Vector3.one * 0.5f, true);
+            GameObject crabbit = cloneEnemyPrefab("Crabbit with Shell", crab1.transform);
+            crabbit.transform.localScale = Vector3.one / 2;
+            crabbit.transform.localPosition = new Vector3(0, 1.5f, 0);
+            crabbit.SetActive(true);
+            GameObject.Destroy(crabbit.transform.GetChild(3).gameObject);
+            GameObject.Destroy(crabbit.transform.GetChild(2).gameObject);
+            GameObject.Destroy(crabbit.GetComponentInChildren<BoxCollider>());
 
             EnemyPresentationObjs.Add("Enemy Soul (Crabs)", crab1);
         }
@@ -494,7 +502,6 @@ namespace TunicRandomizer {
             if (enemy.GetComponent<Rigidbody>() != null) GameObject.Destroy(enemy.GetComponent<Rigidbody>());
             if (enemy.GetComponent<FireController>() != null) GameObject.Destroy(enemy.GetComponent<FireController>());
             if (enemy.GetComponent<HitReceiver>() != null) GameObject.Destroy(enemy.GetComponent<HitReceiver>());
-            if (enemy.GetComponent<CapsuleCollider>() != null) GameObject.Destroy(enemy.GetComponent<CapsuleCollider>());
             if (enemy.GetComponent<TetherTarget>() != null) GameObject.Destroy(enemy.GetComponent<TetherTarget>());
             if (enemy.GetComponent<CoinSpawner>() != null) GameObject.Destroy(enemy.GetComponent<CoinSpawner>());
             if (enemy.GetComponent<AnimationEvents>() != null) GameObject.Destroy(enemy.GetComponent<AnimationEvents>());
@@ -504,6 +511,9 @@ namespace TunicRandomizer {
             if (enemy.GetComponent<SmashableObject>() != null) GameObject.Destroy(enemy.GetComponent<SmashableObject>());
             if (enemy.GetComponent<BossEnemy>() != null) GameObject.Destroy(enemy.GetComponent<BossEnemy>());
             if (enemy.GetComponent<ColliderByParameter>() != null) GameObject.Destroy(enemy.GetComponent<ColliderByParameter>());
+            foreach (CapsuleCollider capsuleCollider in enemy.GetComponentsInChildren<CapsuleCollider>()) {
+                GameObject.Destroy(capsuleCollider);
+            }
             foreach (ZTarget zTarget in enemy.GetComponentsInChildren<ZTarget>()) {
                 GameObject.Destroy(zTarget);
             }
