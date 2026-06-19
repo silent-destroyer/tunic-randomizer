@@ -220,7 +220,6 @@ namespace TunicRandomizer {
                 return;
             }
             if (EntranceOptions.Count > 0) {
-                TunicLogger.LogInfo("Chose first scene");
                 //Notifications.Show($"\"Chose first option.\"", $"\"{EntranceOptions[0].Portal1.Name} -> {EntranceOptions[0].Portal2.Name}\"");
                 FoxPrince.FPPortalChosen(EntranceOptions[0]);
                 cleanup();
@@ -236,7 +235,6 @@ namespace TunicRandomizer {
                 return;
             }
             if (EntranceOptions.Count > 0) {
-            TunicLogger.LogInfo("Chose second scene");
                 //Notifications.Show($"\"Chose second option.\"", $"\"{EntranceOptions[1].Portal1.Name} -> {EntranceOptions[1].Portal2.Name}\"");
                 FoxPrince.FPPortalChosen(EntranceOptions[1]);
                 cleanup();
@@ -251,7 +249,6 @@ namespace TunicRandomizer {
                 PinSelection(EntranceOptions[2].Portal2.Name);
                 return;
             }
-            TunicLogger.LogInfo("Chose third scene");
             if (EntranceOptions.Count > 0) {
                 //Notifications.Show($"\"Chose third option.\"", $"\"{EntranceOptions[2].Portal1.Name} -> {EntranceOptions[2].Portal2.Name}\"");
                 FoxPrince.FPPortalChosen(EntranceOptions[2]);
@@ -273,7 +270,6 @@ namespace TunicRandomizer {
                 return;
             }
             if (SoulDice.Quantity > 0 && EntranceOptions.Count == 3) {
-                TunicLogger.LogInfo("rerolling");
                 foreach (PortalCombo portalCombo in EntranceOptions) {
                     if (!RerollAlreadySeen.Contains(portalCombo)) {
                         RerollAlreadySeen.Add(portalCombo);
@@ -299,11 +295,6 @@ namespace TunicRandomizer {
                 SFX.PlayAudioClipAtFox(PlayerCharacter.instance.blockOutOfStaminaSFX);
                 EntranceOptions = newPortals;
                 ShowSelection(EntranceOptions);
-            }
-            // indicates that either you have no dice left or there are less than 2 options
-            if (newPortals == null) {
-                // do whatever we would do if you can't reroll
-                TunicLogger.LogInfo("Cannot reroll at this time");
             }
         }
 
@@ -370,10 +361,6 @@ namespace TunicRandomizer {
         }
 
         public void ShowSelection(List<PortalCombo> portalChoices) {
-            TunicLogger.LogInfo("Showing Selections:");
-            foreach (PortalCombo combo in portalChoices) {
-                TunicLogger.LogInfo($"{combo.Portal1.Name}, {combo.Portal2.Name}");
-            }
             if (portalChoices.Count > 0) {
                 if (ButtonObj1.GetComponent<SceneSelectionButton>() == null) {
                     SetupSceneSelectionButtons();
@@ -455,11 +442,9 @@ namespace TunicRandomizer {
             Layout3.transform.localPosition = new Vector3(Layout3.transform.localPosition.x, 0, 200);
             ToggleItemRow(false);
             readyForInputs = false;
-            TunicLogger.LogInfo("cleanup started");
             RerollAlreadySeen.Clear();
             GUIMode.ClearStack();
             GUIMode.PushGameMode();
-            TunicLogger.LogInfo("cleanup done");
         }
 
         public void Update() {

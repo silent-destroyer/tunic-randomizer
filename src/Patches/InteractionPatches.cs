@@ -326,11 +326,9 @@ namespace TunicRandomizer {
             if (__instance.GetComponent<PlayerCharacter>() != null) {
                 if (hitType == HitType.EXPLOSIVE) {
                     PlayerCharacterPatches.lastHitTriggerHitBy = "explosion";
-                    TunicLogger.LogTesting("player hit by: " + hitType.ToString());
                 }
                 if (hitType == HitType.FIRE) {
                     PlayerCharacterPatches.lastHitTriggerHitBy = "fire";
-                    TunicLogger.LogTesting("player hit by: " + hitType.ToString());
                 }
             }
 
@@ -340,7 +338,6 @@ namespace TunicRandomizer {
         public static void HitTrigger_doHit_PrefixPatch(HitTrigger __instance, ref Collider c) {
             if (c.GetComponent<PlayerCharacter>() != null && PlayerCharacter.HP > 0) {
                 PlayerCharacterPatches.lastHitTriggerHitBy = __instance.id;
-                TunicLogger.LogTesting($"Player hit by HitTrigger {__instance.id} from gameobject {__instance.name}");
             }
         }
     }
