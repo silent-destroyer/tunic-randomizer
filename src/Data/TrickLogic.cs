@@ -22,12 +22,13 @@ namespace TunicRandomizer {
             new LadderInfo(origin: "Furnace Ladder Area", destination: "Furnace, Overworld Redux_gyro_upper_north"),
             new LadderInfo(origin: "Furnace Ladder Area", destination: "Furnace, Crypt Redux_"),
             new LadderInfo(origin: "Furnace Ladder Area", destination: "Furnace, Overworld Redux_gyro_west"),
-            new LadderInfo(origin: "West Garden before Boss", destination: "Archipelagos Redux, Overworld Redux_upper"),
-            new LadderInfo(origin: "West Garden after Terry", destination: "Archipelagos Redux, Overworld Redux_lowest"),
-            new LadderInfo(origin: "West Garden after Terry", destination: "Archipelagos Redux, archipelagos_house_"),
+            new LadderInfo(origin: "West Garden", destination: "Archipelagos Redux, Overworld Redux_upper"),
+            new LadderInfo(origin: "West Garden", destination: "Archipelagos Redux, Overworld Redux_lowest"),
+            new LadderInfo(origin: "West Garden", destination: "Archipelagos Redux, archipelagos_house_"),
             new LadderInfo(origin: "Ruined Atoll", destination: "Atoll Redux, Overworld Redux_lower"),
             new LadderInfo(origin: "Ruined Atoll", destination: "Atoll Redux, Frog Stairs_mouth"),
             new LadderInfo(origin: "East Forest", destination: "East Forest Redux, East Forest Redux Laddercave_upper"),
+            new LadderInfo(origin: "East Forest", destination: "East Forest Redux, Sword Access_upper"),
             new LadderInfo(origin: "Guard House 1 West", destination: "East Forest Redux Laddercave, East Forest Redux_gate"),
             new LadderInfo(origin: "Guard House 1 West", destination: "East Forest Redux Laddercave, Forest Boss Room_"),
             new LadderInfo(origin: "Fortress Exterior from Overworld", destination: "Fortress Courtyard, Shop_"),
@@ -125,12 +126,14 @@ namespace TunicRandomizer {
             new LSElevConnect(origin: "LS Elev 7", destination: "Overworld Redux, Mountain_", difficulty: 1),
         };
 
-        public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs) {
+        public static Dictionary<string, Dictionary<string, List<List<string>>>> TraversalReqsWithLS(Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqs, List<PortalCombo> randomizedPortals = null) {
             Dictionary<string, Dictionary<string, List<List<string>>>> traversalReqsWithLS = traversalReqs;
             List<PortalCombo> portalList;
 
-            if (GetBool(EntranceRando)) {
-                portalList = ERData.RandomizedPortals;
+            if (randomizedPortals != null) {
+                portalList = randomizedPortals;
+            } else if (GetBool(EntranceRando)) {
+                    portalList = ERData.RandomizedPortals;
             } else {
                 if (ERData.VanillaPortals.Count == 0) {
                     ERScripts.SetupVanillaPortals();
@@ -140,9 +143,9 @@ namespace TunicRandomizer {
 
             // add the OW LS connections
             foreach (LSElevConnect connection in OWLSElevConnections) {
-                string destination = TunicUtils.FindPairedPortalRegionFromSDT(connection.Destination);
+                string destination = TunicUtils.FindPairedPortalRegionFromSDT(connection.Destination, randomizedPortals);
                 if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
-                    // this should only happen as a result of fox prince making the randomized portals list not contain every portal
+                    // this should only happen as a result of fox prince making the randomized portals list not containing every portal
                     continue;
                 }
 
@@ -168,9 +171,9 @@ namespace TunicRandomizer {
                         rules = new List<List<string>> { new List<string> { difficultyString, ladderInfo.LaddersReq } };
                     }
 
-                    string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination);
+                    string destination = TunicUtils.FindPairedPortalRegionFromSDT(ladderInfo.Destination, randomizedPortals);
                     if (destination == "FindPairedPortalRegionFromSDT failed to find a match" && GetBool(FoxPrinceEnabled)) {
-                        // this should only happen as a result of fox prince making the randomized portals list not contain every portal
+                        // this should only happen as a result of fox prince making the randomized portals list not containing every portal
                         continue;
                     }
 

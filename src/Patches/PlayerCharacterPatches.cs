@@ -88,6 +88,7 @@ namespace TunicRandomizer {
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 PaletteEditor.LoadCustomTexture();
             }
+
             if (Input.GetKeyDown(KeyCode.Alpha8)) {
                 // can't think of why it would fail right now, but if it fails I don't really want it to break anything
                 try {
@@ -293,10 +294,16 @@ namespace TunicRandomizer {
             TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
 
             try {
+                if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 1) {
+                    EnemyDropShuffle.SetupEnemyChecks();
+                }
+            } catch (Exception e) {
+                TunicLogger.LogError("Error setting up enemy drop checks! " + e.Source + " " + e.Message + " " + e.StackTrace);
+            }
+
+            try {
                 TunicUtils.FindChecksInLogic();
                 FairyTargets.CreateFairyTargets();
-                //FairyTargets.CreateEntranceTargets();
-                //FairyTargets.FindFairyTargets();
             } catch (Exception ex) {
                 TunicLogger.LogError("An error occurred creating new fairy seeker spell targets:");
                 TunicLogger.LogError(ex.Message + " " + ex.StackTrace);
@@ -414,7 +421,7 @@ namespace TunicRandomizer {
                 SaveFile.SetInt("seed", seed);
                 SaveFile.SetInt("randomizer", 1);
 
-                if (TunicRandomizer.Settings.MysterySeed) {
+                if (TunicRandomizer.Settings.MysterySeed && TunicRandomizer.Settings.GameMode != RandomizerSettings.GameModes.VANILLA) {
                     SaveFile.SetInt(MysterySeedEnabled, 1);
                     GenerateMysterySettings();
                 } else {
@@ -445,6 +452,7 @@ namespace TunicRandomizer {
                                 SaveFile.SetInt(HexagonQuestPageAbilities, 1);
                             }
                             if (TunicRandomizer.Settings.RandomizeHexQuest) {
+                                SaveFile.SetInt(HexagonQuestRandomizedValues, 1);
                                 switch (TunicRandomizer.Settings.HexagonQuestRandomGoal) {
                                     default:
                                     case RandomizerSettings.HexQuestValue.RANDOM:
@@ -538,6 +546,15 @@ namespace TunicRandomizer {
                         }
                         if (TunicRandomizer.Settings.BellShuffle) {
                             SaveFile.SetInt(BellShuffleEnabled, 1);
+                        }
+                        if (TunicRandomizer.Settings.EnemyDropShuffle) { 
+                            SaveFile.SetInt(ShuffleEnemyDropsEnabled, 1);
+                            if (TunicRandomizer.Settings.ExtraEnemyDrops) {
+                                SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
+                            }
+                            if (TunicRandomizer.Settings.ShuffleEnemySouls) { 
+                                SaveFile.SetInt(ShuffleEnemySoulsEnabled, 1);
+                            }
                         }
                         if (TunicRandomizer.Settings.LaurelsZips) {
                             SaveFile.SetInt(LaurelsZips, 1);
@@ -702,6 +719,21 @@ namespace TunicRandomizer {
                 if (slotData.TryGetValue("shuffle_bells", out var bellShuffle)) {
                     if (SaveFile.GetInt(BellShuffleEnabled) == 0 && bellShuffle.ToString() == "1") {
                         SaveFile.SetInt(BellShuffleEnabled, 1);
+                    }
+                }
+                if (slotData.TryGetValue("shuffle_enemy_drops", out var enemyDropShuffle)) {
+                    if (SaveFile.GetInt(ShuffleEnemyDropsEnabled) == 0 && int.TryParse(enemyDropShuffle.ToString(), out var enemyDropInt)) {
+                        if (enemyDropInt >= 1) {
+                            SaveFile.SetInt(ShuffleEnemyDropsEnabled, 1);
+                            if (enemyDropInt == 2) {
+                                SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
+                            }
+                            if (slotData.TryGetValue("shuffle_enemy_souls", out var enemySoulShuffle)) {
+                                if (SaveFile.GetInt(ShuffleEnemySoulsEnabled) == 0 && enemySoulShuffle.ToString() == "1") {
+                                    SaveFile.SetInt(ShuffleEnemySoulsEnabled, 1);
+                                }
+                            }
+                        }
                     }
                 }
                 if (slotData.TryGetValue("seed", out var Seed)) {
@@ -873,6 +905,15 @@ namespace TunicRandomizer {
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleBells) { 
                 SaveFile.SetInt(BellShuffleEnabled, 1);
             }
+            if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemyDrops) { 
+                SaveFile.SetInt(ShuffleEnemyDropsEnabled, 1);
+                if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleEnemySouls) { 
+                    SaveFile.SetInt(ShuffleEnemySoulsEnabled, 1);
+                }
+                if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.ShuffleExtraEnemyDrops) {
+                    SaveFile.SetInt(ExtraEnemyDropsEnabled, 1);
+                }
+            }
             if (random.Next(100) < TunicRandomizer.Settings.MysterySeedWeights.LaurelsZips) {
                 SaveFile.SetInt(LaurelsZips, 1);
             }
@@ -979,6 +1020,7 @@ namespace TunicRandomizer {
                 TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenCoins,
                 TunicRandomizer.Settings.MysterySeedWeights.LaurelsTenFairies,
             };
+            
             int laurelsIndex = random.Next(laurelsOptions.Length);
             if (laurelsOptions.All(x => !x)) {
                 SaveFile.SetInt(LaurelsLocation, 0);
@@ -1044,6 +1086,11 @@ namespace TunicRandomizer {
                 if (IsArchipelago() && TunicRandomizer.Settings.DeathLinkEnabled && Archipelago.instance.integration.session.ConnectionInfo.Tags.Contains("DeathLink") && !DiedToDeathLink) {
                     Archipelago.instance.integration.SendDeathLink();
                 }
+
+                if (SceneManager.GetActiveScene().name == "Spirit Arena" && GetBool("Placed Hexagons ALL") && !GetBool("Has Been Betrayed")) {
+                    SaveFile.SetInt("Has Been Betrayed", 1);
+                }
+
                 DiedToDeathLink = false;
             }
         }

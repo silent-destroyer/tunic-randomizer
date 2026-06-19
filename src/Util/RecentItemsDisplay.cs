@@ -124,7 +124,7 @@ namespace TunicRandomizer {
                                 recentItems[index].transform.GetChild(3).GetComponent<Image>().sprite = ModelSwaps.FindSprite("Randomizer items_Archipelago Item");
                                 string itemFormatted = item.itemInfo.ItemDisplayName.Length > 20 ? item.itemInfo.ItemDisplayName.Substring(0, 20) + "..." : item.itemInfo.ItemDisplayName;
                                 itemFormatted = itemFormatted.Replace("_", " ");
-                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
+                                recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\n{(item.itemInfo.Player.Name.Length > 13 ? "<size=85%>" : "")}sent to {item.itemInfo.Player.Name}";
                             } else {
                                 ItemData itemData = ItemLookup.Items[item.itemInfo.ItemDisplayName];
                                 isTrap = isTrap || itemData.Type == ItemTypes.FOOLTRAP;
@@ -145,7 +145,7 @@ namespace TunicRandomizer {
                                         recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\n({item.hexagonAbility} Unlocked)";
                                     }
                                     if (item.itemInfo.Player != Archipelago.instance.GetPlayerSlot()) {
-                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\nfrom {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
+                                        recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text += $"\n{(item.itemInfo.Player.Name.Length > 13 ? "<size=85%%>" : "")}from {item.itemInfo.Player.Name}";
                                     } else if (item.itemInfo.Player == Archipelago.instance.GetPlayerSlot()) {
                                         if (Locations.LocationDescriptionToId.ContainsKey(item.itemInfo.LocationDisplayName) && Locations.VanillaLocations.ContainsKey(Locations.LocationDescriptionToId[item.itemInfo.LocationDisplayName])) {
                                             Check c = Locations.VanillaLocations[Locations.LocationDescriptionToId[item.itemInfo.LocationDisplayName]];
@@ -155,7 +155,7 @@ namespace TunicRandomizer {
                                         }
                                     }
                                 } else {
-                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\nsent to {(item.itemInfo.Player.Name.Length > 15 ? item.itemInfo.Player.Name.Substring(0, 14) + "..." : item.itemInfo.Player.Name)}";
+                                    recentItems[index].GetComponentInChildren<TextMeshProUGUI>(true).text = $"{itemFormatted}\n{(item.itemInfo.Player.Name.Length > 13 ? "<size=85%>" : "")}sent to {item.itemInfo.Player.Name}";
                                 }
                             } 
                         } else if (item.isShopPurchase) {
@@ -212,7 +212,7 @@ namespace TunicRandomizer {
             if (GrassRandomizer.GrassChecks.ContainsKey(check.CheckId) && check.Reward.Name == "Grass") {
                 return;
             }
-            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && check.Reward.Name == "money" && check.Reward.Amount <= 5) {
+            if ((SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) || SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) && check.Reward.Name == "money" && check.Reward.Amount < 10) {
                 return;
             }
             recentItemsQueue.Add(new RecentItemData(Check: check, ForYou: true, IsHexagonUnlock: hexagonUnlock, HexagonAbility: hexagonAbility));
@@ -223,8 +223,8 @@ namespace TunicRandomizer {
             if (Locations.LocationDescriptionToId.ContainsKey(itemInfo.LocationDisplayName) && itemInfo.LocationGame == "TUNIC" && GrassRandomizer.GrassChecks.ContainsKey(Locations.LocationDescriptionToId[itemInfo.LocationDisplayName]) && itemInfo.ItemDisplayName == "Grass") {
                 return;
             }
-            if (SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemDisplayName.Contains("Money")
-                && ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName) && ItemLookup.Items[itemInfo.ItemDisplayName].QuantityToGive <= 5) {
+            if ((SaveFlags.GetBool(SaveFlags.BreakableShuffleEnabled) || SaveFlags.GetBool(SaveFlags.ShuffleEnemyDropsEnabled)) && itemInfo.ItemGame == "TUNIC" && itemInfo.ItemDisplayName.Contains("Money")
+                && ItemLookup.Items.ContainsKey(itemInfo.ItemDisplayName) && ItemLookup.Items[itemInfo.ItemDisplayName].QuantityToGive < 10) {
 
                 return;
             }

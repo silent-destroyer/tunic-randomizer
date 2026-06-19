@@ -619,7 +619,7 @@ namespace TunicRandomizer {
             GrassCounter.SetActive(SaveFile.GetInt(GrassRandoEnabled) == 1 && SpeedrunData.gameComplete == 0 && !InventoryDisplay.InventoryOpen);
 
             if (HexagonQuest.active && GrassCounter.active) {
-                GrassCounter.transform.position = HexagonQuest.transform.position + new Vector3(125, 0, 0);
+                GrassCounter.transform.position = HexagonQuest.transform.position + new Vector3(130, 0, 0);
             } else {
                 GrassCounter.transform.position = HexagonQuest.transform.position;
             }

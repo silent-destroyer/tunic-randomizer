@@ -262,7 +262,7 @@ namespace TunicRandomizer {
                     yield return true;
                 }
 
-                var handleResult = ItemPatches.GiveItem(itemName, itemInfo);
+                var handleResult = ItemPatches.GiveItem(itemInfo, incomingItems.Count);
                 switch (handleResult) {
                     case ItemPatches.ItemResult.Success:
                         TunicLogger.LogInfo("Received " + itemDisplayName + " from " + itemInfo.Player.Name + " at " + itemInfo.LocationDisplayName);
@@ -283,9 +283,23 @@ namespace TunicRandomizer {
 
                         // Pause before processing next item
                         if (itemInfo.ItemDisplayName != "Grass") {
-                            DateTime postInteractionStart = DateTime.Now;
-                            while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(incomingItems.Count > 10 ? 1f : 2f)) {
-                                yield return true;
+                            if (ItemLookup.Items.TryGetValue(itemInfo.ItemDisplayName, out var itemData)) {
+                                float delay = 1f;
+                                if (itemData.Type == ItemTypes.MONEY) {
+                                    if (itemData.QuantityToGive < 100) {
+                                        delay = 0.5f;
+                                    }
+                                    if (itemData.QuantityToGive < 10) {
+                                        delay = 0.05f;
+                                    }
+                                }
+                                if (itemData.Classification == "filler" && TunicRandomizer.Settings.FasterItemQueue) {
+                                    delay = 0.75f;
+                                }
+                                DateTime postInteractionStart = DateTime.Now;
+                                while (DateTime.Now < postInteractionStart + TimeSpan.FromSeconds(delay)) {
+                                    yield return true;
+                                }
                             }
                         }
 

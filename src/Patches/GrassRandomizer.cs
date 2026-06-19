@@ -27,6 +27,8 @@ namespace TunicRandomizer {
             "bush (58)~(58.0, 44.0, -109.0)",
             "bush (62)~(66.5, 44.0, -111.0)",
             "bush (64)~(56.0, 44.0, -107.0)",
+            "bush (16)~(151.0, 8.0, 7.0)",
+            "bush (17)~(153.0, 8.0, 7.0)"
         };
 
         public static int GrassCut = 0;

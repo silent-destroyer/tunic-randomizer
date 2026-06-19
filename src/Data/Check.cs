@@ -139,5 +139,10 @@ namespace TunicRandomizer {
             Location = location;
             Reward = reward;
         }
+
+        override
+        public string ToString() {
+            return CheckId + " - " + Reward.Name + " x" + Reward.Amount;
+        }
     }
 }

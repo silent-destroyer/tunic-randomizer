@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERData;
 using static TunicRandomizer.SaveFlags;
 
@@ -73,10 +74,10 @@ namespace TunicRandomizer {
         }
 
         // for filtering items out in PlayerItemsAndRegions
-        public static List<string> AllProgressionNames = new List<string>() {
+        public static HashSet<string> AllProgressionNames = new HashSet<string>() {
             "Stick", "Sword", "Sword Upgrade", "Sword Progression", "Stundagger", "Techbow", "Wand", "Hyperdash", "Lantern", "Shotgun",
             "Key (House)", "Key", "Vault Key (Red)", "Trinket Coin", "Hexagon Red", "Hexagon Green", "Hexagon Blue", "Hexagon Gold", "Mask",
-            "Fairy", "12", "21", "26", "Trinket - Glass Cannon",
+            "Fairy", "12", "21", "26", "Trinket - Glass Cannon", "Upgrade Offering - Attack - Tooth",
             "Ladders in Overworld Town", "Ladders near Weathervane", "Ladders near Overworld Checkpoint", "Ladder to East Forest",
             "Ladders to Lower Forest", "Ladders near Patrol Cave", "Ladders in Well", "Ladders to West Bell", "Ladder to Quarry",
             "Ladder in Dark Tomb", "Ladders near Dark Tomb", "Ladder near Temple Rafters", "Ladder to Swamp", "Ladders in Swamp",
@@ -88,7 +89,8 @@ namespace TunicRandomizer {
             "Fortress Courtyard Fuse", "Beneath the Vault Fuse", "Fortress Candles Fuse",
             "Fortress Door Left Fuse", "Fortress Door Right Fuse", "West Furnace Fuse",
             "West Garden Fuse", "Atoll Northeast Fuse", "Atoll Northwest Fuse", "Atoll Southeast Fuse",
-            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell"
+            "Atoll Southwest Fuse", "Library Lab Fuse", "West Bell", "East Bell",
+            // Enemy Souls added here in EnemyDropShuffle.CreateEnemyItems()
         };
 
 
@@ -224,15 +226,28 @@ namespace TunicRandomizer {
             if (randomizedPortals == null) {
                 randomizedPortals = ERData.RandomizedPortals;
             }
+            Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(DeepCopyTraversalReqs(), randomizedPortals);
             // if it worked right, then inventory should be full and alreadyGottenLocs should be all locations with progression items
-            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory, randomizedPortals: randomizedPortals);
-
+            (inventory, _) = ERScripts.UpdateReachableRegionsAndPickUpItems(inventory, randomizedPortals: randomizedPortals, modifiedTraversalReqs: modifiedTraversalReqs);
+            bool loggedIssue = false;
             foreach (Check check in allInUseChecks) {
                 if (!check.Location.reachable(inventory)) {
                     TunicLogger.LogError($"{check.CheckId} is not reachable!");
+                    loggedIssue = true;
                 }
             }
-            TunicLogger.LogInfo("CheckAllLocsReachable done, if there are issues then they will be shown above");
+            if (loggedIssue) {
+                TunicLogger.LogInfo("CheckAllLocsReachable found issues, outputting the portal pairs");
+                foreach (PortalCombo portalCombo in randomizedPortals) {
+                    TunicLogger.LogInfo($"{portalCombo.Portal1.Name} -> {portalCombo.Portal2.Name}");
+                }
+                TunicLogger.LogInfo("Also outputting what it thinks the collectable inventory is");
+                foreach (string item in inventory.Keys) {
+                    TunicLogger.LogInfo(item);
+                }
+            } else {
+                TunicLogger.LogInfo("CheckAllLocsReachable done!");
+            }
         }
 
         public static Dictionary<string, Dictionary<string, List<List<string>>>> DeepCopyTraversalReqs() {
@@ -278,18 +293,24 @@ namespace TunicRandomizer {
         public static List<Check> GetAllInUseChecks(bool getAll = false, bool exceptGrass = false) {
             // Get a list of all default checks based on settings
             List<Check> checks = Locations.VanillaLocations.Values.ToList();
-            if ((SaveFile.GetInt(SaveFlags.GrassRandoEnabled) == 1 || getAll) && !exceptGrass) {
+            if ((GetBool(GrassRandoEnabled) || getAll) && !exceptGrass) {
                 checks.AddRange(GrassRandomizer.GrassChecks.Values.ToList());
             }
-            if (SaveFile.GetInt(SaveFlags.BreakableShuffleEnabled) == 1 || getAll) {
+            if (GetBool(BreakableShuffleEnabled) || getAll) {
                 bool erEnabled = SaveFile.GetInt(SaveFlags.EntranceRando) == 1;
-                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory"));
+                checks.AddRange(BreakableShuffle.BreakableChecks.Values.ToList().Where(check => erEnabled || check.Location.SceneName != "Purgatory" || getAll));
             }
-            if (SaveFile.GetInt(SaveFlags.FuseShuffleEnabled) == 1 || getAll) { 
+            if (GetBool(FuseShuffleEnabled) || getAll) { 
                 checks.AddRange(FuseRandomizer.FuseChecks.Values.ToList());
             }
-            if (SaveFile.GetInt(SaveFlags.BellShuffleEnabled) == 1 || getAll) {
+            if (GetBool(BellShuffleEnabled) || getAll) {
                 checks.AddRange(BellShuffle.BellChecks.Values.ToList());
+            }
+            if (GetBool(ShuffleEnemyDropsEnabled) || getAll) { 
+                checks.AddRange(EnemyDropShuffle.BaseEnemyDropChecks.Values.ToList());
+                if (GetBool(ExtraEnemyDropsEnabled) || getAll) {
+                    checks.AddRange(EnemyDropShuffle.ExtraEnemyDropChecks.Values.ToList());
+                }
             }
             return CopyListOfChecks(checks);
         }
@@ -297,7 +318,7 @@ namespace TunicRandomizer {
         public static Dictionary<string, Check> GetAllInUseChecksDictionary(bool getAll = false) {
             // Get a list of all default checks based on settings
             Dictionary<string, Check> Checks = new Dictionary<string, Check>();
-            foreach (Check check in GetAllInUseChecks(getAll)) {
+            foreach (Check check in GetAllInUseChecks(getAll: getAll)) {
                 Checks.Add(check.CheckId, check);
             }
             return Checks;
@@ -446,11 +467,16 @@ namespace TunicRandomizer {
             return newPortalCombo;
         }        
 
-        public static string FindPairedPortalSceneFromName(string portalName) {
+        public static string FindPairedPortalSceneFromName(string portalName, List<PortalCombo> randomizedPortals = null) {
             List<PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
+            if (randomizedPortals != null) {
+                portalList = randomizedPortals;
+            } else if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
+                if (ERData.VanillaPortals.Count == 0) {
+                    ERScripts.SetupVanillaPortals();
+                }
                 portalList = ERData.VanillaPortals;
             }
             foreach (PortalCombo portalCombo in portalList) {
@@ -477,9 +503,11 @@ namespace TunicRandomizer {
             return "FindPortalRegionFromName failed to find a match";
         }
 
-        public static string FindPairedPortalRegionFromSDT(string portalSDT) {
+        public static string FindPairedPortalRegionFromSDT(string portalSDT, List<PortalCombo> randomizedPortals = null) {
             List<PortalCombo> portalList;
-            if (GetBool(EntranceRando)) {
+            if (randomizedPortals != null) {
+                portalList = randomizedPortals;
+            } else if (GetBool(EntranceRando)) {
                 portalList = ERData.RandomizedPortals;
             } else {
                 if (ERData.VanillaPortals.Count == 0) {
@@ -487,6 +515,7 @@ namespace TunicRandomizer {
                 }
                 portalList = ERData.VanillaPortals;
             }
+
             foreach (PortalCombo portalCombo in portalList) {
                 if (portalCombo.Portal1.SceneDestinationTag == portalSDT) {
                     return portalCombo.Portal2.OutletRegion();
@@ -495,6 +524,12 @@ namespace TunicRandomizer {
 
             // returning this if it fails, since that makes some FairyTarget stuff easier
             return "FindPairedPortalRegionFromSDT failed to find a match";
+        }
+
+        public static bool CanGetPastBushes() {
+            return Inventory.GetItemByName("Hyperdash Toggle").Quantity > 0 || Inventory.GetItemByName("Sword").Quantity > 0
+                || Inventory.GetItemByName("Techbow").Quantity > 0 || Inventory.GetItemByName("Shotgun").Quantity > 0
+                || (Inventory.GetItemByName("Stick").Quantity > 0 && Inventory.GetItemByName("Trinket - Glass Cannon").Quantity > 0);
         }
 
         public static float calcGuiScale() {
@@ -517,6 +552,10 @@ namespace TunicRandomizer {
                 guiScale = 0.6f;
             }
             return guiScale;
+        }
+
+        public static bool IsInActiveScene(GameObject obj) {
+            return obj.scene.name == SceneManager.GetActiveScene().name;
         }
 
     }

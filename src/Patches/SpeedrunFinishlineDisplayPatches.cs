@@ -98,6 +98,8 @@ namespace TunicRandomizer {
             Fuses.icon = ModelSwaps.FindSprite("Randomizer items_fuse");
             SpeedrunReportItem Bells = ScriptableObject.CreateInstance<SpeedrunReportItem>();
             Bells.icon = ModelSwaps.FindSprite("Randomizer items_bell");
+            SpeedrunReportItem EnemySouls = ScriptableObject.CreateInstance<SpeedrunReportItem>();
+            EnemySouls.icon = ModelSwaps.FindSprite("Randomizer items_enemysoul");
 
             List<SpeedrunReportItem> items = SpeedrunFinishlineDisplay.instance.reportGroup_items.ToList();
             items.Add(DathStone);
@@ -112,6 +114,7 @@ namespace TunicRandomizer {
                 Ladders,
                 Fuses,
                 Bells,
+                EnemySouls,
                 Grass,
             };
 
@@ -167,6 +170,10 @@ namespace TunicRandomizer {
             if (icon.name == "Randomizer items_bell") {
                 quantity = ItemRandomizer.BellItems.Where(item => Inventory.GetItemByName(item).Quantity > 0).Count();
                 return SaveFile.GetInt(BellShuffleEnabled) == 1;
+            }
+            if (icon.name == "Randomizer items_enemysoul") {
+                quantity = ItemRandomizer.EnemyItems.Where(item => Inventory.GetItemByName(item).Quantity > 0).Count();
+                return GetBool(ShuffleEnemySoulsEnabled);
             }
             if (TunicRandomizer.Tracker.ImportantItems[ReportGroupItems[icon.name]] == 0) {
                 return false;
@@ -461,7 +468,7 @@ namespace TunicRandomizer {
                     List<string> Times = new List<string>();
                     if (SaveFile.GetInt(HexagonQuestEnabled) == 1) {
                         int HexGoal = SaveFile.GetInt(HexagonQuestGoal);
-                        int HalfGoal = HexGoal / 2;
+                        int HalfGoal = Math.Max(1, ((int)Math.Round(HexGoal / 2.0)));
                         Text += $"1st Hex:\t{FormatTime(SaveFile.GetFloat("randomizer Gold Questagon 1 time"), true)}\t" +
                                 $"{HalfGoal}{GetOrdinalSuffix(HalfGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {HalfGoal} time"), true)}\n" +
                                 $"{HexGoal}{GetOrdinalSuffix(HexGoal)} Hex:\t{FormatTime(SaveFile.GetFloat($"randomizer Gold Questagon {SaveFile.GetInt(HexagonQuestGoal)} time"), true)}\t";
