@@ -39,7 +39,7 @@ description: Default TUNIC Template
 
 game: TUNIC
 requires:
-  version: 0.6.8 # Version of Archipelago required for this yaml to work as expected.
+  version: 0.6.7 # Version of Archipelago required for this yaml to work as expected.
   game:
     TUNIC: 5.0.0 # Version of the world required for this yaml to work as expected.
 
