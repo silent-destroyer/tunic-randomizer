@@ -1,4 +1,4 @@
-﻿# _________  ___  ___  ________   ________     
+﻿﻿# _________  ___  ___  ________   ________     
 #|\___   ___\\  \|\  \|\   ___  \|\   ____\    
 #\|___ \  \_\ \  \\\  \ \  \\ \  \ \  \___|    
 #     \ \  \ \ \  \\\  \ \  \\ \  \ \  \       
@@ -35,14 +35,18 @@
 name: Ruin Seeker
 
 # Used to describe your yaml. Useful if you have multiple files.
-description: tunc
+description: Default TUNIC Template
 
 game: TUNIC
 requires:
-  version: 0.5.1 # Version of Archipelago required for this yaml to work as expected.
+  version: 0.6.8 # Version of Archipelago required for this yaml to work as expected.
+  game:
+    TUNIC: 5.0.0 # Version of the world required for this yaml to work as expected.
 
 TUNIC:
-  # Game Options
+  ################
+  # Game Options #
+  ################
   progression_balancing:
     # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
     # 
@@ -52,8 +56,9 @@ TUNIC:
     # Minimum value is 0
     # Maximum value is 99
     random: 0
-    random-low: 0
-    random-high: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-99: 0 # random value between 0 and 99
     disabled: 0 # equivalent to 0
     normal: 50 # equivalent to 50
     extreme: 0 # equivalent to 99
@@ -115,8 +120,8 @@ TUNIC:
     'true': 0
 
   shuffle_fuses:
-    # Praying at a fuse will reward a check instead of turning on the power. The power from each fuse gets turned into an
-    # item that must be found in order to restore power for that part of the path.
+    # Praying at a fuse will reward a check instead of turning on the power.
+    # The power from each fuse gets turned into an item that must be found in order to restore power for that part of the path.
     'false': 50
     'true': 0
 
@@ -126,20 +131,43 @@ TUNIC:
     'false': 50
     'true': 0
 
-  grass_randomizer:
-    # Turns over 6,000 blades of grass and bushes in the game into checks.
-    'false': 50
-    'true': 0
-
   breakable_shuffle:
     # Turns approximately 250 breakable objects in the game into checks.
     'false': 50
     'true': 0
 
+  shuffle_enemy_drops:
+    # Every individual enemy and boss drops a check when defeated (excluding The Heir).
+    # On: Adds about ~600 locations.
+    # Extra: Includes nighttime and New Game+ enemy spawns for an additional ~90 checks. (Note: These enemies will appear alongside the normal enemy pool, since nighttime is not in the randomizer.)
+    'off': 50
+    'on': 0
+    extra: 0
+
+  shuffle_enemy_souls:
+    # Enemies do not appear until their corresponding "Soul" item is found. There are about 30 Enemy Soul items in total, including one for The Heir that is required to beat the game.
+    # This option has no effect if you do not have Shuffle Enemy Drops enabled.
+    'false': 50
+    'true': 0
+
+  grass_randomizer:
+    # Turns over 6,000 blades of grass and bushes in the game into checks.
+    'false': 50
+    'true': 0
+
   local_fill:
     # Choose the percentage of your filler/trap items that will be kept local or distributed to other TUNIC players with this option enabled.
-    # This option defaults to 95% if you have Grass Randomizer enabled, 40% if you have Breakable Shuffle enabled, 96% if you have both, and 0% otherwise.
-    # If you have Grass Randomizer enabled, this option must be set to 95% or higher to avoid flooding the item pool. The host can remove this restriction by turning off the limit_grass_rando setting in host.yaml.
+    # The default value for this option will be higher or lower depending on what combination of options you have enabled:
+    # - Grass Randomizer + Breakable Shuffle or Shuffled Enemy Drops = 96%
+    # - Grass Randomizer = 95%
+    # - Shuffled Enemy Drops + Breakable Shuffle = 73%
+    # - Shuffled Enemy Drops = 65%
+    # - Breakable Shuffle = 40%
+    # If you have any of the following options enabled, this option must be set greater than or equal to the corresponding value to avoid flooding the item pool:
+    # - Grass Randomizer: >= 95%
+    # - Shuffled Enemy Drops + Breakable Shuffle: >= 40%
+    # - Shuffled Enemy Drops: >= 30%
+    # The host can remove the above restriction by turning off the limit_local_fill setting in host.yaml.
     # This option ignores items placed in your local_items or non_local_items.
     # This option does nothing in single player games.
     #
@@ -147,11 +175,14 @@ TUNIC:
     # Minimum value is 0
     # Maximum value is 98
     random: 0
-    random-low: 0
-    random-high: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-98: 0 # random value between 0 and 98
     default: 50 # equivalent to -1
 
-  # Hexagon Quest Options
+  #########################
+  # Hexagon Quest Options #
+  #########################
   hexagon_quest:
     # An alternate goal that shuffles Gold "Questagon" items into the item pool and allows the game to be completed after collecting the required number of them.
     'false': 50
@@ -165,8 +196,9 @@ TUNIC:
     # Maximum value is 100
     20: 50
     random: 0
-    random-low: 0
-    random-high: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-1-100: 0 # random value between 1 and 100
 
   extra_hexagon_percentage:
     # How many extra Gold Questagons are shuffled into the item pool, taken as a percentage of the goal amount.
@@ -178,8 +210,9 @@ TUNIC:
     # Maximum value is 100
     50: 50
     random: 0
-    random-low: 0
-    random-high: 0
+    random-low: 0 # random value weighted towards lower values
+    random-high: 0 # random value weighted towards higher values
+    random-range-0-100: 0 # random value between 0 and 100
 
   hexagon_quest_ability_type:
     # Determines how abilities are unlocked when playing Hexagon Quest with Shuffled Abilities enabled.
@@ -191,7 +224,9 @@ TUNIC:
     hexagons: 50
     pages: 0
 
-  # Logic Options
+  #################
+  # Logic Options #
+  #################
   combat_logic:
     # If enabled, the player will logically require a combination of stat upgrade items and equipment to get some checks or navigate to some areas, with a goal of matching the vanilla combat difficulty.
     # The player may still be expected to run past enemies, reset aggro (by using a checkpoint or doing a scene transition), or find sneaky paths to checks.
@@ -203,14 +238,14 @@ TUNIC:
     'on': 0
 
   lanternless:
-    # Choose whether you require the Lantern for dark areas.
-    # When enabled, the Lantern is marked as Useful instead of Progression.
+    # When enabled, you may be required to navigate dark areas without the Lantern.
+    # The Lantern is marked as Useful instead of Progression.
     'false': 50
     'true': 0
 
   maskless:
-    # Choose whether you require the Scavenger's Mask for Lower Quarry.
-    # When enabled, the Scavenger's Mask is marked as Useful instead of Progression.
+    # When enabled, you may be required to traverse Lower Quarry without the Scavenger's Mask.
+    # The Scavenger's Mask is marked as Useful instead of Progression.
     'false': 50
     'true': 0
 
@@ -254,7 +289,9 @@ TUNIC:
     'false': 50
     'true': 0
 
-  # Entrance Randomizer
+  #######################
+  # Entrance Randomizer #
+  #######################
   entrance_rando:
     # Randomize the connections between scenes.
     # A small, very lost fox on a big adventure.
@@ -295,9 +332,12 @@ TUNIC:
     # If the Entrance Layout option is set to Standard or Fixed Shop, you can plando multiple shops.
     # If the Entrance Layout option is set to Direction Pairs, your plando connections must be facing opposite directions.
     # Shop Portal 1-6 are South portals, and Shop Portal 7-8 are West portals.
+    # This option does nothing if Entrance Rando is disabled.
     []
 
-  # Item & Location Options
+  ###########################
+  # Item & Location Options #
+  ###########################
   local_items:
     # Forces these items to be in their native world.
     []
@@ -307,7 +347,13 @@ TUNIC:
     []
 
   start_inventory:
-    # Start with these items.
+    # Start with the specified amount of these items. Example: {Bomb: 1, Arrow: 3}
+    {}
+
+  start_inventory_from_pool:
+    # Start with the specified amount of these items and don't place them in the world. Example: {Bomb: 1, Arrow: 3}
+    # 
+    # The game decides what the replacement items will be.
     {}
 
   start_hints:
@@ -330,8 +376,6 @@ TUNIC:
     # Share part of your item pool with other players.
     []
 
-  start_inventory_from_pool:
-    # Start with these items and don't place them in the world.
-    # 
-    # The game decides what the replacement items will be.
-    {}
+  plando_items:
+    # Generic items plando.
+    []
