@@ -566,7 +566,6 @@ namespace TunicRandomizer {
                             check.Reward.Amount = 1;
                             diceAdded++;
                         } else if (dartsAdded < 3) {
-                            TunicLogger.LogInfo("swapping item");
                             check.Reward.Name = "Dart";
                             check.Reward.Type = "INVENTORY";
                             check.Reward.Amount = 1;
