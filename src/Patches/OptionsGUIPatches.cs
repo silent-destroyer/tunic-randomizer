@@ -387,16 +387,14 @@ namespace TunicRandomizer {
             OptionsGUI.addToggle("Keepin' It Real", "Off", "On", TunicRandomizer.Settings.RealestAlwaysOn ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleSunglasses);
             OptionsGUI.addToggle("Bigger Head Mode", "Off", "On", TunicRandomizer.Settings.BiggerHeadMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.BiggerHeadMode = !TunicRandomizer.Settings.BiggerHeadMode; SaveSettings(); }));
             OptionsGUI.addToggle("Tinier Fox Mode", "Off", "On", TunicRandomizer.Settings.TinierFoxMode ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)((int index) => { TunicRandomizer.Settings.TinierFoxMode = !TunicRandomizer.Settings.TinierFoxMode; SaveSettings(); }));
-            OptionsGUI.addButton($"Open Fox Color Editor", (Action)(() => {
-                if (SceneManager.GetActiveScene().name == "TitleScreen") {
-                    GenericMessage.ShowMessage($"\"Fox Color Editor can only\"\n\"be opened while in-game.\"");
-                } else {
-                    PaletteEditor.EditorOpen = true; 
-                    CameraController.DerekZoom = 0.35f; 
-                    GUIMode.ClearStack(); 
-                    GUIMode.PushGameMode(); 
-                }
-            }));
+            if (SceneManager.GetActiveScene().name != "TitleScreen") {
+                OptionsGUI.addButton($"Open Fox Color Editor", (Action)(() => {
+                    PaletteEditor.EditorOpen = true;
+                    CameraController.DerekZoom = 0.35f;
+                    GUIMode.ClearStack();
+                    GUIMode.PushGameMode();
+                }));
+            }
             if (BonusOptionsUnlocked && SceneLoaderPatches.SceneName != "TitleScreen") {
                 OptionsGUI.addToggle("<#FFA500>BONUS: Matching Ghost Foxes", "Off", "On", PaletteEditor.CelShadingEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)ToggleCelShading);
                 OptionsGUI.addToggle("<#00FFFF>BONUS: Party Hat", "Off", "On", PaletteEditor.PartyHatEnabled ? 1 : 0, (OptionsGUIMultiSelect.MultiSelectAction)TogglePartyHat);
