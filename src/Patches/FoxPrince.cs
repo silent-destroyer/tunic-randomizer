@@ -46,9 +46,9 @@ namespace TunicRandomizer {
                 CurrentPortal = __instance;
                 FoxCollider = c;
                 List<PortalCombo> portalChoices = FPGetThreePortals(SaveFile.GetInt("seed"), __instance.name);
-                TunicLogger.LogInfo("portal choices below");
+                TunicLogger.LogTesting("portal choices below");
                 foreach (var portalChoice in portalChoices) {
-                    TunicLogger.LogInfo(portalChoice.Portal2.Name);
+                    TunicLogger.LogTesting(portalChoice.Portal2.Name);
                 }
 
                 FPChoosePortal(portalChoices);
@@ -64,7 +64,7 @@ namespace TunicRandomizer {
 
 
         public static List<PortalCombo> FPGetThreePortals(int seed, string currentPortalName, List<PortalCombo> excludedPortals = null) {
-            TunicLogger.LogInfo("starting FPGetThreePortals");
+            TunicLogger.LogTesting("starting FPGetThreePortals");
             List<PortalCombo> portalChoices = new List<PortalCombo>();
             List<Tuple<string, string>> deplando = new List<Tuple<string, string>>();
 
@@ -150,7 +150,7 @@ namespace TunicRandomizer {
                     break;
                 }
                 trialCount++;
-                TunicLogger.LogInfo($"Current trial: {trialCount}");
+                TunicLogger.LogTesting($"Current trial: {trialCount}");
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + trialCount, plando, deplando, canFail: true);
                 if (randomizedPortals == null) {
                     // this means the generation was not successful, which is fine and intended to happen, especially with restrictive logic
@@ -161,20 +161,20 @@ namespace TunicRandomizer {
                 portalChoices.Add(newPortalCombo);
                 CachePairingDict.Add(newPortalCombo, randomizedPortals);
 
-                TunicLogger.LogInfo("portal choice is " + newPortalCombo.Portal2.Name);
+                TunicLogger.LogTesting("portal choice is " + newPortalCombo.Portal2.Name);
 
                 // todo: remove this later when confident that it's not going to be a problem
-                TunicLogger.LogInfo($"Starting check all reachable in trials for {newPortalCombo.Portal2.Name}");
+                TunicLogger.LogTesting($"Starting check all reachable in trials for {newPortalCombo.Portal2.Name}");
                 TunicUtils.CheckAllLocsReachable(randomizedPortals);
 
                 updateDeplando(currentPortalName, newPortalCombo.Portal2.Name);
             }
-            TunicLogger.LogInfo("returning portal choices");
+            TunicLogger.LogTesting("returning portal choices");
             return portalChoices;
         }
 
         public static void FPPortalChosen(PortalCombo portalCombo) {
-            TunicLogger.LogInfo("FPPortalChosen started");
+            TunicLogger.LogTesting("FPPortalChosen started");
             if (CachePairingDict.ContainsKey(portalCombo)) {
                 CachedSuccessfulPairing = CachePairingDict[portalCombo];
             }
@@ -203,7 +203,7 @@ namespace TunicRandomizer {
                 PinnedPortal = "";
             }
 
-            TunicLogger.LogInfo("FPPortalChosen done");
+            TunicLogger.LogTesting("FPPortalChosen done");
         }
 
         public static void ClearFoxPrinceCaches() {

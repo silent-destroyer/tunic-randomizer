@@ -521,8 +521,8 @@ namespace TunicRandomizer {
                             }
                         }
                         TunicLogger.LogInfo("---------------------------------------");
-                        TunicLogger.LogInfo("This will now reroll the entrances and try again.");
-                        TunicLogger.LogInfo("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
+                        TunicLogger.LogError("This will now reroll the entrances and try again.");
+                        TunicLogger.LogError("If you see this, please report it to the TUNIC rando devs, and give them the log file.");
                         // reroll, hopefully this shouldn't be common at all
                         return RandomizePortals(seed + 1);
                     }
@@ -557,7 +557,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo(debugportal.Name);
                     }
                     // reroll, hopefully this shouldn't be common at all
-                    TunicLogger.LogInfo("Rerolling in first phase in RandomizePortals");
+                    TunicLogger.LogError("Rerolling in first phase in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }
 
@@ -703,7 +703,7 @@ namespace TunicRandomizer {
                         TunicLogger.LogInfo(portal.Name);
                     }
                     // reroll, hopefully this shouldn't be common at all
-                    TunicLogger.LogInfo("Rerolling during last phase in RandomizePortals");
+                    TunicLogger.LogError("Rerolling during last phase in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }
                 Portal portal1 = portalsList[0];
@@ -739,7 +739,7 @@ namespace TunicRandomizer {
                         }
                     }
                     // reroll, hopefully this shouldn't be common at all
-                    TunicLogger.LogInfo("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
+                    TunicLogger.LogError("Rerolling portals in last phase because we couldn't find a match in RandomizePortals");
                     return RandomizePortals(seed + 1);
                 }
                 if (deplando.Any(item => item.Item1 == portal1.Name && item.Item2 == portal2.Name)) {
