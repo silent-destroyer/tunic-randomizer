@@ -455,7 +455,7 @@ namespace TunicRandomizer {
                 l = random.Next(InitialLocations.Count);
 
                 int counter = 0;
-                while (!InitialLocations[l].reachable(FullInventory)) {
+                while (!InitialLocations[l].reachable(FullInventory) || (item.Name == "Hyperdash" && InitialLocations[l].LocationId == "1007" && GetBool(FoxPrinceEnabled) == true)) {
                     l = random.Next(InitialLocations.Count);
                     counter++;
                     // If it fails to place an item, start over with the current seed progress
