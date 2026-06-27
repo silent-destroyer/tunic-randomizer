@@ -772,7 +772,8 @@ namespace TunicRandomizer {
                     portalsList.Add(portal1);
                     portalsList2.Add(portal2);
                     TunicUtils.ShuffleList(portalsList, seed);
-                    TunicUtils.ShuffleList(portalsList2, seed);
+                    // if there isn't a different seed here, the lists will both shuffle the same way, so the deplando'd portals will keep hitting each other
+                    TunicUtils.ShuffleList(portalsList2, seed + 1);
                     continue;
                 }
 
