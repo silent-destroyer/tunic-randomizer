@@ -18,12 +18,6 @@ namespace TunicRandomizer {
             if (modifiedTraversalReqs == null) {
                 modifiedTraversalReqs = ModifiedTraversalReqs;
             }
-            if (TunicLogger.Testing) {
-                TunicLogger.LogTesting("Starting UpdateReachableRegions, current inventory is as follows:");
-                foreach (string itemName in inventory.Keys) {
-                    TunicLogger.LogTesting(itemName);
-                }
-            }
             int inv_count = inventory.Count;
 
             // this is basically if it uses trick logic to get somewhere and never goes and back-checks it later after getting laurels

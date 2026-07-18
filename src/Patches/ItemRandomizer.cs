@@ -455,7 +455,8 @@ namespace TunicRandomizer {
                 l = random.Next(InitialLocations.Count);
 
                 int counter = 0;
-                while (!InitialLocations[l].reachable(FullInventory)) {
+                while (!InitialLocations[l].reachable(FullInventory) 
+                    || (item.Name == "Hyperdash" && InitialLocations[l].LocationId == "1007" && GetBool(FoxPrinceEnabled))) {  // if laurels is at 20 fairies, fox prince freaks the hell out most of the time, so let's just avoid it
                     l = random.Next(InitialLocations.Count);
                     counter++;
                     // If it fails to place an item, start over with the current seed progress
