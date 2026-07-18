@@ -280,7 +280,7 @@ namespace TunicRandomizer {
             },
             { "Changing Room", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Changing Room 1", "Changing Room", new Vector3(14.9876f, 6.9379f, 14.6771f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.PRAY, $"doo yoo %ink #is louks goud awn mE?"),
-                new HintGhost("Hint Ghost Changing Room 2", "Changing Room", new Vector3(14.9876f, 6.9379f, 14.6771f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.DANCE,  $"doo yoo nO sIlehntdistroiur? hE iz kool.") }
+                new HintGhost("Hint Ghost Changing Room 2", "Changing Room", new Vector3(14.9876f, 6.9379f, 14.6771f), new Quaternion(0f, 0.9238796f, 0f, -0.3826834f), NPC.NPCAnimState.DANCE,  $"doo yoo nO sIluhnt? hE iz kool.") }
             },
             { "Waterfall", new List<HintGhost>() {
                 new HintGhost("Hint Ghost Waterfall", "Waterfall", new Vector3(-41.13461f, 44.9833f, -0.6913f), new Quaternion(0f, 0.6755902f, 0f, -0.7372773f), NPC.NPCAnimState.IDLE, $"doo yoo nO wuht #uh fArEz R sAi^?") }
@@ -852,7 +852,7 @@ namespace TunicRandomizer {
                 $"---I sE yoo hahv A \"TORCH\" [torch]?\n\"USE\" it too rEturn hEr, \"IF\" yoo bEkuhm \"LOST.\"" +
                 $"---nEd hehlp? kawl #uh fArEz too \"SEEK ENTRANCES\"\r\nwi% #uh \"ENTRANCE-SPELL:\"[arrow_right] [arrow_down] [arrow_right] [arrow_up] [arrow_left] [arrow_up]";
                 if (GetBool(FoxPrinceEnabled)) {
-                    TorchFoxScript.text += $"---tinE prins, yooz #Ez rehliks if yoo fInd #ehm:\n" +
+                    TorchFoxScript.text += $"---tInE prins, yooz #Ez rehliks if yoo fInd #ehm:\n" +
                         $"[souldice]  sOl \"DICE\": rE\"-\"rOl for A noo seht uhv Joisuhs.\n[dart]\"DART\": pin ahn ehntruhns for lAtur.";
                 }
                 TorchFox.GetComponent<NPC>().script = TorchFoxScript;
