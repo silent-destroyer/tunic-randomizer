@@ -81,7 +81,7 @@ namespace TunicRandomizer {
                     }
                 }
 
-                if (GameObject.FindObjectOfType<TrinketWell>() != null) {
+                if (GameObject.FindObjectOfType<TrinketWell>() != null && TunicRandomizer.Settings.SeekingSpellDefaultChecks) {
                     int CoinCount = Inventory.GetItemByName("Trinket Coin").Quantity + TunicRandomizer.Tracker.ImportantItems["Coins Tossed"];
                     List<int> CoinLevels = new List<int>() { 3, 6, 10, 15, 20 };
                     int CoinsNeededForNextReward = 3;
