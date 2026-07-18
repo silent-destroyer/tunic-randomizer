@@ -430,9 +430,6 @@ namespace TunicRandomizer {
             string FoolMessageBottom = $"giv it bahk!";
             BaldFox = true;
             PlayerCharacter.instance.Flinch(true);
-            if (Inventory.GetItemByName("Hyperdash Toggle").Quantity > 0) {
-                Inventory.GetItemByName("Hyperdash").Quantity = 0; // Unequip laurels
-            }
             return (FoolMessageTop, FoolMessageBottom);
         }
 
