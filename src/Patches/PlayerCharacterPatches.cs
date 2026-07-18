@@ -205,10 +205,11 @@ namespace TunicRandomizer {
                 InvButton.SetActive(false);
             }
 
-            StateVariable.GetStateVariableByName("SV_ShopTrigger_Fortress").BoolValue = true;
-            StateVariable.GetStateVariableByName("SV_ShopTrigger_Sewer").BoolValue = true;
-            StateVariable.GetStateVariableByName("SV_ShopTrigger_Swamp(Night)").BoolValue = true;
-            StateVariable.GetStateVariableByName("SV_ShopTrigger_WestGarden").BoolValue = true;
+            SaveFile.SetInt("SV_ShopTrigger_Fortress", 1);
+            SaveFile.SetInt("SV_ShopTrigger_Sewer", 1);
+            SaveFile.SetInt("SV_ShopTrigger_Swamp(Night)", 1);
+            SaveFile.SetInt("SV_ShopTrigger_WestGarden", 1);
+            SaveFile.SetInt("Visited Spirit World Door Vision", 1);
 
             CustomItemBehaviors.CanTakeGoldenHit = false;
             CustomItemBehaviors.CanSwingGoldenSword = false;
