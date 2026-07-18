@@ -215,11 +215,12 @@ namespace TunicRandomizer {
         }
 
         public static void CreateFoxPrinceItems() {
-            Item SoulDice = ScriptableObject.CreateInstance<Item>();
+            ButtonAssignableItem SoulDice = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             SoulDice.name = "Soul Dice";
             SoulDice.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
             SoulDice.collectionMessage.text = $"dE twehntE!";
             SoulDice.controlAction = "";
+            SoulDice.suppressQuantity = false;
 
             // TODO maybe think of a better name for this item lol
             Item Dart = Inventory.GetItemByName("Dart");

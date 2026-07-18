@@ -26,6 +26,7 @@ namespace TunicRandomizer {
             ButtonAssignableItem LaurelsToggle = ScriptableObject.CreateInstance<ButtonAssignableItem>();
             Item Grass = ScriptableObject.CreateInstance<Item>();
             Item Torch = Inventory.GetItemByName("Torch");
+            Item Dart = Inventory.GetItemByName("Dart");
 
             LibrarianSword.name = "Librarian Sword";
             LibrarianSword.collectionMessage = ScriptableObject.CreateInstance<LanguageLine>();
@@ -103,6 +104,10 @@ namespace TunicRandomizer {
                 if (Inventory.itemList[i].name == "Torch") {
                     Inventory.itemList.RemoveAt(i);
                     Inventory.itemList.Add(Torch);
+                }
+                if (Inventory.itemList[i].name == "Dart") {
+                    Inventory.itemList.RemoveAt(i);
+                    Inventory.itemList.Add(Dart);
                 }
             }
             Inventory.itemList.Add(LaurelsToggle);
@@ -264,8 +269,6 @@ namespace TunicRandomizer {
         public static bool Item_shouldShowInInventory_GetterPatch(Item __instance, ref bool __result) {
             switch (__instance.name) {
                 case "Cape":
-                case "Soul Dice":
-                case "Dart":
                 case "Koban":
                     __result = false;
                     return false;

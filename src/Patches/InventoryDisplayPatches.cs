@@ -625,5 +625,12 @@ namespace TunicRandomizer {
             }
             return true;
         }
+
+        public static bool InventoryDisplay_equip_PrefixPatch(InventoryDisplay __instance, ref int index, ref ButtonAssignableItem bui) {
+            if (bui.name == "Dart" || bui.name == "Soul Dice") {
+                return false;
+            }
+            return true;
+        }
     }
 }
