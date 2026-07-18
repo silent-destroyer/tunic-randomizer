@@ -26,7 +26,7 @@ namespace TunicRandomizer {
         }
 
         // set this to true to trigger logging for all log testing messages
-        public static bool Testing = true;
+        public static bool Testing = false;
         public static void LogTesting(string message) {
             if (Testing) {
                 Logger.LogInfo(message);
