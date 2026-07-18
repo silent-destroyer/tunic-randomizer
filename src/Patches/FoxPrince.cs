@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERScripts;
 using static TunicRandomizer.SaveFlags;
 
@@ -33,13 +34,14 @@ namespace TunicRandomizer {
         }
 
         public static bool ScenePortal_OnTriggerEnter_PrefixPatch(ScenePortal __instance, Collider c) {
+            string scene = SceneManager.GetActiveScene().name;
             // the collider here is the fox's UnityEngine.CapsuleCollider
             if (!GetBool(FoxPrinceEnabled)) return true;
             if (c.transform.name != "_Fox(Clone)") return true;
             // skip the custom portals
             if (__instance.id.Contains("customfasttravel")) return true;
             // skip the easter egg scenes
-            if (SceneLoaderPatches.SceneName == "Crypt" || SceneLoaderPatches.SceneName == "Quarry") return true;
+            if (scene == "Crypt" || scene == "Quarry" || scene == "Playable Intro") return true;
             // skip zig skip too
             if (__instance.id == "zig2_skip") return true;
             if (SaveFile.GetString($"{FPChosenPortalPrefix} {__instance.name}") == "") {
