@@ -322,9 +322,7 @@ namespace TunicRandomizer {
                     if (Locations.VanillaLocations.Count == 0) {
                         Locations.CreateLocationLookups();
                     }
-                    if (ERData.VanillaPortals.Count == 0) {
-                        ERScripts.SetupVanillaPortalsAndTraversalReqs();
-                    }
+                    ERScripts.SetupVanillaPortalsAndTraversalReqs();
                     SpeedrunFinishlineDisplayPatches.SetupCompletionStatsDisplay();
                     GrassRandomizer.LoadGrassChecks();
                     BreakableShuffle.LoadBreakableChecks();
@@ -647,9 +645,7 @@ namespace TunicRandomizer {
                 });
                 GhostHints.SpawnTorchHintGhost();
             } else {
-                if (ERData.VanillaPortals.Count == 0) {
-                    ERScripts.SetupVanillaPortalsAndTraversalReqs();
-                }
+                ERScripts.SetupVanillaPortalsAndTraversalReqs();    
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
                 ERScripts.ModifyPortalNames(loadingScene.name);
             }
