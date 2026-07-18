@@ -336,7 +336,13 @@ namespace TunicRandomizer {
                 }
             }
 
-            Camera mainCamera = Resources.FindObjectsOfTypeAll<Camera>().Where(c => c.name == "Camera 1 - Main").FirstOrDefault();
+            Camera mainCamera = Resources.FindObjectsOfTypeAll<Camera>().Where(c => {
+                if (loadingScene.name == "Playable Intro") {
+                    return c.name == "Camera 1 - Main" && c.transform.parent.gameObject.active;
+                }
+                return c.name == "Camera 1 - Main";
+            }).FirstOrDefault();
+
             if (mainCamera != null && mainCamera.gameObject.GetComponentInParent<CycleController>() == null) {
                 mainCamera.transform.parent.gameObject.AddComponent<CycleController>();
             }

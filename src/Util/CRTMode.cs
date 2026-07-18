@@ -65,8 +65,16 @@ namespace TunicRandomizer {
         public void Enable(bool withCrtFrame = false) {
             gameObject.SetActive(true);
             cameras.Clear();
-            Camera main = Resources.FindObjectsOfTypeAll<Camera>().Where(c => c.name == "Camera 1 - Main" ||
-            (c.gameObject.scene.name == "Credits Scroll" && c.name == "Credits Camera - Environment")).First();
+            string scene = SceneManager.GetActiveScene().name;
+            Camera main = Resources.FindObjectsOfTypeAll<Camera>().Where(c => {
+                if (scene == "Credits Scroll") {
+                    return c.name == "Credits Camera - Environment";
+                }
+                if (scene == "Playable Intro") {
+                    return c.name == "Camera 1 - Main" && c.transform.parent.gameObject.active;
+                }
+                return c.name == "Camera 1 - Main";
+            }).First();
             meshRenderer.material.SetTexture("_render", main.targetTexture);
             foreach (Camera camera in Resources.FindObjectsOfTypeAll<Camera>()) {
                 if (CameraNames.Contains(camera.name) && camera.GetComponentInParent<CRTMode>() == null) {
