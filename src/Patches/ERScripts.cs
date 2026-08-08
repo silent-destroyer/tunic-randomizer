@@ -510,7 +510,7 @@ namespace TunicRandomizer {
                 if (region.Key.StartsWith("LS Elev") && SaveFile.GetInt(LadderStorageDifficulty) == 0) continue;
                 allRegions.Add(region.Key);
             }
-            
+
             while (FullInventory.Keys.Where(region => RegionDict.ContainsKey(region) && !RegionDict[region].SkipCounting).ToList().Count < allRegions.Count()) {
                 Portal portal1 = null;
                 Portal portal2 = null;
