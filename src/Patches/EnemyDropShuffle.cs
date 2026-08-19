@@ -27,6 +27,14 @@ namespace TunicRandomizer {
             }
             if (GetComponent<Probe>() != null) {
                 GetComponent<Probe>().onlyAggroViaTrigger = false;
+
+                string checkId = EnemyDropShuffle.GetEnemyCheckId(gameObject);
+                if (EnemyDropShuffle.OverrideFairiesLineOfSightHack.Contains(checkId)) {
+                    GetComponent<Probe>().needLineOfSightToAggro = false;
+                    if (gameObject.scene.name == "ziggurat2020_1") {
+                        GetComponent<Probe>().monsterAggroDistance = 20;
+                    }
+                }
             }
         }
 
@@ -703,6 +711,14 @@ namespace TunicRandomizer {
             { "43000000 [ziggurat2020_1]", (9999, "43009999 [ziggurat2020_1]") },
             { "44000016 [ziggurat2020_3]", (9998, "44009998 [ziggurat2020_3]") },
             { "44000001 [ziggurat2020_3]", (9999, "44009999 [ziggurat2020_3]") },
+        };
+
+        // For a few fairies that won't aggro just by walking near them
+        public static List<string> OverrideFairiesLineOfSightHack = new List<string>() {
+            "32000049 [Atoll Redux]",
+            "32000056 [Atoll Redux]",
+            "43000002 [ziggurat2020_1]",
+            "43000001 [ziggurat2020_1]",
         };
 
         // For enemies that summon enemies
