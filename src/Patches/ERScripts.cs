@@ -493,8 +493,8 @@ namespace TunicRandomizer {
                     }
                 }
                 (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
-                TunicLogger.LogTesting("Full Inventory before starting the ER while loop is:");
                 if (TunicLogger.Testing) {
+                    TunicLogger.LogTesting("Full Inventory before starting the ER while loop is:");
                     foreach (KeyValuePair<string, int> kvp in FullInventory) {
                         TunicLogger.LogTesting($"{kvp.Key}: {kvp.Value}");
                     }
