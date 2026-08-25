@@ -122,6 +122,7 @@ namespace TunicRandomizer {
                     portalChoices.Add(newPortalCombo);
                     CachePairingDict.Add(newPortalCombo, randomizedPortals);
                     updateDeplando(currentPortalName, PinnedPortal);
+                    TunicLogger.LogTesting($"Pinned portal is going to be one of the choices, it is {newPortalCombo.Portal1.Name} -> {newPortalCombo.Portal2.Name}");
                     break;
                 }
             }
@@ -132,6 +133,7 @@ namespace TunicRandomizer {
                     portalChoices.Add(cachedPortalCombo);
                     updateDeplando(currentPortalName, cachedPortalCombo.Portal2.Name);
                     CachePairingDict.Add(cachedPortalCombo, new List<PortalCombo>(CachedSuccessfulPairing));
+                    TunicLogger.LogTesting($"Cached portal combo is going to be one of the choices, it is {cachedPortalCombo.Portal1.Name} -> {cachedPortalCombo.Portal2.Name}");
                 }
                 CachedSuccessfulPairing = null;
             }
@@ -178,6 +180,20 @@ namespace TunicRandomizer {
                 List<PortalCombo> randomizedPortals = RandomizePortals(seed + trialCount, plando, deplando, canFail: true);
                 if (randomizedPortals == null) {
                     // this means the generation was not successful, which is fine and intended to happen, especially with restrictive logic
+                    if (TunicLogger.Testing && trialCount == 500) {
+                        TunicLogger.LogTesting("---------------------------------------");
+                        TunicLogger.LogTesting($"Current plando length: {plando.Count}");
+                        TunicLogger.LogTesting("Current plando:");
+                        foreach (KeyValuePair<string, string> kvp in plando) {
+                            TunicLogger.LogTesting($"{kvp.Key} -> {kvp.Value}");
+                        }
+                        TunicLogger.LogTesting("---------------------------------------");
+                        TunicLogger.LogTesting("Current deplando:");
+                        foreach (Tuple<string, string> kvp in deplando) {
+                            TunicLogger.LogTesting($"{kvp.Item1} -> {kvp.Item2}");
+                        }
+                        TunicLogger.LogTesting("---------------------------------------");
+                    }
                     continue;
                 }
 

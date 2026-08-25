@@ -489,10 +489,17 @@ namespace TunicRandomizer {
                 foreach (Check check in ItemRandomizer.ProgressionLocations.Values) {
                     if (check.IsCompletedOrCollected) {
                         alreadyCheckedLocations.Add(check);
-                        TunicUtils.AddStringAndQuantityToDict(FullInventory, check.Reward.Name, check.Reward.Amount);
+                        string item_name = ItemLookup.FairyLookup.Keys.Contains(check.Reward.Name) ? "Fairy" : check.Reward.Name;
+                        TunicUtils.AddStringAndQuantityToDict(FullInventory, item_name, check.Reward.Amount);
                     }
                 }
                 (FullInventory, alreadyCheckedLocations) = UpdateReachableRegionsAndPickUpItems(FullInventory, alreadyCheckedLocations);
+                if (TunicLogger.Testing) {
+                    TunicLogger.LogTesting("Full Inventory before starting the ER while loop is:");
+                    foreach (KeyValuePair<string, int> kvp in FullInventory) {
+                        TunicLogger.LogTesting($"{kvp.Key}: {kvp.Value}");
+                    }
+                }
             } else {
                 FullInventory = UpdateReachableRegions(FullInventory);
             }
@@ -563,6 +570,23 @@ namespace TunicRandomizer {
 
                 if (portal1 == null) {
                     if (canFail) {
+                        if (TunicLogger.Testing) {
+                            TunicLogger.LogTesting($"canFail, so stopping at portal1 == null in phase 1");
+                            TunicLogger.LogTesting("if there are regions missing, they are as follows:");
+                            foreach (string region in allRegions) {
+                                if (!FullInventory.ContainsKey(region)) {
+                                    TunicLogger.LogTesting(region);
+                                }
+                            }
+                            TunicLogger.LogTesting("remaining portals in portalsList are:");
+                            foreach (Portal debugportal in portalsList) {
+                                TunicLogger.LogTesting(debugportal.Name);
+                            }
+                            TunicLogger.LogTesting("Inventory is:");
+                            foreach (KeyValuePair<string, int> kvp in FullInventory) {
+                                TunicLogger.LogTesting($"{kvp.Key}: {kvp.Value}");
+                            }
+                        }
                         return null;
                     }
                     // it will fail after this
@@ -637,6 +661,7 @@ namespace TunicRandomizer {
                         continue;
                     } else {
                         if (canFail) {
+                            TunicLogger.LogTesting($"canFail, so stopping at portal2 == null in phase 1");
                             return null;
                         }
                         TunicLogger.LogInfo("---------------------------------------");
@@ -712,6 +737,7 @@ namespace TunicRandomizer {
                 finalPairLoopNumber++;
                 if (finalPairLoopNumber > 10000) {
                     if (canFail) {
+                        TunicLogger.LogTesting($"canFail, so stopping at finalPairLoopNumber > 10000 in phase 2");
                         return null;
                     }
                     TunicLogger.LogError("Failed to pair portals while pairing the final entrances off to each other");
@@ -744,6 +770,7 @@ namespace TunicRandomizer {
                 }
                 if (portal2 == null) {
                     if (canFail) {
+                        TunicLogger.LogTesting($"canFail, so stopping at portal2 == null in phase 2");
                         return null;
                     }
                     // it will fail after this
