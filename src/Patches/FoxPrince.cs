@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TunicRandomizer.ERScripts;
@@ -18,6 +17,9 @@ namespace TunicRandomizer {
         // so we aren't just reading them off the save file every time
         // this might be overengineering it though, idk
         public static Dictionary<string, string> CachedPlandoPortals = new Dictionary<string, string>();
+        // these are to see how many portals are left in the pool, so we can reduce the retry count dynamically
+        public static int PortalsLeftInPool = 440;
+        public static Dictionary<int, int> DirTracker = new Dictionary<int, int>();
 
         // for use with the pin system
         public static string PinnedPortal {
@@ -144,11 +146,31 @@ namespace TunicRandomizer {
             // we want to fine tune this to try to get 3 different portals when possible, but not take overly long if there aren't 3+ possibilities
             int maxTrialCount = 1000;
             int trialCount = 0;
+
+            // this is a little sloppy, it's mostly so that we update PortalsLeftInPool and DirTracker
+            List<PortalCombo> portalsForCounting = RandomizePortals(seed, plando, deplando, canFail: true);
+            // we're adjusting max trial count based on how many potential portals are left in the pool
+            // in practice, if there's a high portal count left, it'll probably never get through a handful of portals before it gets to 3
+            // at low portal counts, it'll probably never need more than a few dozen trials
+            int potentialValidPortalsLeft;
+            if (GetBool(PortalDirectionPairs)) {
+                int portalDir = TunicUtils.FindPortalDirectionFromName(currentPortalName);
+                potentialValidPortalsLeft = DirTracker[TunicUtils.DirectionPairs[portalDir]];
+            } else {
+                potentialValidPortalsLeft = PortalsLeftInPool;
+            }
+            // this equation is entirely based on vibes
+            maxTrialCount = potentialValidPortalsLeft * 5 + 20;
+
             while (portalChoices.Count < 3) {
                 if (trialCount >= maxTrialCount && (portalChoices.Count > 0 || excludedPortals != null)) {
                     // we've done enough trials to say that we probably won't find any more connections, so it's time to give the player less than 3 choices
                     // if we don't have any choices yet, keep trying -- if it's failing, we'd wanna know that, but maybe it's just something really restrictive and weird
                     // if there's excluded portals, that's because they rerolled, so they'll just need to get a set of old portals now
+                    break;
+                }
+                if (potentialValidPortalsLeft == portalChoices.Count) {
+                    // we've already found all the portals possible, so let's just break it now and save a quarter second
                     break;
                 }
                 trialCount++;
@@ -165,7 +187,6 @@ namespace TunicRandomizer {
 
                 TunicLogger.LogTesting("portal choice is " + newPortalCombo.Portal2.Name);
 
-                // todo: remove this later when confident that it's not going to be a problem
                 TunicLogger.LogTesting($"Starting check all reachable in trials for {newPortalCombo.Portal2.Name}");
                 TunicUtils.CheckAllLocsReachable(randomizedPortals);
 

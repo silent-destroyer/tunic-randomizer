@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -392,12 +393,6 @@ namespace TunicRandomizer {
                         string destination = SaveFile.stringStore[key];
                         Portal portal1 = portalsList.First(portal => portal.Name == origin);
                         Portal portal2 = portalsList.First(portal => portal.Name == destination);
-                        // if we end up having to redo RandomizePortals during initial generation, we end up adding this portal twice, which breaks stuff
-                        foreach (PortalCombo portalCombo in FoxPrince.FPRandomizedPortals) {
-                            if (portalCombo.Portal1.Name == portal1.Name && portalCombo.Portal2.Name == portal2.Name) {
-                                continue;
-                            }
-                        }
                         FoxPrince.FPRandomizedPortals.Add(new PortalCombo(portal1, portal2));
                     }
                 }
@@ -450,6 +445,12 @@ namespace TunicRandomizer {
                 } else {
                     twoPlusPortalDirectionTracker[portal2.Direction]--;
                 }
+            }
+
+            // this is to keep track of how many portals are left in the pool, so we can dynamically reduce the retry count to make late game load choices faster
+            FoxPrince.PortalsLeftInPool = portalsList.Count + portalsList2.Count;
+            foreach (KeyValuePair<int, int> kvp in twoPlusPortalDirectionTracker) {
+                FoxPrince.DirTracker[kvp.Key] = kvp.Value + deadEndPortalDirectionTracker[kvp.Key];
             }
 
             // add the plando'd connections to the traversal reqs
