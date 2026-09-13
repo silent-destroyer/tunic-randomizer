@@ -4252,7 +4252,7 @@
                     ""Position"": ""(3.4, -8.0, -21.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1
+                            ""Quarry Back"": 1
                         }
                     ]
                 }
@@ -4561,7 +4561,7 @@
                     ""Position"": ""(-23.0, 0.0, 7.0)"",
                     ""Requirements"": [
                         {
-                            ""Quarry"": 1
+                            ""Quarry Back"": 1
                         }
                     ]
                 }
