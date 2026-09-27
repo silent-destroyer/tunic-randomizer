@@ -103,8 +103,9 @@ namespace TunicRandomizer {
             new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Furnace_gyro_west", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Swamp Redux 2_wall", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, EastFiligreeCache_", difficulty: 3),
-            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Archipelagos Redux_upper", difficulty: 1),
+            new LSElevConnect(origin: "LS Elev 1", destination: "Overworld Redux, Atoll Redux_upper", difficulty: 1),
 
+            new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Archipelagos Redux_upper", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Ruins Passage_east", difficulty: 1),
             new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Town_FiligreeRoom_", difficulty: 3),
             new LSElevConnect(origin: "LS Elev 2", destination: "Overworld Redux, Ruins Passage_west", difficulty: 3),
