@@ -273,5 +273,8 @@
   <ItemGroup>
     <EmbeddedResource Include="src\Data\FoxPrinceSceneImages.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="src\Data\EnemySoulIcons.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -263,8 +263,8 @@ With the exception of the Logic settings (which are determined in your Archipela
   - Allows the game to continue running when tabbed out.
   
 ## Credits
-- Scipio for creating the Entrance Randomizer and maintaining the Archipelago logic.
+- ScipioWright for creating the Entrance Randomizer, maintaing the Archipelago apworld, and much more.
 - RadRingtail, Glace, RisingStar111, kingsamps0n, Landie, JimTheEternal, Jabberrocky, Ekkosangen, FletchIsAFurry, and many others for playtesting and helping to improve the mod.
-- SapphireSapphic, ScoutJD, and Br00ty for creating/maintaining the emo/poptracker maps.
+- SapphireSapphic, ScoutJD, Br00ty, ScipioWright, and fFoxes for contributing to the poptracker pack.
 - Andrew Shouldice, Kevin Regamey, Finji, and everyone else involved in making this wonderful game.
 

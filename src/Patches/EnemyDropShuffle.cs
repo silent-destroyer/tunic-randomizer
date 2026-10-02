@@ -842,11 +842,10 @@ namespace TunicRandomizer {
                 EnemySoul.name = item.Name;
                 EnemySoul.collectionMessage = TunicUtils.CreateLanguageLine($"ehnuhmE sOl \"- {item.Name.Split('(')[1].Replace(")", "").ToUpper()}\"");
                 EnemySoul.controlAction = "";
-                Sprite sprite = ModelSwaps.FindSprite("Randomizer items_enemysoul");
+                Sprite sprite = ModelSwaps.FindSprite($"Randomizer items_{item.Name}");
                 EnemySoul.icon = sprite;
                 ItemLookup.SimplifiedItemNames.Add(item.Name, item.Name);
                 Translations.EnglishToTrunic.Add($"\"{item.Name}\"", $"\"{item.Name}\"");
-                TextBuilderPatches.ItemNameToAbbreviation.Add(item.Name, "[enemysoul]");
                 Inventory.itemList.Add(EnemySoul);
                 TunicUtils.AllProgressionNames.Add(item.Name);
             }
@@ -978,7 +977,7 @@ namespace TunicRandomizer {
             foreach (ItemData itemData in ItemLookup.Items.Values.Where(item => item.Type == ItemTypes.ENEMY)) {
                 Item item = Inventory.GetItemByName(itemData.ItemNameForInventory);
                 string formatted = $"\"{item.name.Split('(')[1].Replace(")", "")}\"";
-                enemies += $"{formatted}\"{new String('.', 26 - formatted.Length)}{(item.Quantity == 0 ? "<#FF0000>Not Found" : "....<#00FF00>Found")}\"\n";
+                enemies += $"{TextBuilderPatches.ItemNameToAbbreviation[item.name]} {formatted}\"{new String('.', 24 - formatted.Length)}{(item.Quantity == 0 ? "<#FF0000>Not Found" : "....<#00FF00>Found")}\"\n";
                 i++;
                 if (i % 8 == 0 && i < 30) {
                     enemies += $"---{header}";
@@ -990,6 +989,26 @@ namespace TunicRandomizer {
         public static bool IsValidEnemy(GameObject monster) {
             string checkId = GetEnemyCheckId(monster);
             return checkId != null && AllEnemyDropChecks.ContainsKey(checkId);
+        }
+
+        public static void LoadEnemySoulIcons() {
+            Material m = ModelSwaps.FindMaterial("Default UI Material");
+            var imgSource = "TunicRandomizer.src.Data.EnemySoulIcons.png";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imgSource)) {
+                if (stream == null) {
+                    TunicLogger.LogInfo("img null");
+                } else {
+                    byte[] ba = new byte[stream.Length];
+                    stream.Read(ba, 0, ba.Length);
+                    Texture2D Texture = new Texture2D(960, 960, TextureFormat.DXT1, false);
+                    ImageConversion.LoadImage(Texture, ba);
+
+                    foreach (string EnemySoul in ItemRandomizer.EnemyItems) {
+                        (int, int) position = EnemyImageData.EnemySoulIconPositions[EnemySoul];
+                        GameObject sprite = ModelSwaps.CreateSprite(Texture, m, x: position.Item1, y: position.Item2, SpriteName: $"Randomizer items_{EnemySoul}");
+                    }
+                }
+            }
         }
 
         public static bool Administrator_monster_preDestroy_PrefixPatch(Administrator __instance) {

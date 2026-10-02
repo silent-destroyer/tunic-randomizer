@@ -2025,6 +2025,7 @@ namespace TunicRandomizer {
             Inventory.GetItemByName("Hyperdash Toggle").icon = CustomItemImages["Hyperdash Toggle"].GetComponent <Image>().sprite;
 
             EnemyModelSwaps.CreateTextures(ImageMaterial);
+            EnemyDropShuffle.LoadEnemySoulIcons();
         }
 
         public static GameObject CreateSprite(string ImageData, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
@@ -2038,11 +2039,11 @@ namespace TunicRandomizer {
             return CreateSprite(Texture, imgMaterial, Width, Height, SpriteName);
         }
 
-        public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1) {
+        public static GameObject CreateSprite(Texture2D Texture, Material imgMaterial, int Width = 160, int Height = 160, string SpriteName = "", TextureFormat tf = TextureFormat.DXT1, int x = 0, int y = 0) {
             GameObject obj = new GameObject(SpriteName + " image");
             Texture.name = SpriteName;
             //Sprite.Create(Texture2D, Rect, Vector2, float, uint, SpriteMeshType, Vector4, bool)
-            Sprite sprite = Sprite.CreateSprite(Texture, new Rect(0, 0, Width, Height), new Vector2(0.5f, 0.5f), 100, 0, SpriteMeshType.FullRect, Vector4.zero, false);
+            Sprite sprite = Sprite.CreateSprite(Texture, new Rect(x, y, Width, Height), new Vector2(0.5f, 0.5f), 100, 0, SpriteMeshType.FullRect, Vector4.zero, false);
             sprite.name = SpriteName;
             obj.AddComponent<Image>().sprite = sprite;
             obj.GetComponent<Image>().material = imgMaterial;

@@ -6,6 +6,42 @@ using System.Threading.Tasks;
 
 namespace TunicRandomizer {
     public class EnemyImageData {
+
+        public static Dictionary<string, (int, int)> EnemySoulIconPositions = new Dictionary<string, (int, int)>() {
+            { "Enemy Soul (Blobs)", (0, 800) },
+            { "Enemy Soul (Hedgehogs)", (160, 800) },
+            { "Enemy Soul (Rudelings)", (320, 800) },
+            { "Enemy Soul (Envoy)", (480, 800) },
+            { "Enemy Soul (Phrend)", (640, 800) },
+            { "Enemy Soul (Autobolt)", (800, 800) },
+            { "Enemy Soul (Fairies)", (0, 640) },
+            { "Enemy Soul (Chompignom)", (160, 640) },
+            { "Enemy Soul (Spiders)", (320, 640) },
+            { "Enemy Soul (Custodians)", (480, 640) },
+            { "Enemy Soul (Crabs)", (640, 640) },
+            { "Enemy Soul (Plover)", (800, 640) },
+            { "Enemy Soul (Husher)", (0, 480) },
+            { "Enemy Soul (Frogs)", (160, 480) },
+            { "Enemy Soul (Baby Slorm)", (320, 480) },
+            { "Enemy Soul (Slorm)", (480, 480) },
+            { "Enemy Soul (Tentacle)", (640, 480) },
+            { "Enemy Soul (Laser Trap)", (800, 480) },
+            { "Enemy Soul (Scavengers)", (0, 320) },
+            { "Enemy Soul (Voidling)", (160, 320) },
+            { "Enemy Soul (Fleemers)", (320, 320) },
+            { "Enemy Soul (Lost Echo)", (480, 320) },
+            { "Enemy Soul (Gunslinger)", (640, 320) },
+            { "Enemy Soul (Zombie Foxes)", (800, 320) },
+            { "Enemy Soul (Garden Knight)", (0, 160) },
+            { "Enemy Soul (Siege Engine)", (160, 160) },
+            { "Enemy Soul (Librarian)", (320, 160) },
+            { "Enemy Soul (Boss Scavenger)", (480, 160) },
+            { "Enemy Soul (Administrator)", (640, 160) },
+            { "Enemy Soul (Beefboy)", (800, 160) },
+            { "Enemy Soul (Voidtouched)", (0, 0) },
+            { "Enemy Soul (The Heir)", (160, 0) },
+        };
+
         // Enemy textures for AP item colors
         public static Dictionary<string, (int, string)> EnemyTextureData = new Dictionary<string, (int, string)>() {
             {"BeefboyBlue", (16, "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAVUExURQCAv8FMTP///25jbZufpAAAAF9fX7Hk770AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuOWxu2j4AAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuOQADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAABMz8BIJY/XoAAAACJJREFUGNNjYGAQFFRSMjZmwMNwcREUNDamDiM0NC0NDwMAa2sXYRqr1VwAAAAASUVORK5CYII=")},
