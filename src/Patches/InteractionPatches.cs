@@ -291,9 +291,15 @@ namespace TunicRandomizer {
 
         public static bool Campfire_isUseableAccordingToConduitSystem_GetterPatch(Campfire __instance, ref bool __result) {
 
+            // disable the upper zig checkpoint under certain enemy souls conditions to avoid softlocking yourself
+            if (__instance != null && __instance.gameObject.scene.name == "ziggurat2020_1" && GetBool(ShuffleEnemySoulsEnabled)) {
+                __result = (Inventory.GetItemByName("Enemy Soul (Administrator)").Quantity > 0 && Inventory.GetItemByName("Sword").Quantity > 0)
+                || Inventory.GetItemByName("Hyperdash Toggle").Quantity > 0 || Inventory.GetItemByName("Torch").Quantity > 0;
+                return false;
+            }
+
             if (TunicRandomizer.Settings.EnableAllCheckpoints) {
                 __result = true;
-
                 return false;
             }
 
