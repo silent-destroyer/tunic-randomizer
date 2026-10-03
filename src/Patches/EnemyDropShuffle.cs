@@ -45,15 +45,15 @@ namespace TunicRandomizer {
             if (CheckId != null) {
                 if (SaveFlags.IsSinglePlayer() && Locations.RandomizedLocations.ContainsKey(CheckId) && !Locations.CheckedLocations[CheckId] && SaveFile.GetInt($"randomizer picked up {CheckId}") == 0) {
                     Check check = Locations.RandomizedLocations[CheckId];
-                    ItemPatches.GiveItem(check, alwaysSkip: skipPresentation);
                     if (skipPresentation) {
                         ModelSwaps.SetupItemMoveUp(transform, check: check);
                     }
+                    ItemPatches.GiveItem(check, alwaysSkip: skipPresentation);
                 } else if (SaveFlags.IsArchipelago() && ItemLookup.ItemList.ContainsKey(CheckId) && !Locations.CheckedLocations[CheckId] && SaveFile.GetInt($"randomizer picked up {CheckId}") == 0) {
-                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
                     if (skipPresentation) {
                         ModelSwaps.SetupItemMoveUp(transform, itemInfo: ItemLookup.ItemList[CheckId]);
                     }
+                    Archipelago.instance.ActivateCheck(Locations.LocationIdToDescription[CheckId]);
                 }
                 if (CheckId == "19000002 [Library Hall]") {
                     EnemyModelSwaps.cleanupAdministratorTableCheck(gameObject);
