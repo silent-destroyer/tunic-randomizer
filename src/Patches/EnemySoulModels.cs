@@ -271,6 +271,9 @@ namespace TunicRandomizer {
         private static void setupSiegeEngine(Transform parent) {
             GameObject siegeEngine = cloneEnemy("Enemy Soul (Siege Engine)", parent);
             for (int i = siegeEngine.transform.childCount - 1; i >= 2; i--) {
+                if (siegeEngine.transform.GetChild(i).name == "Spidertank glow") {
+                    continue;
+                }
                 GameObject.Destroy(siegeEngine.transform.GetChild(i).gameObject);
             }
             siegeEngine.transform.Find("Spidertank_skeleton/root/thorax/Light: core/").gameObject.SetActive(false);
