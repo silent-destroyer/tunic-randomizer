@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,8 +10,10 @@ using static TunicRandomizer.TunicUtils;
 namespace TunicRandomizer {
     public class ERScripts {
         public static GameObject storedPortal = null;
-        // just for solving the case where old house door connects to itself in decoupled
+        // just for solving the case where old house door connects to something bad and you ladder storage into it
         public static bool OldHouseDoorUnstuck = false;
+        // also for the well entrance if you don't have the ladder
+        public static bool WellUnstuck = false;
 
         // returns an inventory of items and regions with the regions you can reach added in, does not traverse entrances
         public static Dictionary<string, int> UpdateReachableRegions(Dictionary<string, int> inventory, List<PortalCombo> randomizedPortals = null, Dictionary<string, Dictionary<string, List<List<string>>>> modifiedTraversalReqs = null) {
@@ -252,6 +253,14 @@ namespace TunicRandomizer {
             if (GetBool(ERFixedShop)) {
                 plando = new Dictionary<string, string> { {"Windmill Entrance", "Shop Portal 1" } };
             }
+
+            // for testing, this is the best place to set plando connections
+            //plando = new Dictionary<string, string> {
+            //    {"Old House Door Entrance", "Well Ladder Entrance"},
+            //    {"Well Ladder Entrance", "Library Rotunda Lower Exit"},
+            //    {"Library Rotunda Lower Exit", "Library Rotunda Upper Exit"},
+            //    {"Library Rotunda Upper Exit", "Old House Door Entrance"},
+            //};
 
             List<PortalCombo> randomizedPortals = RandomizePortals(seed, plando);
 
@@ -890,6 +899,90 @@ namespace TunicRandomizer {
             ModifiedTraversalReqs = TrickLogic.TraversalReqsWithLS(ModifiedTraversalReqs);
         }
 
+
+        // there's a few spots where you can get stuck if you ladder storage or ice grapple into the old house door
+        // so if you manage to get one of these rare combinations, throw the fox out the window
+        // Defennecstration -hatkirby
+        public static Dictionary<string, List<string>> problemSpots = new Dictionary<string, List<string>> {
+            {"Ladders in Library",
+                new List<string> { "Library Hall, Library Rotunda_", "Library Rotunda, Library Hall_", "Library Rotunda, Library Lab_",
+                    "Library Lab, Library Rotunda_", "Library Lab, Library Arena_" } },
+            {"Ladders in Well",
+                new List<string> { "Overworld Redux, Sewer_entrance", "Sewer, Overworld Redux_entrance" } },
+            {"Ladders to Frog's Domain",
+                new List<string> {"Frog Stairs, frog cave main_Entrance", "frog cave main, Frog Stairs_Entrance"} },
+        };
+
+
+        public static void SetUnstuck(string SceneDestinationTag) {
+            if (SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
+                OldHouseDoorUnstuck = true;
+            } else if (SceneDestinationTag == "Overworld Redux, Sewer_entrance") {
+                WellUnstuck = true;
+            }
+        }
+
+
+        // intent is to check if there's the possibility of a loop in decoupled where you get stuck on a ladder/behind the old house door
+        // purpose is that just checking if there's a potential problem on both sides could lead to you getting kicked out of intended logic
+        // like you enter a regular door, it leads to the old house door that's closed, then that leads to the librarian arena ladder, and going down that ladder leads somewhere useful
+        // so we just want to make sure it's not making an infinite loop where you're always stuck on a ladder
+        // it returns a list of ladders (and the old house door) where if you have at least one of them you can break free from the loop
+        // if the list is empty, that means there's no loop
+        public static List<string> DetectLoop(string startingEntranceSDT) {
+            List<string> requiredLadders = new List<string>();
+            // so we can keep track of the portals we're looking at already
+            List<string> alreadyAddedPortals = new List<string>();
+            string portalToCheck = startingEntranceSDT;
+            alreadyAddedPortals.Add(portalToCheck);
+            // we're checking if the starting portal leads to a problem spot
+            // if it does, we'll loop through again and see if that spot leads to another problem spot
+            // and keep going until it loops back around or it leads to a non-problem spot
+            while (true) {
+                bool addedProblem = false;
+                Portal portal2 = null;
+                foreach (PortalCombo portalCombo in RandomizedPortals) {
+                    if (portalCombo.Portal1.SceneDestinationTag == portalToCheck) {
+                        portal2 = portalCombo.Portal2;
+                    }
+                }
+                if (portal2 == null) {
+                    // if there's no portal combo with this portal as portal 2, that means it wasn't connected to in fox prince, so we can just stop here since there's no loop
+                    requiredLadders.Clear();
+                    break;
+                }
+                
+                if (portal2.Name == "Old House Door Entrance") {
+                    requiredLadders.Add("Old House Door");
+                    addedProblem = true;
+                    portalToCheck = portal2.SceneDestinationTag;
+                } else {
+                    foreach (KeyValuePair<string, List<string>> problem in problemSpots) {
+                        if (problem.Value.Contains(portal2.SceneDestinationTag)) {
+                            requiredLadders.Add(problem.Key);
+                            addedProblem = true;
+                            portalToCheck = portal2.SceneDestinationTag;
+                            break;
+                        }
+                    }
+                }
+
+                if (alreadyAddedPortals.Contains(portal2.SceneDestinationTag)) {
+                    // we've looped back around
+                    break;
+                }
+
+                if (!addedProblem) {
+                    // if a problem spot is not added, that means there's somewhere you can go, so there's no loop
+                    requiredLadders.Clear();
+                    break;
+                }
+
+                alreadyAddedPortals.Add(portal2.SceneDestinationTag);
+            }
+            return requiredLadders;
+        }
+
         // a function to apply the randomized portal list to portals during onSceneLoaded
         public static void ModifyPortals(string scene_name, bool sending = false) {
             if (GetBool(FoxPrinceEnabled)) {
@@ -908,6 +1001,13 @@ namespace TunicRandomizer {
                     PlayerCharacter.instance.transform.position = new Vector3(-32, 31, -59);
                     PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
                     OldHouseDoorUnstuck = false;
+                }
+                if (WellUnstuck == true) {
+                    PlayerCharacter.instance.currentLadder = null;
+                    PlayerCharacter.instance.GetComponent<Animator>().SetBool("climbing", false);
+                    PlayerCharacter.instance.transform.position = new Vector3(-32, 40, -1);
+                    PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    WellUnstuck = false;
                 }
                 storedPortal.GetComponent<BoxCollider>().isTrigger = true;
                 storedPortal = null;
@@ -987,49 +1087,35 @@ namespace TunicRandomizer {
                                 storedPortal = portal.gameObject;
                                 storedPortal.GetComponent<BoxCollider>().isTrigger = false;
 
-                                // there's a few spots where you can get stuck if you ladder storage or ice grapple into the old house door
-                                // so if you manage to get one of these rare combinations, throw the fox out the window
-                                // Defennecstration -hatkirby
-                                if (portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" && !GetBool("SV_Overworld_House Door Opened")) {
-                                    if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house") {
-                                        OldHouseDoorUnstuck = true;
+                                if ((portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" && !GetBool("SV_Overworld_House Door Opened"))
+                                    || (portal2.SceneDestinationTag == "Overworld Redux, Sewer_entrance" && !GetBool("inventory quantity Ladders in Well"))) {
+                                    // if old house door connects to the old house door and it's closed, we need to do the unstuck
+                                    if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house"
+                                        && portal1.SceneDestinationTag == portal2.SceneDestinationTag
+                                        && !GetBool("SV_Overworld_House Door Opened")) {
+                                        SetUnstuck(portal2.SceneDestinationTag);
                                     }
-
-                                    Dictionary<string, List<string>> problemSpots = new Dictionary<string, List<string>> {
-                                        {"Ladders in Library",
-                                            new List<string> { "Library Hall, Library Rotunda_", "Library Rotunda, Library Hall_", "Library Rotunda, Library Lab_",
-                                                "Library Lab, Library Rotunda_", "Library Lab, Library Arena_" } },
-                                        {"Ladders in Well",
-                                            new List<string> { "Overworld Redux, Sewer_entrance", "Sewer, Overworld Redux_entrance" } },
-                                        {"Ladders to Frog's Domain",
-                                            new List<string> {"Frog Stairs, frog cave main_Entrance", "frog cave main, Frog Stairs_Entrance"} },
-                                    };
                                     if (GetBool(LadderRandoEnabled)) {
-                                        foreach (KeyValuePair<string, List<string>> problems in problemSpots) {
-                                            string ladderName = problems.Key;
-                                            List<string> ladderPortals = problems.Value;
-                                            // if the old house door connects to a problem spot and you don't have the ladder
-                                            if (ladderPortals.Contains(portal1.SceneDestinationTag)
-                                            && (!GetBool($"randomizer picked up {ladderName}"))) {
-                                                // if you're not in decoupled, then we can be sure this is a problem
-                                                if (!GetBool(Decoupled)) {
-                                                    OldHouseDoorUnstuck = true;
-                                                } else {
-                                                    // if you're in decoupled, we want to make sure the door leads to a problem spot, not just from a problem spot
-                                                    foreach (PortalCombo portalCombo2 in RandomizedPortals) {
-                                                        if (portalCombo2.Portal1.Name == "Overworld Redux, Overworld Interiors_house") {
-                                                            if (ladderPortals.Contains(portalCombo2.Portal2.SceneDestinationTag)) {
-                                                                OldHouseDoorUnstuck = true;
-                                                            }
-                                                            break;
-                                                        }
-                                                    }
+                                        List<string> laddersNeeded = DetectLoop(portal2.SceneDestinationTag);
+                                        bool unstuckNeeded = true;
+                                        foreach (string ladder in laddersNeeded) {
+                                            if (ladder == "Old House Door" && GetBool("SV_Overworld_House Door Opened")) {
+                                                unstuckNeeded = false;
+                                            } else {
+                                                if (GetBool($"inventory quantity {ladder}")) {
+                                                    unstuckNeeded = false;
                                                 }
                                             }
                                         }
+                                        if (laddersNeeded.Count == 0) {
+                                            unstuckNeeded = false;
+                                        }
+
+                                        if (unstuckNeeded) {
+                                            SetUnstuck(portal2.SceneDestinationTag);
+                                        }
                                     }
                                 }
-
                             }
                             break;
                         }

@@ -102,7 +102,7 @@
         }
 
         public static bool GetBool(string value) {
-            return SaveFile.GetInt(value) == 1;
+            return SaveFile.GetInt(value) >= 1;
         }
     }
 }
