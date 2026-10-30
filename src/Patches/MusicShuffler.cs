@@ -60,6 +60,7 @@ namespace TunicRandomizer {
                 MusicShuffler.instance.trackToShuffle = trackName;
                 MusicShuffler.instance.paramsToSet.Clear();
                 __instance.track = Tracks[trackName];
+                RuntimeManager.StudioSystem.setParameterByName("night_time", trackName.EndsWith(" (Night)") ? 1f : 0f, false);
                 MusicManager.PlayNewTrackIfDifferent(Tracks[trackName]);
                 if (TrackParams.ContainsKey(trackName)) {
                     foreach ((string, int) param in TrackParams[trackName]) {
@@ -83,6 +84,7 @@ namespace TunicRandomizer {
             } else {
                 MusicManager.Stop();
             }
+            RuntimeManager.StudioSystem.setParameterByName("night_time", trackName.EndsWith(" (Night)") ? 1f : 0f, false);
             MusicManager.PlayNewTrackIfDifferent(track);
             MusicShuffler.instance.TimeSinceMusicStart = Time.realtimeSinceStartup;
             if (MusicShuffler.TrackParams.ContainsKey(trackName)) {
@@ -109,6 +111,7 @@ namespace TunicRandomizer {
             { "Overworld Subarea", CreateEventReference("017d5f1e-bd27-468b-abd6-7fdef923f0aa") },
             { "Intro Cutscene Area", CreateEventReference("077841ff-76f6-445a-9a4e-2f79a43c4b0f") },
             { "East Forest", CreateEventReference("89e5d635-fa19-4740-9264-d11e065f24c4") },
+            { "East Forest (Night)", CreateEventReference("89e5d635-fa19-4740-9264-d11e065f24c4") },
             { "Guard Captain", CreateEventReference("ec13435f-fba0-42e7-8278-d990f2b68f2b") },
             { "Resurrection", CreateEventReference("b733e6d5-eef5-49b4-9366-ff8d808c7cc2") },
             { "Shop", CreateEventReference("efd407da-eca0-4d4e-9d3a-088708245e9d") },
@@ -122,18 +125,22 @@ namespace TunicRandomizer {
             { "West Furnace", CreateEventReference("521eb8bd-41fb-4d6b-a768-057484cae6ad") },
             { "Dark Tomb", CreateEventReference("2ec4f10f-0411-47b2-b7d2-8cf7b90915a4") },
             { "West Garden", CreateEventReference("a66bad80-45fa-41a4-a3a3-2a324b053df9") },
+            { "West Garden (Night)", CreateEventReference("a66bad80-45fa-41a4-a3a3-2a324b053df9") },
             { "Garden Knight", CreateEventReference("17d077e6-339e-429f-aed1-b1265e1765b6") },
             { "Sealed Temple", CreateEventReference("1e9ff9c7-c594-4323-948d-dd1673c83af3") },
+            { "Sealed Temple (Night)", CreateEventReference("1e9ff9c7-c594-4323-948d-dd1673c83af3") },
             { "Far Shore", CreateEventReference("d3cdded7-01d4-470f-815f-44da75c006b5") },
             { "Fortress Courtyard", CreateEventReference("bc9a21da-a3bd-4c95-bdd0-cda8cb2c5a75") },
             { "Beneath the Vault", CreateEventReference("11dec94a-4683-4130-95c9-cdedd7796b8d") },
             { "Eastern Vault Fortress", CreateEventReference("57f6adc6-e38b-4fb0-8939-b9d0db907ee7") },
+            { "Eastern Vault Fortress (Night)", CreateEventReference("57f6adc6-e38b-4fb0-8939-b9d0db907ee7") },
             { "Fortress Leaf Piles", CreateEventReference("194c4ddb-576d-426a-bdc5-f643421be010") },
             { "Siege Engine", CreateEventReference("6b50e51c-ef86-4073-a688-c72bc2fdcd10") },
             { "Ruined Atoll", CreateEventReference("a1564c7c-c6c7-4bee-874b-6ed9c13ce9dd") },
             { "Frog's Domain", CreateEventReference("1e666263-aca1-49ab-a5b2-8730ef0b2e9f") },
             { "Library Exterior", CreateEventReference("cd23eb08-387f-422e-8ea2-e7adef2e58fb") },
             { "Library Interior", CreateEventReference("32cfeb38-3fd4-435c-91fa-0d1b24e156dd") },
+            { "Library Interior (Night)", CreateEventReference("32cfeb38-3fd4-435c-91fa-0d1b24e156dd") },
             { "Librarian", CreateEventReference("f81317c6-0b17-4532-b4df-8cee40efb48f") },
             { "Quarry Entrance", CreateEventReference("ac3dcf2b-d7bb-47a0-ab3a-52ff47d177eb") },
             { "Quarry", CreateEventReference("971a6110-1297-42a5-a1b8-e6c4a277a266") },
