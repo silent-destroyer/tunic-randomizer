@@ -554,7 +554,7 @@ namespace TunicRandomizer {
             if (ConnectViaRoomLink) {
                 try {
                     Archipelago.instance.Disconnect();
-                    Archipelago.instance.ParseUri(GUIUtility.systemCopyBuffer);
+                    Archipelago.instance.ParseUri(GUIUtility.systemCopyBuffer, true);
                     Archipelago.instance.Connect();
                 } catch (Exception e) {
                     TunicLogger.LogInfo($"{e.Message} {e.Source} {e.StackTrace}");
