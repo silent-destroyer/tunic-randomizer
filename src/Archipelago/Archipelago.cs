@@ -97,7 +97,7 @@ namespace TunicRandomizer {
             if (args.Length > 0) {
                 foreach (string arg in args) {
                     try {
-                        if (ParseUri(arg)) {
+                        if (ParseUri(arg, false)) {
                             break;
                         }
                     } catch {
@@ -107,15 +107,24 @@ namespace TunicRandomizer {
             }
         }
 
-        public bool ParseUri(string arg) {
-            Uri uri = new Uri(arg);
-
+        bool IsTunicUri(Uri uri) {
+            if (uri.Query.Length <= 1) {
+                return true;
+            }
             Dictionary<string, string> queryParams = uri.Query.Substring(uri.Query.IndexOf("?") + 1)
                 .Split('&')
                 .Select(s => s.Split('='))
                 .ToDictionary(kvp => kvp[0], kvp => kvp[1]);
+            return !queryParams.ContainsKey("game") || queryParams["game"] == "TUNIC";
+        }
 
-            if (queryParams.ContainsKey("game") && queryParams["game"] == "TUNIC") {
+        public bool ParseUri(string arg, bool allowNoProtocol) {
+            if (allowNoProtocol && !arg.Contains("://")) {
+                arg = "ws://" + arg;
+            }
+            Uri uri = new Uri(arg);
+
+            if (IsTunicUri(uri)) {
 
                 string[] UserInfo = uri.UserInfo.Replace("%20", " ").Split(':');
                 if (UserInfo[0] != "") {
@@ -123,12 +132,15 @@ namespace TunicRandomizer {
                 }
                 if (uri.Host != "") {
                     TunicRandomizer.Settings.ConnectionSettings.Hostname = uri.Host;
+                    if (uri.AbsolutePath.Length > 1) {
+                        TunicRandomizer.Settings.ConnectionSettings.Hostname += ":" + uri.Port.ToString() + uri.AbsolutePath;
+                    }
                 }
                 if (uri.Port > -1) {
                     TunicRandomizer.Settings.ConnectionSettings.Port = uri.Port.ToString();
                 }
 
-                if (UserInfo.Length > 1 && UserInfo[1] != "None") {
+                if (UserInfo.Length > 1 && UserInfo[1] != "" && UserInfo[1] != "None") {
                     TunicRandomizer.Settings.ConnectionSettings.Password = UserInfo[1];
                 }
 
