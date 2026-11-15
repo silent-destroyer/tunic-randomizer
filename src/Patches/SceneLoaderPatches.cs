@@ -651,7 +651,7 @@ namespace TunicRandomizer {
 
                 // this is to unstuck you if you ladder storage to the well ladder entrance without the ladder, the ER version is in ModifyPortals
                 if (SceneName == "Overworld Redux" && PlayerCharacterSpawn.portalIDToSpawnAt == "Sewer_entrance") {
-                    if (GetBool(LadderRandoEnabled) && !GetBool("inventory quantity Ladders in Well")) {
+                    if (GetBool(LadderRandoEnabled) && !HasItem("Ladders in Well")) {
                         PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
                             PlayerCharacter.instance.currentLadder = null;
                             PlayerCharacter.instance.GetComponent<Animator>().SetBool("climbing", false);
