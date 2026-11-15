@@ -1003,10 +1003,7 @@ namespace TunicRandomizer {
                     OldHouseDoorUnstuck = false;
                 }
                 if (WellUnstuck == true) {
-                    PlayerCharacter.instance.currentLadder = null;
-                    PlayerCharacter.instance.GetComponent<Animator>().SetBool("climbing", false);
-                    PlayerCharacter.instance.transform.position = new Vector3(-32, 40, -1);
-                    PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    SaveFoxFromWell();
                     WellUnstuck = false;
                 }
                 storedPortal.GetComponent<BoxCollider>().isTrigger = true;
@@ -1192,6 +1189,13 @@ namespace TunicRandomizer {
                     }
                 }
             }
+        }
+
+        public static void SaveFoxFromWell() {
+            PlayerCharacter.instance.currentLadder = null;
+            PlayerCharacter.instance.GetComponent<Animator>().SetBool("climbing", false);
+            PlayerCharacter.instance.transform.position = new Vector3(-32, 40, -1);
+            PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
         }
     }
 

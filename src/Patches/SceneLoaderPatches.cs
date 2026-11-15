@@ -653,10 +653,7 @@ namespace TunicRandomizer {
                 if (SceneName == "Overworld Redux" && PlayerCharacterSpawn.portalIDToSpawnAt == "Sewer_entrance") {
                     if (GetBool(LadderRandoEnabled) && !HasItem("Ladders in Well")) {
                         PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
-                            PlayerCharacter.instance.currentLadder = null;
-                            PlayerCharacter.instance.GetComponent<Animator>().SetBool("climbing", false);
-                            PlayerCharacter.instance.transform.position = new Vector3(-32, 40, -1);
-                            PlayerCharacter.instance.transform.rotation = new Quaternion(0, 180, 0, 0);
+                            ERScripts.SaveFoxFromWell();
                         });
                     }
                 }
