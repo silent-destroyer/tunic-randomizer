@@ -1088,7 +1088,7 @@ namespace TunicRandomizer {
                                 storedPortal.GetComponent<BoxCollider>().isTrigger = false;
 
                                 if ((portal2.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house" && !GetBool("SV_Overworld_House Door Opened"))
-                                    || (portal2.SceneDestinationTag == "Overworld Redux, Sewer_entrance" && !GetBool("inventory quantity Ladders in Well"))) {
+                                    || (portal2.SceneDestinationTag == "Overworld Redux, Sewer_entrance" && !HasItem("Ladders in Well"))) {
                                     // if old house door connects to the old house door and it's closed, we need to do the unstuck
                                     if (portal1.SceneDestinationTag == "Overworld Redux, Overworld Interiors_house"
                                         && portal1.SceneDestinationTag == portal2.SceneDestinationTag
