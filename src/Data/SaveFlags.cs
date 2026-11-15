@@ -104,5 +104,10 @@
         public static bool GetBool(string value) {
             return SaveFile.GetInt(value) == 1;
         }
+
+        public static bool HasItem(string itemName) {
+            Item item = Inventory.GetItemByName(itemName);
+            return item != null && item.Quantity > 0;
+        }
     }
 }

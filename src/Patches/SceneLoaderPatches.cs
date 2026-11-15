@@ -648,6 +648,15 @@ namespace TunicRandomizer {
                 ERScripts.SetupVanillaPortalsAndTraversalReqs();    
                 ERData.RandomizedPortals = ERData.GetVanillaPortals();
                 ERScripts.ModifyPortalNames(loadingScene.name);
+
+                // this is to unstuck you if you ladder storage to the well ladder entrance without the ladder, the ER version is in ModifyPortals
+                if (SceneName == "Overworld Redux" && PlayerCharacterSpawn.portalIDToSpawnAt == "Sewer_entrance") {
+                    if (GetBool(LadderRandoEnabled) && !HasItem("Ladders in Well")) {
+                        PlayerCharacterSpawn.OnArrivalCallback += (Action)(() => {
+                            ERScripts.SaveFoxFromWell();
+                        });
+                    }
+                }
             }
             ERScripts.MarkPortals();
             TunicRandomizer.Tracker.PopulateDiscoveredEntrances();
