@@ -1102,7 +1102,7 @@ namespace TunicRandomizer {
                                             if (ladder == "Old House Door" && GetBool("SV_Overworld_House Door Opened")) {
                                                 unstuckNeeded = false;
                                             } else {
-                                                if (GetBool($"inventory quantity {ladder}")) {
+                                                if (HasItem(ladder)) {
                                                     unstuckNeeded = false;
                                                 }
                                             }
