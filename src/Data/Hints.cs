@@ -517,7 +517,7 @@ namespace TunicRandomizer {
                 Hint = $"yor frehndz muhst furst hehlp yoo fInd yor wA...\n\"GOOD LUCK,\" rooin sEkur.";
             }
             HintMessages.Add("Mailbox", Hint);
-            return mailboxitem == null ? "" : mailboxitem.ItemDisplayName;
+            return mailboxitem == null || mailboxitem.Player != Player ? "" : mailboxitem.ItemDisplayName;
         }
 
         private static void Shuffle(List<Check> list, System.Random random) {
